@@ -52,22 +52,22 @@ impl<Key: View + Eq + Hash, Value> View for HashMapWithViewPlus<Key, Value> {
 //		8. traits
 
 pub trait HashMapWithViewPlusTrait<Key: View + Eq + Hash, Value>: Sized + View<V = Map<<Key as View>::V, Value>> {
-    fn new() -> (result: Self)
+    fn new() -> (empty: Self)
         requires
             obeys_key_model::<Key>(),
             forall|k1: Key, k2: Key| k1@ == k2@ ==> k1 == k2,
         ensures
-            result@ == Map::<<Key as View>::V, Value>::empty();
+            empty@ == Map::<<Key as View>::V, Value>::empty();
 
-    fn len(&self) -> (result: usize)
-        ensures result == self@.len();
+    fn len(&self) -> (count: usize)
+        ensures count == self@.len();
 
-    fn is_empty(&self) -> (result: bool)
-        ensures result == self@.is_empty();
+    fn is_empty(&self) -> (is_empty: bool)
+        ensures is_empty == self@.is_empty();
 
-    fn get<'a>(&'a self, k: &Key) -> (result: Option<&'a Value>)
+    fn get<'a>(&'a self, k: &Key) -> (value: Option<&'a Value>)
         ensures
-            match result {
+            match value {
                 Some(v) => self@.contains_key(k@) && *v == self@[k@],
                 None => !self@.contains_key(k@),
             };
@@ -78,12 +78,12 @@ pub trait HashMapWithViewPlusTrait<Key: View + Eq + Hash, Value>: Sized + View<V
     fn clear(&mut self)
         ensures self@ == Map::<<Key as View>::V, Value>::empty();
 
-    fn contains_key(&self, k: &Key) -> (result: bool)
-        ensures result == self@.contains_key(k@);
+    fn contains_key(&self, k: &Key) -> (contains: bool)
+        ensures contains == self@.contains_key(k@);
 
-    fn remove(&mut self, k: &Key) -> (result: Option<Value>)
+    fn remove(&mut self, k: &Key) -> (removed: Option<Value>)
         ensures
-            match result {
+            match removed {
                 Some(v) => old(self)@.contains_key(k@) && v == old(self)@[k@] && self@ == old(self)@.remove(k@),
                 None => !old(self)@.contains_key(k@) && self@ == old(self)@,
             };
@@ -107,22 +107,22 @@ pub trait HashMapWithViewPlusTrait<Key: View + Eq + Hash, Value>: Sized + View<V
 
 impl<Key: View + Eq + Hash, Value> HashMapWithViewPlusTrait<Key, Value> for HashMapWithViewPlus<Key, Value> {
     #[verifier::external_body]
-    fn new() -> (result: Self) {
+    fn new() -> (empty: Self) {
         HashMapWithViewPlus { inner: HashMap::new() }
     }
 
     #[verifier::external_body]
-    fn len(&self) -> (result: usize) {
+    fn len(&self) -> (count: usize) {
         self.inner.len()
     }
 
     #[verifier::external_body]
-    fn is_empty(&self) -> (result: bool) {
+    fn is_empty(&self) -> (is_empty: bool) {
         self.inner.is_empty()
     }
 
     #[verifier::external_body]
-    fn get<'a>(&'a self, k: &Key) -> (result: Option<&'a Value>) {
+    fn get<'a>(&'a self, k: &Key) -> (value: Option<&'a Value>) {
         self.inner.get(k)
     }
 
@@ -137,12 +137,12 @@ impl<Key: View + Eq + Hash, Value> HashMapWithViewPlusTrait<Key, Value> for Hash
     }
 
     #[verifier::external_body]
-    fn contains_key(&self, k: &Key) -> (result: bool) {
+    fn contains_key(&self, k: &Key) -> (contains: bool) {
         self.inner.contains_key(k)
     }
 
     #[verifier::external_body]
-    fn remove(&mut self, k: &Key) -> (result: Option<Value>) {
+    fn remove(&mut self, k: &Key) -> (contains: Option<Value>) {
         self.inner.remove(k)
     }
 
@@ -268,8 +268,8 @@ impl<'a, Key: View + Eq + Hash, Value> View for HashMapWithViewPlusGhostIterator
 
 impl<Key: View + Eq + Hash + Clone, Value: Clone> Clone for HashMapWithViewPlus<Key, Value> {
     #[verifier::external_body]
-    fn clone(&self) -> (result: Self)
-        ensures result@ == self@
+    fn clone(&self) -> (cloned: Self)
+        ensures cloned@ == self@
     {
         HashMapWithViewPlus { inner: self.inner.clone() }
     }

@@ -22,26 +22,26 @@ pub mod AllPairsResultStPerI64 {
     // 8. traits
 
     pub trait AllPairsResultStPerI64Trait: Sized {
-        fn new(n: usize) -> (result: Self);
+        fn new(n: usize) -> (empty: Self);
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64);
 
-        fn set_distance(self, u: usize, v: usize, dist: i64) -> (result: Self);
+        fn set_distance(self, u: usize, v: usize, dist: i64) -> (updated: Self);
 
         fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>);
 
-        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (result: Self);
+        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self);
 
         fn is_reachable(&self, u: usize, v: usize) -> (b: bool);
 
-        fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);
+        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);
     }
 
     // 9. impls
 
     impl AllPairsResultStPerI64Trait for AllPairsResultStPerI64 {
-        fn new(n: usize) -> (result: Self)
-            ensures result.n == n,
+        fn new(n: usize) -> (empty: Self)
+            ensures empty.n == n,
         {
             let mut dist_rows: Vec<ArraySeqStPerS<i64>> = Vec::new();
             let mut i: usize = 0;
@@ -102,10 +102,10 @@ pub mod AllPairsResultStPerI64 {
             *row.nth(v)
         }
 
-        fn set_distance(self, u: usize, v: usize, dist: i64) -> (result: Self)
+        fn set_distance(self, u: usize, v: usize, dist: i64) -> (updated: Self)
             ensures
-                result.n == self.n,
-                result.predecessors == self.predecessors,
+                updated.n == self.n,
+                updated.predecessors == self.predecessors,
         {
             if u >= self.distances.seq.len() || v >= self.n { return self; }
             let mut row_vec = self.distances.seq[u].seq.clone();
@@ -140,10 +140,10 @@ pub mod AllPairsResultStPerI64 {
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
-        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (result: Self)
+        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self)
             ensures
-                result.n == self.n,
-                result.distances == self.distances,
+                updated.n == self.n,
+                updated.distances == self.distances,
         {
             if u >= self.predecessors.seq.len() || v >= self.n { return self; }
             let mut row_vec = self.predecessors.seq[u].seq.clone();
@@ -164,7 +164,7 @@ pub mod AllPairsResultStPerI64 {
             self.get_distance(u, v) != UNREACHABLE
         }
 
-        fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
+        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>) {
             if u >= self.predecessors.length() || v >= self.predecessors.length() {
                 return None;
             }

@@ -63,13 +63,13 @@ broadcast use {
                     self@.len() + 1 <= usize::MAX as int,
                 ensures pq@.len() == self@.len() + 1;
 
-            fn delete_min(&self) -> (result: (Self, Option<T>))
+            fn delete_min(&self) -> (min_pair: (Self, Option<T>))
                 requires obeys_feq_clone::<T>(),
                 ensures
-                    self@.len() > 0 ==> result.1.is_some(),
-                    self@.len() > 0 ==> result.0@.len() == self@.len() - 1,
-                    self@.len() == 0 ==> result.1.is_none(),
-                    self@.len() == 0 ==> result.0@.len() == self@.len();
+                    self@.len() > 0 ==> min_pair.1.is_some(),
+                    self@.len() > 0 ==> min_pair.0@.len() == self@.len() - 1,
+                    self@.len() == 0 ==> min_pair.1.is_none(),
+                    self@.len() == 0 ==> min_pair.0@.len() == self@.len();
 
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
@@ -164,7 +164,7 @@ broadcast use {
             }
 
             /// APAS Work Θ(n), Span Θ(n).
-            fn delete_min(&self) -> (result: (Self, Option<T>)) {
+            fn delete_min(&self) -> (min_pair: (Self, Option<T>)) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
                 }
@@ -232,22 +232,22 @@ broadcast use {
 
             #[verifier::exec_allows_no_decreases_clause]
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>) {
-                let mut result = ArraySeqStPerS::empty();
+                let mut min_pair = ArraySeqStPerS::empty();
                 let mut current_pq = self.clone();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 while !current_pq.is_empty()
                     invariant
-                        result@.len() + current_pq@.len() == self@.len(),
+                        min_pair@.len() + current_pq@.len() == self@.len(),
                         self@.len() <= usize::MAX as int,
                 {
                     let (new_pq, min_element) = current_pq.delete_min();
                     if let Some(element) = min_element {
                         let single_seq = ArraySeqStPerS::singleton(element);
-                        result = ArraySeqStPerS::append(&result, &single_seq);
+                        min_pair = ArraySeqStPerS::append(&min_pair, &single_seq);
                     }
                     current_pq = new_pq;
                 }
-                result
+                min_pair
             }
 
             fn from_vec(vec: Vec<T>) -> Self {
@@ -257,33 +257,33 @@ broadcast use {
 
             fn to_vec(&self) -> Vec<T> {
                 let n = self.elements.length();
-                let mut result: Vec<T> = Vec::new();
+                let mut min_pair: Vec<T> = Vec::new();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
                     invariant
                         n == self.elements@.len(),
-                        result@.len() == i as int,
+                        min_pair@.len() == i as int,
                 {
                     let elem = self.elements.nth(i).clone();
-                    result.push(elem);
+                    min_pair.push(elem);
                 }
-                result
+                min_pair
             }
 
             fn to_sorted_vec(&self) -> Vec<T> {
                 let sorted_seq = self.extract_all_sorted();
                 let n = sorted_seq.length();
-                let mut result: Vec<T> = Vec::new();
+                let mut min_pair: Vec<T> = Vec::new();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
                     invariant
                         n == sorted_seq@.len(),
-                        result@.len() == i as int,
+                        min_pair@.len() == i as int,
                 {
                     let elem = sorted_seq.nth(i).clone();
-                    result.push(elem);
+                    min_pair.push(elem);
                 }
-                result
+                min_pair
             }
         }
 
@@ -295,18 +295,18 @@ broadcast use {
         }
 
         impl<T: StT + Ord> Clone for UnsortedListPQ<T> {
-            fn clone(&self) -> (result: Self)
-                ensures result@ == self@
+            fn clone(&self) -> (cloned: Self)
+                ensures cloned@ == self@
             {
-                let result = UnsortedListPQ { elements: self.elements.clone() };
+                let cloned = UnsortedListPQ { elements: self.elements.clone() };
                 proof {
                     assume(obeys_feq_clone::<T>());
                     lemma_seq_map_cloned_view_eq(
                         self.elements.seq@,
-                        result.elements.seq@,
+                        cloned.elements.seq@,
                     );
                 }
-                result
+                cloned
             }
         }
 

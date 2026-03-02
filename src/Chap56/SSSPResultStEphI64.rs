@@ -24,7 +24,7 @@ pub mod SSSPResultStEphI64 {
     // 8. traits
 
     pub trait SSSPResultStEphI64Trait: Sized {
-        fn new(n: usize, source: usize) -> (result: Self)
+        fn new(n: usize, source: usize) -> (empty: Self)
             requires source < n;
 
         fn get_distance(&self, v: usize) -> (dist: i64);
@@ -37,17 +37,17 @@ pub mod SSSPResultStEphI64 {
 
         fn is_reachable(&self, v: usize) -> (b: bool);
 
-        fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);
+        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);
     }
 
     // 9. impls
 
     impl SSSPResultStEphI64Trait for SSSPResultStEphI64 {
-        fn new(n: usize, source: usize) -> (result: Self)
+        fn new(n: usize, source: usize) -> (empty: Self)
             ensures
-                result.distances.spec_len() == n,
-                result.predecessors.spec_len() == n,
-                result.source == source,
+                empty.distances.spec_len() == n,
+                empty.predecessors.spec_len() == n,
+                empty.source == source,
         {
             let mut dist_seq = ArraySeqStEphS::<i64>::new(n, UNREACHABLE);
             let ok = dist_seq.set(source, 0i64);
@@ -113,7 +113,7 @@ pub mod SSSPResultStEphI64 {
             self.get_distance(v) != UNREACHABLE
         }
 
-        fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
+        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>) {
             if !self.is_reachable(v) {
                 return None;
             }

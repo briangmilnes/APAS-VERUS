@@ -25,7 +25,7 @@ pub mod DFSStEph {
     fn dfs_recursive(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
-        result: &mut AVLTreeSetStEph<N>,
+        reachable: &mut AVLTreeSetStEph<N>,
         vertex: N,
     )
         requires
@@ -48,7 +48,7 @@ pub mod DFSStEph {
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
         }
-        result.insert(vertex);
+        reachable.insert(vertex);
 
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
@@ -67,7 +67,7 @@ pub mod DFSStEph {
         {
             let neighbor = *neighbors.nth(i);
             assert(graph@[vertex as int]@[i as int] < graph@.len());
-            dfs_recursive(graph, visited, result, neighbor);
+            dfs_recursive(graph, visited, reachable, neighbor);
             i = i + 1;
         }
     }
@@ -81,9 +81,9 @@ pub mod DFSStEph {
     {
         let n = graph.length();
         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
-        let mut result = AVLTreeSetStEph::empty();
-        dfs_recursive(graph, &mut visited, &mut result, source);
-        result
+        let mut reachable = AVLTreeSetStEph::empty();
+        dfs_recursive(graph, &mut visited, &mut reachable, source);
+        reachable
     }
 
     } // verus!

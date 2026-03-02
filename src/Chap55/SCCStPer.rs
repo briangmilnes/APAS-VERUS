@@ -38,7 +38,7 @@ pub mod SCCStPer {
     fn dfs_finish_order(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: &mut Vec<bool>,
-        result: &mut Vec<N>,
+        finish_order: &mut Vec<N>,
         vertex: N,
     )
         requires
@@ -79,10 +79,10 @@ pub mod SCCStPer {
         {
             let neighbor = *neighbors.nth(i);
             assert(graph@[vertex as int]@[i as int] < graph@.len());
-            dfs_finish_order(graph, visited, result, neighbor);
+            dfs_finish_order(graph, visited, finish_order, neighbor);
             i = i + 1;
         }
-        result.push(vertex);
+        finish_order.push(vertex);
     }
 
     /// Computes the finish order for SCC (decreasing finish times).
@@ -91,7 +91,7 @@ pub mod SCCStPer {
     {
         let n = graph.length();
         let mut visited: Vec<bool> = Vec::new();
-        let mut result: Vec<N> = Vec::new();
+        let mut finish_order: Vec<N> = Vec::new();
         let mut j: usize = 0;
         while j < n
             invariant j <= n, visited@.len() == j as int,
@@ -111,29 +111,29 @@ pub mod SCCStPer {
             decreases n - start,
         {
             if !visited[start] {
-                dfs_finish_order(graph, &mut visited, &mut result, start);
+                dfs_finish_order(graph, &mut visited, &mut finish_order, start);
             }
             start = start + 1;
         }
-        let result_len = result.len();
+        let result_len = finish_order.len();
         let mut reversed: Vec<N> = Vec::new();
         let mut k: usize = result_len;
         while k > 0
             invariant
                 k <= result_len,
-                result_len == result@.len(),
+                result_len == finish_order@.len(),
             decreases k,
         {
             k = k - 1;
-            reversed.push(result[k]);
+            reversed.push(finish_order[k]);
         }
         AVLTreeSeqStPerS::from_vec(reversed)
     }
 
     /// Transposes a directed graph (reverses all edges).
-    fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: ArraySeqStPerS<ArraySeqStPerS<N>>)
+    fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<N>>)
         requires spec_wf_adj_list_per(graph),
-        ensures result@.len() == graph@.len(),
+        ensures transposed@.len() == graph@.len(),
     {
         let n = graph.length();
         let mut adj_vecs: Vec<Vec<N>> = Vec::new();
@@ -191,8 +191,8 @@ pub mod SCCStPer {
     }
 
     /// Runtime check that all neighbor indices are valid vertex indices.
-    fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: bool)
-        ensures result ==> spec_wf_adj_list_per(graph),
+    fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (valid: bool)
+        ensures valid ==> spec_wf_adj_list_per(graph),
     {
         let n = graph.length();
         let mut u: usize = 0;

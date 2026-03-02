@@ -166,9 +166,9 @@ pub mod BoruvkaMtEph {
             return HashMap::new();
         }
         if size == 1 {
-            let mut result = HashMap::new();
-            let _ = result.insert(vertices[start].clone(), hash_coin(seed, round, start));
-            return result;
+            let mut coins = HashMap::new();
+            let _ = coins.insert(vertices[start].clone(), hash_coin(seed, round, start));
+            return coins;
         }
 
         let mid = start + size / 2;
@@ -277,13 +277,13 @@ pub mod BoruvkaMtEph {
         }
         if size == 1 {
             let v = &vertices[start];
-            let mut result = HashMap::new();
+            let mut heads = HashMap::new();
             if let Some((head, _, _)) = partition.get(v) {
-                let _ = result.insert(v.clone(), head.clone());
+                let _ = heads.insert(v.clone(), head.clone());
             } else {
-                let _ = result.insert(v.clone(), v.clone());
+                let _ = heads.insert(v.clone(), v.clone());
             }
-            return result;
+            return heads;
         }
 
         let mid = start + size / 2;
@@ -323,10 +323,10 @@ pub mod BoruvkaMtEph {
         if size == 1 {
             // Base case: single edge contributes bridges for both endpoints.
             let LabeledEdge(u, v, w, label) = edges[start].clone();
-            let mut result = HashMap::new();
-            let _ = result.insert(u.clone(), (v.clone(), w, label));
-            let _ = result.insert(v.clone(), (u.clone(), w, label));
-            return result;
+            let mut min_edges = HashMap::new();
+            let _ = min_edges.insert(u.clone(), (v.clone(), w, label));
+            let _ = min_edges.insert(v.clone(), (u.clone(), w, label));
+            return min_edges;
         }
 
         // Divide and conquer.
@@ -425,9 +425,9 @@ pub mod BoruvkaMtEph {
                 let v_heads = coin_flips.get(v).copied().unwrap_or(false);
 
                 if !u_heads && v_heads {
-                    let mut result = HashMap::new();
-                    let _ = result.insert(u.clone(), (v.clone(), *w, *label));
-                    return result;
+                    let mut min_edges = HashMap::new();
+                    let _ = min_edges.insert(u.clone(), (v.clone(), *w, *label));
+                    return min_edges;
                 }
             }
             return HashMap::new();

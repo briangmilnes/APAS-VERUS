@@ -27,7 +27,7 @@ pub mod DFSStPer {
     fn dfs_recursive(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited_bool: &mut Vec<bool>,
-        result: AVLTreeSetStPer<N>,
+        reachable: AVLTreeSetStPer<N>,
         vertex: N,
     ) -> (out: AVLTreeSetStPer<N>)
         requires
@@ -43,19 +43,19 @@ pub mod DFSStPer {
         decreases spec_num_false(old(visited_bool)@),
     {
         if visited_bool[vertex] {
-            return result;
+            return reachable;
         }
         assert(!old(visited_bool)@[vertex as int]);
         visited_bool.set(vertex, true);
         proof {
             lemma_set_true_decreases_num_false(old(visited_bool)@, vertex as int);
         }
-        let result = result.insert(vertex);
+        let reachable = reachable.insert(vertex);
 
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
         let mut i: usize = 0;
-        let mut result = result;
+        let mut reachable = reachable;
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
@@ -70,10 +70,10 @@ pub mod DFSStPer {
         {
             let neighbor = *neighbors.nth(i);
             assert(graph@[vertex as int]@[i as int] < graph@.len());
-            result = dfs_recursive(graph, visited_bool, result, neighbor);
+            reachable = dfs_recursive(graph, visited_bool, reachable, neighbor);
             i = i + 1;
         }
-        result
+        reachable
     }
 
     /// Performs DFS from source vertex s on adjacency list graph G.
@@ -93,8 +93,8 @@ pub mod DFSStPer {
             visited_bool.push(false);
             j = j + 1;
         }
-        let result = AVLTreeSetStPer::empty();
-        dfs_recursive(graph, &mut visited_bool, result, source)
+        let reachable = AVLTreeSetStPer::empty();
+        dfs_recursive(graph, &mut visited_bool, reachable, source)
     }
 
     } // verus!

@@ -41,12 +41,12 @@ pub mod ChainedHashTable {
         }
 
         impl<Key, Value, Container: Clone> Clone for ChainEntry<Key, Value, Container> {
-            fn clone(&self) -> (result: Self)
-                ensures result == *self
+            fn clone(&self) -> (cloned: Self)
+                ensures cloned == *self
             {
-                let result = ChainEntry { chain: self.chain.clone(), _phantom: PhantomData };
-                proof { assume(result == *self); }
-                result
+                let cloned = ChainEntry { chain: self.chain.clone(), _phantom: PhantomData };
+                proof { assume(cloned == *self); }
+                cloned
             }
         }
 

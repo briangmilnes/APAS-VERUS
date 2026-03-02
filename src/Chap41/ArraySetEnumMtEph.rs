@@ -52,49 +52,49 @@ broadcast use {
 
     pub trait ArraySetEnumMtEphTrait {
         /// claude-4-sonet: Work Θ(u), Span Θ(1)
-        fn new(u: usize) -> (result: Self)
-            ensures result@ == Set::<usize>::empty();
+        fn new(u: usize) -> (empty: Self)
+            ensures empty@ == Set::<usize>::empty();
         /// - APAS Cost Spec 41.3: Work u, Span 1
         /// - claude-4-sonet: Work Θ(u/w) where w is word size, Span Θ(u/w)
-        fn size(&self) -> (result: usize)
-            ensures result == self@.len(), self@.finite();
+        fn size(&self) -> (count: usize)
+            ensures count == self@.len(), self@.finite();
         /// - APAS Cost Spec 41.3: Work u, Span 1
         /// - claude-4-sonet: Work Θ(|set|), Span Θ(|set|)
-        fn to_seq(&self) -> (result: ArraySeqMtEphS<usize>)
+        fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(u), Span Θ(1)
-        fn empty(u: usize) -> (result: Self)
-            ensures result@ == Set::<usize>::empty();
+        fn empty(u: usize) -> (empty: Self)
+            ensures empty@ == Set::<usize>::empty();
         /// - APAS Cost Spec 41.3: Work u, Span 1
         /// - claude-4-sonet: Work Θ(u), Span Θ(1)
-        fn singleton(u: usize, x: usize) -> (result: Self)
+        fn singleton(u: usize, x: usize) -> (tree: Self)
             ensures
-                (x < u ==> result@ == Set::<usize>::empty().insert(x)),
-                (x >= u ==> result@ == Set::<usize>::empty()),
-                result@.finite();
+                (x < u ==> tree@ == Set::<usize>::empty().insert(x)),
+                (x >= u ==> tree@ == Set::<usize>::empty()),
+                tree@.finite();
         /// claude-4-sonet: Work Θ(u + |seq|), Span Θ(1)
-        fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (result: Self)
-            ensures result@.finite();
+        fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)
+            ensures constructed@.finite();
         /// - APAS Cost Spec 41.3: Work u + Σ W(f(x)), Span 1 + max S(f(x))
         /// - claude-4-sonet: Work Θ(u), Span Θ(log u), Parallelism Θ(u/log u)
-        fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (result: Self)
-            ensures result@.finite(), result@.subset_of(self@);
+        fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (filtered: Self)
+            ensures filtered@.finite(), filtered@.subset_of(self@);
         /// - APAS Cost Spec 41.3: Work u, Span 1
         /// - claude-4-sonet: Work Θ(u/w), Span Θ(u/w)
-        fn intersection(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.intersect(other@), result@.finite();
+        fn intersection(&self, other: &Self) -> (common: Self)
+            ensures common@ == self@.intersect(other@), common@.finite();
         /// - APAS Cost Spec 41.3: Work u, Span 1
         /// - claude-4-sonet: Work Θ(u/w), Span Θ(u/w)
-        fn difference(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.difference(other@), result@.finite();
+        fn difference(&self, other: &Self) -> (remaining: Self)
+            ensures remaining@ == self@.difference(other@), remaining@.finite();
         /// - APAS Cost Spec 41.3: Work u, Span 1
         /// - claude-4-sonet: Work Θ(u/w), Span Θ(u/w)
-        fn union(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.union(other@), result@.finite();
+        fn union(&self, other: &Self) -> (combined: Self)
+            ensures combined@ == self@.union(other@), combined@.finite();
         /// - APAS Cost Spec 41.3: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn find(&self, x: usize) -> (result: B)
-            ensures result == self@.contains(x);
+        fn find(&self, x: usize) -> (found: B)
+            ensures found == self@.contains(x);
         /// - APAS Cost Spec 41.3: Work u, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn delete(&mut self, x: usize)
@@ -109,8 +109,8 @@ broadcast use {
 
     impl ArraySetEnumMtEphTrait for ArraySetEnumMtEph {
         #[verifier::external_body]
-        fn new(u: usize) -> (result: Self)
-            ensures result@ == Set::<usize>::empty()
+        fn new(u: usize) -> (empty: Self)
+            ensures empty@ == Set::<usize>::empty()
         {
             ArraySetEnumMtEph {
                 bits: bitbox![0; u],
@@ -119,14 +119,14 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn size(&self) -> (result: usize)
-            ensures result == self@.len(), self@.finite()
+        fn size(&self) -> (count: usize)
+            ensures count == self@.len(), self@.finite()
         {
             self.bits.count_ones()
         }
 
         #[verifier::external_body]
-        fn to_seq(&self) -> (result: ArraySeqMtEphS<usize>)
+        fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)
             ensures self@.finite()
         {
             let set_size = self.size();
@@ -140,18 +140,18 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn empty(u: usize) -> (result: Self)
-            ensures result@ == Set::<usize>::empty()
+        fn empty(u: usize) -> (empty: Self)
+            ensures empty@ == Set::<usize>::empty()
         {
             Self::new(u)
         }
 
         #[verifier::external_body]
-        fn singleton(u: usize, x: usize) -> (result: Self)
+        fn singleton(u: usize, x: usize) -> (tree: Self)
             ensures
-                (x < u ==> result@ == Set::<usize>::empty().insert(x)),
-                (x >= u ==> result@ == Set::<usize>::empty()),
-                result@.finite()
+                (x < u ==> tree@ == Set::<usize>::empty().insert(x)),
+                (x >= u ==> tree@ == Set::<usize>::empty()),
+                tree@.finite()
         {
             let mut bits = bitbox![0; u];
             if x < u {
@@ -161,8 +161,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (result: Self)
-            ensures result@.finite()
+        fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)
+            ensures constructed@.finite()
         {
             let mut bits = bitbox![0; u];
             for i in 0..seq.length() {
@@ -175,8 +175,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (result: Self)
-            ensures result@.finite(), result@.subset_of(self@)
+        fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (filtered: Self)
+            ensures filtered@.finite(), filtered@.subset_of(self@)
         {
             let mut new_bits = bitbox![0; self.universe_size];
 
@@ -193,8 +193,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn intersection(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.intersect(other@), result@.finite()
+        fn intersection(&self, other: &Self) -> (common: Self)
+            ensures common@ == self@.intersect(other@), common@.finite()
         {
             assert_eq!(self.universe_size, other.universe_size, "Universe sizes must match");
             let mut result_bits = bitbox![0; self.universe_size];
@@ -208,8 +208,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn difference(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.difference(other@), result@.finite()
+        fn difference(&self, other: &Self) -> (remaining: Self)
+            ensures remaining@ == self@.difference(other@), remaining@.finite()
         {
             assert_eq!(self.universe_size, other.universe_size, "Universe sizes must match");
             let mut result_bits = bitbox![0; self.universe_size];
@@ -223,8 +223,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn union(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.union(other@), result@.finite()
+        fn union(&self, other: &Self) -> (combined: Self)
+            ensures combined@ == self@.union(other@), combined@.finite()
         {
             assert_eq!(self.universe_size, other.universe_size, "Universe sizes must match");
             let mut result_bits = bitbox![0; self.universe_size];
@@ -238,8 +238,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn find(&self, x: usize) -> (result: B)
-            ensures result == self@.contains(x)
+        fn find(&self, x: usize) -> (found: B)
+            ensures found == self@.contains(x)
         {
             if x < self.universe_size { self.bits[x] } else { false }
         }
@@ -267,8 +267,8 @@ broadcast use {
 
     impl Clone for ArraySetEnumMtEph {
         #[verifier::external_body]
-        fn clone(&self) -> (result: Self)
-            ensures result@ == self@
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
         {
             ArraySetEnumMtEph {
                 bits: self.bits.clone(),

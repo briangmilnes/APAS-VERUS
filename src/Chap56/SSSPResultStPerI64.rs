@@ -22,30 +22,30 @@ pub mod SSSPResultStPerI64 {
     // 8. traits
 
     pub trait SSSPResultStPerI64Trait: Sized {
-        fn new(n: usize, source: usize) -> (result: Self)
+        fn new(n: usize, source: usize) -> (empty: Self)
             requires source < n;
 
         fn get_distance(&self, v: usize) -> (dist: i64);
 
-        fn set_distance(self, v: usize, dist: i64) -> (result: Self);
+        fn set_distance(self, v: usize, dist: i64) -> (updated: Self);
 
         fn get_predecessor(&self, v: usize) -> (pred: Option<usize>);
 
-        fn set_predecessor(self, v: usize, pred: usize) -> (result: Self);
+        fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self);
 
         fn is_reachable(&self, v: usize) -> (b: bool);
 
-        fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);
+        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);
     }
 
     // 9. impls
 
     impl SSSPResultStPerI64Trait for SSSPResultStPerI64 {
-        fn new(n: usize, source: usize) -> (result: Self)
+        fn new(n: usize, source: usize) -> (empty: Self)
             ensures
-                result.distances@.len() == n as int,
-                result.predecessors@.len() == n as int,
-                result.source == source,
+                empty.distances@.len() == n as int,
+                empty.predecessors@.len() == n as int,
+                empty.source == source,
         {
             let distances = ArraySeqStPerS::tabulate(
                 &(|i: usize| -> (r: i64)
@@ -74,12 +74,12 @@ pub mod SSSPResultStPerI64 {
             *self.distances.nth(v)
         }
 
-        fn set_distance(self, v: usize, dist: i64) -> (result: Self)
+        fn set_distance(self, v: usize, dist: i64) -> (updated: Self)
             ensures
-                v < self.distances@.len() ==> result.distances@ == self.distances@.update(v as int, dist),
-                v >= self.distances@.len() ==> result.distances@ == self.distances@,
-                result.predecessors@ == self.predecessors@,
-                result.source == self.source,
+                v < self.distances@.len() ==> updated.distances@ == self.distances@.update(v as int, dist),
+                v >= self.distances@.len() ==> updated.distances@ == self.distances@,
+                updated.predecessors@ == self.predecessors@,
+                updated.source == self.source,
         {
             if v >= self.distances.seq.len() { return self; }
             let mut dist_vec = self.distances.seq;
@@ -99,12 +99,12 @@ pub mod SSSPResultStPerI64 {
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
-        fn set_predecessor(self, v: usize, pred: usize) -> (result: Self)
+        fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self)
             ensures
-                v < self.predecessors@.len() ==> result.predecessors@ == self.predecessors@.update(v as int, pred),
-                v >= self.predecessors@.len() ==> result.predecessors@ == self.predecessors@,
-                result.distances@ == self.distances@,
-                result.source == self.source,
+                v < self.predecessors@.len() ==> updated.predecessors@ == self.predecessors@.update(v as int, pred),
+                v >= self.predecessors@.len() ==> updated.predecessors@ == self.predecessors@,
+                updated.distances@ == self.distances@,
+                updated.source == self.source,
         {
             if v >= self.predecessors.seq.len() { return self; }
             let mut pred_vec = self.predecessors.seq;
@@ -120,7 +120,7 @@ pub mod SSSPResultStPerI64 {
             self.get_distance(v) != UNREACHABLE
         }
 
-        fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
+        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>) {
             if !self.is_reachable(v) { return None; }
             let n = self.predecessors.length();
             if v >= n { return None; }

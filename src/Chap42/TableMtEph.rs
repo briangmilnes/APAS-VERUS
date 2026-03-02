@@ -70,20 +70,20 @@ broadcast use {
 
     /// Trait defining the Table ADT operations from Chapter 42
     pub trait TableMtEphTrait<K: MtKey, V: MtVal>: Sized + View<V = Map<K::V, V::V>> {
-        fn size(&self) -> (result: usize)
-            ensures result == self@.dom().len();
+        fn size(&self) -> (count: usize)
+            ensures count == self@.dom().len();
 
-        fn empty() -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty();
+        fn empty() -> (empty: Self)
+            ensures empty@ == Map::<K::V, V::V>::empty();
 
-        fn singleton(key: K, value: V) -> (result: Self)
-            ensures result@.dom().finite(), result@.dom().len() == 1;
+        fn singleton(key: K, value: V) -> (tree: Self)
+            ensures tree@.dom().finite(), tree@.dom().len() == 1;
 
-        fn domain(&self) -> (result: ArraySetStEph<K>)
-            ensures result@.finite();
+        fn domain(&self) -> (domain: ArraySetStEph<K>)
+            ensures domain@.finite();
 
-        fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
-            ensures result@.dom().finite();
+        fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+            ensures tabulated@.dom().finite();
 
         fn map<F: Fn(&V) -> V + Send + Sync + 'static>(&mut self, f: F)
             ensures self@.dom() == old(self)@.dom();
@@ -100,7 +100,7 @@ broadcast use {
         fn difference(&mut self, other: &Self)
             ensures self@.dom().finite();
 
-        fn find(&self, key: &K) -> (result: Option<V>)
+        fn find(&self, key: &K) -> (found: Option<V>)
             ensures self@.dom().finite();
 
         fn delete(&mut self, key: &K)
@@ -115,21 +115,21 @@ broadcast use {
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             ensures self@.dom().finite();
 
-        fn entries(&self) -> (result: ArraySeqMtEphS<Pair<K, V>>);
+        fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>);
     }
 
     // 9. impls
 
     impl<K: MtKey, V: MtVal> TableMtEphTrait<K, V> for TableMtEph<K, V> {
         #[verifier::external_body]
-        fn size(&self) -> (result: usize)
-            ensures result == self@.dom().len()
+        fn size(&self) -> (count: usize)
+            ensures count == self@.dom().len()
         {
             self.entries.length()
         }
 
-        fn empty() -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty()
+        fn empty() -> (empty: Self)
+            ensures empty@ == Map::<K::V, V::V>::empty()
         {
             let entries = ArraySeqMtEphS::empty();
             assert(entries@ =~= Seq::<(K::V, V::V)>::empty());
@@ -137,8 +137,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn singleton(key: K, value: V) -> (result: Self)
-            ensures result@.dom().finite(), result@.dom().len() == 1
+        fn singleton(key: K, value: V) -> (tree: Self)
+            ensures tree@.dom().finite(), tree@.dom().len() == 1
         {
             TableMtEph {
                 entries: ArraySeqMtEphS::singleton(Pair(key, value)),
@@ -146,8 +146,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn domain(&self) -> (result: ArraySetStEph<K>)
-            ensures result@.finite()
+        fn domain(&self) -> (domain: ArraySetStEph<K>)
+            ensures domain@.finite()
         {
             let mut keys = ArraySetStEph::empty();
             let len = self.entries.length();
@@ -181,8 +181,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
-            ensures result@.dom().finite()
+        fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+            ensures tabulated@.dom().finite()
         {
             let key_seq = keys.to_seq();
             let f = Arc::new(f);
@@ -454,7 +454,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn find(&self, key: &K) -> (result: Option<V>)
+        fn find(&self, key: &K) -> (found: Option<V>)
             ensures self@.dom().finite()
         {
             let mut left = 0;
@@ -707,7 +707,7 @@ broadcast use {
             self.entries = ArraySeqMtEphS::from_vec(filtered_entries);
         }
 
-        fn entries(&self) -> (result: ArraySeqMtEphS<Pair<K, V>>) {
+        fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>) {
             self.entries.clone()
         }
     }
@@ -716,8 +716,8 @@ broadcast use {
 
     impl<K: MtKey, V: MtVal> Clone for TableMtEph<K, V> {
         #[verifier::external_body]
-        fn clone(&self) -> (result: Self)
-            ensures result@ == self@
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
         {
             TableMtEph {
                 entries: self.entries.clone(),
@@ -725,8 +725,8 @@ broadcast use {
         }
     }
 
-    pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (result: TableMtEph<K, V>)
-        ensures result@.dom().finite()
+    pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (constructed: TableMtEph<K, V>)
+        ensures constructed@.dom().finite()
     {
         let seq = ArraySeqMtEphS::from_vec(entries);
         proof {

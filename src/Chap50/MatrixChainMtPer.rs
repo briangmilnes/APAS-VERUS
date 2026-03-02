@@ -277,12 +277,12 @@ broadcast use {
                 let handle = self.memo.acquire_read();
                 let cached = handle.borrow().get(&Pair(i, j)).copied();
                 handle.release_read();
-                if let Some(result) = cached {
-                    return result;
+                if let Some(cached_cost) = cached {
+                    return cached_cost;
                 }
             }
 
-            let result = if i == j {
+            let cost = if i == j {
                 0
             } else {
                 let costs = (i..j)
@@ -299,11 +299,11 @@ broadcast use {
 
             {
                 let (mut memo, write_handle) = self.memo.acquire_write();
-                memo.insert(Pair(i, j), result);
+                memo.insert(Pair(i, j), cost);
                 write_handle.release_write(memo);
             }
 
-            result
+            cost
         }
 
         #[verifier::external_body]

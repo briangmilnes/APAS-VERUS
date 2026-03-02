@@ -165,67 +165,67 @@ pub mod ArraySetStEph {
     pub trait ArraySetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_wf(&self) -> bool;
 
-        fn size(&self) -> (result: usize)
+        fn size(&self) -> (count: usize)
             requires self.spec_wf()
-            ensures result == self@.len(), self@.finite();
+            ensures count == self@.len(), self@.finite();
 
-        fn to_seq(&self) -> (result: ArraySeqStEphS<T>)
+        fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
             ensures self@.finite();
 
-        fn empty() -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty(), result.spec_wf();
+        fn empty() -> (empty: Self)
+            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_wf();
 
-        fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite(), result.spec_wf();
+        fn singleton(x: T) -> (tree: Self)
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_wf();
 
-        fn from_seq(seq: ArraySeqStEphS<T>) -> (result: Self)
-            ensures result@.finite(), result.spec_wf();
+        fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)
+            ensures constructed@.finite(), constructed.spec_wf();
 
-        fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
+        fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
             requires
                 self.spec_wf(),
                 self@.finite(),
             ensures
-                result@.finite(),
-                result@.subset_of(self@),
-                result.spec_wf();
+                filtered@.finite(),
+                filtered@.subset_of(self@),
+                filtered.spec_wf();
 
-        fn intersection(&self, other: &Self) -> (result: Self)
-            requires
-                self.spec_wf(),
-                other.spec_wf(),
-                self@.finite(),
-                other@.finite(),
-            ensures
-                result@ == self@.intersect(other@),
-                result@.finite(),
-                result.spec_wf();
-
-        fn difference(&self, other: &Self) -> (result: Self)
+        fn intersection(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_wf(),
                 other.spec_wf(),
                 self@.finite(),
                 other@.finite(),
             ensures
-                result@ == self@.difference(other@),
-                result@.finite(),
-                result.spec_wf();
+                common@ == self@.intersect(other@),
+                common@.finite(),
+                common.spec_wf();
 
-        fn union(&self, other: &Self) -> (result: Self)
+        fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_wf(),
                 other.spec_wf(),
                 self@.finite(),
                 other@.finite(),
             ensures
-                result@ == self@.union(other@),
-                result@.finite(),
-                result.spec_wf();
+                remaining@ == self@.difference(other@),
+                remaining@.finite(),
+                remaining.spec_wf();
 
-        fn find(&self, x: &T) -> (result: B)
+        fn union(&self, other: &Self) -> (combined: Self)
+            requires
+                self.spec_wf(),
+                other.spec_wf(),
+                self@.finite(),
+                other@.finite(),
+            ensures
+                combined@ == self@.union(other@),
+                combined@.finite(),
+                combined.spec_wf();
+
+        fn find(&self, x: &T) -> (found: B)
             requires self@.finite(),
-            ensures result == self@.contains(x@);
+            ensures found == self@.contains(x@);
 
         fn delete(&mut self, x: &T)
             requires
@@ -253,7 +253,7 @@ pub mod ArraySetStEph {
             self.elements@.no_duplicates()
         }
 
-        fn size(&self) -> (result: usize)
+        fn size(&self) -> (count: usize)
         {
             proof {
                 self.elements@.unique_seq_to_set();
@@ -261,17 +261,17 @@ pub mod ArraySetStEph {
             self.elements.length()
         }
 
-        fn to_seq(&self) -> (result: ArraySeqStEphS<T>)
+        fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
         { self.elements.clone() }
 
-        fn empty() -> (result: Self)
+        fn empty() -> (empty: Self)
         {
             ArraySetStEph {
                 elements: ArraySeqStEphS::empty(),
             }
         }
 
-        fn singleton(x: T) -> (result: Self)
+        fn singleton(x: T) -> (tree: Self)
         {
             let ghost x_view = x@;
             let mut v: Vec<T> = Vec::new();
@@ -294,28 +294,28 @@ pub mod ArraySetStEph {
             ArraySetStEph { elements }
         }
 
-        fn from_seq(seq: ArraySeqStEphS<T>) -> (result: Self)
+        fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)
         {
             if seq.length() == 0 {
                 return Self::empty();
             }
-            let mut result = Self::empty();
+            let mut constructed = Self::empty();
             let mut i: usize = 0;
             while i < seq.length()
                 invariant
-                    result@.finite(),
-                    result.spec_wf(),
+                    constructed@.finite(),
+                    constructed.spec_wf(),
                     i <= seq.spec_len(),
                 decreases seq.spec_len() - i,
             {
                 let elem = seq.nth(i).clone();
-                result.insert(elem);
+                constructed.insert(elem);
                 i += 1;
             }
-            result
+            constructed
         }
 
-        fn find(&self, x: &T) -> (result: B)
+        fn find(&self, x: &T) -> (found: B)
         {
             let n = self.elements.length();
             let mut i: usize = 0;
@@ -352,7 +352,7 @@ pub mod ArraySetStEph {
             false
         }
 
-        fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
+        fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
         {
             let mut result_vec: Vec<T> = Vec::new();
             let n = self.elements.length();
@@ -368,16 +368,16 @@ pub mod ArraySetStEph {
                 }
                 i += 1;
             }
-            let result = ArraySetStEph { elements: ArraySeqStEphS::from_vec(result_vec) };
+            let filtered = ArraySetStEph { elements: ArraySeqStEphS::from_vec(result_vec) };
             proof {
-                vstd::seq_lib::seq_to_set_is_finite(result.elements@);
-                assume(result@.subset_of(self@));
-                assume(result.spec_wf());
+                vstd::seq_lib::seq_to_set_is_finite(filtered.elements@);
+                assume(filtered@.subset_of(self@));
+                assume(filtered.spec_wf());
             }
-            result
+            filtered
         }
 
-        fn intersection(&self, other: &Self) -> (result: Self)
+        fn intersection(&self, other: &Self) -> (common: Self)
         {
             let mut result_vec: Vec<T> = Vec::new();
             let n = self.elements.length();
@@ -394,18 +394,18 @@ pub mod ArraySetStEph {
                 }
                 i += 1;
             }
-            let result = ArraySetStEph {
+            let common = ArraySetStEph {
                 elements: ArraySeqStEphS::from_vec(result_vec),
             };
             proof {
-                assume(result@ == self@.intersect(other@));
-                vstd::seq_lib::seq_to_set_is_finite(result.elements@);
-                assume(result.spec_wf());
+                assume(common@ == self@.intersect(other@));
+                vstd::seq_lib::seq_to_set_is_finite(common.elements@);
+                assume(common.spec_wf());
             }
-            result
+            common
         }
 
-        fn difference(&self, other: &Self) -> (result: Self)
+        fn difference(&self, other: &Self) -> (remaining: Self)
         {
             let mut result_vec: Vec<T> = Vec::new();
             let n = self.elements.length();
@@ -422,18 +422,18 @@ pub mod ArraySetStEph {
                 }
                 i += 1;
             }
-            let result = ArraySetStEph {
+            let remaining = ArraySetStEph {
                 elements: ArraySeqStEphS::from_vec(result_vec),
             };
             proof {
-                assume(result@ == self@.difference(other@));
-                vstd::seq_lib::seq_to_set_is_finite(result.elements@);
-                assume(result.spec_wf());
+                assume(remaining@ == self@.difference(other@));
+                vstd::seq_lib::seq_to_set_is_finite(remaining.elements@);
+                assume(remaining.spec_wf());
             }
-            result
+            remaining
         }
 
-        fn union(&self, other: &Self) -> (result: Self)
+        fn union(&self, other: &Self) -> (combined: Self)
         {
             let self_len = self.elements.length();
             let other_len = other.elements.length();
@@ -461,15 +461,15 @@ pub mod ArraySetStEph {
                 }
                 j += 1;
             }
-            let result = ArraySetStEph {
+            let combined = ArraySetStEph {
                 elements: ArraySeqStEphS::from_vec(result_vec),
             };
             proof {
-                assume(result@ == self@.union(other@));
-                vstd::seq_lib::seq_to_set_is_finite(result.elements@);
-                assume(result.spec_wf());
+                assume(combined@ == self@.union(other@));
+                vstd::seq_lib::seq_to_set_is_finite(combined.elements@);
+                assume(combined.spec_wf());
             }
-            result
+            combined
         }
 
         fn delete(&mut self, x: &T)
@@ -541,16 +541,16 @@ pub mod ArraySetStEph {
     // 11. derive impls in verus!
 
     impl<T: StT + Ord> Clone for ArraySetStEph<T> {
-        fn clone(&self) -> (result: Self)
-            ensures result@ == self@
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
         {
-            let result = ArraySetStEph {
+            let cloned = ArraySetStEph {
                 elements: self.elements.clone(),
             };
             proof {
-                assume(result@ == self@);
+                assume(cloned@ == self@);
             }
-            result
+            cloned
         }
     }
 

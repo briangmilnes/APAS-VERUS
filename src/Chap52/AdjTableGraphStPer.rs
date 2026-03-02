@@ -63,35 +63,35 @@ broadcast use {
             requires self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges();
         /// claude-4-sonet: Work Θ(|V|), Span Θ(|V|), Parallelism Θ(1)
-        fn vertices(&self) -> (result: AVLTreeSetStPer<V>)
-            ensures result@ == self.spec_adj().dom();
+        fn vertices(&self) -> (verts: AVLTreeSetStPer<V>)
+            ensures verts@ == self.spec_adj().dom();
         /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
         fn has_edge(&self, u: &V, v: &V) -> (found: B)
             ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));
         /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
-        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetStPer<V>)
+        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
             ensures
-                self.spec_adj().dom().contains(u@) ==> result@ == self.spec_adj()[u@],
-                !self.spec_adj().dom().contains(u@) ==> result@ == Set::<<V as View>::V>::empty();
+                self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
+                !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();
         /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
         fn out_degree(&self, u: &V)                                    -> N;
         /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
-        fn insert_vertex(&self, v: V) -> (result: Self)
-            ensures result.spec_adj().dom().contains(v@);
+        fn insert_vertex(&self, v: V) -> (updated: Self)
+            ensures updated.spec_adj().dom().contains(v@);
         /// claude-4-sonet: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|), Parallelism Θ(1)
-        fn delete_vertex(&self, v: &V) -> (result: Self)
-            ensures !result.spec_adj().dom().contains(v@);
+        fn delete_vertex(&self, v: &V) -> (updated: Self)
+            ensures !updated.spec_adj().dom().contains(v@);
         /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
-        fn insert_edge(&self, u: V, v: V) -> (result: Self)
+        fn insert_edge(&self, u: V, v: V) -> (updated: Self)
             ensures
-                result.spec_adj().dom().contains(u@),
-                result.spec_adj().dom().contains(v@),
-                result.spec_adj()[u@].contains(v@);
+                updated.spec_adj().dom().contains(u@),
+                updated.spec_adj().dom().contains(v@),
+                updated.spec_adj()[u@].contains(v@);
         /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
-        fn delete_edge(&self, u: &V, v: &V) -> (result: Self)
+        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
             ensures
-                !result.spec_adj().dom().contains(u@)
-                    || !result.spec_adj()[u@].contains(v@);
+                !updated.spec_adj().dom().contains(u@)
+                    || !updated.spec_adj()[u@].contains(v@);
     }
 
     // 9. impls
@@ -136,8 +136,8 @@ broadcast use {
             count
         }
 
-        fn vertices(&self) -> (result: AVLTreeSetStPer<V>)
-            ensures result@ == self.spec_adj().dom()
+        fn vertices(&self) -> (verts: AVLTreeSetStPer<V>)
+            ensures verts@ == self.spec_adj().dom()
         {
             let domain_set = self.adj.domain();
             let seq = domain_set.to_seq();
@@ -165,10 +165,10 @@ broadcast use {
             }
         }
 
-        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetStPer<V>)
+        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
             ensures
-                self.spec_adj().dom().contains(u@) ==> result@ == self.spec_adj()[u@],
-                !self.spec_adj().dom().contains(u@) ==> result@ == Set::<<V as View>::V>::empty(),
+                self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
+                !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty(),
         {
             match self.adj.find(u) {
                 Some(neighbors) => neighbors.clone(),
@@ -178,15 +178,15 @@ broadcast use {
 
         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
 
-        fn insert_vertex(&self, v: V) -> (result: Self)
-            ensures result.spec_adj().dom().contains(v@)
+        fn insert_vertex(&self, v: V) -> (updated: Self)
+            ensures updated.spec_adj().dom().contains(v@)
         {
             let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty());
             AdjTableGraphStPer { adj: new_adj }
         }
 
-        fn delete_vertex(&self, v: &V) -> (result: Self)
-            ensures !result.spec_adj().dom().contains(v@)
+        fn delete_vertex(&self, v: &V) -> (updated: Self)
+            ensures !updated.spec_adj().dom().contains(v@)
         {
             let v_clone = v.clone();
             let new_adj = self.adj.delete(&v_clone);
@@ -208,11 +208,11 @@ broadcast use {
             AdjTableGraphStPer { adj: result_adj }
         }
 
-        fn insert_edge(&self, u: V, v: V) -> (result: Self)
+        fn insert_edge(&self, u: V, v: V) -> (updated: Self)
             ensures
-                result.spec_adj().dom().contains(u@),
-                result.spec_adj().dom().contains(v@),
-                result.spec_adj()[u@].contains(v@),
+                updated.spec_adj().dom().contains(u@),
+                updated.spec_adj().dom().contains(v@),
+                updated.spec_adj()[u@].contains(v@),
         {
             let neighbors = match self.adj.find(&u) {
                 Some(ns) => ns.insert(v.clone()),
@@ -227,10 +227,10 @@ broadcast use {
             AdjTableGraphStPer { adj: final_adj }
         }
 
-        fn delete_edge(&self, u: &V, v: &V) -> (result: Self)
+        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
             ensures
-                !result.spec_adj().dom().contains(u@)
-                    || !result.spec_adj()[u@].contains(v@),
+                !updated.spec_adj().dom().contains(u@)
+                    || !updated.spec_adj()[u@].contains(v@),
         {
             match self.adj.find(u) {
                 Some(neighbors) => {

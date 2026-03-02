@@ -96,19 +96,19 @@ pub mod BSTParaMtEph {
 
     pub trait ParamBSTTrait<T: MtKey + 'static>: Sized + View<V = Set<<T as View>::V>> {
         /// - APAS: Work O(1), Span O(1)
-        fn new() -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty();
+        fn new() -> (empty: Self)
+            ensures empty@ == Set::<<T as View>::V>::empty();
         /// - APAS: Work O(1), Span O(1)
-        fn singleton(key: T) -> (result: Self)
+        fn singleton(key: T) -> (tree: Self)
             ensures
-                result@ == Set::<<T as View>::V>::empty().insert(key@),
-                result@.finite();
+                tree@ == Set::<<T as View>::V>::empty().insert(key@),
+                tree@.finite();
         /// - APAS: Work O(1), Span O(1)
         fn expose(&self) -> (exposed: Exposed<T>)
             ensures self@.len() == 0 ==> exposed is Leaf;
         /// - APAS: Work O(1), Span O(1)
-        fn join_mid(exposed: Exposed<T>) -> (result: Self)
-            ensures exposed is Leaf ==> result@ == Set::<<T as View>::V>::empty();
+        fn join_mid(exposed: Exposed<T>) -> (joined: Self)
+            ensures exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty();
         /// - APAS: Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite();
@@ -134,14 +134,14 @@ pub mod BSTParaMtEph {
         fn join_pair(&self, other: Self) -> (joined: Self)
             ensures joined@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-        fn union(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.union(other@), result@.finite();
+        fn union(&self, other: &Self) -> (combined: Self)
+            ensures combined@ == self@.union(other@), combined@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-        fn intersect(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.intersect(other@), result@.finite();
+        fn intersect(&self, other: &Self) -> (common: Self)
+            ensures common@ == self@.intersect(other@), common@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-        fn difference(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.difference(other@), result@.finite();
+        fn difference(&self, other: &Self) -> (remaining: Self)
+            ensures remaining@ == self@.difference(other@), remaining@.finite();
         /// - APAS: Work O(|t|), Span O(lg |t|)
         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(&self, predicate: F) -> (filtered: Self)
             ensures filtered@.subset_of(self@), filtered@.finite();
@@ -157,15 +157,15 @@ pub mod BSTParaMtEph {
 
     impl<T: MtKey + 'static> ParamBSTTrait<T> for ParamBST<T> {
         #[verifier::external_body]
-        fn new() -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty()
+        fn new() -> (empty: Self)
+            ensures empty@ == Set::<<T as View>::V>::empty()
         { new_leaf() }
 
         #[verifier::external_body]
-        fn singleton(key: T) -> (result: Self)
+        fn singleton(key: T) -> (tree: Self)
             ensures
-                result@ == Set::<<T as View>::V>::empty().insert(key@),
-                result@.finite()
+                tree@ == Set::<<T as View>::V>::empty().insert(key@),
+                tree@.finite()
         {
             join_mid(Exposed::Node(new_leaf(), key, new_leaf()))
         }
@@ -176,8 +176,8 @@ pub mod BSTParaMtEph {
         { expose_internal(self) }
 
         #[verifier::external_body]
-        fn join_mid(exposed: Exposed<T>) -> (result: Self)
-            ensures exposed is Leaf ==> result@ == Set::<<T as View>::V>::empty()
+        fn join_mid(exposed: Exposed<T>) -> (joined: Self)
+            ensures exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty()
         { join_mid(exposed) }
 
         #[verifier::external_body]
@@ -185,9 +185,9 @@ pub mod BSTParaMtEph {
             ensures count == self@.len(), self@.finite()
         {
             let handle = self.root.acquire_read();
-            let result = handle.borrow().as_ref().map_or(0, |node| node.size);
+            let size = handle.borrow().as_ref().map_or(0, |node| node.size);
             handle.release_read();
-            result
+            size
         }
 
         #[verifier::external_body]
@@ -245,18 +245,18 @@ pub mod BSTParaMtEph {
         { join_pair_inner(self.clone(), other) }
 
         #[verifier::external_body]
-        fn union(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.union(other@), result@.finite()
+        fn union(&self, other: &Self) -> (combined: Self)
+            ensures combined@ == self@.union(other@), combined@.finite()
         { union_inner(self, other) }
 
         #[verifier::external_body]
-        fn intersect(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.intersect(other@), result@.finite()
+        fn intersect(&self, other: &Self) -> (common: Self)
+            ensures common@ == self@.intersect(other@), common@.finite()
         { intersect_inner(self, other) }
 
         #[verifier::external_body]
-        fn difference(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.difference(other@), result@.finite()
+        fn difference(&self, other: &Self) -> (remaining: Self)
+            ensures remaining@ == self@.difference(other@), remaining@.finite()
         { difference_inner(self, other) }
 
         #[verifier::external_body]
@@ -328,12 +328,12 @@ pub mod BSTParaMtEph {
 
     fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> Exposed<T> {
         let handle = tree.root.acquire_read();
-        let result = match handle.borrow() {
+        let exposed = match handle.borrow() {
             | None => Exposed::Leaf,
             | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),
         };
         handle.release_read();
-        result
+        exposed
     }
 
     fn join_mid<T: MtKey + 'static>(exposed: Exposed<T>) -> ParamBST<T> {

@@ -66,15 +66,15 @@ broadcast use {
         /// claude-4-sonet: Work Θ(log |E|), Span Θ(log |E|), Parallelism Θ(1)
         fn has_edge(&self, u: &V, v: &V)                                                  -> B;
         /// claude-4-sonet: Work Θ(|E| log |V|), Span Θ(|E| log |V|), Parallelism Θ(1)
-        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetStPer<V>)
-            ensures result@ == self.spec_out_neighbors(u@);
+        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
+            ensures neighbors@ == self.spec_out_neighbors(u@);
         /// claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1)
         fn out_degree(&self, u: &V)                                                       -> N;
         /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
         fn insert_vertex(&self, v: V)                                                     -> Self;
         /// claude-4-sonet: Work Θ(|E| log |E|), Span Θ(|E| log |E|), Parallelism Θ(1)
-        fn delete_vertex(&self, v: &V) -> (result: Self)
-            ensures !result.vertices@.contains(v@);
+        fn delete_vertex(&self, v: &V) -> (updated: Self)
+            ensures !updated.vertices@.contains(v@);
         /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
         fn insert_edge(&self, u: V, v: V)                                                 -> Self;
         /// claude-4-sonet: Work Θ(log |E|), Span Θ(log |E|), Parallelism Θ(1)
@@ -109,8 +109,8 @@ broadcast use {
 
         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
 
-        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetStPer<V>)
-            ensures result@ == self.spec_out_neighbors(u@)
+        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
+            ensures neighbors@ == self.spec_out_neighbors(u@)
         {
             let u_clone = u.clone();
             let filtered = self.edges.filter(|edge| edge.0 == u_clone);
@@ -142,8 +142,8 @@ broadcast use {
             }
         }
 
-        fn delete_vertex(&self, v: &V) -> (result: Self)
-            ensures !result.vertices@.contains(v@)
+        fn delete_vertex(&self, v: &V) -> (updated: Self)
+            ensures !updated.vertices@.contains(v@)
         {
             let v_clone = v.clone();
             let new_vertices = self.vertices.delete(&v_clone);

@@ -440,8 +440,8 @@ pub mod DirGraphMtEph {
         }
         else if n == 1 {
             let u = verts.choose();
-            let result = n_plus_par(g, u, g.A.clone());
-            result
+            let out_neighbors = n_plus_par(g, u, g.A.clone());
+            out_neighbors
         }
         else {
             let mid = n / 2;
@@ -459,19 +459,19 @@ pub mod DirGraphMtEph {
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
             
-            let result = left_neighbors.union(&right_neighbors);
+            let out_neighbors = left_neighbors.union(&right_neighbors);
             proof {
                 // split guarantees: left_verts@ ∪ right_verts@ == verts@
                 // Prove set equality for the union
-                assert forall |w: V::V| #![trigger result@.contains(w)] g.spec_n_plus_of_vertices_from_set(verts@).contains(w)
-                    <==> result@.contains(w) by {
+                assert forall |w: V::V| #![trigger out_neighbors@.contains(w)] g.spec_n_plus_of_vertices_from_set(verts@).contains(w)
+                    <==> out_neighbors@.contains(w) by {
                     if g.spec_n_plus_of_vertices_from_set(verts@).contains(w) {
                         let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && g.spec_n_plus(v).contains(w);
                         if left_verts@.contains(v_wit) {
                         } else {
                         }
                     }
-                    if result@.contains(w) {
+                    if out_neighbors@.contains(w) {
                         if left_neighbors@.contains(w) {
                             let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && g.spec_n_plus(v).contains(w);
                             assert(verts@.contains(v_wit));
@@ -482,7 +482,7 @@ pub mod DirGraphMtEph {
                     }
                 }
             }
-            result
+            out_neighbors
         }
     }
 
@@ -507,8 +507,8 @@ pub mod DirGraphMtEph {
         }
         else if n == 1 {
             let u = verts.choose();
-            let result = n_minus_par(g, u, g.A.clone());
-            result
+            let in_neighbors = n_minus_par(g, u, g.A.clone());
+            in_neighbors
         }
         else {
             let mid = n / 2;
@@ -526,19 +526,19 @@ pub mod DirGraphMtEph {
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
             
-            let result = left_neighbors.union(&right_neighbors);
+            let in_neighbors = left_neighbors.union(&right_neighbors);
             proof {
                 // split guarantees: left_verts@ ∪ right_verts@ == verts@
                 // Prove set equality for the union
-                assert forall |w: V::V| #![trigger result@.contains(w)] g.spec_n_minus_of_vertices_from_set(verts@).contains(w)
-                    <==> result@.contains(w) by {
+                assert forall |w: V::V| #![trigger in_neighbors@.contains(w)] g.spec_n_minus_of_vertices_from_set(verts@).contains(w)
+                    <==> in_neighbors@.contains(w) by {
                     if g.spec_n_minus_of_vertices_from_set(verts@).contains(w) {
                         let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && g.spec_n_minus(v).contains(w);
                         if left_verts@.contains(v_wit) {
                         } else {
                         }
                     }
-                    if result@.contains(w) {
+                    if in_neighbors@.contains(w) {
                         if left_neighbors@.contains(w) {
                             let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && g.spec_n_minus(v).contains(w);
                             assert(verts@.contains(v_wit));
@@ -549,7 +549,7 @@ pub mod DirGraphMtEph {
                     }
                 }
             }
-            result
+            in_neighbors
         }
     }
 
@@ -574,8 +574,8 @@ pub mod DirGraphMtEph {
         }
         else if n == 1 {
             let u = verts.choose();
-            let result = g.ng(&u);
-            result
+            let neighbors = g.ng(&u);
+            neighbors
         }
         else {
             let mid = n / 2;
@@ -593,19 +593,19 @@ pub mod DirGraphMtEph {
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
             
-            let result = left_neighbors.union(&right_neighbors);
+            let neighbors = left_neighbors.union(&right_neighbors);
             proof {
                 // split guarantees: left_verts@ ∪ right_verts@ == verts@
                 // Prove set equality for the union
-                assert forall |w: V::V| #![trigger result@.contains(w)] g.spec_ng_of_vertices_from_set(verts@).contains(w)
-                    <==> result@.contains(w) by {
+                assert forall |w: V::V| #![trigger neighbors@.contains(w)] g.spec_ng_of_vertices_from_set(verts@).contains(w)
+                    <==> neighbors@.contains(w) by {
                     if g.spec_ng_of_vertices_from_set(verts@).contains(w) {
                         let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && g.spec_ng(v).contains(w);
                         if left_verts@.contains(v_wit) {
                         } else {
                         }
                     }
-                    if result@.contains(w) {
+                    if neighbors@.contains(w) {
                         if left_neighbors@.contains(w) {
                             let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && g.spec_ng(v).contains(w);
                             assert(verts@.contains(v_wit));
@@ -616,7 +616,7 @@ pub mod DirGraphMtEph {
                     }
                 }
             }
-            result
+            neighbors
         }
     }
 

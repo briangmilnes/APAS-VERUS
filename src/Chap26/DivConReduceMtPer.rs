@@ -132,16 +132,16 @@ pub mod DivConReduceMtPer {
             let new_acc = spec_max_fn()(acc, s[0]);
             lemma_fold_left_step(s, acc);
             lemma_max_fold_left_achievable(rest, new_acc);
-            let result = rest.fold_left(new_acc, spec_max_fn());
-            if result == new_acc {
+            let max_val = rest.fold_left(new_acc, spec_max_fn());
+            if max_val == new_acc {
                 if new_acc == acc {
                 } else {
-                    assert(s[0] == result);
+                    assert(s[0] == max_val);
                 }
             } else {
-                let j = choose|j: int| 0 <= j < rest.len() && rest[j] == result;
+                let j = choose|j: int| 0 <= j < rest.len() && rest[j] == max_val;
                 assert(rest[j] == s[j + 1]);
-                assert(s[j + 1] == result);
+                assert(s[j + 1] == max_val);
             }
         }
     }

@@ -125,11 +125,11 @@ pub mod VertexMatchingMtEph {
 
         let selected = select_edges_recursive(graph_arc, edges_arc, map_arc, 0, n);
 
-        let mut result: SetStEph<Edge<V>> = SetLit![];
+        let mut edges: SetStEph<Edge<V>> = SetLit![];
         for edge in selected.iter() {
-            let _ = result.insert(edge.clone());
+            let _ = edges.insert(edge.clone());
         }
-        result
+        edges
     }
 
     /// - APAS: N/A — Verus-specific scaffolding (parallel recursion helper)

@@ -101,23 +101,23 @@ pub mod DijkstraStEphI64 {
             wf_lab_graph_view(graph@),
             valid_key_type_WeightedEdge::<usize, i128>(),
         ensures
-            result.distances.spec_len() == graph.vertices().size(),
-            result.source == source,
+            sssp.distances.spec_len() == graph.vertices().size(),
+            sssp.source == source,
     {
         let n = graph.vertices().size();
 
-        let mut result = SSSPResultStEphI64::new(n, source);
+        let mut sssp = SSSPResultStEphI64::new(n, source);
         let mut visited = SetStEph::<usize>::empty();
         let mut pq = BinaryHeapPQ::<PQEntry>::singleton(pq_entry_new(0, source));
         let ghost verts = graph.vertices()@;
 
         while !pq.is_empty()
             invariant
-                result.distances.spec_len() == n,
-                result.source == source,
+                sssp.distances.spec_len() == n,
+                sssp.source == source,
                 visited@.finite(),
                 visited@.subset_of(verts),
-                result.distances.spec_index(source as int) == 0,
+                sssp.distances.spec_index(source as int) == 0,
         {
             let (new_pq, min_elem) = pq.delete_min();
             pq = new_pq;
@@ -131,7 +131,7 @@ pub mod DijkstraStEphI64 {
                 }
 
                 let _ = visited.insert(v);
-                result.set_distance(v, dist);
+                sssp.set_distance(v, dist);
 
                 let neighbors = graph.out_neighbors_weighed(&v);
                 let mut it = neighbors.iter();
@@ -140,8 +140,8 @@ pub mod DijkstraStEphI64 {
                 for neighbor in iter: it
                     invariant
                         valid_key_type::<Pair<usize, i128>>(),
-                        result.distances.spec_len() == n,
-                        result.source == source,
+                        sssp.distances.spec_len() == n,
+                        sssp.source == source,
                         visited@.finite(),
                         visited@.subset_of(verts),
                         it.elements == neighbors_seq,
@@ -158,14 +158,14 @@ pub mod DijkstraStEphI64 {
                     let new_dist = dist + (*weight as i64);
                     pq = pq.insert(pq_entry_new(new_dist, u_idx));
 
-                    if result.get_distance(u_idx) > new_dist {
-                        result.set_predecessor(u_idx, v);
+                    if sssp.get_distance(u_idx) > new_dist {
+                        sssp.set_predecessor(u_idx, v);
                     }
                 }
             }
         }
 
-        result
+        sssp
     }
 
     } // verus!

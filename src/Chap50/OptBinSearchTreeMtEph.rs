@@ -79,22 +79,22 @@ pub mod OptBinSearchTreeMtEph {
 
     // 8. traits
     pub trait OBSTMtEphTrait<T: MtVal>: Sized {
-        fn new() -> (result: Self);
-        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self);
-        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self);
-        fn optimal_cost(&mut self) -> (result: Probability) where T: Send + Sync + 'static;
-        fn keys(&self) -> (result: Vec<KeyProb<T>>);
+        fn new() -> (empty: Self);
+        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self);
+        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self);
+        fn optimal_cost(&mut self) -> (cost: Probability) where T: Send + Sync + 'static;
+        fn keys(&self) -> (keys: Vec<KeyProb<T>>);
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>);
         fn update_prob(&mut self, index: usize, prob: Probability);
-        fn num_keys(&self) -> (result: usize);
+        fn num_keys(&self) -> (count: usize);
         fn clear_memo(&mut self);
-        fn memo_size(&self) -> (result: usize);
+        fn memo_size(&self) -> (count: usize);
     }
 
     // 9. impls
 
     #[verifier::external_body]
-    fn parallel_min_reduction<T: MtVal>(table: &OBSTMtEphS<T>, costs: Vec<Probability>) -> (result: Probability) {
+    fn parallel_min_reduction<T: MtVal>(table: &OBSTMtEphS<T>, costs: Vec<Probability>) -> (cost: Probability) {
         if costs.is_empty() {
             return Probability::infinity();
         }
@@ -119,17 +119,17 @@ pub mod OptBinSearchTreeMtEph {
     }
 
     #[verifier::external_body]
-    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> (result: Probability) {
+    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> (cost: Probability) {
         {
             let handle = table.memo.acquire_read();
             let cached = handle.borrow().get(&Pair(i, l)).copied();
             handle.release_read();
-            if let Some(result) = cached {
-                return result;
+            if let Some(cost) = cached {
+                return cost;
             }
         }
 
-        let result = if l == 0 {
+        let cost = if l == 0 {
             Probability::zero()
         } else {
             let prob_sum = {
@@ -156,16 +156,16 @@ pub mod OptBinSearchTreeMtEph {
 
         {
             let (mut memo, write_handle) = table.memo.acquire_write();
-            memo.insert(Pair(i, l), result);
+            memo.insert(Pair(i, l), cost);
             write_handle.release_write(memo);
         }
 
-        result
+        cost
     }
 
     impl<T: MtVal> OBSTMtEphTrait<T> for OBSTMtEphS<T> {
         #[verifier::external_body]
-        fn new() -> (result: Self) {
+        fn new() -> (empty: Self) {
             Self {
                 keys: Arc::new(new_obst_eph_keys_lock(Vec::new())),
                 memo: Arc::new(new_obst_eph_memo_lock(HashMapWithViewPlus::new())),
@@ -173,7 +173,7 @@ pub mod OptBinSearchTreeMtEph {
         }
 
         #[verifier::external_body]
-        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self) {
+        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self) {
             let key_probs = keys
                 .into_iter()
                 .zip(probs)
@@ -185,7 +185,7 @@ pub mod OptBinSearchTreeMtEph {
         }
 
         #[verifier::external_body]
-        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self) {
+        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
             Self {
                 keys: Arc::new(new_obst_eph_keys_lock(key_probs)),
                 memo: Arc::new(new_obst_eph_memo_lock(HashMapWithViewPlus::new())),
@@ -193,7 +193,7 @@ pub mod OptBinSearchTreeMtEph {
         }
 
         #[verifier::external_body]
-        fn optimal_cost(&mut self) -> (result: Probability) where T: Send + Sync + 'static {
+        fn optimal_cost(&mut self) -> (cost: Probability) where T: Send + Sync + 'static {
             let keys_len = {
                 let handle = self.keys.acquire_read();
                 let len = handle.borrow().len();
@@ -210,7 +210,7 @@ pub mod OptBinSearchTreeMtEph {
         }
 
         #[verifier::external_body]
-        fn keys(&self) -> (result: Vec<KeyProb<T>>) {
+        fn keys(&self) -> (keys: Vec<KeyProb<T>>) {
             let handle = self.keys.acquire_read();
             let keys = handle.borrow().clone();
             handle.release_read();
@@ -242,7 +242,7 @@ pub mod OptBinSearchTreeMtEph {
         }
 
         #[verifier::external_body]
-        fn num_keys(&self) -> (result: usize) {
+        fn num_keys(&self) -> (count: usize) {
             let handle = self.keys.acquire_read();
             let len = handle.borrow().len();
             handle.release_read();
@@ -257,7 +257,7 @@ pub mod OptBinSearchTreeMtEph {
         }
 
         #[verifier::external_body]
-        fn memo_size(&self) -> (result: usize) {
+        fn memo_size(&self) -> (count: usize) {
             let handle = self.memo.acquire_read();
             let len = handle.borrow().len();
             handle.release_read();
@@ -271,10 +271,10 @@ pub mod OptBinSearchTreeMtEph {
         fn eq(&self, other: &Self) -> bool {
             let self_handle = self.keys.acquire_read();
             let other_handle = other.keys.acquire_read();
-            let result = *self_handle.borrow() == *other_handle.borrow();
+            let count = *self_handle.borrow() == *other_handle.borrow();
             other_handle.release_read();
             self_handle.release_read();
-            result
+            count
         }
     }
 

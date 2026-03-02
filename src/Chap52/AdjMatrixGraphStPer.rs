@@ -112,24 +112,24 @@ broadcast use {
             recommends 0 <= u < self.spec_n(), 0 <= v < self.spec_n();
 
         /// Work Theta(n^2), Span Theta(n^2)
-        fn new(n: N) -> (result: Self)
+        fn new(n: N) -> (empty: Self)
             ensures
-                result.spec_wf(),
-                result.spec_n() == n,
+                empty.spec_wf(),
+                empty.spec_n() == n,
                 forall|u: int, v: int| #![auto]
-                    0 <= u < n && 0 <= v < n ==> !result.spec_edge(u, v);
+                    0 <= u < n && 0 <= v < n ==> !empty.spec_edge(u, v);
 
         /// Work Theta(1), Span Theta(1)
-        fn from_matrix(matrix: ArraySeqStPerS<ArraySeqStPerS<bool>>) -> (result: Self)
+        fn from_matrix(matrix: ArraySeqStPerS<ArraySeqStPerS<bool>>) -> (constructed: Self)
             requires
                 forall|i: int| #![auto] 0 <= i < matrix.spec_len() ==>
                     matrix.spec_index(i).spec_len() == matrix.spec_len()
             ensures
-                result.spec_wf(),
-                result.spec_n() == matrix.spec_len(),
+                constructed.spec_wf(),
+                constructed.spec_n() == matrix.spec_len(),
                 forall|u: int, v: int| #![auto]
                     0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()
-                    ==> result.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);
+                    ==> constructed.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);
 
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: N)
@@ -175,29 +175,29 @@ broadcast use {
             );
 
         /// Work Theta(n), Span Theta(n)
-        fn set_edge(&self, u: N, v: N, exists: B) -> (result: Self)
+        fn set_edge(&self, u: N, v: N, exists: B) -> (updated: Self)
             requires
                 self.spec_wf(),
                 u < self.spec_n(),
                 v < self.spec_n(),
             ensures
-                result.spec_wf(),
-                result.spec_n() == self.spec_n(),
-                result.spec_edge(u as int, v as int) == exists,
+                updated.spec_wf(),
+                updated.spec_n() == self.spec_n(),
+                updated.spec_edge(u as int, v as int) == exists,
                 forall|i: int, j: int| #![auto]
                     0 <= i < self.spec_n() && 0 <= j < self.spec_n()
                     && !(i == u as int && j == v as int)
-                    ==> result.spec_edge(i, j) == self.spec_edge(i, j);
+                    ==> updated.spec_edge(i, j) == self.spec_edge(i, j);
 
         /// Work Theta(n^2), Span Theta(n^2)
-        fn complement(&self) -> (result: Self)
+        fn complement(&self) -> (complemented: Self)
             requires self.spec_wf()
             ensures
-                result.spec_wf(),
-                result.spec_n() == self.spec_n(),
+                complemented.spec_wf(),
+                complemented.spec_n() == self.spec_n(),
                 forall|i: int, j: int| #![auto]
                     0 <= i < self.spec_n() && 0 <= j < self.spec_n()
-                    ==> result.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));
+                    ==> complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));
     }
 
     // 9. impls
@@ -216,7 +216,7 @@ broadcast use {
             self.matrix.spec_index(u).spec_index(v)
         }
 
-        fn new(n: N) -> (result: Self) {
+        fn new(n: N) -> (empty: Self) {
             let matrix = ArraySeqStPerS::tabulate(
                 &|_i: usize| -> (r: ArraySeqStPerS<bool>)
                     ensures
@@ -233,7 +233,7 @@ broadcast use {
             AdjMatrixGraphStPer { matrix, n }
         }
 
-        fn from_matrix(matrix: ArraySeqStPerS<ArraySeqStPerS<bool>>) -> (result: Self) {
+        fn from_matrix(matrix: ArraySeqStPerS<ArraySeqStPerS<bool>>) -> (constructed: Self) {
             let n = matrix.length();
             AdjMatrixGraphStPer { matrix, n }
         }
@@ -375,7 +375,7 @@ broadcast use {
             count
         }
 
-        fn set_edge(&self, u: N, v: N, exists: B) -> (result: Self) {
+        fn set_edge(&self, u: N, v: N, exists: B) -> (updated: Self) {
             let n = self.n;
             let new_row = ArraySeqStPerS::tabulate(
                 &|j: usize| -> (r: bool)
@@ -427,7 +427,7 @@ broadcast use {
             AdjMatrixGraphStPer { matrix, n }
         }
 
-        fn complement(&self) -> (result: Self) {
+        fn complement(&self) -> (complemented: Self) {
             let n = self.n;
             let matrix = ArraySeqStPerS::tabulate(
                 &|i: usize| -> (r: ArraySeqStPerS<bool>)

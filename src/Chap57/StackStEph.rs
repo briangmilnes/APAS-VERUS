@@ -60,49 +60,49 @@ broadcast use {
     // 8. traits
 
     pub trait StackStEphTrait<T: StT>: Sized {
-        fn new() -> (result: Self);
+        fn new() -> (empty: Self);
 
         fn push(&mut self, item: T);
 
-        fn pop(&mut self) -> (result: Option<T>);
+        fn pop(&mut self) -> (popped: Option<T>);
 
-        fn peek(&self) -> (result: Option<&T>);
+        fn peek(&self) -> (top: Option<&T>);
 
-        fn is_empty(&self) -> (result: bool);
+        fn is_empty(&self) -> (is_empty: bool);
 
-        fn size(&self) -> (result: N);
+        fn size(&self) -> (count: N);
     }
 
     // 9. impls
 
     impl<T: StT> StackStEphTrait<T> for StackStEph<T> {
-        fn new() -> (result: Self)
-            ensures result@ == Seq::<T>::empty(),
+        fn new() -> (empty: Self)
+            ensures empty@ == Seq::<T>::empty(),
         { StackStEph { elements: Vec::new() } }
 
         fn push(&mut self, item: T)
             ensures self@ == old(self)@.push(item),
         { self.elements.push(item); }
 
-        fn pop(&mut self) -> (result: Option<T>)
+        fn pop(&mut self) -> (popped: Option<T>)
             ensures
-                old(self)@.len() > 0 ==> result == Some(old(self)@.last()) && self@ == old(self)@.drop_last(),
-                old(self)@.len() == 0 ==> (result matches Option::None),
+                old(self)@.len() > 0 ==> popped == Some(old(self)@.last()) && self@ == old(self)@.drop_last(),
+                old(self)@.len() == 0 ==> (popped matches Option::None),
                 old(self)@.len() == 0 ==> self@ == old(self)@,
         { self.elements.pop() }
 
-        fn peek(&self) -> (result: Option<&T>)
+        fn peek(&self) -> (top: Option<&T>)
             ensures
-                self@.len() > 0 ==> (result matches Option::Some(_)),
-                self@.len() == 0 ==> (result matches Option::None),
+                self@.len() > 0 ==> (top matches Option::Some(_)),
+                self@.len() == 0 ==> (top matches Option::None),
         { self.elements.last() }
 
-        fn is_empty(&self) -> (result: bool)
-            ensures result == (self@.len() == 0),
+        fn is_empty(&self) -> (is_empty: bool)
+            ensures is_empty == (self@.len() == 0),
         { self.elements.is_empty() }
 
-        fn size(&self) -> (result: N)
-            ensures result == self@.len(),
+        fn size(&self) -> (count: N)
+            ensures count == self@.len(),
         { self.elements.len() }
     }
 
@@ -121,8 +121,8 @@ broadcast use {
     }
 
     impl<T: StT> Default for StackStEph<T> {
-        fn default() -> (result: Self)
-            ensures result@ == Seq::<T>::empty(),
+        fn default() -> (default_val: Self)
+            ensures default_val@ == Seq::<T>::empty(),
         { Self::new() }
     }
 

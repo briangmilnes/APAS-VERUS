@@ -122,7 +122,7 @@ pub mod BoruvkaStEph {
             vertices: &SetStEph<V>,
             bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
             rng: &mut StdRng,
-        ) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>));
+        ) -> (mst_edges: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>));
 
         /// Borůvka's MST algorithm.
         /// APAS: Work O(m log n), Span O(m log n)
@@ -230,7 +230,7 @@ pub mod BoruvkaStEph {
             vertices: &SetStEph<V>,
             bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
             rng: &mut StdRng,
-        ) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>)) {
+        ) -> (mst_edges: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>)) {
             // Coin flips for all vertices.
             let mut flips = HashMap::<V, bool>::new();
             for v in vertices.iter() {

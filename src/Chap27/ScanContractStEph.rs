@@ -252,7 +252,7 @@ pub mod ScanContractStEph {
             id: &T,
             n: usize,
             half: usize,
-        ) -> (result: Vec<T>)
+        ) -> (prefixes: Vec<T>)
             requires
                 n == a.spec_len(),
                 n >= 2,
@@ -271,9 +271,9 @@ pub mod ScanContractStEph {
                     c.spec_index(k) == Seq::new(b.spec_len(), |j: int| b.spec_index(j)).take(k).fold_left(*id, spec_f),
             ensures ({
                 let s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
-                &&& result@.len() == n
-                &&& forall|k: int| #![trigger result@[k]] 0 <= k < n as int ==>
-                        result@[k] == s.take(k).fold_left(*id, spec_f)
+                &&& prefixes@.len() == n
+                &&& forall|k: int| #![trigger prefixes@[k]] 0 <= k < n as int ==>
+                        prefixes@[k] == s.take(k).fold_left(*id, spec_f)
             });
     }
 
@@ -396,7 +396,7 @@ pub mod ScanContractStEph {
             id: &T,
             n: usize,
             half: usize,
-        ) -> (result: Vec<T>)
+        ) -> (prefixes: Vec<T>)
         {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));

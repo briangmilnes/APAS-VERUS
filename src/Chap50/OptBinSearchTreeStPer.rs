@@ -54,24 +54,24 @@ pub mod OptBinSearchTreeStPer {
 
     // 8. traits
     pub trait OBSTStPerTrait<T: StT>: Sized {
-        fn new() -> (result: Self);
-        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self);
-        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self);
-        fn optimal_cost(&self) -> (result: Probability);
-        fn keys(&self) -> (result: &Vec<KeyProb<T>>);
-        fn num_keys(&self) -> (result: usize);
-        fn memo_size(&self) -> (result: usize);
+        fn new() -> (empty: Self);
+        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self);
+        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self);
+        fn optimal_cost(&self) -> (cost: Probability);
+        fn keys(&self) -> (keys: &Vec<KeyProb<T>>);
+        fn num_keys(&self) -> (count: usize);
+        fn memo_size(&self) -> (count: usize);
     }
 
     // 9. impls
 
     #[verifier::external_body]
-    fn obst_rec_st_per<T: StT>(s: &mut OBSTStPerS<T>, i: usize, l: usize) -> (result: Probability) {
-        if let Some(&result) = s.memo.get(&Pair(i, l)) {
-            return result;
+    fn obst_rec_st_per<T: StT>(s: &mut OBSTStPerS<T>, i: usize, l: usize) -> (cost: Probability) {
+        if let Some(&cost) = s.memo.get(&Pair(i, l)) {
+            return cost;
         }
 
-        let result = if l == 0 {
+        let cost = if l == 0 {
             Probability::zero()
         } else {
             let prob_sum = (0..l)
@@ -89,13 +89,13 @@ pub mod OptBinSearchTreeStPer {
             prob_sum + min_cost
         };
 
-        s.memo.insert(Pair(i, l), result);
-        result
+        s.memo.insert(Pair(i, l), cost);
+        cost
     }
 
     impl<T: StT> OBSTStPerTrait<T> for OBSTStPerS<T> {
         #[verifier::external_body]
-        fn new() -> (result: Self) {
+        fn new() -> (empty: Self) {
             Self {
                 keys: Vec::new(),
                 memo: HashMapWithViewPlus::new(),
@@ -103,7 +103,7 @@ pub mod OptBinSearchTreeStPer {
         }
 
         #[verifier::external_body]
-        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self) {
+        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self) {
             let key_probs = keys
                 .into_iter()
                 .zip(probs)
@@ -117,7 +117,7 @@ pub mod OptBinSearchTreeStPer {
         }
 
         #[verifier::external_body]
-        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self) {
+        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
             Self {
                 keys: key_probs,
                 memo: HashMapWithViewPlus::new(),
@@ -125,7 +125,7 @@ pub mod OptBinSearchTreeStPer {
         }
 
         #[verifier::external_body]
-        fn optimal_cost(&self) -> (result: Probability) {
+        fn optimal_cost(&self) -> (cost: Probability) {
             if self.keys.is_empty() {
                 return Probability::zero();
             }
@@ -137,11 +137,11 @@ pub mod OptBinSearchTreeStPer {
             obst_rec_st_per(&mut solver, 0, n)
         }
 
-        fn keys(&self) -> (result: &Vec<KeyProb<T>>) { &self.keys }
+        fn keys(&self) -> (keys: &Vec<KeyProb<T>>) { &self.keys }
 
-        fn num_keys(&self) -> (result: usize) { self.keys.len() }
+        fn num_keys(&self) -> (count: usize) { self.keys.len() }
 
-        fn memo_size(&self) -> (result: usize) { self.memo.len() }
+        fn memo_size(&self) -> (count: usize) { self.memo.len() }
     }
 
     // 11. derive impls in verus!

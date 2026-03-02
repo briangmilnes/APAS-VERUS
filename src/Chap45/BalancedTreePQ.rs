@@ -49,8 +49,8 @@ broadcast use {
         }
 
         impl<T: StT + Ord> Clone for BalancedTreePQ<T> {
-            fn clone(&self) -> (result: Self)
-                ensures result@ == self@
+            fn clone(&self) -> (cloned: Self)
+                ensures cloned@ == self@
             {
                 BalancedTreePQ { elements: self.elements.clone() }
             }
@@ -218,12 +218,12 @@ broadcast use {
         }
 
         fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
-            let mut result = self.clone();
+            let mut pq = self.clone();
             for i in 0..elements.length() {
                 let element = elements.nth(i);
-                result = result.insert(element.clone());
+                pq = pq.insert(element.clone());
             }
-            result
+            pq
         }
 
         /// Already sorted — clone the backing tree.
@@ -275,11 +275,11 @@ broadcast use {
         }
 
         fn to_vec(&self) -> Vec<T> {
-            let mut result = Vec::new();
+            let mut elements = Vec::new();
             for i in 0..self.elements.length() {
-                result.push(self.elements.nth(i).clone());
+                elements.push(self.elements.nth(i).clone());
             }
-            result
+            elements
         }
 
         fn to_sorted_vec(&self) -> Vec<T> {
@@ -332,14 +332,14 @@ broadcast use {
         where
             F: Fn(&T) -> bool,
         {
-            let mut result = Self::empty();
+            let mut filtered = Self::empty();
             for i in 0..self.elements.length() {
                 let current = self.elements.nth(i);
                 if predicate(current) {
-                    result = result.insert(current.clone());
+                    filtered = filtered.insert(current.clone());
                 }
             }
-            result
+            filtered
         }
 
         fn map<U, G>(&self, f: G) -> BalancedTreePQ<U>
@@ -347,13 +347,13 @@ broadcast use {
             U: StT + Ord,
             G: Fn(&T) -> U,
         {
-            let mut result = BalancedTreePQ::<U>::empty();
+            let mut mapped_pq = BalancedTreePQ::<U>::empty();
             for i in 0..self.elements.length() {
                 let current = self.elements.nth(i);
                 let mapped = f(current);
-                result = result.insert(mapped);
+                mapped_pq = mapped_pq.insert(mapped);
             }
-            result
+            mapped_pq
         }
     }
 

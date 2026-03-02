@@ -45,7 +45,7 @@ pub mod TopoSortStPer {
     fn dfs_finish_order(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: &mut Vec<bool>,
-        result: &mut Vec<N>,
+        finish_order: &mut Vec<N>,
         vertex: N,
     )
         requires
@@ -86,10 +86,10 @@ pub mod TopoSortStPer {
         {
             let neighbor = *neighbors.nth(i);
             assert(graph@[vertex as int]@[i as int] < graph@.len());
-            dfs_finish_order(graph, visited, result, neighbor);
+            dfs_finish_order(graph, visited, finish_order, neighbor);
             i = i + 1;
         }
-        result.push(vertex);
+        finish_order.push(vertex);
     }
 
     /// Recursive DFS with cycle detection via rec_stack.
@@ -98,7 +98,7 @@ pub mod TopoSortStPer {
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: &mut Vec<bool>,
         rec_stack: &mut Vec<bool>,
-        result: &mut Vec<N>,
+        finish_order: &mut Vec<N>,
         vertex: N,
     ) -> (cycle_free: bool)
         requires
@@ -147,14 +147,14 @@ pub mod TopoSortStPer {
         {
             let neighbor = *neighbors.nth(i);
             assert(graph@[vertex as int]@[i as int] < graph@.len());
-            if !dfs_finish_order_cycle_detect(graph, visited, rec_stack, result, neighbor) {
+            if !dfs_finish_order_cycle_detect(graph, visited, rec_stack, finish_order, neighbor) {
                 return false;
             }
             i = i + 1;
         }
 
         rec_stack.set(vertex, false);
-        result.push(vertex);
+        finish_order.push(vertex);
         true
     }
 
@@ -165,7 +165,7 @@ pub mod TopoSortStPer {
         let n = graph.length();
         let mut visited: Vec<bool> = Vec::new();
         let mut rec_stack: Vec<bool> = Vec::new();
-        let mut result: Vec<N> = Vec::new();
+        let mut finish_order: Vec<N> = Vec::new();
         let mut j: usize = 0;
         while j < n
             invariant
@@ -190,23 +190,23 @@ pub mod TopoSortStPer {
             decreases n - start,
         {
             if !visited[start] {
-                if !dfs_finish_order_cycle_detect(graph, &mut visited, &mut rec_stack, &mut result, start) {
+                if !dfs_finish_order_cycle_detect(graph, &mut visited, &mut rec_stack, &mut finish_order, start) {
                     return None;
                 }
             }
             start = start + 1;
         }
-        let result_len = result.len();
+        let result_len = finish_order.len();
         let mut reversed: Vec<N> = Vec::new();
         let mut k: usize = result_len;
         while k > 0
             invariant
                 k <= result_len,
-                result_len == result@.len(),
+                result_len == finish_order@.len(),
             decreases k,
         {
             k = k - 1;
-            reversed.push(result[k]);
+            reversed.push(finish_order[k]);
         }
         Some(AVLTreeSeqStPerS::from_vec(reversed))
     }
@@ -217,7 +217,7 @@ pub mod TopoSortStPer {
     {
         let n = graph.length();
         let mut visited: Vec<bool> = Vec::new();
-        let mut result: Vec<N> = Vec::new();
+        let mut finish_order: Vec<N> = Vec::new();
         let mut j: usize = 0;
         while j < n
             invariant
@@ -239,21 +239,21 @@ pub mod TopoSortStPer {
             decreases n - start,
         {
             if !visited[start] {
-                dfs_finish_order(graph, &mut visited, &mut result, start);
+                dfs_finish_order(graph, &mut visited, &mut finish_order, start);
             }
             start = start + 1;
         }
-        let result_len = result.len();
+        let result_len = finish_order.len();
         let mut reversed: Vec<N> = Vec::new();
         let mut k: usize = result_len;
         while k > 0
             invariant
                 k <= result_len,
-                result_len == result@.len(),
+                result_len == finish_order@.len(),
             decreases k,
         {
             k = k - 1;
-            reversed.push(result[k]);
+            reversed.push(finish_order[k]);
         }
         AVLTreeSeqStPerS::from_vec(reversed)
     }

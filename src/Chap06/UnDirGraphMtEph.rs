@@ -329,7 +329,7 @@ pub mod UnDirGraphMtEph {
         }
         else if n == 1 {
             let u = verts.choose();
-            let result = g.ng(&u);
+            let neighbors = g.ng(&u);
             proof {
                 // When size == 1, verts@ is a singleton containing u@
                 assert(verts@.len() == 1);
@@ -355,7 +355,7 @@ pub mod UnDirGraphMtEph {
                     }
                 }
             }
-            result
+            neighbors
         }
         else {
             let mid = n / 2;
@@ -373,11 +373,11 @@ pub mod UnDirGraphMtEph {
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
             
-            let result = left_neighbors.union(&right_neighbors);
+            let neighbors = left_neighbors.union(&right_neighbors);
             proof {
                 assert(verts@ =~= left_verts@.union(right_verts@));
-                assert forall |w: V::V| #![trigger result@.contains(w)] g.spec_ng_of_vertices_from_set(verts@).contains(w)
-                    <==> result@.contains(w) by {
+                assert forall |w: V::V| #![trigger neighbors@.contains(w)] g.spec_ng_of_vertices_from_set(verts@).contains(w)
+                    <==> neighbors@.contains(w) by {
                     if g.spec_ng_of_vertices_from_set(verts@).contains(w) {
                         let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && g.spec_ng(v).contains(w);
                         assert(left_verts@.contains(v_wit) || right_verts@.contains(v_wit));
@@ -387,7 +387,7 @@ pub mod UnDirGraphMtEph {
                             assert(g.spec_ng_of_vertices_from_set(right_verts@).contains(w));
                         }
                     }
-                    if result@.contains(w) {
+                    if neighbors@.contains(w) {
                         if left_neighbors@.contains(w) {
                             let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && g.spec_ng(v).contains(w);
                             assert(verts@.contains(v_wit));
@@ -398,7 +398,7 @@ pub mod UnDirGraphMtEph {
                     }
                 }
             }
-            result
+            neighbors
         }
     }
 

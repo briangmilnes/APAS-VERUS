@@ -195,13 +195,13 @@ pub mod BSTParaStEph {
 
     pub trait ParamBSTTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         /// - APAS: Work O(1), Span O(1)
-        fn new() -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty();
+        fn new() -> (empty: Self)
+            ensures empty@ == Set::<<T as View>::V>::empty();
         /// - APAS: Work O(1), Span O(1)
-        fn singleton(key: T) -> (result: Self)
+        fn singleton(key: T) -> (tree: Self)
             ensures
-                result@ == Set::<<T as View>::V>::empty().insert(key@),
-                result@.finite();
+                tree@ == Set::<<T as View>::V>::empty().insert(key@),
+                tree@.finite();
         /// - APAS: Work O(1), Span O(1)
         fn expose(&self) -> (exposed: Exposed<T>)
             ensures
@@ -219,7 +219,7 @@ pub mod BSTParaStEph {
                     && (forall|t: T| #![auto] r@.contains(t@) ==> t.cmp_spec(&k) == Greater)
                 };
         /// - APAS: Work O(1), Span O(1)
-        fn join_mid(exposed: Exposed<T>) -> (result: Self)
+        fn join_mid(exposed: Exposed<T>) -> (joined: Self)
             requires
                 exposed matches Exposed::Node(l, k, r) ==> {
                     l@.finite() && r@.finite()
@@ -229,8 +229,8 @@ pub mod BSTParaStEph {
                     && l@.len() + r@.len() < usize::MAX as nat
                 },
             ensures
-                exposed is Leaf ==> result@ == Set::<<T as View>::V>::empty(),
-                exposed matches Exposed::Node(l, k, r) ==> result@ =~= l@.union(r@).insert(k@);
+                exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty(),
+                exposed matches Exposed::Node(l, k, r) ==> joined@ =~= l@.union(r@).insert(k@);
         /// Joins left, key, right into a single tree.
         fn join_m(left: Self, key: T, right: Self) -> (tree: Self)
             requires
@@ -274,15 +274,15 @@ pub mod BSTParaStEph {
                 forall|t: T| #![auto] parts.0@.contains(t@) ==> t.cmp_spec(&key) == Less,
                 forall|t: T| #![auto] parts.2@.contains(t@) ==> t.cmp_spec(&key) == Greater;
         /// Returns the minimum key, or None if empty.
-        fn min_key(&self) -> (result: Option<T>)
+        fn min_key(&self) -> (minimum: Option<T>)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures
-                self@.len() == 0 <==> result.is_none(),
-                result.is_some() ==> self@.contains(result.unwrap()@),
-                result.is_some() ==> forall|t: T| #![auto] self@.contains(t@) ==>
-                    result.unwrap().cmp_spec(&t) == Less || result.unwrap()@ == t@;
+                self@.len() == 0 <==> minimum.is_none(),
+                minimum.is_some() ==> self@.contains(minimum.unwrap()@),
+                minimum.is_some() ==> forall|t: T| #![auto] self@.contains(t@) ==>
+                    minimum.unwrap().cmp_spec(&t) == Less || minimum.unwrap()@ == t@;
         /// - APAS: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|))
         fn join_pair(&self, other: Self) -> (joined: Self)
             requires
@@ -291,14 +291,14 @@ pub mod BSTParaStEph {
                 self@.len() + other@.len() < usize::MAX as nat,
             ensures joined@.finite(), joined@ =~= self@.union(other@);
         /// - APAS: Work O(m · lg(n/m)), Span O(m · lg(n/m)) — sequential
-        fn union(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.union(other@), result@.finite();
+        fn union(&self, other: &Self) -> (combined: Self)
+            ensures combined@ == self@.union(other@), combined@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(m · lg(n/m)) — sequential
-        fn intersect(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.intersect(other@), result@.finite();
+        fn intersect(&self, other: &Self) -> (common: Self)
+            ensures common@ == self@.intersect(other@), common@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(m · lg(n/m)) — sequential
-        fn difference(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.difference(other@), result@.finite();
+        fn difference(&self, other: &Self) -> (remaining: Self)
+            ensures remaining@ == self@.difference(other@), remaining@.finite();
         /// - APAS: Work O(|t|), Span O(|t|) — sequential
         fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)
             requires self@.finite(), forall|t: &T| predicate.requires((t,)),
@@ -319,14 +319,14 @@ pub mod BSTParaStEph {
     // 9. impls
 
     impl<T: StT + Ord> ParamBSTTrait<T> for ParamBST<T> {
-        fn new() -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty()
+        fn new() -> (empty: Self)
+            ensures empty@ == Set::<<T as View>::V>::empty()
         { new_param_bst(None, Ghost(Set::empty())) }
 
-        fn singleton(key: T) -> (result: Self)
+        fn singleton(key: T) -> (tree: Self)
             ensures
-                result@ == Set::<<T as View>::V>::empty().insert(key@),
-                result@.finite()
+                tree@ == Set::<<T as View>::V>::empty().insert(key@),
+                tree@.finite()
         {
             let left: Self = Self::new();
             let right: Self = Self::new();
@@ -351,15 +351,15 @@ pub mod BSTParaStEph {
                 },
         {
             let handle = self.root.acquire_read();
-            let result = match handle.borrow() {
+            let exposed = match handle.borrow() {
                 | None => Exposed::Leaf,
                 | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),
             };
             handle.release_read();
-            result
+            exposed
         }
 
-        fn join_mid(exposed: Exposed<T>) -> (result: Self)
+        fn join_mid(exposed: Exposed<T>) -> (joined: Self)
         {
             match exposed {
                 | Exposed::Leaf => Self::new(),
@@ -577,12 +577,12 @@ pub mod BSTParaStEph {
             }
         }
 
-        fn min_key(&self) -> (result: Option<T>)
+        fn min_key(&self) -> (minimum: Option<T>)
             ensures
-                self@.len() == 0 <==> result.is_none(),
-                result.is_some() ==> self@.contains(result.unwrap()@),
-                result.is_some() ==> forall|t: T| #![auto] self@.contains(t@) ==>
-                    result.unwrap().cmp_spec(&t) == Less || result.unwrap()@ == t@,
+                self@.len() == 0 <==> minimum.is_none(),
+                minimum.is_some() ==> self@.contains(minimum.unwrap()@),
+                minimum.is_some() ==> forall|t: T| #![auto] self@.contains(t@) ==>
+                    minimum.unwrap().cmp_spec(&t) == Less || minimum.unwrap()@ == t@,
             decreases self@.len(),
         {
             match self.expose() {
@@ -680,8 +680,8 @@ pub mod BSTParaStEph {
 
         /// Algorithm 38.6 — sequential union via divide-and-conquer on split.
         #[verifier::external_body]
-        fn union(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.union(other@), result@.finite()
+        fn union(&self, other: &Self) -> (combined: Self)
+            ensures combined@ == self@.union(other@), combined@.finite()
         {
             match (self.expose(), other.expose()) {
                 | (Exposed::Leaf, _) => other.clone(),
@@ -697,8 +697,8 @@ pub mod BSTParaStEph {
 
         /// Algorithm 38.7 — sequential intersect. Keeps keys present in both trees.
         #[verifier::external_body]
-        fn intersect(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.intersect(other@), result@.finite()
+        fn intersect(&self, other: &Self) -> (common: Self)
+            ensures common@ == self@.intersect(other@), common@.finite()
         {
             match (self.expose(), other.expose()) {
                 | (Exposed::Leaf, _) | (_, Exposed::Leaf) => Self::new(),
@@ -717,8 +717,8 @@ pub mod BSTParaStEph {
 
         /// Algorithm 38.8 — sequential difference. Keeps keys in `self` not in `other`.
         #[verifier::external_body]
-        fn difference(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.difference(other@), result@.finite()
+        fn difference(&self, other: &Self) -> (remaining: Self)
+            ensures remaining@ == self@.difference(other@), remaining@.finite()
         {
             match (self.expose(), other.expose()) {
                 | (Exposed::Leaf, _) => Self::new(),

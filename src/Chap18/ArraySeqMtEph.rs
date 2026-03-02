@@ -108,12 +108,12 @@ pub mod ArraySeqMtEph {
     /// Definition 18.17 (ninject). The result has the same length as `s`. For each position i,
     /// the value is either the original `s[i]` or some `updates[j].1` where `updates[j].0 == i`.
     /// When no duplicates exist, this coincides with `spec_inject`.
-    pub open spec fn spec_ninject<T>(s: Seq<T>, updates: Seq<(usize, T)>, result: Seq<T>) -> bool {
-        result.len() == s.len()
-        && forall|i: int| #![trigger result[i]] 0 <= i < s.len() ==> {
-            result[i] == s[i]
+    pub open spec fn spec_ninject<T>(s: Seq<T>, updates: Seq<(usize, T)>, injected: Seq<T>) -> bool {
+        injected.len() == s.len()
+        && forall|i: int| #![trigger injected[i]] 0 <= i < s.len() ==> {
+            injected[i] == s[i]
             || exists|j: int| #![trigger updates[j]] 0 <= j < updates.len()
-                && updates[j].0 == i as usize && result[i] == updates[j].1
+                && updates[j].0 == i as usize && injected[i] == updates[j].1
         }
     }
 
@@ -415,7 +415,7 @@ pub mod ArraySeqMtEph {
         ///   once; when positions collide, any one of the updates may take effect.
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(|a| + |updates|), Span Θ(1).
-        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (result: Self)
+        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
@@ -423,7 +423,7 @@ pub mod ArraySeqMtEph {
                 spec_ninject(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
                     updates@,
-                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));
+                    Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)));
 
         /// - Definition 18.5 (isEmpty). true iff the sequence has length zero.
         /// - APAS: no cost spec (semantics-only chapter).
@@ -440,24 +440,24 @@ pub mod ArraySeqMtEph {
         /// - Definition 18.7 (iterate). Fold with accumulator `seed`.
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (result: A)
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (acc: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
                 forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
             ensures
-                result == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);
+                acc == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);
 
         /// - Definition 18.18 (reduce). Combine elements using associative `f` and identity `id`.
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(log|a|).
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: T)
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
             requires
                 spec_monoid(spec_f, id),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
             ensures
-                result == spec_iterate(
+                reduced == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
 
         /// - Definition 18.19 (scan). Prefix-reduce returning inclusive prefix sums and total.
@@ -816,16 +816,16 @@ pub mod ArraySeqMtEph {
             injected
         }
 
-        fn ninject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+        fn ninject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
             // Delegate to deterministic inject. inject satisfies the weaker ninject spec
             // because inject picks the first update for each position, which is one valid
             // nondeterministic choice.
-            let result = Self::inject(a, updates);
+            let injected = Self::inject(a, updates);
             proof {
                 let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
-                let ghost r = Seq::new(result.spec_len(), |i: int| result.spec_index(i));
+                let ghost r = Seq::new(injected.spec_len(), |i: int| injected.spec_index(i));
                 let ghost u = updates@;
                 // inject ensures r =~= spec_inject(s, u), so r.len() == s.len().
                 // For each position, spec_inject either leaves s[i] or applies some update.
@@ -837,7 +837,7 @@ pub mod ArraySeqMtEph {
                     lemma_spec_inject_element(s, u, i);
                 }
             }
-            result
+            injected
         }
 
         fn is_empty(&self) -> (empty: bool) {
@@ -1240,16 +1240,16 @@ pub mod ArraySeqMtEph {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             if len == 1 {
-                let result = a.seq[0].clone();
+                let element = a.seq[0].clone();
                 proof {
-                    assert(cloned(a.seq[0 as int], result));
-                    axiom_cloned_implies_eq_owned(a.seq[0 as int], result);
+                    assert(cloned(a.seq[0 as int], element));
+                    axiom_cloned_implies_eq_owned(a.seq[0 as int], element);
                     a.lemma_spec_index(0);
                     assert(s =~= seq![a.spec_index(0)]);
                     reveal_with_fuel(Seq::fold_left, 2);
                     assert(spec_f(id, s[0]) == s[0]);  // left identity
                 }
-                result
+                element
             } else {
                 let mid = len / 2;
                 let left_seq = a.subseq_copy(0, mid);
@@ -1291,14 +1291,14 @@ pub mod ArraySeqMtEph {
                 };
 
                 let (left, right) = join(fa, fb);
-                let result = f(&left, &right);
+                let combined = f(&left, &right);
                 proof {
                     assert(left_s =~= s.subrange(0, mid as int));
                     assert(right_s =~= s.subrange(mid as int, len as int));
                     s.lemma_fold_left_split(id, spec_f, mid as int);
                     Self::lemma_monoid_fold_left(right_s, spec_f, id, left);
                 }
-                result
+                combined
             }
         }
 
@@ -1308,7 +1308,7 @@ pub mod ArraySeqMtEph {
         /// That scheduling race is the source of nondeterminism.
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(|a| + |updates|), Span Θ(|updates|) — lock serializes the writers.
-        pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+        pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
             where T: Clone + Send + Sync + Eq + 'static
             requires
                 obeys_feq_clone::<T>(),
@@ -1318,7 +1318,7 @@ pub mod ArraySeqMtEph {
                 spec_ninject(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
                     updates@,
-                    Seq::new(result.spec_len(), |i: int| result.spec_index(i))),
+                    Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))),
         {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let ghost pred = ArraySeqMtEphInv::<T> { source: a.seq@, updates: updates@ };
@@ -1391,7 +1391,7 @@ pub mod ArraySeqMtEph {
                 },
             );
 
-            // Extract result. The lock invariant gives us spec_ninject.
+            // Extract injected. The lock invariant gives us spec_ninject.
             let (result_vec, write_handle) = lock.acquire_write();
             proof {
                 assert(pred.inv(result_vec));
@@ -1409,11 +1409,11 @@ pub mod ArraySeqMtEph {
             }
             write_handle.release_write(result_vec);
 
-            let result = ArraySeqMtEphS { seq: r };
+            let injected = ArraySeqMtEphS { seq: r };
             proof {
-                assert(Seq::new(result.spec_len(), |i: int| result.spec_index(i)) =~= r@);
+                assert(Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)) =~= r@);
             }
-            result
+            injected
         }
     }
 

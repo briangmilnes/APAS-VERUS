@@ -51,17 +51,17 @@ broadcast use {
     pub trait OrderedSetMtEphTrait<T: MtKey + 'static>: Sized + View<V = Set<<T as View>::V>> {
         // Base set operations (ADT 41.1) - ephemeral semantics with parallelism
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self) -> (result: usize)
-            ensures result == self@.len(), self@.finite();
+        fn size(&self) -> (count: usize)
+            ensures count == self@.len(), self@.finite();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty() -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty();
+        fn empty() -> (empty: Self)
+            ensures empty@ == Set::<<T as View>::V>::empty();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite();
+        fn singleton(x: T) -> (tree: Self)
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn find(&self, x: &T) -> (result: B)
-            ensures result == self@.contains(x@);
+        fn find(&self, x: &T) -> (found: B)
+            ensures found == self@.contains(x@);
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
         fn insert(&mut self, x: T)
             ensures self@ == old(self)@.insert(x@), self@.finite();
@@ -81,43 +81,43 @@ broadcast use {
         fn difference(&mut self, other: &Self)
             ensures self@ == old(self)@.difference(other@), self@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn to_seq(&self) -> (result: ArraySeqStPerS<T>)
+        fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(n lg n), Span Θ(lg n), Parallelism Θ(1)
-        fn from_seq(seq: ArraySeqStPerS<T>) -> (result: Self)
-            ensures result@.finite();
+        fn from_seq(seq: ArraySeqStPerS<T>) -> (constructed: Self)
+            ensures constructed@.finite();
 
         // Ordering operations (ADT 43.1) - sequential (inherently sequential on trees)
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn first(&self) -> (result: Option<T>)
+        fn first(&self) -> (first: Option<T>)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn last(&self) -> (result: Option<T>)
+        fn last(&self) -> (last: Option<T>)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn previous(&self, k: &T) -> (result: Option<T>)
+        fn previous(&self, k: &T) -> (predecessor: Option<T>)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn next(&self, k: &T) -> (result: Option<T>)
+        fn next(&self, k: &T) -> (successor: Option<T>)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn split(&mut self, k: &T) -> (result: (Self, B, Self))
+        fn split(&mut self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn join(&mut self, other: Self)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn get_range(&self, k1: &T, k2: &T) -> (result: Self)
+        fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn rank(&self, k: &T) -> (result: usize)
+        fn rank(&self, k: &T) -> (rank: usize)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn select(&self, i: usize) -> (result: Option<T>)
+        fn select(&self, i: usize) -> (selected: Option<T>)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn split_rank(&mut self, i: usize) -> (result: (Self, Self))
+        fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             ensures self@.finite();
     }
@@ -126,18 +126,18 @@ broadcast use {
 
     impl<T: MtKey + 'static> OrderedSetMtEphTrait<T> for OrderedSetMtEph<T> {
         #[verifier::external_body]
-        fn size(&self) -> (result: usize)
-            ensures result == self@.len(), self@.finite()
+        fn size(&self) -> (count: usize)
+            ensures count == self@.len(), self@.finite()
         { self.tree.size() }
 
         #[verifier::external_body]
-        fn empty() -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty()
+        fn empty() -> (empty: Self)
+            ensures empty@ == Set::<<T as View>::V>::empty()
         { OrderedSetMtEph { tree: ParamTreap::new() } }
 
         #[verifier::external_body]
-        fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite()
+        fn singleton(x: T) -> (tree: Self)
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite()
         {
             let tree = ParamTreap::new();
             tree.insert(x);
@@ -145,8 +145,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn find(&self, x: &T) -> (result: B)
-            ensures result == self@.contains(x@)
+        fn find(&self, x: &T) -> (found: B)
+            ensures found == self@.contains(x@)
         { self.tree.find(x).is_some() }
 
         #[verifier::external_body]
@@ -192,15 +192,15 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn to_seq(&self) -> (result: ArraySeqStPerS<T>)
+        fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)
             ensures self@.finite()
         {
             self.tree.in_order()
         }
 
         #[verifier::external_body]
-        fn from_seq(seq: ArraySeqStPerS<T>) -> (result: Self)
-            ensures result@.finite()
+        fn from_seq(seq: ArraySeqStPerS<T>) -> (constructed: Self)
+            ensures constructed@.finite()
         {
             let tree = ParamTreap::new();
             for i in 0..seq.length() {
@@ -210,7 +210,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn first(&self) -> (result: Option<T>)
+        fn first(&self) -> (first: Option<T>)
             ensures self@.finite()
         {
             match self.tree.expose() {
@@ -232,7 +232,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn last(&self) -> (result: Option<T>)
+        fn last(&self) -> (last: Option<T>)
             ensures self@.finite()
         {
             match self.tree.expose() {
@@ -254,7 +254,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn previous(&self, k: &T) -> (result: Option<T>)
+        fn previous(&self, k: &T) -> (predecessor: Option<T>)
             ensures self@.finite()
         {
             let (left, _found, _right) = self.tree.split(k);
@@ -277,7 +277,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn next(&self, k: &T) -> (result: Option<T>)
+        fn next(&self, k: &T) -> (successor: Option<T>)
             ensures self@.finite()
         {
             let (_left, _found, right) = self.tree.split(k);
@@ -300,7 +300,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn split(&mut self, k: &T) -> (result: (Self, B, Self))
+        fn split(&mut self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
             ensures self@.finite()
         {
@@ -321,7 +321,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn get_range(&self, k1: &T, k2: &T) -> (result: Self)
+        fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
             ensures self@.finite()
         {
             let (_left, found1, right1) = self.tree.split(k1);
@@ -344,7 +344,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn rank(&self, k: &T) -> (result: usize)
+        fn rank(&self, k: &T) -> (rank: usize)
             ensures self@.finite()
         {
             let (left, _found, _right) = self.tree.split(k);
@@ -352,7 +352,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn select(&self, i: usize) -> (result: Option<T>)
+        fn select(&self, i: usize) -> (selected: Option<T>)
             ensures self@.finite()
         {
             let seq = self.tree.in_order();
@@ -364,20 +364,20 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn split_rank(&mut self, i: usize) -> (result: (Self, Self))
+        fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             ensures self@.finite()
         {
             let seq = self.tree.in_order();
             if i == 0 {
-                let result = (Self::empty(), OrderedSetMtEph { tree: self.tree.clone() });
+                let split = (Self::empty(), OrderedSetMtEph { tree: self.tree.clone() });
                 *self = Self::empty();
-                return result;
+                return split;
             }
             if i >= seq.length() {
-                let result = (OrderedSetMtEph { tree: self.tree.clone() }, Self::empty());
+                let split = (OrderedSetMtEph { tree: self.tree.clone() }, Self::empty());
                 *self = Self::empty();
-                return result;
+                return split;
             }
             let pivot = seq.nth(i);
             let (left, found, right) = self.tree.split(pivot);

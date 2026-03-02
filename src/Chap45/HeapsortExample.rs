@@ -70,10 +70,10 @@ broadcast use {
         }
 
         impl<T: StT + Ord> Clone for HeapsortComparison<T> {
-            fn clone(&self) -> (result: Self)
-                ensures result@ == self@
+            fn clone(&self) -> (cloned: Self)
+                ensures cloned@ == self@
             {
-                let result = HeapsortComparison {
+                let cloned = HeapsortComparison {
                     input: self.input.clone(),
                     unsorted_list_result: self.unsorted_list_result.clone(),
                     sorted_list_result: self.sorted_list_result.clone(),
@@ -81,8 +81,8 @@ broadcast use {
                     binary_heap_result: self.binary_heap_result.clone(),
                     leftist_heap_result: self.leftist_heap_result.clone(),
                 };
-                proof { accept(result@ == self@); }
-                result
+                proof { accept(cloned@ == self@); }
+                cloned
             }
         }
 
@@ -111,15 +111,15 @@ broadcast use {
         for element in sequence {
             pq = pq.insert(element.clone());
         }
-        let mut result = Vec::new();
+        let mut cloned = Vec::new();
         while !pq.is_empty() {
             let (new_pq, min_element) = pq.delete_min();
             if let Some(element) = min_element {
-                result.push(element);
+                cloned.push(element);
             }
             pq = new_pq;
         }
-        result
+        cloned
     }
 
     /// - APAS: Work Θ(n²), Span Θ(n²) — n × O(n) insert dominates.
@@ -129,15 +129,15 @@ broadcast use {
         for element in sequence {
             pq = pq.insert(element.clone());
         }
-        let mut result = Vec::new();
+        let mut cloned = Vec::new();
         while !pq.is_empty() {
             let (new_pq, min_element) = pq.delete_min();
             if let Some(element) = min_element {
-                result.push(element);
+                cloned.push(element);
             }
             pq = new_pq;
         }
-        result
+        cloned
     }
 
     /// - APAS: Work Θ(n log n), Span Θ(n log n)
@@ -147,15 +147,15 @@ broadcast use {
         for element in sequence {
             pq = pq.insert(element.clone());
         }
-        let mut result = Vec::new();
+        let mut cloned = Vec::new();
         while !pq.is_empty() {
             let (new_pq, min_element) = pq.delete_min();
             if let Some(element) = min_element {
-                result.push(element);
+                cloned.push(element);
             }
             pq = new_pq;
         }
-        result
+        cloned
     }
 
     /// - APAS: Work Θ(n log n), Span Θ(n log n)
@@ -165,33 +165,33 @@ broadcast use {
         for element in sequence {
             pq = pq.insert(element.clone());
         }
-        let mut result = Vec::new();
+        let mut cloned = Vec::new();
         while !pq.is_empty() {
             let (new_pq, min_element) = pq.delete_min();
             if let Some(element) = min_element {
-                result.push(element);
+                cloned.push(element);
             }
             pq = new_pq;
         }
-        result
+        cloned
     }
 
-    /// - APAS: Work Θ(n log n), Span Θ(n log n)
+    /// - APAS: WorkΘ(n log n), Span Θ(n log n)
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — each insert/delete clones tree O(n).
     pub fn heapsort_leftist_heap<T: StT + Ord>(sequence: &[T]) -> Vec<T> {
         let mut pq = LeftistHeapPQ::empty();
         for element in sequence {
             pq = pq.insert(element.clone());
         }
-        let mut result = Vec::new();
+        let mut elements = Vec::new();
         while !pq.is_empty() {
             let (new_pq, min_element) = pq.delete_min();
             if let Some(element) = min_element {
-                result.push(element);
+                elements.push(element);
             }
             pq = new_pq;
         }
-        result
+        elements
     }
 
     /// Demonstrate all heapsort variants on the same input
@@ -220,7 +220,7 @@ broadcast use {
     }
 
     pub trait HeapsortComparisonTrait<T: StT + Ord> {
-        /// Verify that all implementations produce the same sorted result
+        /// Verify that all implementations produce the same sorted elements
         fn all_results_match(&self)  -> bool;
         /// Check if all results are properly sorted
         fn all_results_sorted(&self) -> bool;
@@ -285,13 +285,13 @@ broadcast use {
     /// Generate a large random-like sequence for performance testing
     pub fn large_example(size: usize) -> Vec<i32> {
         // Generate pseudo-random sequence for testing
-        let mut result = Vec::with_capacity(size);
+        let mut elements = Vec::with_capacity(size);
         let mut x: i64 = 1;
         for _ in 0..size {
             x = (x * 1103515245 + 12345) % (1i64 << 31); // Linear congruential generator
-            result.push((x % 1000) as i32);
+            elements.push((x % 1000) as i32);
         }
-        result
+        elements
     }
 
     /// Demonstrate the efficiency difference between implementations
@@ -354,12 +354,12 @@ broadcast use {
 
     /// Convert Vec to ArraySeqStPerS for use with APAS sequence types
     pub fn vec_to_array_seq<T: StT>(vec: &[T]) -> ArraySeqStPerS<T> {
-        let mut result = ArraySeqStPerS::empty();
+        let mut elements = ArraySeqStPerS::empty();
         for element in vec {
             let single_seq = ArraySeqStPerS::singleton(element.clone());
-            result = ArraySeqStPerS::append(&result, &single_seq);
+            elements = ArraySeqStPerS::append(&elements, &single_seq);
         }
-        result
+        elements
     }
 
     /// Convert Vec to AVLTreeSeqStPerS for use with balanced tree operations

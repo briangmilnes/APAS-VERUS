@@ -65,7 +65,7 @@ broadcast use {
     #[verifier::external_body]
     pub fn recalculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
         table: &AugOrderedTableMtEph<K, V, F>,
-    ) -> (result: V)
+    ) -> (reduced: V)
     ensures table@.dom().finite()
     {
         calculate_reduction(&table.base_table, &table.reducer, &table.identity)
@@ -76,7 +76,7 @@ broadcast use {
         base: &OrderedTableMtEph<K, V>,
         reducer: &F,
         identity: &V,
-    ) -> (result: V)
+    ) -> (reduced: V)
     ensures base@.dom().finite()
     {
         if base.size() == 0 {
@@ -84,20 +84,20 @@ broadcast use {
         }
 
         let pairs = base.collect();
-        let mut result = identity.clone();
+        let mut reduced = identity.clone();
         let mut first = true;
 
         for i in 0..pairs.length() {
             let pair = pairs.nth(i);
             if first {
-                result = pair.1.clone();
+                reduced = pair.1.clone();
                 first = false;
             } else {
-                result = reducer(&result, &pair.1);
+                reduced = reducer(&reduced, &pair.1);
             }
         }
 
-        result
+        reduced
     }
 
     // 7b. proof fns
@@ -113,33 +113,33 @@ broadcast use {
     /// Trait defining all augmented ordered table operations (ADT 43.3) with multi-threaded ephemeral semantics
     /// Extends ordered table operations with efficient reduction and thread-safe operations
     pub trait AugOrderedTableMtEphTrait<K: MtKey, V: MtVal, F: MtReduceFn<V>>: Sized + View<V = Map<K::V, V::V>> {
-        fn size(&self) -> (result: usize)
-            ensures result == self@.dom().len(), self@.dom().finite();
-        fn empty(reducer: F, identity: V) -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty();
-        fn singleton(k: K, v: V, reducer: F, identity: V) -> (result: Self)
-            ensures result@.dom().finite();
-        fn find(&self, k: &K) -> (result: Option<V>);
-        fn lookup(&self, k: &K) -> (result: Option<V>);
-        fn is_empty(&self) -> (result: B)
-            ensures result == self@.dom().is_empty(), self@.dom().finite();
+        fn size(&self) -> (count: usize)
+            ensures count == self@.dom().len(), self@.dom().finite();
+        fn empty(reducer: F, identity: V) -> (empty: Self)
+            ensures empty@ == Map::<K::V, V::V>::empty();
+        fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
+            ensures tree@.dom().finite();
+        fn find(&self, k: &K) -> (found: Option<V>);
+        fn lookup(&self, k: &K) -> (value: Option<V>);
+        fn is_empty(&self) -> (is_empty: B)
+            ensures is_empty == self@.dom().is_empty(), self@.dom().finite();
         fn insert<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: G)
             ensures self@.dom().finite();
-        fn delete(&mut self, k: &K) -> (result: Option<V>)
+        fn delete(&mut self, k: &K) -> (updated: Option<V>)
             ensures self@.dom().finite();
-        fn domain(&self) -> (result: ArraySetStEph<K>)
+        fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite();
         fn tabulate<G: Fn(&K) -> V + Send + Sync + 'static>(
             f: G,
             keys: &ArraySetStEph<K>,
             reducer: F,
             identity: V,
-        ) -> (result: Self)
-            ensures result@.dom().finite();
-        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (result: Self)
-            ensures result@.dom().finite();
-        fn filter<G: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: G) -> (result: Self)
-            ensures result@.dom().finite();
+        ) -> (domain: Self)
+            ensures domain@.dom().finite();
+        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self)
+            ensures mapped@.dom().finite();
+        fn filter<G: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: G) -> (filtered: Self)
+            ensures filtered@.dom().finite();
         fn intersection<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: G)
             ensures self@.dom().finite();
         fn union<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: G)
@@ -150,52 +150,52 @@ broadcast use {
             ensures self@.dom().finite();
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             ensures self@.dom().finite();
-        fn reduce<R: StTInMtT + 'static, G: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: G) -> (result: R)
+        fn reduce<R: StTInMtT + 'static, G: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: G) -> (reduced: R)
             ensures self@.dom().finite();
-        fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
+        fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite();
-        fn first_key(&self) -> (result: Option<K>)
+        fn first_key(&self) -> (first: Option<K>)
             ensures self@.dom().finite();
-        fn last_key(&self) -> (result: Option<K>)
+        fn last_key(&self) -> (last: Option<K>)
             ensures self@.dom().finite();
-        fn previous_key(&self, k: &K) -> (result: Option<K>)
+        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             ensures self@.dom().finite();
-        fn next_key(&self, k: &K) -> (result: Option<K>)
+        fn next_key(&self, k: &K) -> (successor: Option<K>)
             ensures self@.dom().finite();
-        fn split_key(&mut self, k: &K) -> (result: (Self, Option<V>, Self))
+        fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized,
             ensures self@.dom().finite();
         fn join_key(&mut self, other: Self)
             ensures self@.dom().finite();
-        fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
-            ensures result@.dom().finite();
-        fn rank_key(&self, k: &K) -> (result: usize)
+        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+            ensures range@.dom().finite();
+        fn rank_key(&self, k: &K) -> (rank: usize)
             ensures self@.dom().finite();
-        fn select_key(&self, i: usize) -> (result: Option<K>)
+        fn select_key(&self, i: usize) -> (selected: Option<K>)
             ensures self@.dom().finite();
-        fn split_rank_key(&mut self, i: usize) -> (result: (Self, Self))
+        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized,
             ensures self@.dom().finite();
-        fn reduce_val(&self) -> (result: V)
+        fn reduce_val(&self) -> (reduced: V)
             ensures self@.dom().finite();
-        fn reduce_range(&self, k1: &K, k2: &K) -> (result: V)
+        fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
             ensures self@.dom().finite();
-        fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (result: V)
+        fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (reduced: V)
             ensures self@.dom().finite();
     }
 
     // 9. impls
 
     impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> AugOrderedTableMtEphTrait<K, V, F> for AugOrderedTableMtEph<K, V, F> {
-        fn size(&self) -> (result: usize)
-            ensures result == self@.dom().len(), self@.dom().finite()
+        fn size(&self) -> (count: usize)
+            ensures count == self@.dom().len(), self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.size()
         }
 
-        fn empty(reducer: F, identity: V) -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty()
+        fn empty(reducer: F, identity: V) -> (empty: Self)
+            ensures empty@ == Map::<K::V, V::V>::empty()
         {
             let base = OrderedTableMtEph::empty();
             let r = Self {
@@ -208,8 +208,8 @@ broadcast use {
             r
         }
 
-        fn singleton(k: K, v: V, reducer: F, identity: V) -> (result: Self)
-            ensures result@.dom().finite()
+        fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
+            ensures tree@.dom().finite()
         {
             let base = OrderedTableMtEph::singleton(k, v.clone());
             let r = Self {
@@ -222,16 +222,16 @@ broadcast use {
             r
         }
 
-        fn find(&self, k: &K) -> (result: Option<V>) {
+        fn find(&self, k: &K) -> (found: Option<V>) {
             self.base_table.find(k)
         }
 
-        fn lookup(&self, k: &K) -> (result: Option<V>) {
+        fn lookup(&self, k: &K) -> (value: Option<V>) {
             self.base_table.lookup(k)
         }
 
-        fn is_empty(&self) -> (result: B)
-            ensures result == self@.dom().is_empty(), self@.dom().finite()
+        fn is_empty(&self) -> (is_empty: B)
+            ensures is_empty == self@.dom().is_empty(), self@.dom().finite()
         {
             proof {
                 lemma_aug_view(self);
@@ -248,16 +248,16 @@ broadcast use {
             proof { lemma_aug_view(self); }
         }
 
-        fn delete(&mut self, k: &K) -> (result: Option<V>)
+        fn delete(&mut self, k: &K) -> (updated: Option<V>)
             ensures self@.dom().finite()
         {
-            let result = self.base_table.delete(k);
+            let updated = self.base_table.delete(k);
             self.cached_reduction = recalculate_reduction(self);
             proof { lemma_aug_view(self); }
-            result
+            updated
         }
 
-        fn domain(&self) -> (result: ArraySetStEph<K>)
+        fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
@@ -269,8 +269,8 @@ broadcast use {
             keys: &ArraySetStEph<K>,
             reducer: F,
             identity: V,
-        ) -> (result: Self)
-            ensures result@.dom().finite()
+        ) -> (domain: Self)
+            ensures domain@.dom().finite()
         {
             let base_table = OrderedTableMtEph::tabulate(f, keys);
             let cached_reduction = calculate_reduction(&base_table, &reducer, &identity);
@@ -285,8 +285,8 @@ broadcast use {
             r
         }
 
-        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (result: Self)
-            ensures result@.dom().finite()
+        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self)
+            ensures mapped@.dom().finite()
         {
             let new_base = self.base_table.map(f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -301,8 +301,8 @@ broadcast use {
             r
         }
 
-        fn filter<G: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: G) -> (result: Self)
-            ensures result@.dom().finite()
+        fn filter<G: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: G) -> (filtered: Self)
+            ensures filtered@.dom().finite()
         {
             let new_base = self.base_table.filter(f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -357,49 +357,49 @@ broadcast use {
             proof { lemma_aug_view(self); }
         }
 
-        fn reduce<R: StTInMtT + 'static, G: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: G) -> (result: R)
+        fn reduce<R: StTInMtT + 'static, G: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: G) -> (reduced: R)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.reduce(init, f)
         }
 
-        fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
+        fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.collect()
         }
 
-        fn first_key(&self) -> (result: Option<K>)
+        fn first_key(&self) -> (first: Option<K>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.first_key()
         }
 
-        fn last_key(&self) -> (result: Option<K>)
+        fn last_key(&self) -> (last: Option<K>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.last_key()
         }
 
-        fn previous_key(&self, k: &K) -> (result: Option<K>)
+        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.previous_key(k)
         }
 
-        fn next_key(&self, k: &K) -> (result: Option<K>)
+        fn next_key(&self, k: &K) -> (successor: Option<K>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.next_key(k)
         }
 
-        fn split_key(&mut self, k: &K) -> (result: (Self, Option<V>, Self))
+        fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             ensures self@.dom().finite()
         {
             let (left_base, found_value, right_base) = self.base_table.split_key(k);
@@ -444,8 +444,8 @@ broadcast use {
             }
         }
 
-        fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
-            ensures result@.dom().finite()
+        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+            ensures range@.dom().finite()
         {
             let new_base = self.base_table.get_key_range(k1, k2);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -460,21 +460,21 @@ broadcast use {
             r
         }
 
-        fn rank_key(&self, k: &K) -> (result: usize)
+        fn rank_key(&self, k: &K) -> (rank: usize)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.rank_key(k)
         }
 
-        fn select_key(&self, i: usize) -> (result: Option<K>)
+        fn select_key(&self, i: usize) -> (selected: Option<K>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.select_key(i)
         }
 
-        fn split_rank_key(&mut self, i: usize) -> (result: (Self, Self))
+        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             ensures self@.dom().finite()
         {
             let (left_base, right_base) = self.base_table.split_rank_key(i);
@@ -500,7 +500,7 @@ broadcast use {
             (left, right)
         }
 
-        fn reduce_val(&self) -> (result: V)
+        fn reduce_val(&self) -> (reduced: V)
             ensures self@.dom().finite()
         {
             proof {
@@ -510,7 +510,7 @@ broadcast use {
             self.cached_reduction.clone()
         }
 
-        fn reduce_range(&self, k1: &K, k2: &K) -> (result: V)
+        fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
             ensures self@.dom().finite()
         {
             proof {
@@ -522,7 +522,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (result: V)
+        fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (reduced: V)
             ensures self@.dom().finite()
         {
             let range_table = self.get_key_range(k1, k2);
@@ -558,8 +558,8 @@ broadcast use {
 
     impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> Clone for AugOrderedTableMtEph<K, V, F> {
         #[verifier::external_body]
-        fn clone(&self) -> (result: Self)
-            ensures result@ == self@
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
         {
             Self {
                 base_table: self.base_table.clone(),

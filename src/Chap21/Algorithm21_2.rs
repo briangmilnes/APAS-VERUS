@@ -43,14 +43,14 @@ pub mod Algorithm21_2 {
     /// - Implemented as: flatten (tabulate_x (flatten (tabulate_y (tabulate_z))))
     /// - APAS: Work Θ(n³), Span Θ(lg n)
     /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — sequential StPer nested tabulate + flatten.
-    pub fn points3d_tab_flat(n: N) -> (result: ArraySeqStPerS<Pair<N, Pair<N, N>>>)
+    pub fn points3d_tab_flat(n: N) -> (points: ArraySeqStPerS<Pair<N, Pair<N, N>>>)
         requires
             n + 2 <= usize::MAX,
             pow(n as int, 2) <= usize::MAX as int,
             pow(n as int, 3) <= usize::MAX as int,
         ensures
-            n == 0 ==> result.seq@.len() == 0,
-            n > 0  ==> result.seq@.len() == pow(n as int, 3),
+            n == 0 ==> points.seq@.len() == 0,
+            n > 0  ==> points.seq@.len() == pow(n as int, 3),
     {
         if n == 0 {
             return ArraySeqStPerS { seq: Vec::new() };
@@ -114,7 +114,7 @@ pub mod Algorithm21_2 {
             assert(Pair_feq_trigger::<N, N>());
             assert(Pair_feq_trigger::<N, Pair<N, N>>());
         }
-        let result = ArraySeqStPerS::flatten(&outer);
+        let flattened = ArraySeqStPerS::flatten(&outer);
         proof {
             let ghost n2 = pow(n as int, 2);
             let ghost mapped = outer.seq@.map_values(|inner: ArraySeqStPerS<Pair<N, Pair<N, N>>>| inner.seq@);
@@ -124,7 +124,7 @@ pub mod Algorithm21_2 {
             // n * pow(n, 2) == pow(n, 2+1) == pow(n, 3)
             vstd::arithmetic::power::lemma_pow_adds(n as int, 2, 1);
         }
-        result
+        flattened
     }
 
     } // verus!

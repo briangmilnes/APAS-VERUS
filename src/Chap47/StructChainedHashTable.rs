@@ -51,11 +51,11 @@ pub mod StructChainedHashTable {
         }
 
         impl<Key: Clone, Value: Clone> Clone for Node<Key, Value> {
-            fn clone(&self) -> (result: Self)
-                ensures result == *self
+            fn clone(&self) -> (cloned: Self)
+                ensures cloned == *self
                 decreases self
             {
-                let result = Node {
+                let cloned = Node {
                     key: self.key.clone(),
                     value: self.value.clone(),
                     next: match &self.next {
@@ -63,8 +63,8 @@ pub mod StructChainedHashTable {
                         Some(b) => Some(Box::new((**b).clone())),
                     },
                 };
-                proof { accept(result == *self); }
-                result
+                proof { accept(cloned == *self); }
+                cloned
             }
         }
 
@@ -94,17 +94,17 @@ pub mod StructChainedHashTable {
         }
 
         impl<Key: Clone, Value: Clone> Clone for ChainList<Key, Value> {
-            fn clone(&self) -> (result: Self)
-                ensures result == *self
+            fn clone(&self) -> (cloned: Self)
+                ensures cloned == *self
             {
-                let result = ChainList {
+                let cloned = ChainList {
                     head: match &self.head {
                         None => None,
                         Some(b) => Some(Box::new((**b).clone())),
                     },
                 };
-                proof { accept(result == *self); }
-                result
+                proof { accept(cloned == *self); }
+                cloned
             }
         }
 

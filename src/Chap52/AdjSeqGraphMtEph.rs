@@ -87,10 +87,10 @@ broadcast use {
             recommends 0 <= u < self.spec_num_vertices(), 0 <= j < self.spec_degree(u);
 
         /// Work Theta(n), Span Theta(1)
-        fn new(n: N) -> (result: Self)
+        fn new(n: N) -> (empty: Self)
             ensures
-                result.spec_num_vertices() == n,
-                forall|i: int| #![auto] 0 <= i < n ==> result.spec_degree(i) == 0;
+                empty.spec_num_vertices() == n,
+                forall|i: int| #![auto] 0 <= i < n ==> empty.spec_degree(i) == 0;
 
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: N)
@@ -166,7 +166,7 @@ broadcast use {
             self.adj.spec_index(u).spec_index(j)
         }
 
-        fn new(n: N) -> (result: Self) {
+        fn new(n: N) -> (empty: Self) {
             let adj = ArraySeqMtEphS::tabulate(
                 &|_i: usize| -> (r: ArraySeqMtEphS<N>)
                     ensures r.spec_len() == 0

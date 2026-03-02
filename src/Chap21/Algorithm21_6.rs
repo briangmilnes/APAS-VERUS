@@ -59,13 +59,13 @@ pub mod Algorithm21_6 {
     ///
     /// - APAS: Work Θ(n lg n), Span Θ(lg n)
     /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential StPer; O(|composites|) ninject + O(n) collect.
-    pub fn prime_sieve(n: N) -> (result: ArraySeqStPerS<N>)
+    pub fn prime_sieve(n: N) -> (primes: ArraySeqStPerS<N>)
         requires n < usize::MAX,
         ensures
-            n <= 2 ==> result.spec_len() == 0,
-            n > 2  ==> result.spec_len() <= n - 1,
-            forall|i: int| 0 <= i < result.spec_len() ==>
-                2 <= #[trigger] result.spec_index(i) && result.spec_index(i) <= n,
+            n <= 2 ==> primes.spec_len() == 0,
+            n > 2  ==> primes.spec_len() <= n - 1,
+            forall|i: int| 0 <= i < primes.spec_len() ==>
+                2 <= #[trigger] primes.spec_index(i) && primes.spec_index(i) <= n,
     {
         if n <= 2 {
             return ArraySeqStPerS::from_vec(Vec::new());

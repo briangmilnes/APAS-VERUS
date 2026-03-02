@@ -60,15 +60,15 @@ pub mod EdgeSetGraphMtPer {
         /// claude-4-sonet: Work Θ(log |E|), Span Θ(log |E|), Parallelism Θ(1)
         fn has_edge(&self, u: &V, v: &V)                                                  -> B;
         /// claude-4-sonet: Work Θ(|E| log |V|), Span Θ(log |E| × log |V|), Parallelism Θ(|E|/log |E|)
-        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetMtPer<V>)
-            ensures result@ == Set::new(|v: <V as View>::V| self.edges@.contains((u@, v)));
+        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
+            ensures neighbors@ == Set::new(|v: <V as View>::V| self.edges@.contains((u@, v)));
         /// claude-4-sonet: Work Θ(|E|), Span Θ(log |E|), Parallelism Θ(|E|/log |E|)
         fn out_degree(&self, u: &V)                                                       -> N;
         /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
         fn insert_vertex(&self, v: V)                                                     -> Self;
         /// claude-4-sonet: Work Θ(|E| log |V| + |E| log |E|), Span Θ(log |E| × log |V|), Parallelism Θ(|E|/log |E|)
-        fn delete_vertex(&self, v: &V) -> (result: Self)
-            ensures !result.vertices@.contains(v@);
+        fn delete_vertex(&self, v: &V) -> (updated: Self)
+            ensures !updated.vertices@.contains(v@);
         /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
         fn insert_edge(&self, u: V, v: V)                                                 -> Self;
         /// claude-4-sonet: Work Θ(log |E|), Span Θ(log |E|), Parallelism Θ(1)
@@ -149,8 +149,8 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
-        fn delete_vertex(&self, v: &V) -> (result: Self)
-            ensures !result.vertices@.contains(v@)
+        fn delete_vertex(&self, v: &V) -> (updated: Self)
+            ensures !updated.vertices@.contains(v@)
         {
             let v_clone = v.clone();
             let new_vertices = self.vertices.delete(&v_clone);

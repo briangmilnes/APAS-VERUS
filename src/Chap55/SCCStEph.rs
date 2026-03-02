@@ -42,7 +42,7 @@ pub mod SCCStEph {
     {
         let n = graph.length();
         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
-        let mut result: Vec<N> = Vec::new();
+        let mut finish_order: Vec<N> = Vec::new();
 
         let mut start: usize = 0;
         while start < n
@@ -54,29 +54,29 @@ pub mod SCCStEph {
             decreases n - start,
         {
             if !*visited.nth(start) {
-                dfs_finish_order(graph, &mut visited, &mut result, start);
+                dfs_finish_order(graph, &mut visited, &mut finish_order, start);
             }
             start = start + 1;
         }
-        let result_len = result.len();
+        let result_len = finish_order.len();
         let mut reversed: Vec<N> = Vec::new();
         let mut k: usize = result_len;
         while k > 0
             invariant
                 k <= result_len,
-                result_len == result@.len(),
+                result_len == finish_order@.len(),
             decreases k,
         {
             k = k - 1;
-            reversed.push(result[k]);
+            reversed.push(finish_order[k]);
         }
         AVLTreeSeqStEphS::from_vec(reversed)
     }
 
     /// Transposes a directed graph (reverses all edges).
-    fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (result: ArraySeqStEphS<ArraySeqStEphS<N>>)
+    fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<N>>)
         requires spec_wf_adj_list(graph),
-        ensures result@.len() == graph@.len(),
+        ensures transposed@.len() == graph@.len(),
     {
         let n = graph.length();
         let mut adj_vecs: Vec<Vec<N>> = Vec::new();
@@ -136,8 +136,8 @@ pub mod SCCStEph {
     }
 
     /// Runtime check that all neighbor indices are valid vertex indices.
-    fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (result: bool)
-        ensures result ==> spec_wf_adj_list(graph),
+    fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (valid: bool)
+        ensures valid ==> spec_wf_adj_list(graph),
     {
         let n = graph.length();
         let mut u: usize = 0;

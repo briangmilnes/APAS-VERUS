@@ -75,13 +75,13 @@ pub mod Exercise21_7 {
     pub fn pair_even_with_vowels(
         a: &ArraySeqStPerS<N>,
         b: &ArraySeqStPerS<char>,
-    ) -> (result: ArraySeqStPerS<Pair<N, char>>)
+    ) -> (pairs: ArraySeqStPerS<Pair<N, char>>)
        requires 
             obeys_feq_clone::<char>(),
             obeys_feq_clone::<Pair<N, char>>(),
             a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,
        ensures
-            result.seq@.len() <= a.seq@.len() as int * b.seq@.len() as int,
+            pairs.seq@.len() <= a.seq@.len() as int * b.seq@.len() as int,
     {
         let pred_even = |x: &N| -> (r: B) ensures r == spec_is_even(*x as int) { is_even(x) };
         let pred_vowel = |y: &char| -> (r: B) ensures r == spec_is_vowel(*y) { is_vowel(y) };
@@ -116,14 +116,14 @@ pub mod Exercise21_7 {
             }),
             fa_len,
         );
-        let result = ArraySeqStPerS::flatten(&nested);
+        let pairs = ArraySeqStPerS::flatten(&nested);
         proof {
             let ghost mapped = nested.seq@.map_values(
                 |inner: ArraySeqStPerS<Pair<N, char>>| inner.seq@);
             assert forall|i: int| 0 <= i < mapped.len() implies
                 (#[trigger] mapped[i]).len() == fb_len as int by {}
             lemma_flatten_uniform_len(mapped, fb_len as int);
-            assert(result.seq@.len() == fa_len as int * fb_len as int);
+            assert(pairs.seq@.len() == fa_len as int * fb_len as int);
             assert(fa_len <= a.seq@.len());
             assert(fb_len <= b.seq@.len());
             assert(fa_len as int * fb_len as int <= a.seq@.len() as int * b.seq@.len() as int)
@@ -133,7 +133,7 @@ pub mod Exercise21_7 {
                     fa_len as int <= a.seq@.len() as int,
                     fb_len as int <= b.seq@.len() as int;
         }
-        result
+        pairs
     }
 
     } // verus!

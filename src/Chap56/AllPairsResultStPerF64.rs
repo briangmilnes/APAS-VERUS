@@ -32,26 +32,26 @@ pub mod AllPairsResultStPerF64 {
     // 8. traits
 
     pub trait AllPairsResultStPerF64Trait: Sized {
-        fn new(n: usize) -> (result: Self);
+        fn new(n: usize) -> (empty: Self);
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64);
 
-        fn set_distance(self, u: usize, v: usize, dist: WrappedF64) -> (result: Self);
+        fn set_distance(self, u: usize, v: usize, dist: WrappedF64) -> (updated: Self);
 
-        fn get_predecessor(&self, u: usize, v: usize) -> (result: Option<usize>);
+        fn get_predecessor(&self, u: usize, v: usize) -> (predecessor: Option<usize>);
 
-        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (result: Self);
+        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self);
 
-        fn is_reachable(&self, u: usize, v: usize) -> (result: bool);
+        fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool);
 
-        fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);
+        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);
     }
 
     // 9. impls
 
     impl AllPairsResultStPerF64Trait for AllPairsResultStPerF64 {
-        fn new(n: usize) -> (result: Self)
-            ensures result.n == n,
+        fn new(n: usize) -> (empty: Self)
+            ensures empty.n == n,
         {
             let unreach = unreachable_dist();
             let zero = zero_dist();
@@ -109,10 +109,10 @@ pub mod AllPairsResultStPerF64 {
             *row.nth(v)
         }
 
-        fn set_distance(self, u: usize, v: usize, dist: WrappedF64) -> (result: Self)
+        fn set_distance(self, u: usize, v: usize, dist: WrappedF64) -> (updated: Self)
             ensures
-                result.n == self.n,
-                result.predecessors == self.predecessors,
+                updated.n == self.n,
+                updated.predecessors == self.predecessors,
         {
             if u >= self.distances.seq.len() || v >= self.n { return self; }
             let mut row_vec = self.distances.seq[u].seq.clone();
@@ -129,7 +129,7 @@ pub mod AllPairsResultStPerF64 {
             }
         }
 
-        fn get_predecessor(&self, u: usize, v: usize) -> (result: Option<usize>) {
+        fn get_predecessor(&self, u: usize, v: usize) -> (predecessor: Option<usize>) {
             if u >= self.predecessors.length() {
                 return None;
             }
@@ -141,10 +141,10 @@ pub mod AllPairsResultStPerF64 {
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
-        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (result: Self)
+        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self)
             ensures
-                result.n == self.n,
-                result.distances == self.distances,
+                updated.n == self.n,
+                updated.distances == self.distances,
         {
             if u >= self.predecessors.seq.len() || v >= self.n { return self; }
             let mut row_vec = self.predecessors.seq[u].seq.clone();
@@ -161,11 +161,11 @@ pub mod AllPairsResultStPerF64 {
             }
         }
 
-        fn is_reachable(&self, u: usize, v: usize) -> (result: bool) {
+        fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool) {
             self.get_distance(u, v).is_finite()
         }
 
-        fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
+        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>) {
             if u >= self.predecessors.length() || v >= self.predecessors.length() {
                 return None;
             }

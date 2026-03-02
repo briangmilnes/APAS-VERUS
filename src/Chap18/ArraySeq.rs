@@ -1430,16 +1430,16 @@ pub mod ArraySeq {
             // At loop exit, take(len) == s.
             assert(s.take(len as int) =~= s);
         }
-        let result = ArraySeqS { seq };
+        let prefixes = ArraySeqS { seq };
         proof {
             // Bridge seq@ indices to spec_index for the ensures.
-            assert forall|i: int| #![trigger result.spec_index(i)] 0 <= i < a.spec_len() implies
-                result.spec_index(i) == spec_iterate_prefixes(s, spec_f, start_x).0[i]
+            assert forall|i: int| #![trigger prefixes.spec_index(i)] 0 <= i < a.spec_len() implies
+                prefixes.spec_index(i) == spec_iterate_prefixes(s, spec_f, start_x).0[i]
             by {
-                assert(result.spec_index(i) == seq@[i]);
+                assert(prefixes.spec_index(i) == seq@[i]);
             }
         }
-        (result, acc)
+        (prefixes, acc)
     }
 
     impl<T: View> ArraySeqS<T> {

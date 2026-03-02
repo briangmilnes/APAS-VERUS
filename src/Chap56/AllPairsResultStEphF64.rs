@@ -33,26 +33,26 @@ pub mod AllPairsResultStEphF64 {
     // 8. traits
 
     pub trait AllPairsResultStEphF64Trait: Sized {
-        fn new(n: usize) -> (result: Self);
+        fn new(n: usize) -> (empty: Self);
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64);
 
         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64);
 
-        fn get_predecessor(&self, u: usize, v: usize) -> (result: Option<usize>);
+        fn get_predecessor(&self, u: usize, v: usize) -> (predecessor: Option<usize>);
 
         fn set_predecessor(&mut self, u: usize, v: usize, pred: usize);
 
-        fn is_reachable(&self, u: usize, v: usize) -> (result: bool);
+        fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool);
 
-        fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);
+        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);
     }
 
     // 9. impls
 
     impl AllPairsResultStEphF64Trait for AllPairsResultStEphF64 {
-        fn new(n: usize) -> (result: Self)
-            ensures result.n == n,
+        fn new(n: usize) -> (empty: Self)
+            ensures empty.n == n,
         {
             let unreach = unreachable_dist();
             let zero = zero_dist();
@@ -133,7 +133,7 @@ pub mod AllPairsResultStEphF64 {
             }
         }
 
-        fn get_predecessor(&self, u: usize, v: usize) -> (result: Option<usize>) {
+        fn get_predecessor(&self, u: usize, v: usize) -> (predecessor: Option<usize>) {
             if u >= self.predecessors.length() {
                 return None;
             }
@@ -160,11 +160,11 @@ pub mod AllPairsResultStEphF64 {
             }
         }
 
-        fn is_reachable(&self, u: usize, v: usize) -> (result: bool) {
+        fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool) {
             self.get_distance(u, v).is_finite()
         }
 
-        fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
+        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>) {
             if u >= self.predecessors.length() || v >= self.predecessors.length() {
                 return None;
             }

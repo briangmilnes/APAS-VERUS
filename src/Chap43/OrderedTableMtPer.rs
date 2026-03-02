@@ -56,61 +56,61 @@ broadcast use {
     // 8. traits
 
     pub trait OrderedTableMtPerTrait<K: MtKey + 'static, V: StTInMtT + Ord + 'static>: Sized + View<V = Map<K::V, V::V>> {
-        fn size(&self) -> (result: usize)
-            ensures result == self@.dom().len(), self@.dom().finite();
+        fn size(&self) -> (count: usize)
+            ensures count == self@.dom().len(), self@.dom().finite();
 
-        fn empty() -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty();
+        fn empty() -> (empty: Self)
+            ensures empty@ == Map::<K::V, V::V>::empty();
 
-        fn singleton(k: K, v: V) -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty().insert(k@, v@), result@.dom().finite();
+        fn singleton(k: K, v: V) -> (tree: Self)
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite();
 
-        fn find(&self, k: &K) -> (result: Option<V>);
+        fn find(&self, k: &K) -> (found: Option<V>);
 
-        fn insert(&self, k: K, v: V) -> (result: Self)
-            ensures result@.dom().finite();
+        fn insert(&self, k: K, v: V) -> (updated: Self)
+            ensures updated@.dom().finite();
 
-        fn delete(&self, k: &K) -> (result: Self)
-            ensures result@.dom().finite();
+        fn delete(&self, k: &K) -> (updated: Self)
+            ensures updated@.dom().finite();
 
-        fn domain(&self) -> (result: OrderedSetMtEph<K>)
+        fn domain(&self) -> (domain: OrderedSetMtEph<K>)
             ensures self@.dom().finite();
 
-        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (result: Self)
-            ensures result@.dom().finite();
+        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self)
+            ensures mapped@.dom().finite();
 
-        fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (result: Self)
-            ensures result@.dom().finite();
+        fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (filtered: Self)
+            ensures filtered@.dom().finite();
 
-        fn first_key(&self) -> (result: Option<K>)
+        fn first_key(&self) -> (first: Option<K>)
             ensures self@.dom().finite();
 
-        fn last_key(&self) -> (result: Option<K>)
+        fn last_key(&self) -> (last: Option<K>)
             ensures self@.dom().finite();
 
-        fn previous_key(&self, k: &K) -> (result: Option<K>)
+        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             ensures self@.dom().finite();
 
-        fn next_key(&self, k: &K) -> (result: Option<K>)
+        fn next_key(&self, k: &K) -> (successor: Option<K>)
             ensures self@.dom().finite();
 
-        fn split_key(&self, k: &K) -> (result: (Self, Option<V>, Self))
+        fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
             ensures self@.dom().finite();
 
-        fn join_key(&self, other: &Self) -> (result: Self)
-            ensures result@.dom().finite();
+        fn join_key(&self, other: &Self) -> (joined: Self)
+            ensures joined@.dom().finite();
 
-        fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
-            ensures result@.dom().finite();
+        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+            ensures range@.dom().finite();
 
-        fn rank_key(&self, k: &K) -> (result: usize)
+        fn rank_key(&self, k: &K) -> (rank: usize)
             ensures self@.dom().finite();
 
-        fn select_key(&self, i: usize) -> (result: Option<K>)
+        fn select_key(&self, i: usize) -> (selected: Option<K>)
             ensures self@.dom().finite();
 
-        fn split_rank_key(&self, i: usize) -> (result: (Self, Self))
+        fn split_rank_key(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite();
     }
@@ -119,15 +119,15 @@ broadcast use {
 
     impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
         #[verifier::external_body]
-        fn size(&self) -> (result: usize)
-            ensures result == self@.dom().len(), self@.dom().finite()
+        fn size(&self) -> (count: usize)
+            ensures count == self@.dom().len(), self@.dom().finite()
         {
             self.tree.size()
         }
 
         #[verifier::external_body]
-        fn empty() -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty()
+        fn empty() -> (empty: Self)
+            ensures empty@ == Map::<K::V, V::V>::empty()
         {
             OrderedTableMtPer {
                 tree: ParamTreap::new(),
@@ -135,8 +135,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn singleton(k: K, v: V) -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty().insert(k@, v@), result@.dom().finite()
+        fn singleton(k: K, v: V) -> (tree: Self)
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite()
         {
             let tree = ParamTreap::new();
             tree.insert(Pair(k, v));
@@ -144,7 +144,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn find(&self, k: &K) -> (result: Option<V>) {
+        fn find(&self, k: &K) -> (found: Option<V>) {
             let seq = self.tree.in_order();
             let mut left = 0;
             let mut right = seq.length();
@@ -163,8 +163,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn insert(&self, k: K, v: V) -> (result: Self)
-            ensures result@.dom().finite()
+        fn insert(&self, k: K, v: V) -> (updated: Self)
+            ensures updated@.dom().finite()
         {
             let k_clone = k.clone();
             let filtered = self.tree.filter(move |pair: &Pair<K, V>| pair.0 != k_clone);
@@ -173,8 +173,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn delete(&self, k: &K) -> (result: Self)
-            ensures result@.dom().finite()
+        fn delete(&self, k: &K) -> (updated: Self)
+            ensures updated@.dom().finite()
         {
             let k_clone = k.clone();
             let filtered = self.tree.filter(move |pair: &Pair<K, V>| pair.0 != k_clone);
@@ -182,7 +182,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn domain(&self) -> (result: OrderedSetMtEph<K>)
+        fn domain(&self) -> (domain: OrderedSetMtEph<K>)
             ensures self@.dom().finite()
         {
             let pair_seq = self.tree.in_order();
@@ -197,8 +197,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (result: Self)
-            ensures result@.dom().finite()
+        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self)
+            ensures mapped@.dom().finite()
         {
             let seq = self.tree.in_order();
             let new_tree = ParamTreap::new();
@@ -211,8 +211,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (result: Self)
-            ensures result@.dom().finite()
+        fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (filtered: Self)
+            ensures filtered@.dom().finite()
         {
             OrderedTableMtPer {
                 tree: self.tree.filter(f),
@@ -220,7 +220,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn first_key(&self) -> (result: Option<K>)
+        fn first_key(&self) -> (first: Option<K>)
             ensures self@.dom().finite()
         {
             let seq = self.tree.in_order();
@@ -228,7 +228,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn last_key(&self) -> (result: Option<K>)
+        fn last_key(&self) -> (last: Option<K>)
             ensures self@.dom().finite()
         {
             let seq = self.tree.in_order();
@@ -237,20 +237,20 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn previous_key(&self, k: &K) -> (result: Option<K>)
+        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             ensures self@.dom().finite()
         {
             let seq = self.tree.in_order();
-            let mut result = None;
+            let mut predecessor = None;
             for i in 0..seq.length() {
                 let pair = seq.nth(i);
-                if &pair.0 < k { result = Some(pair.0.clone()); } else { break; }
+                if &pair.0 < k { predecessor = Some(pair.0.clone()); } else { break; }
             }
-            result
+            predecessor
         }
 
         #[verifier::external_body]
-        fn next_key(&self, k: &K) -> (result: Option<K>)
+        fn next_key(&self, k: &K) -> (successor: Option<K>)
             ensures self@.dom().finite()
         {
             let seq = self.tree.in_order();
@@ -262,7 +262,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn split_key(&self, k: &K) -> (result: (Self, Option<V>, Self))
+        fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
             ensures self@.dom().finite()
         {
@@ -290,8 +290,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn join_key(&self, other: &Self) -> (result: Self)
-            ensures result@.dom().finite()
+        fn join_key(&self, other: &Self) -> (joined: Self)
+            ensures joined@.dom().finite()
         {
             OrderedTableMtPer {
                 tree: self.tree.union(&other.tree),
@@ -299,8 +299,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
-            ensures result@.dom().finite()
+        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+            ensures range@.dom().finite()
         {
             let seq = self.tree.in_order();
             let result_tree = ParamTreap::new();
@@ -314,7 +314,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn rank_key(&self, k: &K) -> (result: usize)
+        fn rank_key(&self, k: &K) -> (rank: usize)
             ensures self@.dom().finite()
         {
             let seq = self.tree.in_order();
@@ -327,7 +327,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn select_key(&self, i: usize) -> (result: Option<K>)
+        fn select_key(&self, i: usize) -> (selected: Option<K>)
             ensures self@.dom().finite()
         {
             let seq = self.tree.in_order();
@@ -335,7 +335,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn split_rank_key(&self, i: usize) -> (result: (Self, Self))
+        fn split_rank_key(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite()
         {
@@ -358,8 +358,8 @@ broadcast use {
 
     impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> Clone for OrderedTableMtPer<K, V> {
         #[verifier::external_body]
-        fn clone(&self) -> (result: Self)
-            ensures result@ == self@
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
         {
             OrderedTableMtPer {
                 tree: self.tree.clone(),

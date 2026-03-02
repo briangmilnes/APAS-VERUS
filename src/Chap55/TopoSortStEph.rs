@@ -83,7 +83,7 @@ broadcast use {
     pub fn dfs_finish_order(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
-        result: &mut Vec<N>,
+        finish_order: &mut Vec<N>,
         vertex: N,
     )
         requires
@@ -125,10 +125,10 @@ broadcast use {
         {
             let neighbor = *neighbors.nth(i);
             assert(graph@[vertex as int]@[i as int] < graph@.len());
-            dfs_finish_order(graph, visited, result, neighbor);
+            dfs_finish_order(graph, visited, finish_order, neighbor);
             i = i + 1;
         }
-        result.push(vertex);
+        finish_order.push(vertex);
     }
 
     /// Recursive DFS with cycle detection via rec_stack.
@@ -137,7 +137,7 @@ broadcast use {
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
         rec_stack: &mut ArraySeqStEphS<B>,
-        result: &mut Vec<N>,
+        finish_order: &mut Vec<N>,
         vertex: N,
     ) -> (cycle_free: bool)
         requires
@@ -188,7 +188,7 @@ broadcast use {
         {
             let neighbor = *neighbors.nth(i);
             assert(graph@[vertex as int]@[i as int] < graph@.len());
-            if !dfs_finish_order_cycle_detect(graph, visited, rec_stack, result, neighbor) {
+            if !dfs_finish_order_cycle_detect(graph, visited, rec_stack, finish_order, neighbor) {
                 return false;
             }
             i = i + 1;
@@ -196,7 +196,7 @@ broadcast use {
 
         let ok3 = rec_stack.set(vertex, false);
         assert(ok3.is_ok());
-        result.push(vertex);
+        finish_order.push(vertex);
         true
     }
 
@@ -207,7 +207,7 @@ broadcast use {
         let n = graph.length();
         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
         let mut rec_stack = ArraySeqStEphS::tabulate(&|_| false, n);
-        let mut result: Vec<N> = Vec::new();
+        let mut finish_order: Vec<N> = Vec::new();
 
         let mut start: usize = 0;
         while start < n
@@ -220,23 +220,23 @@ broadcast use {
             decreases n - start,
         {
             if !*visited.nth(start) {
-                if !dfs_finish_order_cycle_detect(graph, &mut visited, &mut rec_stack, &mut result, start) {
+                if !dfs_finish_order_cycle_detect(graph, &mut visited, &mut rec_stack, &mut finish_order, start) {
                     return None;
                 }
             }
             start = start + 1;
         }
-        let result_len = result.len();
+        let result_len = finish_order.len();
         let mut reversed: Vec<N> = Vec::new();
         let mut k: usize = result_len;
         while k > 0
             invariant
                 k <= result_len,
-                result_len == result@.len(),
+                result_len == finish_order@.len(),
             decreases k,
         {
             k = k - 1;
-            reversed.push(result[k]);
+            reversed.push(finish_order[k]);
         }
         Some(AVLTreeSeqStEphS::from_vec(reversed))
     }
@@ -247,7 +247,7 @@ broadcast use {
     {
         let n = graph.length();
         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
-        let mut result: Vec<N> = Vec::new();
+        let mut finish_order: Vec<N> = Vec::new();
 
         let mut start: usize = 0;
         while start < n
@@ -259,21 +259,21 @@ broadcast use {
             decreases n - start,
         {
             if !*visited.nth(start) {
-                dfs_finish_order(graph, &mut visited, &mut result, start);
+                dfs_finish_order(graph, &mut visited, &mut finish_order, start);
             }
             start = start + 1;
         }
-        let result_len = result.len();
+        let result_len = finish_order.len();
         let mut reversed: Vec<N> = Vec::new();
         let mut k: usize = result_len;
         while k > 0
             invariant
                 k <= result_len,
-                result_len == result@.len(),
+                result_len == finish_order@.len(),
             decreases k,
         {
             k = k - 1;
-            reversed.push(result[k]);
+            reversed.push(finish_order[k]);
         }
         AVLTreeSeqStEphS::from_vec(reversed)
     }

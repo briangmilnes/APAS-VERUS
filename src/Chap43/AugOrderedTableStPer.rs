@@ -68,7 +68,7 @@ broadcast use {
         base: &OrderedTableStPer<K, V>,
         reducer: &F,
         identity: &V,
-    ) -> (result: V)
+    ) -> (reduced: V)
     where
         F: Fn(&V, &V) -> V + Clone,
         ensures base@.dom().finite(),
@@ -83,7 +83,7 @@ broadcast use {
             assume(pairs.spec_well_formed());
             assume(pairs@.len() == sz as int);
         }
-        let mut result = pairs.nth(0).1.clone();
+        let mut reduced = pairs.nth(0).1.clone();
         let mut i: usize = 1;
         while i < pairs.length()
             invariant
@@ -92,11 +92,11 @@ broadcast use {
             decreases pairs@.len() - i,
         {
             let pair = pairs.nth(i);
-            proof { assume(reducer.requires((&result, &pair.1))); }
-            result = reducer(&result, &pair.1);
+            proof { assume(reducer.requires((&reduced, &pair.1))); }
+            reduced = reducer(&reduced, &pair.1);
             i += 1;
         }
-        result
+        reduced
     }
 
     // 7b. proof fns
@@ -117,78 +117,78 @@ broadcast use {
     {
         spec fn spec_wf(&self) -> bool;
 
-        fn size(&self) -> (result: usize)
+        fn size(&self) -> (count: usize)
             requires self.spec_wf(),
-            ensures result == self@.dom().len(), self@.dom().finite();
-        fn empty(reducer: F, identity: V) -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty(), result.spec_wf();
-        fn singleton(k: K, v: V, reducer: F, identity: V) -> (result: Self)
+            ensures count == self@.dom().len(), self@.dom().finite();
+        fn empty(reducer: F, identity: V) -> (empty: Self)
+            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_wf();
+        fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
             requires obeys_feq_clone::<Pair<K, V>>(),
-            ensures result@.dom().finite(), result.spec_wf();
-        fn find(&self, k: &K) -> (result: Option<V>)
+            ensures tree@.dom().finite(), tree.spec_wf();
+        fn find(&self, k: &K) -> (found: Option<V>)
             requires self.spec_wf(),
             ensures
-                match result {
+                match found {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
                     None => !self@.contains_key(k@),
                 };
-        fn insert(&self, k: K, v: V) -> (result: Self)
+        fn insert(&self, k: K, v: V) -> (updated: Self)
             requires self.spec_wf(),
-            ensures result@.dom().finite(), result.spec_wf();
-        fn delete(&self, k: &K) -> (result: Self)
+            ensures updated@.dom().finite(), updated.spec_wf();
+        fn delete(&self, k: &K) -> (updated: Self)
             requires self.spec_wf(), obeys_feq_clone::<Pair<K, V>>(),
-            ensures result@.dom().finite(), result.spec_wf();
-        fn domain(&self) -> (result: ArraySetStEph<K>)
+            ensures updated@.dom().finite(), updated.spec_wf();
+        fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite();
-        fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (result: Self)
+        fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
             requires forall|k: &K| f.requires((k,)),
-            ensures result@.dom().finite();
-        fn map<G: Fn(&V) -> V>(&self, f: G) -> (result: Self)
+            ensures tabulated@.dom().finite();
+        fn map<G: Fn(&V) -> V>(&self, f: G) -> (mapped: Self)
             requires forall|v: &V| f.requires((v,)),
-            ensures result@.dom().finite();
-        fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (result: Self)
+            ensures mapped@.dom().finite();
+        fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (filtered: Self)
             requires forall|k: &K, v: &V| f.requires((k, v)),
-            ensures result@.dom().finite();
-        fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (result: Self)
+            ensures filtered@.dom().finite();
+        fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (common: Self)
             requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
-            ensures result@.dom().finite();
-        fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (result: Self)
+            ensures common@.dom().finite();
+        fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (combined: Self)
             requires self.spec_wf(), forall|v1: &V, v2: &V| f.requires((v1, v2)),
-            ensures result@.dom().finite(), result.spec_wf();
-        fn difference(&self, other: &Self) -> (result: Self)
-            ensures result@.dom().finite();
-        fn restrict(&self, keys: &ArraySetStEph<K>) -> (result: Self)
-            ensures result@.dom().finite();
-        fn subtract(&self, keys: &ArraySetStEph<K>) -> (result: Self)
-            ensures result@.dom().finite();
-        fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
+            ensures combined@.dom().finite(), combined.spec_wf();
+        fn difference(&self, other: &Self) -> (remaining: Self)
+            ensures remaining@.dom().finite();
+        fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
+            ensures restricted@.dom().finite();
+        fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
+            ensures subtracted@.dom().finite();
+        fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite();
-        fn first_key(&self) -> (result: Option<K>)
+        fn first_key(&self) -> (first: Option<K>)
             ensures self@.dom().finite();
-        fn last_key(&self) -> (result: Option<K>)
+        fn last_key(&self) -> (last: Option<K>)
             ensures self@.dom().finite();
-        fn previous_key(&self, k: &K) -> (result: Option<K>)
+        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             ensures self@.dom().finite();
-        fn next_key(&self, k: &K) -> (result: Option<K>)
+        fn next_key(&self, k: &K) -> (successor: Option<K>)
             ensures self@.dom().finite();
-        fn split_key(&self, k: &K) -> (result: (Self, Option<V>, Self))
+        fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized,
             ensures self@.dom().finite();
-        fn join_key(left: &Self, right: &Self) -> (result: Self)
+        fn join_key(left: &Self, right: &Self) -> (joined: Self)
             requires left.spec_wf(), right.spec_wf(),
-            ensures result@.dom().finite(), result.spec_wf();
-        fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
-            ensures result@.dom().finite();
-        fn rank_key(&self, k: &K) -> (result: usize)
+            ensures joined@.dom().finite(), joined.spec_wf();
+        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+            ensures range@.dom().finite();
+        fn rank_key(&self, k: &K) -> (rank: usize)
             ensures self@.dom().finite();
-        fn select_key(&self, i: usize) -> (result: Option<K>)
+        fn select_key(&self, i: usize) -> (selected: Option<K>)
             ensures self@.dom().finite();
-        fn split_rank_key(&self, i: usize) -> (result: (Self, Self))
+        fn split_rank_key(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized,
             ensures self@.dom().finite();
-        fn reduce_val(&self) -> (result: V)
+        fn reduce_val(&self) -> (reduced: V)
             ensures self@.dom().finite();
-        fn reduce_range(&self, k1: &K, k2: &K) -> (result: V)
+        fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
             ensures self@.dom().finite();
     }
 
@@ -202,15 +202,15 @@ broadcast use {
             self.base_table.spec_wf()
         }
 
-        fn size(&self) -> (result: usize)
-            ensures result == self@.dom().len(), self@.dom().finite()
+        fn size(&self) -> (count: usize)
+            ensures count == self@.dom().len(), self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.size()
         }
 
-        fn empty(reducer: F, identity: V) -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty(), result.spec_wf()
+        fn empty(reducer: F, identity: V) -> (empty: Self)
+            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_wf()
         {
             let base = OrderedTableStPer::empty();
             let r = Self {
@@ -223,8 +223,8 @@ broadcast use {
             r
         }
 
-        fn singleton(k: K, v: V, reducer: F, identity: V) -> (result: Self)
-            ensures result@.dom().finite(), result.spec_wf()
+        fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
+            ensures tree@.dom().finite(), tree.spec_wf()
         {
             let base = OrderedTableStPer::singleton(k, v.clone());
             let r = Self {
@@ -237,14 +237,14 @@ broadcast use {
             r
         }
 
-        fn find(&self, k: &K) -> (result: Option<V>)
+        fn find(&self, k: &K) -> (found: Option<V>)
         {
             proof { lemma_aug_view(self); }
             self.base_table.find(k)
         }
 
-        fn insert(&self, k: K, v: V) -> (result: Self)
-            ensures result@.dom().finite(), result.spec_wf()
+        fn insert(&self, k: K, v: V) -> (updated: Self)
+            ensures updated@.dom().finite(), updated.spec_wf()
         {
             let new_base = self.base_table.insert(k, v);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -259,8 +259,8 @@ broadcast use {
             r
         }
 
-        fn delete(&self, k: &K) -> (result: Self)
-            ensures result@.dom().finite(), result.spec_wf()
+        fn delete(&self, k: &K) -> (updated: Self)
+            ensures updated@.dom().finite(), updated.spec_wf()
         {
             let new_base = self.base_table.delete(k);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -275,15 +275,15 @@ broadcast use {
             r
         }
 
-        fn domain(&self) -> (result: ArraySetStEph<K>)
+        fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.domain()
         }
 
-        fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (result: Self)
-            ensures result@.dom().finite()
+        fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
+            ensures tabulated@.dom().finite()
         {
             let base_table = OrderedTableStPer::tabulate(f, keys);
             let cached_reduction = calculate_reduction(&base_table, &reducer, &identity);
@@ -298,8 +298,8 @@ broadcast use {
             r
         }
 
-        fn map<G: Fn(&V) -> V>(&self, f: G) -> (result: Self)
-            ensures result@.dom().finite()
+        fn map<G: Fn(&V) -> V>(&self, f: G) -> (mapped: Self)
+            ensures mapped@.dom().finite()
         {
             let new_base = self.base_table.map(f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -314,8 +314,8 @@ broadcast use {
             r
         }
 
-        fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (result: Self)
-            ensures result@.dom().finite()
+        fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (filtered: Self)
+            ensures filtered@.dom().finite()
         {
             let new_base = self.base_table.filter(f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -330,8 +330,8 @@ broadcast use {
             r
         }
 
-        fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (result: Self)
-            ensures result@.dom().finite()
+        fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (common: Self)
+            ensures common@.dom().finite()
         {
             let new_base = self.base_table.intersection(&other.base_table, f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -346,8 +346,8 @@ broadcast use {
             r
         }
 
-        fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (result: Self)
-            ensures result@.dom().finite(), result.spec_wf()
+        fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (combined: Self)
+            ensures combined@.dom().finite(), combined.spec_wf()
         {
             let new_base = self.base_table.union(&other.base_table, f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -362,8 +362,8 @@ broadcast use {
             r
         }
 
-        fn difference(&self, other: &Self) -> (result: Self)
-            ensures result@.dom().finite()
+        fn difference(&self, other: &Self) -> (remaining: Self)
+            ensures remaining@.dom().finite()
         {
             let new_base = self.base_table.difference(&other.base_table);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -378,8 +378,8 @@ broadcast use {
             r
         }
 
-        fn restrict(&self, keys: &ArraySetStEph<K>) -> (result: Self)
-            ensures result@.dom().finite()
+        fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
+            ensures restricted@.dom().finite()
         {
             let new_base = self.base_table.restrict(keys);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -394,8 +394,8 @@ broadcast use {
             r
         }
 
-        fn subtract(&self, keys: &ArraySetStEph<K>) -> (result: Self)
-            ensures result@.dom().finite()
+        fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
+            ensures subtracted@.dom().finite()
         {
             let new_base = self.base_table.subtract(keys);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -410,42 +410,42 @@ broadcast use {
             r
         }
 
-        fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
+        fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.collect()
         }
 
-        fn first_key(&self) -> (result: Option<K>)
+        fn first_key(&self) -> (first: Option<K>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.first_key()
         }
 
-        fn last_key(&self) -> (result: Option<K>)
+        fn last_key(&self) -> (last: Option<K>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.last_key()
         }
 
-        fn previous_key(&self, k: &K) -> (result: Option<K>)
+        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.previous_key(k)
         }
 
-        fn next_key(&self, k: &K) -> (result: Option<K>)
+        fn next_key(&self, k: &K) -> (successor: Option<K>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.next_key(k)
         }
 
-        fn split_key(&self, k: &K) -> (result: (Self, Option<V>, Self))
+        fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self))
             ensures self@.dom().finite()
         {
             let (left_base, middle, right_base) = self.base_table.split_key(k);
@@ -471,8 +471,8 @@ broadcast use {
             (left, middle, right)
         }
 
-        fn join_key(left: &Self, right: &Self) -> (result: Self)
-            ensures result@.dom().finite(), result.spec_wf()
+        fn join_key(left: &Self, right: &Self) -> (joined: Self)
+            ensures joined@.dom().finite(), joined.spec_wf()
         {
             let new_base = OrderedTableStPer::join_key(&left.base_table, &right.base_table);
             let new_reduction = if left.base_table.size() == 0 {
@@ -495,8 +495,8 @@ broadcast use {
             r
         }
 
-        fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
-            ensures result@.dom().finite()
+        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+            ensures range@.dom().finite()
         {
             let new_base = self.base_table.get_key_range(k1, k2);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -511,21 +511,21 @@ broadcast use {
             r
         }
 
-        fn rank_key(&self, k: &K) -> (result: usize)
+        fn rank_key(&self, k: &K) -> (rank: usize)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.rank_key(k)
         }
 
-        fn select_key(&self, i: usize) -> (result: Option<K>)
+        fn select_key(&self, i: usize) -> (selected: Option<K>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.select_key(i)
         }
 
-        fn split_rank_key(&self, i: usize) -> (result: (Self, Self))
+        fn split_rank_key(&self, i: usize) -> (split: (Self, Self))
             ensures self@.dom().finite()
         {
             let (left_base, right_base) = self.base_table.split_rank_key(i);
@@ -551,7 +551,7 @@ broadcast use {
             (left, right)
         }
 
-        fn reduce_val(&self) -> (result: V)
+        fn reduce_val(&self) -> (reduced: V)
             ensures self@.dom().finite()
         {
             proof {
@@ -561,7 +561,7 @@ broadcast use {
             self.cached_reduction.clone()
         }
 
-        fn reduce_range(&self, k1: &K, k2: &K) -> (result: V)
+        fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
             ensures self@.dom().finite()
         {
             proof {
@@ -579,8 +579,8 @@ broadcast use {
     where
         F: Fn(&V, &V) -> V + Clone,
     {
-        fn clone(&self) -> (result: Self)
-            ensures result@ == self@
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
         {
             let r = Self {
                 base_table: self.base_table.clone(),

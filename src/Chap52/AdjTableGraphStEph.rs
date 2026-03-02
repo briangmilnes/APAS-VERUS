@@ -154,24 +154,24 @@ broadcast use {
             count
         }
 
-        fn vertices(&self) -> (result: AVLTreeSetStEph<V>)
-            ensures result@ == self.spec_adj().dom()
+        fn vertices(&self) -> (verts: AVLTreeSetStEph<V>)
+            ensures verts@ == self.spec_adj().dom()
         {
             let domain = self.adj.domain();
             let seq = domain.to_seq();
-            let mut result = AVLTreeSetStEph::empty();
+            let mut verts = AVLTreeSetStEph::empty();
             let mut i: usize = 0;
             while i < seq.length()
                 invariant
                     i <= seq.length(),
-                    result@.finite(),
-                    result@ == seq.subrange(0, i as int).to_set(),
+                    verts@.finite(),
+                    verts@ == seq.subrange(0, i as int).to_set(),
                 decreases seq.length() - i
             {
-                result.insert(seq.nth(i).clone());
+                verts.insert(seq.nth(i).clone());
                 i += 1;
             }
-            result
+            verts
         }
 
         fn has_edge(&self, u: &V, v: &V) -> (found: B)
@@ -183,10 +183,10 @@ broadcast use {
             }
         }
 
-        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetStEph<V>)
+        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             ensures
-                self.spec_adj().dom().contains(u@) ==> result@ == self.spec_adj()[u@],
-                !self.spec_adj().dom().contains(u@) ==> result@ == Set::<<V as View>::V>::empty(),
+                self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
+                !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty(),
         {
             match self.adj.find(u) {
                 Some(neighbors) => neighbors.clone(),

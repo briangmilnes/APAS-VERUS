@@ -40,11 +40,11 @@ pub mod Problem21_4 {
     pub fn cartesian_loops(
         a: &ArraySeqStPerS<N>,
         b: &ArraySeqStPerS<N>,
-    ) -> (result: ArraySeqStPerS<Pair<N, N>>)
+    ) -> (pairs: ArraySeqStPerS<Pair<N, N>>)
         requires
             a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,
         ensures
-            result.seq@.len() == a.seq@.len() as int * b.seq@.len() as int,
+            pairs.seq@.len() == a.seq@.len() as int * b.seq@.len() as int,
     {
         let alen = a.length();
         let blen = b.length();
@@ -92,14 +92,14 @@ pub mod Problem21_4 {
     pub fn cartesian_tab_flat(
         a: &ArraySeqStPerS<N>,
         b: &ArraySeqStPerS<N>,
-    ) -> (result: ArraySeqStPerS<Pair<N, N>>)
+    ) -> (pairs: ArraySeqStPerS<Pair<N, N>>)
         requires
             a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,
         ensures
-            result.seq@.len() == a.seq@.len() as int * b.seq@.len() as int,
-            forall|k: int| 0 <= k < result.seq@.len() ==> (
-                a.seq@.contains((#[trigger] result.seq@[k]).0)
-                && b.seq@.contains(result.seq@[k].1)
+            pairs.seq@.len() == a.seq@.len() as int * b.seq@.len() as int,
+            forall|k: int| 0 <= k < pairs.seq@.len() ==> (
+                a.seq@.contains((#[trigger] pairs.seq@[k]).0)
+                && b.seq@.contains(pairs.seq@[k].1)
             ),
     {
         let alen = a.length();
@@ -145,7 +145,7 @@ pub mod Problem21_4 {
         );
 
         proof { assert(Pair_feq_trigger::<N, N>()); }
-        let result = ArraySeqStPerS::flatten(&nested);
+        let pairs = ArraySeqStPerS::flatten(&nested);
         proof {
             let ghost mapped = nested.seq@.map_values(
                 |inner: ArraySeqStPerS<Pair<N, N>>| inner.seq@);
@@ -161,15 +161,15 @@ pub mod Problem21_4 {
                 assert(mapped[i][j] == nested.seq@[i].seq@[j]);
             }
             lemma_flatten_all(mapped, pred);
-            assert forall|k: int| 0 <= k < result.seq@.len() implies (
-                a.seq@.contains((#[trigger] result.seq@[k]).0)
-                && b.seq@.contains(result.seq@[k].1)
+            assert forall|k: int| 0 <= k < pairs.seq@.len() implies (
+                a.seq@.contains((#[trigger] pairs.seq@[k]).0)
+                && b.seq@.contains(pairs.seq@[k].1)
             ) by {
-                assert(result.seq@[k] == mapped.flatten()[k]);
+                assert(pairs.seq@[k] == mapped.flatten()[k]);
                 assert(pred(mapped.flatten()[k]));
             }
         }
-        result
+        pairs
     }
 
     } // verus!

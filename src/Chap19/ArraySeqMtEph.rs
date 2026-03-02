@@ -107,12 +107,12 @@ pub mod ArraySeqMtEph {
     /// Definition 18.17 (ninject). Non-deterministic inject: each position in the result
     /// holds either the original value or a value from some update. The choice of which
     /// update "wins" is unspecified.
-    pub open spec fn spec_ninject<T>(s: Seq<T>, updates: Seq<(usize, T)>, result: Seq<T>) -> bool {
-        result.len() == s.len()
-        && forall|i: int| #![trigger result[i]] 0 <= i < s.len() ==> {
-            result[i] == s[i]
+    pub open spec fn spec_ninject<T>(s: Seq<T>, updates: Seq<(usize, T)>, injected: Seq<T>) -> bool {
+        injected.len() == s.len()
+        && forall|i: int| #![trigger injected[i]] 0 <= i < s.len() ==> {
+            injected[i] == s[i]
             || exists|j: int| #![trigger updates[j]] 0 <= j < updates.len()
-                && updates[j].0 == i as usize && result[i] == updates[j].1
+                && updates[j].0 == i as usize && injected[i] == updates[j].1
         }
     }
 
@@ -329,7 +329,7 @@ pub mod ArraySeqMtEph {
         ///   holds either the original value or a value from some update.
         /// - APAS: primitive (Definition 18.17).
         /// - Claude-Opus-4.6: Work Θ(|a| + |updates|), Span Θ(1).
-        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (result: Self)
+        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
@@ -337,7 +337,7 @@ pub mod ArraySeqMtEph {
                 spec_ninject(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
                     updates@,
-                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));
+                    Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)));
 
         /// - Algorithm 19.7 (isEmpty). isEmpty a = (|a| = 0).
         /// - APAS: Algorithm 19.7 — isEmpty.
@@ -753,13 +753,13 @@ pub mod ArraySeqMtEph {
 
         // Definition 18.17 (ninject): delegates to inject. inject is a valid ninject because
         // every element of spec_inject(s, u) is either the original or came from some update.
-        fn ninject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+        fn ninject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
-            let result = Self::inject(a, updates);
+            let injected = Self::inject(a, updates);
             proof {
                 let s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
-                let r = Seq::new(result.spec_len(), |i: int| result.spec_index(i));
+                let r = Seq::new(injected.spec_len(), |i: int| injected.spec_index(i));
                 let u = updates@;
                 assert(r =~= spec_inject(s, u));
                 lemma_spec_inject_len(s, u);
@@ -771,7 +771,7 @@ pub mod ArraySeqMtEph {
                     lemma_spec_inject_element(s, u, i);
                 }
             }
-            result
+            injected
         }
 
         // Algorithm 19.7: isEmpty a = (|a| = 0).
@@ -1197,16 +1197,16 @@ pub mod ArraySeqMtEph {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             if len == 1 {
-                let result = a.seq[0].clone();
+                let element = a.seq[0].clone();
                 proof {
-                    assert(cloned(a.seq[0 as int], result));
-                    axiom_cloned_implies_eq_owned(a.seq[0 as int], result);
+                    assert(cloned(a.seq[0 as int], element));
+                    axiom_cloned_implies_eq_owned(a.seq[0 as int], element);
                     a.lemma_spec_index(0);
                     assert(s =~= seq![a.spec_index(0)]);
                     reveal_with_fuel(Seq::fold_left, 2);
                     assert(spec_f(id, s[0]) == s[0]);  // left identity
                 }
-                result
+                element
             } else {
                 let mid = len / 2;
                 let left_seq = a.subseq_copy(0, mid);
@@ -1248,14 +1248,14 @@ pub mod ArraySeqMtEph {
                 };
 
                 let (left, right) = join(fa, fb);
-                let result = f(&left, &right);
+                let combined = f(&left, &right);
                 proof {
                     assert(left_s =~= s.subrange(0, mid as int));
                     assert(right_s =~= s.subrange(mid as int, len as int));
                     s.lemma_fold_left_split(id, spec_f, mid as int);
                     Self::lemma_monoid_fold_left(right_s, spec_f, id, left);
                 }
-                result
+                combined
             }
         }
     }

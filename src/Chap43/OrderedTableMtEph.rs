@@ -55,39 +55,39 @@ broadcast use {
 
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1 for keys) with multi-threaded ephemeral semantics
     pub trait OrderedTableMtEphTrait<K: MtKey, V: MtVal>: Sized + View<V = Map<K::V, V::V>> {
-        fn size(&self) -> (result: usize)
-            ensures result == self@.dom().len(), self@.dom().finite();
+        fn size(&self) -> (count: usize)
+            ensures count == self@.dom().len(), self@.dom().finite();
 
-        fn empty() -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty();
+        fn empty() -> (empty: Self)
+            ensures empty@ == Map::<K::V, V::V>::empty();
 
-        fn singleton(k: K, v: V) -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty().insert(k@, v@), result@.dom().finite();
+        fn singleton(k: K, v: V) -> (tree: Self)
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite();
 
-        fn find(&self, k: &K) -> (result: Option<V>);
+        fn find(&self, k: &K) -> (found: Option<V>);
 
-        fn lookup(&self, k: &K) -> (result: Option<V>);
+        fn lookup(&self, k: &K) -> (value: Option<V>);
 
-        fn is_empty(&self) -> (result: B)
-            ensures result == self@.dom().is_empty();
+        fn is_empty(&self) -> (is_empty: B)
+            ensures is_empty == self@.dom().is_empty();
 
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F)
             ensures self@.dom().finite();
 
-        fn delete(&mut self, k: &K) -> (result: Option<V>)
+        fn delete(&mut self, k: &K) -> (updated: Option<V>)
             ensures self@ == old(self)@.remove(k@), self@.dom().finite();
 
-        fn domain(&self) -> (result: ArraySetStEph<K>)
+        fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite();
 
-        fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
-            ensures result@.dom().finite();
+        fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+            ensures tabulated@.dom().finite();
 
-        fn map<F: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: F) -> (result: Self)
-            ensures result@.dom().finite();
+        fn map<F: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: F) -> (mapped: Self)
+            ensures mapped@.dom().finite();
 
-        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: F) -> (result: Self)
-            ensures result@.dom().finite();
+        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: F) -> (filtered: Self)
+            ensures filtered@.dom().finite();
 
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F)
             ensures self@.dom().finite();
@@ -104,41 +104,41 @@ broadcast use {
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             ensures self@.dom().finite();
 
-        fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (result: R)
+        fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (reduced: R)
             ensures self@.dom().finite();
 
-        fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
+        fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite();
 
-        fn first_key(&self) -> (result: Option<K>)
+        fn first_key(&self) -> (first: Option<K>)
             ensures self@.dom().finite();
 
-        fn last_key(&self) -> (result: Option<K>)
+        fn last_key(&self) -> (last: Option<K>)
             ensures self@.dom().finite();
 
-        fn previous_key(&self, k: &K) -> (result: Option<K>)
+        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             ensures self@.dom().finite();
 
-        fn next_key(&self, k: &K) -> (result: Option<K>)
+        fn next_key(&self, k: &K) -> (successor: Option<K>)
             ensures self@.dom().finite();
 
-        fn split_key(&mut self, k: &K) -> (result: (Self, Option<V>, Self))
+        fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
             ensures self@.dom().finite();
 
         fn join_key(&mut self, other: Self)
             ensures self@.dom().finite();
 
-        fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
-            ensures result@.dom().finite();
+        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+            ensures range@.dom().finite();
 
-        fn rank_key(&self, k: &K) -> (result: usize)
+        fn rank_key(&self, k: &K) -> (rank: usize)
             ensures self@.dom().finite();
 
-        fn select_key(&self, i: usize) -> (result: Option<K>)
+        fn select_key(&self, i: usize) -> (selected: Option<K>)
             ensures self@.dom().finite();
 
-        fn split_rank_key(&mut self, i: usize) -> (result: (Self, Self))
+        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite();
     }
@@ -146,8 +146,8 @@ broadcast use {
     // 9. impls
 
     impl<K: MtKey, V: MtVal> OrderedTableMtEphTrait<K, V> for OrderedTableMtEph<K, V> {
-        fn size(&self) -> (result: usize)
-            ensures result == self@.dom().len(), self@.dom().finite()
+        fn size(&self) -> (count: usize)
+            ensures count == self@.dom().len(), self@.dom().finite()
         {
             let r = self.base_table.size();
             proof {
@@ -157,8 +157,8 @@ broadcast use {
             r
         }
 
-        fn empty() -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty()
+        fn empty() -> (empty: Self)
+            ensures empty@ == Map::<K::V, V::V>::empty()
         {
             OrderedTableMtEph {
                 base_table: TableMtEph::empty(),
@@ -166,24 +166,24 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn singleton(k: K, v: V) -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty().insert(k@, v@), result@.dom().finite()
+        fn singleton(k: K, v: V) -> (tree: Self)
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite()
         {
             OrderedTableMtEph {
                 base_table: TableMtEph::singleton(k, v),
             }
         }
 
-        fn find(&self, k: &K) -> (result: Option<V>) {
+        fn find(&self, k: &K) -> (found: Option<V>) {
             self.base_table.find(k)
         }
 
-        fn lookup(&self, k: &K) -> (result: Option<V>) {
+        fn lookup(&self, k: &K) -> (value: Option<V>) {
             self.find(k)
         }
 
-        fn is_empty(&self) -> (result: B)
-            ensures result == self@.dom().is_empty()
+        fn is_empty(&self) -> (is_empty: B)
+            ensures is_empty == self@.dom().is_empty()
         {
             proof { assert(self@ =~= self.base_table@); }
             self.size() == 0
@@ -197,7 +197,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn delete(&mut self, k: &K) -> (result: Option<V>)
+        fn delete(&mut self, k: &K) -> (updated: Option<V>)
             ensures self@ == old(self)@.remove(k@), self@.dom().finite()
         {
             let old_value = self.find(k);
@@ -205,16 +205,16 @@ broadcast use {
             old_value
         }
 
-        fn domain(&self) -> (result: ArraySetStEph<K>)
+        fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite()
         {
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             self.base_table.domain()
         }
 
-        fn tabulate<F>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
+        fn tabulate<F>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             where F: Fn(&K) -> V + Send + Sync + 'static
-            ensures result@.dom().finite()
+            ensures tabulated@.dom().finite()
         {
             let base = TableMtEph::tabulate(f, keys);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
@@ -222,52 +222,52 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn map<F>(&self, f: F) -> (result: Self)
+        fn map<F>(&self, f: F) -> (mapped: Self)
             where F: Fn(&K, &V) -> V + Send + Sync + 'static
-            ensures result@.dom().finite()
+            ensures mapped@.dom().finite()
         {
-            let mut result = self.clone();
+            let mut mapped = self.clone();
             let entries = self.collect();
-            result.base_table = TableMtEph::empty();
+            mapped.base_table = TableMtEph::empty();
             for i in 0..entries.length() {
                 let pair = entries.nth(i);
                 let new_value = f(&pair.0, &pair.1);
-                result
+                mapped
                     .base_table
                     .insert(pair.0.clone(), new_value, |_old, new| new.clone());
             }
-            result
+            mapped
         }
 
         #[verifier::external_body]
-        fn filter<F>(&self, f: F) -> (result: Self)
+        fn filter<F>(&self, f: F) -> (filtered: Self)
             where F: Fn(&K, &V) -> B + Send + Sync + 'static
-            ensures result@.dom().finite()
+            ensures filtered@.dom().finite()
         {
-            let mut result = OrderedTableMtEph::empty();
+            let mut filtered = OrderedTableMtEph::empty();
             let entries = self.collect();
             for i in 0..entries.length() {
                 let pair = entries.nth(i);
                 if f(&pair.0, &pair.1) {
-                    result
+                    filtered
                         .base_table
                         .insert(pair.0.clone(), pair.1.clone(), |_old, new| new.clone());
                 }
             }
-            result
+            filtered
         }
 
         #[verifier::external_body]
-        fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (result: R)
+        fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (reduced: R)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
-            let mut result = init;
+            let mut reduced = init;
             for i in 0..entries.length() {
                 let pair = entries.nth(i);
-                result = f(result, &pair.0, &pair.1);
+                reduced = f(reduced, &pair.0, &pair.1);
             }
-            result
+            reduced
         }
 
         fn intersection<F>(&mut self, other: &Self, f: F)
@@ -308,7 +308,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
+        fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite()
         {
             let array_seq = self.base_table.entries();
@@ -321,7 +321,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn first_key(&self) -> (result: Option<K>)
+        fn first_key(&self) -> (first: Option<K>)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
@@ -333,7 +333,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn last_key(&self) -> (result: Option<K>)
+        fn last_key(&self) -> (last: Option<K>)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
@@ -346,7 +346,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn previous_key(&self, k: &K) -> (result: Option<K>)
+        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
@@ -362,7 +362,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn next_key(&self, k: &K) -> (result: Option<K>)
+        fn next_key(&self, k: &K) -> (successor: Option<K>)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
@@ -378,7 +378,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn split_key(&mut self, k: &K) -> (result: (Self, Option<V>, Self))
+        fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
             ensures self@.dom().finite()
         {
@@ -413,8 +413,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
-            ensures result@.dom().finite()
+        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+            ensures range@.dom().finite()
         {
             let entries = self.collect();
             let size = entries.length();
@@ -432,7 +432,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn rank_key(&self, k: &K) -> (result: usize)
+        fn rank_key(&self, k: &K) -> (rank: usize)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
@@ -451,7 +451,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn select_key(&self, i: usize) -> (result: Option<K>)
+        fn select_key(&self, i: usize) -> (selected: Option<K>)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
@@ -463,7 +463,7 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn split_rank_key(&mut self, i: usize) -> (result: (Self, Self))
+        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite()
         {
@@ -498,8 +498,8 @@ broadcast use {
 
     impl<K: MtKey, V: MtVal> Clone for OrderedTableMtEph<K, V> {
         #[verifier::external_body]
-        fn clone(&self) -> (result: Self)
-            ensures result@ == self@
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
         {
             OrderedTableMtEph {
                 base_table: self.base_table.clone(),
@@ -508,8 +508,8 @@ broadcast use {
     }
 
     #[verifier::external_body]
-    pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: AVLTreeSeqStPerS<Pair<K, V>>) -> (result: OrderedTableMtEph<K, V>)
-        ensures result@.dom().finite()
+    pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: AVLTreeSeqStPerS<Pair<K, V>>) -> (constructed: OrderedTableMtEph<K, V>)
+        ensures constructed@.dom().finite()
     {
         let len = entries.length();
         let mut elements = Vec::new();

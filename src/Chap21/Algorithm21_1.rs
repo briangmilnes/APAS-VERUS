@@ -89,11 +89,11 @@ pub mod Algorithm21_1 {
     /// Flatten a sequence of sequences into a single sequence.
     /// - APAS: Work Θ(m), Span Θ(lg k) where m = total elements, k = number of inner sequences.
     /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — sequential two-pass implementation.
-    fn flatten_inner<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (result: ArraySeqStPerS<T>)
+    fn flatten_inner<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: ArraySeqStPerS<T>)
         requires
             sum_inner_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
         ensures
-            result.seq@.len() == sum_inner_lens(ss.seq@, ss.seq@.len() as int),
+            flattened.seq@.len() == sum_inner_lens(ss.seq@, ss.seq@.len() as int),
     {
         let ss_len = ss.seq.len();
         // First pass: compute total length.
@@ -115,13 +115,13 @@ pub mod Algorithm21_1 {
         }
 
         // Second pass: copy all elements.
-        let mut result: Vec<T> = Vec::with_capacity(total_len);
+        let mut flattened: Vec<T> = Vec::with_capacity(total_len);
         let mut j: usize = 0;
         while j < ss_len
             invariant
                 j <= ss_len,
                 ss_len == ss.seq@.len(),
-                result@.len() == sum_inner_lens(ss.seq@, j as int),
+                flattened@.len() == sum_inner_lens(ss.seq@, j as int),
             decreases ss_len - j
         {
             let inner = &ss.seq[j];
@@ -133,15 +133,15 @@ pub mod Algorithm21_1 {
                     inner_len == inner.seq@.len(),
                     j < ss_len,
                     ss_len == ss.seq@.len(),
-                    result@.len() == sum_inner_lens(ss.seq@, j as int) + k as int,
+                    flattened@.len() == sum_inner_lens(ss.seq@, j as int) + k as int,
                 decreases inner_len - k
             {
-                result.push(inner.seq[k].clone());
+                flattened.push(inner.seq[k].clone());
                 k = k + 1;
             }
             j = j + 1;
         }
-        ArraySeqStPerS { seq: result }
+        ArraySeqStPerS { seq: flattened }
     }
 
     /// Algorithm 21.1 (2D Points) using ArraySeqPer: points2D via tabulate + flatten.
@@ -149,13 +149,13 @@ pub mod Algorithm21_1 {
     /// - Generates all 2D points (x, y) where 0 ≤ x < n and 1 ≤ y < n.
     /// - APAS: Work Θ(n²), Span Θ(lg n)
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential StPer tabulate + flatten.
-    pub fn points2d_tab_flat(n: N) -> (result: ArraySeqStPerS<Pair<N, N>>)
+    pub fn points2d_tab_flat(n: N) -> (points: ArraySeqStPerS<Pair<N, N>>)
         requires
             n <= usize::MAX,
             n as int * (n as int - 1) <= usize::MAX as int,
         ensures
-            n == 0 ==> result.seq@.len() == 0,
-            n > 0 ==> result.seq@.len() == n as int * (n as int - 1),
+            n == 0 ==> points.seq@.len() == 0,
+            n > 0 ==> points.seq@.len() == n as int * (n as int - 1),
     {
         if n == 0 {
             return ArraySeqStPerS { seq: Vec::new() };

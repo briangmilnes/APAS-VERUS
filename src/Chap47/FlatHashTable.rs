@@ -36,7 +36,7 @@ pub mod FlatHashTable {
     // 11. derive impls in verus!
 
     impl<Key: Clone, Value: Clone> Clone for FlatEntry<Key, Value> {
-        fn clone(&self) -> (result: Self) {
+        fn clone(&self) -> (cloned: Self) {
             match self {
                 FlatEntry::Empty => FlatEntry::Empty,
                 FlatEntry::Occupied(k, v) => FlatEntry::Occupied(k.clone(), v.clone()),

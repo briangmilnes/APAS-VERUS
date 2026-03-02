@@ -24,7 +24,7 @@ pub mod BellmanFordStEphI64 {
 
     pub trait BellmanFordStEphI64Trait {
         fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
-            -> (result: Result<SSSPResultStEphI64, String>);
+            -> (sssp: Result<SSSPResultStEphI64, String>);
     }
 
     } // verus!
@@ -55,13 +55,13 @@ pub mod BellmanFordStEphI64 {
             }
             distances = new_distances;
             if !changed {
-                let mut result = SSSPResultStEphI64::new(n, source);
+                let mut sssp = SSSPResultStEphI64::new(n, source);
                 for v in 0..n {
                     let dist = *distances.get(&v).unwrap_or(&i64::MAX);
-                    result.set_distance(v, dist);
+                    sssp.set_distance(v, dist);
                 }
-                reconstruct_predecessors(graph, &distances, &mut result, source);
-                return Ok(result);
+                reconstruct_predecessors(graph, &distances, &mut sssp, source);
+                return Ok(sssp);
             }
             if round == n - 1 { return Err("Negative-weight cycle detected".to_string()); }
         }
@@ -72,7 +72,7 @@ pub mod BellmanFordStEphI64 {
     fn reconstruct_predecessors(
         graph: &WeightedDirGraphStEphI128<usize>,
         distances: &HashMap<usize, i64>,
-        result: &mut SSSPResultStEphI64,
+        sssp: &mut SSSPResultStEphI64,
         source: usize,
     ) {
         let n = graph.vertices().size();
@@ -85,7 +85,7 @@ pub mod BellmanFordStEphI64 {
                 let u_dist = *distances.get(u).unwrap_or(&i64::MAX);
                 if u_dist != i64::MAX {
                     let path_dist = u_dist.saturating_add(*weight as i64);
-                    if path_dist == v_dist { result.set_predecessor(v, *u); break; }
+                    if path_dist == v_dist { sssp.set_predecessor(v, *u); break; }
                 }
             }
         }

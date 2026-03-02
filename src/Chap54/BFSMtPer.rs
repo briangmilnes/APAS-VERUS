@@ -154,12 +154,12 @@ pub mod BFSMtPer {
     }
 
     // Builds an owned copy of the distances array with proven spec equality.
-    fn copy_distances(distances: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>)
+    fn copy_distances(distances: &ArraySeqMtPerS<N>) -> (copied: ArraySeqMtPerS<N>)
         requires distances.spec_len() <= usize::MAX,
         ensures
-            result.spec_len() == distances.spec_len(),
+            copied.spec_len() == distances.spec_len(),
             forall|i: int| #![auto] 0 <= i < distances.spec_len() ==>
-                result.spec_index(i) == distances.spec_index(i),
+                copied.spec_index(i) == distances.spec_index(i),
     {
         let n = distances.length();
         ArraySeqMtPerS::tabulate(
@@ -172,15 +172,15 @@ pub mod BFSMtPer {
     }
 
     // Builds an owned copy of the graph with proven spec equality.
-    fn copy_graph(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>) -> (result: ArraySeqMtPerS<ArraySeqMtPerS<N>>)
+    fn copy_graph(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>) -> (copied: ArraySeqMtPerS<ArraySeqMtPerS<N>>)
         requires graph.spec_len() <= usize::MAX,
         ensures
-            result.spec_len() == graph.spec_len(),
+            copied.spec_len() == graph.spec_len(),
             forall|u: int| #![auto] 0 <= u < graph.spec_len() ==>
-                result.spec_index(u).spec_len() == graph.spec_index(u).spec_len(),
+                copied.spec_index(u).spec_len() == graph.spec_index(u).spec_len(),
             forall|u: int, i: int| #![auto]
                 0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len() ==>
-                result.spec_index(u).spec_index(i) == graph.spec_index(u).spec_index(i),
+                copied.spec_index(u).spec_index(i) == graph.spec_index(u).spec_index(i),
     {
         let n = graph.length();
         ArraySeqMtPerS::tabulate(
@@ -258,52 +258,52 @@ pub mod BFSMtPer {
         spec fn spec_order(&self) -> ArraySeqMtPerS<N>;
 
         /// Vertices in BFS order (root first, then distance 1, 2, ...).
-        fn top_down_order(&self) -> (result: &ArraySeqMtPerS<N>)
+        fn top_down_order(&self) -> (order: &ArraySeqMtPerS<N>)
             ensures
-                result.spec_len() == self.spec_order().spec_len(),
-                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>
-                    result.spec_index(i) == self.spec_order().spec_index(i),
+                order.spec_len() == self.spec_order().spec_len(),
+                forall|i: int| #![auto] 0 <= i < order.spec_len() ==>
+                    order.spec_index(i) == self.spec_order().spec_index(i),
         ;
 
         /// Vertices in reverse BFS order (furthest from root first).
-        fn bottom_up_order(&self) -> (result: ArraySeqMtPerS<N>)
+        fn bottom_up_order(&self) -> (order: ArraySeqMtPerS<N>)
             requires self.spec_order().spec_len() <= usize::MAX,
             ensures
-                result.spec_len() == self.spec_order().spec_len(),
-                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>
-                    result.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i),
+                order.spec_len() == self.spec_order().spec_len(),
+                forall|i: int| #![auto] 0 <= i < order.spec_len() ==>
+                    order.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i),
         ;
     }
 
     pub trait BFSMtPerTrait {
-        fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (result: ArraySeqMtPerS<N>)
+        fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (traversal: ArraySeqMtPerS<N>)
             requires
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
                 graph.spec_len() < usize::MAX,
                 spec_wf_graph(graph),
             ensures
-                result.spec_len() == graph.spec_len(),
-                result.spec_index(source as int) == 0usize,
-                spec_distances_bounded(&result, graph.spec_len() as int),
+                traversal.spec_len() == graph.spec_len(),
+                traversal.spec_index(source as int) == 0usize,
+                spec_distances_bounded(&traversal, graph.spec_len() as int),
         ;
 
         /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
         /// - APAS: Work O(|V| + |E|), Span O(d·lg n)
-        fn bfs_tree(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (result: BFSTreeS)
+        fn bfs_tree(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (traversal: BFSTreeS)
             requires
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
                 graph.spec_len() < usize::MAX,
                 spec_wf_graph(graph),
             ensures
-                result.parents.spec_len() == graph.spec_len(),
-                result.parents.spec_index(source as int) == source,
-                result.order.spec_len() > 0,
-                result.order.spec_index(0) == source,
-                forall|i: int| #![auto] 0 <= i < result.order.spec_len()
-                    ==> result.order.spec_index(i) < graph.spec_len(),
-                spec_parents_bounded(&result.parents, graph.spec_len() as int),
+                traversal.parents.spec_len() == graph.spec_len(),
+                traversal.parents.spec_index(source as int) == source,
+                traversal.order.spec_len() > 0,
+                traversal.order.spec_index(0) == source,
+                forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
+                    ==> traversal.order.spec_index(i) < graph.spec_len(),
+                spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
         ;
     }
 
@@ -316,7 +316,7 @@ pub mod BFSMtPer {
         distances: ArraySeqMtPerS<N>,
         frontier: Vec<N>,
         next_dist: N,
-    ) -> (result: (Vec<N>, Vec<Pair<N, N>>))
+    ) -> (traversal: (Vec<N>, Vec<Pair<N, N>>))
         requires
             graph.spec_len() > 0,
             graph.spec_len() < usize::MAX,
@@ -327,12 +327,12 @@ pub mod BFSMtPer {
             forall|j: int| #![auto] 0 <= j < frontier@.len() ==>
                 frontier@[j] < graph.spec_len(),
         ensures
-            forall|j: int| #![auto] 0 <= j < result.0@.len() ==>
-                result.0@[j] < graph.spec_len(),
-            forall|j: int| #![auto] 0 <= j < result.1@.len() ==>
-                result.1@[j].0 < graph.spec_len()
-                && result.1@[j].1 == next_dist
-                && distances.spec_index(result.1@[j].0 as int) == UNREACHABLE,
+            forall|j: int| #![auto] 0 <= j < traversal.0@.len() ==>
+                traversal.0@[j] < graph.spec_len(),
+            forall|j: int| #![auto] 0 <= j < traversal.1@.len() ==>
+                traversal.1@[j].0 < graph.spec_len()
+                && traversal.1@[j].1 == next_dist
+                && distances.spec_index(traversal.1@[j].0 as int) == UNREACHABLE,
         decreases frontier@.len()
     {
         let n = graph.length();
@@ -478,16 +478,16 @@ pub mod BFSMtPer {
     }
 
     #[verifier::exec_allows_no_decreases_clause]
-    pub fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (result: ArraySeqMtPerS<N>)
+    pub fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (traversal: ArraySeqMtPerS<N>)
         requires
             source < graph.spec_len(),
             graph.spec_len() > 0,
             graph.spec_len() < usize::MAX,
             spec_wf_graph(graph),
         ensures
-            result.spec_len() == graph.spec_len(),
-            result.spec_index(source as int) == 0usize,
-            spec_distances_bounded(&result, graph.spec_len() as int),
+            traversal.spec_len() == graph.spec_len(),
+            traversal.spec_index(source as int) == 0usize,
+            spec_distances_bounded(&traversal, graph.spec_len() as int),
     {
         let n = graph.length();
 
@@ -613,7 +613,7 @@ pub mod BFSMtPer {
         graph: ArraySeqMtPerS<ArraySeqMtPerS<N>>,
         parents: ArraySeqMtPerS<N>,
         frontier: Vec<N>,
-    ) -> (result: Vec<Pair<N, N>>)
+    ) -> (traversal: Vec<Pair<N, N>>)
         requires
             graph.spec_len() > 0,
             graph.spec_len() < usize::MAX,
@@ -623,10 +623,10 @@ pub mod BFSMtPer {
             forall|j: int| #![auto] 0 <= j < frontier@.len() ==>
                 frontier@[j] < graph.spec_len(),
         ensures
-            forall|j: int| #![auto] 0 <= j < result@.len() ==>
-                result@[j].0 < graph.spec_len()
-                && result@[j].1 < graph.spec_len()
-                && parents.spec_index(result@[j].0 as int) == NO_PARENT,
+            forall|j: int| #![auto] 0 <= j < traversal@.len() ==>
+                traversal@[j].0 < graph.spec_len()
+                && traversal@[j].1 < graph.spec_len()
+                && parents.spec_index(traversal@[j].0 as int) == NO_PARENT,
         decreases frontier@.len()
     {
         let n = graph.length();
@@ -741,20 +741,20 @@ pub mod BFSMtPer {
 
     /// Algorithm 54.6: BFS Tree with parallel frontier processing.
     #[verifier::exec_allows_no_decreases_clause]
-    pub fn bfs_tree(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (result: BFSTreeS)
+    pub fn bfs_tree(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (traversal: BFSTreeS)
         requires
             source < graph.spec_len(),
             graph.spec_len() > 0,
             graph.spec_len() < usize::MAX,
             spec_wf_graph(graph),
         ensures
-            result.parents.spec_len() == graph.spec_len(),
-            result.parents.spec_index(source as int) == source,
-            result.order.spec_len() > 0,
-            result.order.spec_index(0) == source,
-            forall|i: int| #![auto] 0 <= i < result.order.spec_len()
-                ==> result.order.spec_index(i) < graph.spec_len(),
-            spec_parents_bounded(&result.parents, graph.spec_len() as int),
+            traversal.parents.spec_len() == graph.spec_len(),
+            traversal.parents.spec_index(source as int) == source,
+            traversal.order.spec_len() > 0,
+            traversal.order.spec_index(0) == source,
+            forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
+                ==> traversal.order.spec_index(i) < graph.spec_len(),
+            spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
     {
         let n = graph.length();
 
@@ -877,11 +877,11 @@ pub mod BFSMtPer {
             self.order
         }
 
-        fn top_down_order(&self) -> (result: &ArraySeqMtPerS<N>) {
+        fn top_down_order(&self) -> (order: &ArraySeqMtPerS<N>) {
             &self.order
         }
 
-        fn bottom_up_order(&self) -> (result: ArraySeqMtPerS<N>) {
+        fn bottom_up_order(&self) -> (order: ArraySeqMtPerS<N>) {
             let n = self.order.length();
             ArraySeqMtPerS::tabulate(
                 &|i: usize| -> (r: N)

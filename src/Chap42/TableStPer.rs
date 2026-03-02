@@ -277,81 +277,81 @@ pub mod TableStPer {
         spec fn spec_wf(&self) -> bool;
 
         /// APAS: Work Θ(1), Span Θ(1)
-        fn size(&self) -> (result: usize)
+        fn size(&self) -> (count: usize)
             requires self.spec_wf(),
-            ensures result == self@.len();
+            ensures count == self@.len();
 
         /// APAS: Work Θ(1), Span Θ(1)
-        fn empty() -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty(), result.spec_wf();
+        fn empty() -> (empty: Self)
+            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_wf();
 
         /// APAS: Work Θ(1), Span Θ(1)
-        fn singleton(key: K, value: V) -> (result: Self)
+        fn singleton(key: K, value: V) -> (tree: Self)
             requires obeys_feq_clone::<Pair<K, V>>(),
-            ensures result@ == Map::<K::V, V::V>::empty().insert(key@, value@), result.spec_wf();
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@), tree.spec_wf();
 
         /// APAS: Work Θ(|a|), Span Θ(lg |a|)
-        fn domain(&self) -> (result: ArraySetStEph<K>)
-            ensures result@.finite();
+        fn domain(&self) -> (domain: ArraySetStEph<K>)
+            ensures domain@.finite();
 
         /// APAS: Work Θ(|s| * W(f)), Span Θ(lg |s| + S(f))
-        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
+        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             requires forall|k: &K| f.requires((k,)),
-            ensures result@.dom().finite();
+            ensures tabulated@.dom().finite();
 
         /// APAS: Work Θ(|a| * W(f)), Span Θ(lg |a| + S(f))
-        fn map<F: Fn(&V) -> V>(&self, f: F) -> (result: Self)
+        fn map<F: Fn(&V) -> V>(&self, f: F) -> (mapped: Self)
             requires forall|v: &V| f.requires((v,)),
-            ensures result@.dom() == self@.dom();
+            ensures mapped@.dom() == self@.dom();
 
         /// APAS: Work Θ(|a| * W(f)), Span Θ(lg |a| + S(f))
-        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (result: Self)
+        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (filtered: Self)
             requires forall|k: &K, v: &V| f.requires((k, v)),
-            ensures result@.dom().subset_of(self@.dom());
+            ensures filtered@.dom().subset_of(self@.dom());
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
-        fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (result: Self)
+        fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (common: Self)
             requires forall|v1: &V, v2: &V| combine.requires((v1, v2)),
-            ensures result@.dom().subset_of(self@.dom().intersect(other@.dom()));
+            ensures common@.dom().subset_of(self@.dom().intersect(other@.dom()));
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
-        fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (result: Self)
+        fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (combined: Self)
             requires self.spec_wf(), forall|v1: &V, v2: &V| combine.requires((v1, v2)),
-            ensures self@.dom().union(other@.dom()).subset_of(result@.dom()), result.spec_wf();
+            ensures self@.dom().union(other@.dom()).subset_of(combined@.dom()), combined.spec_wf();
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
-        fn difference(&self, other: &Self) -> (result: Self)
-            ensures result@.dom().subset_of(self@.dom().difference(other@.dom()));
+        fn difference(&self, other: &Self) -> (remaining: Self)
+            ensures remaining@.dom().subset_of(self@.dom().difference(other@.dom()));
 
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
-        fn find(&self, key: &K) -> (result: Option<V>)
+        fn find(&self, key: &K) -> (found: Option<V>)
             requires self.spec_wf(),
             ensures
-                match result {
+                match found {
                     Some(v) => self@.contains_key(key@) && self@[key@] == v@,
                     None => !self@.contains_key(key@),
                 };
 
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
-        fn delete(&self, key: &K) -> (result: Self)
+        fn delete(&self, key: &K) -> (updated: Self)
             requires self.spec_wf(), obeys_feq_clone::<Pair<K, V>>(),
-            ensures !result@.contains_key(key@), result.spec_wf();
+            ensures !updated@.contains_key(key@), updated.spec_wf();
 
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
-        fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (result: Self)
+        fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
             requires self.spec_wf(), forall|v1: &V, v2: &V| combine.requires((v1, v2)),
-            ensures result@.contains_key(key@), result.spec_wf();
+            ensures updated@.contains_key(key@), updated.spec_wf();
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
-        fn restrict(&self, keys: &ArraySetStEph<K>) -> (result: Self)
-            ensures result@.dom().subset_of(self@.dom());
+        fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
+            ensures restricted@.dom().subset_of(self@.dom());
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
-        fn subtract(&self, keys: &ArraySetStEph<K>) -> (result: Self)
-            ensures result@.dom().subset_of(self@.dom());
+        fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
+            ensures subtracted@.dom().subset_of(self@.dom());
 
         /// APAS: Work Θ(|a|), Span Θ(lg |a|)
-        fn collect(&self) -> (result: ArraySeqStPerS<Pair<K, V>>);
+        fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>);
     }
 
     // 9. impls
@@ -361,7 +361,7 @@ pub mod TableStPer {
             spec_keys_no_dups(self.entries@)
         }
 
-        fn size(&self) -> (result: usize)
+        fn size(&self) -> (count: usize)
         {
             proof {
                 lemma_entries_to_map_len::<K::V, V::V>(self.entries@);
@@ -369,14 +369,14 @@ pub mod TableStPer {
             self.entries.length()
         }
 
-        fn empty() -> (result: Self)
+        fn empty() -> (empty: Self)
         {
             let entries = ArraySeqStPerS::empty();
             assert(entries@ =~= Seq::<(K::V, V::V)>::empty());
             TableStPer { entries }
         }
 
-        fn singleton(key: K, value: V) -> (result: Self)
+        fn singleton(key: K, value: V) -> (tree: Self)
         {
             let entries = ArraySeqStPerS::singleton(Pair(key, value));
             assert(entries@ =~= seq![(key@, value@)]);
@@ -390,7 +390,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
-        fn domain(&self) -> (result: ArraySetStEph<K>)
+        fn domain(&self) -> (domain: ArraySetStEph<K>)
         {
             let mut keys: Vec<K> = Vec::new();
             let mut i: usize = 0;
@@ -405,7 +405,7 @@ pub mod TableStPer {
             ArraySetStEph::from_seq(ArraySeqStEphS::from_vec(keys))
         }
 
-        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
+        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
             let key_seq = keys.to_seq();
             let len = key_seq.length();
@@ -427,7 +427,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
-        fn map<F: Fn(&V) -> V>(&self, f: F) -> (result: Self)
+        fn map<F: Fn(&V) -> V>(&self, f: F) -> (mapped: Self)
         {
             proof { assume(obeys_feq_full::<K>()); }
             let ghost old_view = self.entries@;
@@ -465,7 +465,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
-        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (result: Self)
+        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (filtered: Self)
         {
             proof { assume(obeys_feq_full::<Pair<K, V>>()); }
             let ghost self_view = self.entries@;
@@ -494,7 +494,7 @@ pub mod TableStPer {
             }
             let entries = ArraySeqStPerS::from_vec(kept);
             proof {
-                // Prove subset directly: any key in result map is also in self map.
+                // Prove subset directly: any key in filtered map is also in self map.
                 assert forall|k: K::V| #![auto]
                     spec_entries_to_map(entries@).dom().contains(k)
                     implies spec_entries_to_map(self_view).dom().contains(k)
@@ -511,7 +511,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
-        fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (result: Self)
+        fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (common: Self)
         {
             let ghost self_view = self.entries@;
             let ghost other_view = other.entries@;
@@ -596,14 +596,14 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
-        fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (result: Self)
+        fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (combined: Self)
         {
             let ghost self_view = self.entries@;
             let ghost other_view = other.entries@;
-            let mut result = self.clone_plus();
+            let mut combined = self.clone_plus();
             proof {
                 // clone preserves entries@, so spec_wf transfers.
-                assume(result.spec_wf());
+                assume(combined.spec_wf());
             }
             let mut j: usize = 0;
             while j < other.entries.length()
@@ -611,21 +611,21 @@ pub mod TableStPer {
                     j <= other.entries.spec_len(),
                     other.entries@ == other_view,
                     forall|v1: &V, v2: &V| combine.requires((v1, v2)),
-                    result.spec_wf(),
+                    combined.spec_wf(),
                 decreases other.entries.spec_len() - j,
             {
                 let pair = other.entries.nth(j);
                 let cloned = pair.clone_plus();
-                result = result.insert(cloned.0, cloned.1, &combine);
+                combined = combined.insert(cloned.0, cloned.1, &combine);
                 j += 1;
             }
             proof {
-                assume(self@.dom().union(other@.dom()).subset_of(result@.dom()));
+                assume(self@.dom().union(other@.dom()).subset_of(combined@.dom()));
             }
-            result
+            combined
         }
 
-        fn difference(&self, other: &Self) -> (result: Self)
+        fn difference(&self, other: &Self) -> (remaining: Self)
         {
             let ghost self_view = self.entries@;
             let ghost other_view = other.entries@;
@@ -700,7 +700,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
-        fn find(&self, key: &K) -> (result: Option<V>)
+        fn find(&self, key: &K) -> (found: Option<V>)
         {
             proof {
                 assume(obeys_view_eq::<K>());
@@ -734,14 +734,14 @@ pub mod TableStPer {
             None
         }
 
-        fn delete(&self, key: &K) -> (result: Self)
+        fn delete(&self, key: &K) -> (updated: Self)
         {
             proof {
                 assume(obeys_view_eq::<K>());
                 assume(obeys_feq_full::<Pair<K, V>>());
             }
             let ghost self_view = self.entries@;
-            let mut result: Vec<Pair<K, V>> = Vec::new();
+            let mut updated: Vec<Pair<K, V>> = Vec::new();
             let ghost mut src: Seq<int> = Seq::empty();
             let mut i: usize = 0;
             while i < self.entries.length()
@@ -749,12 +749,12 @@ pub mod TableStPer {
                     i <= self.entries.spec_len(),
                     self.entries@ == self_view,
                     self.spec_wf(),
-                    forall|j: int| #![auto] 0 <= j < result@.len() ==>
-                        result@[j].0@ != key@,
-                    src.len() == result@.len(),
+                    forall|j: int| #![auto] 0 <= j < updated@.len() ==>
+                        updated@[j].0@ != key@,
+                    src.len() == updated@.len(),
                     forall|j: int| 0 <= j < src.len() ==> (
                         0 <= #[trigger] src[j] < i
-                        && result@[j].0@ == self_view[src[j]].0
+                        && updated@[j].0@ == self_view[src[j]].0
                     ),
                     forall|a: int, b: int| 0 <= a < b < src.len() ==> src[a] < src[b],
                     obeys_view_eq::<K>(),
@@ -765,18 +765,18 @@ pub mod TableStPer {
                 proof { reveal(obeys_view_eq); }
                 if !pair.0.eq(key) {
                     let cloned = pair.clone_plus();
-                    result.push(cloned);
+                    updated.push(cloned);
                     proof { src = src.push(i as int); }
                 }
                 i += 1;
             }
-            let entries = ArraySeqStPerS::from_vec(result);
+            let entries = ArraySeqStPerS::from_vec(updated);
             proof {
                 assert forall|j: int| 0 <= j < entries@.len()
                     implies (#[trigger] entries@[j]).0 != key@
                 by {
-                    assert(entries.spec_index(j) == result@[j]);
-                    assert(result@[j].0@ != key@);
+                    assert(entries.spec_index(j) == updated@[j]);
+                    assert(updated@[j].0@ != key@);
                 };
                 lemma_entries_to_map_no_key::<K::V, V::V>(entries@, key@);
                 // Prove spec_keys_no_dups(entries@).
@@ -785,8 +785,8 @@ pub mod TableStPer {
                         0 <= a < b < entries@.len()
                         implies (#[trigger] entries@[a]).0 != (#[trigger] entries@[b]).0
                     by {
-                        assert(entries.spec_index(a) == result@[a]);
-                        assert(entries.spec_index(b) == result@[b]);
+                        assert(entries.spec_index(a) == updated@[a]);
+                        assert(entries.spec_index(b) == updated@[b]);
                         assert(src[a] < src[b]);
                         assert(0 <= src[a] < self_view.len());
                         assert(0 <= src[b] < self_view.len());
@@ -797,7 +797,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
-        fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (result: Self)
+        fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
         {
             proof {
                 assume(obeys_view_eq::<K>());
@@ -873,7 +873,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
-        fn restrict(&self, keys: &ArraySetStEph<K>) -> (result: Self)
+        fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
         {
             proof { assume(obeys_feq_full::<Pair<K, V>>()); }
             let ghost self_view = self.entries@;
@@ -917,7 +917,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
-        fn subtract(&self, keys: &ArraySetStEph<K>) -> (result: Self)
+        fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
         {
             proof { assume(obeys_feq_full::<Pair<K, V>>()); }
             let ghost self_view = self.entries@;
@@ -961,7 +961,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
-        fn collect(&self) -> (result: ArraySeqStPerS<Pair<K, V>>)
+        fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
         {
             self.entries.clone()
         }
@@ -970,25 +970,25 @@ pub mod TableStPer {
     // 11. derive impls in verus!
 
     impl<K: StT + Ord, V: StT> Clone for TableStPer<K, V> {
-        fn clone(&self) -> (result: Self)
-            ensures result.entries@ == self.entries@
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned.entries@ == self.entries@
         {
-            let result = TableStPer { entries: self.entries.clone() };
+            let cloned = TableStPer { entries: self.entries.clone() };
             proof {
                 assume(obeys_feq_clone::<Pair<K, V>>());
                 lemma_seq_map_cloned_view_eq(
                     self.entries.seq@,
-                    result.entries.seq@,
+                    cloned.entries.seq@,
                 );
             }
-            result
+            cloned
         }
     }
 
     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
         entries: Vec<Pair<K, V>>,
-    ) -> (result: TableStPer<K, V>)
-        ensures result@.dom().finite()
+    ) -> (cloned: TableStPer<K, V>)
+        ensures cloned@.dom().finite()
     {
         let seq = ArraySeqStPerS::from_vec(entries);
         proof {

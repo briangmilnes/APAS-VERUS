@@ -259,7 +259,7 @@ verus! {
         }
 
         fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
-            let mut result: SetStEph<V> = SetStEph::empty();
+            let mut neighbors: SetStEph<V> = SetStEph::empty();
             let mut it = vertices.iter();
             let ghost u_seq = it@.1;
             let ghost vertices_view = vertices@;
@@ -271,29 +271,29 @@ verus! {
                     it@.0 <= u_seq.len(),
                     it@.1 == u_seq,
                     u_seq.map(|i: int, v: V| v@).to_set() == vertices_view,
-                    result@ == Set::new(|w: V::V| 
+                    neighbors@ == Set::new(|w: V::V| 
                         exists |i: int| #![trigger u_seq[i]] 0 <= i < it@.0 && self.spec_ng(u_seq[i]@).contains(w)),
                 decreases u_seq.len() - it@.0,
             {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |w: V::V| #[trigger] result@.contains(w) implies 
+                            assert forall |w: V::V| #[trigger] neighbors@.contains(w) implies 
                                 self.spec_ng_of_vertices(vertices_view).contains(w) by {
-                                if result@.contains(w) {
+                                if neighbors@.contains(w) {
                                     let i = choose |i: int| #![trigger u_seq[i]] 0 <= i < u_seq.len() && self.spec_ng(u_seq[i]@).contains(w);
                                     lemma_seq_index_in_map_to_set(u_seq, i);
                                 }
                             }
                             assert forall |w: V::V| #[trigger] self.spec_ng_of_vertices(vertices_view).contains(w) implies 
-                                result@.contains(w) by {
+                                neighbors@.contains(w) by {
                                 if self.spec_ng_of_vertices(vertices_view).contains(w) {
                                     let u = choose |u: V::V| #![trigger vertices_view.contains(u)] vertices_view.contains(u) && self.spec_ng(u).contains(w);
                                     lemma_map_to_set_contains_index(u_seq, u);
                                 }
                             }
                         }
-                        return result;
+                        return neighbors;
                     },
                     Some(u) => {
                         proof {
@@ -307,7 +307,7 @@ verus! {
                             assert(self@.V.contains(u@));
                         }
                         let ng_u = self.ng(u);
-                        result = result.union(&ng_u);
+                        neighbors = neighbors.union(&ng_u);
                     },
                 }
             }

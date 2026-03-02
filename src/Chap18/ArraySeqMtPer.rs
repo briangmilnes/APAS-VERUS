@@ -954,16 +954,16 @@ pub mod ArraySeqMtPer {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             if len == 1 {
-                let result = a.seq[0].clone();
+                let element = a.seq[0].clone();
                 proof {
-                    assert(cloned(a.seq[0 as int], result));
-                    axiom_cloned_implies_eq_owned(a.seq[0 as int], result);
+                    assert(cloned(a.seq[0 as int], element));
+                    axiom_cloned_implies_eq_owned(a.seq[0 as int], element);
                     a.lemma_spec_index(0);
                     assert(s =~= seq![a.spec_index(0)]);
                     reveal_with_fuel(Seq::fold_left, 2);
                     assert(spec_f(id, s[0]) == s[0]);  // left identity
                 }
-                result
+                element
             } else {
                 let mid = len / 2;
                 let left_seq = a.subseq_copy(0, mid);
@@ -1005,11 +1005,11 @@ pub mod ArraySeqMtPer {
                 };
 
                 let (left, right) = join(fa, fb);
-                let result = f(&left, &right);
+                let combined = f(&left, &right);
                 proof {
                     // left == left_s.fold_left(id, spec_f)
                     // right == right_s.fold_left(id, spec_f)
-                    // result == spec_f(left, right)
+                    // combined == spec_f(left, right)
                     assert(left_s =~= s.subrange(0, mid as int));
                     assert(right_s =~= s.subrange(mid as int, len as int));
                     s.lemma_fold_left_split(id, spec_f, mid as int);
@@ -1020,7 +1020,7 @@ pub mod ArraySeqMtPer {
                     // i.e., spec_f(left, right) == right_s.fold_left(left, spec_f)
                     //                           == s.fold_left(id, spec_f)
                 }
-                result
+                combined
             }
         }
     }

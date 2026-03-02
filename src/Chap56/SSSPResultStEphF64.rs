@@ -33,7 +33,7 @@ pub mod SSSPResultStEphF64 {
     // 9. impls
 
     impl SSSPResultStEphF64 {
-        pub fn new(n: usize, source: usize) -> (result: Self)
+        pub fn new(n: usize, source: usize) -> (empty: Self)
             requires source < n,
         {
             let unreach = unreachable_dist();

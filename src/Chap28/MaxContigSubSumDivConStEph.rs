@@ -89,11 +89,11 @@ broadcast use {
     {
         let n = s.len() as int;
         let crossing = s_left + p_right;
-        let result = if m_left >= m_right && m_left >= crossing { m_left }
+        let max_sum = if m_left >= m_right && m_left >= crossing { m_left }
                      else if m_right >= crossing { m_right }
                      else { crossing };
 
-        // Part (a): result is achieved.
+        // Part (a): max_sum is achieved.
         if m_left >= m_right && m_left >= crossing {
             let (lo_l, hi_l) = choose|lo: int, hi: int|
                 #![trigger spec_range_sum(left, lo, hi)]
@@ -123,12 +123,12 @@ broadcast use {
             assert(spec_range_sum(s, lo_s, mid + hi_p) == crossing);
         }
 
-        // Part (b): result is maximal.
+        // Part (b): max_sum is maximal.
         assert forall|lo: int, hi: int|
             #![trigger spec_range_sum(s, lo, hi)]
             0 <= lo < hi <= n
         implies
-            spec_range_sum(s, lo, hi) <= result
+            spec_range_sum(s, lo, hi) <= max_sum
         by {
             if hi <= mid {
                 lemma_range_sum_subseq(s, left, 0, lo, hi);

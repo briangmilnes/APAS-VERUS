@@ -23,7 +23,7 @@ pub mod AllPairsResultStEphI64 {
     // 8. traits
 
     pub trait AllPairsResultStEphI64Trait: Sized {
-        fn new(n: usize) -> (result: Self);
+        fn new(n: usize) -> (empty: Self);
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64);
 
@@ -35,14 +35,14 @@ pub mod AllPairsResultStEphI64 {
 
         fn is_reachable(&self, u: usize, v: usize) -> (b: bool);
 
-        fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);
+        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);
     }
 
     // 9. impls
 
     impl AllPairsResultStEphI64Trait for AllPairsResultStEphI64 {
-        fn new(n: usize) -> (result: Self)
-            ensures result.n == n,
+        fn new(n: usize) -> (empty: Self)
+            ensures empty.n == n,
         {
             let mut dist_rows: Vec<ArraySeqStEphS<i64>> = Vec::new();
             let mut i: usize = 0;
@@ -163,7 +163,7 @@ pub mod AllPairsResultStEphI64 {
             self.get_distance(u, v) != UNREACHABLE
         }
 
-        fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
+        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>) {
             if u >= self.predecessors.length() || v >= self.predecessors.length() {
                 return None;
             }

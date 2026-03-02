@@ -76,7 +76,7 @@ broadcast use {
             fn singleton(element: T) -> (pq: Self);
             fn find_min(&self) -> (min_elem: Option<&T>);
             fn insert(&self, element: T) -> (pq: Self);
-            fn delete_min(&self) -> (result: (Self, Option<T>));
+            fn delete_min(&self) -> (min_pair: (Self, Option<T>));
             fn meld(&self, other: &Self) -> (pq: Self);
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>();
@@ -214,17 +214,17 @@ broadcast use {
                 match self {
                     LeftistHeapNode::Leaf => Vec::new(),
                     LeftistHeapNode::Node { key, left, right, .. } => {
-                        let mut result = left.to_vec();
-                        result.push(key.clone());
+                        let mut min_pair = left.to_vec();
+                        min_pair.push(key.clone());
                         let right_vec = right.to_vec();
                         let n = right_vec.len();
                         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                         for i in 0..n
                             invariant n == right_vec@.len()
                         {
-                            result.push(right_vec[i].clone());
+                            min_pair.push(right_vec[i].clone());
                         }
-                        result
+                        min_pair
                     }
                 }
             }
@@ -263,7 +263,7 @@ broadcast use {
             }
 
             /// APAS Work Θ(log n), Span Θ(log n).
-            fn delete_min(&self) -> (result: (Self, Option<T>)) {
+            fn delete_min(&self) -> (min_pair: (Self, Option<T>)) {
                 match &self.root {
                     LeftistHeapNode::Leaf => (self.clone(), None),
                     LeftistHeapNode::Node { key, left, right, .. } => {
@@ -307,16 +307,16 @@ broadcast use {
 
             #[verifier::exec_allows_no_decreases_clause]
             fn extract_all_sorted(&self) -> (sorted: Vec<T>) {
-                let mut result: Vec<T> = Vec::new();
+                let mut min_pair: Vec<T> = Vec::new();
                 let mut current_heap = self.clone();
                 while !current_heap.is_empty() {
                     let (new_heap, min_element) = current_heap.delete_min();
                     if let Some(element) = min_element {
-                        result.push(element);
+                        min_pair.push(element);
                     }
                     current_heap = new_heap;
                 }
-                result
+                min_pair
             }
 
             fn height(&self) -> (levels: usize) { self.root.height() }
@@ -337,15 +337,15 @@ broadcast use {
             fn to_sorted_vec(&self) -> (v: Vec<T>) { self.extract_all_sorted() }
 
             fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self) {
-                let mut result = Self::empty();
+                let mut min_pair = Self::empty();
                 let n = heaps.len();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
                     invariant n == heaps@.len()
                 {
-                    result = result.meld(&heaps[i]);
+                    min_pair = min_pair.meld(&heaps[i]);
                 }
-                result
+                min_pair
             }
 
             fn split(&self, key: &T) -> (parts: (Self, Self)) {
@@ -376,21 +376,21 @@ broadcast use {
         }
 
         impl<T: StT + Ord> Clone for LeftistHeapNode<T> {
-            fn clone(&self) -> (result: Self)
-                ensures result == *self
+            fn clone(&self) -> (cloned: Self)
+                ensures cloned == *self
                 decreases self
             {
                 match self {
                     LeftistHeapNode::Leaf => LeftistHeapNode::Leaf,
                     LeftistHeapNode::Node { key, left, right, rank } => {
-                        let result = LeftistHeapNode::Node {
+                        let cloned = LeftistHeapNode::Node {
                             key: key.clone(),
                             left: Box::new((**left).clone()),
                             right: Box::new((**right).clone()),
                             rank: *rank,
                         };
-                        proof { accept(result == *self); }
-                        result
+                        proof { accept(cloned == *self); }
+                        cloned
                     }
                 }
             }
@@ -423,12 +423,12 @@ broadcast use {
         }
 
         impl<T: StT + Ord> Clone for LeftistHeapPQ<T> {
-            fn clone(&self) -> (result: Self)
-                ensures result.root == self.root
+            fn clone(&self) -> (cloned: Self)
+                ensures cloned.root == self.root
             {
-                let result = LeftistHeapPQ { root: self.root.clone() };
-                proof { accept(result.root == self.root); }
-                result
+                let cloned = LeftistHeapPQ { root: self.root.clone() };
+                proof { accept(cloned.root == self.root); }
+                cloned
             }
         }
 

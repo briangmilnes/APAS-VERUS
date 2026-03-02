@@ -170,24 +170,24 @@ pub mod BSTSizeStEph {
         spec fn spec_height(&self) -> nat;
 
         /// - APAS: Work Θ(1), Span Θ(1)
-        fn new() -> (result: Self)
+        fn new() -> (empty: Self)
             ensures
-                result.spec_size() == 0,
-                result.spec_wf(),
-                result@ == Set::<T>::empty();
+                empty.spec_size() == 0,
+                empty.spec_wf(),
+                empty@ == Set::<T>::empty();
         /// - APAS: Work Θ(1), Span Θ(1)
-        fn size(&self) -> (result: N)
-            ensures result as nat == self.spec_size();
+        fn size(&self) -> (count: N)
+            ensures count as nat == self.spec_size();
         /// - APAS: Work Θ(1), Span Θ(1)
-        fn is_empty(&self) -> (result: B)
-            ensures result == (self.spec_size() == 0);
+        fn is_empty(&self) -> (is_empty: B)
+            ensures is_empty == (self.spec_size() == 0);
         /// - APAS: Work Θ(n), Span Θ(n)
-        fn height(&self) -> (result: N)
+        fn height(&self) -> (height: N)
             requires
                 self.spec_size() < usize::MAX as nat,
                 self.spec_wf(),
             ensures
-                result as nat == self.spec_height();
+                height as nat == self.spec_height();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn insert(&mut self, value: T, priority: u64)
             requires
@@ -204,50 +204,50 @@ pub mod BSTSizeStEph {
                 self.spec_wf(),
                 self.spec_size() <= old(self).spec_size();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
-        fn find(&self, target: &T) -> (result: Option<&T>)
+        fn find(&self, target: &T) -> (found: Option<&T>)
             requires self.spec_wf(),
-            ensures self.spec_size() == 0 ==> result is None;
+            ensures self.spec_size() == 0 ==> found is None;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
-        fn contains(&self, target: &T) -> (result: B)
+        fn contains(&self, target: &T) -> (contains: B)
             requires self.spec_wf(),
-            ensures self.spec_size() == 0 ==> !result;
+            ensures self.spec_size() == 0 ==> !contains;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
-        fn minimum(&self) -> (result: Option<&T>)
+        fn minimum(&self) -> (minimum: Option<&T>)
             requires self.spec_wf(),
             ensures
-                self.spec_size() == 0 ==> result is None,
-                self.spec_size() > 0 ==> result is Some;
+                self.spec_size() == 0 ==> minimum is None,
+                self.spec_size() > 0 ==> minimum is Some;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
-        fn maximum(&self) -> (result: Option<&T>)
+        fn maximum(&self) -> (maximum: Option<&T>)
             requires self.spec_wf(),
             ensures
-                self.spec_size() == 0 ==> result is None,
-                self.spec_size() > 0 ==> result is Some;
+                self.spec_size() == 0 ==> maximum is None,
+                self.spec_size() > 0 ==> maximum is Some;
         /// - APAS: Work Θ(n), Span Θ(n)
-        fn in_order(&self) -> (result: ArraySeqStPerS<T>)
+        fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
             requires self.spec_wf(),
-            ensures result.spec_len() == self.spec_size();
+            ensures ordered.spec_len() == self.spec_size();
         /// - APAS: Work Θ(log n), Span Θ(log n) — Algorithm 40.1
-        fn rank(&self, key: &T) -> (result: N)
+        fn rank(&self, key: &T) -> (rank: N)
             requires
                 self.spec_size() < usize::MAX as nat,
                 self.spec_wf(),
             ensures
-                result as nat <= self.spec_size();
+                rank as nat <= self.spec_size();
         /// - APAS: Work Θ(log n), Span Θ(log n) — Algorithm 40.1
-        fn select(&self, rank: N) -> (result: Option<&T>)
-            ensures (rank == 0 || rank as nat > self.spec_size()) ==> result is None;
+        fn select(&self, rank: N) -> (selected: Option<&T>)
+            ensures (rank == 0 || rank as nat > self.spec_size()) ==> selected is None;
         /// - APAS: Work Θ(log n), Span Θ(log n) — Exercise 40.1
-        fn split_rank(&self, rank: N) -> (result: (BSTSizeStEph<T>, BSTSizeStEph<T>))
+        fn split_rank(&self, rank: N) -> (split: (BSTSizeStEph<T>, BSTSizeStEph<T>))
             requires self.spec_wf(),
             ensures
-                spec_size_wf_link(&result.0.root),
-                spec_size_wf_link(&result.1.root);
+                spec_size_wf_link(&split.0.root),
+                spec_size_wf_link(&split.1.root);
 
         // Internal associated functions.
 
-        fn size_link(link: &Link<T>) -> (result: N)
-            ensures result as nat == spec_size_link(link);
+        fn size_link(link: &Link<T>) -> (count: N)
+            ensures count as nat == spec_size_link(link);
         fn update_size(node: &mut Node<T>)
             requires
                 spec_size_link(&old(node).left) + spec_size_link(&old(node).right) + 1 <= usize::MAX as nat,
@@ -257,12 +257,12 @@ pub mod BSTSizeStEph {
                 node.priority == old(node).priority,
                 node.left == old(node).left,
                 node.right == old(node).right;
-        fn make_node(key: T, priority: u64, left: Link<T>, right: Link<T>) -> (result: Link<T>)
+        fn make_node(key: T, priority: u64, left: Link<T>, right: Link<T>) -> (node: Link<T>)
             requires
                 spec_size_link(&left) + spec_size_link(&right) + 1 <= usize::MAX as nat,
             ensures
-                spec_size_link(&result) == spec_size_link(&left) + spec_size_link(&right) + 1,
-                spec_size_wf_link(&result) <==> (spec_size_wf_link(&left) && spec_size_wf_link(&right));
+                spec_size_link(&node) == spec_size_link(&left) + spec_size_link(&right) + 1,
+                spec_size_wf_link(&node) <==> (spec_size_wf_link(&left) && spec_size_wf_link(&right));
         fn rotate_left(link: &mut Link<T>)
             requires
                 spec_size_wf_link(old(link)),
@@ -286,18 +286,18 @@ pub mod BSTSizeStEph {
                 spec_size_link(link) <= spec_size_link(old(link)) + 1,
                 spec_size_link(link) >= spec_size_link(old(link)),
             decreases old(link);
-        fn find_link<'a>(link: &'a Link<T>, target: &T) -> (result: Option<&'a T>)
-            ensures link.is_none() ==> result.is_none(),
+        fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
+            ensures link.is_none() ==> found.is_none(),
             decreases *link;
-        fn min_link(link: &Link<T>) -> (result: Option<&T>)
+        fn min_link(link: &Link<T>) -> (minimum: Option<&T>)
             ensures
-                link.is_none() ==> result.is_none(),
-                link.is_some() ==> result.is_some(),
+                link.is_none() ==> minimum.is_none(),
+                link.is_some() ==> minimum.is_some(),
             decreases *link;
-        fn max_link(link: &Link<T>) -> (result: Option<&T>)
+        fn max_link(link: &Link<T>) -> (maximum: Option<&T>)
             ensures
-                link.is_none() ==> result.is_none(),
-                link.is_some() ==> result.is_some(),
+                link.is_none() ==> maximum.is_none(),
+                link.is_some() ==> maximum.is_some(),
             decreases *link;
         fn height_link(link: &Link<T>) -> (h: N)
             requires
@@ -313,25 +313,25 @@ pub mod BSTSizeStEph {
             requires spec_size_wf_link(link),
             ensures out.len() == old(out).len() + spec_size_link(link),
             decreases *link;
-        fn find_min_priority_idx(items: &Vec<(T, u64)>, start: usize, end: usize) -> (result: usize)
+        fn find_min_priority_idx(items: &Vec<(T, u64)>, start: usize, end: usize) -> (min_idx: usize)
             requires start < end, end <= items.len(),
-            ensures start <= result && result < end;
-        fn build_treap_from_vec(items: &Vec<(T, u64)>, start: usize, end: usize) -> (result: Link<T>)
+            ensures start <= min_idx && min_idx < end;
+        fn build_treap_from_vec(items: &Vec<(T, u64)>, start: usize, end: usize) -> (treap: Link<T>)
             requires start <= end, end <= items.len(),
             ensures
-                spec_size_link(&result) == (end - start) as nat,
-                spec_size_wf_link(&result),
+                spec_size_link(&treap) == (end - start) as nat,
+                spec_size_wf_link(&treap),
             decreases end - start;
-        fn filter_by_key(items: &Vec<(T, u64)>, key: &T) -> (result: Vec<(T, u64)>)
-            ensures result.len() <= items.len();
-        fn rank_link(link: &Link<T>, key: &T) -> (result: N)
+        fn filter_by_key(items: &Vec<(T, u64)>, key: &T) -> (filtered: Vec<(T, u64)>)
+            ensures filtered.len() <= items.len();
+        fn rank_link(link: &Link<T>, key: &T) -> (rank: N)
             requires
                 spec_size_link(link) < usize::MAX as nat,
                 spec_size_wf_link(link),
-            ensures result as nat <= spec_size_link(link),
+            ensures rank as nat <= spec_size_link(link),
             decreases *link;
-        fn select_link(link: &Link<T>, rank: N) -> (result: Option<&T>)
-            ensures link.is_none() ==> result.is_none(),
+        fn select_link(link: &Link<T>, rank: N) -> (selected: Option<&T>)
+            ensures link.is_none() ==> selected.is_none(),
             decreases *link;
     }
 
@@ -354,13 +354,13 @@ pub mod BSTSizeStEph {
         open spec fn spec_wf(&self) -> bool { spec_size_wf_link(&self.root) }
         open spec fn spec_height(&self) -> nat { spec_height_link(&self.root) }
 
-        fn new() -> (result: Self) { BSTSizeStEph { root: None } }
+        fn new() -> (empty: Self) { BSTSizeStEph { root: None } }
 
-        fn size(&self) -> (result: N) { Self::size_link(&self.root) }
+        fn size(&self) -> (count: N) { Self::size_link(&self.root) }
 
-        fn is_empty(&self) -> (result: B) { self.size() == 0 }
+        fn is_empty(&self) -> (is_empty: B) { self.size() == 0 }
 
-        fn height(&self) -> (result: N) { Self::height_link(&self.root) }
+        fn height(&self) -> (height: N) { Self::height_link(&self.root) }
 
         fn insert(&mut self, value: T, priority: u64) {
             Self::insert_link(&mut self.root, value, priority);
@@ -417,7 +417,7 @@ pub mod BSTSizeStEph {
 
         // Internal associated functions.
 
-        fn size_link(link: &Link<T>) -> (result: N) {
+        fn size_link(link: &Link<T>) -> (count: N) {
             match link {
                 None => 0,
                 Some(n) => n.size,
@@ -430,7 +430,7 @@ pub mod BSTSizeStEph {
             node.size = 1 + l + r;
         }
 
-        fn make_node(key: T, priority: u64, left: Link<T>, right: Link<T>) -> (result: Link<T>) {
+        fn make_node(key: T, priority: u64, left: Link<T>, right: Link<T>) -> (node: Link<T>) {
             let mut node = Node::new(key, priority);
             node.left = left;
             node.right = right;
@@ -554,7 +554,7 @@ pub mod BSTSizeStEph {
             }
         }
 
-        fn find_link<'a>(link: &'a Link<T>, target: &T) -> (result: Option<&'a T>)
+        fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             decreases *link,
         {
             match link {
@@ -571,7 +571,7 @@ pub mod BSTSizeStEph {
             }
         }
 
-        fn min_link(link: &Link<T>) -> (result: Option<&T>)
+        fn min_link(link: &Link<T>) -> (minimum: Option<&T>)
             decreases *link,
         {
             match link {
@@ -583,7 +583,7 @@ pub mod BSTSizeStEph {
             }
         }
 
-        fn max_link(link: &Link<T>) -> (result: Option<&T>)
+        fn max_link(link: &Link<T>) -> (maximum: Option<&T>)
             decreases *link,
         {
             match link {
@@ -638,7 +638,7 @@ pub mod BSTSizeStEph {
             }
         }
 
-        fn find_min_priority_idx(items: &Vec<(T, u64)>, start: usize, end: usize) -> (result: usize) {
+        fn find_min_priority_idx(items: &Vec<(T, u64)>, start: usize, end: usize) -> (min_idx: usize) {
             let mut min_idx = start;
             let mut i = start + 1;
             while i < end
@@ -658,7 +658,7 @@ pub mod BSTSizeStEph {
             min_idx
         }
 
-        fn build_treap_from_vec(items: &Vec<(T, u64)>, start: usize, end: usize) -> (result: Link<T>)
+        fn build_treap_from_vec(items: &Vec<(T, u64)>, start: usize, end: usize) -> (treap: Link<T>)
             decreases end - start,
         {
             if start >= end {
@@ -672,7 +672,7 @@ pub mod BSTSizeStEph {
             Self::make_node(key, priority, left, right)
         }
 
-        fn filter_by_key(items: &Vec<(T, u64)>, key: &T) -> (result: Vec<(T, u64)>) {
+        fn filter_by_key(items: &Vec<(T, u64)>, key: &T) -> (filtered: Vec<(T, u64)>) {
             let mut filtered: Vec<(T, u64)> = Vec::new();
             let mut i: usize = 0;
             while i < items.len()
@@ -689,7 +689,7 @@ pub mod BSTSizeStEph {
             filtered
         }
 
-        fn rank_link(link: &Link<T>, key: &T) -> (result: N)
+        fn rank_link(link: &Link<T>, key: &T) -> (rank: N)
             decreases *link,
         {
             match link {
@@ -766,19 +766,19 @@ pub mod BSTSizeStEph {
     }
 
     impl<T: StT + Ord> Clone for BSTSizeStEph<T> {
-        fn clone(&self) -> (result: Self)
+        fn clone(&self) -> (cloned: Self)
             ensures
-                result@ == self@,
-                spec_size_link(&result.root) == spec_size_link(&self.root),
-                spec_size_wf_link(&self.root) ==> spec_size_wf_link(&result.root),
+                cloned@ == self@,
+                spec_size_link(&cloned.root) == spec_size_link(&self.root),
+                spec_size_wf_link(&self.root) ==> spec_size_wf_link(&cloned.root),
         {
             BSTSizeStEph { root: clone_link(&self.root) }
         }
     }
 
     impl<T: StT + Ord> Default for BSTreeSize<T> {
-        fn default() -> (result: Self)
-            ensures result.spec_size() == 0, result.spec_wf(), result@ == Set::<T>::empty(),
+        fn default() -> (default_val: Self)
+            ensures default_val.spec_size() == 0, default_val.spec_wf(), default_val@ == Set::<T>::empty(),
         { Self::new() }
     }
 

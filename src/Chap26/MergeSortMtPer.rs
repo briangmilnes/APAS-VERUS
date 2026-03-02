@@ -67,17 +67,17 @@ pub mod MergeSortMtPer {
     }
 
     /// Spec function: result of merge of two sorted sequences is sorted and a permutation.
-    pub open spec fn spec_merge_post(left: Seq<N>, right: Seq<N>, result: Seq<N>) -> bool {
-        &&& result.len() == left.len() + right.len()
-        &&& spec_sorted(result)
-        &&& spec_is_permutation(left.add(right), result)
+    pub open spec fn spec_merge_post(left: Seq<N>, right: Seq<N>, merged: Seq<N>) -> bool {
+        &&& merged.len() == left.len() + right.len()
+        &&& spec_sorted(merged)
+        &&& spec_is_permutation(left.add(right), merged)
     }
 
     /// Spec function: result of merge_sort is sorted and a permutation.
-    pub open spec fn spec_sort_post(input: Seq<N>, result: Seq<N>) -> bool {
-        &&& result.len() == input.len()
-        &&& spec_sorted(result)
-        &&& spec_is_permutation(input, result)
+    pub open spec fn spec_sort_post(input: Seq<N>, sorted: Seq<N>) -> bool {
+        &&& sorted.len() == input.len()
+        &&& spec_sorted(sorted)
+        &&& spec_is_permutation(input, sorted)
     }
 
 
@@ -149,20 +149,20 @@ pub mod MergeSortMtPer {
         ensures
             spec_sorted(a.push(pivot) + c),
     {
-        let result = a.push(pivot) + c;
+        let concatenated = a.push(pivot) + c;
         let ap = a.push(pivot);
         assert forall|i: int, j: int|
-            0 <= i < j < result.len() implies result[i] <= result[j]
+            0 <= i < j < concatenated.len() implies concatenated[i] <= concatenated[j]
         by {
             if j < a.len() as int {
             } else if j == a.len() as int {
             } else if i < a.len() as int {
-                assert(result[j] == c[j - a.len() as int - 1]);
+                assert(concatenated[j] == c[j - a.len() as int - 1]);
             } else if i == a.len() as int {
-                assert(result[j] == c[j - a.len() as int - 1]);
+                assert(concatenated[j] == c[j - a.len() as int - 1]);
             } else {
-                assert(result[i] == c[i - a.len() as int - 1]);
-                assert(result[j] == c[j - a.len() as int - 1]);
+                assert(concatenated[i] == c[i - a.len() as int - 1]);
+                assert(concatenated[j] == c[j - a.len() as int - 1]);
             }
         }
     }

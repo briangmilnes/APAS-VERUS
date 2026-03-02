@@ -255,22 +255,22 @@ broadcast use {
         spec fn spec_wf(&self) -> bool;
 
         /// APAS: Work Θ(1), Span Θ(1)
-        fn size(&self) -> (result: usize)
+        fn size(&self) -> (count: usize)
             requires self.spec_wf()
-            ensures result == self@.len();
+            ensures count == self@.len();
         /// APAS: Work Θ(1), Span Θ(1)
-        fn empty() -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty();
+        fn empty() -> (empty: Self)
+            ensures empty@ == Map::<K::V, V::V>::empty();
         /// APAS: Work Θ(1), Span Θ(1)
-        fn singleton(key: K, value: V) -> (result: Self)
+        fn singleton(key: K, value: V) -> (tree: Self)
             requires obeys_feq_clone::<Pair<K, V>>()
-            ensures result@ == Map::<K::V, V::V>::empty().insert(key@, value@);
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@);
         /// APAS: Work Θ(|a|), Span Θ(lg |a|)
-        fn domain(&self) -> (result: ArraySetStEph<K>)
-            ensures result@.finite();
+        fn domain(&self) -> (domain: ArraySetStEph<K>)
+            ensures domain@.finite();
         /// APAS: Work Θ(|s| * W(f)), Span Θ(lg |s| + S(f))
-        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
-            ensures result@.dom().finite();
+        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+            ensures tabulated@.dom().finite();
         /// APAS: Work Θ(Σ W(f(v))), Span Θ(lg |a| + max S(f(v)))
         fn map<F: Fn(&V) -> V>(&mut self, f: F)
             ensures self@.dom() == old(self)@.dom();
@@ -288,10 +288,10 @@ broadcast use {
         fn difference(&mut self, other: &Self)
             ensures self@.dom().subset_of(old(self)@.dom().difference(other@.dom()));
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
-        fn find(&self, key: &K) -> (result: Option<V>)
+        fn find(&self, key: &K) -> (found: Option<V>)
             requires self.spec_wf()
             ensures
-                match result {
+                match found {
                     Some(v) => self@.contains_key(key@) && self@[key@] == v@,
                     None => !self@.contains_key(key@),
                 };
@@ -309,7 +309,7 @@ broadcast use {
             ensures self@.dom().subset_of(old(self)@.dom());
 
         /// Returns a flat sequence of (K, V) pairs in key order.
-        fn entries(&self) -> (result: ArraySeqStEphS<Pair<K, V>>);
+        fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>);
     }
 
     // 9. impls
@@ -319,7 +319,7 @@ broadcast use {
             spec_keys_no_dups(self.entries@)
         }
 
-        fn size(&self) -> (result: usize)
+        fn size(&self) -> (count: usize)
         {
             proof {
                 lemma_entries_to_map_len::<K::V, V::V>(self.entries@);
@@ -327,15 +327,15 @@ broadcast use {
             self.entries.length()
         }
 
-        fn empty() -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty()
+        fn empty() -> (empty: Self)
+            ensures empty@ == Map::<K::V, V::V>::empty()
         {
             let entries = ArraySeqStEphS::empty();
             assert(entries@ =~= Seq::<(K::V, V::V)>::empty());
             TableStEph { entries }
         }
 
-        fn singleton(key: K, value: V) -> (result: Self)
+        fn singleton(key: K, value: V) -> (tree: Self)
         {
             let entries = ArraySeqStEphS::singleton(Pair(key, value));
             assert(entries@ =~= seq![(key@, value@)]);
@@ -350,8 +350,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn domain(&self) -> (result: ArraySetStEph<K>)
-            ensures result@.finite()
+        fn domain(&self) -> (domain: ArraySetStEph<K>)
+            ensures domain@.finite()
         {
             let mut keys = ArraySetStEph::empty();
             for i in 0..self.entries.length() {
@@ -362,8 +362,8 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
-            ensures result@.dom().finite()
+        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+            ensures tabulated@.dom().finite()
         {
             let key_seq = keys.to_seq();
             let mut entries = Vec::with_capacity(key_seq.length());
@@ -540,7 +540,7 @@ broadcast use {
             self.entries = ArraySeqStEphS::from_vec(difference_entries);
         }
 
-        fn find(&self, key: &K) -> (result: Option<V>)
+        fn find(&self, key: &K) -> (found: Option<V>)
         {
             proof {
                 assume(obeys_view_eq::<K>());
@@ -578,14 +578,14 @@ broadcast use {
         fn delete(&mut self, key: &K)
             ensures !self@.contains_key(key@)
         {
-            let mut result = Vec::new();
+            let mut found = Vec::new();
             for i in 0..self.entries.length() {
                 let pair = self.entries.nth(i);
                 if &pair.0 != key {
-                    result.push(pair.clone());
+                    found.push(pair.clone());
                 }
             }
-            self.entries = ArraySeqStEphS::from_vec(result);
+            self.entries = ArraySeqStEphS::from_vec(found);
         }
 
         #[verifier::external_body]
@@ -701,7 +701,7 @@ broadcast use {
             }
         }
 
-        fn entries(&self) -> (result: ArraySeqStEphS<Pair<K, V>>) {
+        fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>) {
             self.entries.clone()
         }
     }
@@ -709,7 +709,7 @@ broadcast use {
     // 11. derive impls in verus!
 
     impl<K: StT + Ord, V: StT> Clone for TableStEph<K, V> {
-        fn clone(&self) -> (result: Self) {
+        fn clone(&self) -> (cloned: Self) {
             TableStEph {
                 entries: self.entries.clone(),
             }
@@ -718,8 +718,8 @@ broadcast use {
 
     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
         entries: Vec<Pair<K, V>>,
-    ) -> (result: TableStEph<K, V>)
-        ensures result@.dom().finite()
+    ) -> (cloned: TableStEph<K, V>)
+        ensures cloned@.dom().finite()
     {
         let seq = ArraySeqStEphS::from_vec(entries);
         proof {

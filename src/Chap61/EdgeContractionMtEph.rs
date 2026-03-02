@@ -135,9 +135,9 @@ pub mod EdgeContractionMtEph {
                 } else {
                     Edge(block_v, block_u)
                 };
-                let mut result: SetStEph<Edge<V>> = SetLit![];
-                let _ = result.insert(new_edge);
-                return result;
+                let mut edges: SetStEph<Edge<V>> = SetLit![];
+                let _ = edges.insert(new_edge);
+                return edges;
             } else {
                 return SetLit![];
             }
@@ -154,11 +154,11 @@ pub mod EdgeContractionMtEph {
             build_edges_parallel(edges2, map2, mid, end)
         });
 
-        let mut result = pair.0;
+        let mut edges = pair.0;
         for edge in pair.1.iter() {
-            let _ = result.insert(edge.clone());
+            let _ = edges.insert(edge.clone());
         }
-        result
+        edges
     }
 
     /// One round of parallel edge contraction

@@ -54,27 +54,27 @@ pub mod OptBinSearchTreeStEph {
 
     // 8. traits
     pub trait OBSTStEphTrait<T: StT>: Sized {
-        fn new() -> (result: Self);
-        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self);
-        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self);
-        fn optimal_cost(&mut self) -> (result: Probability);
-        fn keys(&self) -> (result: &Vec<KeyProb<T>>);
+        fn new() -> (empty: Self);
+        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self);
+        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self);
+        fn optimal_cost(&mut self) -> (cost: Probability);
+        fn keys(&self) -> (keys: &Vec<KeyProb<T>>);
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>);
         fn update_prob(&mut self, index: usize, prob: Probability);
-        fn num_keys(&self) -> (result: usize);
+        fn num_keys(&self) -> (count: usize);
         fn clear_memo(&mut self);
-        fn memo_size(&self) -> (result: usize);
+        fn memo_size(&self) -> (count: usize);
     }
 
     // 9. impls
 
     #[verifier::external_body]
-    fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (result: Probability) {
-        if let Some(&result) = s.memo.get(&Pair(i, l)) {
-            return result;
+    fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (cost: Probability) {
+        if let Some(&cost) = s.memo.get(&Pair(i, l)) {
+            return cost;
         }
 
-        let result = if l == 0 {
+        let cost = if l == 0 {
             Probability::zero()
         } else {
             let prob_sum = (0..l)
@@ -92,13 +92,13 @@ pub mod OptBinSearchTreeStEph {
             prob_sum + min_cost
         };
 
-        s.memo.insert(Pair(i, l), result);
-        result
+        s.memo.insert(Pair(i, l), cost);
+        cost
     }
 
     impl<T: StT> OBSTStEphTrait<T> for OBSTStEphS<T> {
         #[verifier::external_body]
-        fn new() -> (result: Self) {
+        fn new() -> (empty: Self) {
             Self {
                 keys: Vec::new(),
                 memo: HashMapWithViewPlus::new(),
@@ -106,7 +106,7 @@ pub mod OptBinSearchTreeStEph {
         }
 
         #[verifier::external_body]
-        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self) {
+        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self) {
             let key_probs = keys
                 .into_iter()
                 .zip(probs)
@@ -120,7 +120,7 @@ pub mod OptBinSearchTreeStEph {
         }
 
         #[verifier::external_body]
-        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self) {
+        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
             Self {
                 keys: key_probs,
                 memo: HashMapWithViewPlus::new(),
@@ -128,7 +128,7 @@ pub mod OptBinSearchTreeStEph {
         }
 
         #[verifier::external_body]
-        fn optimal_cost(&mut self) -> (result: Probability) {
+        fn optimal_cost(&mut self) -> (cost: Probability) {
             if self.keys.is_empty() {
                 return Probability::zero();
             }
@@ -139,7 +139,7 @@ pub mod OptBinSearchTreeStEph {
             obst_rec_st_eph(self, 0, n)
         }
 
-        fn keys(&self) -> (result: &Vec<KeyProb<T>>) { &self.keys }
+        fn keys(&self) -> (keys: &Vec<KeyProb<T>>) { &self.keys }
 
         #[verifier::external_body]
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>) {
@@ -157,11 +157,11 @@ pub mod OptBinSearchTreeStEph {
             self.memo.clear();
         }
 
-        fn num_keys(&self) -> (result: usize) { self.keys.len() }
+        fn num_keys(&self) -> (count: usize) { self.keys.len() }
 
         fn clear_memo(&mut self) { self.memo.clear(); }
 
-        fn memo_size(&self) -> (result: usize) { self.memo.len() }
+        fn memo_size(&self) -> (count: usize) { self.memo.len() }
     }
 
     // 11. derive impls in verus!

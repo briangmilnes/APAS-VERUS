@@ -61,57 +61,57 @@ broadcast use {
     pub trait AVLTreeSetStPerTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self) -> (result: usize)
-            ensures result == self@.len(), self@.finite();
+        fn size(&self) -> (count: usize)
+            ensures count == self@.len(), self@.finite();
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn to_seq(&self) -> (result: AVLTreeSeqStPerS<T>)
+        fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
             ensures self@.finite();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty() -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty();
+        fn empty() -> (empty: Self)
+            ensures empty@ == Set::<<T as View>::V>::empty();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite();
+        fn singleton(x: T) -> (tree: Self)
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
-        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (result: Self)
-            ensures result@.finite();
+        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
+            ensures constructed@.finite();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
-            ensures result@.finite(), result@.subset_of(self@);
+        fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
+            ensures filtered@.finite(), filtered@.subset_of(self@);
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
-        fn intersection(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.intersect(other@), result@.finite();
+        fn intersection(&self, other: &Self) -> (common: Self)
+            ensures common@ == self@.intersect(other@), common@.finite();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
-        fn difference(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.difference(other@), result@.finite();
+        fn difference(&self, other: &Self) -> (remaining: Self)
+            ensures remaining@ == self@.difference(other@), remaining@.finite();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
-        fn union(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.union(other@), result@.finite();
+        fn union(&self, other: &Self) -> (combined: Self)
+            ensures combined@ == self@.union(other@), combined@.finite();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn find(&self, x: &T) -> (result: B)
-            ensures result == self@.contains(x@);
+        fn find(&self, x: &T) -> (found: B)
+            ensures found == self@.contains(x@);
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn delete(&self, x: &T) -> (result: Self)
-            ensures result@ == self@.remove(x@), result@.finite();
+        fn delete(&self, x: &T) -> (updated: Self)
+            ensures updated@ == self@.remove(x@), updated@.finite();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn insert(&self, x: T) -> (result: Self)
-            ensures result@ == self@.insert(x@), result@.finite();
+        fn insert(&self, x: T) -> (updated: Self)
+            ensures updated@ == self@.insert(x@), updated@.finite();
     }
 
     // 9. impls
 
     impl<T: StT + Ord> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
-        fn size(&self) -> (result: usize)
+        fn size(&self) -> (count: usize)
         {
             proof { assume(self.elements.spec_well_formed()); }
             let r = self.elements.length();
@@ -119,7 +119,7 @@ broadcast use {
             r
         }
 
-        fn to_seq(&self) -> (result: AVLTreeSeqStPerS<T>)
+        fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
         {
             proof { assume(self.elements.spec_well_formed()); }
             let n = self.elements.length();
@@ -135,33 +135,33 @@ broadcast use {
                 v.push(self.elements.nth(i).clone());
                 i += 1;
             }
-            let result = AVLTreeSeqStPerS::from_vec(v);
+            let seq = AVLTreeSeqStPerS::from_vec(v);
             proof { assume(self@.finite()); }
-            result
+            seq
         }
 
-        fn empty() -> (result: Self)
+        fn empty() -> (empty: Self)
         {
-            let result = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::empty() };
-            proof { assume(result@ == Set::<<T as View>::V>::empty()); }
-            result
+            let empty = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::empty() };
+            proof { assume(empty@ == Set::<<T as View>::V>::empty()); }
+            empty
         }
 
-        fn singleton(x: T) -> (result: Self)
+        fn singleton(x: T) -> (tree: Self)
         {
             let ghost x_view = x@;
-            let result = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::singleton(x) };
+            let tree = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::singleton(x) };
             proof {
-                assume(result@ == Set::<<T as View>::V>::empty().insert(x_view));
-                assume(result@.finite());
+                assume(tree@ == Set::<<T as View>::V>::empty().insert(x_view));
+                assume(tree@.finite());
             }
-            result
+            tree
         }
 
-        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (result: Self)
+        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
         {
             proof { assume(seq.spec_well_formed()); }
-            let mut result = Self::empty();
+            let mut constructed = Self::empty();
             let n = seq.length();
             let mut i: usize = 0;
             while i < n
@@ -172,17 +172,17 @@ broadcast use {
                 decreases n - i,
             {
                 let elem = seq.nth(i).clone();
-                result = result.insert(elem);
+                constructed = constructed.insert(elem);
                 i += 1;
             }
-            proof { assume(result@.finite()); }
-            result
+            proof { assume(constructed@.finite()); }
+            constructed
         }
 
-        fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
+        fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
         {
             proof { assume(self.elements.spec_well_formed()); }
-            let mut result = Self::empty();
+            let mut filtered = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
             while i < n
@@ -195,21 +195,21 @@ broadcast use {
                 let elem = self.elements.nth(i);
                 proof { assume(f.requires((&*elem,))); }
                 if f(elem) {
-                    result = result.insert(elem.clone());
+                    filtered = filtered.insert(elem.clone());
                 }
                 i += 1;
             }
             proof {
-                assume(result@.finite());
-                assume(result@.subset_of(self@));
+                assume(filtered@.finite());
+                assume(filtered@.subset_of(self@));
             }
-            result
+            filtered
         }
 
-        fn intersection(&self, other: &Self) -> (result: Self)
+        fn intersection(&self, other: &Self) -> (common: Self)
         {
             proof { assume(self.elements.spec_well_formed()); }
-            let mut result = Self::empty();
+            let mut common = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
             while i < n
@@ -221,21 +221,21 @@ broadcast use {
             {
                 let elem = self.elements.nth(i);
                 if other.find(elem) {
-                    result = result.insert(elem.clone());
+                    common = common.insert(elem.clone());
                 }
                 i += 1;
             }
             proof {
-                assume(result@ == self@.intersect(other@));
-                assume(result@.finite());
+                assume(common@ == self@.intersect(other@));
+                assume(common@.finite());
             }
-            result
+            common
         }
 
-        fn difference(&self, other: &Self) -> (result: Self)
+        fn difference(&self, other: &Self) -> (remaining: Self)
         {
             proof { assume(self.elements.spec_well_formed()); }
-            let mut result = Self::empty();
+            let mut remaining = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
             while i < n
@@ -247,24 +247,24 @@ broadcast use {
             {
                 let elem = self.elements.nth(i);
                 if !other.find(elem) {
-                    result = result.insert(elem.clone());
+                    remaining = remaining.insert(elem.clone());
                 }
                 i += 1;
             }
             proof {
-                assume(result@ == self@.difference(other@));
-                assume(result@.finite());
+                assume(remaining@ == self@.difference(other@));
+                assume(remaining@.finite());
             }
-            result
+            remaining
         }
 
-        fn union(&self, other: &Self) -> (result: Self)
+        fn union(&self, other: &Self) -> (combined: Self)
         {
             proof {
                 assume(self.elements.spec_well_formed());
                 assume(other.elements.spec_well_formed());
             }
-            let mut result = Self::empty();
+            let mut combined = Self::empty();
             let self_len = self.elements.length();
             let mut i: usize = 0;
             while i < self_len
@@ -274,7 +274,7 @@ broadcast use {
                     i <= self_len,
                 decreases self_len - i,
             {
-                result = result.insert(self.elements.nth(i).clone());
+                combined = combined.insert(self.elements.nth(i).clone());
                 i += 1;
             }
             let other_len = other.elements.length();
@@ -286,17 +286,17 @@ broadcast use {
                     j <= other_len,
                 decreases other_len - j,
             {
-                result = result.insert(other.elements.nth(j).clone());
+                combined = combined.insert(other.elements.nth(j).clone());
                 j += 1;
             }
             proof {
-                assume(result@ == self@.union(other@));
-                assume(result@.finite());
+                assume(combined@ == self@.union(other@));
+                assume(combined@.finite());
             }
-            result
+            combined
         }
 
-        fn find(&self, x: &T) -> (result: B)
+        fn find(&self, x: &T) -> (found: B)
         {
             proof { assume(self.elements.spec_well_formed()); }
             let n = self.elements.length();
@@ -325,7 +325,7 @@ broadcast use {
             false
         }
 
-        fn delete(&self, x: &T) -> (result: Self)
+        fn delete(&self, x: &T) -> (updated: Self)
         {
             proof { assume(self.elements.spec_well_formed()); }
             let n = self.elements.length();
@@ -344,25 +344,25 @@ broadcast use {
                 }
                 i += 1;
             }
-            let result = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(result_vec) };
+            let updated = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(result_vec) };
             proof {
-                assume(result@ == self@.remove(x@));
-                assume(result@.finite());
+                assume(updated@ == self@.remove(x@));
+                assume(updated@.finite());
             }
-            result
+            updated
         }
 
-        fn insert(&self, x: T) -> (result: Self)
+        fn insert(&self, x: T) -> (updated: Self)
         {
             proof { assume(self.elements.spec_well_formed()); }
             let ghost x_view = x@;
             if self.find(&x) {
-                let result = Self { elements: self.elements.clone() };
+                let updated = Self { elements: self.elements.clone() };
                 proof {
-                    assume(result@ == self@.insert(x_view));
-                    assume(result@.finite());
+                    assume(updated@ == self@.insert(x_view));
+                    assume(updated@.finite());
                 }
-                return result;
+                return updated;
             }
             let n = self.elements.length();
             let mut lo: usize = 0;
@@ -405,24 +405,24 @@ broadcast use {
                 new_vec.push(self.elements.nth(j).clone());
                 j += 1;
             }
-            let result = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(new_vec) };
+            let updated = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(new_vec) };
             proof {
-                assume(result@ == self@.insert(x_view));
-                assume(result@.finite());
+                assume(updated@ == self@.insert(x_view));
+                assume(updated@.finite());
             }
-            result
+            updated
         }
     }
 
     // 11. derive impls in verus!
 
     impl<T: StT + Ord> Clone for AVLTreeSetStPer<T> {
-        fn clone(&self) -> (result: Self)
-            ensures result@ == self@
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
         {
-            let result = AVLTreeSetStPer { elements: self.elements.clone() };
-            proof { accept(result@ == self@); }
-            result
+            let cloned = AVLTreeSetStPer { elements: self.elements.clone() };
+            proof { accept(cloned@ == self@); }
+            cloned
         }
     }
 

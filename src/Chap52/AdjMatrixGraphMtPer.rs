@@ -110,12 +110,12 @@ broadcast use {
             recommends 0 <= u < self.spec_n(), 0 <= v < self.spec_n();
 
         /// Work Theta(n^2), Span Theta(n^2)
-        fn new(n: N) -> (result: Self)
+        fn new(n: N) -> (empty: Self)
             ensures
-                result.spec_wf(),
-                result.spec_n() == n,
+                empty.spec_wf(),
+                empty.spec_n() == n,
                 forall|u: int, v: int| #![auto]
-                    0 <= u < n && 0 <= v < n ==> !result.spec_edge(u, v);
+                    0 <= u < n && 0 <= v < n ==> !empty.spec_edge(u, v);
 
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: N)
@@ -168,14 +168,14 @@ broadcast use {
                 u >= self.spec_n() ==> d == 0;
 
         /// Work Theta(n^2), Span Theta(n^2)
-        fn complement(&self) -> (result: Self)
+        fn complement(&self) -> (complemented: Self)
             requires self.spec_wf()
             ensures
-                result.spec_wf(),
-                result.spec_n() == self.spec_n(),
+                complemented.spec_wf(),
+                complemented.spec_n() == self.spec_n(),
                 forall|i: int, j: int| #![auto]
                     0 <= i < self.spec_n() && 0 <= j < self.spec_n()
-                    ==> result.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));
+                    ==> complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));
     }
 
     // 9. impls
@@ -194,7 +194,7 @@ broadcast use {
             self.matrix.spec_index(u).spec_index(v)
         }
 
-        fn new(n: N) -> (result: Self) {
+        fn new(n: N) -> (empty: Self) {
             let matrix = ArraySeqMtPerS::tabulate(
                 &|_i: usize| -> (r: ArraySeqMtPerS<bool>)
                     ensures
@@ -357,7 +357,7 @@ broadcast use {
             count
         }
 
-        fn complement(&self) -> (result: Self) {
+        fn complement(&self) -> (complemented: Self) {
             let n = self.n;
             let matrix = ArraySeqMtPerS::tabulate(
                 &|i: usize| -> (r: ArraySeqMtPerS<bool>)

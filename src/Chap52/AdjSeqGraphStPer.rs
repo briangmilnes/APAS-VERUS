@@ -86,20 +86,20 @@ broadcast use {
             recommends 0 <= u < self.spec_num_vertices(), 0 <= j < self.spec_degree(u);
 
         /// Work Theta(n), Span Theta(n)
-        fn new(n: N) -> (result: Self)
+        fn new(n: N) -> (empty: Self)
             ensures
-                result.spec_num_vertices() == n,
-                forall|i: int| #![auto] 0 <= i < n ==> result.spec_degree(i) == 0;
+                empty.spec_num_vertices() == n,
+                forall|i: int| #![auto] 0 <= i < n ==> empty.spec_degree(i) == 0;
 
         /// Work Theta(1), Span Theta(1)
-        fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: Self)
+        fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<N>>) -> (constructed: Self)
             ensures
-                result.spec_num_vertices() == adj.spec_len(),
+                constructed.spec_num_vertices() == adj.spec_len(),
                 forall|i: int| #![auto] 0 <= i < adj.spec_len() ==>
-                    result.spec_degree(i) == adj.spec_index(i).spec_len(),
+                    constructed.spec_degree(i) == adj.spec_index(i).spec_len(),
                 forall|i: int, j: int| #![auto] 0 <= i < adj.spec_len()
                     && 0 <= j < adj.spec_index(i).spec_len()
-                    ==> result.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);
+                    ==> constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);
 
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: N)
@@ -139,36 +139,36 @@ broadcast use {
             ensures d as nat == self.spec_degree(u as int);
 
         /// Work Theta(n + deg(u)), Span Theta(n + deg(u))
-        fn insert_edge(&self, u: N, v: N) -> (result: Self)
+        fn insert_edge(&self, u: N, v: N) -> (updated: Self)
             requires
                 u < self.spec_num_vertices(),
                 v < self.spec_num_vertices(),
             ensures
-                result.spec_num_vertices() == self.spec_num_vertices(),
+                updated.spec_num_vertices() == self.spec_num_vertices(),
                 forall|i: int| #![auto] 0 <= i < self.spec_num_vertices() && i != u as int
-                    ==> result.spec_degree(i) == self.spec_degree(i),
+                    ==> updated.spec_degree(i) == self.spec_degree(i),
                 forall|i: int, j: int| #![auto]
                     0 <= i < self.spec_num_vertices() && i != u as int
                     && 0 <= j < self.spec_degree(i)
-                    ==> result.spec_neighbor(i, j) == self.spec_neighbor(i, j),
+                    ==> updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),
                 exists|j: int| #![auto]
-                    0 <= j < result.spec_degree(u as int)
-                    && result.spec_neighbor(u as int, j) == v;
+                    0 <= j < updated.spec_degree(u as int)
+                    && updated.spec_neighbor(u as int, j) == v;
 
         /// Work Theta(n + deg(u)), Span Theta(n + deg(u))
-        fn delete_edge(&self, u: N, v: N) -> (result: Self)
+        fn delete_edge(&self, u: N, v: N) -> (updated: Self)
             requires u < self.spec_num_vertices()
             ensures
-                result.spec_num_vertices() == self.spec_num_vertices(),
+                updated.spec_num_vertices() == self.spec_num_vertices(),
                 forall|i: int| #![auto] 0 <= i < self.spec_num_vertices() && i != u as int
-                    ==> result.spec_degree(i) == self.spec_degree(i),
+                    ==> updated.spec_degree(i) == self.spec_degree(i),
                 forall|i: int, j: int| #![auto]
                     0 <= i < self.spec_num_vertices() && i != u as int
                     && 0 <= j < self.spec_degree(i)
-                    ==> result.spec_neighbor(i, j) == self.spec_neighbor(i, j),
+                    ==> updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),
                 forall|j: int| #![auto]
-                    0 <= j < result.spec_degree(u as int)
-                    ==> result.spec_neighbor(u as int, j) != v;
+                    0 <= j < updated.spec_degree(u as int)
+                    ==> updated.spec_neighbor(u as int, j) != v;
     }
 
     // 9. impls
@@ -187,7 +187,7 @@ broadcast use {
             self.adj.spec_index(u).spec_index(j)
         }
 
-        fn new(n: N) -> (result: Self) {
+        fn new(n: N) -> (empty: Self) {
             let adj = ArraySeqStPerS::tabulate(
                 &|_i: usize| -> (r: ArraySeqStPerS<N>)
                     ensures r.spec_len() == 0
@@ -199,7 +199,7 @@ broadcast use {
             AdjSeqGraphStPer { adj }
         }
 
-        fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: Self) {
+        fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<N>>) -> (constructed: Self) {
             AdjSeqGraphStPer { adj }
         }
 
@@ -265,7 +265,7 @@ broadcast use {
             self.adj.nth(u).length()
         }
 
-        fn insert_edge(&self, u: N, v: N) -> (result: Self) {
+        fn insert_edge(&self, u: N, v: N) -> (updated: Self) {
             let n_v = self.adj.length();
             let src_u = self.adj.nth(u);
             let deg_u = src_u.length();
@@ -380,14 +380,14 @@ broadcast use {
                 n_v,
             );
 
-            let result = AdjSeqGraphStPer { adj: result_adj };
-            assert(result.spec_degree(u as int) == new_neighbors.spec_len());
-            assert(result.spec_neighbor(u as int, witness) == new_neighbors.spec_index(witness));
-            assert(result.spec_neighbor(u as int, witness) == v);
-            result
+            let updated = AdjSeqGraphStPer { adj: result_adj };
+            assert(updated.spec_degree(u as int) == new_neighbors.spec_len());
+            assert(updated.spec_neighbor(u as int, witness) == new_neighbors.spec_index(witness));
+            assert(updated.spec_neighbor(u as int, witness) == v);
+            updated
         }
 
-        fn delete_edge(&self, u: N, v: N) -> (result: Self) {
+        fn delete_edge(&self, u: N, v: N) -> (updated: Self) {
             let n_v = self.adj.length();
             let src_u = self.adj.nth(u);
             let deg_u = src_u.length();

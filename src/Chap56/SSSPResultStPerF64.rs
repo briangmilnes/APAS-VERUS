@@ -50,30 +50,30 @@ broadcast use {
     // 8. traits
 
     pub trait SSSPResultStPerF64Trait: Sized {
-        fn new(n: usize, source: usize) -> (result: Self)
+        fn new(n: usize, source: usize) -> (empty: Self)
             requires source < n;
 
         fn get_distance(&self, v: usize) -> (dist: WrappedF64);
 
-        fn set_distance(self, v: usize, dist: WrappedF64) -> (result: Self);
+        fn set_distance(self, v: usize, dist: WrappedF64) -> (updated: Self);
 
-        fn get_predecessor(&self, v: usize) -> (result: Option<usize>);
+        fn get_predecessor(&self, v: usize) -> (predecessor: Option<usize>);
 
-        fn set_predecessor(self, v: usize, pred: usize) -> (result: Self);
+        fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self);
 
-        fn is_reachable(&self, v: usize) -> (result: bool);
+        fn is_reachable(&self, v: usize) -> (reachable: bool);
 
-        fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);
+        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);
     }
 
     // 9. impls
 
     impl SSSPResultStPerF64Trait for SSSPResultStPerF64 {
-        fn new(n: usize, source: usize) -> (result: Self)
+        fn new(n: usize, source: usize) -> (empty: Self)
             ensures
-                result.distances@.len() == n,
-                result.predecessors@.len() == n,
-                result.source == source,
+                empty.distances@.len() == n,
+                empty.predecessors@.len() == n,
+                empty.source == source,
         {
             let unreach = unreachable_dist();
             let zero = zero_dist();
@@ -105,10 +105,10 @@ broadcast use {
             *self.distances.nth(v)
         }
 
-        fn set_distance(self, v: usize, dist: WrappedF64) -> (result: Self)
+        fn set_distance(self, v: usize, dist: WrappedF64) -> (updated: Self)
             ensures
-                result.predecessors@ == self.predecessors@,
-                result.source == self.source,
+                updated.predecessors@ == self.predecessors@,
+                updated.source == self.source,
         {
             if v >= self.distances.seq.len() { return self; }
             let mut dist_vec = self.distances.seq;
@@ -120,7 +120,7 @@ broadcast use {
             }
         }
 
-        fn get_predecessor(&self, v: usize) -> (result: Option<usize>) {
+        fn get_predecessor(&self, v: usize) -> (predecessor: Option<usize>) {
             if v >= self.predecessors.length() {
                 return None;
             }
@@ -128,10 +128,10 @@ broadcast use {
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
-        fn set_predecessor(self, v: usize, pred: usize) -> (result: Self)
+        fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self)
             ensures
-                result.distances@ == self.distances@,
-                result.source == self.source,
+                updated.distances@ == self.distances@,
+                updated.source == self.source,
         {
             if v >= self.predecessors.seq.len() { return self; }
             let mut pred_vec = self.predecessors.seq;
@@ -143,11 +143,11 @@ broadcast use {
             }
         }
 
-        fn is_reachable(&self, v: usize) -> (result: bool) {
+        fn is_reachable(&self, v: usize) -> (reachable: bool) {
             self.get_distance(v).is_finite()
         }
 
-        fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
+        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>) {
             if !self.is_reachable(v) { return None; }
             let n = self.predecessors.length();
             if v >= n { return None; }
