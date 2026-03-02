@@ -441,11 +441,11 @@ pub mod BSTRBStEph {
         }
     }
 
-    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (result: Option<&'a T>)
+    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)
         requires tree_is_bst::<T>(*node),
         ensures
-            result.is_some() == tree_contains(*node, *target),
-            result.is_some() ==> *result.unwrap() == *target,
+            found.is_some() == tree_contains(*node, *target),
+            found.is_some() ==> *found.unwrap() == *target,
         decreases node.spec_size(),
     {
         match node {
@@ -476,7 +476,7 @@ pub mod BSTRBStEph {
         }
     }
 
-    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (result: Option<&T>)
+    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
         decreases node.spec_size(),
     {
         match node {
@@ -491,7 +491,7 @@ pub mod BSTRBStEph {
         }
     }
 
-    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (result: Option<&T>)
+    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
         decreases node.spec_size(),
     {
         match node {
@@ -534,29 +534,29 @@ pub mod BSTRBStEph {
         tree.root.height()
     }
 
-    pub fn rb_insert<T: TotalOrder>(tree: BSTRBStEph<T>, value: T) -> (result: BSTRBStEph<T>)
+    pub fn rb_insert<T: TotalOrder>(tree: BSTRBStEph<T>, value: T) -> (inserted: BSTRBStEph<T>)
         requires tree_is_bst::<T>(tree.root),
         ensures
-            tree_is_bst::<T>(result.root),
-            tree_contains(result.root, value),
-            forall|x: T| #![auto] tree_contains(result.root, x) <==>
+            tree_is_bst::<T>(inserted.root),
+            tree_contains(inserted.root, value),
+            forall|x: T| #![auto] tree_contains(inserted.root, x) <==>
                 (tree_contains(tree.root, x) || x == value),
     {
         BSTRBStEph { root: insert_node(tree.root, value) }
     }
 
-    pub fn rb_contains<T: TotalOrder>(tree: &BSTRBStEph<T>, target: &T) -> (result: bool)
+    pub fn rb_contains<T: TotalOrder>(tree: &BSTRBStEph<T>, target: &T) -> (found: bool)
         requires tree_is_bst::<T>(tree.root),
-        ensures result == tree_contains(tree.root, *target),
+        ensures found == tree_contains(tree.root, *target),
     {
         contains_node(&tree.root, target)
     }
 
-    pub fn rb_find<'a, T: TotalOrder>(tree: &'a BSTRBStEph<T>, target: &T) -> (result: Option<&'a T>)
+    pub fn rb_find<'a, T: TotalOrder>(tree: &'a BSTRBStEph<T>, target: &T) -> (found: Option<&'a T>)
         requires tree_is_bst::<T>(tree.root),
         ensures
-            result.is_some() == tree_contains(tree.root, *target),
-            result.is_some() ==> *result.unwrap() == *target,
+            found.is_some() == tree_contains(tree.root, *target),
+            found.is_some() ==> *found.unwrap() == *target,
     {
         find_node(&tree.root, target)
     }

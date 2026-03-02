@@ -23,8 +23,8 @@ pub mod BSTSplayStEph {
 
     impl<T: StT + Ord> Clone for Node<T> {
         #[verifier::external_body]
-        fn clone(&self) -> (result: Self)
-            ensures result == *self
+        fn clone(&self) -> (copy: Self)
+            ensures copy == *self
         {
             Node {
                 key: self.key.clone(),
@@ -64,8 +64,8 @@ pub mod BSTSplayStEph {
         }
     }
 
-    fn size_link<T: StT + Ord>(link: &Link<T>) -> (result: N)
-        ensures result as nat == spec_size_link(link),
+    fn size_link<T: StT + Ord>(link: &Link<T>) -> (size: N)
+        ensures size as nat == spec_size_link(link),
     {
         proof { reveal(spec_size_link); }
         match link.as_ref() {
@@ -74,9 +74,9 @@ pub mod BSTSplayStEph {
         }
     }
 
-    fn height_link<T: StT + Ord>(link: &Link<T>) -> (result: N)
+    fn height_link<T: StT + Ord>(link: &Link<T>) -> (height: N)
         requires spec_height_link(link) < usize::MAX as nat,
-        ensures result as nat == spec_height_link(link),
+        ensures height as nat == spec_height_link(link),
         decreases *link,
     {
         proof { reveal_with_fuel(spec_height_link, 2); }
@@ -329,7 +329,7 @@ pub mod BSTSplayStEph {
     }
 
     impl<T: StT + Ord> Clone for BSTSplayStEph<T> {
-        fn clone(&self) -> (result: Self)
+        fn clone(&self) -> (copy: Self)
             ensures true,
         {
             BSTSplayStEph { root: self.root.clone() }
