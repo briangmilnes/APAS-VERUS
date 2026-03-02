@@ -470,5 +470,44 @@ impl IsLtTransitive for String {
     }
 }
 
+// String: comparison specs are opaque in vstd, so TotalOrder proof methods
+// must assume their conclusions. The cmp body delegates to Ord::cmp.
+// accept hole
+impl TotalOrder for String {
+    // Delegates to PartialOrd::is_le; opaque because vstd has no String ordering spec.
+    open spec fn le(self, other: Self) -> bool {
+        self.is_le(&other)
+    }
+
+    proof fn reflexive(x: Self) {
+        assume(TotalOrder::le(x, x));
+    }
+
+    proof fn transitive(x: Self, y: Self, z: Self) {
+        assume(TotalOrder::le(x, z));
+    }
+
+    proof fn antisymmetric(x: Self, y: Self) {
+        assume(x == y);
+    }
+
+    proof fn total(x: Self, y: Self) {
+        assume(TotalOrder::le(x, y) || TotalOrder::le(y, x));
+    }
+
+    fn cmp(&self, other: &Self) -> (c: Ordering) {
+        if *self < *other {
+            proof { assume(TotalOrder::le(*self, *other) && self != other); }
+            Ordering::Less
+        } else if *self == *other {
+            proof { assume(*self == *other); }
+            Ordering::Equal
+        } else {
+            proof { assume(TotalOrder::le(*other, *self) && self != other); }
+            Ordering::Greater
+        }
+    }
+}
+
 } // verus!
 }

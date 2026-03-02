@@ -5,23 +5,31 @@ pub mod BSTKeyValueStEph {
 
     use std::fmt;
 
+    use core::cmp::Ordering;
+
     use vstd::prelude::*;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
 
     // Table of Contents
     // 1. module
     // 2. imports
+    // 3. broadcast use
     // 4. type definitions
     // 5. view impls
     // 6. spec fns
+    // 7. proof fns
     // 8. traits
     // 9. impls
     // 11. derive impls in verus!
     // 13. derive impls outside verus!
+
+    // 3. broadcast use
+    broadcast use { vstd::map::group_map_axioms, vstd::map_lib::group_map_union, vstd::set::group_set_axioms };
 
     // 4. type definitions
 
@@ -124,6 +132,30 @@ pub mod BSTKeyValueStEph {
         }
     }
 
+    pub open spec fn spec_min_key_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Option<K>
+        decreases *link,
+    {
+        match link {
+            None => None,
+            Some(node) => match node.left {
+                None => Some(node.key),
+                Some(_) => spec_min_key_link(&node.left),
+            },
+        }
+    }
+
+    pub open spec fn spec_max_key_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Option<K>
+        decreases *link,
+    {
+        match link {
+            None => None,
+            Some(node) => match node.right {
+                None => Some(node.key),
+                Some(_) => spec_max_key_link(&node.right),
+            },
+        }
+    }
+
     // 5. view impls
 
     impl<K: StT + Ord, V: StT> View for BSTKeyValueStEph<K, V> {
@@ -133,12 +165,105 @@ pub mod BSTKeyValueStEph {
         }
     }
 
+    // 7. proof fns
+
+    proof fn lemma_content_left_contains_key<K: StT + Ord, V: StT>(
+        node: &Box<Node<K, V>>, k: K,
+    )
+        requires spec_content_link(&node.left).contains_key(k),
+        ensures spec_content_link(&Some(*node)).contains_key(k),
+    {
+    }
+
+    proof fn lemma_content_right_contains_key<K: StT + Ord, V: StT>(
+        node: &Box<Node<K, V>>, k: K,
+    )
+        requires spec_content_link(&node.right).contains_key(k),
+        ensures spec_content_link(&Some(*node)).contains_key(k),
+    {
+    }
+
+    /// Left-rotation rearranges subtrees but preserves key membership.
+    proof fn lemma_rotate_left_preserves_keys<K: StT + Ord, V: StT>(
+        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
+        xk: K, xv: V, yk: K, yv: V,
+    )
+        ensures
+            forall|k: K| #![auto]
+                a.union_prefer_right(
+                    b.union_prefer_right(c).insert(yk, yv)
+                ).insert(xk, xv).contains_key(k)
+                ==>
+                a.union_prefer_right(b).insert(xk, xv)
+                    .union_prefer_right(c).insert(yk, yv).contains_key(k),
+    {
+    }
+
+    /// Right-rotation rearranges subtrees but preserves key membership.
+    proof fn lemma_rotate_right_preserves_keys<K: StT + Ord, V: StT>(
+        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
+        xk: K, xv: V, yk: K, yv: V,
+    )
+        ensures
+            forall|k: K| #![auto]
+                a.union_prefer_right(b).insert(xk, xv)
+                    .union_prefer_right(c).insert(yk, yv).contains_key(k)
+                ==>
+                a.union_prefer_right(
+                    b.union_prefer_right(c).insert(yk, yv)
+                ).insert(xk, xv).contains_key(k),
+    {
+    }
+
+    /// Lift left-child membership to the containing link.
+    proof fn lemma_left_key_in_link<K: StT + Ord, V: StT>(
+        link: &Link<K, V>, k: K,
+    )
+        requires
+            link is Some,
+            match *link {
+                Some(node) => spec_content_link(&node.left).contains_key(k),
+                None => false,
+            },
+        ensures spec_content_link(link).contains_key(k),
+    {
+    }
+
+    /// Lift right-child membership to the containing link.
+    proof fn lemma_right_key_in_link<K: StT + Ord, V: StT>(
+        link: &Link<K, V>, k: K,
+    )
+        requires
+            link is Some,
+            match *link {
+                Some(node) => spec_content_link(&node.right).contains_key(k),
+                None => false,
+            },
+        ensures spec_content_link(link).contains_key(k),
+    {
+    }
+
+    /// The root node's own key is always in the link's content.
+    proof fn lemma_node_key_in_link<K: StT + Ord, V: StT>(
+        link: &Link<K, V>,
+    )
+        requires link is Some,
+        ensures
+            match *link {
+                Some(node) => spec_content_link(link).contains_key(node.key),
+                None => true,
+            },
+    {
+    }
+
     // 8. traits
 
-    pub trait BSTKeyValueStEphTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K, V>> {
+    pub trait BSTKeyValueStEphTrait<K: StT + Ord + TotalOrder, V: StT>: Sized + View<V = Map<K, V>> {
         spec fn spec_size(&self) -> nat;
         spec fn spec_height(&self) -> nat;
         spec fn spec_wf(&self) -> bool;
+        spec fn spec_min_key(&self) -> Option<K>;
+        spec fn spec_max_key(&self) -> Option<K>;
 
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn new() -> (result: Self)
@@ -159,6 +284,7 @@ pub mod BSTKeyValueStEph {
         fn insert(&mut self, key: K, value: V, priority: u64)
             requires old(self).spec_size() < usize::MAX,
             ensures
+                self@.contains_key(key),
                 self.spec_size() >= old(self).spec_size(),
                 self.spec_size() <= old(self).spec_size() + 1;
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — filter + rebuild
@@ -168,15 +294,21 @@ pub mod BSTKeyValueStEph {
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn find(&self, key: &K) -> (result: Option<&V>)
             requires self.spec_wf(),
-            ensures self.spec_size() == 0 ==> result is None;
+            ensures
+                self.spec_size() == 0 ==> result is None,
+                result.is_some() ==> self@.contains_key(*key);
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn contains(&self, key: &K) -> (result: bool)
             requires self.spec_wf(),
-            ensures self.spec_size() == 0 ==> !result;
+            ensures
+                self.spec_size() == 0 ==> !result,
+                result ==> self@.contains_key(*key);
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn get(&self, key: &K) -> (result: Option<&V>)
             requires self.spec_wf(),
-            ensures self.spec_size() == 0 ==> result is None;
+            ensures
+                self.spec_size() == 0 ==> result is None,
+                result.is_some() ==> self@.contains_key(*key);
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn keys(&self) -> (result: ArraySeqStPerS<K>)
             requires self.spec_wf(),
@@ -191,14 +323,24 @@ pub mod BSTKeyValueStEph {
             requires self.spec_wf(),
             ensures
                 self.spec_size() == 0 ==> result is None,
-                self.spec_size() > 0 ==> result is Some;
+                self.spec_size() > 0 ==> result is Some,
+                match (result, self.spec_min_key()) {
+                    (Some(rv), Some(sv)) => *rv == sv,
+                    (None, None) => true,
+                    _ => false,
+                };
         /// - APAS: Work Θ(log n) expected, Span Θ(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn maximum_key(&self) -> (result: Option<&K>)
             requires self.spec_wf(),
             ensures
                 self.spec_size() == 0 ==> result is None,
-                self.spec_size() > 0 ==> result is Some;
+                self.spec_size() > 0 ==> result is Some,
+                match (result, self.spec_max_key()) {
+                    (Some(rv), Some(sv)) => *rv == sv,
+                    (None, None) => true,
+                    _ => false,
+                };
 
         // Internal associated functions.
 
@@ -214,24 +356,42 @@ pub mod BSTKeyValueStEph {
             ensures result == spec_height_link(link),
             decreases *link;
         fn rotate_left(link: &mut Link<K, V>)
-            ensures link.is_some() == old(link).is_some();
+            ensures
+                link.is_some() == old(link).is_some(),
+                forall|k: K| #[trigger] spec_content_link(old(link)).contains_key(k) ==> spec_content_link(link).contains_key(k);
         fn rotate_right(link: &mut Link<K, V>)
-            ensures link.is_some() == old(link).is_some();
+            ensures
+                link.is_some() == old(link).is_some(),
+                forall|k: K| #[trigger] spec_content_link(old(link)).contains_key(k) ==> spec_content_link(link).contains_key(k);
         fn insert_link(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> (inserted: bool)
-            ensures link.is_some(),
+            ensures
+                link.is_some(),
+                spec_content_link(link).contains_key(key),
             decreases old(link);
         fn find_link<'a>(link: &'a Link<K, V>, key: &K) -> (result: Option<&'a V>)
-            ensures link.is_none() ==> result.is_none(),
+            ensures
+                link.is_none() ==> result.is_none(),
+                result.is_some() ==> spec_content_link(link).contains_key(*key),
             decreases *link;
         fn min_key_link(link: &Link<K, V>) -> (result: Option<&K>)
             ensures
                 link.is_none() ==> result.is_none(),
                 link.is_some() ==> result.is_some(),
+                match (result, spec_min_key_link(link)) {
+                    (Some(rv), Some(sv)) => *rv == sv,
+                    (None, None) => true,
+                    _ => false,
+                },
             decreases *link;
         fn max_key_link(link: &Link<K, V>) -> (result: Option<&K>)
             ensures
                 link.is_none() ==> result.is_none(),
                 link.is_some() ==> result.is_some(),
+                match (result, spec_max_key_link(link)) {
+                    (Some(rv), Some(sv)) => *rv == sv,
+                    (None, None) => true,
+                    _ => false,
+                },
             decreases *link;
         fn collect_keys(link: &Link<K, V>, out: &mut Vec<K>)
             ensures out.len() == old(out).len() + spec_node_count_link(link),
@@ -261,12 +421,14 @@ pub mod BSTKeyValueStEph {
 
     // 9. impls
 
-    impl<K: StT + Ord, V: StT> BSTKeyValueStEphTrait<K, V> for BSTKeyValueStEph<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT> BSTKeyValueStEphTrait<K, V> for BSTKeyValueStEph<K, V> {
         open spec fn spec_size(&self) -> nat { self.size as nat }
         open spec fn spec_height(&self) -> nat { spec_height_link(&self.root) }
         open spec fn spec_wf(&self) -> bool {
             self.size as nat == spec_node_count_link(&self.root)
         }
+        open spec fn spec_min_key(&self) -> Option<K> { spec_min_key_link(&self.root) }
+        open spec fn spec_max_key(&self) -> Option<K> { spec_max_key_link(&self.root) }
 
         fn new() -> (result: Self) { BSTKeyValueStEph { root: None, size: 0 } }
 
@@ -335,9 +497,20 @@ pub mod BSTKeyValueStEph {
         fn rotate_left(link: &mut Link<K, V>) {
             if let Some(mut x) = link.take() {
                 if let Some(mut y) = x.right.take() {
+                    let ghost a = spec_content_link(&x.left);
+                    let ghost b = spec_content_link(&y.left);
+                    let ghost c = spec_content_link(&y.right);
+                    let ghost xk = x.key;
+                    let ghost xv = x.value;
+                    let ghost yk = y.key;
+                    let ghost yv = y.value;
                     x.right = y.left.take();
                     y.left = Some(x);
                     *link = Some(y);
+                    proof {
+                        reveal_with_fuel(spec_content_link, 3);
+                        lemma_rotate_left_preserves_keys(a, b, c, xk, xv, yk, yv);
+                    }
                 } else {
                     *link = Some(x);
                 }
@@ -347,9 +520,20 @@ pub mod BSTKeyValueStEph {
         fn rotate_right(link: &mut Link<K, V>) {
             if let Some(mut x) = link.take() {
                 if let Some(mut y) = x.left.take() {
+                    let ghost a = spec_content_link(&y.left);
+                    let ghost b = spec_content_link(&y.right);
+                    let ghost c = spec_content_link(&x.right);
+                    let ghost xk = x.key;
+                    let ghost xv = x.value;
+                    let ghost yk = y.key;
+                    let ghost yv = y.value;
                     x.left = y.right.take();
                     y.right = Some(x);
                     *link = Some(y);
+                    proof {
+                        reveal_with_fuel(spec_content_link, 3);
+                        lemma_rotate_right_preserves_keys(a, b, c, xk, xv, yk, yv);
+                    }
                 } else {
                     *link = Some(x);
                 }
@@ -359,33 +543,43 @@ pub mod BSTKeyValueStEph {
         fn insert_link(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> (inserted: bool)
             decreases old(link),
         {
+            proof { reveal_with_fuel(spec_content_link, 2); }
             if let Some(mut node) = link.take() {
-                if key < node.key {
-                    let inserted = Self::insert_link(&mut node.left, key, value, priority);
-                    *link = Some(node);
-                    let need_rotate = match link.as_ref().unwrap().left.as_ref() {
-                        Some(left) => left.priority < link.as_ref().unwrap().priority,
-                        None => false,
-                    };
-                    if need_rotate {
-                        Self::rotate_right(link);
+                let c = TotalOrder::cmp(&key, &node.key);
+                match c {
+                    Ordering::Less => {
+                        let inserted = Self::insert_link(&mut node.left, key, value, priority);
+                        *link = Some(node);
+                        proof { lemma_left_key_in_link(link, key); }
+                        let need_rotate = match link.as_ref().unwrap().left.as_ref() {
+                            Some(left) => left.priority < link.as_ref().unwrap().priority,
+                            None => false,
+                        };
+                        if need_rotate {
+                            Self::rotate_right(link);
+                        }
+                        inserted
                     }
-                    inserted
-                } else if key > node.key {
-                    let inserted = Self::insert_link(&mut node.right, key, value, priority);
-                    *link = Some(node);
-                    let need_rotate = match link.as_ref().unwrap().right.as_ref() {
-                        Some(right) => right.priority < link.as_ref().unwrap().priority,
-                        None => false,
-                    };
-                    if need_rotate {
-                        Self::rotate_left(link);
+                    Ordering::Greater => {
+                        let inserted = Self::insert_link(&mut node.right, key, value, priority);
+                        *link = Some(node);
+                        proof { lemma_right_key_in_link(link, key); }
+                        let need_rotate = match link.as_ref().unwrap().right.as_ref() {
+                            Some(right) => right.priority < link.as_ref().unwrap().priority,
+                            None => false,
+                        };
+                        if need_rotate {
+                            Self::rotate_left(link);
+                        }
+                        inserted
                     }
-                    inserted
-                } else {
-                    node.value = value;
-                    *link = Some(node);
-                    false
+                    Ordering::Equal => {
+                        // TotalOrder::cmp ensures: key == node.key (spec equality).
+                        node.value = value;
+                        *link = Some(node);
+                        proof { lemma_node_key_in_link(link); }
+                        false
+                    }
                 }
             } else {
                 *link = Some(Box::new(Self::new_node(key, value, priority)));
@@ -399,12 +593,31 @@ pub mod BSTKeyValueStEph {
             match link {
                 | None => None,
                 | Some(node) => {
-                    if *key == node.key {
-                        Some(&node.value)
-                    } else if *key < node.key {
-                        Self::find_link(&node.left, key)
-                    } else {
-                        Self::find_link(&node.right, key)
+                    let c = TotalOrder::cmp(key, &node.key);
+                    match c {
+                        Ordering::Equal => {
+                            // TotalOrder::cmp ensures: *key == node.key (spec equality).
+                            proof { lemma_node_key_in_link(link); }
+                            Some(&node.value)
+                        }
+                        Ordering::Less => {
+                            let r = Self::find_link(&node.left, key);
+                            proof {
+                                if r.is_some() {
+                                    lemma_left_key_in_link(link, *key);
+                                }
+                            }
+                            r
+                        }
+                        Ordering::Greater => {
+                            let r = Self::find_link(&node.right, key);
+                            proof {
+                                if r.is_some() {
+                                    lemma_right_key_in_link(link, *key);
+                                }
+                            }
+                            r
+                        }
                     }
                 }
             }
@@ -525,7 +738,7 @@ pub mod BSTKeyValueStEph {
 
     // 11. derive impls in verus!
 
-    impl<K: StT + Ord, V: StT> Default for BSTreeKeyValue<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT> Default for BSTreeKeyValue<K, V> {
         fn default() -> (result: Self)
             ensures result.spec_size() == 0, result@ == Map::<K, V>::empty(),
         { Self::new() }
