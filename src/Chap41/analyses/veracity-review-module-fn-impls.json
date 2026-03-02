@@ -1,0 +1,786 @@
+[
+  {
+    "id": 1,
+    "function": "new_set_mt_lock",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "60",
+    "spec_strength": "hole",
+    "snippet": "    fn new_set_mt_lock<T: StTInMtT + Ord + 'static>(val: AVLTreeSetStEph<T>) -> (lock: RwLock<AVLTreeSetStEph<T>, AVLTreeSetMtEphInv>) {"
+  },
+  {
+    "id": 2,
+    "function": "size",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "87-88",
+    "spec_strength": "hole",
+    "snippet": "        fn size(&self) -> (result: usize)\n            ensures result == self@.len(), self@.finite();"
+  },
+  {
+    "id": 3,
+    "function": "to_seq",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "91-92",
+    "spec_strength": "hole",
+    "snippet": "        fn to_seq(&self) -> (result: AVLTreeSeqStEphS<T>)\n            ensures self@.finite();"
+  },
+  {
+    "id": 4,
+    "function": "empty",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "95-96",
+    "spec_strength": "hole",
+    "snippet": "        fn empty() -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty();"
+  },
+  {
+    "id": 5,
+    "function": "singleton",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "99-100",
+    "spec_strength": "hole",
+    "snippet": "        fn singleton(x: T) -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite();"
+  },
+  {
+    "id": 6,
+    "function": "from_seq",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "102-103",
+    "spec_strength": "hole",
+    "snippet": "        fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (result: Self)\n            ensures result@.finite();"
+  },
+  {
+    "id": 7,
+    "function": "filter",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "106-107",
+    "spec_strength": "hole",
+    "snippet": "        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (result: Self)\n            ensures result@.finite(), result@.subset_of(self@);"
+  },
+  {
+    "id": 8,
+    "function": "intersection",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "110-111",
+    "spec_strength": "hole",
+    "snippet": "        fn intersection(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.intersect(other@), result@.finite();"
+  },
+  {
+    "id": 9,
+    "function": "difference",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "114-115",
+    "spec_strength": "hole",
+    "snippet": "        fn difference(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.difference(other@), result@.finite();"
+  },
+  {
+    "id": 10,
+    "function": "union",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "118-119",
+    "spec_strength": "hole",
+    "snippet": "        fn union(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.union(other@), result@.finite();"
+  },
+  {
+    "id": 11,
+    "function": "find",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "122-123",
+    "spec_strength": "hole",
+    "snippet": "        fn find(&self, x: &T) -> (result: B)\n            ensures result == self@.contains(x@);"
+  },
+  {
+    "id": 12,
+    "function": "delete",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "126-127",
+    "spec_strength": "hole",
+    "snippet": "        fn delete(&mut self, x: &T)\n            ensures self@ == old(self)@.remove(x@), self@.finite();"
+  },
+  {
+    "id": 13,
+    "function": "insert",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "130-131",
+    "spec_strength": "hole",
+    "snippet": "        fn insert(&mut self, x: T)\n            ensures self@ == old(self)@.insert(x@), self@.finite();"
+  },
+  {
+    "id": 14,
+    "function": "default",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "408",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::empty() }"
+  },
+  {
+    "id": 15,
+    "function": "size",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "76-77",
+    "spec_strength": "hole",
+    "snippet": "        fn size(&self) -> (result: usize)\n            ensures result == self@.len(), self@.finite();"
+  },
+  {
+    "id": 16,
+    "function": "to_seq",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "80-81",
+    "spec_strength": "hole",
+    "snippet": "        fn to_seq(&self) -> (result: AVLTreeSeqMtPerS<T>)\n            ensures self@.finite();"
+  },
+  {
+    "id": 17,
+    "function": "empty",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "84-85",
+    "spec_strength": "hole",
+    "snippet": "        fn empty() -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty();"
+  },
+  {
+    "id": 18,
+    "function": "singleton",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "88-89",
+    "spec_strength": "hole",
+    "snippet": "        fn singleton(x: T) -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite();"
+  },
+  {
+    "id": 19,
+    "function": "from_seq",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "91-92",
+    "spec_strength": "hole",
+    "snippet": "        fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (result: Self)\n            ensures result@.finite();"
+  },
+  {
+    "id": 20,
+    "function": "filter",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "95-96",
+    "spec_strength": "hole",
+    "snippet": "        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (result: Self)\n            ensures result@.finite(), result@.subset_of(self@);"
+  },
+  {
+    "id": 21,
+    "function": "intersection",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "99-100",
+    "spec_strength": "hole",
+    "snippet": "        fn intersection(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.intersect(other@), result@.finite();"
+  },
+  {
+    "id": 22,
+    "function": "difference",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "103-104",
+    "spec_strength": "hole",
+    "snippet": "        fn difference(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.difference(other@), result@.finite();"
+  },
+  {
+    "id": 23,
+    "function": "union",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "107-108",
+    "spec_strength": "hole",
+    "snippet": "        fn union(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.union(other@), result@.finite();"
+  },
+  {
+    "id": 24,
+    "function": "find",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "111-112",
+    "spec_strength": "hole",
+    "snippet": "        fn find(&self, x: &T) -> (result: B)\n            ensures result == self@.contains(x@);"
+  },
+  {
+    "id": 25,
+    "function": "delete",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "115-116",
+    "spec_strength": "hole",
+    "snippet": "        fn delete(&self, x: &T) -> (result: Self)\n            ensures result@ == self@.remove(x@), result@.finite();"
+  },
+  {
+    "id": 26,
+    "function": "insert",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "119-120",
+    "spec_strength": "hole",
+    "snippet": "        fn insert(&self, x: T) -> (result: Self)\n            ensures result@ == self@.insert(x@), result@.finite();"
+  },
+  {
+    "id": 27,
+    "function": "default",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "474",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::empty() }"
+  },
+  {
+    "id": 28,
+    "function": "eq",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "478-487",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.size() == other.size() && {\n                for i in 0..self.size() {\n                    if !other.find(self.elements.nth(i)) {\n                        return false;\n                    }\n                }\n                true\n            }\n        }"
+  },
+  {
+    "id": 29,
+    "function": "partial_cmp",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "493-495",
+    "spec_strength": "",
+    "snippet": "        fn partial_cmp(&self, other: &Self) -> Option<Ordering> {\n            Some(self.cmp(other))\n        }"
+  },
+  {
+    "id": 30,
+    "function": "cmp",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "499-517",
+    "spec_strength": "",
+    "snippet": "        fn cmp(&self, other: &Self) -> Ordering {\n            // Lexicographic ordering: compare element by element (no cloning)\n            let n_self = self.size();\n            let n_other = other.size();\n            let min_n = n_self.min(n_other);\n\n            // Compare common prefix\n            for i in 0..min_n {\n                let a = self.elements.nth(i);\n                let b = other.elements.nth(i);\n                match a.cmp(b) {\n                    Equal => continue,\n                    non_equal => return non_equal,\n                }\n            }\n\n            // If all compared elements are equal, compare by size\n            n_self.cmp(&n_other)\n        }"
+  },
+  {
+    "id": 31,
+    "function": "size",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "64-65",
+    "spec_strength": "hole",
+    "snippet": "        fn size(&self) -> (result: usize)\n            ensures result == self@.len(), self@.finite();"
+  },
+  {
+    "id": 32,
+    "function": "to_seq",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "68-69",
+    "spec_strength": "hole",
+    "snippet": "        fn to_seq(&self) -> (result: AVLTreeSeqStEphS<T>)\n            ensures self@.finite();"
+  },
+  {
+    "id": 33,
+    "function": "empty",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "72-73",
+    "spec_strength": "hole",
+    "snippet": "        fn empty() -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty();"
+  },
+  {
+    "id": 34,
+    "function": "singleton",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "76-77",
+    "spec_strength": "hole",
+    "snippet": "        fn singleton(x: T) -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite();"
+  },
+  {
+    "id": 35,
+    "function": "from_seq",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "79-80",
+    "spec_strength": "hole",
+    "snippet": "        fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (result: Self)\n            ensures result@.finite();"
+  },
+  {
+    "id": 36,
+    "function": "filter",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "83-84",
+    "spec_strength": "hole",
+    "snippet": "        fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)\n            ensures result@.finite(), result@.subset_of(self@);"
+  },
+  {
+    "id": 37,
+    "function": "intersection",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "87-88",
+    "spec_strength": "hole",
+    "snippet": "        fn intersection(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.intersect(other@), result@.finite();"
+  },
+  {
+    "id": 38,
+    "function": "difference",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "91-92",
+    "spec_strength": "hole",
+    "snippet": "        fn difference(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.difference(other@), result@.finite();"
+  },
+  {
+    "id": 39,
+    "function": "union",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "95-96",
+    "spec_strength": "hole",
+    "snippet": "        fn union(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.union(other@), result@.finite();"
+  },
+  {
+    "id": 40,
+    "function": "find",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "99-100",
+    "spec_strength": "hole",
+    "snippet": "        fn find(&self, x: &T) -> (result: B)\n            ensures result == self@.contains(x@);"
+  },
+  {
+    "id": 41,
+    "function": "delete",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "103-104",
+    "spec_strength": "hole",
+    "snippet": "        fn delete(&mut self, x: &T)\n            ensures self@ == old(self)@.remove(x@), self@.finite();"
+  },
+  {
+    "id": 42,
+    "function": "insert",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "107-108",
+    "spec_strength": "hole",
+    "snippet": "        fn insert(&mut self, x: T)\n            ensures self@ == old(self)@.insert(x@), self@.finite();"
+  },
+  {
+    "id": 43,
+    "function": "default",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "440",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::empty() }"
+  },
+  {
+    "id": 44,
+    "function": "eq",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "444-453",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.size() == other.size() && {\n                for i in 0..self.elements.length() {\n                    if !other.find(self.elements.nth(i)) {\n                        return false;\n                    }\n                }\n                true\n            }\n        }"
+  },
+  {
+    "id": 45,
+    "function": "size",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "64-65",
+    "spec_strength": "hole",
+    "snippet": "        fn size(&self) -> (result: usize)\n            ensures result == self@.len(), self@.finite();"
+  },
+  {
+    "id": 46,
+    "function": "to_seq",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "68-69",
+    "spec_strength": "hole",
+    "snippet": "        fn to_seq(&self) -> (result: AVLTreeSeqStPerS<T>)\n            ensures self@.finite();"
+  },
+  {
+    "id": 47,
+    "function": "empty",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "72-73",
+    "spec_strength": "hole",
+    "snippet": "        fn empty() -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty();"
+  },
+  {
+    "id": 48,
+    "function": "singleton",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "76-77",
+    "spec_strength": "hole",
+    "snippet": "        fn singleton(x: T) -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite();"
+  },
+  {
+    "id": 49,
+    "function": "from_seq",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "79-80",
+    "spec_strength": "hole",
+    "snippet": "        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (result: Self)\n            ensures result@.finite();"
+  },
+  {
+    "id": 50,
+    "function": "filter",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "83-84",
+    "spec_strength": "hole",
+    "snippet": "        fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)\n            ensures result@.finite(), result@.subset_of(self@);"
+  },
+  {
+    "id": 51,
+    "function": "intersection",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "87-88",
+    "spec_strength": "hole",
+    "snippet": "        fn intersection(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.intersect(other@), result@.finite();"
+  },
+  {
+    "id": 52,
+    "function": "difference",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "91-92",
+    "spec_strength": "hole",
+    "snippet": "        fn difference(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.difference(other@), result@.finite();"
+  },
+  {
+    "id": 53,
+    "function": "union",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "95-96",
+    "spec_strength": "hole",
+    "snippet": "        fn union(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.union(other@), result@.finite();"
+  },
+  {
+    "id": 54,
+    "function": "find",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "99-100",
+    "spec_strength": "hole",
+    "snippet": "        fn find(&self, x: &T) -> (result: B)\n            ensures result == self@.contains(x@);"
+  },
+  {
+    "id": 55,
+    "function": "delete",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "103-104",
+    "spec_strength": "hole",
+    "snippet": "        fn delete(&self, x: &T) -> (result: Self)\n            ensures result@ == self@.remove(x@), result@.finite();"
+  },
+  {
+    "id": 56,
+    "function": "insert",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "107-108",
+    "spec_strength": "hole",
+    "snippet": "        fn insert(&self, x: T) -> (result: Self)\n            ensures result@ == self@.insert(x@), result@.finite();"
+  },
+  {
+    "id": 57,
+    "function": "default",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "448",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::empty() }"
+  },
+  {
+    "id": 58,
+    "function": "eq",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "452-461",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.size() == other.size() && {\n                for i in 0..self.elements.length() {\n                    if !other.find(self.elements.nth(i)) {\n                        return false;\n                    }\n                }\n                true\n            }\n        }"
+  },
+  {
+    "id": 59,
+    "function": "new",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "55-56",
+    "spec_strength": "hole",
+    "snippet": "        fn new(u: usize) -> (result: Self)\n            ensures result@ == Set::<usize>::empty();"
+  },
+  {
+    "id": 60,
+    "function": "size",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "59-60",
+    "spec_strength": "hole",
+    "snippet": "        fn size(&self) -> (result: usize)\n            ensures result == self@.len(), self@.finite();"
+  },
+  {
+    "id": 61,
+    "function": "to_seq",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "63-64",
+    "spec_strength": "hole",
+    "snippet": "        fn to_seq(&self) -> (result: ArraySeqMtEphS<usize>)\n            ensures self@.finite();"
+  },
+  {
+    "id": 62,
+    "function": "empty",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "66-67",
+    "spec_strength": "hole",
+    "snippet": "        fn empty(u: usize) -> (result: Self)\n            ensures result@ == Set::<usize>::empty();"
+  },
+  {
+    "id": 63,
+    "function": "singleton",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "70-74",
+    "spec_strength": "hole",
+    "snippet": "        fn singleton(u: usize, x: usize) -> (result: Self)\n            ensures\n                (x < u ==> result@ == Set::<usize>::empty().insert(x)),\n                (x >= u ==> result@ == Set::<usize>::empty()),\n                result@.finite();"
+  },
+  {
+    "id": 64,
+    "function": "from_seq",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "76-77",
+    "spec_strength": "hole",
+    "snippet": "        fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (result: Self)\n            ensures result@.finite();"
+  },
+  {
+    "id": 65,
+    "function": "filter",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "80-81",
+    "spec_strength": "hole",
+    "snippet": "        fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (result: Self)\n            ensures result@.finite(), result@.subset_of(self@);"
+  },
+  {
+    "id": 66,
+    "function": "intersection",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "84-85",
+    "spec_strength": "hole",
+    "snippet": "        fn intersection(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.intersect(other@), result@.finite();"
+  },
+  {
+    "id": 67,
+    "function": "difference",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "88-89",
+    "spec_strength": "hole",
+    "snippet": "        fn difference(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.difference(other@), result@.finite();"
+  },
+  {
+    "id": 68,
+    "function": "union",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "92-93",
+    "spec_strength": "hole",
+    "snippet": "        fn union(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.union(other@), result@.finite();"
+  },
+  {
+    "id": 69,
+    "function": "find",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "96-97",
+    "spec_strength": "hole",
+    "snippet": "        fn find(&self, x: usize) -> (result: B)\n            ensures result == self@.contains(x);"
+  },
+  {
+    "id": 70,
+    "function": "delete",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "100-101",
+    "spec_strength": "hole",
+    "snippet": "        fn delete(&mut self, x: usize)\n            ensures self@ == old(self)@.remove(x), self@.finite();"
+  },
+  {
+    "id": 71,
+    "function": "insert",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "104-105",
+    "spec_strength": "hole",
+    "snippet": "        fn insert(&mut self, x: usize)\n            ensures self@ == old(self)@.insert(x), self@.finite();"
+  },
+  {
+    "id": 72,
+    "function": "eq",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "299-308",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.universe_size == other.universe_size && {\n                for i in 0..self.universe_size {\n                    if self.bits[i] != other.bits[i] {\n                        return false;\n                    }\n                }\n                true\n            }\n        }"
+  },
+  {
+    "id": 73,
+    "function": "lemma_filter_remove",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "80-83",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_filter_remove<V>(s: Seq<V>, v: V)\n        requires s.no_duplicates()\n        ensures s.filter(|e: V| e != v).to_set() =~= s.to_set().remove(v)\n        decreases s.len()"
+  },
+  {
+    "id": 74,
+    "function": "lemma_push_preserves_no_dups",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "119-124",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_push_preserves_no_dups<V>(s: Seq<V>, x: V)\n        requires\n            s.no_duplicates(),\n            !s.contains(x),\n        ensures\n            s.push(x).no_duplicates()"
+  },
+  {
+    "id": 75,
+    "function": "lemma_subseq_no_dups_subset",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "145-151",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_subseq_no_dups_subset<V>(orig: Seq<V>, sub: Seq<V>)\n        requires\n            orig.no_duplicates(),\n            forall|i: int| #![trigger sub[i]] 0 <= i < sub.len() ==> orig.contains(sub[i]),\n            sub.no_duplicates(),\n        ensures\n            sub.to_set().subset_of(orig.to_set())"
+  },
+  {
+    "id": 76,
+    "function": "size",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "168-170",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (result: usize)\n            requires self.spec_wf()\n            ensures result == self@.len(), self@.finite();"
+  },
+  {
+    "id": 77,
+    "function": "to_seq",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "172-173",
+    "spec_strength": "unknown",
+    "snippet": "        fn to_seq(&self) -> (result: ArraySeqStEphS<T>)\n            ensures self@.finite();"
+  },
+  {
+    "id": 78,
+    "function": "empty",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "175-176",
+    "spec_strength": "unknown",
+    "snippet": "        fn empty() -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty(), result.spec_wf();"
+  },
+  {
+    "id": 79,
+    "function": "singleton",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "178-179",
+    "spec_strength": "unknown",
+    "snippet": "        fn singleton(x: T) -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite(), result.spec_wf();"
+  },
+  {
+    "id": 80,
+    "function": "from_seq",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "181-182",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_seq(seq: ArraySeqStEphS<T>) -> (result: Self)\n            ensures result@.finite(), result.spec_wf();"
+  },
+  {
+    "id": 81,
+    "function": "filter",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "184-191",
+    "spec_strength": "hole",
+    "snippet": "        fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)\n            requires\n                self.spec_wf(),\n                self@.finite(),\n            ensures\n                result@.finite(),\n                result@.subset_of(self@),\n                result.spec_wf();"
+  },
+  {
+    "id": 82,
+    "function": "intersection",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "193-202",
+    "spec_strength": "hole",
+    "snippet": "        fn intersection(&self, other: &Self) -> (result: Self)\n            requires\n                self.spec_wf(),\n                other.spec_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                result@ == self@.intersect(other@),\n                result@.finite(),\n                result.spec_wf();"
+  },
+  {
+    "id": 83,
+    "function": "difference",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "204-213",
+    "spec_strength": "hole",
+    "snippet": "        fn difference(&self, other: &Self) -> (result: Self)\n            requires\n                self.spec_wf(),\n                other.spec_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                result@ == self@.difference(other@),\n                result@.finite(),\n                result.spec_wf();"
+  },
+  {
+    "id": 84,
+    "function": "union",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "215-224",
+    "spec_strength": "hole",
+    "snippet": "        fn union(&self, other: &Self) -> (result: Self)\n            requires\n                self.spec_wf(),\n                other.spec_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                result@ == self@.union(other@),\n                result@.finite(),\n                result.spec_wf();"
+  },
+  {
+    "id": 85,
+    "function": "find",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "226-228",
+    "spec_strength": "hole",
+    "snippet": "        fn find(&self, x: &T) -> (result: B)\n            requires self@.finite(),\n            ensures result == self@.contains(x@);"
+  },
+  {
+    "id": 86,
+    "function": "delete",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "230-237",
+    "spec_strength": "hole",
+    "snippet": "        fn delete(&mut self, x: &T)\n            requires\n                old(self).spec_wf(),\n                old(self)@.finite(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self@.finite(),\n                self.spec_wf();"
+  },
+  {
+    "id": 87,
+    "function": "insert",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "239-246",
+    "spec_strength": "hole",
+    "snippet": "        fn insert(&mut self, x: T)\n            requires\n                old(self).spec_wf(),\n                old(self)@.finite(),\n            ensures\n                self@ == old(self)@.insert(x@),\n                self@.finite(),\n                self.spec_wf();"
+  },
+  {
+    "id": 88,
+    "function": "default",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "576",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::empty() }"
+  },
+  {
+    "id": 89,
+    "function": "eq",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "580-589",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.size() == other.size() && {\n                for i in 0..self.elements.length() {\n                    if !other.find(self.elements.nth(i)) {\n                        return false;\n                    }\n                }\n                true\n            }\n        }"
+  },
+  {
+    "id": 90,
+    "function": "example_41_1_array_set",
+    "file": "Chap41/Example41_3.rs",
+    "lines": "21",
+    "spec_strength": "",
+    "snippet": "        fn example_41_1_array_set();"
+  },
+  {
+    "id": 91,
+    "function": "example_41_1_avl_set",
+    "file": "Chap41/Example41_3.rs",
+    "lines": "25",
+    "spec_strength": "",
+    "snippet": "        fn example_41_1_avl_set();"
+  },
+  {
+    "id": 92,
+    "function": "demonstrate_set_operations",
+    "file": "Chap41/Example41_3.rs",
+    "lines": "29",
+    "spec_strength": "",
+    "snippet": "        fn demonstrate_set_operations();"
+  },
+  {
+    "id": 93,
+    "function": "example_41_1_array_set_impl",
+    "file": "Chap41/Example41_3.rs",
+    "lines": "33-34",
+    "spec_strength": "hole",
+    "snippet": "    fn example_41_1_array_set_impl()\n        ensures true"
+  },
+  {
+    "id": 94,
+    "function": "example_41_1_avl_set_impl",
+    "file": "Chap41/Example41_3.rs",
+    "lines": "86-87",
+    "spec_strength": "hole",
+    "snippet": "    fn example_41_1_avl_set_impl()\n        ensures true"
+  },
+  {
+    "id": 95,
+    "function": "example_41_3_from_seq_demonstration_impl",
+    "file": "Chap41/Example41_3.rs",
+    "lines": "139-140",
+    "spec_strength": "hole",
+    "snippet": "    fn example_41_3_from_seq_demonstration_impl()\n        ensures true"
+  },
+  {
+    "id": 96,
+    "function": "additional_set_operations_impl",
+    "file": "Chap41/Example41_3.rs",
+    "lines": "188-189",
+    "spec_strength": "hole",
+    "snippet": "    fn additional_set_operations_impl()\n        ensures true"
+  },
+  {
+    "id": 97,
+    "function": "example_41_3_from_seq_demonstration",
+    "file": "Chap41/Example41_3.rs",
+    "lines": "246",
+    "spec_strength": "",
+    "snippet": "    pub fn example_41_3_from_seq_demonstration() { example_41_3_from_seq_demonstration_impl(); }"
+  },
+  {
+    "id": 98,
+    "function": "additional_set_operations",
+    "file": "Chap41/Example41_3.rs",
+    "lines": "247",
+    "spec_strength": "",
+    "snippet": "    pub fn additional_set_operations() { additional_set_operations_impl(); }"
+  }
+]

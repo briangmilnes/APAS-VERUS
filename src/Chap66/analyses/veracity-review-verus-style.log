@@ -1,0 +1,67 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/Chap66/
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap66/analyses/veracity-review-verus-style.log
+
+Checking 2 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:144: warning: [4] use std::... imports should be grouped with trailing blank line
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:56: warning: [12] trait BoruvkaMtEphTrait fn vertex_bridges_mt should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:64: warning: [12] trait BoruvkaMtEphTrait fn bridge_star_partition_mt should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:73: warning: [12] trait BoruvkaMtEphTrait fn boruvka_mst_mt should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:83: warning: [12] trait BoruvkaMtEphTrait fn boruvka_mst_mt_with_seed should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:91: warning: [12] trait BoruvkaMtEphTrait fn mst_weight should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:103: warning: [15] impl PartialOrd should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:109: warning: [15] impl Ord should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:118: warning: [15] impl Hash should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:53: warning: [18] trait BoruvkaMtEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:97: warning: [18] impl View for LabeledEdge < V > should come before derive impls in verus! (expected view impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:42: warning: [19] eq return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:53: warning: [20] trait BoruvkaMtEphTrait is defined but has no impl
+
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:121: warning: [12] trait BoruvkaStEphTrait fn bridge_star_partition should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:129: warning: [12] trait BoruvkaStEphTrait fn boruvka_mst should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:138: warning: [12] trait BoruvkaStEphTrait fn boruvka_mst_with_seed should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:146: warning: [12] trait BoruvkaStEphTrait fn mst_weight should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:367: warning: [15] impl PartialOrd should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:373: warning: [15] impl Ord should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:382: warning: [15] impl Hash should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:80: warning: [18] impl View for LabeledEdge < V > should come before derive impls in verus! (expected view impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:88: warning: [18] spec fn spec_valid_bridge should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:97: warning: [18] spec fn spec_all_weights_finite should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:103: warning: [18] trait BoruvkaStEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:154: warning: [18] impl BoruvkaStEphTrait for BoruvkaStEph should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:67: warning: [19] eq return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:121: warning: [19] bridge_star_partition return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:229: warning: [19] bridge_star_partition return name 'result' could be more descriptive
+
+════════════════════════════════════════════════════════════════
+Summary: 22 passed, 28 warnings in 2 files (checked 2 files)
+════════════════════════════════════════════════════════════════

@@ -1,0 +1,7 @@
+You are the veracity agent.
+You work in director ~/projects/veracity.
+You are building rust tools to parse and analyze verus soure code.
+
+A call of ~/projects/veracity/target/release/veracity-review-verus-style src/Chap02/
+should be logging to src/Chap02/analyses/veracity-review-verus-style.log but is not.
+Discuss why and fix it. 

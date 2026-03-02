@@ -1,0 +1,55 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/Chap63/
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap63/analyses/veracity-review-verus-style.log
+
+Checking 2 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:36: warning: [12] trait ConnectivityMtEphTrait fn count_components_mt should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:40: warning: [12] trait ConnectivityMtEphTrait fn connected_components_mt should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:47: warning: [12] trait ConnectivityMtEphTrait fn count_components_hof should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:51: warning: [12] trait ConnectivityMtEphTrait fn connected_components_hof should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:33: warning: [20] trait ConnectivityMtEphTrait is defined but has no impl
+
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:31: warning: [12] trait ConnectivityStEphTrait fn count_components should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:35: warning: [12] trait ConnectivityStEphTrait fn connected_components should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:39: warning: [12] trait ConnectivityStEphTrait fn count_components_hof should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:43: warning: [12] trait ConnectivityStEphTrait fn connected_components_hof should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:28: warning: [20] trait ConnectivityStEphTrait is defined but has no impl
+
+════════════════════════════════════════════════════════════════
+Summary: 28 passed, 10 warnings in 2 files (checked 2 files)
+════════════════════════════════════════════════════════════════

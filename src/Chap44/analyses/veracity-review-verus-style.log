@@ -1,0 +1,51 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/Chap44/
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap44/analyses/veracity-review-verus-style.log
+
+Checking 2 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:94: warning: [13] impl DocumentIndexTrait for DocumentIndex should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:306: warning: [13] impl QueryBuilderTrait for QueryBuilder should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: warning: [17] collection DocumentIndex should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: warning: [17] collection DocumentIndex should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap44/ProveDocumentIndex.rs
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:28: warning: [18] struct DocumentIndex should come before proof fns/broadcast groups (expected type definitions before proof fns/broadcast groups)
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:33: warning: [19] clone return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:55: warning: [13] impl Default for TweetQueryExamples should be inside verus!
+
+════════════════════════════════════════════════════════════════
+Summary: 26 passed, 8 warnings in 2 files (checked 2 files)
+════════════════════════════════════════════════════════════════

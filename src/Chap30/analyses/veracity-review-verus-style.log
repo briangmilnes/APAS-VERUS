@@ -1,0 +1,39 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/Chap30/
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap30/analyses/veracity-review-verus-style.log
+
+Checking 1 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:1: info: [15] PartialEq, Eq, PartialOrd, Ord, Hash inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:30: warning: [12] trait ProbabilityTrait fn new should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:34: warning: [12] trait ProbabilityTrait fn value should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:38: warning: [12] trait ProbabilityTrait fn infinity should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:42: warning: [12] trait ProbabilityTrait fn zero should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:107: warning: [18] impl From for Probability should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:114: warning: [18] impl From for f64 should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:121: warning: [18] impl Add for Probability should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:128: warning: [18] impl Sub for Probability should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:135: warning: [18] impl Mul for Probability should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:142: warning: [18] impl Div for Probability should come before derive impls in verus! (expected impls before derive impls in verus!)
+
+════════════════════════════════════════════════════════════════
+Summary: 14 passed, 10 warnings in 1 files (checked 1 files)
+════════════════════════════════════════════════════════════════

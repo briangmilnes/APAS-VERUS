@@ -1,13 +1,35 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs
-Codebase: /home/milnes/projects/APAS-VERUS-agent1
+Path: /home/milnes/projects/APAS-VERUS/src/Chap17/
+Codebase: /home/milnes/projects/APAS-VERUS
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap17/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap17/analyses/veracity-review-verus-style.log
 
 Checking 1 files...
 
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: info: [17] Iterator<MathSeqS>, IntoIterator<MathSeqS>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:746: warning: [13] impl IntoIterator for MathSeqS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:588: warning: [18] struct MathSeqIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:592: warning: [18] impl View for MathSeqIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:599: warning: [18] struct MathSeqGhostIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:605: warning: [18] impl View for MathSeqGhostIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:610: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+
 ════════════════════════════════════════════════════════════════
-Summary: 13 passed, 10 warnings in 1 files (checked 1 files)
+Summary: 14 passed, 6 warnings in 1 files (checked 1 files)
 ════════════════════════════════════════════════════════════════

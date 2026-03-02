@@ -1,13 +1,155 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ScanDCStPer.rs
-Codebase: /home/milnes/projects/APAS-VERUS-agent1
+Path: /home/milnes/projects/APAS-VERUS/src/Chap26/
+Codebase: /home/milnes/projects/APAS-VERUS
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap26/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap26/analyses/veracity-review-verus-style.log
 
-Checking 1 files...
+Checking 8 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:560: warning: [13] impl ETSPPointTrait for Point should be inside verus!
+
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:534: warning: [13] impl ETSPPointTrait for Point should be inside verus!
+
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
 
 ════════════════════════════════════════════════════════════════
-Summary: 14 passed, 5 warnings in 1 files (checked 1 files)
+Summary: 124 passed, 2 warnings in 2 files (checked 8 files)
 ════════════════════════════════════════════════════════════════

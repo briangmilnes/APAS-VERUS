@@ -1,0 +1,114 @@
+[
+  {
+    "id": 1,
+    "function": "new_spanning_edges_lock",
+    "file": "Chap64/SpanTreeMtEph.rs",
+    "lines": "36-38",
+    "spec_strength": "hole",
+    "snippet": "        fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(\n            val: SetStEph<Edge<V>>,\n        ) -> (lock: RwLock<SetStEph<Edge<V>>, SpanTreeMtEphEdgesInv>) {"
+  },
+  {
+    "id": 2,
+    "function": "new_valid_lock",
+    "file": "Chap64/SpanTreeMtEph.rs",
+    "lines": "47",
+    "spec_strength": "hole",
+    "snippet": "        fn new_valid_lock(val: bool) -> (lock: RwLock<bool, SpanTreeMtEphValidInv>) {"
+  },
+  {
+    "id": 3,
+    "function": "spanning_tree_star_contraction_mt",
+    "file": "Chap64/SpanTreeMtEph.rs",
+    "lines": "54-56",
+    "spec_strength": "",
+    "snippet": "            fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(\n                graph: &UnDirGraphMtEph<V>,\n            ) -> SetStEph<Edge<V>>;"
+  },
+  {
+    "id": 4,
+    "function": "verify_spanning_tree",
+    "file": "Chap64/SpanTreeMtEph.rs",
+    "lines": "60",
+    "spec_strength": "",
+    "snippet": "            fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> B;"
+  },
+  {
+    "id": 5,
+    "function": "spanning_tree_star_contraction",
+    "file": "Chap64/SpanTreeStEph.rs",
+    "lines": "27",
+    "spec_strength": "",
+    "snippet": "            fn spanning_tree_star_contraction<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>;"
+  },
+  {
+    "id": 6,
+    "function": "verify_spanning_tree",
+    "file": "Chap64/SpanTreeStEph.rs",
+    "lines": "31",
+    "spec_strength": "",
+    "snippet": "            fn verify_spanning_tree<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>, tree: &SetStEph<Edge<V>>) -> B;"
+  },
+  {
+    "id": 7,
+    "function": "_tsp_approx_st_eph_verified",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "14",
+    "spec_strength": "",
+    "snippet": "        proof fn _tsp_approx_st_eph_verified() {}"
+  },
+  {
+    "id": 8,
+    "function": "euler_tour",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "41-43",
+    "spec_strength": "",
+    "snippet": "        /// Compute Euler tour of a tree\n        /// APAS: Work O(|V|), Span O(|V|)\n        fn euler_tour<V: StT + Hash + Ord>(tree: &LabUnDirGraphStEph<V, WrappedF64>, start: V) -> Vec<V>;"
+  },
+  {
+    "id": 9,
+    "function": "shortcut_tour",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "45-47",
+    "spec_strength": "",
+    "snippet": "        /// Shortcut Euler tour to avoid revisiting vertices\n        /// APAS: Work O(|V|), Span O(|V|)\n        fn shortcut_tour<V: StT + Hash + Ord>(euler_tour: &[V]) -> Vec<V>;"
+  },
+  {
+    "id": 10,
+    "function": "tour_weight",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "49-54",
+    "spec_strength": "",
+    "snippet": "        /// Compute total weight of a tour\n        /// APAS: Work O(|V|), Span O(|V|)\n        fn tour_weight<V: StT + Hash + Ord>(\n            tour: &[V],\n            distances: &HashMap<(V, V), WrappedF64>,\n        ) -> WrappedF64;"
+  },
+  {
+    "id": 11,
+    "function": "approx_metric_tsp",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "56-61",
+    "spec_strength": "",
+    "snippet": "        /// 2-approximation algorithm for metric TSP\n        /// APAS: Work O(|V|² log |V|), Span O(|V|² log |V|)\n        fn approx_metric_tsp<V: StT + Hash + Ord>(\n            distances: &HashMap<(V, V), WrappedF64>,\n            vertices: &SetStEph<V>,\n        ) -> Vec<V>;"
+  },
+  {
+    "id": 12,
+    "function": "euler_tour_dfs",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "93-144",
+    "spec_strength": "",
+    "snippet": "    /// - APAS: N/A — internal helper for euler_tour.\n    /// - Claude-Opus-4.6: Work O(n * m_tree), Span O(n * m_tree) — for each vertex,\n    ///   scans neighbors (O(m)) and tree_edges (O(m_tree)) to find matching edges.\n    #[cfg(not(verus_keep_ghost))]\n    fn euler_tour_dfs<V: StT + Hash + Ord>(\n        graph: &LabUnDirGraphStEph<V, WrappedF64>,\n        current: &V,\n        parent: Option<&V>,\n        tree_edges: &SetStEph<LabEdge<V, WrappedF64>>,\n        tour: &mut Vec<V>,\n        visited_edges: &mut HashSetWithViewPlus<(V, V)>,\n    ) {\n        tour.push(current.clone());\n\n        // Visit all neighbors connected by tree edges\n        let neighbors = get_neighbors(graph, current);\n        for neighbor in neighbors.iter() {\n            // Skip parent to avoid immediate backtrack\n            if let Some(p) = parent {\n                if neighbor == p {\n                    continue;\n                }\n            }\n\n            // Check if edge is in tree and not yet traversed\n            let edge_key = if current < neighbor {\n                (current.clone(), neighbor.clone())\n            } else {\n                (neighbor.clone(), current.clone())\n            };\n\n            if visited_edges.contains(&edge_key) {\n                continue;\n            }\n\n            // Check if edge exists in tree_edges\n            let mut edge_found = false;\n            for edge in tree_edges.iter() {\n                let LabEdge(u, v, _) = edge;\n                if (u == current && v == neighbor) || (u == neighbor && v == current) {\n                    edge_found = true;\n                    break;\n                }\n            }\n\n            if edge_found {\n                visited_edges.insert(edge_key);\n                euler_tour_dfs(graph, neighbor, Some(current), tree_edges, tour, visited_edges);\n                tour.push(current.clone());\n            }\n        }\n    }"
+  },
+  {
+    "id": 13,
+    "function": "get_neighbors",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "209-223",
+    "spec_strength": "",
+    "snippet": "    /// - APAS: N/A — internal helper, no prose counterpart.\n    /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges.\n    #[cfg(not(verus_keep_ghost))]\n    fn get_neighbors<V: StT + Hash + Ord>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> SetStEph<V> {\n        let mut neighbors = SetLit![];\n        for edge in graph.labeled_edges().iter() {\n            let LabEdge(a, b, _) = edge;\n            if a == v {\n                let _ = neighbors.insert(b.clone());\n            } else if b == v {\n                let _ = neighbors.insert(a.clone());\n            }\n        }\n        neighbors\n    }"
+  },
+  {
+    "id": 14,
+    "function": "get_edge_weight",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "225-240",
+    "spec_strength": "",
+    "snippet": "    /// - APAS: N/A — internal helper, no prose counterpart.\n    /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges.\n    #[cfg(not(verus_keep_ghost))]\n    fn get_edge_weight<V: StT + Hash + Ord>(\n        graph: &LabUnDirGraphStEph<V, WrappedF64>,\n        u: &V,\n        v: &V,\n    ) -> Option<WrappedF64> {\n        for edge in graph.labeled_edges().iter() {\n            let LabEdge(a, b, w) = edge;\n            if (a == u && b == v) || (a == v && b == u) {\n                return Some(*w);\n            }\n        }\n        None\n    }"
+  }
+]

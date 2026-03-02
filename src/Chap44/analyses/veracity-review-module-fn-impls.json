@@ -1,0 +1,330 @@
+[
+  {
+    "id": 1,
+    "function": "_document_index_verified",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "25",
+    "spec_strength": "",
+    "snippet": "        proof fn _document_index_verified() {}"
+  },
+  {
+    "id": 2,
+    "function": "eq",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "41-42",
+    "spec_strength": "unknown",
+    "snippet": "            fn eq(&self, other: &Self) -> (b: bool)\n                ensures b == (self.word_to_docs == other.word_to_docs)"
+  },
+  {
+    "id": 3,
+    "function": "make_index",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "53-55",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work Θ(n log n), Span Θ(log² n)\n        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential nested loops over all_pairs; no Table.collect sort used\n        fn make_index(docs: &DocumentCollection)                     -> Self;"
+  },
+  {
+    "id": 4,
+    "function": "find`",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "285-287",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — delegates to DocumentIndex::find.\n        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)\n        fn find(&self, word: &Word)                                                     -> DocumentSet;"
+  },
+  {
+    "id": 5,
+    "function": "query_and",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "61-63",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work Θ(m log(1 + n/m)), Span Θ(log n + log m)\n        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m)) — delegates to AVLTreeSetStPer.intersection (sequential)\n        fn query_and(docs_a: &DocumentSet, docs_b: &DocumentSet)     -> DocumentSet;"
+  },
+  {
+    "id": 6,
+    "function": "query_or",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "65-67",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work Θ(m log(1 + n/m)), Span Θ(log n + log m)\n        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m)) — delegates to AVLTreeSetStPer.union (sequential)\n        fn query_or(docs_a: &DocumentSet, docs_b: &DocumentSet)      -> DocumentSet;"
+  },
+  {
+    "id": 7,
+    "function": "query_and_not",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "69-71",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work Θ(m log(1 + n/m)), Span Θ(log n + log m)\n        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m)) — delegates to AVLTreeSetStPer.difference (sequential)\n        fn query_and_not(docs_a: &DocumentSet, docs_b: &DocumentSet) -> DocumentSet;"
+  },
+  {
+    "id": 8,
+    "function": "size",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "73-75",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work Θ(1), Span Θ(1)\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS\n        fn size(docs: &DocumentSet)                                  -> usize;"
+  },
+  {
+    "id": 9,
+    "function": "to_seq",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "77-79",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: (no cost stated)\n        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential iteration over AVL tree sequence\n        fn to_seq(docs: &DocumentSet)                                -> ArraySeqStPerS<DocumentId>;"
+  },
+  {
+    "id": 10,
+    "function": "empty",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "81-83",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn empty()                                                   -> Self;"
+  },
+  {
+    "id": 11,
+    "function": "get_all_words",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "85-87",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — collects table keys into sequence\n        fn get_all_words(&self)                                      -> ArraySeqStPerS<Word>;"
+  },
+  {
+    "id": 12,
+    "function": "word_count",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "89-91",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to Table.size\n        fn word_count(&self)                                         -> usize;"
+  },
+  {
+    "id": 13,
+    "function": "tokens",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "195-222",
+    "spec_strength": "",
+    "snippet": "    /// Tokenization function: splits content into words.\n    /// - APAS: (no cost stated — tokens is a helper assumed O(m) where m = string length)\n    /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — sequential character iteration\n    pub fn tokens(content: &Contents) -> ArraySeqStPerS<Word> {\n        let mut words = ArraySeqStPerS::empty();\n        let content_lower = content.to_lowercase();\n\n        // Simple tokenization: split on whitespace and punctuation\n        let mut current_word = String::new();\n\n        for ch in content_lower.chars() {\n            if ch.is_alphabetic() {\n                current_word.push(ch);\n            } else if !current_word.is_empty() {\n                let single_seq = ArraySeqStPerS::singleton(current_word.clone());\n                words = ArraySeqStPerS::append(&words, &single_seq);\n                current_word = String::new();\n            }\n        }\n\n        // Don't forget the last word\n        if !current_word.is_empty() {\n            let single_seq = ArraySeqStPerS::singleton(current_word);\n            words = ArraySeqStPerS::append(&words, &single_seq);\n        }\n\n        words\n    }"
+  },
+  {
+    "id": 14,
+    "function": "create_finder",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "224-229",
+    "spec_strength": "",
+    "snippet": "    /// Convenience function for staged computation pattern (Example 44.2).\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — closure capture only\n    pub fn create_finder(index: &DocumentIndex) -> impl Fn(&Word) -> DocumentSet + '_ {\n        move |word: &Word| index.find(word)\n    }"
+  },
+  {
+    "id": 15,
+    "function": "new",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "281-283",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn new(index: &'a DocumentIndex)                                                -> Self;"
+  },
+  {
+    "id": 16,
+    "function": "and",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "289-291",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — delegates to DocumentIndex::query_and.\n        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m))\n        fn and(&self, docs_a: DocumentSet, docs_b: DocumentSet)                         -> DocumentSet;"
+  },
+  {
+    "id": 17,
+    "function": "or",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "293-295",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — delegates to DocumentIndex::query_or.\n        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m))\n        fn or(&self, docs_a: DocumentSet, docs_b: DocumentSet)                          -> DocumentSet;"
+  },
+  {
+    "id": 18,
+    "function": "and_not",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "297-299",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — delegates to DocumentIndex::query_and_not.\n        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m))\n        fn and_not(&self, docs_a: DocumentSet, docs_b: DocumentSet)                     -> DocumentSet;"
+  },
+  {
+    "id": 19,
+    "function": "complex_query",
+    "file": "Chap44/DocumentIndex.rs",
+    "lines": "301-303",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work dominated by 4 finds + 3 set operations\n        fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> DocumentSet;"
+  },
+  {
+    "id": 20,
+    "function": "_example_44_1_verified",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "14",
+    "spec_strength": "",
+    "snippet": "        proof fn _example_44_1_verified() {}"
+  },
+  {
+    "id": 21,
+    "function": "create_tweet_collection",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "17-27",
+    "spec_strength": "",
+    "snippet": "    /// - APAS: N/A — Example scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — builds 5-element sequence via macro\n    pub fn create_tweet_collection() -> DocumentCollection {\n        DocumentCollectionLit![\n            \"jack\" => \"chess is fun\",\n            \"mary\" => \"I had fun in dance club today\",\n            \"nick\" => \"food at the cafeteria sucks\",\n            \"josefa\" => \"rock climbing was a blast\",\n            \"peter\" => \"I had fun at the party, food was great\"\n        ]\n    }"
+  },
+  {
+    "id": 22,
+    "function": "create_tweet_index",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "29-35",
+    "spec_strength": "",
+    "snippet": "    /// Creates the document index for the tweet collection.\n    /// - APAS: N/A — Example scaffolding (cost dominated by make_index).\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — delegates to make_index\n    pub fn create_tweet_index() -> DocumentIndex {\n        let tweets = create_tweet_collection();\n        DocumentIndex::make_index(&tweets)\n    }"
+  },
+  {
+    "id": 23,
+    "function": "create_tweet_finder",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "37-44",
+    "spec_strength": "",
+    "snippet": "    /// Example 44.2: Staged computation pattern.\n    /// fw : word -> docs = find (makeIndex T)\n    /// - APAS: N/A — Example scaffolding (cost dominated by make_index).\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — builds index then returns closure\n    pub fn create_tweet_finder() -> impl Fn(&Word) -> DocumentSet {\n        let index = create_tweet_index();\n        move |word: &Word| index.find(word)\n    }"
+  },
+  {
+    "id": 24,
+    "function": "default",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "56",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::new() }"
+  },
+  {
+    "id": 25,
+    "function": "new",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "60-68",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — Example scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — builds index via create_tweet_index\n        pub fn new() -> Self {\n            let index = create_tweet_index();\n            let index_clone = index.clone();\n            let fw = Box::new(move |word: &Word| index_clone.find(word));\n\n            TweetQueryExamples { index, fw }\n        }"
+  },
+  {
+    "id": 26,
+    "function": "search_fun",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "70-73",
+    "spec_strength": "",
+    "snippet": "        /// Example query: searching for 'fun' should return {\"jack\", \"mary\", \"peter\"}.\n        /// - APAS: N/A — Example scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) — single find\n        pub fn search_fun(&self) -> DocumentSet { (self.fw)(&\"fun\".to_string()) }"
+  },
+  {
+    "id": 27,
+    "function": "search_club",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "75-78",
+    "spec_strength": "",
+    "snippet": "        /// Example query: searching for 'club' should return {\"mary\"}.\n        /// - APAS: N/A — Example scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) — single find\n        pub fn search_club(&self) -> DocumentSet { (self.fw)(&\"club\".to_string()) }"
+  },
+  {
+    "id": 28,
+    "function": "search_food",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "80-83",
+    "spec_strength": "",
+    "snippet": "        /// Example query: searching for 'food' should return {\"nick\", \"peter\"}.\n        /// - APAS: N/A — Example scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) — single find\n        pub fn search_food(&self) -> DocumentSet { (self.fw)(&\"food\".to_string()) }"
+  },
+  {
+    "id": 29,
+    "function": "search_chess",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "85-88",
+    "spec_strength": "",
+    "snippet": "        /// Example query: searching for 'chess' should return {\"jack\"}.\n        /// - APAS: N/A — Example scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) — single find\n        pub fn search_chess(&self) -> DocumentSet { (self.fw)(&\"chess\".to_string()) }"
+  },
+  {
+    "id": 30,
+    "function": "complex_query_fun_and_food_or_chess",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "90-104",
+    "spec_strength": "",
+    "snippet": "        /// Complex query from textbook:\n        /// toSeq (queryAnd ((fw 'fun'), queryOr ((fw 'food'), (fw 'chess'))))\n        /// Expected result: ⟨'jack', 'peter'⟩\n        /// - APAS: N/A — Example scaffolding; cost is 3 finds + 2 set operations + toSeq.\n        /// - Claude-Opus-4.6: Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m)) — dominated by set operations\n        pub fn complex_query_fun_and_food_or_chess(&self) -> ArraySeqStPerS<DocumentId> {\n            let fun_docs = (self.fw)(&\"fun\".to_string());\n            let food_docs = (self.fw)(&\"food\".to_string());\n            let chess_docs = (self.fw)(&\"chess\".to_string());\n\n            let food_or_chess = DocumentIndex::query_or(&food_docs, &chess_docs);\n            let result = DocumentIndex::query_and(&fun_docs, &food_or_chess);\n\n            DocumentIndex::to_seq(&result)\n        }"
+  },
+  {
+    "id": 31,
+    "function": "count_fun_but_not_chess",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "106-117",
+    "spec_strength": "",
+    "snippet": "        /// Complex query from textbook:\n        /// size (queryAndNot ((fw 'fun'), (fw 'chess')))\n        /// Expected result: 2 (mary and peter).\n        /// - APAS: N/A — Example scaffolding; cost is 2 finds + queryAndNot + size.\n        /// - Claude-Opus-4.6: Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m)) — dominated by set difference\n        pub fn count_fun_but_not_chess(&self) -> usize {\n            let fun_docs = (self.fw)(&\"fun\".to_string());\n            let chess_docs = (self.fw)(&\"chess\".to_string());\n\n            let result = DocumentIndex::query_and_not(&fun_docs, &chess_docs);\n            DocumentIndex::size(&result)\n        }"
+  },
+  {
+    "id": 32,
+    "function": "search_food_or_fun",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "119-127",
+    "spec_strength": "",
+    "snippet": "        /// Additional example: documents with 'food' OR 'fun'.\n        /// - APAS: N/A — Example scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m))\n        pub fn search_food_or_fun(&self) -> DocumentSet {\n            let food_docs = (self.fw)(&\"food\".to_string());\n            let fun_docs = (self.fw)(&\"fun\".to_string());\n\n            DocumentIndex::query_or(&food_docs, &fun_docs)\n        }"
+  },
+  {
+    "id": 33,
+    "function": "search_party_and_food",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "129-137",
+    "spec_strength": "",
+    "snippet": "        /// Additional example: documents with 'party' AND 'food'.\n        /// - APAS: N/A — Example scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m))\n        pub fn search_party_and_food(&self) -> DocumentSet {\n            let party_docs = (self.fw)(&\"party\".to_string());\n            let food_docs = (self.fw)(&\"food\".to_string());\n\n            DocumentIndex::query_and(&party_docs, &food_docs)\n        }"
+  },
+  {
+    "id": 34,
+    "function": "get_all_words",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "139-142",
+    "spec_strength": "",
+    "snippet": "        /// Get all unique words in the tweet collection.\n        /// - APAS: N/A — Example scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)\n        pub fn get_all_words(&self) -> ArraySeqStPerS<Word> { self.index.get_all_words() }"
+  },
+  {
+    "id": 35,
+    "function": "get_word_count",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "144-147",
+    "spec_strength": "",
+    "snippet": "        /// Get word count statistics.\n        /// - APAS: N/A — Example scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        pub fn get_word_count(&self) -> usize { self.index.word_count() }"
+  },
+  {
+    "id": 36,
+    "function": "query_builder_example",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "149-162",
+    "spec_strength": "",
+    "snippet": "        /// Demonstrate query builder pattern.\n        /// - APAS: N/A — Example scaffolding.\n        /// - Claude-Opus-4.6: Work dominated by 4 finds + 3 set operations\n        pub fn query_builder_example(&self) -> DocumentSet {\n            let builder = QueryBuilder::new(&self.index);\n\n            // Complex query: (fun AND party) OR (chess AND NOT food)\n            builder.complex_query(\n                &\"fun\".to_string(),\n                &\"party\".to_string(),\n                &\"chess\".to_string(),\n                &\"food\".to_string(),\n            )\n        }"
+  },
+  {
+    "id": 37,
+    "function": "doc_set_to_sorted_vec",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "165-178",
+    "spec_strength": "",
+    "snippet": "    /// - APAS: N/A — Test helper.\n    /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) — to_seq + sort\n    pub fn doc_set_to_sorted_vec(docs: &DocumentSet) -> Vec<DocumentId> {\n        let seq = DocumentIndex::to_seq(docs);\n        let mut result = Vec::new();\n\n        for i in 0..seq.length() {\n            let doc_id = seq.nth(i);\n            result.push(doc_id.clone());\n        }\n\n        result.sort();\n        result\n    }"
+  },
+  {
+    "id": 38,
+    "function": "verify_textbook_examples",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "180-220",
+    "spec_strength": "",
+    "snippet": "    /// Verify the expected results from the textbook examples.\n    /// - APAS: N/A — Test verification helper.\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — builds index, runs queries, compares results\n    pub fn verify_textbook_examples() -> bool {\n        let examples = TweetQueryExamples::new();\n\n        // Test 1: searching for 'fun' should return {\"jack\", \"mary\", \"peter\"}\n        let fun_results = doc_set_to_sorted_vec(&examples.search_fun());\n        let expected_fun = vec![\"jack\".to_string(), \"mary\".to_string(), \"peter\".to_string()];\n        if fun_results != expected_fun {\n            return false;\n        }\n\n        // Test 2: searching for 'club' should return {\"mary\"}\n        let club_results = doc_set_to_sorted_vec(&examples.search_club());\n        let expected_club = vec![\"mary\".to_string()];\n        if club_results != expected_club {\n            return false;\n        }\n\n        // Test 3: complex query should return ⟨'jack', 'peter'⟩\n        let complex_results = examples.complex_query_fun_and_food_or_chess();\n        let mut complex_vec = Vec::new();\n        for i in 0..complex_results.length() {\n            let doc_id = complex_results.nth(i);\n            complex_vec.push(doc_id.clone());\n        }\n        complex_vec.sort();\n        let expected_complex = vec![\"jack\".to_string(), \"peter\".to_string()];\n        if complex_vec != expected_complex {\n            return false;\n        }\n\n        // Test 4: count query should return 2\n        let count_result = examples.count_fun_but_not_chess();\n        if count_result != 2 {\n            return false;\n        }\n\n        true\n    }"
+  },
+  {
+    "id": 39,
+    "function": "performance_comparison_demo",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "222-236",
+    "spec_strength": "",
+    "snippet": "    /// Performance demonstration: compare indexed search vs brute force.\n    /// - APAS: N/A — Example scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — dominated by index construction\n    pub fn performance_comparison_demo() -> (usize, usize) {\n        let tweets = create_tweet_collection();\n        let _index = create_tweet_index();\n\n        // Indexed search work: O(log n) for find\n        let indexed_work = 1; // Represents O(log n) complexity\n\n        // Brute force work: O(n * m) where n is documents, m is average content length\n        let brute_force_work = tweets.length(); // Represents O(n) complexity\n\n        (indexed_work, brute_force_work)\n    }"
+  },
+  {
+    "id": 40,
+    "function": "tokenization_demo",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "238-244",
+    "spec_strength": "",
+    "snippet": "    /// Demonstrate the tokenization process.\n    /// - APAS: N/A — Example scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to tokens()\n    pub fn tokenization_demo() -> ArraySeqStPerS<Word> {\n        let sample_content = \"I had fun in dance club today!\";\n        tokens(&sample_content.to_string())\n    }"
+  },
+  {
+    "id": 41,
+    "function": "index_statistics",
+    "file": "Chap44/Example44_1.rs",
+    "lines": "246-265",
+    "spec_strength": "",
+    "snippet": "    /// Show index statistics for the tweet collection.\n    /// - APAS: N/A — Example scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — builds index + iterates documents\n    pub fn index_statistics() -> (usize, usize, usize) {\n        let tweets = create_tweet_collection();\n        let index = create_tweet_index();\n\n        let document_count = tweets.length();\n        let unique_word_count = index.word_count();\n\n        // Calculate total words across all documents\n        let mut total_words = 0;\n        for i in 0..tweets.length() {\n            let doc = tweets.nth(i);\n            let word_tokens = tokens(&doc.1);\n            total_words += word_tokens.length();\n        }\n\n        (document_count, unique_word_count, total_words)\n    }"
+  }
+]

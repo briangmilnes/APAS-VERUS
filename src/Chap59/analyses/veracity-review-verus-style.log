@@ -1,0 +1,85 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/Chap59/
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap59/analyses/veracity-review-verus-style.log
+
+Checking 4 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: warning: [2] missing use vstd::prelude::* (should be before verus!)
+
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:37: warning: [12] trait JohnsonMtEphI64Trait fn johnson_apsp should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:34: warning: [20] trait JohnsonMtEphI64Trait is defined but has no impl
+
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: warning: [2] missing use vstd::prelude::* (should be before verus!)
+
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:34: warning: [12] trait JohnsonStEphI64Trait fn johnson_apsp should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:31: warning: [20] trait JohnsonStEphI64Trait is defined but has no impl
+
+════════════════════════════════════════════════════════════════
+Summary: 58 passed, 6 warnings in 4 files (checked 4 files)
+════════════════════════════════════════════════════════════════

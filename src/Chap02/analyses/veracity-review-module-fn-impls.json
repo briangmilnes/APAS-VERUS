@@ -1,0 +1,130 @@
+[
+  {
+    "id": 1,
+    "function": "lemma_pow2_mono",
+    "file": "Chap02/FibonacciHFScheduler.rs",
+    "lines": "23-25",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_pow2_mono(a: nat, b: nat)\n        requires a <= b,\n        ensures pow2(a) <= pow2(b),"
+  },
+  {
+    "id": 2,
+    "function": "lemma_pow2_46_lt_u64_max",
+    "file": "Chap02/FibonacciHFScheduler.rs",
+    "lines": "30-31",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_pow2_46_lt_u64_max()\n        ensures pow2(46) < u64::MAX as nat,"
+  },
+  {
+    "id": 3,
+    "function": "lemma_fib_bound",
+    "file": "Chap02/FibonacciHFScheduler.rs",
+    "lines": "36-38",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_fib_bound(n: nat)\n        ensures spec_fib(n) < pow2(n),\n        decreases n,"
+  },
+  {
+    "id": 4,
+    "function": "lemma_fib_fits_u64",
+    "file": "Chap02/FibonacciHFScheduler.rs",
+    "lines": "53-55",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_fib_fits_u64(n: nat)\n        requires n <= 46,\n        ensures spec_fib(n) <= u64::MAX as nat,"
+  },
+  {
+    "id": 5,
+    "function": "lemma_fib_sum_fits_u64",
+    "file": "Chap02/FibonacciHFScheduler.rs",
+    "lines": "62-64",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_fib_sum_fits_u64(n: nat)\n        requires 2 <= n <= 46,\n        ensures spec_fib((n-1) as nat) + spec_fib((n-2) as nat) <= u64::MAX as nat,"
+  },
+  {
+    "id": 6,
+    "function": "fib_seq",
+    "file": "Chap02/FibonacciHFScheduler.rs",
+    "lines": "71-74",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn fib_seq(n: u64) -> (fibonacci: u64)\n        requires n <= 46,\n        ensures fibonacci == spec_fib(n as nat),\n        decreases n,"
+  },
+  {
+    "id": 7,
+    "function": "fib_par",
+    "file": "Chap02/FibonacciHFScheduler.rs",
+    "lines": "86-89",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn fib_par(n: u64) -> (fibonacci: u64)\n        requires n <= 46,\n        ensures fibonacci == spec_fib(n as nat),\n        decreases n,"
+  },
+  {
+    "id": 8,
+    "function": "set_parallelism",
+    "file": "Chap02/HFSchedulerMtEph.rs",
+    "lines": "87",
+    "spec_strength": "hole",
+    "snippet": "    pub fn set_parallelism(n: usize) {"
+  },
+  {
+    "id": 9,
+    "function": "join",
+    "file": "Chap02/HFSchedulerMtEph.rs",
+    "lines": "97-108",
+    "spec_strength": "hole",
+    "snippet": "    pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))\n    where\n        FA: FnOnce() -> A + Send + 'static,\n        FB: FnOnce() -> B + Send + 'static,\n        A: Send + 'static,\n        B: Send + 'static,\n        requires\n            fa.requires(()),\n            fb.requires(()),\n        ensures\n            fa.ensures((), joined_pair.0),\n            fb.ensures((), joined_pair.1),"
+  },
+  {
+    "id": 10,
+    "function": "spawn_join",
+    "file": "Chap02/HFSchedulerMtEph.rs",
+    "lines": "124-135",
+    "spec_strength": "hole",
+    "snippet": "    pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))\n    where\n        FA: FnOnce() -> A + Send + 'static,\n        FB: FnOnce() -> B + Send + 'static,\n        A: Send + 'static,\n        B: Send + 'static,\n        requires\n            fa.requires(()),\n            fb.requires(()),\n        ensures\n            fa.ensures((), joined_pair.0),\n            fb.ensures((), joined_pair.1),"
+  },
+  {
+    "id": 11,
+    "function": "spawn",
+    "file": "Chap02/HFSchedulerMtEph.rs",
+    "lines": "155-162",
+    "spec_strength": "hole",
+    "snippet": "    pub fn spawn<T, F>(f: F) -> (task: TaskState<T>)\n    where\n        F: FnOnce() -> T + Send + 'static,\n        T: Send + 'static,\n        requires\n            f.requires(()),\n        ensures\n            forall|ret: T| #[trigger] task.predicate(ret) ==> f.ensures((), ret),"
+  },
+  {
+    "id": 12,
+    "function": "wait",
+    "file": "Chap02/HFSchedulerMtEph.rs",
+    "lines": "177-179",
+    "spec_strength": "hole",
+    "snippet": "    pub fn wait<T: Send + 'static>(task: TaskState<T>) -> (task_result: T)\n        ensures\n            task.predicate(task_result),"
+  },
+  {
+    "id": 13,
+    "function": "init_pool",
+    "file": "Chap02/HFSchedulerMtEph.rs",
+    "lines": "32-44",
+    "spec_strength": "",
+    "snippet": "    fn init_pool() -> PoolState {\n        let n = PARALLELISM.read().unwrap();\n        let threads = n.unwrap_or_else(|| {\n            let cpus = std::thread::available_parallelism()\n                .map(|n| n.get())\n                .unwrap_or(2);\n            (cpus - 1).max(1)\n        });\n        PoolState {\n            available_tasks: Mutex::new(threads),\n            task_freed: Condvar::new(),\n        }\n    }"
+  },
+  {
+    "id": 14,
+    "function": "try_acquire",
+    "file": "Chap02/HFSchedulerMtEph.rs",
+    "lines": "48-56",
+    "spec_strength": "",
+    "snippet": "    fn try_acquire() -> bool {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        if *available > 0 {\n            *available -= 1;\n            true\n        } else {\n            false\n        }\n    }"
+  },
+  {
+    "id": 15,
+    "function": "acquire",
+    "file": "Chap02/HFSchedulerMtEph.rs",
+    "lines": "58-64",
+    "spec_strength": "",
+    "snippet": "    fn acquire() {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        while *available == 0 {\n            available = POOL.task_freed.wait(available).unwrap();\n        }\n        *available -= 1;\n    }"
+  },
+  {
+    "id": 16,
+    "function": "release",
+    "file": "Chap02/HFSchedulerMtEph.rs",
+    "lines": "66-70",
+    "spec_strength": "",
+    "snippet": "    fn release() {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        *available += 1;\n        POOL.task_freed.notify_one();\n    }"
+  }
+]

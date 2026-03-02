@@ -45,3 +45,32 @@ scripts/validate.sh exp
 ```
 
 Otherwise, same as validate. Do not iterate or fix errors. Just run once, show the full output, and stop.
+
+## Proof Holes
+
+Use the wrapper scripts for hole queries (never call the binary directly):
+
+```bash
+scripts/holes.sh src/ChapNN/          # single chapter or file
+scripts/all-holes-by-chap.sh          # all chapters, writes to analyses/ logs
+```
+
+Run `scripts/all-holes-by-chap.sh` after any rename or structural change that affects
+proof hole analysis output. The per-chapter logs live at
+`src/ChapNN/analyses/veracity-review-verus-proof-holes.log`.
+
+## Analysis Scripts
+
+All analysis scripts write per-chapter output to `src/ChapNN/analyses/`. Run them after
+renames, structural changes, or when refreshing analysis baselines.
+
+| Script | Output per chapter |
+|---|---|
+| `scripts/all-holes-by-chap.sh` | `veracity-review-verus-proof-holes.log` |
+| `scripts/all-style-by-chap.sh` | `veracity-review-verus-style.log` |
+| `scripts/all-fn-impls-by-chap.sh` | `veracity-review-module-fn-impls.{md,json}` |
+
+## Running Suites
+
+Run validate, rtt, and ptt **sequentially**, not in parallel. They compete for CPU and
+memory, making all three slower than running them one at a time.

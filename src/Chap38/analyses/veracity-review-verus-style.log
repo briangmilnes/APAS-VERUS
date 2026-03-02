@@ -1,0 +1,89 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/Chap38/
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap38/analyses/veracity-review-verus-style.log
+
+Checking 2 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1: warning: [11] Set usage should have vstd::set::group_set_axioms in broadcast use
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:120: warning: [12] trait ParamBSTTrait fn insert should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:123: warning: [12] trait ParamBSTTrait fn delete should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:150: warning: [12] trait ParamBSTTrait fn reduce should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:48: warning: [18] enum Exposed should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:54: warning: [18] struct NodeInner should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:62: warning: [18] struct ParamBST should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:80: warning: [18] impl View for ParamBST < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:85: warning: [18] impl View for Exposed < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:90: warning: [18] impl View for NodeInner < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:97: warning: [18] trait ParamBSTTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:99: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:102: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:110: warning: [19] join_mid return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:137: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:140: warning: [19] intersect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:143: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:160: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:165: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:179: warning: [19] join_mid return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:248: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:253: warning: [19] intersect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:258: warning: [19] difference return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:167: warning: [12] trait ParamBSTTrait fn insert should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:170: warning: [12] trait ParamBSTTrait fn delete should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:185: warning: [12] trait ParamBSTTrait fn min_key should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:57: warning: [18] enum Exposed should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:65: warning: [18] struct NodeInner should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:73: warning: [18] struct ParamBST should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:97: warning: [18] impl View for ParamBST < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:102: warning: [18] impl View for Exposed < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:107: warning: [18] impl View for NodeInner < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:114: warning: [18] trait ParamBSTTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:116: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:119: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:138: warning: [19] join_mid return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:185: warning: [19] min_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:190: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:193: warning: [19] intersect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:196: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:218: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:222: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:256: warning: [19] join_mid return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:372: warning: [19] min_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:408: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:425: warning: [19] intersect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:445: warning: [19] difference return name 'result' could be more descriptive
+
+════════════════════════════════════════════════════════════════
+Summary: 25 passed, 47 warnings in 2 files (checked 2 files)
+════════════════════════════════════════════════════════════════

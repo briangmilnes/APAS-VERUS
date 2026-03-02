@@ -1,0 +1,514 @@
+[
+  {
+    "id": 1,
+    "function": "_chained_hash_table_verified",
+    "file": "Chap47/ChainedHashTable.rs",
+    "lines": "25",
+    "spec_strength": "",
+    "snippet": "        proof fn _chained_hash_table_verified() {}"
+  },
+  {
+    "id": 2,
+    "function": "eq",
+    "file": "Chap47/ChainedHashTable.rs",
+    "lines": "54-55",
+    "spec_strength": "unknown",
+    "snippet": "            fn eq(&self, other: &Self) -> (r: bool)\n                ensures r == (self.chain == other.chain)"
+  },
+  {
+    "id": 3,
+    "function": "hash_index",
+    "file": "Chap47/ChainedHashTable.rs",
+    "lines": "74-77",
+    "spec_strength": "",
+    "snippet": "        /// Computes the hash index for a key.\n        /// - APAS: Work O(1), Span O(1).\n        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on hash function.\n        fn hash_index(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key) -> usize;"
+  },
+  {
+    "id": 4,
+    "function": "insert_chained",
+    "file": "Chap47/ChainedHashTable.rs",
+    "lines": "79-91",
+    "spec_strength": "",
+    "snippet": "        /// Inserts into the chain at the hashed bucket, updating num_elements on new keys.\n        /// - APAS: Work O(1) expected, Span O(1).\n        /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — lookup to check existence, then chain insert.\n        fn insert_chained(table: &mut HashTable<Key, Value, Entry, Metrics>, key: Key, value: Value) {\n            let index = Self::hash_index(table, &key);\n            if index < table.table.len() {\n                let existed = table.table[index].lookup(&key).is_some();\n                table.table[index].insert(key, value);\n                if !existed {\n                    table.num_elements += 1;\n                }\n            }\n        }"
+  },
+  {
+    "id": 5,
+    "function": "lookup_chained",
+    "file": "Chap47/ChainedHashTable.rs",
+    "lines": "93-103",
+    "spec_strength": "",
+    "snippet": "        /// Looks up in the chain at the hashed bucket.\n        /// - APAS: Work O(1+α) expected, Span O(1+α).\n        /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — agrees with APAS; hashes then linear scan of chain.\n        fn lookup_chained(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key) -> Option<Value> {\n            let index = Self::hash_index(table, key);\n            if index < table.table.len() {\n                table.table[index].lookup(key)\n            } else {\n                None\n            }\n        }"
+  },
+  {
+    "id": 6,
+    "function": "delete_chained",
+    "file": "Chap47/ChainedHashTable.rs",
+    "lines": "105-119",
+    "spec_strength": "",
+    "snippet": "        /// Deletes from the chain at the hashed bucket, updating num_elements on removal.\n        /// - APAS: Work O(1+α) expected, Span O(1+α).\n        /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — agrees with APAS; hashes then linear scan of chain.\n        fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics>, key: &Key) -> B {\n            let index = Self::hash_index(table, key);\n            if index < table.table.len() {\n                let deleted = table.table[index].delete(key);\n                if deleted {\n                    table.num_elements -= 1;\n                }\n                deleted\n            } else {\n                false\n            }\n        }"
+  },
+  {
+    "id": 7,
+    "function": "second_hash",
+    "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
+    "lines": "36-62",
+    "spec_strength": "",
+    "snippet": "        /// Compute second hash value for double hashing.\n        /// APAS: hh(k) must be relatively prime to m.\n        /// - APAS: Work O(1), Span O(1).\n        /// - Claude-Opus-4.6: Work O(sizeof(Key)), Span O(sizeof(Key)) — hashes key with SipHash.\n        /// Strategy: Always return an odd number (works for power-of-2 sizes),\n        /// and for prime sizes, ensure < m and non-zero.\n        pub fn second_hash<Key: StT + Hash>(key: &Key, table_size: usize) -> usize {\n            use std::collections::hash_map::DefaultHasher;\n            use std::hash::Hasher;\n\n            if table_size <= 2 {\n                return 1;\n            }\n\n            let mut hasher = DefaultHasher::new();\n            key.hash(&mut hasher);\n            let hash = hasher.finish();\n\n            let base = (table_size - 1) as u64;\n            let mut step = ((hash % base) + 1) as usize;\n\n            if step % 2 == 0 && step < table_size - 1 {\n                step += 1;\n            }\n\n            step\n        }"
+  },
+  {
+    "id": 8,
+    "function": "insert",
+    "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
+    "lines": "68-85",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash find_slot then O(1) write.\n        fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: Key, value: Value) {\n            let slot = Self::find_slot(table, &key);\n            match &table.table[slot] {\n                | FlatEntry::Occupied(k, _) if k == &key => {\n                    table.table[slot] = FlatEntry::Occupied(key, value);\n                }\n                | FlatEntry::Empty | FlatEntry::Deleted => {\n                    table.table[slot] = FlatEntry::Occupied(key, value);\n                    table.num_elements += 1;\n                }\n                | _ => {\n                    table.table[slot] = FlatEntry::Occupied(key, value);\n                    table.num_elements += 1;\n                }\n            }\n        }"
+  },
+  {
+    "id": 9,
+    "function": "lookup",
+    "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
+    "lines": "87-102",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash probe until found or empty.\n        fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> Option<Value> {\n            let mut attempt = 0;\n            while attempt < table.current_size {\n                let slot = Self::probe(table, key, attempt);\n                match &table.table[slot] {\n                    | FlatEntry::Occupied(k, v) if k == key => return Some(v.clone()),\n                    | FlatEntry::Empty => return None,\n                    | FlatEntry::Deleted | FlatEntry::Occupied(_, _) => {\n                        attempt += 1;\n                    }\n                }\n            }\n            None\n        }"
+  },
+  {
+    "id": 10,
+    "function": "delete",
+    "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
+    "lines": "104-123",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash probe until found or empty, then tombstone.\n        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> B {\n            let mut attempt = 0;\n            while attempt < table.current_size {\n                let slot = Self::probe(table, key, attempt);\n                match &table.table[slot] {\n                    | FlatEntry::Occupied(k, _) if k == key => {\n                        table.table[slot] = FlatEntry::Deleted;\n                        table.num_elements -= 1;\n                        return true;\n                    }\n                    | FlatEntry::Empty => return false,\n                    | FlatEntry::Deleted | FlatEntry::Occupied(_, _) => {\n                        attempt += 1;\n                    }\n                }\n            }\n            false\n        }"
+  },
+  {
+    "id": 11,
+    "function": "resize",
+    "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
+    "lines": "125-156",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(n + m + m'), Span O(n + m + m').\n        /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' slots, reinserts.\n        fn resize(\n            table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>,\n            new_size: usize,\n        ) -> HashTable<Key, Value, FlatEntry<Key, Value>, Metrics> {\n            let mut pairs = Vec::new();\n            for entry in &table.table {\n                if let FlatEntry::Occupied(k, v) = entry {\n                    pairs.push((k.clone(), v.clone()));\n                }\n            }\n\n            let new_table_vec = (0..new_size).map(|_| FlatEntry::new()).collect();\n            let new_hash_fn = (table.hash_fn_gen)(new_size);\n            let mut new_table = HashTable {\n                table: new_table_vec,\n                hash_fn_gen: table.hash_fn_gen.clone(),\n                hash_fn: new_hash_fn,\n                initial_size: table.initial_size,\n                current_size: new_size,\n                num_elements: 0,\n                metrics: Metrics::default(),\n                _phantom: PhantomData,\n            };\n\n            for (key, value) in pairs {\n                Self::insert(&mut new_table, key, value);\n            }\n\n            new_table\n        }"
+  },
+  {
+    "id": 12,
+    "function": "probe",
+    "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
+    "lines": "162-168",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1), Span O(1).\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) — two hash values + arithmetic + modulo.\n        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key, attempt: usize) -> usize {\n            let hash1 = (table.hash_fn)(key);\n            let step = Self::second_hash(key, table.current_size);\n            (hash1 + (attempt * step)) % table.current_size\n        }"
+  },
+  {
+    "id": 13,
+    "function": "find_slot",
+    "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
+    "lines": "170-183",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash probe until empty/deleted/matching.\n        fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> usize {\n            let mut attempt = 0;\n            while attempt < table.current_size {\n                let slot = Self::probe(table, key, attempt);\n                match &table.table[slot] {\n                    | FlatEntry::Empty | FlatEntry::Deleted => return slot,\n                    | FlatEntry::Occupied(k, _) if k == key => return slot,\n                    | _ => attempt += 1,\n                }\n            }\n            Self::probe(table, key, 0)\n        }"
+  },
+  {
+    "id": 14,
+    "function": "new",
+    "file": "Chap47/FlatHashTable.rs",
+    "lines": "53",
+    "spec_strength": "",
+    "snippet": "        fn new() -> Self { FlatEntry::Empty }"
+  },
+  {
+    "id": 15,
+    "function": "insert",
+    "file": "Chap47/FlatHashTable.rs",
+    "lines": "57",
+    "spec_strength": "",
+    "snippet": "        fn insert(&mut self, key: Key, value: Value) { *self = FlatEntry::Occupied(key, value); }"
+  },
+  {
+    "id": 16,
+    "function": "lookup",
+    "file": "Chap47/FlatHashTable.rs",
+    "lines": "61",
+    "spec_strength": "",
+    "snippet": "        fn lookup(&self, key: &Key) -> Option<Value> {"
+  },
+  {
+    "id": 17,
+    "function": "delete",
+    "file": "Chap47/FlatHashTable.rs",
+    "lines": "72",
+    "spec_strength": "",
+    "snippet": "        fn delete(&mut self, key: &Key) -> B {"
+  },
+  {
+    "id": 18,
+    "function": "probe",
+    "file": "Chap47/FlatHashTable.rs",
+    "lines": "97-100",
+    "spec_strength": "",
+    "snippet": "        /// Probes for the next slot in the sequence.\n        /// - APAS: Work O(1), Span O(1).\n        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on probing strategy.\n        fn probe(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key, attempt: usize) -> usize;"
+  },
+  {
+    "id": 19,
+    "function": "find_slot",
+    "file": "Chap47/FlatHashTable.rs",
+    "lines": "102-105",
+    "spec_strength": "",
+    "snippet": "        /// Finds the first available slot (Empty or Deleted) for insertion.\n        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on probing strategy.\n        fn find_slot(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key) -> usize;"
+  },
+  {
+    "id": 20,
+    "function": "insert_with_probe",
+    "file": "Chap47/FlatHashTable.rs",
+    "lines": "107-115",
+    "spec_strength": "",
+    "snippet": "        /// Inserts using linear probing as default.\n        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — delegates to find_slot then O(1) write.\n        fn insert_with_probe(table: &mut HashTable<Key, Value, Entry, Metrics>, key: Key, value: Value) {\n            let slot = Self::find_slot(table, &key);\n            if slot < table.table.len() {\n                table.table[slot].insert(key, value);\n            }\n        }"
+  },
+  {
+    "id": 21,
+    "function": "lookup_with_probe",
+    "file": "Chap47/FlatHashTable.rs",
+    "lines": "117-130",
+    "spec_strength": "",
+    "snippet": "        /// Looks up using probe sequence.\n        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — iterates probe sequence until found or empty.\n        fn lookup_with_probe(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key) -> Option<Value> {\n            for attempt in 0..table.current_size {\n                let slot = Self::probe(table, key, attempt);\n                if slot < table.table.len() {\n                    if let Some(val) = table.table[slot].lookup(key) {\n                        return Some(val);\n                    }\n                }\n            }\n            None\n        }"
+  },
+  {
+    "id": 22,
+    "function": "insert",
+    "file": "Chap47/LinProbFlatHashTableStEph.rs",
+    "lines": "35-52",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe find_slot then O(1) write.\n        fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: Key, value: Value) {\n            let slot = Self::find_slot(table, &key);\n            match &table.table[slot] {\n                | FlatEntry::Occupied(k, _) if k == &key => {\n                    table.table[slot] = FlatEntry::Occupied(key, value);\n                }\n                | FlatEntry::Empty | FlatEntry::Deleted => {\n                    table.table[slot] = FlatEntry::Occupied(key, value);\n                    table.num_elements += 1;\n                }\n                | _ => {\n                    table.table[slot] = FlatEntry::Occupied(key, value);\n                    table.num_elements += 1;\n                }\n            }\n        }"
+  },
+  {
+    "id": 23,
+    "function": "lookup",
+    "file": "Chap47/LinProbFlatHashTableStEph.rs",
+    "lines": "54-69",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe sequence until found or empty.\n        fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> Option<Value> {\n            let mut attempt = 0;\n            while attempt < table.current_size {\n                let slot = Self::probe(table, key, attempt);\n                match &table.table[slot] {\n                    | FlatEntry::Occupied(k, v) if k == key => return Some(v.clone()),\n                    | FlatEntry::Empty => return None,\n                    | FlatEntry::Deleted | FlatEntry::Occupied(_, _) => {\n                        attempt += 1;\n                    }\n                }\n            }\n            None\n        }"
+  },
+  {
+    "id": 24,
+    "function": "delete",
+    "file": "Chap47/LinProbFlatHashTableStEph.rs",
+    "lines": "71-90",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe until found or empty, then tombstone.\n        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> B {\n            let mut attempt = 0;\n            while attempt < table.current_size {\n                let slot = Self::probe(table, key, attempt);\n                match &table.table[slot] {\n                    | FlatEntry::Occupied(k, _) if k == key => {\n                        table.table[slot] = FlatEntry::Deleted;\n                        table.num_elements -= 1;\n                        return true;\n                    }\n                    | FlatEntry::Empty => return false,\n                    | FlatEntry::Deleted | FlatEntry::Occupied(_, _) => {\n                        attempt += 1;\n                    }\n                }\n            }\n            false\n        }"
+  },
+  {
+    "id": 25,
+    "function": "resize",
+    "file": "Chap47/LinProbFlatHashTableStEph.rs",
+    "lines": "92-123",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(n + m + m'), Span O(n + m + m').\n        /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs from m slots, creates m' new slots, reinserts n pairs.\n        fn resize(\n            table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>,\n            new_size: usize,\n        ) -> HashTable<Key, Value, FlatEntry<Key, Value>, Metrics> {\n            let mut pairs = Vec::new();\n            for entry in &table.table {\n                if let FlatEntry::Occupied(k, v) = entry {\n                    pairs.push((k.clone(), v.clone()));\n                }\n            }\n\n            let new_table_vec = (0..new_size).map(|_| FlatEntry::new()).collect();\n            let new_hash_fn = (table.hash_fn_gen)(new_size);\n            let mut new_table = HashTable {\n                table: new_table_vec,\n                hash_fn_gen: table.hash_fn_gen.clone(),\n                hash_fn: new_hash_fn,\n                initial_size: table.initial_size,\n                current_size: new_size,\n                num_elements: 0,\n                metrics: Metrics::default(),\n                _phantom: PhantomData,\n            };\n\n            for (key, value) in pairs {\n                Self::insert(&mut new_table, key, value);\n            }\n\n            new_table\n        }"
+  },
+  {
+    "id": 26,
+    "function": "probe",
+    "file": "Chap47/LinProbFlatHashTableStEph.rs",
+    "lines": "129-134",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1), Span O(1).\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) — hash + addition + modulo.\n        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key, attempt: usize) -> usize {\n            let hash_val = (table.hash_fn)(key);\n            (hash_val + attempt) % table.current_size\n        }"
+  },
+  {
+    "id": 27,
+    "function": "find_slot",
+    "file": "Chap47/LinProbFlatHashTableStEph.rs",
+    "lines": "136-149",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe until empty/deleted/matching slot.\n        fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> usize {\n            let mut attempt = 0;\n            while attempt < table.current_size {\n                let slot = Self::probe(table, key, attempt);\n                match &table.table[slot] {\n                    | FlatEntry::Empty | FlatEntry::Deleted => return slot,\n                    | FlatEntry::Occupied(k, _) if k == key => return slot,\n                    | _ => attempt += 1,\n                }\n            }\n            Self::probe(table, key, 0)\n        }"
+  },
+  {
+    "id": 28,
+    "function": "_linked_list_chained_hash_table_verified",
+    "file": "Chap47/LinkedListChainedHashTableStEph.rs",
+    "lines": "23",
+    "spec_strength": "",
+    "snippet": "        proof fn _linked_list_chained_hash_table_verified() {}"
+  },
+  {
+    "id": 29,
+    "function": "new",
+    "file": "Chap47/LinkedListChainedHashTableStEph.rs",
+    "lines": "30-32",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1), Span O(1).\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty LinkedList construction.\n        fn new() -> Self { LinkedList::new() }"
+  },
+  {
+    "id": 30,
+    "function": "insert`",
+    "file": "Chap47/LinkedListChainedHashTableStEph.rs",
+    "lines": "34-44",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1+α) expected, Span O(1+α).\n        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan for duplicate key, n = chain length.\n        fn insert(&mut self, key: Key, value: Value) {\n            for (k, v) in self.iter_mut() {\n                if k == &key {\n                    *v = value;\n                    return;\n                }\n            }\n            self.push_back((key, value));\n        }"
+  },
+  {
+    "id": 31,
+    "function": "lookup`",
+    "file": "Chap47/LinkedListChainedHashTableStEph.rs",
+    "lines": "46-55",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1+α) expected, Span O(1+α).\n        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan of chain, n = chain length.\n        fn lookup(&self, key: &Key) -> Option<Value> {\n            for (k, v) in self.iter() {\n                if k == key {\n                    return Some(v.clone());\n                }\n            }\n            None\n        }"
+  },
+  {
+    "id": 32,
+    "function": "delete`",
+    "file": "Chap47/LinkedListChainedHashTableStEph.rs",
+    "lines": "57-75",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1+α) expected, Span O(1+α).\n        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + split_off/append, n = chain length.\n        fn delete(&mut self, key: &Key) -> B {\n            let mut found_idx = None;\n            for (idx, (k, _)) in self.iter().enumerate() {\n                if k == key {\n                    found_idx = Some(idx);\n                    break;\n                }\n            }\n            if let Some(idx) = found_idx {\n                let mut split_off = self.split_off(idx);\n                split_off.pop_front();\n                self.append(&mut split_off);\n                true\n            } else {\n                false\n            }\n        }"
+  },
+  {
+    "id": 33,
+    "function": "resize",
+    "file": "Chap47/LinkedListChainedHashTableStEph.rs",
+    "lines": "101-132",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(n + m + m'), Span O(n + m + m').\n        /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' lists, reinserts.\n        fn resize(\n            table: &HashTable<Key, Value, LinkedList<(Key, Value)>, Metrics>,\n            new_size: usize,\n        ) -> HashTable<Key, Value, LinkedList<(Key, Value)>, Metrics> {\n            let mut pairs = Vec::new();\n            for chain in &table.table {\n                for (k, v) in chain.iter() {\n                    pairs.push((k.clone(), v.clone()));\n                }\n            }\n\n            let new_table_vec = (0..new_size).map(|_| LinkedList::new()).collect();\n            let new_hash_fn = (table.hash_fn_gen)(new_size);\n            let mut new_table = HashTable {\n                table: new_table_vec,\n                hash_fn_gen: table.hash_fn_gen.clone(),\n                hash_fn: new_hash_fn,\n                initial_size: table.initial_size,\n                current_size: new_size,\n                num_elements: 0,\n                metrics: Metrics::default(),\n                _phantom: PhantomData,\n            };\n\n            for (key, value) in pairs {\n                Self::insert(&mut new_table, key, value);\n            }\n\n            new_table\n        }"
+  },
+  {
+    "id": 34,
+    "function": "hash_index",
+    "file": "Chap47/LinkedListChainedHashTableStEph.rs",
+    "lines": "138-142",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1), Span O(1).\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to stored hash function.\n        fn hash_index(table: &HashTable<Key, Value, LinkedList<(Key, Value)>, Metrics>, key: &Key) -> usize {\n            (table.hash_fn)(key) % table.current_size\n        }"
+  },
+  {
+    "id": 35,
+    "function": "new",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "49",
+    "spec_strength": "",
+    "snippet": "        fn new()                        -> Self;"
+  },
+  {
+    "id": 36,
+    "function": "insert`",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "100-103",
+    "spec_strength": "",
+    "snippet": "        /// Inserts a key-value pair into the hash table.\n        /// - APAS: Work O(1) expected, Span O(1).\n        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.\n        fn insert(table: &mut HashTable<Key, Value, Entry, Metrics>, key: Key, value: Value);"
+  },
+  {
+    "id": 37,
+    "function": "lookup`",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "105-108",
+    "spec_strength": "",
+    "snippet": "        /// Looks up a key in the hash table, returning its value if found.\n        /// - APAS: Work O(1) expected, Span O(1).\n        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.\n        fn lookup(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key)     -> Option<Value>;"
+  },
+  {
+    "id": 38,
+    "function": "delete`",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "110-113",
+    "spec_strength": "",
+    "snippet": "        /// Deletes a key from the hash table if it exists.\n        /// - APAS: Work O(1) expected, Span O(1).\n        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.\n        fn delete(table: &mut HashTable<Key, Value, Entry, Metrics>, key: &Key) -> B;"
+  },
+  {
+    "id": 39,
+    "function": "createTable",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "81-98",
+    "spec_strength": "",
+    "snippet": "        /// Creates an empty hash table with the given initial size.\n        /// Takes a hash function generator that produces hash functions for different table sizes.\n        /// - APAS: Work O(m), Span O(m) where m is initial size.\n        /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.\n        fn createTable(hash_fn_gen: HashFunGen<Key>, initial_size: usize)           -> HashTable<Key, Value, Entry, Metrics> {\n            let table = (0..initial_size).map(|_| Entry::new()).collect();\n            let hash_fn = hash_fn_gen(initial_size);\n            HashTable {\n                table,\n                hash_fn_gen,\n                hash_fn,\n                initial_size,\n                current_size: initial_size,\n                num_elements: 0,\n                metrics: Metrics::default(),\n                _phantom: PhantomData,\n            }\n        }"
+  },
+  {
+    "id": 40,
+    "function": "metrics",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "115-118",
+    "spec_strength": "",
+    "snippet": "        /// Accessor for metrics field.\n        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.\n        fn metrics(table: &HashTable<Key, Value, Entry, Metrics>)               -> &Metrics { &table.metrics }"
+  },
+  {
+    "id": 41,
+    "function": "loadAndSize",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "120-134",
+    "spec_strength": "",
+    "snippet": "        /// Returns the load (number of entries) and size (table capacity).\n        /// Load factor α = load/size = num_elements/size\n        /// - APAS: Work O(1), Span O(1).\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads and one division.\n        fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics>)           -> LoadAndSize {\n            let load_factor = if table.current_size == 0 {\n                0.0\n            } else {\n                table.num_elements as f64 / table.current_size as f64\n            };\n            LoadAndSize {\n                load: load_factor,\n                size: table.current_size,\n            }\n        }"
+  },
+  {
+    "id": 42,
+    "function": "resize",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "136-141",
+    "spec_strength": "",
+    "snippet": "        /// Resizes the hash table to a new size and rehashes all entries.\n        /// Uses the stored hash function generator to create a new hash function for the new size.\n        /// - APAS: Work O(n + m + m'), Span O(n + m + m') where n is number of elements,\n        ///   m is old size, m' is new size.\n        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.\n        fn resize(table: &HashTable<Key, Value, Entry, Metrics>, new_size: usize)   -> HashTable<Key, Value, Entry, Metrics>;"
+  },
+  {
+    "id": 43,
+    "function": "insert",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "36-53",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe find_slot then O(1) write.\n        fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: Key, value: Value) {\n            let slot = Self::find_slot(table, &key);\n            match &table.table[slot] {\n                | FlatEntry::Occupied(k, _) if k == &key => {\n                    table.table[slot] = FlatEntry::Occupied(key, value);\n                }\n                | FlatEntry::Empty | FlatEntry::Deleted => {\n                    table.table[slot] = FlatEntry::Occupied(key, value);\n                    table.num_elements += 1;\n                }\n                | _ => {\n                    table.table[slot] = FlatEntry::Occupied(key, value);\n                    table.num_elements += 1;\n                }\n            }\n        }"
+  },
+  {
+    "id": 44,
+    "function": "lookup",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "55-71",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe up to ⌈m/2⌉ attempts (Lemma 47.1).\n        fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> Option<Value> {\n            let mut attempt = 0;\n            let max_attempts = table.current_size.div_ceil(2);\n            while attempt < max_attempts {\n                let slot = Self::probe(table, key, attempt);\n                match &table.table[slot] {\n                    | FlatEntry::Occupied(k, v) if k == key => return Some(v.clone()),\n                    | FlatEntry::Empty => return None,\n                    | FlatEntry::Deleted | FlatEntry::Occupied(_, _) => {\n                        attempt += 1;\n                    }\n                }\n            }\n            None\n        }"
+  },
+  {
+    "id": 45,
+    "function": "delete",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "73-93",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe until found or empty, then tombstone.\n        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> B {\n            let mut attempt = 0;\n            let max_attempts = table.current_size.div_ceil(2);\n            while attempt < max_attempts {\n                let slot = Self::probe(table, key, attempt);\n                match &table.table[slot] {\n                    | FlatEntry::Occupied(k, _) if k == key => {\n                        table.table[slot] = FlatEntry::Deleted;\n                        table.num_elements -= 1;\n                        return true;\n                    }\n                    | FlatEntry::Empty => return false,\n                    | FlatEntry::Deleted | FlatEntry::Occupied(_, _) => {\n                        attempt += 1;\n                    }\n                }\n            }\n            false\n        }"
+  },
+  {
+    "id": 46,
+    "function": "resize",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "95-126",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(n + m + m'), Span O(n + m + m').\n        /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs from m slots, creates m' new slots, reinserts n pairs.\n        fn resize(\n            table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>,\n            new_size: usize,\n        ) -> HashTable<Key, Value, FlatEntry<Key, Value>, Metrics> {\n            let mut pairs = Vec::new();\n            for entry in &table.table {\n                if let FlatEntry::Occupied(k, v) = entry {\n                    pairs.push((k.clone(), v.clone()));\n                }\n            }\n\n            let new_table_vec = (0..new_size).map(|_| FlatEntry::new()).collect();\n            let new_hash_fn = (table.hash_fn_gen)(new_size);\n            let mut new_table = HashTable {\n                table: new_table_vec,\n                hash_fn_gen: table.hash_fn_gen.clone(),\n                hash_fn: new_hash_fn,\n                initial_size: table.initial_size,\n                current_size: new_size,\n                num_elements: 0,\n                metrics: Metrics::default(),\n                _phantom: PhantomData,\n            };\n\n            for (key, value) in pairs {\n                Self::insert(&mut new_table, key, value);\n            }\n\n            new_table\n        }"
+  },
+  {
+    "id": 47,
+    "function": "probe",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "132-137",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1), Span O(1).\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) — hash + i² + modulo.\n        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key, attempt: usize) -> usize {\n            let hash_val = (table.hash_fn)(key);\n            (hash_val + (attempt * attempt)) % table.current_size\n        }"
+  },
+  {
+    "id": 48,
+    "function": "find_slot",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "139-153",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).\n        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe up to ⌈m/2⌉ (Lemma 47.1).\n        fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> usize {\n            let mut attempt = 0;\n            let max_attempts = table.current_size.div_ceil(2);\n            while attempt < max_attempts {\n                let slot = Self::probe(table, key, attempt);\n                match &table.table[slot] {\n                    | FlatEntry::Empty | FlatEntry::Deleted => return slot,\n                    | FlatEntry::Occupied(k, _) if k == key => return slot,\n                    | _ => attempt += 1,\n                }\n            }\n            Self::probe(table, key, 0)\n        }"
+  },
+  {
+    "id": 49,
+    "function": "_struct_chained_hash_table_verified",
+    "file": "Chap47/StructChainedHashTable.rs",
+    "lines": "27",
+    "spec_strength": "",
+    "snippet": "        proof fn _struct_chained_hash_table_verified() {}"
+  },
+  {
+    "id": 50,
+    "function": "eq`",
+    "file": "Chap47/StructChainedHashTable.rs",
+    "lines": "72-74",
+    "spec_strength": "unknown",
+    "snippet": "            fn eq(&self, other: &Self) -> (r: bool)\n                ensures r == (*self == *other)\n                decreases self, other"
+  },
+  {
+    "id": 51,
+    "function": "default",
+    "file": "Chap47/StructChainedHashTable.rs",
+    "lines": "128",
+    "spec_strength": "",
+    "snippet": "            fn default() -> Self { ChainList { head: None } }"
+  },
+  {
+    "id": 52,
+    "function": "new",
+    "file": "Chap47/StructChainedHashTable.rs",
+    "lines": "136",
+    "spec_strength": "",
+    "snippet": "        fn new() -> Self { ChainList { head: None } }"
+  },
+  {
+    "id": 53,
+    "function": "insert`",
+    "file": "Chap47/StructChainedHashTable.rs",
+    "lines": "138-153",
+    "spec_strength": "",
+    "snippet": "        fn insert(&mut self, key: Key, value: Value) {\n            let mut current = &mut self.head;\n            while let Some(node) = current {\n                if node.key == key {\n                    node.value = value;\n                    return;\n                }\n                current = &mut node.next;\n            }\n            let new_node = Box::new(Node {\n                key,\n                value,\n                next: self.head.take(),\n            });\n            self.head = Some(new_node);\n        }"
+  },
+  {
+    "id": 54,
+    "function": "lookup`",
+    "file": "Chap47/StructChainedHashTable.rs",
+    "lines": "155-164",
+    "spec_strength": "",
+    "snippet": "        fn lookup(&self, key: &Key) -> Option<Value> {\n            let mut current = &self.head;\n            while let Some(node) = current {\n                if &node.key == key {\n                    return Some(node.value.clone());\n                }\n                current = &node.next;\n            }\n            None\n        }"
+  },
+  {
+    "id": 55,
+    "function": "delete`",
+    "file": "Chap47/StructChainedHashTable.rs",
+    "lines": "166-180",
+    "spec_strength": "",
+    "snippet": "        fn delete(&mut self, key: &Key) -> B {\n            let mut current = &mut self.head;\n            loop {\n                match current {\n                    | None => return false,\n                    | Some(node) if &node.key == key => {\n                        *current = node.next.take();\n                        return true;\n                    }\n                    | Some(node) => {\n                        current = &mut node.next;\n                    }\n                }\n            }\n        }"
+  },
+  {
+    "id": 56,
+    "function": "resize",
+    "file": "Chap47/StructChainedHashTable.rs",
+    "lines": "206-239",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(n + m + m'), Span O(n + m + m').\n        /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — traverses all chains, creates m' lists, reinserts.\n        fn resize(\n            table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics>,\n            new_size: usize,\n        ) -> HashTable<Key, Value, ChainList<Key, Value>, Metrics> {\n            let mut pairs = Vec::new();\n            for chain in &table.table {\n                let mut current = &chain.head;\n                while let Some(node) = current {\n                    pairs.push((node.key.clone(), node.value.clone()));\n                    current = &node.next;\n                }\n            }\n\n            let new_table_vec = (0..new_size).map(|_| ChainList::new()).collect();\n            let new_hash_fn = (table.hash_fn_gen)(new_size);\n            let mut new_table = HashTable {\n                table: new_table_vec,\n                hash_fn_gen: table.hash_fn_gen.clone(),\n                hash_fn: new_hash_fn,\n                initial_size: table.initial_size,\n                current_size: new_size,\n                num_elements: 0,\n                metrics: Metrics::default(),\n                _phantom: PhantomData,\n            };\n\n            for (key, value) in pairs {\n                Self::insert(&mut new_table, key, value);\n            }\n\n            new_table\n        }"
+  },
+  {
+    "id": 57,
+    "function": "hash_index",
+    "file": "Chap47/StructChainedHashTable.rs",
+    "lines": "245-249",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1), Span O(1).\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to stored hash function.\n        fn hash_index(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics>, key: &Key) -> usize {\n            (table.hash_fn)(key) % table.current_size\n        }"
+  },
+  {
+    "id": 58,
+    "function": "_vec_chained_hash_table_verified",
+    "file": "Chap47/VecChainedHashTableStEph.rs",
+    "lines": "22",
+    "spec_strength": "",
+    "snippet": "        proof fn _vec_chained_hash_table_verified() {}"
+  },
+  {
+    "id": 59,
+    "function": "new",
+    "file": "Chap47/VecChainedHashTableStEph.rs",
+    "lines": "31-33",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1), Span O(1).\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty Vec construction.\n        fn new() -> Self { Vec::new() }"
+  },
+  {
+    "id": 60,
+    "function": "insert`",
+    "file": "Chap47/VecChainedHashTableStEph.rs",
+    "lines": "35-45",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1+α) expected, Span O(1+α).\n        /// - Claude-Opus-4.6: Work O(n) worst case, Span O(n) — linear scan for duplicate key, n = chain length.\n        fn insert(&mut self, key: Key, value: Value) {\n            for (k, v) in self.iter_mut() {\n                if k == &key {\n                    *v = value;\n                    return;\n                }\n            }\n            self.push((key, value));\n        }"
+  },
+  {
+    "id": 61,
+    "function": "lookup`",
+    "file": "Chap47/VecChainedHashTableStEph.rs",
+    "lines": "47-56",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1+α) expected, Span O(1+α).\n        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan of chain, n = chain length.\n        fn lookup(&self, key: &Key) -> Option<Value> {\n            for (k, v) in self.iter() {\n                if k == key {\n                    return Some(v.clone());\n                }\n            }\n            None\n        }"
+  },
+  {
+    "id": 62,
+    "function": "delete`",
+    "file": "Chap47/VecChainedHashTableStEph.rs",
+    "lines": "58-67",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1+α) expected, Span O(1+α).\n        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + Vec::remove (shifts elements), n = chain length.\n        fn delete(&mut self, key: &Key) -> B {\n            if let Some(pos) = self.iter().position(|(k, _)| k == key) {\n                self.remove(pos);\n                true\n            } else {\n                false\n            }\n        }"
+  },
+  {
+    "id": 63,
+    "function": "resize",
+    "file": "Chap47/VecChainedHashTableStEph.rs",
+    "lines": "93-124",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(n + m + m'), Span O(n + m + m').\n        /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' chains, reinserts.\n        fn resize(\n            table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics>,\n            new_size: usize,\n        ) -> HashTable<Key, Value, Vec<(Key, Value)>, Metrics> {\n            let mut pairs = Vec::new();\n            for chain in &table.table {\n                for (k, v) in chain.iter() {\n                    pairs.push((k.clone(), v.clone()));\n                }\n            }\n\n            let new_table_vec = (0..new_size).map(|_| Vec::new()).collect();\n            let new_hash_fn = (table.hash_fn_gen)(new_size);\n            let mut new_table = HashTable {\n                table: new_table_vec,\n                hash_fn_gen: table.hash_fn_gen.clone(),\n                hash_fn: new_hash_fn,\n                initial_size: table.initial_size,\n                current_size: new_size,\n                num_elements: 0,\n                metrics: Metrics::default(),\n                _phantom: PhantomData,\n            };\n\n            for (key, value) in pairs {\n                Self::insert(&mut new_table, key, value);\n            }\n\n            new_table\n        }"
+  },
+  {
+    "id": 64,
+    "function": "hash_index",
+    "file": "Chap47/VecChainedHashTableStEph.rs",
+    "lines": "130-134",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: Work O(1), Span O(1).\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to stored hash function.\n        fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics>, key: &Key) -> usize {\n            (table.hash_fn)(key) % table.current_size\n        }"
+  }
+]

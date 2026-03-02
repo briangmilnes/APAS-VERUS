@@ -1,13 +1,626 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs
-Codebase: /home/milnes/projects/APAS-VERUS-agent2
+Path: /home/milnes/projects/APAS-VERUS/src/Chap43/
+Codebase: /home/milnes/projects/APAS-VERUS
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap43/analyses/veracity-review-verus-style.log
 
-Checking 1 files...
+Checking 11 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:122: warning: [12] trait AugOrderedTableMtEphTrait fn find should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:123: warning: [12] trait AugOrderedTableMtEphTrait fn lookup should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:577: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:1: warning: [17] collection AugOrderedTableMtEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:1: warning: [17] collection AugOrderedTableMtEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap43/ProveAugOrderedTableMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:105: warning: [18] proof fn lemma_aug_view should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:115: warning: [18] trait AugOrderedTableMtEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:66: warning: [19] recalculate_reduction return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:75: warning: [19] calculate_reduction return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:116: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:118: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:120: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:122: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:123: warning: [19] lookup return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:124: warning: [19] is_empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:128: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:130: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:132: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:139: warning: [19] map return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:141: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:153: warning: [19] reduce return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:155: warning: [19] collect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:157: warning: [19] first_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:159: warning: [19] last_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:161: warning: [19] previous_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:163: warning: [19] next_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:165: warning: [19] split_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:170: warning: [19] get_key_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:172: warning: [19] rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:174: warning: [19] select_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:176: warning: [19] split_rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:179: warning: [19] reduce_val return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:181: warning: [19] reduce_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:183: warning: [19] reduce_range_parallel return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:190: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:197: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:211: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:225: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:229: warning: [19] lookup return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:233: warning: [19] is_empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:251: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:260: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:267: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:288: warning: [19] map return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:304: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:360: warning: [19] reduce return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:367: warning: [19] collect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:374: warning: [19] first_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:381: warning: [19] last_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:388: warning: [19] previous_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:395: warning: [19] next_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:402: warning: [19] split_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:447: warning: [19] get_key_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:463: warning: [19] rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:470: warning: [19] select_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:477: warning: [19] split_rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:503: warning: [19] reduce_val return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:513: warning: [19] reduce_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:525: warning: [19] reduce_range_parallel return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:561: warning: [19] clone return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:559: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: warning: [17] collection AugOrderedTableStEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: warning: [17] collection AugOrderedTableStEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap43/ProveAugOrderedTableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:98: warning: [18] proof fn lemma_aug_view should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:108: warning: [18] trait AugOrderedTableStEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:66: warning: [19] calculate_reduction return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:112: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:114: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:116: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:118: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:124: warning: [19] lookup return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:130: warning: [19] is_empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:134: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:136: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:138: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:140: warning: [19] map return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:142: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:144: warning: [19] reduce return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:156: warning: [19] collect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:158: warning: [19] first_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:160: warning: [19] last_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:162: warning: [19] previous_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:164: warning: [19] next_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:166: warning: [19] split_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:171: warning: [19] get_key_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:173: warning: [19] rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:175: warning: [19] select_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:177: warning: [19] split_rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:180: warning: [19] reduce_val return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:182: warning: [19] reduce_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:192: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:199: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:213: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:228: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:239: warning: [19] lookup return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:249: warning: [19] is_empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:267: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:276: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:283: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:299: warning: [19] map return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:315: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:331: warning: [19] reduce return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:378: warning: [19] collect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:385: warning: [19] first_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:392: warning: [19] last_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:399: warning: [19] previous_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:406: warning: [19] next_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:413: warning: [19] split_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:458: warning: [19] get_key_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:474: warning: [19] rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:481: warning: [19] select_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:488: warning: [19] split_rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:514: warning: [19] reduce_val return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:524: warning: [19] reduce_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:543: warning: [19] clone return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:599: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: warning: [17] collection AugOrderedTableStPer should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: warning: [17] collection AugOrderedTableStPer should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap43/ProveAugOrderedTableStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:104: warning: [18] proof fn lemma_aug_view should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:114: warning: [18] trait AugOrderedTableStPerTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:67: warning: [19] calculate_reduction return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:120: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:123: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:125: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:128: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:135: warning: [19] insert return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:138: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:141: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:143: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:146: warning: [19] map return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:149: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:152: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:155: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:158: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:160: warning: [19] restrict return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:162: warning: [19] subtract return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:164: warning: [19] collect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:166: warning: [19] first_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:168: warning: [19] last_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:170: warning: [19] previous_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:172: warning: [19] next_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:174: warning: [19] split_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:177: warning: [19] join_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:180: warning: [19] get_key_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:182: warning: [19] rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:184: warning: [19] select_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:186: warning: [19] split_rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:189: warning: [19] reduce_val return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:191: warning: [19] reduce_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:205: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:212: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:226: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:240: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:246: warning: [19] insert return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:262: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:278: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:285: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:301: warning: [19] map return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:317: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:333: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:349: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:365: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:381: warning: [19] restrict return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:397: warning: [19] subtract return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:413: warning: [19] collect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:420: warning: [19] first_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:427: warning: [19] last_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:434: warning: [19] previous_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:441: warning: [19] next_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:448: warning: [19] split_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:474: warning: [19] join_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:498: warning: [19] get_key_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:514: warning: [19] rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:521: warning: [19] select_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:528: warning: [19] split_rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:554: warning: [19] reduce_val return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:564: warning: [19] reduce_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:582: warning: [19] clone return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap43/Example43_1.rs:18: warning: [20] trait Example43_1Trait is defined but has no impl
+
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:54: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:57: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:60: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:63: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:84: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:87: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:92: warning: [19] first return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:95: warning: [19] last return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:98: warning: [19] previous return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:101: warning: [19] next return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:104: warning: [19] split return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:111: warning: [19] get_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:114: warning: [19] rank return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:117: warning: [19] select return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:120: warning: [19] split_rank return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:129: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:134: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:139: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:148: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:195: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:202: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:213: warning: [19] first return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:235: warning: [19] last return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:257: warning: [19] previous return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:280: warning: [19] next return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:303: warning: [19] split return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:324: warning: [19] get_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:347: warning: [19] rank return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:355: warning: [19] select return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:367: warning: [19] split_rank return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:432: warning: [13] impl Default for OrderedSetStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:436: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: warning: [17] collection OrderedSetStEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: warning: [17] collection OrderedSetStEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap43/ProveOrderedSetStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:408: warning: [18] fn from_sorted_elements should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:57: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:60: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:63: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:66: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:87: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:90: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:95: warning: [19] first return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:98: warning: [19] last return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:101: warning: [19] previous return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:104: warning: [19] next return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:107: warning: [19] split return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:114: warning: [19] get_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:117: warning: [19] rank return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:120: warning: [19] select return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:123: warning: [19] split_rank return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:131: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:135: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:143: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:151: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:192: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:205: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:220: warning: [19] first return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:232: warning: [19] last return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:245: warning: [19] previous return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:261: warning: [19] next return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:277: warning: [19] split return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:312: warning: [19] get_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:332: warning: [19] rank return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:351: warning: [19] select return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:363: warning: [19] split_rank return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:398: warning: [19] clone return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:408: warning: [19] from_sorted_elements return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:411: warning: [13] impl Default for OrderedSetStPer should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:415: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: warning: [17] collection OrderedSetStPer should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: warning: [17] collection OrderedSetStPer should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap43/ProveOrderedSetStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:387: warning: [18] fn from_sorted_elements should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:56: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:59: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:62: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:65: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:68: warning: [19] insert return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:71: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:74: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:77: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:80: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:83: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:86: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:89: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:94: warning: [19] first return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:97: warning: [19] last return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:100: warning: [19] previous return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:103: warning: [19] next return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:106: warning: [19] split return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:110: warning: [19] join return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:113: warning: [19] get_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:116: warning: [19] rank return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:119: warning: [19] select return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:122: warning: [19] split_rank return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:130: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:134: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:142: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:150: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:154: warning: [19] insert return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:162: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:170: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:178: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:186: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:194: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:202: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:206: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:215: warning: [19] first return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:227: warning: [19] last return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:240: warning: [19] previous return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:256: warning: [19] next return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:272: warning: [19] split return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:300: warning: [19] join return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:305: warning: [19] get_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:325: warning: [19] rank return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:344: warning: [19] select return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:356: warning: [19] split_rank return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:377: warning: [19] clone return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:387: warning: [19] from_sorted_elements return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:67: warning: [12] trait OrderedTableMtEphTrait fn find should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:69: warning: [12] trait OrderedTableMtEphTrait fn lookup should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:528: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1: warning: [17] collection OrderedTableMtEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1: warning: [17] collection OrderedTableMtEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap43/ProveOrderedTableMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:511: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:58: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:61: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:64: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:67: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:69: warning: [19] lookup return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:71: warning: [19] is_empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:77: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:80: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:83: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:86: warning: [19] map return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:89: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:107: warning: [19] reduce return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:110: warning: [19] collect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:113: warning: [19] first_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:116: warning: [19] last_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:119: warning: [19] previous_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:122: warning: [19] next_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:125: warning: [19] split_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:132: warning: [19] get_key_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:135: warning: [19] rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:138: warning: [19] select_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:141: warning: [19] split_rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:149: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:160: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:169: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:177: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:181: warning: [19] lookup return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:185: warning: [19] is_empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:200: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:208: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:215: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:225: warning: [19] map return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:243: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:261: warning: [19] reduce return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:311: warning: [19] collect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:324: warning: [19] first_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:336: warning: [19] last_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:349: warning: [19] previous_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:365: warning: [19] next_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:381: warning: [19] split_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:416: warning: [19] get_key_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:435: warning: [19] rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:454: warning: [19] select_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:466: warning: [19] split_rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:501: warning: [19] clone return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:511: warning: [19] from_sorted_entries return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:68: warning: [12] trait OrderedTableMtPerTrait fn find should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:374: warning: [13] impl Default for OrderedTableMtPer should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:59: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:62: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:65: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:68: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:70: warning: [19] insert return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:73: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:76: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:79: warning: [19] map return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:82: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:85: warning: [19] first_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:88: warning: [19] last_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:91: warning: [19] previous_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:94: warning: [19] next_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:97: warning: [19] split_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:101: warning: [19] join_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:104: warning: [19] get_key_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:107: warning: [19] rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:110: warning: [19] select_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:113: warning: [19] split_rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:122: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:129: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:138: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:147: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:166: warning: [19] insert return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:176: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:185: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:200: warning: [19] map return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:214: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:223: warning: [19] first_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:231: warning: [19] last_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:240: warning: [19] previous_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:253: warning: [19] next_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:265: warning: [19] split_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:293: warning: [19] join_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:302: warning: [19] get_key_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:317: warning: [19] rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:330: warning: [19] select_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:338: warning: [19] split_rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:361: warning: [19] clone return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:60: warning: [12] trait OrderedTableStEphTrait fn find should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:61: warning: [12] trait OrderedTableStEphTrait fn lookup should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:489: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1: warning: [17] collection OrderedTableStEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1: warning: [17] collection OrderedTableStEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap43/ProveOrderedTableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:474: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:54: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:56: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:58: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:60: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:61: warning: [19] lookup return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:62: warning: [19] is_empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:66: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:68: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:70: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:72: warning: [19] map return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:74: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:76: warning: [19] reduce return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:88: warning: [19] collect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:90: warning: [19] first_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:92: warning: [19] last_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:94: warning: [19] previous_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:96: warning: [19] next_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:98: warning: [19] split_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:103: warning: [19] get_key_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:105: warning: [19] rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:107: warning: [19] select_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:109: warning: [19] split_rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:117: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:129: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:138: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:146: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:151: warning: [19] lookup return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:155: warning: [19] is_empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:170: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:178: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:185: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:194: warning: [19] map return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:209: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:225: warning: [19] reduce return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:273: warning: [19] collect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:286: warning: [19] first_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:298: warning: [19] last_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:311: warning: [19] previous_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:327: warning: [19] next_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:343: warning: [19] split_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:382: warning: [19] get_key_range return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:401: warning: [19] rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:420: warning: [19] select_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:432: warning: [19] split_rank_key return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:466: warning: [19] clone return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:474: warning: [19] from_sorted_entries return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: info: [15] Eq, PartialEq, Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: info: [17] Iterator<OrderedTableStPer>, IntoIterator<OrderedTableStPer>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1: warning: [11] Seq usage should have vstd::seq::group_seq_axioms in broadcast use
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:536: warning: [18] struct OrderedTableStPerIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:540: warning: [18] impl View for OrderedTableStPerIter < 'a , K , V > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:545: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:576: warning: [18] struct OrderedTableStPerGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:582: warning: [18] impl View for OrderedTableStPerGhostIterator < 'a , K , V > should come before iterators (expected view impls before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:648: warning: [18] impl PartialEqSpecImpl for OrderedTableStPer < K , V > should come before iterators (expected impls before iterators)
 
 ════════════════════════════════════════════════════════════════
-Summary: 14 passed, 7 warnings in 1 files (checked 1 files)
+Summary: 135 passed, 456 warnings in 11 files (checked 11 files)
 ════════════════════════════════════════════════════════════════

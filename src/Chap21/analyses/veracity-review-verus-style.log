@@ -1,13 +1,233 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap21/Problem21_4.rs
-Codebase: /home/milnes/projects/APAS-VERUS-agent1
+Path: /home/milnes/projects/APAS-VERUS/src/Chap21/
+Codebase: /home/milnes/projects/APAS-VERUS
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap21/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap21/analyses/veracity-review-verus-style.log
 
-Checking 1 files...
+Checking 12 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:92: warning: [19] flatten_inner return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:152: warning: [19] points2d_tab_flat return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:46: warning: [19] points3d_tab_flat return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: warning: [11] Seq usage should have vstd::seq::group_seq_axioms in broadcast use
+
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:62: warning: [19] prime_sieve return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:72: warning: [19] all_contiguous_subseqs return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [21] no broadcast use entries
+
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:52: warning: [18] spec fn spec_is_vowel should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:47: warning: [19] is_even return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:60: warning: [19] is_vowel return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:75: warning: [19] pair_even_with_vowels return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: warning: [11] Seq usage should have vstd::seq::group_seq_axioms in broadcast use
+
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_9.rs:1: info: [21] no broadcast use entries
+
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_1.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:37: warning: [19] points3d_loops return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:40: warning: [19] cartesian_loops return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:92: warning: [19] cartesian_tab_flat return name 'result' could be more descriptive
 
 ════════════════════════════════════════════════════════════════
-Summary: 13 passed, 4 warnings in 1 files (checked 1 files)
+Summary: 182 passed, 14 warnings in 9 files (checked 12 files)
 ════════════════════════════════════════════════════════════════

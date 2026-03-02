@@ -1,0 +1,169 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/Chap49/
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap49/analyses/veracity-review-verus-style.log
+
+Checking 8 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:162: warning: [13] impl MinEditDistMtEphTrait for MinEditDistMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:236: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:240: warning: [15] impl Eq should be inside verus! (for verification)
+
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:132: warning: [13] impl MinEditDistMtPerTrait for MinEditDistMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:182: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:186: warning: [15] impl Eq should be inside verus! (for verification)
+
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:127: warning: [13] impl MinEditDistStEphTrait for MinEditDistStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:203: warning: [13] impl IntoIterator for MinEditDistStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:213: warning: [13] impl IntoIterator for MinEditDistStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:229: warning: [13] impl IntoIterator for MinEditDistStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: warning: [17] IntoIterator for MinEditDistStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: warning: [17] IntoIterator for MinEditDistStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: warning: [17] IntoIterator for MinEditDistStEphS should be inside verus!
+
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:101: warning: [13] impl MinEditDistStPerTrait for MinEditDistStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:162: warning: [13] impl IntoIterator for MinEditDistStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:172: warning: [13] impl IntoIterator for MinEditDistStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: warning: [17] IntoIterator for MinEditDistStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStPer.rs:1: warning: [17] IntoIterator for MinEditDistStPerS should be inside verus!
+
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:140: warning: [13] impl SubsetSumMtEphTrait for SubsetSumMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:203: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:207: warning: [15] impl Eq should be inside verus! (for verification)
+
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:124: warning: [13] impl SubsetSumMtPerTrait for SubsetSumMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:172: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:176: warning: [15] impl Eq should be inside verus! (for verification)
+
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:106: warning: [13] impl SubsetSumStEphTrait for SubsetSumStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:174: warning: [13] impl IntoIterator for SubsetSumStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:181: warning: [13] impl IntoIterator for SubsetSumStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:188: warning: [13] impl IntoIterator for SubsetSumStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: warning: [17] IntoIterator for SubsetSumStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: warning: [17] IntoIterator for SubsetSumStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: warning: [17] IntoIterator for SubsetSumStEphS should be inside verus!
+
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:91: warning: [13] impl SubsetSumStPerTrait for SubsetSumStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:151: warning: [13] impl IntoIterator for SubsetSumStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:158: warning: [13] impl IntoIterator for SubsetSumStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: warning: [17] IntoIterator for SubsetSumStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:1: warning: [17] IntoIterator for SubsetSumStPerS should be inside verus!
+
+════════════════════════════════════════════════════════════════
+Summary: 104 passed, 36 warnings in 8 files (checked 8 files)
+════════════════════════════════════════════════════════════════

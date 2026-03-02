@@ -1,0 +1,88 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/Chap57/
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap57/analyses/veracity-review-verus-style.log
+
+Checking 3 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: warning: [2] missing use vstd::prelude::* (should be before verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:32: warning: [15] impl PartialOrd should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:38: warning: [15] impl Ord should be inside verus! (for verification)
+
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [15] Ord, PartialOrd inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:63: warning: [12] trait DijkstraStEphI64Trait fn dijkstra should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:98: warning: [18] fn dijkstra should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:68: warning: [19] pq_entry_new return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:75: warning: [19] cmp return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:87: warning: [19] partial_cmp return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:59: warning: [20] trait DijkstraStEphI64Trait is defined but has no impl
+
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:63: warning: [12] trait StackStEphTrait fn new should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:65: warning: [12] trait StackStEphTrait fn push should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:67: warning: [12] trait StackStEphTrait fn pop should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:69: warning: [12] trait StackStEphTrait fn peek should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:71: warning: [12] trait StackStEphTrait fn is_empty should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:73: warning: [12] trait StackStEphTrait fn size should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: warning: [17] collection StackStEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: warning: [17] collection StackStEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap57/ProveStackStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:43: warning: [18] use vstd::... should come before broadcast use (expected imports before broadcast use)
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:123: warning: [18] impl Default for StackStEph < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:63: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:67: warning: [19] pop return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:69: warning: [19] peek return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:71: warning: [19] is_empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:73: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:79: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:87: warning: [19] pop return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:94: warning: [19] peek return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:100: warning: [19] is_empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:104: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:124: warning: [19] default return name 'result' could be more descriptive
+
+════════════════════════════════════════════════════════════════
+Summary: 38 passed, 31 warnings in 3 files (checked 3 files)
+════════════════════════════════════════════════════════════════

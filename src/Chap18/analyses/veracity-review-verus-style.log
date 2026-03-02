@@ -1,13 +1,166 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs
-Codebase: /home/milnes/projects/APAS-VERUS-agent1
+Path: /home/milnes/projects/APAS-VERUS/src/Chap18/
+Codebase: /home/milnes/projects/APAS-VERUS
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap18/analyses/veracity-review-verus-style.log
 
-Checking 1 files...
+Checking 7 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [17] Iterator<ArraySeqS>, IntoIterator<ArraySeqS>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1479: warning: [18] struct ArraySeqIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1485: warning: [18] struct ArraySeqGhostIterator should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1491: warning: [18] impl View for ArraySeqIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1498: warning: [18] impl View for ArraySeqGhostIterator < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1506: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [17] Iterator<ArraySeqMtPerS>, IntoIterator<ArraySeqMtPerS>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1039: warning: [18] struct ArraySeqMtPerIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1043: warning: [18] impl View for ArraySeqMtPerIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1048: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1080: warning: [18] struct ArraySeqMtPerGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1086: warning: [18] impl View for ArraySeqMtPerGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
+
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [17] Iterator<ArraySeqStEphS>, IntoIterator<ArraySeqStEphS>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:906: warning: [18] struct ArraySeqStEphIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:910: warning: [18] impl View for ArraySeqStEphIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:917: warning: [18] struct ArraySeqStEphGhostIterator should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:923: warning: [18] impl View for ArraySeqStEphGhostIterator < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:928: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1016: warning: [13] impl IntoIterator for ArraySeqStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1023: warning: [13] impl IntoIterator for ArraySeqStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: warning: [17] collection ArraySeqStPerS has IntoIterator impl but it should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: warning: [17] IntoIterator for ArraySeqStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1: warning: [17] IntoIterator for ArraySeqStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:887: warning: [18] struct ArraySeqStPerIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:891: warning: [18] impl View for ArraySeqStPerIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:896: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:928: warning: [18] struct ArraySeqStPerGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:934: warning: [18] impl View for ArraySeqStPerGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
+
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [17] Iterator<LinkedListStEphS>, IntoIterator<LinkedListStEphS>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:750: warning: [18] struct LinkedListStEphIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:754: warning: [18] impl View for LinkedListStEphIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:759: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:793: warning: [18] struct LinkedListStEphGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:836: warning: [18] impl View for LinkedListStEphGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
+
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [17] Iterator<LinkedListStPerS>, IntoIterator<LinkedListStPerS>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:733: warning: [18] struct LinkedListStPerIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:737: warning: [18] impl View for LinkedListStPerIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:742: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:776: warning: [18] struct LinkedListStPerGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:819: warning: [18] impl View for LinkedListStPerGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
 
 ════════════════════════════════════════════════════════════════
-Summary: 14 passed, 9 warnings in 1 files (checked 1 files)
+Summary: 104 passed, 35 warnings in 6 files (checked 7 files)
 ════════════════════════════════════════════════════════════════

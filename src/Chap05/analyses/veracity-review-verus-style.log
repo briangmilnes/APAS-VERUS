@@ -1,13 +1,117 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs
-Codebase: /home/milnes/projects/APAS-VERUS-agent1
+Path: /home/milnes/projects/APAS-VERUS/src/Chap05/
+Codebase: /home/milnes/projects/APAS-VERUS
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap05/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap05/analyses/veracity-review-verus-style.log
 
-Checking 1 files...
+Checking 5 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: warning: [17] collection KleeneStPer should have an IntoIterator impl
+
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [15] Clone, Hash, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [17] Iterator<MappingStEph>, IntoIterator<MappingStEph>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:440: warning: [18] struct MappingStEphIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:444: warning: [18] impl View for MappingStEphIter < 'a , X , Y > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:477: warning: [18] struct MappingStEphGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:530: warning: [18] impl View for MappingStEphGhostIterator < 'a , X , Y > should come before iterators (expected view impls before iterators)
+
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [15] Clone, Hash, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [17] Iterator<RelationStEph>, IntoIterator<RelationStEph>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:276: warning: [18] struct RelationStEphIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:280: warning: [18] impl View for RelationStEphIter < 'a , X , Y > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:313: warning: [18] struct RelationStEphGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:366: warning: [18] impl View for RelationStEphGhostIterator < 'a , X , Y > should come before iterators (expected view impls before iterators)
+
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [15] Clone, Hash, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [17] Iterator<SetMtEph>, IntoIterator<SetMtEph>, Iterator<SetMtEphIter>, IntoIterator<SetMtEphIter>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:833: warning: [18] struct SetMtEphIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:837: warning: [18] impl View for SetMtEphIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:842: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:873: warning: [18] struct SetMtEphGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:926: warning: [18] impl View for SetMtEphGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
+
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [15] Clone, Hash, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:754: warning: [18] struct SetStEphIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:758: warning: [18] impl View for SetStEphIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:765: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:798: warning: [18] struct SetStEphGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:851: warning: [18] impl View for SetStEphGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
 
 ════════════════════════════════════════════════════════════════
-Summary: 14 passed, 6 warnings in 1 files (checked 1 files)
+Summary: 75 passed, 19 warnings in 5 files (checked 5 files)
 ════════════════════════════════════════════════════════════════

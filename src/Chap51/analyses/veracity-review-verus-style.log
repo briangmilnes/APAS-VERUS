@@ -1,0 +1,165 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/Chap51/
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap51/analyses/veracity-review-verus-style.log
+
+Checking 8 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:72: warning: [13] impl BottomUpDPMtEphTrait for BottomUpDPMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:189: warning: [13] impl Default for BottomUpDPMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:174: warning: [15] impl Clone should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:181: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:187: warning: [15] impl Eq should be inside verus! (for verification)
+
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:70: warning: [13] impl BottomUpDPMtPerTrait for BottomUpDPMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:185: warning: [13] impl Default for BottomUpDPMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:170: warning: [15] impl Clone should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:177: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:183: warning: [15] impl Eq should be inside verus! (for verification)
+
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:53: warning: [13] impl BottomUpDPStEphTrait for BottomUpDPStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:139: warning: [13] impl Default for BottomUpDPStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:124: warning: [15] impl Clone should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:131: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:137: warning: [15] impl Eq should be inside verus! (for verification)
+
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:51: warning: [13] impl BottomUpDPStPerTrait for BottomUpDPStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:138: warning: [13] impl Default for BottomUpDPStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:123: warning: [15] impl Clone should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:130: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:136: warning: [15] impl Eq should be inside verus! (for verification)
+
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:76: warning: [13] impl TopDownDPMtEphTrait for TopDownDPMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:238: warning: [13] impl Default for TopDownDPMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:223: warning: [15] impl PartialEq should be inside verus! (for verification)
+
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:74: warning: [13] impl TopDownDPMtPerTrait for TopDownDPMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:230: warning: [13] impl Default for TopDownDPMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:215: warning: [15] impl PartialEq should be inside verus! (for verification)
+
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:60: warning: [13] impl TopDownDPStEphTrait for TopDownDPStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:126: warning: [13] impl Default for TopDownDPStEphS should be inside verus!
+
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:58: warning: [13] impl TopDownDPStPerTrait for TopDownDPStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:120: warning: [13] impl Default for TopDownDPStPerS should be inside verus!
+
+════════════════════════════════════════════════════════════════
+Summary: 106 passed, 30 warnings in 8 files (checked 8 files)
+════════════════════════════════════════════════════════════════

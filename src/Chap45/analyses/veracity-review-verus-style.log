@@ -1,14 +1,223 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent3/src/Chap45/
-Codebase: /home/milnes/projects/APAS-VERUS-agent3
+Path: /home/milnes/projects/APAS-VERUS/src/Chap45/
+Codebase: /home/milnes/projects/APAS-VERUS
 Mode: basic
-Excluding: ["vstdplus", "Types.rs", "Concurrency.rs", "experiments", "lib.rs"]
-Logging to: /home/milnes/projects/APAS-VERUS-agent3/src/Chap45/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap45/analyses/veracity-review-verus-style.log
 
 Checking 7 files...
 
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:107: warning: [13] impl BalancedTreePQTrait for BalancedTreePQ should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:330: warning: [13] impl BalancedTreePQExtTrait for BalancedTreePQ should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:360: warning: [13] impl Default for BalancedTreePQ should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:52: warning: [19] clone return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:60: warning: [19] eq return name 'r' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:76: warning: [18] fn left_child should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:82: warning: [18] fn right_child should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:88: warning: [18] fn parent should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:94: warning: [18] spec fn parent_spec should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:98: warning: [18] spec fn left_child_spec should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:101: warning: [18] spec fn right_child_spec should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:105: warning: [18] fn swap_elements should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:139: warning: [18] fn bubble_up should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:179: warning: [18] fn bubble_down should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:230: warning: [18] fn heapify should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:261: warning: [18] fn is_heap should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:288: warning: [18] spec fn spec_heap_inv_at should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:295: warning: [18] spec fn spec_leq_view should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:297: warning: [18] spec fn spec_is_heap should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:301: warning: [18] fn exec_pow2 should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:328: warning: [18] proof fn lemma_log2_bound should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:348: warning: [18] fn exec_log2 should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:370: warning: [18] trait BinaryHeapPQTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:464: warning: [18] impl BinaryHeapPQTrait for BinaryHeapPQ < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:688: warning: [18] impl Default for BinaryHeapPQ < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:49: warning: [19] clone return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:65: warning: [19] eq return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:76: warning: [19] left_child return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:82: warning: [19] right_child return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:88: warning: [19] parent return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:105: warning: [19] swap_elements return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:139: warning: [19] bubble_up return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:179: warning: [19] bubble_down return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:230: warning: [19] heapify return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:261: warning: [19] is_heap return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:301: warning: [19] exec_pow2 return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:348: warning: [19] exec_log2 return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:373: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:392: warning: [19] delete_min return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:417: warning: [19] size return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:420: warning: [19] is_empty return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:437: warning: [19] is_valid_heap return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:499: warning: [19] delete_min return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:15: warning: [20] trait Example45_2Trait is defined but has no impl
+
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:229: warning: [13] impl HeapsortComparisonTrait for HeapsortComparison should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: warning: [17] collection HeapsortComparison should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: warning: [17] collection HeapsortComparison should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap45/ProveHeapsortExample.rs
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:36: warning: [18] struct HeapsortComparison should come before proof fns/broadcast groups (expected type definitions before proof fns/broadcast groups)
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:45: warning: [18] impl View for HeapsortComparison < T > should come before proof fns/broadcast groups (expected view impls before proof fns/broadcast groups)
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:73: warning: [19] clone return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:90: warning: [19] eq return name 'r' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:63: warning: [12] trait LeftistHeapNodeTrait fn rank should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:64: warning: [12] trait LeftistHeapNodeTrait fn make_node should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:65: warning: [12] trait LeftistHeapNodeTrait fn meld_nodes should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:66: warning: [12] trait LeftistHeapNodeTrait fn size should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:67: warning: [12] trait LeftistHeapNodeTrait fn height should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:68: warning: [12] trait LeftistHeapNodeTrait fn is_leftist should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:69: warning: [12] trait LeftistHeapNodeTrait fn is_heap should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:70: warning: [12] trait LeftistHeapNodeTrait fn to_vec should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:75: warning: [12] trait LeftistHeapPQTrait fn empty should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:76: warning: [12] trait LeftistHeapPQTrait fn singleton should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:77: warning: [12] trait LeftistHeapPQTrait fn find_min should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:78: warning: [12] trait LeftistHeapPQTrait fn insert should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:79: warning: [12] trait LeftistHeapPQTrait fn delete_min should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:80: warning: [12] trait LeftistHeapPQTrait fn meld should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:83: warning: [12] trait LeftistHeapPQTrait fn size should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:84: warning: [12] trait LeftistHeapPQTrait fn is_empty should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:85: warning: [12] trait LeftistHeapPQTrait fn extract_all_sorted should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:86: warning: [12] trait LeftistHeapPQTrait fn height should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:87: warning: [12] trait LeftistHeapPQTrait fn root_rank should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:88: warning: [12] trait LeftistHeapPQTrait fn is_valid_leftist_heap should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:91: warning: [12] trait LeftistHeapPQTrait fn to_vec should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:92: warning: [12] trait LeftistHeapPQTrait fn to_sorted_vec should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:93: warning: [12] trait LeftistHeapPQTrait fn meld_multiple should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:94: warning: [12] trait LeftistHeapPQTrait fn split should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:59: warning: [18] proof fn _leftist_heap_pq_verified should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:62: warning: [18] trait LeftistHeapNodeTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:74: warning: [18] trait LeftistHeapPQTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:420: warning: [18] impl PartialEqSpecImpl for LeftistHeapPQ < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:447: warning: [18] impl Default for LeftistHeapPQ < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:63: warning: [19] rank return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:79: warning: [19] delete_min return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:87: warning: [19] root_rank return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:99: warning: [19] rank return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:266: warning: [19] delete_min return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:324: warning: [19] root_rank return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:379: warning: [19] clone return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:400: warning: [19] eq return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:426: warning: [19] clone return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:436: warning: [19] eq return name 'r' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:125: warning: [12] trait SortedListPQTrait fn is_sorted should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:423: warning: [18] impl Default for SortedListPQ < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:66: warning: [19] delete_min return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:108: warning: [19] delete_max return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:206: warning: [19] delete_min return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:326: warning: [19] delete_max return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:396: warning: [19] clone return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:412: warning: [19] eq return name 'r' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:325: warning: [18] impl Default for UnsortedListPQ < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:66: warning: [19] delete_min return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:167: warning: [19] delete_min return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:298: warning: [19] clone return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:314: warning: [19] eq return name 'r' could be more descriptive
+
 ════════════════════════════════════════════════════════════════
-Summary: 84 passed, 86 warnings in 7 files (checked 7 files)
+Summary: 92 passed, 104 warnings in 7 files (checked 7 files)
 ════════════════════════════════════════════════════════════════

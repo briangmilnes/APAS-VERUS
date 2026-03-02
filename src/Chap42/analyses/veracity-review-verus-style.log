@@ -1,0 +1,171 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/Chap42/
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap42/analyses/veracity-review-verus-style.log
+
+Checking 4 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:20: warning: [20] trait Example42_1Trait is defined but has no impl
+
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:118: warning: [12] trait TableMtEphTrait fn entries should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:751: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:62: warning: [18] impl View for TableMtEph < K , V > should come before spec fns (expected view impls before spec fns)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:728: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:738: warning: [18] proof fn lemma_entries_to_map_finite should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:73: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:76: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:79: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:82: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:85: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:103: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:118: warning: [19] entries return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:125: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:131: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:140: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:149: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:184: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:457: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:710: warning: [19] entries return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:719: warning: [19] clone return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:728: warning: [19] from_sorted_entries return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:312: warning: [12] trait TableStEphTrait fn entries should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:758: warning: [13] impl Default for TableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:764: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:70: warning: [18] impl View for TableStEph < K , V > should come before spec fns (expected view impls before spec fns)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:94: warning: [18] proof fn lemma_entries_to_map_key_in_seq should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:113: warning: [18] proof fn lemma_entries_to_map_contains_key should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:127: warning: [18] proof fn lemma_entries_to_map_len should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:166: warning: [18] proof fn lemma_entries_to_map_no_key should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:176: warning: [18] proof fn lemma_entries_to_map_get should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:214: warning: [18] proof fn lemma_entries_to_map_dom_subset should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:233: warning: [18] proof fn lemma_entries_to_map_dom_same_keys should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:254: warning: [18] trait TableStEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:719: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:731: warning: [18] proof fn lemma_entries_to_map_finite should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:258: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:262: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:265: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:269: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:272: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:291: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:312: warning: [19] entries return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:322: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:330: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:338: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:353: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:365: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:543: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:704: warning: [19] entries return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:712: warning: [19] clone return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:719: warning: [19] from_sorted_entries return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:354: warning: [12] trait TableStPerTrait fn collect should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1019: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:72: warning: [18] struct TableStPer should come before proof fns/broadcast groups (expected type definitions before proof fns/broadcast groups)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:76: warning: [18] type TableS should come before proof fns/broadcast groups (expected type definitions before proof fns/broadcast groups)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:80: warning: [18] impl View for TableStPer < K , V > should come before proof fns/broadcast groups (expected view impls before proof fns/broadcast groups)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:90: warning: [18] spec fn spec_keys_no_dups should come before proof fns/broadcast groups (expected spec fns before proof fns/broadcast groups)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:105: warning: [18] proof fn lemma_entries_to_map_get should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:146: warning: [18] proof fn lemma_entries_to_map_dom_subset should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:165: warning: [18] proof fn lemma_entries_to_map_contains_key should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:181: warning: [18] proof fn lemma_entries_to_map_no_key should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:191: warning: [18] proof fn lemma_entries_to_map_key_in_seq should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:210: warning: [18] proof fn lemma_entries_to_map_len should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:255: warning: [18] proof fn lemma_entries_to_map_dom_same_keys should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:276: warning: [18] trait TableStPerTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:988: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:280: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:285: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:289: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:294: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:298: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:303: warning: [19] map return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:308: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:313: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:318: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:323: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:327: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:336: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:341: warning: [19] insert return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:346: warning: [19] restrict return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:350: warning: [19] subtract return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:354: warning: [19] collect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:364: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:372: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:379: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:393: warning: [19] domain return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:408: warning: [19] tabulate return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:430: warning: [19] map return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:468: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:514: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:599: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:628: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:703: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:737: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:800: warning: [19] insert return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:876: warning: [19] restrict return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:920: warning: [19] subtract return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:964: warning: [19] collect return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:973: warning: [19] clone return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:988: warning: [19] from_sorted_entries return name 'result' could be more descriptive
+
+════════════════════════════════════════════════════════════════
+Summary: 49 passed, 101 warnings in 4 files (checked 4 files)
+════════════════════════════════════════════════════════════════

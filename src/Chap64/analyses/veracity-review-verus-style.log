@@ -1,0 +1,69 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/Chap64/
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap64/analyses/veracity-review-verus-style.log
+
+Checking 3 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:54: warning: [12] trait SpanTreeMtEphTrait fn spanning_tree_star_contraction_mt should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:60: warning: [12] trait SpanTreeMtEphTrait fn verify_spanning_tree should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:42: warning: [18] struct SpanTreeMtEphValidInv should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:51: warning: [18] trait SpanTreeMtEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:51: warning: [20] trait SpanTreeMtEphTrait is defined but has no impl
+
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:27: warning: [12] trait SpanTreeStEphTrait fn spanning_tree_star_contraction should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:31: warning: [12] trait SpanTreeStEphTrait fn verify_spanning_tree should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:24: warning: [20] trait SpanTreeStEphTrait is defined but has no impl
+
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:39: warning: [20] trait TSPApproxStEphTrait is defined but has no impl
+
+════════════════════════════════════════════════════════════════
+Summary: 41 passed, 9 warnings in 3 files (checked 3 files)
+════════════════════════════════════════════════════════════════

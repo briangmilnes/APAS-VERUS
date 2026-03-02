@@ -1,0 +1,610 @@
+[
+  {
+    "id": 1,
+    "function": "_example_42_1_verified",
+    "file": "Chap42/Example42_1.rs",
+    "lines": "11",
+    "spec_strength": "",
+    "snippet": "        proof fn _example_42_1_verified() {}"
+  },
+  {
+    "id": 2,
+    "function": "example_42_1",
+    "file": "Chap42/Example42_1.rs",
+    "lines": "21-23",
+    "spec_strength": "",
+    "snippet": "        /// Example 42.1: Basic table operations demonstration\n        /// APAS: Work Θ(n log n), Span Θ(log n)\n        fn example_42_1();"
+  },
+  {
+    "id": 3,
+    "function": "demonstrate_table_operations",
+    "file": "Chap42/Example42_1.rs",
+    "lines": "25-27",
+    "spec_strength": "",
+    "snippet": "        /// Demonstrate table operations with different implementations\n        /// APAS: Work Θ(n log n), Span Θ(log n)\n        fn demonstrate_table_operations();"
+  },
+  {
+    "id": 4,
+    "function": "performance_comparison",
+    "file": "Chap42/Example42_1.rs",
+    "lines": "151-202",
+    "spec_strength": "",
+    "snippet": "    /// Demonstrate performance characteristics of different table implementations\n    pub fn performance_comparison() {\n        println!(\"\\n=== Performance Comparison ===\");\n\n        let size = 1000;\n        println!(\"Building tables with {size} entries...\");\n\n        // Build persistent table\n        let start = std::time::Instant::now();\n        let mut table_per = TableStPer::empty();\n        for i in 0..size {\n            table_per = table_per.insert(i, format!(\"value_{i}\"), |_old, new| new.clone());\n        }\n        let per_time = start.elapsed();\n        println!(\"Persistent table construction: {per_time:?}\");\n\n        // Build ephemeral table\n        let start = std::time::Instant::now();\n        let mut table_eph = TableStEph::empty();\n        for i in 0..size {\n            table_eph.insert(i, format!(\"value_{i}\"), |_old, new| new.clone());\n        }\n        let eph_time = start.elapsed();\n        println!(\"Ephemeral table construction: {eph_time:?}\");\n\n        // Build multi-threaded table\n        let start = std::time::Instant::now();\n        let mut table_mt = TableMtEph::empty();\n        for i in 0..size {\n            table_mt.insert(i, format!(\"value_{i}\"), |_old, new| new.clone());\n        }\n        let mt_time = start.elapsed();\n        println!(\"Multi-threaded table construction: {mt_time:?}\");\n\n        // Test map operation performance\n        println!(\"\\nMap operation performance:\");\n\n        let start = std::time::Instant::now();\n        let _mapped_per = table_per.map(|s| s.to_uppercase());\n        let per_map_time = start.elapsed();\n        println!(\"Persistent map: {per_map_time:?}\");\n\n        let start = std::time::Instant::now();\n        table_eph.map(|s| s.to_uppercase());\n        let eph_map_time = start.elapsed();\n        println!(\"Ephemeral map: {eph_map_time:?}\");\n\n        let start = std::time::Instant::now();\n        table_mt.map(|s| s.to_uppercase());\n        let mt_map_time = start.elapsed();\n        println!(\"Multi-threaded map: {mt_map_time:?}\");\n    }"
+  },
+  {
+    "id": 5,
+    "function": "size",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "73-74",
+    "spec_strength": "hole",
+    "snippet": "        fn size(&self) -> (result: usize)\n            ensures result == self@.dom().len();"
+  },
+  {
+    "id": 6,
+    "function": "empty",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "76-77",
+    "spec_strength": "unknown",
+    "snippet": "        fn empty() -> (result: Self)\n            ensures result@ == Map::<K::V, V::V>::empty();"
+  },
+  {
+    "id": 7,
+    "function": "singleton",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "79-80",
+    "spec_strength": "hole",
+    "snippet": "        fn singleton(key: K, value: V) -> (result: Self)\n            ensures result@.dom().finite(), result@.dom().len() == 1;"
+  },
+  {
+    "id": 8,
+    "function": "domain",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "82-83",
+    "spec_strength": "hole",
+    "snippet": "        fn domain(&self) -> (result: ArraySetStEph<K>)\n            ensures result@.finite();"
+  },
+  {
+    "id": 9,
+    "function": "tabulate",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "85-86",
+    "spec_strength": "hole",
+    "snippet": "        fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)\n            ensures result@.dom().finite();"
+  },
+  {
+    "id": 10,
+    "function": "map",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "88-89",
+    "spec_strength": "hole",
+    "snippet": "        fn map<F: Fn(&V) -> V + Send + Sync + 'static>(&mut self, f: F)\n            ensures self@.dom() == old(self)@.dom();"
+  },
+  {
+    "id": 11,
+    "function": "filter",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "91-92",
+    "spec_strength": "hole",
+    "snippet": "        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&mut self, f: F)\n            ensures self@.dom().subset_of(old(self)@.dom());"
+  },
+  {
+    "id": 12,
+    "function": "intersection",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "94-95",
+    "spec_strength": "hole",
+    "snippet": "        fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F)\n            ensures self@.dom().finite();"
+  },
+  {
+    "id": 13,
+    "function": "union",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "97-98",
+    "spec_strength": "hole",
+    "snippet": "        fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F)\n            ensures self@.dom().finite();"
+  },
+  {
+    "id": 14,
+    "function": "difference",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "100-101",
+    "spec_strength": "hole",
+    "snippet": "        fn difference(&mut self, other: &Self)\n            ensures self@.dom().finite();"
+  },
+  {
+    "id": 15,
+    "function": "find",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "103-104",
+    "spec_strength": "hole",
+    "snippet": "        fn find(&self, key: &K) -> (result: Option<V>)\n            ensures self@.dom().finite();"
+  },
+  {
+    "id": 16,
+    "function": "delete",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "106-107",
+    "spec_strength": "hole",
+    "snippet": "        fn delete(&mut self, key: &K)\n            ensures self@.dom().finite();"
+  },
+  {
+    "id": 17,
+    "function": "insert",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "109-110",
+    "spec_strength": "hole",
+    "snippet": "        fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, key: K, value: V, combine: F)\n            ensures self@.dom().finite();"
+  },
+  {
+    "id": 18,
+    "function": "restrict",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "112-113",
+    "spec_strength": "hole",
+    "snippet": "        fn restrict(&mut self, keys: &ArraySetStEph<K>)\n            ensures self@.dom().finite();"
+  },
+  {
+    "id": 19,
+    "function": "subtract",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "115-116",
+    "spec_strength": "hole",
+    "snippet": "        fn subtract(&mut self, keys: &ArraySetStEph<K>)\n            ensures self@.dom().finite();"
+  },
+  {
+    "id": 20,
+    "function": "entries",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "118",
+    "spec_strength": "",
+    "snippet": "        fn entries(&self) -> (result: ArraySeqMtEphS<Pair<K, V>>);"
+  },
+  {
+    "id": 21,
+    "function": "from_sorted_entries",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "728-729",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (result: TableMtEph<K, V>)\n        ensures result@.dom().finite()"
+  },
+  {
+    "id": 22,
+    "function": "lemma_entries_to_map_finite",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "738-740",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)\n        ensures spec_entries_to_map(entries).dom().finite()\n        decreases entries.len()"
+  },
+  {
+    "id": 23,
+    "function": "eq",
+    "file": "Chap42/TableMtEph.rs",
+    "lines": "752-754",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.entries == other.entries\n        }"
+  },
+  {
+    "id": 24,
+    "function": "lemma_entries_to_map_key_in_seq",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "94-97",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_key_in_seq<KV, VV>(entries: Seq<(KV, VV)>, k: KV)\n        requires spec_entries_to_map(entries).contains_key(k)\n        ensures exists|i: int| 0 <= i < entries.len() && (#[trigger] entries[i]).0 == k\n        decreases entries.len()"
+  },
+  {
+    "id": 25,
+    "function": "lemma_entries_to_map_contains_key",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "113-116",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_contains_key<KV, VV>(entries: Seq<(KV, VV)>, idx: int)\n        requires 0 <= idx < entries.len()\n        ensures spec_entries_to_map(entries).contains_key(entries[idx].0)\n        decreases entries.len()"
+  },
+  {
+    "id": 26,
+    "function": "lemma_entries_to_map_len",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "127-130",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_len<KV, VV>(entries: Seq<(KV, VV)>)\n        requires spec_keys_no_dups(entries)\n        ensures spec_entries_to_map(entries).len() == entries.len()\n        decreases entries.len()"
+  },
+  {
+    "id": 27,
+    "function": "lemma_entries_to_map_no_key",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "166-168",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_no_key<KV, VV>(entries: Seq<(KV, VV)>, k: KV)\n        requires forall|i: int| 0 <= i < entries.len() ==> (#[trigger] entries[i]).0 != k\n        ensures !spec_entries_to_map(entries).contains_key(k)"
+  },
+  {
+    "id": 28,
+    "function": "lemma_entries_to_map_get",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "176-183",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_get<KV, VV>(entries: Seq<(KV, VV)>, idx: int)\n        requires\n            0 <= idx < entries.len(),\n            spec_keys_no_dups(entries),\n        ensures\n            spec_entries_to_map(entries).contains_key(entries[idx].0),\n            spec_entries_to_map(entries)[entries[idx].0] == entries[idx].1,\n        decreases entries.len(),"
+  },
+  {
+    "id": 29,
+    "function": "lemma_entries_to_map_dom_subset",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "214-220",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_dom_subset<KV, VV>(\n        sub: Seq<(KV, VV)>,\n        sup: Seq<(KV, VV)>,\n    )\n        requires forall|i: int| 0 <= i < sub.len() ==>\n            exists|j: int| 0 <= j < sup.len() && (#[trigger] sup[j]).0 == (#[trigger] sub[i]).0,\n        ensures spec_entries_to_map(sub).dom().subset_of(spec_entries_to_map(sup).dom()),"
+  },
+  {
+    "id": 30,
+    "function": "lemma_entries_to_map_dom_same_keys",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "233-242",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_dom_same_keys<KV, VV1, VV2>(\n        s1: Seq<(KV, VV1)>,\n        s2: Seq<(KV, VV2)>,\n    )\n        requires\n            s1.len() == s2.len(),\n            forall|i: int| 0 <= i < s1.len() ==> (#[trigger] s1[i]).0 == (#[trigger] s2[i]).0,\n        ensures\n            spec_entries_to_map(s1).dom() =~= spec_entries_to_map(s2).dom(),\n        decreases s1.len(),"
+  },
+  {
+    "id": 31,
+    "function": "size",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "258-260",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (result: usize)\n            requires self.spec_wf()\n            ensures result == self@.len();"
+  },
+  {
+    "id": 32,
+    "function": "empty",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "262-263",
+    "spec_strength": "unknown",
+    "snippet": "        fn empty() -> (result: Self)\n            ensures result@ == Map::<K::V, V::V>::empty();"
+  },
+  {
+    "id": 33,
+    "function": "singleton",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "265-267",
+    "spec_strength": "unknown",
+    "snippet": "        fn singleton(key: K, value: V) -> (result: Self)\n            requires obeys_feq_clone::<Pair<K, V>>()\n            ensures result@ == Map::<K::V, V::V>::empty().insert(key@, value@);"
+  },
+  {
+    "id": 34,
+    "function": "domain",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "269-270",
+    "spec_strength": "hole",
+    "snippet": "        fn domain(&self) -> (result: ArraySetStEph<K>)\n            ensures result@.finite();"
+  },
+  {
+    "id": 35,
+    "function": "tabulate",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "272-273",
+    "spec_strength": "hole",
+    "snippet": "        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)\n            ensures result@.dom().finite();"
+  },
+  {
+    "id": 36,
+    "function": "map",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "275-276",
+    "spec_strength": "hole",
+    "snippet": "        fn map<F: Fn(&V) -> V>(&mut self, f: F)\n            ensures self@.dom() == old(self)@.dom();"
+  },
+  {
+    "id": 37,
+    "function": "filter",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "278-280",
+    "spec_strength": "hole",
+    "snippet": "        fn filter<F: Fn(&K, &V) -> B>(&mut self, f: F)\n            requires forall|k: &K, v: &V| f.requires((k, v))\n            ensures self@.dom().subset_of(old(self)@.dom());"
+  },
+  {
+    "id": 38,
+    "function": "intersection",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "282-283",
+    "spec_strength": "hole",
+    "snippet": "        fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)\n            ensures self@.dom().subset_of(old(self)@.dom().intersect(other@.dom()));"
+  },
+  {
+    "id": 39,
+    "function": "union",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "285-286",
+    "spec_strength": "hole",
+    "snippet": "        fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)\n            ensures old(self)@.dom().union(other@.dom()).subset_of(self@.dom());"
+  },
+  {
+    "id": 40,
+    "function": "difference",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "288-289",
+    "spec_strength": "hole",
+    "snippet": "        fn difference(&mut self, other: &Self)\n            ensures self@.dom().subset_of(old(self)@.dom().difference(other@.dom()));"
+  },
+  {
+    "id": 41,
+    "function": "find",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "291-297",
+    "spec_strength": "hole",
+    "snippet": "        fn find(&self, key: &K) -> (result: Option<V>)\n            requires self.spec_wf()\n            ensures\n                match result {\n                    Some(v) => self@.contains_key(key@) && self@[key@] == v@,\n                    None => !self@.contains_key(key@),\n                };"
+  },
+  {
+    "id": 42,
+    "function": "delete",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "299-300",
+    "spec_strength": "hole",
+    "snippet": "        fn delete(&mut self, key: &K)\n            ensures !self@.contains_key(key@);"
+  },
+  {
+    "id": 43,
+    "function": "insert",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "302-303",
+    "spec_strength": "hole",
+    "snippet": "        fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)\n            ensures self@.contains_key(key@);"
+  },
+  {
+    "id": 44,
+    "function": "restrict",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "305-306",
+    "spec_strength": "hole",
+    "snippet": "        fn restrict(&mut self, keys: &ArraySetStEph<K>)\n            ensures self@.dom().subset_of(old(self)@.dom());"
+  },
+  {
+    "id": 45,
+    "function": "subtract",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "308-309",
+    "spec_strength": "hole",
+    "snippet": "        fn subtract(&mut self, keys: &ArraySetStEph<K>)\n            ensures self@.dom().subset_of(old(self)@.dom());"
+  },
+  {
+    "id": 46,
+    "function": "entries",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "312",
+    "spec_strength": "",
+    "snippet": "        fn entries(&self) -> (result: ArraySeqStEphS<Pair<K, V>>);"
+  },
+  {
+    "id": 47,
+    "function": "from_sorted_entries",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "719-722",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn from_sorted_entries<K: StT + Ord, V: StT>(\n        entries: Vec<Pair<K, V>>,\n    ) -> (result: TableStEph<K, V>)\n        ensures result@.dom().finite()"
+  },
+  {
+    "id": 48,
+    "function": "lemma_entries_to_map_finite",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "731-733",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)\n        ensures spec_entries_to_map(entries).dom().finite()\n        decreases entries.len()"
+  },
+  {
+    "id": 49,
+    "function": "default",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "759-761",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self {\n            TableStEph::empty()\n        }"
+  },
+  {
+    "id": 50,
+    "function": "eq",
+    "file": "Chap42/TableStEph.rs",
+    "lines": "765-767",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.entries == other.entries\n        }"
+  },
+  {
+    "id": 51,
+    "function": "lemma_entries_to_map_finite",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "59-61",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)\n        ensures spec_entries_to_map(entries).dom().finite()\n        decreases entries.len()"
+  },
+  {
+    "id": 52,
+    "function": "lemma_entries_to_map_get",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "105-112",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_get<KV, VV>(entries: Seq<(KV, VV)>, idx: int)\n        requires\n            0 <= idx < entries.len(),\n            spec_keys_no_dups(entries),\n        ensures\n            spec_entries_to_map(entries).contains_key(entries[idx].0),\n            spec_entries_to_map(entries)[entries[idx].0] == entries[idx].1,\n        decreases entries.len(),"
+  },
+  {
+    "id": 53,
+    "function": "lemma_entries_to_map_dom_subset",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "146-152",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_dom_subset<KV, VV>(\n        sub: Seq<(KV, VV)>,\n        sup: Seq<(KV, VV)>,\n    )\n        requires forall|i: int| 0 <= i < sub.len() ==>\n            exists|j: int| 0 <= j < sup.len() && (#[trigger] sup[j]).0 == (#[trigger] sub[i]).0,\n        ensures spec_entries_to_map(sub).dom().subset_of(spec_entries_to_map(sup).dom()),"
+  },
+  {
+    "id": 54,
+    "function": "lemma_entries_to_map_contains_key",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "165-168",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_contains_key<KV, VV>(entries: Seq<(KV, VV)>, idx: int)\n        requires 0 <= idx < entries.len(),\n        ensures spec_entries_to_map(entries).contains_key(entries[idx].0),\n        decreases entries.len(),"
+  },
+  {
+    "id": 55,
+    "function": "lemma_entries_to_map_no_key",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "181-183",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_no_key<KV, VV>(entries: Seq<(KV, VV)>, k: KV)\n        requires forall|i: int| 0 <= i < entries.len() ==> (#[trigger] entries[i]).0 != k,\n        ensures !spec_entries_to_map(entries).contains_key(k),"
+  },
+  {
+    "id": 56,
+    "function": "lemma_entries_to_map_key_in_seq",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "191-194",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_key_in_seq<KV, VV>(entries: Seq<(KV, VV)>, k: KV)\n        requires spec_entries_to_map(entries).contains_key(k),\n        ensures exists|i: int| 0 <= i < entries.len() && (#[trigger] entries[i]).0 == k,\n        decreases entries.len(),"
+  },
+  {
+    "id": 57,
+    "function": "lemma_entries_to_map_len",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "210-213",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_len<KV, VV>(entries: Seq<(KV, VV)>)\n        requires spec_keys_no_dups(entries),\n        ensures spec_entries_to_map(entries).len() == entries.len(),\n        decreases entries.len(),"
+  },
+  {
+    "id": 58,
+    "function": "lemma_entries_to_map_dom_same_keys",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "255-264",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_dom_same_keys<KV, VV1, VV2>(\n        s1: Seq<(KV, VV1)>,\n        s2: Seq<(KV, VV2)>,\n    )\n        requires\n            s1.len() == s2.len(),\n            forall|i: int| 0 <= i < s1.len() ==> (#[trigger] s1[i]).0 == (#[trigger] s2[i]).0,\n        ensures\n            spec_entries_to_map(s1).dom() =~= spec_entries_to_map(s2).dom(),\n        decreases s1.len(),"
+  },
+  {
+    "id": 59,
+    "function": "size",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "280-282",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (result: usize)\n            requires self.spec_wf(),\n            ensures result == self@.len();"
+  },
+  {
+    "id": 60,
+    "function": "empty",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "285-286",
+    "spec_strength": "unknown",
+    "snippet": "        fn empty() -> (result: Self)\n            ensures result@ == Map::<K::V, V::V>::empty(), result.spec_wf();"
+  },
+  {
+    "id": 61,
+    "function": "singleton",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "289-291",
+    "spec_strength": "unknown",
+    "snippet": "        fn singleton(key: K, value: V) -> (result: Self)\n            requires obeys_feq_clone::<Pair<K, V>>(),\n            ensures result@ == Map::<K::V, V::V>::empty().insert(key@, value@), result.spec_wf();"
+  },
+  {
+    "id": 62,
+    "function": "domain",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "294-295",
+    "spec_strength": "unknown",
+    "snippet": "        fn domain(&self) -> (result: ArraySetStEph<K>)\n            ensures result@.finite();"
+  },
+  {
+    "id": 63,
+    "function": "tabulate",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "298-300",
+    "spec_strength": "unknown",
+    "snippet": "        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)\n            requires forall|k: &K| f.requires((k,)),\n            ensures result@.dom().finite();"
+  },
+  {
+    "id": 64,
+    "function": "map",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "303-305",
+    "spec_strength": "hole",
+    "snippet": "        fn map<F: Fn(&V) -> V>(&self, f: F) -> (result: Self)\n            requires forall|v: &V| f.requires((v,)),\n            ensures result@.dom() == self@.dom();"
+  },
+  {
+    "id": 65,
+    "function": "filter",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "308-310",
+    "spec_strength": "hole",
+    "snippet": "        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (result: Self)\n            requires forall|k: &K, v: &V| f.requires((k, v)),\n            ensures result@.dom().subset_of(self@.dom());"
+  },
+  {
+    "id": 66,
+    "function": "intersection",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "313-315",
+    "spec_strength": "hole",
+    "snippet": "        fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (result: Self)\n            requires forall|v1: &V, v2: &V| combine.requires((v1, v2)),\n            ensures result@.dom().subset_of(self@.dom().intersect(other@.dom()));"
+  },
+  {
+    "id": 67,
+    "function": "union",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "318-320",
+    "spec_strength": "hole",
+    "snippet": "        fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (result: Self)\n            requires self.spec_wf(), forall|v1: &V, v2: &V| combine.requires((v1, v2)),\n            ensures self@.dom().union(other@.dom()).subset_of(result@.dom()), result.spec_wf();"
+  },
+  {
+    "id": 68,
+    "function": "difference",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "323-324",
+    "spec_strength": "hole",
+    "snippet": "        fn difference(&self, other: &Self) -> (result: Self)\n            ensures result@.dom().subset_of(self@.dom().difference(other@.dom()));"
+  },
+  {
+    "id": 69,
+    "function": "find",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "327-333",
+    "spec_strength": "hole",
+    "snippet": "        fn find(&self, key: &K) -> (result: Option<V>)\n            requires self.spec_wf(),\n            ensures\n                match result {\n                    Some(v) => self@.contains_key(key@) && self@[key@] == v@,\n                    None => !self@.contains_key(key@),\n                };"
+  },
+  {
+    "id": 70,
+    "function": "delete",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "336-338",
+    "spec_strength": "hole",
+    "snippet": "        fn delete(&self, key: &K) -> (result: Self)\n            requires self.spec_wf(), obeys_feq_clone::<Pair<K, V>>(),\n            ensures !result@.contains_key(key@), result.spec_wf();"
+  },
+  {
+    "id": 71,
+    "function": "insert",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "341-343",
+    "spec_strength": "hole",
+    "snippet": "        fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (result: Self)\n            requires self.spec_wf(), forall|v1: &V, v2: &V| combine.requires((v1, v2)),\n            ensures result@.contains_key(key@), result.spec_wf();"
+  },
+  {
+    "id": 72,
+    "function": "restrict",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "346-347",
+    "spec_strength": "hole",
+    "snippet": "        fn restrict(&self, keys: &ArraySetStEph<K>) -> (result: Self)\n            ensures result@.dom().subset_of(self@.dom());"
+  },
+  {
+    "id": 73,
+    "function": "subtract",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "350-351",
+    "spec_strength": "hole",
+    "snippet": "        fn subtract(&self, keys: &ArraySetStEph<K>) -> (result: Self)\n            ensures result@.dom().subset_of(self@.dom());"
+  },
+  {
+    "id": 74,
+    "function": "collect",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "354",
+    "spec_strength": "",
+    "snippet": "        fn collect(&self) -> (result: ArraySeqStPerS<Pair<K, V>>);"
+  },
+  {
+    "id": 75,
+    "function": "from_sorted_entries",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "988-991",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn from_sorted_entries<K: StT + Ord, V: StT>(\n        entries: Vec<Pair<K, V>>,\n    ) -> (result: TableStPer<K, V>)\n        ensures result@.dom().finite()"
+  },
+  {
+    "id": 76,
+    "function": "eq",
+    "file": "Chap42/TableStPer.rs",
+    "lines": "1020-1022",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.entries == other.entries\n        }"
+  }
+]

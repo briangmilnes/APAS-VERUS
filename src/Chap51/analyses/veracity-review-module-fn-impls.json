@@ -1,0 +1,850 @@
+[
+  {
+    "id": 1,
+    "function": "new_bu_eph_lock",
+    "file": "Chap51/BottomUpDPMtEph.rs",
+    "lines": "43",
+    "spec_strength": "hole",
+    "snippet": "    fn new_bu_eph_lock(val: Vec<Vec<usize>>) -> (lock: RwLock<Vec<Vec<usize>>, BottomUpDPMtEphInv>) {"
+  },
+  {
+    "id": 2,
+    "function": "new",
+    "file": "Chap51/BottomUpDPMtEph.rs",
+    "lines": "52",
+    "spec_strength": "",
+    "snippet": "        fn new(s: ArraySeqMtEphS<char>, t: ArraySeqMtEphS<char>) -> Self;"
+  },
+  {
+    "id": 3,
+    "function": "s_length",
+    "file": "Chap51/BottomUpDPMtEph.rs",
+    "lines": "53",
+    "spec_strength": "",
+    "snippet": "        fn s_length(&self) -> usize;"
+  },
+  {
+    "id": 4,
+    "function": "t_length",
+    "file": "Chap51/BottomUpDPMtEph.rs",
+    "lines": "54",
+    "spec_strength": "",
+    "snippet": "        fn t_length(&self) -> usize;"
+  },
+  {
+    "id": 5,
+    "function": "is_empty",
+    "file": "Chap51/BottomUpDPMtEph.rs",
+    "lines": "55",
+    "spec_strength": "",
+    "snippet": "        fn is_empty(&self) -> bool;"
+  },
+  {
+    "id": 6,
+    "function": "set_s",
+    "file": "Chap51/BottomUpDPMtEph.rs",
+    "lines": "56",
+    "spec_strength": "",
+    "snippet": "        fn set_s(&mut self, s: ArraySeqMtEphS<char>);"
+  },
+  {
+    "id": 7,
+    "function": "set_t",
+    "file": "Chap51/BottomUpDPMtEph.rs",
+    "lines": "57",
+    "spec_strength": "",
+    "snippet": "        fn set_t(&mut self, t: ArraySeqMtEphS<char>);"
+  },
+  {
+    "id": 8,
+    "function": "med_bottom_up_parallel",
+    "file": "Chap51/BottomUpDPMtEph.rs",
+    "lines": "58",
+    "spec_strength": "",
+    "snippet": "        fn med_bottom_up_parallel(&mut self) -> usize;"
+  },
+  {
+    "id": 9,
+    "function": "initialize_base_cases",
+    "file": "Chap51/BottomUpDPMtEph.rs",
+    "lines": "59",
+    "spec_strength": "",
+    "snippet": "        fn initialize_base_cases(&self) -> Vec<Vec<usize>>;"
+  },
+  {
+    "id": 10,
+    "function": "compute_diagonal_parallel",
+    "file": "Chap51/BottomUpDPMtEph.rs",
+    "lines": "60",
+    "spec_strength": "",
+    "snippet": "        fn compute_diagonal_parallel(&self, table: Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtEphInv>>, k: usize);"
+  },
+  {
+    "id": 11,
+    "function": "compute_cell_value_static",
+    "file": "Chap51/BottomUpDPMtEph.rs",
+    "lines": "61-67",
+    "spec_strength": "",
+    "snippet": "        fn compute_cell_value_static(\n            seq_s: &ArraySeqMtEphS<char>,\n            seq_t: &ArraySeqMtEphS<char>,\n            table: &Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtEphInv>>,\n            i: usize,\n            j: usize,\n        ) -> usize;"
+  },
+  {
+    "id": 12,
+    "function": "eq",
+    "file": "Chap51/BottomUpDPMtEph.rs",
+    "lines": "182-184",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.seq_s == other.seq_s && self.seq_t == other.seq_t\n        }"
+  },
+  {
+    "id": 13,
+    "function": "default",
+    "file": "Chap51/BottomUpDPMtEph.rs",
+    "lines": "190-194",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self {\n            let empty_s = ArraySeqMtEphS::new(0, ' ');\n            let empty_t = ArraySeqMtEphS::new(0, ' ');\n            Self::new(empty_s, empty_t)\n        }"
+  },
+  {
+    "id": 14,
+    "function": "new_bu_per_lock",
+    "file": "Chap51/BottomUpDPMtPer.rs",
+    "lines": "43",
+    "spec_strength": "hole",
+    "snippet": "    fn new_bu_per_lock(val: Vec<Vec<usize>>) -> (lock: RwLock<Vec<Vec<usize>>, BottomUpDPMtPerInv>) {"
+  },
+  {
+    "id": 15,
+    "function": "new",
+    "file": "Chap51/BottomUpDPMtPer.rs",
+    "lines": "52",
+    "spec_strength": "",
+    "snippet": "        fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> Self;"
+  },
+  {
+    "id": 16,
+    "function": "s_length",
+    "file": "Chap51/BottomUpDPMtPer.rs",
+    "lines": "53",
+    "spec_strength": "",
+    "snippet": "        fn s_length(&self) -> usize;"
+  },
+  {
+    "id": 17,
+    "function": "t_length",
+    "file": "Chap51/BottomUpDPMtPer.rs",
+    "lines": "54",
+    "spec_strength": "",
+    "snippet": "        fn t_length(&self) -> usize;"
+  },
+  {
+    "id": 18,
+    "function": "is_empty",
+    "file": "Chap51/BottomUpDPMtPer.rs",
+    "lines": "55",
+    "spec_strength": "",
+    "snippet": "        fn is_empty(&self) -> bool;"
+  },
+  {
+    "id": 19,
+    "function": "med_bottom_up_parallel",
+    "file": "Chap51/BottomUpDPMtPer.rs",
+    "lines": "56",
+    "spec_strength": "",
+    "snippet": "        fn med_bottom_up_parallel(&self) -> usize;"
+  },
+  {
+    "id": 20,
+    "function": "initialize_base_cases",
+    "file": "Chap51/BottomUpDPMtPer.rs",
+    "lines": "57",
+    "spec_strength": "",
+    "snippet": "        fn initialize_base_cases(&self) -> Vec<Vec<usize>>;"
+  },
+  {
+    "id": 21,
+    "function": "compute_diagonal_parallel",
+    "file": "Chap51/BottomUpDPMtPer.rs",
+    "lines": "58",
+    "spec_strength": "",
+    "snippet": "        fn compute_diagonal_parallel(&self, table: Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerInv>>, k: usize);"
+  },
+  {
+    "id": 22,
+    "function": "compute_cell_value_static",
+    "file": "Chap51/BottomUpDPMtPer.rs",
+    "lines": "59-65",
+    "spec_strength": "",
+    "snippet": "        fn compute_cell_value_static(\n            seq_s: &ArraySeqMtPerS<char>,\n            seq_t: &ArraySeqMtPerS<char>,\n            table: &Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerInv>>,\n            i: usize,\n            j: usize,\n        ) -> usize;"
+  },
+  {
+    "id": 23,
+    "function": "eq",
+    "file": "Chap51/BottomUpDPMtPer.rs",
+    "lines": "178-180",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.seq_s == other.seq_s && self.seq_t == other.seq_t\n        }"
+  },
+  {
+    "id": 24,
+    "function": "default",
+    "file": "Chap51/BottomUpDPMtPer.rs",
+    "lines": "186-190",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self {\n            let empty_s = ArraySeqMtPerS::new(0, ' ');\n            let empty_t = ArraySeqMtPerS::new(0, ' ');\n            Self::new(empty_s, empty_t)\n        }"
+  },
+  {
+    "id": 25,
+    "function": "new",
+    "file": "Chap51/BottomUpDPStEph.rs",
+    "lines": "39",
+    "spec_strength": "",
+    "snippet": "        fn new(s: ArraySeqStEphS<char>, t: ArraySeqStEphS<char>) -> Self;"
+  },
+  {
+    "id": 26,
+    "function": "s_length",
+    "file": "Chap51/BottomUpDPStEph.rs",
+    "lines": "40",
+    "spec_strength": "",
+    "snippet": "        fn s_length(&self) -> usize;"
+  },
+  {
+    "id": 27,
+    "function": "t_length",
+    "file": "Chap51/BottomUpDPStEph.rs",
+    "lines": "41",
+    "spec_strength": "",
+    "snippet": "        fn t_length(&self) -> usize;"
+  },
+  {
+    "id": 28,
+    "function": "is_empty",
+    "file": "Chap51/BottomUpDPStEph.rs",
+    "lines": "42",
+    "spec_strength": "",
+    "snippet": "        fn is_empty(&self) -> bool;"
+  },
+  {
+    "id": 29,
+    "function": "set_s",
+    "file": "Chap51/BottomUpDPStEph.rs",
+    "lines": "43",
+    "spec_strength": "",
+    "snippet": "        fn set_s(&mut self, s: ArraySeqStEphS<char>);"
+  },
+  {
+    "id": 30,
+    "function": "set_t",
+    "file": "Chap51/BottomUpDPStEph.rs",
+    "lines": "44",
+    "spec_strength": "",
+    "snippet": "        fn set_t(&mut self, t: ArraySeqStEphS<char>);"
+  },
+  {
+    "id": 31,
+    "function": "med_bottom_up",
+    "file": "Chap51/BottomUpDPStEph.rs",
+    "lines": "45",
+    "spec_strength": "",
+    "snippet": "        fn med_bottom_up(&mut self) -> usize;"
+  },
+  {
+    "id": 32,
+    "function": "initialize_base_cases",
+    "file": "Chap51/BottomUpDPStEph.rs",
+    "lines": "46",
+    "spec_strength": "",
+    "snippet": "        fn initialize_base_cases(&self) -> Vec<Vec<usize>>;"
+  },
+  {
+    "id": 33,
+    "function": "compute_diagonal",
+    "file": "Chap51/BottomUpDPStEph.rs",
+    "lines": "47",
+    "spec_strength": "",
+    "snippet": "        fn compute_diagonal(&self, table: &mut [Vec<usize>], k: usize);"
+  },
+  {
+    "id": 34,
+    "function": "compute_cell_value",
+    "file": "Chap51/BottomUpDPStEph.rs",
+    "lines": "48",
+    "spec_strength": "",
+    "snippet": "        fn compute_cell_value(&self, table: &[Vec<usize>], i: usize, j: usize) -> usize;"
+  },
+  {
+    "id": 35,
+    "function": "eq",
+    "file": "Chap51/BottomUpDPStEph.rs",
+    "lines": "132-134",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.seq_s == other.seq_s && self.seq_t == other.seq_t\n        }"
+  },
+  {
+    "id": 36,
+    "function": "default",
+    "file": "Chap51/BottomUpDPStEph.rs",
+    "lines": "140-144",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self {\n            let empty_s = ArraySeqStEphS::new(0, ' ');\n            let empty_t = ArraySeqStEphS::new(0, ' ');\n            Self::new(empty_s, empty_t)\n        }"
+  },
+  {
+    "id": 37,
+    "function": "new",
+    "file": "Chap51/BottomUpDPStPer.rs",
+    "lines": "39",
+    "spec_strength": "",
+    "snippet": "        fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> Self;"
+  },
+  {
+    "id": 38,
+    "function": "s_length",
+    "file": "Chap51/BottomUpDPStPer.rs",
+    "lines": "40",
+    "spec_strength": "",
+    "snippet": "        fn s_length(&self) -> usize;"
+  },
+  {
+    "id": 39,
+    "function": "t_length",
+    "file": "Chap51/BottomUpDPStPer.rs",
+    "lines": "41",
+    "spec_strength": "",
+    "snippet": "        fn t_length(&self) -> usize;"
+  },
+  {
+    "id": 40,
+    "function": "is_empty",
+    "file": "Chap51/BottomUpDPStPer.rs",
+    "lines": "42",
+    "spec_strength": "",
+    "snippet": "        fn is_empty(&self) -> bool;"
+  },
+  {
+    "id": 41,
+    "function": "med_bottom_up",
+    "file": "Chap51/BottomUpDPStPer.rs",
+    "lines": "43",
+    "spec_strength": "",
+    "snippet": "        fn med_bottom_up(&self) -> usize;"
+  },
+  {
+    "id": 42,
+    "function": "initialize_base_cases",
+    "file": "Chap51/BottomUpDPStPer.rs",
+    "lines": "44",
+    "spec_strength": "",
+    "snippet": "        fn initialize_base_cases(&self) -> Vec<Vec<usize>>;"
+  },
+  {
+    "id": 43,
+    "function": "compute_diagonal",
+    "file": "Chap51/BottomUpDPStPer.rs",
+    "lines": "45",
+    "spec_strength": "",
+    "snippet": "        fn compute_diagonal(&self, table: Vec<Vec<usize>>, k: usize) -> Vec<Vec<usize>>;"
+  },
+  {
+    "id": 44,
+    "function": "compute_cell_value",
+    "file": "Chap51/BottomUpDPStPer.rs",
+    "lines": "46",
+    "spec_strength": "",
+    "snippet": "        fn compute_cell_value(&self, table: &[Vec<usize>], i: usize, j: usize) -> usize;"
+  },
+  {
+    "id": 45,
+    "function": "eq",
+    "file": "Chap51/BottomUpDPStPer.rs",
+    "lines": "131-133",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.seq_s == other.seq_s && self.seq_t == other.seq_t\n        }"
+  },
+  {
+    "id": 46,
+    "function": "default",
+    "file": "Chap51/BottomUpDPStPer.rs",
+    "lines": "139-143",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self {\n            let empty_s = ArraySeqStPerS::new(0, ' ');\n            let empty_t = ArraySeqStPerS::new(0, ' ');\n            Self::new(empty_s, empty_t)\n        }"
+  },
+  {
+    "id": 47,
+    "function": "new_td_eph_lock",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "37",
+    "spec_strength": "hole",
+    "snippet": "    fn new_td_eph_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, TopDownDPMtEphInv>) {"
+  },
+  {
+    "id": 48,
+    "function": "new",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "57",
+    "spec_strength": "",
+    "snippet": "        fn new(s: ArraySeqMtEphS<char>, t: ArraySeqMtEphS<char>) -> Self;"
+  },
+  {
+    "id": 49,
+    "function": "med_memoized_concurrent",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "58",
+    "spec_strength": "",
+    "snippet": "        fn med_memoized_concurrent(&mut self) -> usize;"
+  },
+  {
+    "id": 50,
+    "function": "med_memoized_parallel",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "59",
+    "spec_strength": "",
+    "snippet": "        fn med_memoized_parallel(&mut self) -> usize;"
+  },
+  {
+    "id": 51,
+    "function": "memo_size",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "60",
+    "spec_strength": "",
+    "snippet": "        fn memo_size(&self) -> usize;"
+  },
+  {
+    "id": 52,
+    "function": "is_memoized",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "61",
+    "spec_strength": "",
+    "snippet": "        fn is_memoized(&self, i: usize, j: usize) -> bool;"
+  },
+  {
+    "id": 53,
+    "function": "get_memoized",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "62",
+    "spec_strength": "",
+    "snippet": "        fn get_memoized(&self, i: usize, j: usize) -> Option<usize>;"
+  },
+  {
+    "id": 54,
+    "function": "insert_memo",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "63",
+    "spec_strength": "",
+    "snippet": "        fn insert_memo(&mut self, i: usize, j: usize, value: usize);"
+  },
+  {
+    "id": 55,
+    "function": "s_length",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "64",
+    "spec_strength": "",
+    "snippet": "        fn s_length(&self) -> usize;"
+  },
+  {
+    "id": 56,
+    "function": "t_length",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "65",
+    "spec_strength": "",
+    "snippet": "        fn t_length(&self) -> usize;"
+  },
+  {
+    "id": 57,
+    "function": "is_empty",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "66",
+    "spec_strength": "",
+    "snippet": "        fn is_empty(&self) -> bool;"
+  },
+  {
+    "id": 58,
+    "function": "clear_memo",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "67",
+    "spec_strength": "",
+    "snippet": "        fn clear_memo(&mut self);"
+  },
+  {
+    "id": 59,
+    "function": "set_s",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "68",
+    "spec_strength": "",
+    "snippet": "        fn set_s(&mut self, s: ArraySeqMtEphS<char>);"
+  },
+  {
+    "id": 60,
+    "function": "set_t",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "69",
+    "spec_strength": "",
+    "snippet": "        fn set_t(&mut self, t: ArraySeqMtEphS<char>);"
+  },
+  {
+    "id": 61,
+    "function": "med_recursive_concurrent",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "70",
+    "spec_strength": "",
+    "snippet": "        fn med_recursive_concurrent(&self, i: usize, j: usize) -> usize;"
+  },
+  {
+    "id": 62,
+    "function": "med_recursive_parallel",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "71",
+    "spec_strength": "",
+    "snippet": "        fn med_recursive_parallel(&self, i: usize, j: usize) -> usize;"
+  },
+  {
+    "id": 63,
+    "function": "eq",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "225-235",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — infrastructure.\n        /// - Claude-Opus-4.6: Work Θ(|S|+|T|+|memo|), Span Θ(|S|+|T|+|memo|)\n        fn eq(&self, other: &Self) -> bool {\n            let self_handle = self.memo_table.acquire_read();\n            let other_handle = other.memo_table.acquire_read();\n            let result = self.seq_s == other.seq_s && self.seq_t == other.seq_t\n                && *self_handle.borrow() == *other_handle.borrow();\n            other_handle.release_read();\n            self_handle.release_read();\n            result\n        }"
+  },
+  {
+    "id": 64,
+    "function": "default",
+    "file": "Chap51/TopDownDPMtEph.rs",
+    "lines": "239-245",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — infrastructure.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn default() -> Self {\n            let empty_s = ArraySeqMtEphS::new(0, ' ');\n            let empty_t = ArraySeqMtEphS::new(0, ' ');\n            Self::new(empty_s, empty_t)\n        }"
+  },
+  {
+    "id": 65,
+    "function": "new_td_per_lock",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "37",
+    "spec_strength": "hole",
+    "snippet": "    fn new_td_per_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, TopDownDPMtPerInv>) {"
+  },
+  {
+    "id": 66,
+    "function": "new",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "57",
+    "spec_strength": "",
+    "snippet": "        fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> Self;"
+  },
+  {
+    "id": 67,
+    "function": "med_memoized_concurrent",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "58",
+    "spec_strength": "",
+    "snippet": "        fn med_memoized_concurrent(&self) -> usize;"
+  },
+  {
+    "id": 68,
+    "function": "med_memoized_parallel",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "59",
+    "spec_strength": "",
+    "snippet": "        fn med_memoized_parallel(&self) -> usize;"
+  },
+  {
+    "id": 69,
+    "function": "with_memo_table",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "60",
+    "spec_strength": "",
+    "snippet": "        fn with_memo_table(self, memo: HashMap<(usize, usize), usize>) -> Self;"
+  },
+  {
+    "id": 70,
+    "function": "memo_size",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "61",
+    "spec_strength": "",
+    "snippet": "        fn memo_size(&self) -> usize;"
+  },
+  {
+    "id": 71,
+    "function": "is_memoized",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "62",
+    "spec_strength": "",
+    "snippet": "        fn is_memoized(&self, i: usize, j: usize) -> bool;"
+  },
+  {
+    "id": 72,
+    "function": "get_memoized",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "63",
+    "spec_strength": "",
+    "snippet": "        fn get_memoized(&self, i: usize, j: usize) -> Option<usize>;"
+  },
+  {
+    "id": 73,
+    "function": "s_length",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "64",
+    "spec_strength": "",
+    "snippet": "        fn s_length(&self) -> usize;"
+  },
+  {
+    "id": 74,
+    "function": "t_length",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "65",
+    "spec_strength": "",
+    "snippet": "        fn t_length(&self) -> usize;"
+  },
+  {
+    "id": 75,
+    "function": "is_empty",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "66",
+    "spec_strength": "",
+    "snippet": "        fn is_empty(&self) -> bool;"
+  },
+  {
+    "id": 76,
+    "function": "clear_memo",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "67",
+    "spec_strength": "",
+    "snippet": "        fn clear_memo(self) -> Self;"
+  },
+  {
+    "id": 77,
+    "function": "med_recursive_concurrent",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "68",
+    "spec_strength": "",
+    "snippet": "        fn med_recursive_concurrent(&self, i: usize, j: usize) -> usize;"
+  },
+  {
+    "id": 78,
+    "function": "med_recursive_parallel",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "69",
+    "spec_strength": "",
+    "snippet": "        fn med_recursive_parallel(&self, i: usize, j: usize) -> usize;"
+  },
+  {
+    "id": 79,
+    "function": "eq",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "217-227",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — infrastructure.\n        /// - Claude-Opus-4.6: Work Θ(|S|+|T|+|memo|), Span Θ(|S|+|T|+|memo|)\n        fn eq(&self, other: &Self) -> bool {\n            let self_handle = self.memo_table.acquire_read();\n            let other_handle = other.memo_table.acquire_read();\n            let result = self.seq_s == other.seq_s && self.seq_t == other.seq_t\n                && *self_handle.borrow() == *other_handle.borrow();\n            other_handle.release_read();\n            self_handle.release_read();\n            result\n        }"
+  },
+  {
+    "id": 80,
+    "function": "default",
+    "file": "Chap51/TopDownDPMtPer.rs",
+    "lines": "231-237",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — infrastructure.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn default() -> Self {\n            let empty_s = ArraySeqMtPerS::new(0, ' ');\n            let empty_t = ArraySeqMtPerS::new(0, ' ');\n            Self::new(empty_s, empty_t)\n        }"
+  },
+  {
+    "id": 81,
+    "function": "new",
+    "file": "Chap51/TopDownDPStEph.rs",
+    "lines": "43",
+    "spec_strength": "",
+    "snippet": "        fn new(s: ArraySeqStEphS<char>, t: ArraySeqStEphS<char>) -> Self;"
+  },
+  {
+    "id": 82,
+    "function": "med_memoized",
+    "file": "Chap51/TopDownDPStEph.rs",
+    "lines": "44",
+    "spec_strength": "",
+    "snippet": "        fn med_memoized(&mut self) -> usize;"
+  },
+  {
+    "id": 83,
+    "function": "memo_size",
+    "file": "Chap51/TopDownDPStEph.rs",
+    "lines": "45",
+    "spec_strength": "",
+    "snippet": "        fn memo_size(&self) -> usize;"
+  },
+  {
+    "id": 84,
+    "function": "is_memoized",
+    "file": "Chap51/TopDownDPStEph.rs",
+    "lines": "46",
+    "spec_strength": "",
+    "snippet": "        fn is_memoized(&self, i: usize, j: usize) -> bool;"
+  },
+  {
+    "id": 85,
+    "function": "get_memoized",
+    "file": "Chap51/TopDownDPStEph.rs",
+    "lines": "47",
+    "spec_strength": "",
+    "snippet": "        fn get_memoized(&self, i: usize, j: usize) -> Option<usize>;"
+  },
+  {
+    "id": 86,
+    "function": "insert_memo",
+    "file": "Chap51/TopDownDPStEph.rs",
+    "lines": "48",
+    "spec_strength": "",
+    "snippet": "        fn insert_memo(&mut self, i: usize, j: usize, value: usize);"
+  },
+  {
+    "id": 87,
+    "function": "s_length",
+    "file": "Chap51/TopDownDPStEph.rs",
+    "lines": "49",
+    "spec_strength": "",
+    "snippet": "        fn s_length(&self) -> usize;"
+  },
+  {
+    "id": 88,
+    "function": "t_length",
+    "file": "Chap51/TopDownDPStEph.rs",
+    "lines": "50",
+    "spec_strength": "",
+    "snippet": "        fn t_length(&self) -> usize;"
+  },
+  {
+    "id": 89,
+    "function": "is_empty",
+    "file": "Chap51/TopDownDPStEph.rs",
+    "lines": "51",
+    "spec_strength": "",
+    "snippet": "        fn is_empty(&self) -> bool;"
+  },
+  {
+    "id": 90,
+    "function": "clear_memo",
+    "file": "Chap51/TopDownDPStEph.rs",
+    "lines": "52",
+    "spec_strength": "",
+    "snippet": "        fn clear_memo(&mut self);"
+  },
+  {
+    "id": 91,
+    "function": "set_s",
+    "file": "Chap51/TopDownDPStEph.rs",
+    "lines": "53",
+    "spec_strength": "",
+    "snippet": "        fn set_s(&mut self, s: ArraySeqStEphS<char>);"
+  },
+  {
+    "id": 92,
+    "function": "set_t",
+    "file": "Chap51/TopDownDPStEph.rs",
+    "lines": "54",
+    "spec_strength": "",
+    "snippet": "        fn set_t(&mut self, t: ArraySeqStEphS<char>);"
+  },
+  {
+    "id": 93,
+    "function": "med_recursive",
+    "file": "Chap51/TopDownDPStEph.rs",
+    "lines": "55",
+    "spec_strength": "",
+    "snippet": "        fn med_recursive(&mut self, i: usize, j: usize) -> usize;"
+  },
+  {
+    "id": 94,
+    "function": "default",
+    "file": "Chap51/TopDownDPStEph.rs",
+    "lines": "128-134",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — infrastructure.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn default() -> Self {\n            let empty_s = ArraySeqStEphS::new(0, ' ');\n            let empty_t = ArraySeqStEphS::new(0, ' ');\n            Self::new(empty_s, empty_t)\n        }"
+  },
+  {
+    "id": 95,
+    "function": "new",
+    "file": "Chap51/TopDownDPStPer.rs",
+    "lines": "43",
+    "spec_strength": "",
+    "snippet": "        fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> Self;"
+  },
+  {
+    "id": 96,
+    "function": "med_memoized",
+    "file": "Chap51/TopDownDPStPer.rs",
+    "lines": "44",
+    "spec_strength": "",
+    "snippet": "        fn med_memoized(&self) -> usize;"
+  },
+  {
+    "id": 97,
+    "function": "with_memo_table",
+    "file": "Chap51/TopDownDPStPer.rs",
+    "lines": "45",
+    "spec_strength": "",
+    "snippet": "        fn with_memo_table(self, memo: HashMap<(usize, usize), usize>) -> Self;"
+  },
+  {
+    "id": 98,
+    "function": "memo_size",
+    "file": "Chap51/TopDownDPStPer.rs",
+    "lines": "46",
+    "spec_strength": "",
+    "snippet": "        fn memo_size(&self) -> usize;"
+  },
+  {
+    "id": 99,
+    "function": "is_memoized",
+    "file": "Chap51/TopDownDPStPer.rs",
+    "lines": "47",
+    "spec_strength": "",
+    "snippet": "        fn is_memoized(&self, i: usize, j: usize) -> bool;"
+  },
+  {
+    "id": 100,
+    "function": "get_memoized",
+    "file": "Chap51/TopDownDPStPer.rs",
+    "lines": "48",
+    "spec_strength": "",
+    "snippet": "        fn get_memoized(&self, i: usize, j: usize) -> Option<usize>;"
+  },
+  {
+    "id": 101,
+    "function": "s_length",
+    "file": "Chap51/TopDownDPStPer.rs",
+    "lines": "49",
+    "spec_strength": "",
+    "snippet": "        fn s_length(&self) -> usize;"
+  },
+  {
+    "id": 102,
+    "function": "t_length",
+    "file": "Chap51/TopDownDPStPer.rs",
+    "lines": "50",
+    "spec_strength": "",
+    "snippet": "        fn t_length(&self) -> usize;"
+  },
+  {
+    "id": 103,
+    "function": "is_empty",
+    "file": "Chap51/TopDownDPStPer.rs",
+    "lines": "51",
+    "spec_strength": "",
+    "snippet": "        fn is_empty(&self) -> bool;"
+  },
+  {
+    "id": 104,
+    "function": "clear_memo",
+    "file": "Chap51/TopDownDPStPer.rs",
+    "lines": "52",
+    "spec_strength": "",
+    "snippet": "        fn clear_memo(self) -> Self;"
+  },
+  {
+    "id": 105,
+    "function": "med_recursive",
+    "file": "Chap51/TopDownDPStPer.rs",
+    "lines": "53",
+    "spec_strength": "",
+    "snippet": "        fn med_recursive(&self, i: usize, j: usize, memo: &mut HashMap<(usize, usize), usize>) -> usize;"
+  },
+  {
+    "id": 106,
+    "function": "default",
+    "file": "Chap51/TopDownDPStPer.rs",
+    "lines": "122-128",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — infrastructure.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn default() -> Self {\n            let empty_s = ArraySeqStPerS::new(0, ' ');\n            let empty_t = ArraySeqStPerS::new(0, ' ');\n            Self::new(empty_s, empty_t)\n        }"
+  }
+]

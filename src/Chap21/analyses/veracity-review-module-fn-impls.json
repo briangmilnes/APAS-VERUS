@@ -1,0 +1,218 @@
+[
+  {
+    "id": 1,
+    "function": "lemma_sum_inner_lens_mono",
+    "file": "Chap21/Algorithm21_1.rs",
+    "lines": "52-55",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_sum_inner_lens_mono<T>(ss: Seq<ArraySeqStPerS<T>>, a: int, b: int)\n        requires 0 <= a <= b <= ss.len()\n        ensures sum_inner_lens(ss, a) <= sum_inner_lens(ss, b)\n        decreases b - a"
+  },
+  {
+    "id": 2,
+    "function": "lemma_sum_inner_lens_uniform",
+    "file": "Chap21/Algorithm21_1.rs",
+    "lines": "65-71",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_sum_inner_lens_uniform<T>(ss: Seq<ArraySeqStPerS<T>>, k: int, m: int)\n        requires\n            0 <= k <= ss.len(),\n            forall|i: int| 0 <= i < k ==> (#[trigger] ss[i]).seq@.len() == m,\n        ensures\n            sum_inner_lens(ss, k) == k * m\n        decreases k"
+  },
+  {
+    "id": 3,
+    "function": "flatten_inner",
+    "file": "Chap21/Algorithm21_1.rs",
+    "lines": "92-96",
+    "spec_strength": "unknown",
+    "snippet": "    fn flatten_inner<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (result: ArraySeqStPerS<T>)\n        requires\n            sum_inner_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,\n        ensures\n            result.seq@.len() == sum_inner_lens(ss.seq@, ss.seq@.len() as int),"
+  },
+  {
+    "id": 4,
+    "function": "points2d_tab_flat",
+    "file": "Chap21/Algorithm21_1.rs",
+    "lines": "152-158",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn points2d_tab_flat(n: N) -> (result: ArraySeqStPerS<Pair<N, N>>)\n        requires\n            n <= usize::MAX,\n            n as int * (n as int - 1) <= usize::MAX as int,\n        ensures\n            n == 0 ==> result.seq@.len() == 0,\n            n > 0 ==> result.seq@.len() == n as int * (n as int - 1),"
+  },
+  {
+    "id": 5,
+    "function": "points3d_tab_flat",
+    "file": "Chap21/Algorithm21_2.rs",
+    "lines": "46-53",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn points3d_tab_flat(n: N) -> (result: ArraySeqStPerS<Pair<N, Pair<N, N>>>)\n        requires\n            n + 2 <= usize::MAX,\n            pow(n as int, 2) <= usize::MAX as int,\n            pow(n as int, 3) <= usize::MAX as int,\n        ensures\n            n == 0 ==> result.seq@.len() == 0,\n            n > 0  ==> result.seq@.len() == pow(n as int, 3),"
+  },
+  {
+    "id": 6,
+    "function": "primes_bf",
+    "file": "Chap21/Algorithm21_5.rs",
+    "lines": "46-54",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn primes_bf(n: N) -> (primes: ArraySeqStPerS<N>)\n        ensures\n            n <= 2 ==> primes.spec_len() == 0,\n            n > 2  ==> primes.spec_len() <= n - 2,\n            forall|i: int| 0 <= i < primes.spec_len()\n                ==> spec_is_prime(#[trigger] primes.spec_index(i) as int),\n            forall|p: int| 2 <= p < n as int && spec_is_prime(p) ==>\n                Seq::new(primes.spec_len(), |i: int| primes.spec_index(i))\n                    .contains(#[trigger] (p as N)),"
+  },
+  {
+    "id": 7,
+    "function": "lemma_product_not_prime",
+    "file": "Chap21/Algorithm21_6.rs",
+    "lines": "37-39",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_product_not_prime(a: int, b: int)\n        requires a >= 2, b >= 2,\n        ensures !spec_is_prime(a * b)"
+  },
+  {
+    "id": 8,
+    "function": "prime_sieve",
+    "file": "Chap21/Algorithm21_6.rs",
+    "lines": "62-68",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn prime_sieve(n: N) -> (result: ArraySeqStPerS<N>)\n        requires n < usize::MAX,\n        ensures\n            n <= 2 ==> result.spec_len() == 0,\n            n > 2  ==> result.spec_len() <= n - 1,\n            forall|i: int| 0 <= i < result.spec_len() ==>\n                2 <= #[trigger] result.spec_index(i) && result.spec_index(i) <= n,"
+  },
+  {
+    "id": 9,
+    "function": "lemma_inner_lens_sum_triangular",
+    "file": "Chap21/Exercise21_5.rs",
+    "lines": "44-51",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_inner_lens_sum_triangular<A>(ss: Seq<Seq<A>>, n: int)\n        requires\n            ss.len() == n,\n            n >= 0,\n            forall|i: int| 0 <= i < n ==> (#[trigger] ss[i]).len() == n - i,\n        ensures\n            spec_inner_lens_sum(ss) * 2 == n * (n + 1),\n        decreases n"
+  },
+  {
+    "id": 10,
+    "function": "all_contiguous_subseqs",
+    "file": "Chap21/Exercise21_5.rs",
+    "lines": "72-76",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn all_contiguous_subseqs(a: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<ArraySeqStPerS<N>>)\n         requires obeys_feq_clone::<ArraySeqStPerS<N>>()\n         ensures\n            a.spec_len() == 0 ==> result.spec_len() == 0,\n            a.spec_len() > 0 ==> result.spec_len() * 2 == a.spec_len() * (a.spec_len() + 1),"
+  },
+  {
+    "id": 11,
+    "function": "is_even",
+    "file": "Chap21/Exercise21_7.rs",
+    "lines": "47-48",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn is_even(x: &N) -> (r: B)\n        ensures r == spec_is_even(*x as int)"
+  },
+  {
+    "id": 12,
+    "function": "is_vowel",
+    "file": "Chap21/Exercise21_7.rs",
+    "lines": "60-61",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn is_vowel(c: &char) -> (r: B)\n        ensures r == spec_is_vowel(*c)"
+  },
+  {
+    "id": 13,
+    "function": "pair_even_with_vowels",
+    "file": "Chap21/Exercise21_7.rs",
+    "lines": "75-84",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn pair_even_with_vowels(\n        a: &ArraySeqStPerS<N>,\n        b: &ArraySeqStPerS<char>,\n    ) -> (result: ArraySeqStPerS<Pair<N, char>>)\n       requires \n            obeys_feq_clone::<char>(),\n            obeys_feq_clone::<Pair<N, char>>(),\n            a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,\n       ensures\n            result.seq@.len() <= a.seq@.len() as int * b.seq@.len() as int,"
+  },
+  {
+    "id": 14,
+    "function": "lemma_zero_count_means_no_divisors",
+    "file": "Chap21/Exercise21_8.rs",
+    "lines": "55-62",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_zero_count_means_no_divisors(n: int, from: int, to: int)\n        requires\n            from <= to,\n            from > 0,\n            spec_divisor_count(n, from, to) == 0,\n        ensures\n            forall|i: int| from <= i < to ==> #[trigger] (n % i) != 0,\n        decreases to - from,"
+  },
+  {
+    "id": 15,
+    "function": "lemma_no_divisors_means_zero_count",
+    "file": "Chap21/Exercise21_8.rs",
+    "lines": "81-88",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_no_divisors_means_zero_count(n: int, from: int, to: int)\n        requires\n            from <= to,\n            from > 0,\n            forall|i: int| from <= i < to ==> #[trigger] (n % i) != 0,\n        ensures\n            spec_divisor_count(n, from, to) == 0,\n        decreases to - from,"
+  },
+  {
+    "id": 16,
+    "function": "lemma_divisor_count_nonneg",
+    "file": "Chap21/Exercise21_8.rs",
+    "lines": "99-101",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_divisor_count_nonneg(n: int, from: int, to: int)\n        ensures spec_divisor_count(n, from, to) >= 0,\n        decreases (if to > from { to - from } else { 0 }),"
+  },
+  {
+    "id": 17,
+    "function": "lemma_filter_len_eq_divisor_count",
+    "file": "Chap21/Exercise21_8.rs",
+    "lines": "109-115",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_filter_len_eq_divisor_count(n: int, k: int)\n        requires k >= 0, n >= 2,\n        ensures spec_filter_len(\n            Seq::new(k as nat, |i: int| (n % (i + 1) == 0)),\n            |v: B| v,\n        ) == spec_divisor_count(n, 1, k + 1),\n        decreases k,"
+  },
+  {
+    "id": 18,
+    "function": "lemma_divisor_count_split_last",
+    "file": "Chap21/Exercise21_8.rs",
+    "lines": "135-140",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_divisor_count_split_last(n: int, from: int, to: int)\n        requires from > 0, from < to,\n        ensures spec_divisor_count(n, from, to) ==\n            spec_divisor_count(n, from, to - 1) +\n            if n % (to - 1) == 0 { 1int } else { 0int },\n        decreases to - from,"
+  },
+  {
+    "id": 19,
+    "function": "is_divisible",
+    "file": "Chap21/Exercise21_8.rs",
+    "lines": "164-166",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn is_divisible(n: N, i: N) -> (divides: B)\n        requires i > 0\n        ensures divides == (n as int % i as int == 0)"
+  },
+  {
+    "id": 20,
+    "function": "is_prime",
+    "file": "Chap21/Exercise21_8.rs",
+    "lines": "176-177",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn is_prime(n: N) -> (prime: B)\n        ensures prime == spec_is_prime(n as int)"
+  },
+  {
+    "id": 21,
+    "function": "lemma_div_exact",
+    "file": "Chap21/Exercise21_9.rs",
+    "lines": "28-30",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_div_exact(m: int, d: int)\n        requires d > 0, m % d == 0, m >= 0,\n        ensures m == d * (m / d),"
+  },
+  {
+    "id": 22,
+    "function": "lemma_composite_has_small_divisor",
+    "file": "Chap21/Exercise21_9.rs",
+    "lines": "38-43",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_composite_has_small_divisor(m: int)\n        requires\n            m > 1,\n            spec_is_composite(m),\n        ensures\n            exists|d: int| 2 <= d && d * d <= m && #[trigger] (m % d) == 0,"
+  },
+  {
+    "id": 23,
+    "function": "lemma_composites_covered_by_small_multiples",
+    "file": "Chap21/Exercise21_9.rs",
+    "lines": "75-82",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_composites_covered_by_small_multiples(m: int, n: int)\n        requires\n            n >= 2,\n            2 <= m <= n,\n            spec_is_composite(m),\n        ensures\n            exists|i: int, j: int|\n                2 <= i && i * i <= n && j >= 2 && #[trigger] (i * j) == m,"
+  },
+  {
+    "id": 24,
+    "function": "points2d",
+    "file": "Chap21/Problem21_1.rs",
+    "lines": "34-43",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn points2d(n: N) -> (points: ArraySeqStPerS<Pair<N, N>>)\n        requires\n            n as int * (n as int - 1) <= usize::MAX as int,\n        ensures\n            n == 0 ==> points.seq@.len() == 0,\n            n > 0  ==> points.seq@.len() == n as int * (n as int - 1),\n            forall|k: int| 0 <= k < points.seq@.len() ==>\n                (#[trigger] points.seq@[k]).0 < n\n                && 1 <= points.seq@[k].1\n                && points.seq@[k].1 < n,"
+  },
+  {
+    "id": 25,
+    "function": "points3d_loops",
+    "file": "Chap21/Problem21_3.rs",
+    "lines": "37-48",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn points3d_loops(n: N) -> (result: ArraySeqStPerS<Pair<N, Pair<N, N>>>)\n        requires\n            n + 2 <= usize::MAX,\n            n as int * n as int <= usize::MAX as int,\n            n as int * n as int * n as int <= usize::MAX as int,\n        ensures\n            n == 0 ==> result.seq@.len() == 0,\n            n > 0  ==> result.seq@.len() == n as int * n as int * n as int,\n            forall|k: int| 0 <= k < result.seq@.len() ==>\n                (#[trigger] result.seq@[k]).0 < n\n                && 1 <= result.seq@[k].1.0 && result.seq@[k].1.0 <= n\n                && 2 <= result.seq@[k].1.1 && result.seq@[k].1.1 <= n + 1,"
+  },
+  {
+    "id": 26,
+    "function": "cartesian_loops",
+    "file": "Chap21/Problem21_4.rs",
+    "lines": "40-47",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn cartesian_loops(\n        a: &ArraySeqStPerS<N>,\n        b: &ArraySeqStPerS<N>,\n    ) -> (result: ArraySeqStPerS<Pair<N, N>>)\n        requires\n            a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,\n        ensures\n            result.seq@.len() == a.seq@.len() as int * b.seq@.len() as int,"
+  },
+  {
+    "id": 27,
+    "function": "cartesian_tab_flat",
+    "file": "Chap21/Problem21_4.rs",
+    "lines": "92-103",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn cartesian_tab_flat(\n        a: &ArraySeqStPerS<N>,\n        b: &ArraySeqStPerS<N>,\n    ) -> (result: ArraySeqStPerS<Pair<N, N>>)\n        requires\n            a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,\n        ensures\n            result.seq@.len() == a.seq@.len() as int * b.seq@.len() as int,\n            forall|k: int| 0 <= k < result.seq@.len() ==> (\n                a.seq@.contains((#[trigger] result.seq@[k]).0)\n                && b.seq@.contains(result.seq@[k].1)\n            ),"
+  }
+]

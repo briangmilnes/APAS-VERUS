@@ -1,0 +1,290 @@
+[
+  {
+    "id": 1,
+    "function": "lemma_in_order_pre_order_permutation",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "96-98",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_in_order_pre_order_permutation<T>(tree: BalBinTree<T>)\n        ensures tree.spec_in_order().to_multiset() =~= tree.spec_pre_order().to_multiset()\n        decreases tree,"
+  },
+  {
+    "id": 2,
+    "function": "lemma_pre_order_post_order_permutation",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "141-143",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_pre_order_post_order_permutation<T>(tree: BalBinTree<T>)\n        ensures tree.spec_pre_order().to_multiset() =~= tree.spec_post_order().to_multiset()\n        decreases tree,"
+  },
+  {
+    "id": 3,
+    "function": "leaf",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "193-198",
+    "spec_strength": "unknown",
+    "snippet": "        fn leaf() -> (l: Self)\n            ensures l.spec_size() == 0,\n                    l.spec_height() == 0,\n                    l.spec_in_order() == Seq::<T>::empty(),\n                    l.spec_pre_order() == Seq::<T>::empty(),\n                    l.spec_post_order() == Seq::<T>::empty();"
+  },
+  {
+    "id": 4,
+    "function": "node",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "202-208",
+    "spec_strength": "unknown",
+    "snippet": "        fn node(left: Self, value: T, right: Self) -> (n: Self)\n            ensures n.spec_size() == 1 + left.spec_size() + right.spec_size(),\n                    n.spec_height() == 1 + if left.spec_height() >= right.spec_height()\n                                            { left.spec_height() } else { right.spec_height() },\n                    n.spec_in_order() == left.spec_in_order() + seq![value] + right.spec_in_order(),\n                    n.spec_pre_order() == seq![value] + left.spec_pre_order() + right.spec_pre_order(),\n                    n.spec_post_order() == left.spec_post_order() + right.spec_post_order() + seq![value];"
+  },
+  {
+    "id": 5,
+    "function": "is_leaf",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "212-213",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_leaf(&self) -> (b: bool)\n            ensures b == (self.spec_size() == 0);"
+  },
+  {
+    "id": 6,
+    "function": "size",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "217-219",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_size() <= usize::MAX,\n            ensures count == self.spec_size();"
+  },
+  {
+    "id": 7,
+    "function": "height",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "223-225",
+    "spec_strength": "unknown",
+    "snippet": "        fn height(&self) -> (h: usize)\n            requires self.spec_height() <= usize::MAX,\n            ensures h == self.spec_height();"
+  },
+  {
+    "id": 8,
+    "function": "in_order",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "230-234",
+    "spec_strength": "unknown",
+    "snippet": "        fn in_order(&self) -> (traversal: Vec<T>)\n            where T: Clone + Eq\n            requires self.spec_size() <= usize::MAX,\n                     obeys_feq_clone::<T>(),\n            ensures traversal@ =~= self.spec_in_order();"
+  },
+  {
+    "id": 9,
+    "function": "pre_order",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "239-243",
+    "spec_strength": "unknown",
+    "snippet": "        fn pre_order(&self) -> (traversal: Vec<T>)\n            where T: Clone + Eq\n            requires self.spec_size() <= usize::MAX,\n                     obeys_feq_clone::<T>(),\n            ensures traversal@ =~= self.spec_pre_order();"
+  },
+  {
+    "id": 10,
+    "function": "post_order",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "248-252",
+    "spec_strength": "unknown",
+    "snippet": "        fn post_order(&self) -> (traversal: Vec<T>)\n            where T: Clone + Eq\n            requires self.spec_size() <= usize::MAX,\n                     obeys_feq_clone::<T>(),\n            ensures traversal@ =~= self.spec_post_order();"
+  },
+  {
+    "id": 11,
+    "function": "iter_in_order",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "432-438",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn iter_in_order(&self) -> (it: InOrderIter<T>)\n            requires self.spec_size() <= usize::MAX,\n                     obeys_feq_clone::<T>(),\n            ensures\n                it@.0 == 0,\n                it@.1 =~= self.spec_in_order(),\n                in_order_iter_invariant(&it),"
+  },
+  {
+    "id": 12,
+    "function": "iter_pre_order",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "446-452",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn iter_pre_order(&self) -> (it: PreOrderIter<T>)\n            requires self.spec_size() <= usize::MAX,\n                     obeys_feq_clone::<T>(),\n            ensures\n                it@.0 == 0,\n                it@.1 =~= self.spec_pre_order(),\n                pre_order_iter_invariant(&it),"
+  },
+  {
+    "id": 13,
+    "function": "iter_post_order",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "460-466",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn iter_post_order(&self) -> (it: PostOrderIter<T>)\n            requires self.spec_size() <= usize::MAX,\n                     obeys_feq_clone::<T>(),\n            ensures\n                it@.0 == 0,\n                it@.1 =~= self.spec_post_order(),\n                post_order_iter_invariant(&it),"
+  },
+  {
+    "id": 14,
+    "function": "next`",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "550-566",
+    "spec_strength": "unknown",
+    "snippet": "        fn next(&mut self) -> (next: Option<T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
+  },
+  {
+    "id": 15,
+    "function": "eq`",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "765-767",
+    "spec_strength": "unknown",
+    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (*self == *other)\n            decreases self,"
+  },
+  {
+    "id": 16,
+    "function": "clone_tree",
+    "file": "Chap23/BalBinTreeStEph.rs",
+    "lines": "794-796",
+    "spec_strength": "unknown",
+    "snippet": "    fn clone_tree<T: Clone>(t: &BalBinTree<T>) -> (c: BalBinTree<T>)\n        ensures c == *t\n        decreases t,"
+  },
+  {
+    "id": 17,
+    "function": "empty",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "128-129",
+    "spec_strength": "unknown",
+    "snippet": "        fn empty() -> (empty_seq: Self)\n            ensures empty_seq.spec_len() == 0;"
+  },
+  {
+    "id": 18,
+    "function": "singleton",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "134-137",
+    "spec_strength": "unknown",
+    "snippet": "        fn singleton(value: T) -> (single: Self)\n            ensures\n                single.spec_len() == 1,\n                single.spec_index(0) == value;"
+  },
+  {
+    "id": 19,
+    "function": "from_vec",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "142-145",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_vec(vec: Vec<T>) -> (seq: Self)\n            ensures\n                seq.spec_len() == vec@.len(),\n                forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < vec@.len() ==> seq.spec_index(i) == vec@[i];"
+  },
+  {
+    "id": 20,
+    "function": "length",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "150-151",
+    "spec_strength": "unknown",
+    "snippet": "        fn length(&self) -> (len: usize)\n            ensures len == self.spec_len();"
+  },
+  {
+    "id": 21,
+    "function": "nth",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "156-158",
+    "spec_strength": "unknown",
+    "snippet": "        fn nth(&self, index: usize) -> (nth_elem: &T)\n            requires index < self.spec_len()\n            ensures *nth_elem == self.spec_index(index as int);"
+  },
+  {
+    "id": 22,
+    "function": "expose",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "163-170",
+    "spec_strength": "unknown",
+    "snippet": "        fn expose(&self) -> (tree: PrimTreeSeqStTree<T>)\n            where T: Clone + Eq\n            requires\n                self.spec_len() <= usize::MAX,\n                obeys_feq_clone::<T>(),\n            ensures\n                self.spec_len() == 0 <==> tree@ is Zero,\n                self.spec_len() == 1 <==> {"
+  },
+  {
+    "id": 23,
+    "function": "join",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "185-189",
+    "spec_strength": "unknown",
+    "snippet": "        fn join(tree: PrimTreeSeqStTree<T>) -> (joined: Self)\n            ensures\n                tree@ is Zero ==> joined@ =~= Seq::<T>::empty(),\n                tree@ is One ==> joined@ =~= seq![tree@->One_0],\n                tree@ is Two ==> joined@ =~= tree@->Two_0 + tree@->Two_1;"
+  },
+  {
+    "id": 24,
+    "function": "append",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "194-202",
+    "spec_strength": "unknown",
+    "snippet": "        fn append(a: &Self, b: &Self) -> (appended: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                a.spec_len() + b.spec_len() <= usize::MAX as nat,\n            ensures\n                appended.spec_len() == a.spec_len() + b.spec_len(),\n                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.spec_len() ==> appended.spec_index(i) == a.spec_index(i),\n                forall|i: int| #![trigger b.spec_index(i)] 0 <= i < b.spec_len() ==> appended.spec_index(a.spec_len() as int + i) == b.spec_index(i);"
+  },
+  {
+    "id": 25,
+    "function": "subseq",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "207-215",
+    "spec_strength": "unknown",
+    "snippet": "        fn subseq(&self, start: usize, length: usize) -> (subseq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                start + length <= usize::MAX,\n                start + length <= self.spec_len(),\n            ensures\n                subseq.spec_len() == length as int,\n                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);"
+  },
+  {
+    "id": 26,
+    "function": "update",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "220-228",
+    "spec_strength": "unknown",
+    "snippet": "        fn update(a: &Self, index: usize, item: T) -> (updated: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                index < a.spec_len(),\n            ensures\n                updated.spec_len() == a.spec_len(),\n                updated.spec_index(index as int) == item,\n                forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.spec_len() && i != index as int ==> updated.spec_index(i) == a.spec_index(i);"
+  },
+  {
+    "id": 27,
+    "function": "map",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "233-238",
+    "spec_strength": "unknown",
+    "snippet": "        fn map<U: Clone, F: Fn(&T) -> U>(a: &PrimTreeSeqStS<T>, f: &F) -> (mapped: PrimTreeSeqStS<U>)\n            requires\n                forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.spec_index(i),)),\n            ensures\n                mapped.spec_len() == a.spec_len(),\n                forall|i: int| #![trigger mapped.spec_index(i)] 0 <= i < a.spec_len() ==> f.ensures((&a.spec_index(i),), mapped.spec_index(i));"
+  },
+  {
+    "id": 28,
+    "function": "tabulate",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "243-249",
+    "spec_strength": "unknown",
+    "snippet": "        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: Self)\n            requires\n                length <= usize::MAX,\n                forall|i: usize| i < length ==> #[trigger] f.requires((i,)),\n            ensures\n                tab_seq.spec_len() == length,\n                forall|i: int| #![trigger tab_seq.spec_index(i)] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.spec_index(i));"
+  },
+  {
+    "id": 29,
+    "function": "filter",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "254-266",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter<F: Fn(&T) -> bool>(a: &PrimTreeSeqStS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: PrimTreeSeqStS<T>)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(i),)),\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_len() <= a.spec_len(),\n                filtered.spec_len() == spec_filter_len(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_pred),\n                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()\n                    =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)).to_multiset().filter(spec_pred),\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);"
+  },
+  {
+    "id": 30,
+    "function": "drop",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "271-279",
+    "spec_strength": "unknown",
+    "snippet": "        fn drop(&self, n: usize) -> (dropped: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                n <= self.spec_len(),\n                self.spec_len() <= usize::MAX,\n            ensures\n                dropped.spec_len() == self.spec_len() - n,\n                forall|i: int| #![trigger dropped.spec_index(i)] 0 <= i < dropped.spec_len() ==> dropped.spec_index(i) == self.spec_index(n as int + i);"
+  },
+  {
+    "id": 31,
+    "function": "flatten",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "284-289",
+    "spec_strength": "unknown",
+    "snippet": "        fn flatten(a: &PrimTreeSeqStS<PrimTreeSeqStS<T>>) -> (flattened: PrimTreeSeqStS<T>)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                flattened.seq@ =~= a.seq@.map_values(|inner: PrimTreeSeqStS<T>| inner.seq@).flatten();"
+  },
+  {
+    "id": 32,
+    "function": "as_slice",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "294-295",
+    "spec_strength": "unknown",
+    "snippet": "        fn as_slice(&self) -> (slice: &[T])\n            ensures slice@ =~= self@;"
+  },
+  {
+    "id": 33,
+    "function": "into_vec",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "300-301",
+    "spec_strength": "unknown",
+    "snippet": "        fn into_vec(self) -> (vec: Vec<T>)\n            ensures vec@ =~= self@;"
+  },
+  {
+    "id": 34,
+    "function": "iter",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "321-325",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn iter(&self) -> (it: PrimTreeSeqStIter<'_, T>)\n            ensures\n                it@.0 == 0,\n                it@.1 == self.seq@,\n                prim_tree_seq_iter_invariant(&it),"
+  },
+  {
+    "id": 35,
+    "function": "next",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "760-776",
+    "spec_strength": "unknown",
+    "snippet": "        fn next(&mut self) -> (next: Option<&'a T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
+  },
+  {
+    "id": 36,
+    "function": "eq`",
+    "file": "Chap23/PrimTreeSeqStPer.rs",
+    "lines": "862-863",
+    "spec_strength": "unknown",
+    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
+  }
+]

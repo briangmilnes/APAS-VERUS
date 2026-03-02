@@ -1,0 +1,326 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/Chap56/
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap56/analyses/veracity-review-verus-style.log
+
+Checking 12 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:36: warning: [12] trait AllPairsResultStEphF64Trait fn new should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:38: warning: [12] trait AllPairsResultStEphF64Trait fn get_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:40: warning: [12] trait AllPairsResultStEphF64Trait fn set_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:42: warning: [12] trait AllPairsResultStEphF64Trait fn get_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:44: warning: [12] trait AllPairsResultStEphF64Trait fn set_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:46: warning: [12] trait AllPairsResultStEphF64Trait fn is_reachable should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:48: warning: [12] trait AllPairsResultStEphF64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:36: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:42: warning: [19] get_predecessor return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:46: warning: [19] is_reachable return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:48: warning: [19] extract_path return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:54: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:136: warning: [19] get_predecessor return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:163: warning: [19] is_reachable return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:167: warning: [19] extract_path return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:26: warning: [12] trait AllPairsResultStEphI64Trait fn new should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:28: warning: [12] trait AllPairsResultStEphI64Trait fn get_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:30: warning: [12] trait AllPairsResultStEphI64Trait fn set_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:32: warning: [12] trait AllPairsResultStEphI64Trait fn get_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:34: warning: [12] trait AllPairsResultStEphI64Trait fn set_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:36: warning: [12] trait AllPairsResultStEphI64Trait fn is_reachable should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:38: warning: [12] trait AllPairsResultStEphI64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:26: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:38: warning: [19] extract_path return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:44: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:166: warning: [19] extract_path return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:35: warning: [12] trait AllPairsResultStPerF64Trait fn new should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:37: warning: [12] trait AllPairsResultStPerF64Trait fn get_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:39: warning: [12] trait AllPairsResultStPerF64Trait fn set_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:41: warning: [12] trait AllPairsResultStPerF64Trait fn get_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:43: warning: [12] trait AllPairsResultStPerF64Trait fn set_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:45: warning: [12] trait AllPairsResultStPerF64Trait fn is_reachable should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:47: warning: [12] trait AllPairsResultStPerF64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:35: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:39: warning: [19] set_distance return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:41: warning: [19] get_predecessor return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:43: warning: [19] set_predecessor return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:45: warning: [19] is_reachable return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:47: warning: [19] extract_path return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:53: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:112: warning: [19] set_distance return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:132: warning: [19] get_predecessor return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:144: warning: [19] set_predecessor return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:164: warning: [19] is_reachable return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:168: warning: [19] extract_path return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:25: warning: [12] trait AllPairsResultStPerI64Trait fn new should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:27: warning: [12] trait AllPairsResultStPerI64Trait fn get_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:29: warning: [12] trait AllPairsResultStPerI64Trait fn set_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:31: warning: [12] trait AllPairsResultStPerI64Trait fn get_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:33: warning: [12] trait AllPairsResultStPerI64Trait fn set_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:35: warning: [12] trait AllPairsResultStPerI64Trait fn is_reachable should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:37: warning: [12] trait AllPairsResultStPerI64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:25: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:29: warning: [19] set_distance return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:33: warning: [19] set_predecessor return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:37: warning: [19] extract_path return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:43: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:105: warning: [19] set_distance return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:143: warning: [19] set_predecessor return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:167: warning: [19] extract_path return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:28: warning: [12] trait Example56_1Trait fn example_path_weight_int should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:32: warning: [12] trait Example56_1Trait fn example_path_weight_float should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:36: warning: [12] trait Example56_1Trait fn example_negative_weights should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:25: warning: [20] trait Example56_1Trait is defined but has no impl
+
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:28: warning: [12] trait Example56_3Trait fn example_negative_cycle should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:32: warning: [12] trait Example56_3Trait fn example_undefined_shortest_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:25: warning: [20] trait Example56_3Trait is defined but has no impl
+
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:37: warning: [12] trait PathWeightUtilsStEphTrait fn path_weight_int should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:39: warning: [12] trait PathWeightUtilsStEphTrait fn path_weight_float should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:44: warning: [12] trait PathWeightUtilsStEphTrait fn validate_subpath_property_int should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:50: warning: [12] trait PathWeightUtilsStEphTrait fn validate_subpath_property_float should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:36: warning: [20] trait PathWeightUtilsStEphTrait is defined but has no impl
+
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:36: warning: [12] trait PathWeightUtilsStPerTrait fn path_weight_int should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:38: warning: [12] trait PathWeightUtilsStPerTrait fn path_weight_float should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:43: warning: [12] trait PathWeightUtilsStPerTrait fn validate_subpath_property_int should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:49: warning: [12] trait PathWeightUtilsStPerTrait fn validate_subpath_property_float should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:35: warning: [20] trait PathWeightUtilsStPerTrait is defined but has no impl
+
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:36: warning: [19] new return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:30: warning: [12] trait SSSPResultStEphI64Trait fn get_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:32: warning: [12] trait SSSPResultStEphI64Trait fn set_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:34: warning: [12] trait SSSPResultStEphI64Trait fn get_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:36: warning: [12] trait SSSPResultStEphI64Trait fn set_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:38: warning: [12] trait SSSPResultStEphI64Trait fn is_reachable should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:40: warning: [12] trait SSSPResultStEphI64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:27: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:40: warning: [19] extract_path return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:46: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:116: warning: [19] extract_path return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:56: warning: [12] trait SSSPResultStPerF64Trait fn get_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:58: warning: [12] trait SSSPResultStPerF64Trait fn set_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:60: warning: [12] trait SSSPResultStPerF64Trait fn get_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:62: warning: [12] trait SSSPResultStPerF64Trait fn set_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:64: warning: [12] trait SSSPResultStPerF64Trait fn is_reachable should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:66: warning: [12] trait SSSPResultStPerF64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:53: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:58: warning: [19] set_distance return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:60: warning: [19] get_predecessor return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:62: warning: [19] set_predecessor return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:64: warning: [19] is_reachable return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:66: warning: [19] extract_path return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:72: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:108: warning: [19] set_distance return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:123: warning: [19] get_predecessor return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:131: warning: [19] set_predecessor return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:146: warning: [19] is_reachable return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:150: warning: [19] extract_path return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:28: warning: [12] trait SSSPResultStPerI64Trait fn get_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:30: warning: [12] trait SSSPResultStPerI64Trait fn set_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:32: warning: [12] trait SSSPResultStPerI64Trait fn get_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:34: warning: [12] trait SSSPResultStPerI64Trait fn set_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:36: warning: [12] trait SSSPResultStPerI64Trait fn is_reachable should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:38: warning: [12] trait SSSPResultStPerI64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:25: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:30: warning: [19] set_distance return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:34: warning: [19] set_predecessor return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:38: warning: [19] extract_path return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:44: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:77: warning: [19] set_distance return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:102: warning: [19] set_predecessor return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:123: warning: [19] extract_path return name 'result' could be more descriptive
+
+════════════════════════════════════════════════════════════════
+Summary: 169 passed, 120 warnings in 12 files (checked 12 files)
+════════════════════════════════════════════════════════════════

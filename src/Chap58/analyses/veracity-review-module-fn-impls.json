@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "function": "bellman_ford",
+    "file": "Chap58/BellmanFordStEphI64.rs",
+    "lines": "26-27",
+    "spec_strength": "",
+    "snippet": "        fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)\n            -> (result: Result<SSSPResultStEphI64, String>);"
+  },
+  {
+    "id": 2,
+    "function": "reconstruct_predecessors",
+    "file": "Chap58/BellmanFordStEphI64.rs",
+    "lines": "71-92",
+    "spec_strength": "",
+    "snippet": "    #[cfg(not(verus_keep_ghost))]\n    fn reconstruct_predecessors(\n        graph: &WeightedDirGraphStEphI128<usize>,\n        distances: &HashMap<usize, i64>,\n        result: &mut SSSPResultStEphI64,\n        source: usize,\n    ) {\n        let n = graph.vertices().size();\n        for v in 0..n {\n            if v == source { continue; }\n            let v_dist = *distances.get(&v).unwrap_or(&i64::MAX);\n            if v_dist == i64::MAX { continue; }\n            let in_neighbors = graph.in_neighbors_weighed(&v);\n            for Pair(u, weight) in in_neighbors.iter() {\n                let u_dist = *distances.get(u).unwrap_or(&i64::MAX);\n                if u_dist != i64::MAX {\n                    let path_dist = u_dist.saturating_add(*weight as i64);\n                    if path_dist == v_dist { result.set_predecessor(v, *u); break; }\n                }\n            }\n        }\n    }"
+  }
+]

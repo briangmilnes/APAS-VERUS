@@ -1,0 +1,348 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/Chap52/
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap52/analyses/veracity-review-verus-style.log
+
+Checking 14 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:66: warning: [12] trait AdjTableGraphMtPerTrait fn empty should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:68: warning: [12] trait AdjTableGraphMtPerTrait fn num_vertices should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:82: warning: [12] trait AdjTableGraphMtPerTrait fn out_degree should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: warning: [17] collection AdjTableGraphMtPer should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: warning: [17] collection AdjTableGraphMtPer should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap52/ProveAdjTableGraphMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:77: warning: [19] out_neighbors return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:84: warning: [19] insert_vertex return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:87: warning: [19] delete_vertex return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:90: warning: [19] insert_edge return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:96: warning: [19] delete_edge return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:151: warning: [19] out_neighbors return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:164: warning: [19] insert_vertex return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:236: warning: [19] insert_edge return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:259: warning: [19] delete_edge return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:88: warning: [12] trait AdjTableGraphStEphTrait fn empty should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:90: warning: [12] trait AdjTableGraphStEphTrait fn from_table should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:92: warning: [12] trait AdjTableGraphStEphTrait fn num_vertices should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:98: warning: [12] trait AdjTableGraphStEphTrait fn vertices should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:100: warning: [12] trait AdjTableGraphStEphTrait fn has_edge should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:102: warning: [12] trait AdjTableGraphStEphTrait fn out_neighbors should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:104: warning: [12] trait AdjTableGraphStEphTrait fn out_degree should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:106: warning: [12] trait AdjTableGraphStEphTrait fn insert_vertex should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:108: warning: [12] trait AdjTableGraphStEphTrait fn delete_vertex should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:110: warning: [12] trait AdjTableGraphStEphTrait fn insert_edge should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:112: warning: [12] trait AdjTableGraphStEphTrait fn delete_edge should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: warning: [17] collection AdjTableGraphStEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: warning: [17] collection AdjTableGraphStEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap52/ProveAdjTableGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:157: warning: [19] vertices return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:186: warning: [19] out_neighbors return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:56: warning: [12] trait AdjTableGraphStPerTrait fn empty should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:58: warning: [12] trait AdjTableGraphStPerTrait fn from_table should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:60: warning: [12] trait AdjTableGraphStPerTrait fn num_vertices should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:77: warning: [12] trait AdjTableGraphStPerTrait fn out_degree should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: warning: [17] collection AdjTableGraphStPer should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: warning: [17] collection AdjTableGraphStPer should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap52/ProveAdjTableGraphStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:66: warning: [19] vertices return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:72: warning: [19] out_neighbors return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:79: warning: [19] insert_vertex return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:82: warning: [19] delete_vertex return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:85: warning: [19] insert_edge return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:91: warning: [19] delete_edge return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:139: warning: [19] vertices return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:168: warning: [19] out_neighbors return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:181: warning: [19] insert_vertex return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:188: warning: [19] delete_vertex return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:211: warning: [19] insert_edge return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:230: warning: [19] delete_edge return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:49: warning: [12] trait EdgeSetGraphMtPerTrait fn empty should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:51: warning: [12] trait EdgeSetGraphMtPerTrait fn from_vertices_and_edges should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:53: warning: [12] trait EdgeSetGraphMtPerTrait fn num_vertices should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:55: warning: [12] trait EdgeSetGraphMtPerTrait fn num_edges should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:57: warning: [12] trait EdgeSetGraphMtPerTrait fn vertices should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:59: warning: [12] trait EdgeSetGraphMtPerTrait fn edges should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:61: warning: [12] trait EdgeSetGraphMtPerTrait fn has_edge should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:66: warning: [12] trait EdgeSetGraphMtPerTrait fn out_degree should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:68: warning: [12] trait EdgeSetGraphMtPerTrait fn insert_vertex should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:73: warning: [12] trait EdgeSetGraphMtPerTrait fn insert_edge should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:75: warning: [12] trait EdgeSetGraphMtPerTrait fn delete_edge should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: warning: [17] collection EdgeSetGraphMtPer should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: warning: [17] collection EdgeSetGraphMtPer should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap52/ProveEdgeSetGraphMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:63: warning: [19] out_neighbors return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:70: warning: [19] delete_vertex return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:152: warning: [19] delete_vertex return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:53: warning: [12] trait EdgeSetGraphStEphTrait fn empty should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:55: warning: [12] trait EdgeSetGraphStEphTrait fn from_vertices_and_edges should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:57: warning: [12] trait EdgeSetGraphStEphTrait fn num_vertices should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:59: warning: [12] trait EdgeSetGraphStEphTrait fn num_edges should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:61: warning: [12] trait EdgeSetGraphStEphTrait fn vertices should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:63: warning: [12] trait EdgeSetGraphStEphTrait fn edges should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:65: warning: [12] trait EdgeSetGraphStEphTrait fn has_edge should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:70: warning: [12] trait EdgeSetGraphStEphTrait fn out_degree should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:72: warning: [12] trait EdgeSetGraphStEphTrait fn insert_vertex should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:77: warning: [12] trait EdgeSetGraphStEphTrait fn insert_edge should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:79: warning: [12] trait EdgeSetGraphStEphTrait fn delete_edge should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: warning: [17] collection EdgeSetGraphStEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: warning: [17] collection EdgeSetGraphStEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap52/ProveEdgeSetGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:67: warning: [19] out_neighbors return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:118: warning: [19] out_neighbors return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:55: warning: [12] trait EdgeSetGraphStPerTrait fn empty should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:57: warning: [12] trait EdgeSetGraphStPerTrait fn from_vertices_and_edges should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:59: warning: [12] trait EdgeSetGraphStPerTrait fn num_vertices should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:61: warning: [12] trait EdgeSetGraphStPerTrait fn num_edges should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:63: warning: [12] trait EdgeSetGraphStPerTrait fn vertices should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:65: warning: [12] trait EdgeSetGraphStPerTrait fn edges should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:67: warning: [12] trait EdgeSetGraphStPerTrait fn has_edge should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:72: warning: [12] trait EdgeSetGraphStPerTrait fn out_degree should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:74: warning: [12] trait EdgeSetGraphStPerTrait fn insert_vertex should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:79: warning: [12] trait EdgeSetGraphStPerTrait fn insert_edge should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:81: warning: [12] trait EdgeSetGraphStPerTrait fn delete_edge should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: warning: [17] collection EdgeSetGraphStPer should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: warning: [17] collection EdgeSetGraphStPer should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap52/ProveEdgeSetGraphStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:69: warning: [19] out_neighbors return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:76: warning: [19] delete_vertex return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:112: warning: [19] out_neighbors return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:145: warning: [19] delete_vertex return name 'result' could be more descriptive
+
+════════════════════════════════════════════════════════════════
+Summary: 206 passed, 101 warnings in 6 files (checked 14 files)
+════════════════════════════════════════════════════════════════

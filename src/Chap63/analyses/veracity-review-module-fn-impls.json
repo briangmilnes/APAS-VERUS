@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "function": "count_components_mt",
+    "file": "Chap63/ConnectivityMtEph.rs",
+    "lines": "36",
+    "spec_strength": "",
+    "snippet": "            fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N;"
+  },
+  {
+    "id": 2,
+    "function": "connected_components_mt",
+    "file": "Chap63/ConnectivityMtEph.rs",
+    "lines": "40-43",
+    "spec_strength": "",
+    "snippet": "            fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(\n                graph: &UnDirGraphMtEph<V>,\n                seed: u64,\n            ) -> (SetStEph<V>, HashMap<V, V>);"
+  },
+  {
+    "id": 3,
+    "function": "count_components_hof",
+    "file": "Chap63/ConnectivityMtEph.rs",
+    "lines": "47",
+    "spec_strength": "",
+    "snippet": "            fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N;"
+  },
+  {
+    "id": 4,
+    "function": "connected_components_hof",
+    "file": "Chap63/ConnectivityMtEph.rs",
+    "lines": "51-54",
+    "spec_strength": "",
+    "snippet": "            fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(\n                graph: &UnDirGraphMtEph<V>,\n                seed: u64,\n            ) -> (SetStEph<V>, HashMap<V, V>);"
+  },
+  {
+    "id": 5,
+    "function": "build_quotient_edges_parallel",
+    "file": "Chap63/ConnectivityMtEph.rs",
+    "lines": "127-143",
+    "spec_strength": "",
+    "snippet": "    /// Build quotient graph edges in parallel.\n    ///\n    /// - APAS: N/A — helper function implicit in Algorithm 63.2/63.3 Line 7.\n    /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to route_edges_parallel whose merge is sequential\n    #[cfg(not(verus_keep_ghost))]\n    fn build_quotient_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(\n        graph: &UnDirGraphMtEph<V>,\n        partition_map: &HashMap<V, V>,\n    ) -> SetStEph<Edge<V>> {\n        let edges_vec = graph.edges().iter().cloned().collect::<Vec<Edge<V>>>();\n        let edges_seq = ArraySeqStEphS::from_vec(edges_vec);\n        let n_edges = edges_seq.length();\n\n        let part_map_arc = Arc::new(partition_map.clone());\n\n        route_edges_parallel(&edges_seq, part_map_arc, 0, n_edges)\n    }"
+  },
+  {
+    "id": 6,
+    "function": "route_edges_parallel",
+    "file": "Chap63/ConnectivityMtEph.rs",
+    "lines": "145-195",
+    "spec_strength": "",
+    "snippet": "    /// Parallel edge routing using divide-and-conquer.\n    ///\n    /// - APAS: N/A — helper function, not in prose.\n    /// - Claude-Opus-4.6: Work O(k), Span O(k) — sequential set union after ParaPair! makes span O(k) not O(lg k)\n    #[cfg(not(verus_keep_ghost))]\n    fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(\n        edges: &ArraySeqStEphS<Edge<V>>,\n        partition_map: Arc<HashMap<V, V>>,\n        start: usize,\n        end: usize,\n    ) -> SetStEph<Edge<V>> {\n        let size = end - start;\n\n        if size == 0 {\n            return SetLit![];\n        }\n\n        if size == 1 {\n            let edge = edges.nth(start as N);\n            let Edge(u, v) = edge;\n            let u_center = partition_map.get(u).unwrap_or(u);\n            let v_center = partition_map.get(v).unwrap_or(v);\n\n            if u_center != v_center {\n                let new_edge = if u_center < v_center {\n                    Edge(u_center.clone(), v_center.clone())\n                } else {\n                    Edge(v_center.clone(), u_center.clone())\n                };\n                return SetLit![new_edge];\n            }\n            return SetLit![];\n        }\n\n        let mid = start + size / 2;\n\n        let edges1 = edges.clone();\n        let map1 = partition_map.clone();\n        let edges2 = edges.clone();\n        let map2 = partition_map;\n\n        let pair = ParaPair!(move || route_edges_parallel(&edges1, map1, start, mid), move || {\n            route_edges_parallel(&edges2, map2, mid, end)\n        });\n\n        let mut result = pair.0;\n        for edge in pair.1.iter() {\n            let _ = result.insert(edge.clone());\n        }\n        result\n    }"
+  },
+  {
+    "id": 7,
+    "function": "compose_maps_parallel",
+    "file": "Chap63/ConnectivityMtEph.rs",
+    "lines": "197-212",
+    "spec_strength": "",
+    "snippet": "    /// Compose maps (P ∘ C): for each (u → v) in P, output (u → C[v]).\n    ///\n    /// - APAS: N/A — helper function, Line 10 of Algorithm 63.3.\n    /// - Claude-Opus-4.6: Work O(|P|), Span O(|P|) — currently sequential despite \"parallel\" name\n    #[cfg(not(verus_keep_ghost))]\n    fn compose_maps_parallel<V: StT + MtT + Hash + Ord + 'static>(\n        partition_map: &HashMap<V, V>,\n        component_map: &HashMap<V, V>,\n    ) -> HashMap<V, V> {\n        let mut result = HashMap::new();\n        for (u, v) in partition_map.iter() {\n            let component = component_map.get(v).unwrap_or(v);\n            let _ = result.insert(u.clone(), component.clone());\n        }\n        result\n    }"
+  },
+  {
+    "id": 8,
+    "function": "count_components",
+    "file": "Chap63/ConnectivityStEph.rs",
+    "lines": "31",
+    "spec_strength": "",
+    "snippet": "            fn count_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N;"
+  },
+  {
+    "id": 9,
+    "function": "connected_components",
+    "file": "Chap63/ConnectivityStEph.rs",
+    "lines": "35",
+    "spec_strength": "",
+    "snippet": "            fn connected_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>);"
+  },
+  {
+    "id": 10,
+    "function": "count_components_hof",
+    "file": "Chap63/ConnectivityStEph.rs",
+    "lines": "39",
+    "spec_strength": "",
+    "snippet": "            fn count_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N;"
+  },
+  {
+    "id": 11,
+    "function": "connected_components_hof",
+    "file": "Chap63/ConnectivityStEph.rs",
+    "lines": "43",
+    "spec_strength": "",
+    "snippet": "            fn connected_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>);"
+  },
+  {
+    "id": 12,
+    "function": "build_quotient_edges",
+    "file": "Chap63/ConnectivityStEph.rs",
+    "lines": "118-146",
+    "spec_strength": "",
+    "snippet": "    /// Build quotient graph edges by routing through partition map.\n    /// Filters out self-edges (where both endpoints map to same super-vertex).\n    ///\n    /// - APAS: N/A — helper function implicit in Algorithm 63.2/63.3 Line 7.\n    /// - Claude-Opus-4.6: Work O(m), Span O(m) — single pass over edges\n    #[cfg(not(verus_keep_ghost))]\n    fn build_quotient_edges<V: StT + Hash + Ord>(\n        graph: &UnDirGraphStEph<V>,\n        partition_map: &HashMap<V, V>,\n    ) -> SetStEph<Edge<V>> {\n        let mut quotient_edges: SetStEph<Edge<V>> = SetLit![];\n\n        for edge in graph.edges().iter() {\n            let Edge(u, v) = edge;\n            let u_center = partition_map.get(u).unwrap_or(u);\n            let v_center = partition_map.get(v).unwrap_or(v);\n\n            if u_center != v_center {\n                let new_edge = if u_center < v_center {\n                    Edge(u_center.clone(), v_center.clone())\n                } else {\n                    Edge(v_center.clone(), u_center.clone())\n                };\n                let _ = quotient_edges.insert(new_edge);\n            }\n        }\n\n        quotient_edges\n    }"
+  }
+]

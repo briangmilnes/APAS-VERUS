@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "function": "johnson_apsp",
+    "file": "Chap59/JohnsonMtEphI64.rs",
+    "lines": "37",
+    "spec_strength": "",
+    "snippet": "            fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphI64;"
+  },
+  {
+    "id": 2,
+    "function": "parallel_dijkstra_all",
+    "file": "Chap59/JohnsonMtEphI64.rs",
+    "lines": "79-138",
+    "spec_strength": "",
+    "snippet": "    /// Parallel Dijkstra execution using recursive divide-and-conquer with ParaPair!\n    ///\n    /// - APAS: N/A — internal helper, not named in prose.\n    /// - Claude-Opus-4.6: Work O(k * m log n), Span O(m log n) where k = end - start — binary split with ParaPair! gives log k depth, each leaf runs Dijkstra O(m log n)\n    #[cfg(not(verus_keep_ghost))]\n    fn parallel_dijkstra_all(\n        graph: &WeightedDirGraphStEphI128<usize>,\n        potentials: &ArraySeqStEphS<i64>,\n        start: usize,\n        end: usize,\n        n: usize,\n    ) -> (\n        ArraySeqStEphS<ArraySeqStEphS<i64>>,\n        ArraySeqStEphS<ArraySeqStEphS<usize>>,\n    ) {\n        let range_size = end - start;\n\n        if range_size == 0 {\n            return (ArraySeqStEphS::empty(), ArraySeqStEphS::empty());\n        }\n\n        if range_size == 1 {\n            let u = start;\n            let dijkstra_result = dijkstra(graph, u);\n\n            let p_u = *potentials.nth(u);\n            let adjusted_row = ArraySeqStEphS::tabulate(\n                &|v| {\n                    let d_prime = dijkstra_result.get_distance(v);\n                    if d_prime == i64::MAX {\n                        i64::MAX\n                    } else {\n                        let p_v = *potentials.nth(v);\n                        d_prime - p_u + p_v\n                    }\n                },\n                n,\n            );\n\n            let dist_seq = ArraySeqStEphS::singleton(adjusted_row);\n            let pred_seq = ArraySeqStEphS::singleton(dijkstra_result.predecessors.clone());\n            return (dist_seq, pred_seq);\n        }\n\n        let mid = start + range_size / 2;\n        let graph_left = graph.clone();\n        let graph_right = graph.clone();\n        let potentials_left = potentials.clone();\n        let potentials_right = potentials.clone();\n\n        let Pair((left_dist, left_pred), (right_dist, right_pred)) = crate::ParaPair!(\n            move || parallel_dijkstra_all(&graph_left, &potentials_left, start, mid, n),\n            move || parallel_dijkstra_all(&graph_right, &potentials_right, mid, end, n)\n        );\n\n        let combined_dist = ArraySeqStEphS::append(&left_dist, &right_dist);\n        let combined_pred = ArraySeqStEphS::append(&left_pred, &right_pred);\n\n        (combined_dist, combined_pred)\n    }"
+  },
+  {
+    "id": 3,
+    "function": "add_dummy_source",
+    "file": "Chap59/JohnsonMtEphI64.rs",
+    "lines": "140-164",
+    "spec_strength": "",
+    "snippet": "    /// Add dummy source vertex s with zero-weight edges to all vertices in G.\n    ///\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — iterates over vertices and edges\n    #[cfg(not(verus_keep_ghost))]\n    fn add_dummy_source(graph: &WeightedDirGraphStEphI128<usize>, n: usize) -> (WeightedDirGraphStEphI128<usize>, usize) {\n        let mut vertices = SetStEph::empty();\n        for i in 0..n {\n            vertices.insert(i);\n        }\n\n        vertices.insert(n);\n\n        let mut edges = SetStEph::empty();\n\n        for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {\n            edges.insert(WeightedEdge(*from, *to, *weight));\n        }\n\n        for v in 0..n {\n            edges.insert(WeightedEdge(n, v, 0i128));\n        }\n\n        (WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges), n)\n    }"
+  },
+  {
+    "id": 4,
+    "function": "reweight_graph",
+    "file": "Chap59/JohnsonMtEphI64.rs",
+    "lines": "166-190",
+    "spec_strength": "",
+    "snippet": "    /// Reweight edges: w'(u,v) = w(u,v) + p(u) - p(v)\n    ///\n    /// - APAS: Work O(m), Span O(m)\n    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — rebuilds vertex set O(n) plus iterates edges O(m)\n    #[cfg(not(verus_keep_ghost))]\n    fn reweight_graph(\n        graph: &WeightedDirGraphStEphI128<usize>,\n        potentials: &ArraySeqStEphS<i64>,\n        n: usize,\n    ) -> WeightedDirGraphStEphI128<usize> {\n        let mut vertices = SetStEph::empty();\n        for i in 0..n {\n            vertices.insert(i);\n        }\n\n        let mut reweighted_edges = SetStEph::empty();\n        for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {\n            let p_from = *potentials.nth(*from) as i128;\n            let p_to = *potentials.nth(*to) as i128;\n            let w_prime: i128 = *weight + p_from - p_to;\n            reweighted_edges.insert(WeightedEdge(*from, *to, w_prime));\n        }\n\n        WeightedDirGraphStEphI128::from_weighed_edges(vertices, reweighted_edges)\n    }"
+  },
+  {
+    "id": 5,
+    "function": "create_negative_cycle_result",
+    "file": "Chap59/JohnsonMtEphI64.rs",
+    "lines": "192-205",
+    "spec_strength": "",
+    "snippet": "    /// Create result for negative cycle case.\n    ///\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — builds n×n distance and predecessor matrices\n    #[cfg(not(verus_keep_ghost))]\n    fn create_negative_cycle_result(n: usize) -> AllPairsResultStEphI64 {\n        let distances = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| i64::MAX, n), n);\n        let predecessors = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| 0, n), n);\n        AllPairsResultStEphI64 {\n            distances,\n            predecessors,\n            n,\n        }\n    }"
+  },
+  {
+    "id": 6,
+    "function": "johnson_apsp",
+    "file": "Chap59/JohnsonStEphI64.rs",
+    "lines": "34",
+    "spec_strength": "",
+    "snippet": "            fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphI64;"
+  },
+  {
+    "id": 7,
+    "function": "add_dummy_source",
+    "file": "Chap59/JohnsonStEphI64.rs",
+    "lines": "100-126",
+    "spec_strength": "",
+    "snippet": "    /// Add dummy source vertex s with zero-weight edges to all vertices in G.\n    ///\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — iterates over vertices and edges\n    #[cfg(not(verus_keep_ghost))]\n    fn add_dummy_source(graph: &WeightedDirGraphStEphI128<usize>, n: usize) -> (WeightedDirGraphStEphI128<usize>, usize) {\n        let dummy_idx = n;\n\n        let mut vertices = SetStEph::empty();\n        for i in 0..=n {\n            vertices.insert(i);\n        }\n\n        let mut edges = SetStEph::empty();\n        for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {\n            edges.insert(WeightedEdge(*from, *to, *weight));\n        }\n\n        for i in 0..n {\n            edges.insert(WeightedEdge(dummy_idx, i, 0i128));\n        }\n\n        (\n            WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges),\n            dummy_idx,\n        )\n    }"
+  },
+  {
+    "id": 8,
+    "function": "reweight_graph",
+    "file": "Chap59/JohnsonStEphI64.rs",
+    "lines": "128-152",
+    "spec_strength": "",
+    "snippet": "    /// Reweight edges: w'(u,v) = w(u,v) + p(u) - p(v)\n    ///\n    /// - APAS: Work O(m), Span O(m)\n    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — rebuilds vertex set O(n) plus iterates edges O(m)\n    #[cfg(not(verus_keep_ghost))]\n    fn reweight_graph(\n        graph: &WeightedDirGraphStEphI128<usize>,\n        potentials: &ArraySeqStEphS<i64>,\n        n: usize,\n    ) -> WeightedDirGraphStEphI128<usize> {\n        let mut vertices = SetStEph::empty();\n        for i in 0..n {\n            vertices.insert(i);\n        }\n\n        let mut edges = SetStEph::empty();\n        for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {\n            let p_from = *potentials.nth(*from) as i128;\n            let p_to = *potentials.nth(*to) as i128;\n            let new_weight: i128 = *weight + p_from - p_to;\n            edges.insert(WeightedEdge(*from, *to, new_weight));\n        }\n\n        WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges)\n    }"
+  },
+  {
+    "id": 9,
+    "function": "create_negative_cycle_result",
+    "file": "Chap59/JohnsonStEphI64.rs",
+    "lines": "154-167",
+    "spec_strength": "",
+    "snippet": "    /// Create result for negative cycle case.\n    ///\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — builds n×n distance and predecessor matrices\n    #[cfg(not(verus_keep_ghost))]\n    fn create_negative_cycle_result(n: usize) -> AllPairsResultStEphI64 {\n        let distances = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| i64::MAX, n), n);\n        let predecessors = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| 0, n), n);\n        AllPairsResultStEphI64 {\n            distances,\n            predecessors,\n            n,\n        }\n    }"
+  }
+]

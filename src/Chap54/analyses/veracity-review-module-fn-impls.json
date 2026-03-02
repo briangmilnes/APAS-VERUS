@@ -1,0 +1,370 @@
+[
+  {
+    "id": 1,
+    "function": "lemma_tabulate_all_no_parent",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "55-60",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_tabulate_all_no_parent(parents: &ArraySeqMtEphS<N>, n: int)\n        requires\n            parents.spec_len() == n,\n            forall|i: int| #![auto] 0 <= i < n ==> parents.spec_index(i) == NO_PARENT,\n        ensures\n            spec_parents_bounded(parents, n),"
+  },
+  {
+    "id": 2,
+    "function": "lemma_set_preserves_parents_bounded",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "63-80",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_set_preserves_parents_bounded(\n        parents: &ArraySeqMtEphS<N>,\n        old_parents: &ArraySeqMtEphS<N>,\n        v: int,\n        new_val: N,\n        n: int,\n    )\n        requires\n            parents.spec_len() == n,\n            old_parents.spec_len() == n,\n            0 <= v < n,\n            new_val < n,\n            parents.spec_index(v) == new_val,\n            forall|j: int| #![auto] 0 <= j < n && j != v ==>\n                parents.spec_index(j) == old_parents.spec_index(j),\n            spec_parents_bounded(old_parents, n),\n        ensures\n            spec_parents_bounded(parents, n),"
+  },
+  {
+    "id": 3,
+    "function": "lemma_copy_preserves_parents_bounded",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "94-105",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_copy_preserves_parents_bounded(\n        original: &ArraySeqMtEphS<N>,\n        copy: &ArraySeqMtEphS<N>,\n        n: int,\n    )\n        requires\n            spec_parents_bounded(original, n),\n            copy.spec_len() == original.spec_len(),\n            forall|i: int| #![auto] 0 <= i < original.spec_len() ==>\n                copy.spec_index(i) == original.spec_index(i),\n        ensures\n            spec_parents_bounded(copy, n),"
+  },
+  {
+    "id": 4,
+    "function": "lemma_tabulate_all_unreachable",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "115-121",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_tabulate_all_unreachable(distances: &ArraySeqMtEphS<N>, n: int)\n        requires\n            distances.spec_len() == n,\n            forall|i: int| #![auto] 0 <= i < n ==>\n                distances.spec_index(i) == UNREACHABLE,\n        ensures\n            spec_distances_bounded(distances, n),"
+  },
+  {
+    "id": 5,
+    "function": "lemma_set_preserves_bounded",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "125-142",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_set_preserves_bounded(\n        distances: &ArraySeqMtEphS<N>,\n        old_distances: &ArraySeqMtEphS<N>,\n        v: int,\n        new_val: N,\n        n: int,\n    )\n        requires\n            distances.spec_len() == n,\n            old_distances.spec_len() == n,\n            0 <= v < n,\n            new_val < n,\n            distances.spec_index(v) == new_val,\n            forall|j: int| #![auto] 0 <= j < n && j != v ==>\n                distances.spec_index(j) == old_distances.spec_index(j),\n            spec_distances_bounded(old_distances, n),\n        ensures\n            spec_distances_bounded(distances, n),"
+  },
+  {
+    "id": 6,
+    "function": "copy_distances",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "157-162",
+    "spec_strength": "unknown",
+    "snippet": "    fn copy_distances(distances: &ArraySeqMtEphS<N>) -> (result: ArraySeqMtEphS<N>)\n        requires distances.spec_len() <= usize::MAX,\n        ensures\n            result.spec_len() == distances.spec_len(),\n            forall|i: int| #![auto] 0 <= i < distances.spec_len() ==>\n                result.spec_index(i) == distances.spec_index(i),"
+  },
+  {
+    "id": 7,
+    "function": "copy_graph",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "175-183",
+    "spec_strength": "unknown",
+    "snippet": "    fn copy_graph(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>) -> (result: ArraySeqMtEphS<ArraySeqMtEphS<N>>)\n        requires graph.spec_len() <= usize::MAX,\n        ensures\n            result.spec_len() == graph.spec_len(),\n            forall|u: int| #![auto] 0 <= u < graph.spec_len() ==>\n                result.spec_index(u).spec_len() == graph.spec_index(u).spec_len(),\n            forall|u: int, i: int| #![auto]\n                0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len() ==>\n                result.spec_index(u).spec_index(i) == graph.spec_index(u).spec_index(i),"
+  },
+  {
+    "id": 8,
+    "function": "lemma_copy_preserves_wf",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "208-221",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_copy_preserves_wf(\n        original: &ArraySeqMtEphS<ArraySeqMtEphS<N>>,\n        copy: &ArraySeqMtEphS<ArraySeqMtEphS<N>>,\n    )\n        requires\n            spec_wf_graph(original),\n            copy.spec_len() == original.spec_len(),\n            forall|u: int| #![auto] 0 <= u < original.spec_len() ==>\n                copy.spec_index(u).spec_len() == original.spec_index(u).spec_len(),\n            forall|u: int, i: int| #![auto]\n                0 <= u < original.spec_len() && 0 <= i < original.spec_index(u).spec_len() ==>\n                copy.spec_index(u).spec_index(i) == original.spec_index(u).spec_index(i),\n        ensures\n            spec_wf_graph(copy),"
+  },
+  {
+    "id": 9,
+    "function": "lemma_copy_preserves_bounded",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "233-244",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_copy_preserves_bounded(\n        original: &ArraySeqMtEphS<N>,\n        copy: &ArraySeqMtEphS<N>,\n        n: int,\n    )\n        requires\n            spec_distances_bounded(original, n),\n            copy.spec_len() == original.spec_len(),\n            forall|i: int| #![auto] 0 <= i < original.spec_len() ==>\n                copy.spec_index(i) == original.spec_index(i),\n        ensures\n            spec_distances_bounded(copy, n),"
+  },
+  {
+    "id": 10,
+    "function": "top_down_order",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "259-264",
+    "spec_strength": "unknown",
+    "snippet": "        fn top_down_order(&self) -> (result: &ArraySeqMtEphS<N>)\n            ensures\n                result.spec_len() == self.spec_order().spec_len(),\n                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>\n                    result.spec_index(i) == self.spec_order().spec_index(i),\n        ;"
+  },
+  {
+    "id": 11,
+    "function": "bottom_up_order",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "267-273",
+    "spec_strength": "unknown",
+    "snippet": "        fn bottom_up_order(&self) -> (result: ArraySeqMtEphS<N>)\n            requires self.spec_order().spec_len() <= usize::MAX,\n            ensures\n                result.spec_len() == self.spec_order().spec_len(),\n                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>\n                    result.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i),\n        ;"
+  },
+  {
+    "id": 12,
+    "function": "bfs",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "277-287",
+    "spec_strength": "unknown",
+    "snippet": "        fn bfs(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> (result: ArraySeqMtEphS<N>)\n            requires\n                source < graph.spec_len(),\n                graph.spec_len() > 0,\n                graph.spec_len() < usize::MAX,\n                spec_wf_graph(graph),\n            ensures\n                result.spec_len() == graph.spec_len(),\n                result.spec_index(source as int) == 0usize,\n                spec_distances_bounded(&result, graph.spec_len() as int),\n        ;"
+  },
+  {
+    "id": 13,
+    "function": "bfs_tree",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "291-305",
+    "spec_strength": "unknown",
+    "snippet": "        fn bfs_tree(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> (result: BFSTreeS)\n            requires\n                source < graph.spec_len(),\n                graph.spec_len() > 0,\n                graph.spec_len() < usize::MAX,\n                spec_wf_graph(graph),\n            ensures\n                result.parents.spec_len() == graph.spec_len(),\n                result.parents.spec_index(source as int) == source,\n                result.order.spec_len() > 0,\n                result.order.spec_index(0) == source,\n                forall|i: int| #![auto] 0 <= i < result.order.spec_len()\n                    ==> result.order.spec_index(i) < graph.spec_len(),\n                spec_parents_bounded(&result.parents, graph.spec_len() as int),\n        ;"
+  },
+  {
+    "id": 14,
+    "function": "process_frontier_parallel",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "311-333",
+    "spec_strength": "unknown",
+    "snippet": "    fn process_frontier_parallel(\n        graph: ArraySeqMtEphS<ArraySeqMtEphS<N>>,\n        distances: ArraySeqMtEphS<N>,\n        frontier: Vec<N>,\n        next_dist: N,\n    ) -> (result: (Vec<N>, Vec<Pair<N, N>>))\n        requires\n            graph.spec_len() > 0,\n            graph.spec_len() < usize::MAX,\n            spec_wf_graph(&graph),\n            distances.spec_len() == graph.spec_len(),\n            spec_distances_bounded(&distances, graph.spec_len() as int),\n            next_dist < graph.spec_len(),\n            forall|j: int| #![auto] 0 <= j < frontier@.len() ==>\n                frontier@[j] < graph.spec_len(),\n        ensures\n            forall|j: int| #![auto] 0 <= j < result.0@.len() ==>\n                result.0@[j] < graph.spec_len(),\n            forall|j: int| #![auto] 0 <= j < result.1@.len() ==>\n                result.1@[j].0 < graph.spec_len()\n                && result.1@[j].1 == next_dist\n                && distances.spec_index(result.1@[j].0 as int) == UNREACHABLE,\n        decreases frontier@.len()"
+  },
+  {
+    "id": 15,
+    "function": "process_frontier_tree_parallel",
+    "file": "Chap54/BFSMtEph.rs",
+    "lines": "595-613",
+    "spec_strength": "unknown",
+    "snippet": "    fn process_frontier_tree_parallel(\n        graph: ArraySeqMtEphS<ArraySeqMtEphS<N>>,\n        parents: ArraySeqMtEphS<N>,\n        frontier: Vec<N>,\n    ) -> (result: Vec<Pair<N, N>>)\n        requires\n            graph.spec_len() > 0,\n            graph.spec_len() < usize::MAX,\n            spec_wf_graph(&graph),\n            parents.spec_len() == graph.spec_len(),\n            spec_parents_bounded(&parents, graph.spec_len() as int),\n            forall|j: int| #![auto] 0 <= j < frontier@.len() ==>\n                frontier@[j] < graph.spec_len(),\n        ensures\n            forall|j: int| #![auto] 0 <= j < result@.len() ==>\n                result@[j].0 < graph.spec_len()\n                && result@[j].1 < graph.spec_len()\n                && parents.spec_index(result@[j].0 as int) == NO_PARENT,\n        decreases frontier@.len()"
+  },
+  {
+    "id": 16,
+    "function": "lemma_tabulate_all_no_parent",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "55-60",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_tabulate_all_no_parent(parents: &ArraySeqMtPerS<N>, n: int)\n        requires\n            parents.spec_len() == n,\n            forall|i: int| #![auto] 0 <= i < n ==> parents.spec_index(i) == NO_PARENT,\n        ensures\n            spec_parents_bounded(parents, n),"
+  },
+  {
+    "id": 17,
+    "function": "lemma_update_preserves_parents_bounded",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "63-80",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_update_preserves_parents_bounded(\n        parents: &ArraySeqMtPerS<N>,\n        old_parents: &ArraySeqMtPerS<N>,\n        v: int,\n        new_val: N,\n        n: int,\n    )\n        requires\n            parents.spec_len() == n,\n            old_parents.spec_len() == n,\n            0 <= v < n,\n            new_val < n,\n            parents.spec_index(v) == new_val,\n            forall|j: int| #![auto] 0 <= j < n && j != v ==>\n                parents.spec_index(j) == old_parents.spec_index(j),\n            spec_parents_bounded(old_parents, n),\n        ensures\n            spec_parents_bounded(parents, n),"
+  },
+  {
+    "id": 18,
+    "function": "lemma_copy_preserves_parents_bounded",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "94-105",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_copy_preserves_parents_bounded(\n        original: &ArraySeqMtPerS<N>,\n        copy: &ArraySeqMtPerS<N>,\n        n: int,\n    )\n        requires\n            spec_parents_bounded(original, n),\n            copy.spec_len() == original.spec_len(),\n            forall|i: int| #![auto] 0 <= i < original.spec_len() ==>\n                copy.spec_index(i) == original.spec_index(i),\n        ensures\n            spec_parents_bounded(copy, n),"
+  },
+  {
+    "id": 19,
+    "function": "lemma_tabulate_all_unreachable",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "115-121",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_tabulate_all_unreachable(distances: &ArraySeqMtPerS<N>, n: int)\n        requires\n            distances.spec_len() == n,\n            forall|i: int| #![auto] 0 <= i < n ==>\n                distances.spec_index(i) == UNREACHABLE,\n        ensures\n            spec_distances_bounded(distances, n),"
+  },
+  {
+    "id": 20,
+    "function": "lemma_update_preserves_bounded",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "125-142",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_update_preserves_bounded(\n        distances: &ArraySeqMtPerS<N>,\n        old_distances: &ArraySeqMtPerS<N>,\n        v: int,\n        new_val: N,\n        n: int,\n    )\n        requires\n            distances.spec_len() == n,\n            old_distances.spec_len() == n,\n            0 <= v < n,\n            new_val < n,\n            distances.spec_index(v) == new_val,\n            forall|j: int| #![auto] 0 <= j < n && j != v ==>\n                distances.spec_index(j) == old_distances.spec_index(j),\n            spec_distances_bounded(old_distances, n),\n        ensures\n            spec_distances_bounded(distances, n),"
+  },
+  {
+    "id": 21,
+    "function": "copy_distances",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "157-162",
+    "spec_strength": "unknown",
+    "snippet": "    fn copy_distances(distances: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>)\n        requires distances.spec_len() <= usize::MAX,\n        ensures\n            result.spec_len() == distances.spec_len(),\n            forall|i: int| #![auto] 0 <= i < distances.spec_len() ==>\n                result.spec_index(i) == distances.spec_index(i),"
+  },
+  {
+    "id": 22,
+    "function": "copy_graph",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "175-183",
+    "spec_strength": "unknown",
+    "snippet": "    fn copy_graph(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>) -> (result: ArraySeqMtPerS<ArraySeqMtPerS<N>>)\n        requires graph.spec_len() <= usize::MAX,\n        ensures\n            result.spec_len() == graph.spec_len(),\n            forall|u: int| #![auto] 0 <= u < graph.spec_len() ==>\n                result.spec_index(u).spec_len() == graph.spec_index(u).spec_len(),\n            forall|u: int, i: int| #![auto]\n                0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len() ==>\n                result.spec_index(u).spec_index(i) == graph.spec_index(u).spec_index(i),"
+  },
+  {
+    "id": 23,
+    "function": "lemma_copy_preserves_wf",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "209-222",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_copy_preserves_wf(\n        original: &ArraySeqMtPerS<ArraySeqMtPerS<N>>,\n        copy: &ArraySeqMtPerS<ArraySeqMtPerS<N>>,\n    )\n        requires\n            spec_wf_graph(original),\n            copy.spec_len() == original.spec_len(),\n            forall|u: int| #![auto] 0 <= u < original.spec_len() ==>\n                copy.spec_index(u).spec_len() == original.spec_index(u).spec_len(),\n            forall|u: int, i: int| #![auto]\n                0 <= u < original.spec_len() && 0 <= i < original.spec_index(u).spec_len() ==>\n                copy.spec_index(u).spec_index(i) == original.spec_index(u).spec_index(i),\n        ensures\n            spec_wf_graph(copy),"
+  },
+  {
+    "id": 24,
+    "function": "lemma_copy_preserves_bounded",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "235-246",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_copy_preserves_bounded(\n        original: &ArraySeqMtPerS<N>,\n        copy: &ArraySeqMtPerS<N>,\n        n: int,\n    )\n        requires\n            spec_distances_bounded(original, n),\n            copy.spec_len() == original.spec_len(),\n            forall|i: int| #![auto] 0 <= i < original.spec_len() ==>\n                copy.spec_index(i) == original.spec_index(i),\n        ensures\n            spec_distances_bounded(copy, n),"
+  },
+  {
+    "id": 25,
+    "function": "top_down_order",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "261-266",
+    "spec_strength": "unknown",
+    "snippet": "        fn top_down_order(&self) -> (result: &ArraySeqMtPerS<N>)\n            ensures\n                result.spec_len() == self.spec_order().spec_len(),\n                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>\n                    result.spec_index(i) == self.spec_order().spec_index(i),\n        ;"
+  },
+  {
+    "id": 26,
+    "function": "bottom_up_order",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "269-275",
+    "spec_strength": "unknown",
+    "snippet": "        fn bottom_up_order(&self) -> (result: ArraySeqMtPerS<N>)\n            requires self.spec_order().spec_len() <= usize::MAX,\n            ensures\n                result.spec_len() == self.spec_order().spec_len(),\n                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>\n                    result.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i),\n        ;"
+  },
+  {
+    "id": 27,
+    "function": "bfs",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "279-289",
+    "spec_strength": "unknown",
+    "snippet": "        fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (result: ArraySeqMtPerS<N>)\n            requires\n                source < graph.spec_len(),\n                graph.spec_len() > 0,\n                graph.spec_len() < usize::MAX,\n                spec_wf_graph(graph),\n            ensures\n                result.spec_len() == graph.spec_len(),\n                result.spec_index(source as int) == 0usize,\n                spec_distances_bounded(&result, graph.spec_len() as int),\n        ;"
+  },
+  {
+    "id": 28,
+    "function": "bfs_tree",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "293-307",
+    "spec_strength": "unknown",
+    "snippet": "        fn bfs_tree(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (result: BFSTreeS)\n            requires\n                source < graph.spec_len(),\n                graph.spec_len() > 0,\n                graph.spec_len() < usize::MAX,\n                spec_wf_graph(graph),\n            ensures\n                result.parents.spec_len() == graph.spec_len(),\n                result.parents.spec_index(source as int) == source,\n                result.order.spec_len() > 0,\n                result.order.spec_index(0) == source,\n                forall|i: int| #![auto] 0 <= i < result.order.spec_len()\n                    ==> result.order.spec_index(i) < graph.spec_len(),\n                spec_parents_bounded(&result.parents, graph.spec_len() as int),\n        ;"
+  },
+  {
+    "id": 29,
+    "function": "process_frontier_parallel",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "314-336",
+    "spec_strength": "unknown",
+    "snippet": "    fn process_frontier_parallel(\n        graph: ArraySeqMtPerS<ArraySeqMtPerS<N>>,\n        distances: ArraySeqMtPerS<N>,\n        frontier: Vec<N>,\n        next_dist: N,\n    ) -> (result: (Vec<N>, Vec<Pair<N, N>>))\n        requires\n            graph.spec_len() > 0,\n            graph.spec_len() < usize::MAX,\n            spec_wf_graph(&graph),\n            distances.spec_len() == graph.spec_len(),\n            spec_distances_bounded(&distances, graph.spec_len() as int),\n            next_dist < graph.spec_len(),\n            forall|j: int| #![auto] 0 <= j < frontier@.len() ==>\n                frontier@[j] < graph.spec_len(),\n        ensures\n            forall|j: int| #![auto] 0 <= j < result.0@.len() ==>\n                result.0@[j] < graph.spec_len(),\n            forall|j: int| #![auto] 0 <= j < result.1@.len() ==>\n                result.1@[j].0 < graph.spec_len()\n                && result.1@[j].1 == next_dist\n                && distances.spec_index(result.1@[j].0 as int) == UNREACHABLE,\n        decreases frontier@.len()"
+  },
+  {
+    "id": 30,
+    "function": "process_frontier_tree_parallel",
+    "file": "Chap54/BFSMtPer.rs",
+    "lines": "612-630",
+    "spec_strength": "unknown",
+    "snippet": "    fn process_frontier_tree_parallel(\n        graph: ArraySeqMtPerS<ArraySeqMtPerS<N>>,\n        parents: ArraySeqMtPerS<N>,\n        frontier: Vec<N>,\n    ) -> (result: Vec<Pair<N, N>>)\n        requires\n            graph.spec_len() > 0,\n            graph.spec_len() < usize::MAX,\n            spec_wf_graph(&graph),\n            parents.spec_len() == graph.spec_len(),\n            spec_parents_bounded(&parents, graph.spec_len() as int),\n            forall|j: int| #![auto] 0 <= j < frontier@.len() ==>\n                frontier@[j] < graph.spec_len(),\n        ensures\n            forall|j: int| #![auto] 0 <= j < result@.len() ==>\n                result@[j].0 < graph.spec_len()\n                && result@[j].1 < graph.spec_len()\n                && parents.spec_index(result@[j].0 as int) == NO_PARENT,\n        decreases frontier@.len()"
+  },
+  {
+    "id": 31,
+    "function": "lemma_tabulate_all_no_parent",
+    "file": "Chap54/BFSStEph.rs",
+    "lines": "57-62",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_tabulate_all_no_parent(parents: &ArraySeqStEphS<N>, n: int)\n        requires\n            parents.spec_len() == n,\n            forall|i: int| #![auto] 0 <= i < n ==> parents.spec_index(i) == NO_PARENT,\n        ensures\n            spec_parents_bounded(parents, n),"
+  },
+  {
+    "id": 32,
+    "function": "lemma_set_preserves_parents_bounded",
+    "file": "Chap54/BFSStEph.rs",
+    "lines": "65-82",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_set_preserves_parents_bounded(\n        parents: &ArraySeqStEphS<N>,\n        old_parents: &ArraySeqStEphS<N>,\n        v: int,\n        new_val: N,\n        n: int,\n    )\n        requires\n            parents.spec_len() == n,\n            old_parents.spec_len() == n,\n            0 <= v < n,\n            new_val < n,\n            parents.spec_index(v) == new_val,\n            forall|j: int| #![auto] 0 <= j < n && j != v ==>\n                parents.spec_index(j) == old_parents.spec_index(j),\n            spec_parents_bounded(old_parents, n),\n        ensures\n            spec_parents_bounded(parents, n),"
+  },
+  {
+    "id": 33,
+    "function": "bfs",
+    "file": "Chap54/BFSStEph.rs",
+    "lines": "99-109",
+    "spec_strength": "unknown",
+    "snippet": "        fn bfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (result: ArraySeqStEphS<N>)\n            requires\n                source < graph.spec_len(),\n                graph.spec_len() > 0,\n                graph.spec_len() < usize::MAX,\n                spec_wf_graph(graph),\n            ensures\n                result.spec_len() == graph.spec_len(),\n                result.spec_index(source as int) == 0usize,\n                spec_distances_bounded(&result, graph.spec_len() as int),\n        ;"
+  },
+  {
+    "id": 34,
+    "function": "bfs_tree",
+    "file": "Chap54/BFSStEph.rs",
+    "lines": "113-127",
+    "spec_strength": "unknown",
+    "snippet": "        fn bfs_tree(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (result: BFSTreeS)\n            requires\n                source < graph.spec_len(),\n                graph.spec_len() > 0,\n                graph.spec_len() < usize::MAX,\n                spec_wf_graph(graph),\n            ensures\n                result.parents.spec_len() == graph.spec_len(),\n                result.parents.spec_index(source as int) == source,\n                result.order.spec_len() > 0,\n                result.order.spec_index(0) == source,\n                forall|i: int| #![auto] 0 <= i < result.order.spec_len()\n                    ==> result.order.spec_index(i) < graph.spec_len(),\n                spec_parents_bounded(&result.parents, graph.spec_len() as int),\n        ;"
+  },
+  {
+    "id": 35,
+    "function": "top_down_order",
+    "file": "Chap54/BFSStEph.rs",
+    "lines": "133-137",
+    "spec_strength": "unknown",
+    "snippet": "        fn top_down_order(&self) -> (result: &ArraySeqStEphS<N>)\n            ensures\n                result.spec_len() == self.spec_order().spec_len(),\n                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>\n                    result.spec_index(i) == self.spec_order().spec_index(i);"
+  },
+  {
+    "id": 36,
+    "function": "bottom_up_order",
+    "file": "Chap54/BFSStEph.rs",
+    "lines": "139-144",
+    "spec_strength": "unknown",
+    "snippet": "        fn bottom_up_order(&self) -> (result: ArraySeqStEphS<N>)\n            requires self.spec_order().spec_len() <= usize::MAX,\n            ensures\n                result.spec_len() == self.spec_order().spec_len(),\n                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>\n                    result.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i);"
+  },
+  {
+    "id": 37,
+    "function": "lemma_tabulate_all_unreachable",
+    "file": "Chap54/BFSStEph.rs",
+    "lines": "149-155",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_tabulate_all_unreachable(distances: &ArraySeqStEphS<N>, n: int)\n        requires\n            distances.spec_len() == n,\n            forall|i: int| #![auto] 0 <= i < n ==>\n                distances.spec_index(i) == UNREACHABLE,\n        ensures\n            spec_distances_bounded(distances, n),"
+  },
+  {
+    "id": 38,
+    "function": "lemma_set_preserves_bounded",
+    "file": "Chap54/BFSStEph.rs",
+    "lines": "160-177",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_set_preserves_bounded(\n        distances: &ArraySeqStEphS<N>,\n        old_distances: &ArraySeqStEphS<N>,\n        v: int,\n        new_val: N,\n        n: int,\n    )\n        requires\n            distances.spec_len() == n,\n            old_distances.spec_len() == n,\n            0 <= v < n,\n            new_val < n,\n            distances.spec_index(v) == new_val,\n            forall|j: int| #![auto] 0 <= j < n && j != v ==>\n                distances.spec_index(j) == old_distances.spec_index(j),\n            spec_distances_bounded(old_distances, n),\n        ensures\n            spec_distances_bounded(distances, n),"
+  },
+  {
+    "id": 39,
+    "function": "lemma_tabulate_all_no_parent",
+    "file": "Chap54/BFSStPer.rs",
+    "lines": "57-62",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_tabulate_all_no_parent(parents: &ArraySeqStPerS<N>, n: int)\n        requires\n            parents.spec_len() == n,\n            forall|i: int| #![auto] 0 <= i < n ==> parents.spec_index(i) == NO_PARENT,\n        ensures\n            spec_parents_bounded(parents, n),"
+  },
+  {
+    "id": 40,
+    "function": "lemma_update_preserves_parents_bounded",
+    "file": "Chap54/BFSStPer.rs",
+    "lines": "65-82",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_update_preserves_parents_bounded(\n        parents: &ArraySeqStPerS<N>,\n        old_parents: &ArraySeqStPerS<N>,\n        v: int,\n        new_val: N,\n        n: int,\n    )\n        requires\n            parents.spec_len() == n,\n            old_parents.spec_len() == n,\n            0 <= v < n,\n            new_val < n,\n            parents.spec_index(v) == new_val,\n            forall|j: int| #![auto] 0 <= j < n && j != v ==>\n                parents.spec_index(j) == old_parents.spec_index(j),\n            spec_parents_bounded(old_parents, n),\n        ensures\n            spec_parents_bounded(parents, n),"
+  },
+  {
+    "id": 41,
+    "function": "lemma_tabulate_all_unreachable",
+    "file": "Chap54/BFSStPer.rs",
+    "lines": "96-102",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_tabulate_all_unreachable(distances: &ArraySeqStPerS<N>, n: int)\n        requires\n            distances.spec_len() == n,\n            forall|i: int| #![auto] 0 <= i < n ==>\n                distances.spec_index(i) == UNREACHABLE,\n        ensures\n            spec_distances_bounded(distances, n),"
+  },
+  {
+    "id": 42,
+    "function": "lemma_update_preserves_bounded",
+    "file": "Chap54/BFSStPer.rs",
+    "lines": "106-123",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_update_preserves_bounded(\n        distances: &ArraySeqStPerS<N>,\n        old_distances: &ArraySeqStPerS<N>,\n        v: int,\n        new_val: N,\n        n: int,\n    )\n        requires\n            distances.spec_len() == n,\n            old_distances.spec_len() == n,\n            0 <= v < n,\n            new_val < n,\n            distances.spec_index(v) == new_val,\n            forall|j: int| #![auto] 0 <= j < n && j != v ==>\n                distances.spec_index(j) == old_distances.spec_index(j),\n            spec_distances_bounded(old_distances, n),\n        ensures\n            spec_distances_bounded(distances, n),"
+  },
+  {
+    "id": 43,
+    "function": "bfs",
+    "file": "Chap54/BFSStPer.rs",
+    "lines": "140-150",
+    "spec_strength": "unknown",
+    "snippet": "        fn bfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> (result: ArraySeqStPerS<N>)\n            requires\n                source < graph.spec_len(),\n                graph.spec_len() > 0,\n                graph.spec_len() < usize::MAX,\n                spec_wf_graph(graph),\n            ensures\n                result.spec_len() == graph.spec_len(),\n                result.spec_index(source as int) == 0usize,\n                spec_distances_bounded(&result, graph.spec_len() as int),\n        ;"
+  },
+  {
+    "id": 44,
+    "function": "bfs_tree",
+    "file": "Chap54/BFSStPer.rs",
+    "lines": "154-168",
+    "spec_strength": "unknown",
+    "snippet": "        fn bfs_tree(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> (result: BFSTreeS)\n            requires\n                source < graph.spec_len(),\n                graph.spec_len() > 0,\n                graph.spec_len() < usize::MAX,\n                spec_wf_graph(graph),\n            ensures\n                result.parents.spec_len() == graph.spec_len(),\n                result.parents.spec_index(source as int) == source,\n                result.order.spec_len() > 0,\n                result.order.spec_index(0) == source,\n                forall|i: int| #![auto] 0 <= i < result.order.spec_len()\n                    ==> result.order.spec_index(i) < graph.spec_len(),\n                spec_parents_bounded(&result.parents, graph.spec_len() as int),\n        ;"
+  },
+  {
+    "id": 45,
+    "function": "top_down_order",
+    "file": "Chap54/BFSStPer.rs",
+    "lines": "174-178",
+    "spec_strength": "unknown",
+    "snippet": "        fn top_down_order(&self) -> (result: &ArraySeqStPerS<N>)\n            ensures\n                result.spec_len() == self.spec_order().spec_len(),\n                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>\n                    result.spec_index(i) == self.spec_order().spec_index(i);"
+  },
+  {
+    "id": 46,
+    "function": "bottom_up_order",
+    "file": "Chap54/BFSStPer.rs",
+    "lines": "180-185",
+    "spec_strength": "unknown",
+    "snippet": "        fn bottom_up_order(&self) -> (result: ArraySeqStPerS<N>)\n            requires self.spec_order().spec_len() <= usize::MAX,\n            ensures\n                result.spec_len() == self.spec_order().spec_len(),\n                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>\n                    result.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i);"
+  }
+]

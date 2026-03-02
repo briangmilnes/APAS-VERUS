@@ -1,0 +1,10 @@
+[
+  {
+    "id": 1,
+    "function": "insertion_sort",
+    "file": "Chap03/InsertionSortStEph.rs",
+    "lines": "37-41",
+    "spec_strength": "unknown",
+    "snippet": "pub fn insertion_sort<T: TotalOrder + Copy>(a: &mut [T]) -> (sorted: &[T])\n        ensures\n          sorted.len() == old(a).len(),\n          sorted@.to_multiset() == old(a)@.to_multiset(),\n          is_sorted(sorted),"
+  }
+]

@@ -1,0 +1,202 @@
+[
+  {
+    "id": 1,
+    "function": "lemma_total_ordering",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "64-65",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
+  },
+  {
+    "id": 2,
+    "function": "lemma_partition_sort_concat",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "90-113",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_partition_sort_concat<T: TotalOrder>(\n        original: Seq<T>,\n        left_view: Seq<T>,\n        right_view: Seq<T>,\n        eq_view: Seq<T>,\n        sorted_left: Seq<T>,\n        sorted_right: Seq<T>,\n        pivot: T,\n    )\n        requires\n            total_ordering(spec_leq::<T>()),\n            sorted_left =~= left_view.sort_by(spec_leq::<T>()),\n            sorted_right =~= right_view.sort_by(spec_leq::<T>()),\n            forall|j: int| 0 <= j < left_view.len() ==>\n                (#[trigger] T::le(left_view[j], pivot)) && left_view[j] != pivot,\n            forall|j: int| 0 <= j < right_view.len() ==>\n                (#[trigger] T::le(pivot, right_view[j])) && right_view[j] != pivot,\n            forall|j: int| 0 <= j < eq_view.len() ==>\n                (#[trigger] eq_view[j]) == pivot,\n            eq_view.len() >= 1,\n            original.to_multiset() =~=\n                left_view.to_multiset().add(right_view.to_multiset()).add(eq_view.to_multiset()),\n        ensures\n            (sorted_left + eq_view + sorted_right) =~= original.sort_by(spec_leq::<T>()),"
+  },
+  {
+    "id": 3,
+    "function": "quick_sort_first",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "185-190",
+    "spec_strength": "unknown",
+    "snippet": "        fn quick_sort_first(a: &mut ArraySeqMtEphS<T>)\n            requires old(a).spec_len() <= usize::MAX,\n            ensures\n                a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>()),\n                a.spec_len() == old(a).spec_len(),\n            decreases old(a).spec_len();"
+  },
+  {
+    "id": 4,
+    "function": "quick_sort_median3",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "195-200",
+    "spec_strength": "unknown",
+    "snippet": "        fn quick_sort_median3(a: &mut ArraySeqMtEphS<T>)\n            requires old(a).spec_len() <= usize::MAX,\n            ensures\n                a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>()),\n                a.spec_len() == old(a).spec_len(),\n            decreases old(a).spec_len();"
+  },
+  {
+    "id": 5,
+    "function": "quick_sort_random",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "205-210",
+    "spec_strength": "unknown",
+    "snippet": "        fn quick_sort_random(a: &mut ArraySeqMtEphS<T>)\n            requires old(a).spec_len() <= usize::MAX,\n            ensures\n                a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>()),\n                a.spec_len() == old(a).spec_len(),\n            decreases old(a).spec_len();"
+  },
+  {
+    "id": 6,
+    "function": "median_of_three",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "213-216",
+    "spec_strength": "unknown",
+    "snippet": "        fn median_of_three(a: T, b: T, c: T) -> (median: T)\n            ensures\n                median == a || median == b || median == c,\n                median == spec_median_of_three(a, b, c);"
+  },
+  {
+    "id": 7,
+    "function": "median3_pivot_idx",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "219-224",
+    "spec_strength": "unknown",
+    "snippet": "        fn median3_pivot_idx(a: &ArraySeqMtEphS<T>, n: usize) -> (idx: usize)\n            requires n >= 2, n == a.spec_len(),\n            ensures\n                idx < n,\n                idx == 0 || idx == n / 2 || idx == n - 1,\n                a.seq@[idx as int] == spec_median_of_three(a.seq@[0], a.seq@[(n / 2) as int], a.seq@[(n - 1) as int]);"
+  },
+  {
+    "id": 8,
+    "function": "concat_three",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "227-233",
+    "spec_strength": "unknown",
+    "snippet": "        fn concat_three(\n            left: &ArraySeqMtEphS<T>,\n            mid: &ArraySeqMtEphS<T>,\n            right: &ArraySeqMtEphS<T>,\n        ) -> (out: Vec<T>)\n            requires left.spec_len() + mid.spec_len() + right.spec_len() <= usize::MAX,\n            ensures out@ =~= left.seq@ + mid.seq@ + right.seq@;"
+  },
+  {
+    "id": 9,
+    "function": "lemma_total_ordering",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "71-72",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
+  },
+  {
+    "id": 10,
+    "function": "lemma_partition_sort_concat",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "97-120",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_partition_sort_concat<T: TotalOrder>(\n        original: Seq<T>,\n        left_view: Seq<T>,\n        right_view: Seq<T>,\n        eq_view: Seq<T>,\n        sorted_left: Seq<T>,\n        sorted_right: Seq<T>,\n        pivot: T,\n    )\n        requires\n            total_ordering(spec_leq::<T>()),\n            sorted_left =~= left_view.sort_by(spec_leq::<T>()),\n            sorted_right =~= right_view.sort_by(spec_leq::<T>()),\n            forall|j: int| 0 <= j < left_view.len() ==>\n                (#[trigger] T::le(left_view[j], pivot)) && left_view[j] != pivot,\n            forall|j: int| 0 <= j < right_view.len() ==>\n                (#[trigger] T::le(pivot, right_view[j])) && right_view[j] != pivot,\n            forall|j: int| 0 <= j < eq_view.len() ==>\n                (#[trigger] eq_view[j]) == pivot,\n            eq_view.len() >= 1,\n            original.to_multiset() =~=\n                left_view.to_multiset().add(right_view.to_multiset()).add(eq_view.to_multiset()),\n        ensures\n            (sorted_left + eq_view + sorted_right) =~= original.sort_by(spec_leq::<T>()),"
+  },
+  {
+    "id": 11,
+    "function": "lemma_elements_from_vec",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "187-193",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)\n        requires\n            a.slice_wf(),\n            a.spec_len() == v.len(),\n            forall|i: int| #![trigger a.spec_index(i)]\n                0 <= i < v.len() ==> a.spec_index(i) == v[i],\n        ensures elements(a) =~= v,"
+  },
+  {
+    "id": 12,
+    "function": "quick_sort_first",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "209-218",
+    "spec_strength": "unknown",
+    "snippet": "        fn quick_sort_first(a: &mut ArraySeqMtEphSliceS<T>)\n            requires\n                old(a).slice_wf(),\n                old(a).spec_len() <= usize::MAX,\n                obeys_feq_clone::<T>(),\n            ensures\n                a.slice_wf(),\n                elements(*a) =~= elements(*old(a)).sort_by(spec_leq::<T>()),\n                a.spec_len() == old(a).spec_len(),\n            decreases old(a).spec_len();"
+  },
+  {
+    "id": 13,
+    "function": "quick_sort_median3",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "223-232",
+    "spec_strength": "unknown",
+    "snippet": "        fn quick_sort_median3(a: &mut ArraySeqMtEphSliceS<T>)\n            requires\n                old(a).slice_wf(),\n                old(a).spec_len() <= usize::MAX,\n                obeys_feq_clone::<T>(),\n            ensures\n                a.slice_wf(),\n                elements(*a) =~= elements(*old(a)).sort_by(spec_leq::<T>()),\n                a.spec_len() == old(a).spec_len(),\n            decreases old(a).spec_len();"
+  },
+  {
+    "id": 14,
+    "function": "quick_sort_random",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "237-246",
+    "spec_strength": "unknown",
+    "snippet": "        fn quick_sort_random(a: &mut ArraySeqMtEphSliceS<T>)\n            requires\n                old(a).slice_wf(),\n                old(a).spec_len() <= usize::MAX,\n                obeys_feq_clone::<T>(),\n            ensures\n                a.slice_wf(),\n                elements(*a) =~= elements(*old(a)).sort_by(spec_leq::<T>()),\n                a.spec_len() == old(a).spec_len(),\n            decreases old(a).spec_len();"
+  },
+  {
+    "id": 15,
+    "function": "median_of_three",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "249-252",
+    "spec_strength": "unknown",
+    "snippet": "        fn median_of_three(a: T, b: T, c: T) -> (median: T)\n            ensures\n                median == a || median == b || median == c,\n                median == spec_median_of_three(a, b, c);"
+  },
+  {
+    "id": 16,
+    "function": "median3_pivot_idx",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "255-264",
+    "spec_strength": "unknown",
+    "snippet": "        fn median3_pivot_idx(a: &ArraySeqMtEphSliceS<T>, n: usize) -> (idx: usize)\n            requires\n                n >= 2, n == a.spec_len(),\n                a.slice_wf(),\n                obeys_feq_clone::<T>(),\n            ensures\n                idx < n,\n                idx == 0 || idx == n / 2 || idx == n - 1,\n                a.spec_index(idx as int) == spec_median_of_three(\n                    a.spec_index(0), a.spec_index((n / 2) as int), a.spec_index((n - 1) as int));"
+  },
+  {
+    "id": 17,
+    "function": "concat_three_vecs",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "267-273",
+    "spec_strength": "unknown",
+    "snippet": "        fn concat_three_vecs(\n            left: &Vec<T>,\n            mid: &Vec<T>,\n            right: &Vec<T>,\n        ) -> (out: Vec<T>)\n            requires left@.len() + mid@.len() + right@.len() <= usize::MAX,\n            ensures out@ =~= left@ + mid@ + right@;"
+  },
+  {
+    "id": 18,
+    "function": "lemma_total_ordering",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "62-63",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
+  },
+  {
+    "id": 19,
+    "function": "lemma_partition_sort_concat",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "88-111",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_partition_sort_concat<T: TotalOrder>(\n        original: Seq<T>,\n        left_view: Seq<T>,\n        right_view: Seq<T>,\n        eq_view: Seq<T>,\n        sorted_left: Seq<T>,\n        sorted_right: Seq<T>,\n        pivot: T,\n    )\n        requires\n            total_ordering(spec_leq::<T>()),\n            sorted_left =~= left_view.sort_by(spec_leq::<T>()),\n            sorted_right =~= right_view.sort_by(spec_leq::<T>()),\n            forall|j: int| 0 <= j < left_view.len() ==>\n                (#[trigger] T::le(left_view[j], pivot)) && left_view[j] != pivot,\n            forall|j: int| 0 <= j < right_view.len() ==>\n                (#[trigger] T::le(pivot, right_view[j])) && right_view[j] != pivot,\n            forall|j: int| 0 <= j < eq_view.len() ==>\n                (#[trigger] eq_view[j]) == pivot,\n            eq_view.len() >= 1,\n            original.to_multiset() =~=\n                left_view.to_multiset().add(right_view.to_multiset()).add(eq_view.to_multiset()),\n        ensures\n            (sorted_left + eq_view + sorted_right) =~= original.sort_by(spec_leq::<T>()),"
+  },
+  {
+    "id": 20,
+    "function": "quick_sort_first",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "183-188",
+    "spec_strength": "unknown",
+    "snippet": "        fn quick_sort_first(a: &mut ArraySeqStEphS<T>)\n            requires old(a).spec_len() <= usize::MAX,\n            ensures\n                a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>()),\n                a.spec_len() == old(a).spec_len(),\n            decreases old(a).spec_len();"
+  },
+  {
+    "id": 21,
+    "function": "quick_sort_median3",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "193-198",
+    "spec_strength": "unknown",
+    "snippet": "        fn quick_sort_median3(a: &mut ArraySeqStEphS<T>)\n            requires old(a).spec_len() <= usize::MAX,\n            ensures\n                a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>()),\n                a.spec_len() == old(a).spec_len(),\n            decreases old(a).spec_len();"
+  },
+  {
+    "id": 22,
+    "function": "quick_sort_random",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "203-208",
+    "spec_strength": "unknown",
+    "snippet": "        fn quick_sort_random(a: &mut ArraySeqStEphS<T>)\n            requires old(a).spec_len() <= usize::MAX,\n            ensures\n                a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>()),\n                a.spec_len() == old(a).spec_len(),\n            decreases old(a).spec_len();"
+  },
+  {
+    "id": 23,
+    "function": "median_of_three",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "211-214",
+    "spec_strength": "unknown",
+    "snippet": "        fn median_of_three(a: T, b: T, c: T) -> (median: T)\n            ensures\n                median == a || median == b || median == c,\n                median == spec_median_of_three(a, b, c);"
+  },
+  {
+    "id": 24,
+    "function": "median3_pivot_idx",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "217-222",
+    "spec_strength": "unknown",
+    "snippet": "        fn median3_pivot_idx(a: &ArraySeqStEphS<T>, n: usize) -> (idx: usize)\n            requires n >= 2, n == a.spec_len(),\n            ensures\n                idx < n,\n                idx == 0 || idx == n / 2 || idx == n - 1,\n                a.seq@[idx as int] == spec_median_of_three(a.seq@[0], a.seq@[(n / 2) as int], a.seq@[(n - 1) as int]);"
+  },
+  {
+    "id": 25,
+    "function": "concat_three",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "225-231",
+    "spec_strength": "unknown",
+    "snippet": "        fn concat_three(\n            left: &ArraySeqStEphS<T>,\n            mid: &ArraySeqStEphS<T>,\n            right: &ArraySeqStEphS<T>,\n        ) -> (out: Vec<T>)\n            requires left.spec_len() + mid.spec_len() + right.spec_len() <= usize::MAX,\n            ensures out@ =~= left.seq@ + mid.seq@ + right.seq@;"
+  }
+]

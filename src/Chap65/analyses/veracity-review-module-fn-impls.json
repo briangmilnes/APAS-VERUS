@@ -1,0 +1,114 @@
+[
+  {
+    "id": 1,
+    "function": "kruskal_mst",
+    "file": "Chap65/KruskalStEph.rs",
+    "lines": "26-28",
+    "spec_strength": "",
+    "snippet": "            fn kruskal_mst<V: StT + Hash + Ord>(\n                graph: &LabUnDirGraphStEph<V, WrappedF64>,\n            ) -> SetStEph<LabEdge<V, WrappedF64>>;"
+  },
+  {
+    "id": 2,
+    "function": "mst_weight",
+    "file": "Chap65/KruskalStEph.rs",
+    "lines": "32",
+    "spec_strength": "",
+    "snippet": "            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64;"
+  },
+  {
+    "id": 3,
+    "function": "verify_mst_size",
+    "file": "Chap65/KruskalStEph.rs",
+    "lines": "36-39",
+    "spec_strength": "",
+    "snippet": "            fn verify_mst_size<V: StT + Hash + Ord>(\n                graph: &LabUnDirGraphStEph<V, WrappedF64>,\n                mst: &SetStEph<LabEdge<V, WrappedF64>>,\n            ) -> B;"
+  },
+  {
+    "id": 4,
+    "function": "prim_mst",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "43-46",
+    "spec_strength": "",
+    "snippet": "            fn prim_mst<V: StT + Hash + Ord>(\n                graph: &LabUnDirGraphStEph<V, WrappedF64>,\n                start: V,\n            ) -> SetStEph<LabEdge<V, WrappedF64>>;"
+  },
+  {
+    "id": 5,
+    "function": "mst_weight",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "50",
+    "spec_strength": "",
+    "snippet": "            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64;"
+  },
+  {
+    "id": 6,
+    "function": "pq_entry_new",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "59-69",
+    "spec_strength": "",
+    "snippet": "    /// Module-level function to create a new PQEntry.\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n    #[cfg(not(verus_keep_ghost))]\n    fn pq_entry_new<V: StT + Hash + Ord>(priority: WrappedF64, vertex: V, parent: Option<V>) -> PQEntry<V> {\n        PQEntry {\n            priority,\n            vertex,\n            parent,\n        }\n    }"
+  },
+  {
+    "id": 7,
+    "function": "cmp",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "73-75",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn cmp(&self, other: &Self) -> Ordering { self.priority.cmp(&other.priority) }"
+  },
+  {
+    "id": 8,
+    "function": "partial_cmp",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "80-82",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }"
+  },
+  {
+    "id": 9,
+    "function": "new",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "102-111",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (uf: Self)\n            requires\n                obeys_key_model::<V>(),\n                obeys_feq_full::<V>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,\n            ensures\n                uf@.parent =~= Map::<<V as View>::V, V>::empty(),\n                uf@.rank =~= Map::<<V as View>::V, usize>::empty(),\n                uf@.elements =~= Seq::<V>::empty(),\n                uf@.roots =~= Map::<<V as View>::V, <V as View>::V>::empty();"
+  },
+  {
+    "id": 10,
+    "function": "insert",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "115-121",
+    "spec_strength": "hole",
+    "snippet": "        fn insert(&mut self, v: V)\n            requires\n                old(self).wf(),\n            ensures\n                self.wf(),\n                old(self)@.parent.contains_key(v@) ==> self@ == old(self)@,\n                !old(self)@.parent.contains_key(v@) ==> {"
+  },
+  {
+    "id": 11,
+    "function": "find",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "130-143",
+    "spec_strength": "hole",
+    "snippet": "        fn find(&mut self, v: &V) -> (root: V)\n            requires\n                old(self).wf(),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.wf(),\n                // Result is the canonical root.\n                root@ == old(self)@.roots[v@],\n                // Path compression preserves the logical partition.\n                self@.roots =~= old(self)@.roots,\n                // Domain unchanged.\n                self@.parent.dom() =~= old(self)@.parent.dom(),\n                self@.rank =~= old(self)@.rank,\n                self@.elements =~= old(self)@.elements;"
+  },
+  {
+    "id": 12,
+    "function": "union",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "147-157",
+    "spec_strength": "hole",
+    "snippet": "        fn union(&mut self, u: &V, v: &V)\n            requires\n                old(self).wf(),\n                old(self)@.parent.contains_key(u@),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.wf(),\n                self@.parent.dom() =~= old(self)@.parent.dom(),\n                self@.elements =~= old(self)@.elements,\n                // Merged elements share a new root; others unchanged.\n                forall|x: <V as View>::V| #[trigger] self@.roots.contains_key(x) ==> {"
+  },
+  {
+    "id": 13,
+    "function": "equals",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "169-178",
+    "spec_strength": "hole",
+    "snippet": "        fn equals(&mut self, u: &V, v: &V) -> (same: B)\n            requires\n                old(self).wf(),\n                old(self)@.parent.contains_key(u@),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.wf(),\n                same == (old(self)@.roots[u@] == old(self)@.roots[v@]),\n                self@.roots =~= old(self)@.roots,\n                self@.parent.dom() =~= old(self)@.parent.dom();"
+  },
+  {
+    "id": 14,
+    "function": "num_sets",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "182-188",
+    "spec_strength": "hole",
+    "snippet": "        fn num_sets(&mut self) -> (count: usize)\n            requires\n                old(self).wf(),\n            ensures\n                self.wf(),\n                self@.roots =~= old(self)@.roots,\n                self@.parent.dom() =~= old(self)@.parent.dom();"
+  }
+]

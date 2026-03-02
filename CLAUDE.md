@@ -218,11 +218,27 @@ scripts/rtt.sh               # run time tests (cargo nextest)
 
 ### Proof Holes
 
-Always use `veracity-review-proof-holes` for hole queries (never grep manually):
+Use the wrapper scripts for hole queries (never grep manually, never call the binary directly):
 
 ```bash
-~/projects/veracity/target/release/veracity-review-proof-holes -d src/ChapNN/
+scripts/holes.sh src/ChapNN/          # single chapter or file
+scripts/all-holes-by-chap.sh          # all chapters, writes to analyses/ logs
 ```
+
+Run `scripts/all-holes-by-chap.sh` after any rename or structural change that affects
+proof hole analysis output. The per-chapter logs live at
+`src/ChapNN/analyses/veracity-review-verus-proof-holes.log`.
+
+### Analysis Scripts
+
+All analysis scripts write per-chapter output to `src/ChapNN/analyses/`. Run them after
+renames, structural changes, or when refreshing analysis baselines.
+
+| Script | Output per chapter |
+|---|---|
+| `scripts/all-holes-by-chap.sh` | `veracity-review-verus-proof-holes.log` |
+| `scripts/all-style-by-chap.sh` | `veracity-review-verus-style.log` |
+| `scripts/all-fn-impls-by-chap.sh` | `veracity-review-module-fn-impls.{md,json}` |
 
 **NEVER add `external_body`, `admit()`, or `assume(...)` without asking the user first.**
 

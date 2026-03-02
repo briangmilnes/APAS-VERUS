@@ -1,0 +1,286 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/Chap41/
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap41/analyses/veracity-review-verus-style.log
+
+Checking 7 files...
+
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:407: warning: [13] impl Default for AVLTreeSetMtEph should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: warning: [17] collection AVLTreeSetMtEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: warning: [17] collection AVLTreeSetMtEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap41/ProveAVLTreeSetMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:64: warning: [18] struct AVLTreeSetMtEph should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:77: warning: [18] impl View for AVLTreeSetMtEph < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:84: warning: [18] trait AVLTreeSetMtEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:87: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:91: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:95: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:99: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:102: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:106: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:110: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:114: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:118: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:122: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:138: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:148: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:158: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:167: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:176: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:187: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:235: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:299: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:310: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:345: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:377: warning: [19] clone return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:473: warning: [13] impl Default for AVLTreeSetMtPer should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:477: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:490: warning: [15] impl Eq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:492: warning: [15] impl PartialOrd should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:498: warning: [15] impl Ord should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:66: warning: [18] impl View for AVLTreeSetMtPer < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:73: warning: [18] trait AVLTreeSetMtPerTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:76: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:80: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:84: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:88: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:91: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:95: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:99: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:103: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:107: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:111: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:115: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:119: warning: [19] insert return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:126: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:134: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:141: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:148: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:160: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:210: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:270: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:328: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:338: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:390: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:420: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:429: warning: [19] insert return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:446: warning: [19] clone return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:439: warning: [13] impl Default for AVLTreeSetStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:443: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:456: warning: [15] impl Eq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:54: warning: [18] impl View for AVLTreeSetStEph < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:61: warning: [18] trait AVLTreeSetStEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:64: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:68: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:72: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:76: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:79: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:83: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:87: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:91: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:95: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:99: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:114: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:122: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:143: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:150: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:161: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:182: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:209: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:235: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:261: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:299: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:412: warning: [19] clone return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:447: warning: [13] impl Default for AVLTreeSetStPer should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:451: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:464: warning: [15] impl Eq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:54: warning: [18] impl View for AVLTreeSetStPer < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:61: warning: [18] trait AVLTreeSetStPerTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:64: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:68: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:72: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:76: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:79: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:83: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:87: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:91: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:95: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:99: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:103: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:107: warning: [19] insert return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:114: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:122: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:143: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:150: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:161: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:182: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:209: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:235: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:261: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:299: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:328: warning: [19] delete return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:355: warning: [19] insert return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:420: warning: [19] clone return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:298: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:55: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:59: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:63: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:66: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:70: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:76: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:80: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:84: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:88: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:92: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:96: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:112: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:122: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:129: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:143: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:150: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:164: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:178: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:196: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:211: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:226: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:241: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:270: warning: [19] clone return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:575: warning: [13] impl Default for ArraySetStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:579: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:80: warning: [18] proof fn lemma_filter_remove should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:119: warning: [18] proof fn lemma_push_preserves_no_dups should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:145: warning: [18] proof fn lemma_subseq_no_dups_subset should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:165: warning: [18] trait ArraySetStEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:168: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:172: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:175: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:178: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:181: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:184: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:193: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:204: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:215: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:226: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:256: warning: [19] size return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:264: warning: [19] to_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:267: warning: [19] empty return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:274: warning: [19] singleton return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:297: warning: [19] from_seq return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:318: warning: [19] find return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:355: warning: [19] filter return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:380: warning: [19] intersection return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:408: warning: [19] difference return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:436: warning: [19] union return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:544: warning: [19] clone return name 'result' could be more descriptive
+
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:21: warning: [12] trait Example41_3Trait fn example_41_1_array_set should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:25: warning: [12] trait Example41_3Trait fn example_41_1_avl_set should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:29: warning: [12] trait Example41_3Trait fn demonstrate_set_operations should have requires/ensures
+
+════════════════════════════════════════════════════════════════
+Summary: 89 passed, 170 warnings in 7 files (checked 7 files)
+════════════════════════════════════════════════════════════════

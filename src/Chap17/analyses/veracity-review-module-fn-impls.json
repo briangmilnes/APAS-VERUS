@@ -1,0 +1,170 @@
+[
+  {
+    "id": 1,
+    "function": "new",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "144-147",
+    "spec_strength": "unknown",
+    "snippet": "            fn new(length: N, init_value: T) -> (new_seq: Self)\n                ensures\n                    new_seq.spec_len() == length,\n                    forall|i: int| #![trigger new_seq.spec_seq()[i]] 0 <= i < length ==> cloned(init_value, new_seq.spec_seq()[i]);"
+  },
+  {
+    "id": 2,
+    "function": "set",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "151-157",
+    "spec_strength": "unknown",
+    "snippet": "            fn set(&mut self, index: N, value: T) -> (success: bool)\n                ensures\n                    success ==> index < old(self).spec_len()\n                        && self.spec_len() == old(self).spec_len()\n                        && self@[index as int] == value@\n                        && forall|i: int| 0 <= i < self.spec_len() && i != index as int ==> self@[i] == old(self)@[i],\n                    !success ==> index >= old(self).spec_len() && self@ == old(self)@;"
+  },
+  {
+    "id": 3,
+    "function": "length",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "161-162",
+    "spec_strength": "unknown",
+    "snippet": "            fn length(&self) -> (len: N)\n                ensures len == self.spec_len();"
+  },
+  {
+    "id": 4,
+    "function": "nth",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "166-168",
+    "spec_strength": "unknown",
+    "snippet": "            fn nth(&self, index: N) -> (elem: &T)\n                requires index < self.spec_len()\n                ensures elem@ == self@[index as int];"
+  },
+  {
+    "id": 5,
+    "function": "empty",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "172-173",
+    "spec_strength": "unknown",
+    "snippet": "            fn empty() -> (empty_seq: Self)\n                ensures empty_seq.spec_len() == 0;"
+  },
+  {
+    "id": 6,
+    "function": "singleton",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "177-180",
+    "spec_strength": "unknown",
+    "snippet": "            fn singleton(item: T) -> (singleton: Self)\n                ensures\n                    singleton.spec_len() == 1,\n                    singleton@[0] == item@;"
+  },
+  {
+    "id": 7,
+    "function": "add_last",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "184-188",
+    "spec_strength": "unknown",
+    "snippet": "            fn add_last(&mut self, value: T)\n                ensures\n                    self.spec_len() == old(self).spec_len() + 1,\n                    self@[self.spec_len() - 1] == value@,\n                    forall|i: int| 0 <= i < old(self).spec_len() ==> self@[i] == old(self)@[i];"
+  },
+  {
+    "id": 8,
+    "function": "delete_last",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "192-198",
+    "spec_strength": "unknown",
+    "snippet": "            fn delete_last(&mut self) -> (shortened: Option<T>)\n                ensures\n                    old(self).spec_len() == 0 ==> shortened is None && self@ == old(self)@,\n                    old(self).spec_len() > 0  ==> shortened is Some\n                        && shortened->Some_0@ == old(self)@[old(self).spec_len() - 1]\n                        && self.spec_len() == old(self).spec_len() - 1\n                        && forall|i: int| 0 <= i < self.spec_len() ==> self@[i] == old(self)@[i];"
+  },
+  {
+    "id": 9,
+    "function": "is_empty",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "202-203",
+    "spec_strength": "unknown",
+    "snippet": "            fn is_empty(&self) -> (emptiness: bool)\n                ensures emptiness == self.spec_is_empty();"
+  },
+  {
+    "id": 10,
+    "function": "is_singleton",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "207-208",
+    "spec_strength": "unknown",
+    "snippet": "            fn is_singleton(&self) -> (singularity: bool)\n                ensures singularity == self.spec_is_singleton();"
+  },
+  {
+    "id": 11,
+    "function": "from_vec",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "212-213",
+    "spec_strength": "unknown",
+    "snippet": "            fn from_vec(data: Vec<T>) -> (seq: Self)\n                ensures seq.spec_seq() == data@;"
+  },
+  {
+    "id": 12,
+    "function": "with_len",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "217-220",
+    "spec_strength": "unknown",
+    "snippet": "            fn with_len(length: N, init_value: T) -> (seq_of_len_value: Self)\n                ensures\n                    seq_of_len_value.spec_len() == length,\n                    forall|i: int| #![trigger seq_of_len_value.spec_seq()[i]] 0 <= i < length ==> cloned(init_value, seq_of_len_value.spec_seq()[i]);"
+  },
+  {
+    "id": 13,
+    "function": "subseq",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "224-231",
+    "spec_strength": "unknown",
+    "snippet": "            fn subseq(&self, start: N, length: N) -> (subseq: &[T])\n                ensures\n                    subseq@.len() <= length,\n                ({\n                    let s = spec_clamp(start as int, self.spec_seq().len() as int);\n                    let e = spec_clamp((start + length) as int, self.spec_seq().len() as int);\n                    subseq@ == self.spec_seq().subrange(s, e)\n                });"
+  },
+  {
+    "id": 14,
+    "function": "subseq_copy",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "235-240",
+    "spec_strength": "unknown",
+    "snippet": "            fn subseq_copy(&self, start: N, length: N) -> (subseq: Self) where T: Copy\n                requires\n                    start as int + length as int <= self.spec_seq().len(),\n                ensures\n                    subseq.spec_len() == length,\n                    subseq.spec_seq() == self.spec_seq().subrange(start as int, (start + length) as int);"
+  },
+  {
+    "id": 15,
+    "function": "domain",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "244-245",
+    "spec_strength": "unknown",
+    "snippet": "            fn domain(&self) -> (domain: Vec<N>)\n                ensures domain@.len() == self.spec_len();"
+  },
+  {
+    "id": 16,
+    "function": "range",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "249-253",
+    "spec_strength": "unknown",
+    "snippet": "            fn range(&self) -> (range: Vec<T>)\n                requires valid_key_type::<T>()\n                ensures\n                    range@.len() <= self.spec_seq().len(),\n                    range@.no_duplicates();"
+  },
+  {
+    "id": 17,
+    "function": "multiset_range",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "257-262",
+    "spec_strength": "unknown",
+    "snippet": "            fn multiset_range(&self) -> (range: Vec<(N, T)>)\n                requires\n                    valid_key_type::<T>(),\n                    forall|k1: T, k2: T| k1@ == k2@ ==> k1 == k2,\n                ensures\n                    range@.len() <= self.spec_seq().len();"
+  },
+  {
+    "id": 18,
+    "function": "iter",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "267-271",
+    "spec_strength": "unknown",
+    "snippet": "            fn iter(&self) -> (it: MathSeqIter<'_, T>)\n                ensures\n                    it@.0 == 0,\n                    it@.1 == self.spec_seq(),\n                    iter_invariant(&it);"
+  },
+  {
+    "id": 19,
+    "function": "next",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "617-633",
+    "spec_strength": "unknown",
+    "snippet": "        fn next(&mut self) -> (next: Option<&'a T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
+  },
+  {
+    "id": 20,
+    "function": "eq",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "724-725",
+    "spec_strength": "unknown",
+    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
+  },
+  {
+    "id": 21,
+    "function": "iter_mut",
+    "file": "Chap17/MathSeq.rs",
+    "lines": "738-743",
+    "spec_strength": "",
+    "snippet": "        /// Mutable borrow iterator. Must stay outside verus! (returns &mut).\n        /// - APAS: no cost spec.\n        /// - Claude-Opus-4.6: O(1) — returns iterator wrapper.\n        pub fn iter_mut(&mut self) -> IterMut<'_, T> {\n            self.data.iter_mut()\n        }"
+  }
+]
