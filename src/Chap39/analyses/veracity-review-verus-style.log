@@ -1,102 +1,96 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS/src/Chap39/
-Codebase: /home/milnes/projects/APAS-VERUS
+Path: /home/milnes/projects/APAS-VERUS-agent3/src/Chap39/
+Codebase: /home/milnes/projects/APAS-VERUS-agent3
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS/src/Chap39/analyses/veracity-review-verus-style.log
+Excluding: ["Chap21", "vstdplus", "Types.rs", "Concurrency.rs", "experiments", "lib.rs"]
+Logging to: /home/milnes/projects/APAS-VERUS-agent3/src/Chap39/analyses/veracity-review-verus-style.log
 
 Checking 4 files...
 
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:401: warning: [13] impl ParamTreapTrait for ParamTreap should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:87: warning: [15] impl Clone should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:96: warning: [15] impl Clone should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:108: warning: [15] impl Clone should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:401: warning: [13] impl ParamTreapTrait for ParamTreap should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:87: warning: [15] impl Clone should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:96: warning: [15] impl Clone should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:108: warning: [15] impl Clone should be inside verus! (for verification)
 
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:104: warning: [13] impl BSTSetTreapMtEphTrait for BSTSetTreapMtEph should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:29: warning: [15] impl Clone should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:104: warning: [13] impl BSTSetTreapMtEphTrait for BSTSetTreapMtEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:29: warning: [15] impl Clone should be inside verus! (for verification)
 
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:157: warning: [12] trait BSTTreapMtEphTrait fn new should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:160: warning: [12] trait BSTTreapMtEphTrait fn insert should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:163: warning: [12] trait BSTTreapMtEphTrait fn find should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:166: warning: [12] trait BSTTreapMtEphTrait fn contains should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:169: warning: [12] trait BSTTreapMtEphTrait fn size should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:172: warning: [12] trait BSTTreapMtEphTrait fn is_empty should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:175: warning: [12] trait BSTTreapMtEphTrait fn height should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:178: warning: [12] trait BSTTreapMtEphTrait fn minimum should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:181: warning: [12] trait BSTTreapMtEphTrait fn maximum should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:184: warning: [12] trait BSTTreapMtEphTrait fn in_order should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:187: warning: [12] trait BSTTreapMtEphTrait fn pre_order should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:157: warning: [12] trait BSTTreapMtEphTrait fn new should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:160: warning: [12] trait BSTTreapMtEphTrait fn insert should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:163: warning: [12] trait BSTTreapMtEphTrait fn find should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:166: warning: [12] trait BSTTreapMtEphTrait fn contains should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:169: warning: [12] trait BSTTreapMtEphTrait fn size should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:172: warning: [12] trait BSTTreapMtEphTrait fn is_empty should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:175: warning: [12] trait BSTTreapMtEphTrait fn height should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:178: warning: [12] trait BSTTreapMtEphTrait fn minimum should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:181: warning: [12] trait BSTTreapMtEphTrait fn maximum should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:184: warning: [12] trait BSTTreapMtEphTrait fn in_order should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:187: warning: [12] trait BSTTreapMtEphTrait fn pre_order should have requires/ensures
 
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:313: warning: [12] trait BSTTreapStEphTrait fn contains should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:316: warning: [19] minimum return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:324: warning: [19] maximum return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:332: warning: [19] in_order return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:336: warning: [19] pre_order return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:506: warning: [19] min_link return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:513: warning: [19] max_link return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:681: warning: [19] min_link return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:693: warning: [19] max_link return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapStEph.rs:1: info: [21] no broadcast use entries
 
 ════════════════════════════════════════════════════════════════
-Summary: 55 passed, 26 warnings in 4 files (checked 4 files)
+Summary: 57 passed, 17 warnings in 3 files (checked 4 files)
 ════════════════════════════════════════════════════════════════

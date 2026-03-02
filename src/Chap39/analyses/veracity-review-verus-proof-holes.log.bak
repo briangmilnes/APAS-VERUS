@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap39/
+
 ℹ BSTParaTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Info: 1 total
@@ -33,10 +35,6 @@ Info: 5 total
    BSTTreapMtEph.rs:212: info: accept() - accept hole
    BSTTreapMtEph.rs:224: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    BSTTreapMtEph.rs:554: info: accept() - accept hole
-   BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-
-🎉 No proof holes or warnings found! All proofs are complete.
-ole
    BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
 
 🎉 No proof holes or warnings found! All proofs are complete.
