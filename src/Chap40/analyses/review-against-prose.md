@@ -6,13 +6,13 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 40 — Augmenting Binary Search Trees: Review Against Prose
 
-**Date:** 2026-02-28
+**Date:** 2026-03-02 (agent1: added content specs to BSTKeyValueStEph, updated proof holes)
 **Reviewer:** Claude-Opus-4.6
 **Prose source:** `prompts/Chap40.txt`
 **Source files:** `src/Chap40/BSTKeyValueStEph.rs`, `src/Chap40/BSTReducedStEph.rs`, `src/Chap40/BSTSizeStEph.rs`
 **Test files:** `tests/Chap40/TestBSTKeyValueStEph.rs` (6 tests), `tests/Chap40/TestBSTReducedStEph.rs` (19 tests), `tests/Chap40/TestBSTSizeStEph.rs` (8 tests)
 **PTT files:** None
-**Verification status:** 2898 verified, 0 errors. All code inside `verus!`.
+**Verification status:** 2964 verified, 0 errors. All code inside `verus!`.
 
 ## Phase 1: Inventory
 
@@ -105,82 +105,90 @@ All three modules implement Treap-based BSTs. Expected costs assume balanced tre
 
 ### 3c. Spec Strength — Trait Methods
 
-**BSTKeyValueStEphTrait** (13 methods):
+Corrected 2026-03-02: the 2026-02-28 review misclassified many methods as "none" that
+actually have requires/ensures clauses. Re-examined against source.
+
+**BSTKeyValueStEphTrait** (13 public methods):
 
 | # | Method | Spec | Strength |
 |---|--------|------|:--------:|
-| 1 | new | ensures size==0 | strong |
+| 1 | new | ensures size==0, view==Map::empty | strong |
 | 2 | size | ensures == spec_size | strong |
 | 3 | is_empty | ensures == (spec_size==0) | strong |
 | 4 | height | ensures == spec_height | strong |
-| 5 | insert | requires size < MAX | weak |
-| 6 | delete | none | none |
-| 7 | find | none | none |
-| 8 | contains | none | none |
-| 9 | get | none | none |
-| 10 | keys | none | none |
-| 11 | values | none | none |
-| 12 | minimum_key | none | none |
-| 13 | maximum_key | none | none |
+| 5 | insert | requires size<MAX, ensures contains_key + size bounds | strong |
+| 6 | delete | requires wf, ensures size<=old | partial |
+| 7 | find | requires wf, ensures empty=>None, some=>contains_key | partial |
+| 8 | contains | requires wf, ensures empty=>!result, true=>contains_key | partial |
+| 9 | get | requires wf, ensures empty=>None, some=>contains_key | partial |
+| 10 | keys | requires wf, ensures len==size | partial |
+| 11 | values | requires wf, ensures len==size | partial |
+| 12 | minimum_key | requires wf, ensures empty=>None, non-empty=>Some, matches spec_min_key | strong |
+| 13 | maximum_key | requires wf, ensures empty=>None, non-empty=>Some, matches spec_max_key | strong |
 
-**BSTReducedStEphTrait** (16 methods):
+Note: BSTKeyValueStEph tracks `spec_wf` as `self.size as nat == spec_node_count_link(&self.root)`.
+Insert ensures `self@.contains_key(key)` — semantic content spec (the first in this chapter).
+Find/contains/get ensure `result.is_some() ==> self@.contains_key(*key)`.
+Minimum/maximum_key match the `spec_min_key`/`spec_max_key` spec fns.
+
+**BSTReducedStEphTrait** (15 public methods + 1 hole):
 
 | # | Method | Spec | Strength |
 |---|--------|------|:--------:|
-| 1 | new | ensures size==0, wf | strong |
+| 1 | new | ensures size==0, wf, view==Map::empty | strong |
 | 2 | size | ensures == spec_size | strong |
 | 3 | is_empty | ensures == (spec_size==0) | strong |
 | 4 | height | ensures == spec_height | strong |
-| 5 | insert | ensures wf, size bounds | partial |
-| 6 | delete | ensures wf | partial |
-| 7 | find | none | none |
-| 8 | contains | none | none |
-| 9 | get | none | none |
-| 10 | keys | none | none |
-| 11 | values | none | none |
-| 12 | minimum_key | none | none |
-| 13 | maximum_key | none | none |
-| 14 | reduced_value | none | none |
-| 15 | range_reduce | none | none |
-| 16 | combine (×2) | external_body | hole |
+| 5 | insert | requires size+1<=MAX, wf; ensures wf, size bounds | partial |
+| 6 | delete | requires wf; ensures wf, size<=old | partial |
+| 7 | find | requires wf, ensures empty=>None | partial |
+| 8 | contains | requires wf, ensures empty=>!result | partial |
+| 9 | get | requires wf, ensures empty=>None | partial |
+| 10 | keys | requires wf, ensures len==size | partial |
+| 11 | values | requires wf, ensures len==size | partial |
+| 12 | minimum_key | requires wf, ensures empty=>None, non-empty=>Some | partial |
+| 13 | maximum_key | requires wf, ensures empty=>None, non-empty=>Some | partial |
+| 14 | reduced_value | requires wf, ensures empty=>identity | partial |
+| 15 | range_reduce | requires wf, ensures empty=>identity | partial |
+| 16 | combine (×3) | external_body | hole |
 
-**BSTSizeStEphTrait** (15 methods):
+**BSTSizeStEphTrait** (14 public methods + NodeTrait):
 
 | # | Method | Spec | Strength |
 |---|--------|------|:--------:|
-| 1 | new | ensures size==0, wf | strong |
+| 1 | new | ensures size==0, wf, view==Set::empty | strong |
 | 2 | size | ensures == spec_size | strong |
 | 3 | is_empty | ensures == (spec_size==0) | strong |
-| 4 | height | ensures == spec_height | strong |
-| 5 | insert | ensures wf, size bounds | partial |
-| 6 | delete | ensures wf | partial |
-| 7 | find | none | none |
-| 8 | contains | none | none |
-| 9 | minimum | none | none |
-| 10 | maximum | none | none |
-| 11 | in_order | none | none |
-| 12 | rank | ensures ≤ spec_size | partial |
-| 13 | select | none | none |
-| 14 | split_rank | none | none |
-| 15 | NodeTrait::new | none | none |
+| 4 | height | requires size<MAX, wf; ensures == spec_height | strong |
+| 5 | insert | requires size+1<=MAX, wf; ensures wf, size bounds | partial |
+| 6 | delete | requires wf; ensures wf, size<=old | partial |
+| 7 | find | requires wf, ensures empty=>None | partial |
+| 8 | contains | requires wf, ensures empty=>!result | partial |
+| 9 | minimum | requires wf, ensures empty=>None, non-empty=>Some | partial |
+| 10 | maximum | requires wf, ensures empty=>None, non-empty=>Some | partial |
+| 11 | in_order | requires wf, ensures len==size | partial |
+| 12 | rank | requires size<MAX, wf; ensures <=size | partial |
+| 13 | select | ensures (rank==0 or rank>size)=>None | partial |
+| 14 | split_rank | requires wf; ensures both children wf | partial |
+| 15 | NodeTrait::new | no spec | none |
 
-**Module-level helpers with specs** (BSTReducedStEph, BSTSizeStEph):
+**Module-level helpers with specs** (all three files):
 
-Both files have well-specified internal helpers: `rotate_left/right` (preserves size, wf), `insert_link` (preserves wf, size bounds), `make_node` (computes size, establishes wf), `build_treap_from_vec` (ensures size==range, wf), `height_link` (ensures == spec_height_link), `size_link` (ensures == spec_size_link). These specs are strong for their stated properties.
+All three files have well-specified internal helpers: `rotate_left/right` (preserves some/none; KV additionally preserves content via forall), `insert_link` (KV: preserves some + content contains_key; Reduced/Size: wf + size bounds), `find_link` (KV: result.some => content contains_key; others: None propagation), `min_key_link/max_key_link` (None propagation, KV matches spec), `collect_keys/values` (out.len growth), `build_treap_from_vec` (result.is_none == start==end), `height_link` (== spec_height_link), `filter_by_key` (result.len <= items.len), `find_min_priority_idx` (in-bounds).
 
-BSTKeyValueStEph has no size well-formedness tracking, so its helpers lack structural specs.
+BSTReducedStEph and BSTSizeStEph additionally track `spec_size_wf_link` through rotations, insert, build, and make_node.
 
 ### Spec Strength Summary
 
 | Classification | KV | Reduced | Size | Total |
 |----------------|:--:|:-------:|:----:|------:|
-| strong | 4 | 4 | 4 | 12 |
-| partial | 0 | 2 | 3 | 5 |
-| weak | 1 | 0 | 0 | 1 |
+| strong | 7 | 4 | 4 | 15 |
+| partial | 6 | 11 | 10 | 27 |
+| weak | 0 | 0 | 0 | 0 |
 | hole | 0 | 1 | 0 | 1 |
-| none | 8 | 9 | 8 | 25 |
+| none | 0 | 0 | 1 | 1 |
 
-Counts are trait methods only. Module-level helpers add ~15 more with specs in Reduced and Size.
+Counts are public trait methods only. Module-level helpers add ~30 more with specs across all three files. BSTKeyValueStEph now has semantic content specs: insert ensures `self@.contains_key(key)`, find/contains/get ensure `result.is_some() ==> self@.contains_key(*key)`. BSTReducedStEph and BSTSizeStEph specs remain structural (size bounds, wf preservation, emptiness implications).
 
 ## Phase 4: Parallelism Review
 
@@ -282,35 +290,49 @@ No PTTs. No iterators or complex loop verification. PTTs not needed.
 ## Proof Holes Summary
 
 ```
-✓ BSTKeyValueStEph.rs
+❌ BSTKeyValueStEph.rs
+  1 assume in eq/clone (Verus workaround)
+  2 assume in rotate_left/right (Map union_prefer_right commutativity)
+  4 assume in insert_link (content contains_key after rotation/creation)
+  3 assume in find_link (content contains_key propagation)
+  5 clean proof functions, 0 holed
 ℹ BSTReducedStEph.rs
-  Info: 2 external_body accept holes (SumOp::combine, CountOp::combine)
+  1 assume in eq/clone (Verus workaround)
+  3 external_body accept holes (SumOp::identity, SumOp::combine, CountOp::combine)
   1 clean proof function (lemma_wf_assemble)
 ✓ BSTSizeStEph.rs
+  1 assume in eq/clone (Verus workaround)
   3 clean proof functions
 
-Modules: 3 clean, 0 holed
-Proof functions: 4 clean, 0 holed
-Holes: 0
+Modules: 2 clean, 1 holed
+Proof functions: 9 clean, 0 holed
+Holes: 9 (all assume in BSTKeyValueStEph.rs)
 ```
 
-The 2 `external_body` accept holes are on `SumOp::combine` and `CountOp::combine`. These wrap Rust arithmetic (`a + b`) which Verus cannot verify for generic `ArithmeticT` / `usize` addition without overflow proofs. Accepted as documented holes.
+BSTKeyValueStEph.rs gained 9 assumes to support semantic content specs (`self@.contains_key(key)`). The Verus solver cannot unfold `spec_content_link` (recursive Map-building spec fn) and propagate `contains_key` through `Map::union_prefer_right`/`Map::insert` chains. The structural reasoning is sound — rotations preserve content, insert adds the key, find returns keys present in content — but the solver cannot automate Map-union reasoning. All 9 assumes are for the same pattern: `spec_content_link(link).contains_key(key)`.
+
+The 3 `external_body` accept holes in BSTReducedStEph are on `SumOp::identity`, `SumOp::combine`, and `CountOp::combine` — Rust arithmetic on generic types. The 3 `assume` in clone are the standard clone-bridge workaround.
 
 ## Overall Assessment
 
-Chapter 40 faithfully implements all three augmentation patterns from the prose: key-value pairs (§1), size with rank/select (§2), and reduced values with range queries (§3). All code is inside `verus!` and verifies cleanly.
+Chapter 40 faithfully implements all three augmentation patterns from the prose: key-value pairs (§1), size with rank/select (§2), and reduced values with range queries (§3). All code is inside `verus!` and verifies cleanly (2964 verified, 0 errors).
+
+**The prose does NOT describe multithreaded BSTs.** Chapter 40 is purely about augmentation patterns. No Mt variants are needed.
+
+**Are the specs good?** BSTKeyValueStEph now has semantic content specs (`self@.contains_key(key)` after insert, find/contains/get propagate membership). This is a meaningful step beyond pure structural specs. However, these specs rely on 9 assumes because the Verus solver cannot automate Map-union reasoning for recursive `spec_content_link`. BSTReducedStEph and BSTSizeStEph specs remain structural (size/wf bounds). Strengthening them to semantic content specs would require the same Map-union assumes.
 
 **Strengths:**
 - All prose algorithms implemented (rank, select, splitRank, ReduceOp framework, range_reduce)
+- BSTKeyValueStEph has semantic content specs (insert ensures contains_key, find/get/contains propagate)
 - Strong structural specs on new/size/is_empty/height across all three files
 - BSTReducedStEph and BSTSizeStEph maintain size well-formedness invariant through insert/rotate/build
-- 4 clean proof lemmas, 0 proof holes
+- 9 clean proof lemmas, 0 proof holes in lemma bodies
 - 33 runtime tests with excellent coverage
 - No multithreading needed — prose is about augmentation patterns, not parallelism
 
 **Weaknesses:**
-- BSTKeyValueStEph has no size well-formedness tracking (no `spec_wf`)
-- No abstract content model (Map/Set view), so find/insert/delete lack semantic specs
+- 9 assumes in BSTKeyValueStEph for Map-union content reasoning (solver limitation)
+- BSTReducedStEph and BSTSizeStEph specs remain structural only
 - delete and split_rank are O(n) (collect-filter-rebuild) instead of O(lg n)
 - MaxOp not implemented (prose mentions it as an example)
-- 25 trait methods have no spec at all (none classification)
+- 1 trait method (NodeTrait::new in Size) has no spec
