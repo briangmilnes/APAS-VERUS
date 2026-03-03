@@ -37,29 +37,13 @@
 ✓ TableStEph.rs
    8 clean proof functions
 ❌ TableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:618: assume() - assume(combined.spec_wf());
-       611 |         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (combined: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:1034: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1029 |         fn clone(&self) -> (cloned: Self)
             ...
-       616 |             proof {
-       617 |                 // clone preserves entries@, so spec_wf transfers.
-       619 |             }
-       620 |             let mut j: usize = 0;
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:637: assume() - assume(self@.dom().union(other@.dom()).subset_of(combined@.d
-       611 |         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (combined: Self)
-            ...
-       635 |             }
-       636 |             proof {
-       638 |             }
-       639 |             combined
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:974: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       969 |         fn clone(&self) -> (cloned: Self)
-            ...
-       972 |             let cloned = TableStPer { entries: self.entries.clone() };
-       973 |             proof {
-       975 |                 lemma_seq_map_cloned_view_eq(
-       976 |                     self.entries.seq@,
-   Holes: 2 total
-      2 × assume()
+      1032 |             let cloned = TableStPer { entries: self.entries.clone() };
+      1033 |             proof {
+      1035 |                 lemma_seq_map_cloned_view_eq(
+      1036 |                     self.entries.seq@,
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 8 total (8 clean, 0 holed)
 
@@ -68,8 +52,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   2 clean (no holes)
-   2 holed (contains holes)
+   3 clean (no holes)
+   1 holed (contains holes)
    4 total
 
 Proof Functions:
@@ -77,12 +61,11 @@ Proof Functions:
    0 holed
    18 total
 
-Holes Found: 17 total
-   2 × assume()
+Holes Found: 15 total
    15 × external_body
 
 Errors: 1 total (1 assume in eq/clone (Verus workaround))
-es)
+led (contains holes)
    4 total
 
 Proof Functions:
@@ -90,8 +73,7 @@ Proof Functions:
    0 holed
    18 total
 
-Holes Found: 17 total
-   2 × assume()
+Holes Found: 15 total
    15 × external_body
 
 Errors: 1 total (1 assume in eq/clone (Verus workaround))

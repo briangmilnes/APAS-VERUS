@@ -356,7 +356,10 @@ pub mod TableStPer {
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
-            ensures updated@.contains_key(key@), updated.spec_wf();
+            ensures
+                updated@.contains_key(key@),
+                updated.spec_wf(),
+                forall|k: K::V| self@.contains_key(k) ==> updated@.contains_key(k);
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
@@ -612,11 +615,8 @@ pub mod TableStPer {
         {
             let ghost self_view = self.entries@;
             let ghost other_view = other.entries@;
-            let mut combined = self.clone_plus();
-            proof {
-                // clone preserves entries@, so spec_wf transfers.
-                assume(combined.spec_wf());
-            }
+            // Clone ensures combined.entries@ == self.entries@, so spec_wf transfers.
+            let mut combined = self.clone();
             let mut j: usize = 0;
             while j < other.entries.length()
                 invariant
@@ -624,6 +624,11 @@ pub mod TableStPer {
                     other.entries@ == other_view,
                     forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                     combined.spec_wf(),
+                    forall|k: K::V| spec_entries_to_map(self_view).contains_key(k)
+                        ==> combined@.contains_key(k),
+                    forall|oj: int| 0 <= oj < j as int
+                        ==> combined@.contains_key(
+                            (#[trigger] other.entries@[oj]).0),
                     obeys_view_eq::<K>(),
                     obeys_feq_full::<Pair<K, V>>(),
                 decreases other.entries.spec_len() - j,
@@ -634,7 +639,21 @@ pub mod TableStPer {
                 j += 1;
             }
             proof {
-                assume(self@.dom().union(other@.dom()).subset_of(combined@.dom()));
+                assert forall|k: K::V|
+                    spec_entries_to_map(self_view).dom().contains(k)
+                    || spec_entries_to_map(other_view).dom().contains(k)
+                    implies combined@.dom().contains(k)
+                by {
+                    if spec_entries_to_map(self_view).dom().contains(k) {
+                        // From invariant: all self keys are in combined.
+                    } else {
+                        // k is in other@.dom().
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(other_view, k);
+                        let oj = choose|oj: int| 0 <= oj < other_view.len()
+                            && (#[trigger] other_view[oj]).0 == k;
+                        // From invariant: all processed other keys are in combined.
+                    }
+                };
             }
             combined
         }
@@ -820,6 +839,8 @@ pub mod TableStPer {
                     ),
                     forall|a: int, b: int| 0 <= a < b < src.len() ==> src[a] < src[b],
                     forall|j: int| #![auto] 0 <= j < all@.len() ==> all@[j].0@ != key_view,
+                    forall|si: int| 0 <= si < i as int && (#[trigger] self_view[si]).0 != key_view ==>
+                        exists|j: int| 0 <= j < src.len() && src[j] == si,
                     obeys_view_eq::<K>(),
                     obeys_feq_full::<Pair<K, V>>(),
                     key@ == key_view,
@@ -829,10 +850,30 @@ pub mod TableStPer {
                 proof { reveal(obeys_view_eq); }
                 if pair.0 == key {
                     found_value = Some(pair.1.clone_plus());
+                    // self_view[i].0 == key_view, so the new si==i case is vacuous.
+                    proof { assert(self_view[i as int].0 == key_view); }
                 } else {
                     let cloned = pair.clone_plus();
                     all.push(cloned);
-                    proof { src = src.push(i as int); }
+                    proof {
+                        let ghost old_src = src;
+                        src = src.push(i as int);
+                        // Re-establish invariant for all si in 0..i+1.
+                        assert forall|si: int|
+                            0 <= si < i as int + 1
+                            && (#[trigger] self_view[si]).0 != key_view
+                            implies exists|j: int| 0 <= j < src.len() && src[j] == si
+                        by {
+                            if si < i as int {
+                                let j = choose|j: int|
+                                    0 <= j < old_src.len() && old_src[j] == si;
+                                assert(src[j] == old_src[j]);
+                            } else {
+                                // si == i: just pushed.
+                                assert(src[src.len() - 1] == i as int);
+                            }
+                        };
+                    }
                 }
                 i += 1;
             }
@@ -866,6 +907,25 @@ pub mod TableStPer {
                             assert(all@[a].0@ != key_view);
                         }
                     };
+                };
+                // Prove domain preservation: every key in self is in the result.
+                assert forall|k: K::V| #![auto]
+                    spec_entries_to_map(self_view).contains_key(k)
+                    implies spec_entries_to_map(entries@).contains_key(k)
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self_view, k);
+                    let si = choose|si: int| 0 <= si < self_view.len()
+                        && (#[trigger] self_view[si]).0 == k;
+                    if self_view[si].0 == key_view {
+                        // k == key_view: the last entry has this key.
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, last);
+                    } else {
+                        // Non-matching: was copied to all.
+                        let j = choose|j: int| 0 <= j < src.len()
+                            && (#[trigger] src[j]) == si;
+                        assert(entries.spec_index(j) == all@[j]);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, j);
+                    }
                 };
             }
             TableStPer { entries }

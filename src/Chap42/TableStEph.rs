@@ -770,7 +770,7 @@ broadcast use {
                     lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, si);
                 };
                 // Every other key is in the output.
-                assert forall|k: K::V|
+                assert forall|k: K::V| #![auto]
                     spec_entries_to_map(other.entries@).dom().contains(k)
                     implies self@.dom().contains(k)
                 by {
