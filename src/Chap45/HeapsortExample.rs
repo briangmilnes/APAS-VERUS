@@ -87,17 +87,17 @@ broadcast use {
         }
 
         impl<T: StT + Ord> core::cmp::PartialEq for HeapsortComparison<T> {
-            fn eq(&self, other: &Self) -> (r: bool)
-                ensures r == (self@ == other@)
+            fn eq(&self, other: &Self) -> (equal: bool)
+                ensures equal == (self@ == other@)
             {
-                let r = self.input == other.input
+                let equal = self.input == other.input
                     && self.unsorted_list_result == other.unsorted_list_result
                     && self.sorted_list_result == other.sorted_list_result
                     && self.balanced_tree_result == other.balanced_tree_result
                     && self.binary_heap_result == other.binary_heap_result
                     && self.leftist_heap_result == other.leftist_heap_result;
-                proof { accept(r == (self@ == other@)); }
-                r
+                proof { accept(equal == (self@ == other@)); }
+                equal
             }
         }
 

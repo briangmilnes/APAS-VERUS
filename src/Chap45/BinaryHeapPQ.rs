@@ -1,5 +1,23 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 45: Priority Queue implementation using Binary Heap
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod BinaryHeapPQ {
 
@@ -15,11 +33,16 @@ pub mod BinaryHeapPQ {
 
     verus! {
 
+        //		2. imports
+
         use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
         use crate::Types::Types::*;
         #[cfg(verus_keep_ghost)]
         use crate::vstdplus::feq::feq::*;
         use crate::vstdplus::accept::accept;
+
+
+        //		3. broadcast use
 
         broadcast use {
             crate::vstdplus::feq::feq::group_feq_axioms,
@@ -29,67 +52,24 @@ pub mod BinaryHeapPQ {
             vstd::std_specs::vec::group_vec_axioms,
         };
 
+
+        //		4. type definitions
+
         #[verifier::reject_recursive_types(T)]
         pub struct BinaryHeapPQ<T: StT + Ord> {
             pub elements: ArraySeqStPerS<T>,
         }
+
+
+        //		5. view impls
 
         impl<T: StT + Ord> View for BinaryHeapPQ<T> {
             type V = Seq<T::V>;
             open spec fn view(&self) -> Seq<T::V> { self.elements@ }
         }
 
-        #[cfg(verus_keep_ghost)]
-        impl<T: StT + Ord> PartialEqSpecImpl for BinaryHeapPQ<T> {
-            open spec fn obeys_eq_spec() -> bool { true }
-            open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-        }
 
-        impl<T: StT + Ord> Clone for BinaryHeapPQ<T> {
-            fn clone(&self) -> (cloned: Self)
-                ensures cloned@ == self@
-            {
-                let cloned = BinaryHeapPQ { elements: self.elements.clone() };
-                proof {
-                    accept(obeys_feq_clone::<T>());
-                    lemma_seq_map_cloned_view_eq(
-                        self.elements.seq@,
-                        cloned.elements.seq@,
-                    );
-                }
-                cloned
-            }
-        }
-
-        impl<T: StT + Ord> core::cmp::PartialEq for BinaryHeapPQ<T> {
-            fn eq(&self, other: &Self) -> (r: bool)
-                ensures r == (self@ == other@)
-            {
-                let r = self.elements == other.elements;
-                proof { accept(r == (self@ == other@)); }
-                r
-            }
-        }
-
-        impl<T: StT + Ord> core::cmp::Eq for BinaryHeapPQ<T> {}
-
-        fn left_child(i: usize) -> (r: usize)
-            requires i <= usize::MAX / 2 - 1,
-            ensures r as int == left_child_spec(i as int),
-        {
-            2 * i + 1
-        }
-        fn right_child(i: usize) -> (r: usize)
-            requires i <= usize::MAX / 2 - 1,
-            ensures r as int == right_child_spec(i as int),
-        {
-            2 * i + 2
-        }
-        fn parent(i: usize) -> (r: usize)
-            ensures r as int == parent_spec(i as int),
-        {
-            if i == 0 { 0 } else { (i - 1) / 2 }
-        }
+        //		6. spec fns
 
         spec fn parent_spec(i: int) -> int {
             if i == 0 { 0 } else { (i - 1) / 2 }
@@ -98,191 +78,9 @@ pub mod BinaryHeapPQ {
         spec fn left_child_spec(i: int) -> int {
             2 * i + 1
         }
+
         spec fn right_child_spec(i: int) -> int {
             2 * i + 2
-        }
-
-        fn swap_elements<T: StT + Ord>(seq: &ArraySeqStPerS<T>, i: usize, j: usize) -> (swapped: ArraySeqStPerS<T>)
-            requires
-                obeys_feq_clone::<T>(),
-                (i as int) < seq.view().len(),
-                (j as int) < seq.view().len(),
-                seq@.len() <= usize::MAX as int,
-            ensures swapped@.len() == seq@.len()
-        {
-            let n = seq.length();
-            let mut swapped = ArraySeqStPerS::empty();
-
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            for k in 0..n
-                invariant
-                    n == seq@.len(),
-                    swapped@.len() == k as int,
-                    (i as int) < n,
-                    (j as int) < n,
-            {
-                let element = if k == i {
-                    seq.nth(j).clone()
-                } else if k == j {
-                    seq.nth(i).clone()
-                } else {
-                    seq.nth(k).clone()
-                };
-
-                let single_seq = ArraySeqStPerS::singleton(element);
-                swapped = ArraySeqStPerS::append(&swapped, &single_seq);
-            }
-
-            swapped
-        }
-
-        fn bubble_up<T: StT + Ord>(seq: &ArraySeqStPerS<T>, mut i: usize) -> (heapified: ArraySeqStPerS<T>)
-            requires
-                obeys_feq_clone::<T>(),
-                (i as int) < seq.view().len(),
-                seq@.len() <= usize::MAX as int,
-            ensures heapified@.len() == seq@.len()
-        {
-            let mut heapified = seq.clone();
-
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            while i > 0
-                invariant
-                    heapified@.len() == seq@.len(),
-                    heapified@.len() <= usize::MAX as int,
-                    (i as int) < seq.view().len(),
-                    parent_spec(i as int) < seq.view().len(),
-                decreases i,
-            {
-                let parent_idx = parent(i);
-                proof {
-                    assert((parent_idx as int) < seq.view().len());
-                }
-                let current = heapified.nth(i);
-                let parent_val = heapified.nth(parent_idx);
-
-                if *current >= *parent_val {
-                    i = 0;
-                } else {
-                    proof {
-                        assert((i as int) < heapified.view().len());
-                        assert((parent_idx as int) < heapified.view().len());
-                    }
-                    heapified = swap_elements(&heapified, i, parent_idx);
-                    i = parent_idx;
-                }
-            }
-
-            heapified
-        }
-
-        fn bubble_down<T: StT + Ord>(heap: &ArraySeqStPerS<T>, i: usize) -> (heapified: ArraySeqStPerS<T>)
-            requires
-                obeys_feq_clone::<T>(),
-                (i as int) < heap.view().len(),
-                heap@.len() <= usize::MAX as int,
-                heap@.len() * 2 <= usize::MAX as int,
-            ensures heapified@.len() == heap@.len()
-        {
-            let mut heapified = heap.clone();
-            let n = heapified.length();
-            let mut idx = i;
-
-            let mut done = false;
-            let ghost mut old_idx: int = idx as int;
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            while !done
-                invariant
-                    heapified@.len() == heap@.len(),
-                    heapified@.len() == n,
-                    (idx as int) < n,
-                    n <= usize::MAX as int,
-                    n * 2 <= usize::MAX as int,
-                    obeys_feq_clone::<T>(),
-                    !done ==> old_idx == idx as int,
-                decreases (if !done { 1int } else { 0int }), n - idx,
-            {
-                let left = left_child(idx);
-                let right = right_child(idx);
-                let mut smallest = idx;
-
-                if left < n && *heapified.nth(left) < *heapified.nth(smallest) {
-                    smallest = left;
-                }
-
-                if right < n && *heapified.nth(right) < *heapified.nth(smallest) {
-                    smallest = right;
-                }
-
-                if smallest == idx {
-                    done = true;
-                } else {
-                    assert(smallest > idx);
-                    heapified = swap_elements(&heapified, idx, smallest);
-                    idx = smallest;
-                }
-                proof { old_idx = idx as int; }
-            }
-
-            heapified
-        }
-
-        fn heapify<T: StT + Ord>(seq: &ArraySeqStPerS<T>) -> (heapified: ArraySeqStPerS<T>)
-            requires
-                obeys_feq_clone::<T>(),
-                seq@.len() <= usize::MAX as int,
-                seq@.len() * 2 <= usize::MAX as int,
-            ensures heapified@.len() == seq@.len()
-        {
-            if seq.length() <= 1 {
-                return seq.clone();
-            }
-
-            let mut heapified = seq.clone();
-            let last_non_leaf = if seq.length() >= 2 { (seq.length() - 2) / 2 } else { 0 };
-
-            let mut idx = last_non_leaf + 1;
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            while idx > 0
-                invariant
-                    heapified@.len() == seq@.len(),
-                    (idx as int) <= seq@.len(),
-                    heapified@.len() <= usize::MAX as int,
-                    heapified@.len() * 2 <= usize::MAX as int,
-                decreases idx,
-            {
-                idx = idx - 1;
-                heapified = bubble_down(&heapified, idx);
-            }
-
-            heapified
-        }
-
-        fn is_heap<T: StT + Ord>(elements: &ArraySeqStPerS<T>) -> (r: bool)
-            requires elements@.len() * 2 <= usize::MAX as int,
-        {
-            let n = elements.length();
-            let mut r = true;
-            for i in 0..n
-                invariant
-                    n == elements@.len(),
-                    (i as int) <= n,
-                    (i as int) < n || i == n,
-            {
-                if i <= usize::MAX / 2 - 1 {
-                let left = left_child(i);
-                let right = right_child(i);
-
-                if left < n && *elements.nth(i) > *elements.nth(left) {
-                    r = false;
-                }
-
-                if right < n && *elements.nth(i) > *elements.nth(right) {
-                    r = false;
-                }
-                }
-            }
-            r
         }
 
         pub open spec fn spec_heap_inv_at<T: StT + Ord>(seq: Seq<T::V>, i: int) -> bool {
@@ -298,32 +96,8 @@ pub mod BinaryHeapPQ {
             forall|i: int| 0 <= i < seq.len() ==> spec_heap_inv_at::<T>(seq, i)
         }
 
-        fn exec_pow2(e: usize) -> (r: usize)
-            requires pow2(e as nat) <= usize::MAX as int,
-            ensures r as int == pow2(e as nat),
-        {
-            proof {
-                lemma_pow2_pos(e as nat);
-                vstd::arithmetic::power::lemma_pow0(2);
-            }
-            let mut r: usize = 1;
-            for i in 0..e
-                invariant
-                    r as int == pow2(i as nat),
-                    pow2(i as nat) <= pow2(e as nat),
-                    pow2(e as nat) <= usize::MAX as int,
-            {
-                proof {
-                    lemma_pow2_unfold((i + 1) as nat);
-                    lemma_pow2_pos(i as nat);
-                    if (i + 1) < e {
-                        vstd::arithmetic::power2::lemma_pow2_strictly_increases((i + 1) as nat, e as nat);
-                    }
-                }
-                r = r * 2;
-            }
-            r
-        }
+
+        //		7. proof fns/broadcast groups
 
         proof fn lemma_log2_bound(n: int, bits: nat)
             requires
@@ -345,33 +119,15 @@ pub mod BinaryHeapPQ {
             }
         }
 
-        fn exec_log2(n: usize) -> (r: usize)
-            requires n >= 1,
-            ensures r as int == log(2, n as int),
-            decreases n,
-        {
-            if n < 2 {
-                proof { lemma_log0(2, n as int); }
-                0
-            } else {
-                proof { lemma_log_s(2, n as int); }
-                let rest = exec_log2(n / 2);
-                proof {
-                    lemma_log_nonnegative(2, (n / 2) as int);
-                    vstd::layout::unsigned_int_max_values();
-                    vstd::arithmetic::power2::lemma_pow2(usize::BITS as nat);
-                    lemma_log2_bound(n as int, usize::BITS as nat);
-                }
-                rest + 1
-            }
-        }
+
+        //		8. traits
 
         /// Trait defining the Meldable Priority Queue ADT operations (Data Type 45.1)
         pub trait BinaryHeapPQTrait<T: StT + Ord>: Sized + View<V = Seq<T::V>> {
             spec fn spec_size(self) -> nat;
 
-            fn empty() -> (empty: Self)
-                ensures empty@.len() == 0;
+            fn empty() -> (pq: Self)
+                ensures pq@.len() == 0;
 
             fn singleton(element: T) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
@@ -389,15 +145,15 @@ pub mod BinaryHeapPQ {
                 ensures
                     pq@.len() == self@.len() + 1;
 
-            fn delete_min(&self) -> (min_pair: (Self, Option<T>))
+            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() * 2 <= usize::MAX as int,
                 ensures
-                    self@.len() > 0 ==> min_pair.1.is_some(),
-                    self@.len() > 0 ==> min_pair.0@.len() == self@.len() - 1,
-                    self@.len() == 0 ==> min_pair.1.is_none(),
-                    self@.len() == 0 ==> min_pair.0@.len() == 0;
+                    self@.len() > 0 ==> min_and_rest.1.is_some(),
+                    self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,
+                    self@.len() == 0 ==> min_and_rest.1.is_none(),
+                    self@.len() == 0 ==> min_and_rest.0@.len() == 0;
 
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
@@ -414,11 +170,11 @@ pub mod BinaryHeapPQ {
                 ensures
                     pq@.len() == seq@.len();
 
-            fn size(&self) -> (r: usize)
-                ensures r as int == self.spec_size();
+            fn size(&self) -> (n: usize)
+                ensures n as int == self.spec_size();
 
-            fn is_empty(&self) -> (r: bool)
-                ensures r == (self.spec_size() == 0);
+            fn is_empty(&self) -> (empty: bool)
+                ensures empty == (self.spec_size() == 0);
 
             fn to_seq(&self) -> ArraySeqStPerS<T>
                 requires obeys_feq_clone::<T>();
@@ -434,7 +190,7 @@ pub mod BinaryHeapPQ {
                     obeys_feq_clone::<T>(),
                     self@.len() * 2 <= usize::MAX as int;
 
-            fn is_valid_heap(&self) -> (r: bool)
+            fn is_valid_heap(&self) -> (valid: bool)
                 requires self@.len() * 2 <= usize::MAX as int;
 
             fn height(&self) -> (levels: usize)
@@ -459,6 +215,266 @@ pub mod BinaryHeapPQ {
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() * 2 <= usize::MAX as int;
+        }
+
+
+        //		9. impls
+
+        #[cfg(verus_keep_ghost)]
+        impl<T: StT + Ord> PartialEqSpecImpl for BinaryHeapPQ<T> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+        }
+
+        fn left_child(i: usize) -> (child_idx: usize)
+            requires i <= usize::MAX / 2 - 1,
+            ensures child_idx as int == left_child_spec(i as int),
+        {
+            2 * i + 1
+        }
+
+        fn right_child(i: usize) -> (child_idx: usize)
+            requires i <= usize::MAX / 2 - 1,
+            ensures child_idx as int == right_child_spec(i as int),
+        {
+            2 * i + 2
+        }
+
+        fn parent(i: usize) -> (parent_idx: usize)
+            ensures parent_idx as int == parent_spec(i as int),
+        {
+            if i == 0 { 0 } else { (i - 1) / 2 }
+        }
+
+        fn swap_elements<T: StT + Ord>(seq: &ArraySeqStPerS<T>, i: usize, j: usize) -> (swapped: ArraySeqStPerS<T>)
+            requires
+                obeys_feq_clone::<T>(),
+                (i as int) < seq.view().len(),
+                (j as int) < seq.view().len(),
+                seq@.len() <= usize::MAX as int,
+            ensures swapped@.len() == seq@.len()
+        {
+            let n = seq.length();
+            let mut result = ArraySeqStPerS::empty();
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            for k in 0..n
+                invariant
+                    n == seq@.len(),
+                    result@.len() == k as int,
+                    (i as int) < n,
+                    (j as int) < n,
+            {
+                let element = if k == i {
+                    seq.nth(j).clone()
+                } else if k == j {
+                    seq.nth(i).clone()
+                } else {
+                    seq.nth(k).clone()
+                };
+
+                let single_seq = ArraySeqStPerS::singleton(element);
+                result = ArraySeqStPerS::append(&result, &single_seq);
+            }
+
+            result
+        }
+
+        fn bubble_up<T: StT + Ord>(seq: &ArraySeqStPerS<T>, mut i: usize) -> (heaped: ArraySeqStPerS<T>)
+            requires
+                obeys_feq_clone::<T>(),
+                (i as int) < seq.view().len(),
+                seq@.len() <= usize::MAX as int,
+            ensures heaped@.len() == seq@.len()
+        {
+            let mut result = seq.clone();
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            while i > 0
+                invariant
+                    result@.len() == seq@.len(),
+                    result@.len() <= usize::MAX as int,
+                    (i as int) < seq.view().len(),
+                    parent_spec(i as int) < seq.view().len(),
+                decreases i,
+            {
+                let parent_idx = parent(i);
+                proof {
+                    assert((parent_idx as int) < seq.view().len());
+                }
+                let current = result.nth(i);
+                let parent_val = result.nth(parent_idx);
+
+                if *current >= *parent_val {
+                    i = 0;
+                } else {
+                    proof {
+                        assert((i as int) < result.view().len());
+                        assert((parent_idx as int) < result.view().len());
+                    }
+                    result = swap_elements(&result, i, parent_idx);
+                    i = parent_idx;
+                }
+            }
+
+            result
+        }
+
+        fn bubble_down<T: StT + Ord>(heap: &ArraySeqStPerS<T>, i: usize) -> (heaped: ArraySeqStPerS<T>)
+            requires
+                obeys_feq_clone::<T>(),
+                (i as int) < heap.view().len(),
+                heap@.len() <= usize::MAX as int,
+                heap@.len() * 2 <= usize::MAX as int,
+            ensures heaped@.len() == heap@.len()
+        {
+            let mut result = heap.clone();
+            let n = result.length();
+            let mut idx = i;
+
+            let mut done = false;
+            let ghost mut old_idx: int = idx as int;
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            while !done
+                invariant
+                    result@.len() == heap@.len(),
+                    result@.len() == n,
+                    (idx as int) < n,
+                    n <= usize::MAX as int,
+                    n * 2 <= usize::MAX as int,
+                    obeys_feq_clone::<T>(),
+                    !done ==> old_idx == idx as int,
+                decreases (if !done { 1int } else { 0int }), n - idx,
+            {
+                let left = left_child(idx);
+                let right = right_child(idx);
+                let mut smallest = idx;
+
+                if left < n && *result.nth(left) < *result.nth(smallest) {
+                    smallest = left;
+                }
+
+                if right < n && *result.nth(right) < *result.nth(smallest) {
+                    smallest = right;
+                }
+
+                if smallest == idx {
+                    done = true;
+                } else {
+                    assert(smallest > idx);
+                    result = swap_elements(&result, idx, smallest);
+                    idx = smallest;
+                }
+                proof { old_idx = idx as int; }
+            }
+
+            result
+        }
+
+        fn heapify<T: StT + Ord>(seq: &ArraySeqStPerS<T>) -> (heap: ArraySeqStPerS<T>)
+            requires
+                obeys_feq_clone::<T>(),
+                seq@.len() <= usize::MAX as int,
+                seq@.len() * 2 <= usize::MAX as int,
+            ensures heap@.len() == seq@.len()
+        {
+            if seq.length() <= 1 {
+                return seq.clone();
+            }
+
+            let mut result = seq.clone();
+            let last_non_leaf = if seq.length() >= 2 { (seq.length() - 2) / 2 } else { 0 };
+
+            let mut idx = last_non_leaf + 1;
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            while idx > 0
+                invariant
+                    result@.len() == seq@.len(),
+                    (idx as int) <= seq@.len(),
+                    result@.len() <= usize::MAX as int,
+                    result@.len() * 2 <= usize::MAX as int,
+                decreases idx,
+            {
+                idx = idx - 1;
+                result = bubble_down(&result, idx);
+            }
+
+            result
+        }
+
+        fn is_heap<T: StT + Ord>(elements: &ArraySeqStPerS<T>) -> (valid: bool)
+            requires elements@.len() * 2 <= usize::MAX as int,
+        {
+            let n = elements.length();
+            let mut valid = true;
+            for i in 0..n
+                invariant
+                    n == elements@.len(),
+                    (i as int) <= n,
+                    (i as int) < n || i == n,
+            {
+                if i <= usize::MAX / 2 - 1 {
+                let left = left_child(i);
+                let right = right_child(i);
+
+                if left < n && *elements.nth(i) > *elements.nth(left) {
+                    valid = false;
+                }
+
+                if right < n && *elements.nth(i) > *elements.nth(right) {
+                    valid = false;
+                }
+                }
+            }
+            valid
+        }
+
+        fn exec_pow2(e: usize) -> (power: usize)
+            requires pow2(e as nat) <= usize::MAX as int,
+            ensures power as int == pow2(e as nat),
+        {
+            proof {
+                lemma_pow2_pos(e as nat);
+                vstd::arithmetic::power::lemma_pow0(2);
+            }
+            let mut power: usize = 1;
+            for i in 0..e
+                invariant
+                    power as int == pow2(i as nat),
+                    pow2(i as nat) <= pow2(e as nat),
+                    pow2(e as nat) <= usize::MAX as int,
+            {
+                proof {
+                    lemma_pow2_unfold((i + 1) as nat);
+                    lemma_pow2_pos(i as nat);
+                    if (i + 1) < e {
+                        vstd::arithmetic::power2::lemma_pow2_strictly_increases((i + 1) as nat, e as nat);
+                    }
+                }
+                power = power * 2;
+            }
+            power
+        }
+
+        fn exec_log2(n: usize) -> (log_val: usize)
+            requires n >= 1,
+            ensures log_val as int == log(2, n as int),
+            decreases n,
+        {
+            if n < 2 {
+                proof { lemma_log0(2, n as int); }
+                0
+            } else {
+                proof { lemma_log_s(2, n as int); }
+                let rest = exec_log2(n / 2);
+                proof {
+                    lemma_log_nonnegative(2, (n / 2) as int);
+                    vstd::layout::unsigned_int_max_values();
+                    vstd::arithmetic::power2::lemma_pow2(usize::BITS as nat);
+                    lemma_log2_bound(n as int, usize::BITS as nat);
+                }
+                rest + 1
+            }
         }
 
         impl<T: StT + Ord> BinaryHeapPQTrait<T> for BinaryHeapPQ<T> {
@@ -496,7 +512,7 @@ pub mod BinaryHeapPQ {
                 BinaryHeapPQ { elements: heapified }
             }
 
-            fn delete_min(&self) -> (min_pair: (Self, Option<T>)) {
+            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
                 }
@@ -564,24 +580,24 @@ pub mod BinaryHeapPQ {
 
             #[verifier::exec_allows_no_decreases_clause]
             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
-                let mut min_pair = ArraySeqStPerS::empty();
+                let mut result = ArraySeqStPerS::empty();
                 let mut current_heap = self.clone();
 
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 while !current_heap.is_empty()
                     invariant
                         current_heap@.len() * 2 <= usize::MAX as int,
-                        min_pair@.len() + current_heap@.len() == self@.len(),
+                        result@.len() + current_heap@.len() == self@.len(),
                 {
                     let (new_heap, min_element) = current_heap.delete_min();
                     if let Some(element) = min_element {
                         let single_seq = ArraySeqStPerS::singleton(element);
-                        min_pair = ArraySeqStPerS::append(&min_pair, &single_seq);
+                        result = ArraySeqStPerS::append(&result, &single_seq);
                     }
                     current_heap = new_heap;
                 }
 
-                min_pair
+                result
             }
 
             fn is_valid_heap(&self) -> bool {
@@ -604,7 +620,7 @@ pub mod BinaryHeapPQ {
             }
 
             fn level_elements(&self, level: usize) -> ArraySeqStPerS<T> {
-                let mut seq = ArraySeqStPerS::empty();
+                let mut result = ArraySeqStPerS::empty();
                 let n = self.elements.length();
                 proof {
                     lemma_pow2_pos(level as nat);
@@ -630,17 +646,17 @@ pub mod BinaryHeapPQ {
                         start_idx <= i,
                         end_idx <= n,
                         n == self.elements@.len(),
-                        seq@.len() == (i - start_idx) as int,
-                        seq@.len() + 1 <= usize::MAX as int,
+                        result@.len() == (i - start_idx) as int,
+                        result@.len() + 1 <= usize::MAX as int,
                     decreases end_idx - i,
                 {
                     let elem = self.elements.nth(i);
                     let single_seq = ArraySeqStPerS::singleton(elem.clone());
-                    seq = ArraySeqStPerS::append(&seq, &single_seq);
+                    result = ArraySeqStPerS::append(&result, &single_seq);
                     i = i + 1;
                 }
 
-                seq
+                result
             }
 
             fn from_vec(vec: Vec<T>) -> Self {
@@ -651,37 +667,37 @@ pub mod BinaryHeapPQ {
             fn to_vec(&self) -> Vec<T> {
                 let seq = self.to_seq();
                 let n = seq.length();
-                let mut elements: Vec<T> = Vec::new();
+                let mut result: Vec<T> = Vec::new();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
                     invariant
                         n == seq@.len(),
-                        elements@.len() == i as int,
-                        forall|j: int| 0 <= j < i ==> (elements@[j])@ == #[trigger] seq@[j],
+                        result@.len() == i as int,
+                        forall|j: int| 0 <= j < i ==> (result@[j])@ == #[trigger] seq@[j],
                 {
                     let elem = seq.nth(i).clone();
                     proof { axiom_cloned_implies_eq_owned(seq.spec_index(i as int), elem); }
-                    elements.push(elem);
+                    result.push(elem);
                 }
-                elements
+                result
             }
 
             fn to_sorted_vec(&self) -> Vec<T> {
                 let sorted_seq = self.extract_all_sorted();
                 let n = sorted_seq.length();
-                let mut elements: Vec<T> = Vec::new();
+                let mut result: Vec<T> = Vec::new();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
                     invariant
                         n == sorted_seq@.len(),
-                        elements@.len() == i as int,
-                        forall|j: int| 0 <= j < i ==> (elements@[j])@ == #[trigger] sorted_seq@[j],
+                        result@.len() == i as int,
+                        forall|j: int| 0 <= j < i ==> (result@[j])@ == #[trigger] sorted_seq@[j],
                 {
                     let elem = sorted_seq.nth(i).clone();
                     proof { axiom_cloned_implies_eq_owned(sorted_seq.spec_index(i as int), elem); }
-                    elements.push(elem);
+                    result.push(elem);
                 }
-                elements
+                result
             }
         }
 
@@ -690,7 +706,42 @@ pub mod BinaryHeapPQ {
                 Self::empty()
             }
         }
+
+
+        //		11. derive impls in verus!
+
+        impl<T: StT + Ord> Clone for BinaryHeapPQ<T> {
+            fn clone(&self) -> (cloned: Self)
+                ensures cloned@ == self@
+            {
+                let cloned = BinaryHeapPQ { elements: self.elements.clone() };
+                proof {
+                    accept(obeys_feq_clone::<T>());
+                    lemma_seq_map_cloned_view_eq(
+                        self.elements.seq@,
+                        cloned.elements.seq@,
+                    );
+                }
+                cloned
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::PartialEq for BinaryHeapPQ<T> {
+            fn eq(&self, other: &Self) -> (equal: bool)
+                ensures equal == (self@ == other@)
+            {
+                let equal = self.elements == other.elements;
+                proof { accept(equal == (self@ == other@)); }
+                equal
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::Eq for BinaryHeapPQ<T> {}
+
     }
+
+
+    //		13. derive impls outside verus!
 
     impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for BinaryHeapPQ<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -710,6 +761,9 @@ pub mod BinaryHeapPQ {
             write!(f, "]")
         }
     }
+
+
+    //		12. macros
 
     // Macro for creating binary heap priority queues
     #[macro_export]
