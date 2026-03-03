@@ -219,7 +219,26 @@ cd ~/projects/APAS-VERUS && ./scripts/ptt.sh
 cd ~/projects/APAS-VERUS && git push
 ```
 
-STOP. Do not proceed to Phase 6 until Phase 5 step 34 succeeds.
+STOP. Do not proceed to Phase 5.5 until Phase 5 step 34 succeeds.
+
+## Phase 5.5: Regenerate analyses
+
+After all merges are complete but before rebasing agents, regenerate the per-chapter
+analysis logs so they reflect the final merged state.
+
+```bash
+set -e
+# 34a. Regenerate style analyses
+cd ~/projects/APAS-VERUS && ./scripts/all-style-by-chap.sh
+
+# 34b. Regenerate proof-holes analyses
+cd ~/projects/APAS-VERUS && ./scripts/all-holes-by-chap.sh
+
+# 34c. Commit and push
+cd ~/projects/APAS-VERUS && git add -A && git commit -m "Regenerate style and proof-holes analyses across all chapters" && git push
+```
+
+STOP. Do not proceed to Phase 6 until Phase 5.5 step 34c succeeds.
 
 ## Phase 6: Rebase all agents onto final main
 
@@ -278,7 +297,7 @@ cd ~/projects/APAS-VERUS-agent4 && echo "agent4/ready: $(git log --oneline -1)"
 
 ## Notes
 
-- Execute phases 0, 1, 2, 3, 3.5, 4, 4.5, 5, 6, 7 in strict order. Never skip a phase.
+- Execute phases 0, 1, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6, 7 in strict order. Never skip a phase.
 - Each phase uses `set -e`: stop immediately if any command fails. Fix the failure before proceeding.
 - Phase 2 is critical: agent2 must rebase onto post-agent1 main BEFORE Phase 3.
 - Phase 3.5 is critical: agent3 must rebase onto post-agent2 main BEFORE Phase 4.

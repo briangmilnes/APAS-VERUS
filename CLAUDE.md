@@ -105,7 +105,8 @@ minor). You bring:
   The committed state must match the validated on-disk state.
 - Each agent works ONLY in its own worktree. Never cd into another agent's worktree.
 - Agents push their own branches (`git push origin agentN/<topic>`). Main merges agent branches.
-- See `.cursor/rules/git/merge-worktree.mdc` for the full 5-phase merge workflow.
+- See `.cursor/rules/git/merge-worktree.mdc` for the full merge workflow (phases 0–7,
+  including Phase 5.5: regenerate analyses before rebasing agents).
 
 ### Output Formatting
 
