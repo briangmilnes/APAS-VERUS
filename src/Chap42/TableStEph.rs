@@ -274,26 +274,34 @@ broadcast use {
             ensures tabulated@.dom().finite();
         /// APAS: Work Θ(Σ W(f(v))), Span Θ(lg |a| + max S(f(v)))
         fn map<F: Fn(&V) -> V>(&mut self, f: F)
-            requires forall|v: &V| f.requires((v,))
+            requires forall|v: &V| f.requires((v,)), obeys_feq_clone::<K>()
             ensures self@.dom() == old(self)@.dom();
         /// APAS: Work Θ(Σ W(p(k,v))), Span Θ(lg |a| + max S(p(k,v)))
         fn filter<F: Fn(&K, &V) -> B>(&mut self, f: F)
-            requires forall|k: &K, v: &V| f.requires((k, v))
+            requires forall|k: &K, v: &V| f.requires((k, v)), obeys_feq_full::<Pair<K, V>>()
             ensures self@.dom().subset_of(old(self)@.dom());
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
-            requires forall|v1: &V, v2: &V| combine.requires((v1, v2))
+            requires
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_feq_clone::<K>(),
+                obeys_view_eq::<K>(),
             ensures self@.dom().subset_of(old(self)@.dom().intersect(other@.dom()));
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
-            requires forall|v1: &V, v2: &V| combine.requires((v1, v2))
+            requires
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_feq_clone::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                obeys_view_eq::<K>(),
             ensures old(self)@.dom().union(other@.dom()).subset_of(self@.dom());
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn difference(&mut self, other: &Self)
+            requires obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
             ensures self@.dom().subset_of(old(self)@.dom().difference(other@.dom()));
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn find(&self, key: &K) -> (found: Option<V>)
-            requires self.spec_wf()
+            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
                 match found {
                     Some(v) => self@.contains_key(key@) && self@[key@] == v@,
@@ -301,16 +309,22 @@ broadcast use {
                 };
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn delete(&mut self, key: &K)
+            requires obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>()
             ensures !self@.contains_key(key@);
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
-            requires forall|v1: &V, v2: &V| combine.requires((v1, v2))
+            requires
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures self@.contains_key(key@);
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+            requires obeys_feq_full::<Pair<K, V>>()
             ensures self@.dom().subset_of(old(self)@.dom());
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+            requires obeys_feq_full::<Pair<K, V>>()
             ensures self@.dom().subset_of(old(self)@.dom());
 
         /// Returns a flat sequence of (K, V) pairs in key order.
@@ -397,9 +411,6 @@ broadcast use {
 
         fn map<F: Fn(&V) -> V>(&mut self, f: F)
         {
-            proof {
-                assume(obeys_feq_clone::<K>());
-            }
             let ghost old_entries = self.entries@;
             let mut mapped: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
@@ -433,7 +444,6 @@ broadcast use {
 
         fn filter<F: Fn(&K, &V) -> B>(&mut self, f: F)
         {
-            proof { assume(obeys_feq_full::<Pair<K, V>>()); }
             let ghost old_view = self.entries@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let ghost mut sources: Seq<int> = Seq::empty();
@@ -477,10 +487,6 @@ broadcast use {
 
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
         {
-            proof {
-                assume(obeys_feq_clone::<K>());
-                assume(obeys_view_eq::<K>());
-            }
             let ghost old_self_view = self.entries@;
             let other_len = other.entries.length();
             let mut kept: Vec<Pair<K, V>> = Vec::new();
@@ -572,11 +578,6 @@ broadcast use {
 
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
         {
-            proof {
-                assume(obeys_feq_clone::<K>());
-                assume(obeys_feq_full::<Pair<K, V>>());
-                assume(obeys_view_eq::<K>());
-            }
             let ghost old_self_view = self.entries@;
             let other_len = other.entries.length();
             let self_len = self.entries.length();
@@ -808,10 +809,6 @@ broadcast use {
 
         fn difference(&mut self, other: &Self)
         {
-            proof {
-                assume(obeys_feq_full::<Pair<K, V>>());
-                assume(obeys_view_eq::<K>());
-            }
             let ghost old_self_view = self.entries@;
             let other_len = other.entries.length();
             let mut kept: Vec<Pair<K, V>> = Vec::new();
@@ -887,10 +884,6 @@ broadcast use {
 
         fn find(&self, key: &K) -> (found: Option<V>)
         {
-            proof {
-                assume(obeys_view_eq::<K>());
-                assume(obeys_feq_full::<V>());
-            }
             let mut i: usize = 0;
             while i < self.entries.length()
                 invariant
@@ -921,10 +914,6 @@ broadcast use {
 
         fn delete(&mut self, key: &K)
         {
-            proof {
-                assume(obeys_view_eq::<K>());
-                assume(obeys_feq_full::<Pair<K, V>>());
-            }
             let ghost old_view = self.entries@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
@@ -959,10 +948,6 @@ broadcast use {
 
         fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
         {
-            proof {
-                assume(obeys_view_eq::<K>());
-                assume(obeys_feq_full::<Pair<K, V>>());
-            }
             let ghost key_view: K::V = key@;
             let ghost old_view = self.entries@;
             let mut all: Vec<Pair<K, V>> = Vec::new();
@@ -1005,7 +990,6 @@ broadcast use {
 
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
         {
-            proof { assume(obeys_feq_full::<Pair<K, V>>()); }
             let ghost old_view = self.entries@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let ghost mut sources: Seq<int> = Seq::empty();
@@ -1048,7 +1032,6 @@ broadcast use {
 
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
         {
-            proof { assume(obeys_feq_full::<Pair<K, V>>()); }
             let ghost old_view = self.entries@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let ghost mut sources: Seq<int> = Seq::empty();

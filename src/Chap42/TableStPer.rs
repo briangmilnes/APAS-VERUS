@@ -301,31 +301,39 @@ pub mod TableStPer {
 
         /// APAS: Work Θ(|a| * W(f)), Span Θ(lg |a| + S(f))
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (mapped: Self)
-            requires forall|v: &V| f.requires((v,)),
+            requires forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
             ensures mapped@.dom() == self@.dom();
 
         /// APAS: Work Θ(|a| * W(f)), Span Θ(lg |a| + S(f))
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (filtered: Self)
-            requires forall|k: &K, v: &V| f.requires((k, v)),
+            requires forall|k: &K, v: &V| f.requires((k, v)), obeys_feq_full::<Pair<K, V>>(),
             ensures filtered@.dom().subset_of(self@.dom());
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (common: Self)
-            requires forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+            requires
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<K>(),
             ensures common@.dom().subset_of(self@.dom().intersect(other@.dom()));
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (combined: Self)
-            requires self.spec_wf(), forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+            requires
+                self.spec_wf(),
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures self@.dom().union(other@.dom()).subset_of(combined@.dom()), combined.spec_wf();
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn difference(&self, other: &Self) -> (remaining: Self)
+            requires obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
             ensures remaining@.dom().subset_of(self@.dom().difference(other@.dom()));
 
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn find(&self, key: &K) -> (found: Option<V>)
-            requires self.spec_wf(),
+            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
                 match found {
                     Some(v) => self@.contains_key(key@) && self@[key@] == v@,
@@ -334,20 +342,30 @@ pub mod TableStPer {
 
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn delete(&self, key: &K) -> (updated: Self)
-            requires self.spec_wf(), obeys_feq_clone::<Pair<K, V>>(),
+            requires
+                self.spec_wf(),
+                obeys_feq_clone::<Pair<K, V>>(),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures !updated@.contains_key(key@), updated.spec_wf();
 
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
-            requires self.spec_wf(), forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+            requires
+                self.spec_wf(),
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures updated@.contains_key(key@), updated.spec_wf();
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
+            requires obeys_feq_full::<Pair<K, V>>(),
             ensures restricted@.dom().subset_of(self@.dom());
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
+            requires obeys_feq_full::<Pair<K, V>>(),
             ensures subtracted@.dom().subset_of(self@.dom());
 
         /// APAS: Work Θ(|a|), Span Θ(lg |a|)
@@ -429,7 +447,6 @@ pub mod TableStPer {
 
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (mapped: Self)
         {
-            proof { assume(obeys_feq_full::<K>()); }
             let ghost old_view = self.entries@;
             let mut new_entries: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
@@ -467,7 +484,6 @@ pub mod TableStPer {
 
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (filtered: Self)
         {
-            proof { assume(obeys_feq_full::<Pair<K, V>>()); }
             let ghost self_view = self.entries@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let ghost mut sources: Seq<int> = Seq::empty();
@@ -518,10 +534,6 @@ pub mod TableStPer {
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let ghost mut self_srcs: Seq<int> = Seq::empty();
             let ghost mut other_srcs: Seq<int> = Seq::empty();
-            proof {
-                assume(obeys_view_eq::<K>());
-                assume(obeys_feq_full::<K>());
-            }
             let mut i: usize = 0;
             while i < self.entries.length()
                 invariant
@@ -612,6 +624,8 @@ pub mod TableStPer {
                     other.entries@ == other_view,
                     forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                     combined.spec_wf(),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
                 decreases other.entries.spec_len() - j,
             {
                 let pair = other.entries.nth(j);
@@ -631,10 +645,6 @@ pub mod TableStPer {
             let ghost other_view = other.entries@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let ghost mut sources: Seq<int> = Seq::empty();
-            proof {
-                assume(obeys_view_eq::<K>());
-                assume(obeys_feq_full::<Pair<K, V>>());
-            }
             let mut i: usize = 0;
             while i < self.entries.length()
                 invariant
@@ -702,10 +712,6 @@ pub mod TableStPer {
 
         fn find(&self, key: &K) -> (found: Option<V>)
         {
-            proof {
-                assume(obeys_view_eq::<K>());
-                assume(obeys_feq_full::<V>());
-            }
             let mut i: usize = 0;
             while i < self.entries.length()
                 invariant
@@ -736,10 +742,6 @@ pub mod TableStPer {
 
         fn delete(&self, key: &K) -> (updated: Self)
         {
-            proof {
-                assume(obeys_view_eq::<K>());
-                assume(obeys_feq_full::<Pair<K, V>>());
-            }
             let ghost self_view = self.entries@;
             let mut updated: Vec<Pair<K, V>> = Vec::new();
             let ghost mut src: Seq<int> = Seq::empty();
@@ -799,10 +801,6 @@ pub mod TableStPer {
 
         fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
         {
-            proof {
-                assume(obeys_view_eq::<K>());
-                assume(obeys_feq_full::<Pair<K, V>>());
-            }
             let ghost key_view: K::V = key@;
             let ghost self_view = self.entries@;
             let mut all: Vec<Pair<K, V>> = Vec::new();
@@ -875,7 +873,6 @@ pub mod TableStPer {
 
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
         {
-            proof { assume(obeys_feq_full::<Pair<K, V>>()); }
             let ghost self_view = self.entries@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let ghost mut sources: Seq<int> = Seq::empty();
@@ -919,7 +916,6 @@ pub mod TableStPer {
 
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
         {
-            proof { assume(obeys_feq_full::<Pair<K, V>>()); }
             let ghost self_view = self.entries@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let ghost mut sources: Seq<int> = Seq::empty();
