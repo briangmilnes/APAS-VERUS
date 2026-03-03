@@ -20,10 +20,15 @@ pub mod LinkedListChainedHashTableStEph {
     use crate::Types::Types::*;
 
     verus! {
-        proof fn _linked_list_chained_hash_table_verified() {}
+
+        // 4. type definitions
 
         /// LinkedList Chained Hash Table implementation.
         pub struct LinkedListChainedHashTableStEph;
+
+        // 7. proof fns
+
+        proof fn _linked_list_chained_hash_table_verified() {}
     }
 
     impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for LinkedList<(Key, Value)> {

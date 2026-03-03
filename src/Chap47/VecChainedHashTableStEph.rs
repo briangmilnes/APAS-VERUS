@@ -7,8 +7,9 @@ pub mod VecChainedHashTableStEph {
     // Table of Contents
     // 1. module
     // 2. imports
-    // 4. type definitions
-    // 9. impls (outside verus!: EntryTrait for Vec, ParaHashTableStEphTrait, ChainedHashTable)
+    // 4. type definitions (inside verus!)
+    // 7. proof fns (inside verus!)
+    // 9. impls (inside verus!: EntryTrait for Vec; outside verus!: ParaHashTableStEphTrait, ChainedHashTable)
 
     // 2. imports
     use std::marker::PhantomData;
@@ -19,49 +20,68 @@ pub mod VecChainedHashTableStEph {
     use crate::Types::Types::*;
 
     verus! {
-        proof fn _vec_chained_hash_table_verified() {}
+
+        // 4. type definitions
 
         /// Vec Chained Hash Table implementation.
         pub struct VecChainedHashTableStEph;
-    }
 
-    // 9. impls (EntryTrait for Vec — outside verus!, matching LinkedList pattern)
+        // 7. proof fns
 
-    impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for Vec<(Key, Value)> {
-        /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty Vec construction.
-        fn new() -> Self { Vec::new() }
+        proof fn _vec_chained_hash_table_verified() {}
 
-        /// - APAS: Work O(1+α) expected, Span O(1+α).
-        /// - Claude-Opus-4.6: Work O(n) worst case, Span O(n) — linear scan for duplicate key, n = chain length.
-        fn insert(&mut self, key: Key, value: Value) {
-            for (k, v) in self.iter_mut() {
-                if k == &key {
-                    *v = value;
-                    return;
+        // 9. impls
+
+        impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for Vec<(Key, Value)> {
+            /// - APAS: Work O(1), Span O(1).
+            /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty Vec construction.
+            fn new() -> (entry: Self) { Vec::new() }
+
+            /// - APAS: Work O(1+α) expected, Span O(1+α).
+            /// - Claude-Opus-4.6: Work O(n) worst case, Span O(n) — linear scan for duplicate key, n = chain length.
+            fn insert(&mut self, key: Key, value: Value) {
+                let mut i: usize = 0;
+                while i < self.len()
+                    decreases self.len() - i,
+                {
+                    if self[i].0 == key {
+                        self.remove(i);
+                        self.push((key, value));
+                        return;
+                    }
+                    i += 1;
                 }
+                self.push((key, value));
             }
-            self.push((key, value));
-        }
 
-        /// - APAS: Work O(1+α) expected, Span O(1+α).
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan of chain, n = chain length.
-        fn lookup(&self, key: &Key) -> Option<Value> {
-            for (k, v) in self.iter() {
-                if k == key {
-                    return Some(v.clone());
+            /// - APAS: Work O(1+α) expected, Span O(1+α).
+            /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan of chain, n = chain length.
+            fn lookup(&self, key: &Key) -> (found: Option<Value>) {
+                let mut i: usize = 0;
+                while i < self.len()
+                    decreases self.len() - i,
+                {
+                    if self[i].0 == *key {
+                        return Some(self[i].1.clone());
+                    }
+                    i += 1;
                 }
+                None
             }
-            None
-        }
 
-        /// - APAS: Work O(1+α) expected, Span O(1+α).
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + Vec::remove (shifts elements), n = chain length.
-        fn delete(&mut self, key: &Key) -> B {
-            if let Some(pos) = self.iter().position(|(k, _)| k == key) {
-                self.remove(pos);
-                true
-            } else {
+            /// - APAS: Work O(1+α) expected, Span O(1+α).
+            /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + Vec::remove (shifts elements), n = chain length.
+            fn delete(&mut self, key: &Key) -> (deleted: B) {
+                let mut i: usize = 0;
+                while i < self.len()
+                    decreases self.len() - i,
+                {
+                    if self[i].0 == *key {
+                        self.remove(i);
+                        return true;
+                    }
+                    i += 1;
+                }
                 false
             }
         }

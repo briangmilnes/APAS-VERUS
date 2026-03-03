@@ -46,16 +46,16 @@ pub mod ParaHashTableStEph {
     pub trait EntryTrait<Key, Value> : Sized {
         /// - APAS: N/A — inner table interface, cost depends on implementation.
         /// - Claude-Opus-4.6: N/A — abstract trait method.
-        fn new()                        -> Self;
+        fn new() -> (entry: Self);
         /// - APAS: N/A — inner table interface, cost depends on implementation.
         /// - Claude-Opus-4.6: N/A — abstract trait method.
         fn insert(&mut self, key: Key, value: Value);
         /// - APAS: N/A — inner table interface, cost depends on implementation.
         /// - Claude-Opus-4.6: N/A — abstract trait method.
-        fn lookup(&self, key: &Key)     -> Option<Value>;
+        fn lookup(&self, key: &Key) -> (found: Option<Value>);
         /// - APAS: N/A — inner table interface, cost depends on implementation.
         /// - Claude-Opus-4.6: N/A — abstract trait method.
-        fn delete(&mut self, key: &Key) -> B;
+        fn delete(&mut self, key: &Key) -> (deleted: B);
     }
 
     } // verus!

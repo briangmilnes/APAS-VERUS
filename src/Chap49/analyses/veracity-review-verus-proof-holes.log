@@ -1,110 +1,110 @@
 ❌ MinEditDistMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:26: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtEph.rs:26: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         24 |         pub struct MinEditDistMtEphInv;
         25 |         impl RwLockPredicate<HashMap<(usize, usize), usize>> for MinEditDistMtEphInv {
         27 |         }
         28 | 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:38: error: struct_outside_verus - struct MinEditDistMtEphS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtEph.rs:38: error: struct_outside_verus - struct MinEditDistMtEphS — should be inside verus!
         38 |     pub struct MinEditDistMtEphS<T: MtVal> {
         39 |         pub source: ArraySeqMtEphS<T>,
         40 |         pub target: ArraySeqMtEphS<T>,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:38: error: clone_derived_outside - struct MinEditDistMtEphS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtEph.rs:38: error: clone_derived_outside - struct MinEditDistMtEphS — Clone should be implemented inside verus!, not derived outside
         38 |     pub struct MinEditDistMtEphS<T: MtVal> {
         39 |         pub source: ArraySeqMtEphS<T>,
         40 |         pub target: ArraySeqMtEphS<T>,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:29: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtEph.rs:29: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Errors: 3 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 dummy RwLockPredicate)
    Info: 1 total
 ❌ MinEditDistMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:25: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtPer.rs:25: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         23 |         pub struct MinEditDistMtPerInv;
         24 |         impl RwLockPredicate<HashMap<(usize, usize), usize>> for MinEditDistMtPerInv {
         26 |         }
         27 | 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:37: error: struct_outside_verus - struct MinEditDistMtPerS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtPer.rs:37: error: struct_outside_verus - struct MinEditDistMtPerS — should be inside verus!
         37 |     pub struct MinEditDistMtPerS<T: MtVal> {
         38 |         pub source: ArraySeqMtPerS<T>,
         39 |         pub target: ArraySeqMtPerS<T>,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:37: error: clone_derived_outside - struct MinEditDistMtPerS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtPer.rs:37: error: clone_derived_outside - struct MinEditDistMtPerS — Clone should be implemented inside verus!, not derived outside
         37 |     pub struct MinEditDistMtPerS<T: MtVal> {
         38 |         pub source: ArraySeqMtPerS<T>,
         39 |         pub target: ArraySeqMtPerS<T>,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:28: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtPer.rs:28: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Errors: 3 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 dummy RwLockPredicate)
    Info: 1 total
 ❌ MinEditDistStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:29: error: struct_outside_verus - struct MinEditDistStEphS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistStEph.rs:29: error: struct_outside_verus - struct MinEditDistStEphS — should be inside verus!
         29 |     pub struct MinEditDistStEphS<T: StT> {
         30 |         pub source: ArraySeqStEphS<T>,
         31 |         pub target: ArraySeqStEphS<T>,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:29: error: clone_derived_outside - struct MinEditDistStEphS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistStEph.rs:29: error: clone_derived_outside - struct MinEditDistStEphS — Clone should be implemented inside verus!, not derived outside
         29 |     pub struct MinEditDistStEphS<T: StT> {
         30 |         pub source: ArraySeqStEphS<T>,
         31 |         pub target: ArraySeqStEphS<T>,
    Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ MinEditDistStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:28: error: struct_outside_verus - struct MinEditDistStPerS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistStPer.rs:28: error: struct_outside_verus - struct MinEditDistStPerS — should be inside verus!
         28 |     pub struct MinEditDistStPerS<T: StT> {
         29 |         pub source: ArraySeqStPerS<T>,
         30 |         pub target: ArraySeqStPerS<T>,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:28: error: clone_derived_outside - struct MinEditDistStPerS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistStPer.rs:28: error: clone_derived_outside - struct MinEditDistStPerS — Clone should be implemented inside verus!, not derived outside
         28 |     pub struct MinEditDistStPerS<T: StT> {
         29 |         pub source: ArraySeqStPerS<T>,
         30 |         pub target: ArraySeqStPerS<T>,
    Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ SubsetSumMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:26: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtEph.rs:26: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         24 |         pub struct SubsetSumMtEphInv;
         25 |         impl RwLockPredicate<HashMap<(usize, i32), bool>> for SubsetSumMtEphInv {
         27 |         }
         28 | 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:38: error: struct_outside_verus - struct SubsetSumMtEphS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtEph.rs:38: error: struct_outside_verus - struct SubsetSumMtEphS — should be inside verus!
         38 |     pub struct SubsetSumMtEphS<T: MtVal> {
         39 |         pub multiset: ArraySeqMtEphS<T>,
         40 |         pub memo: Arc<RwLock<HashMap<(usize, i32), bool>, SubsetSumMtEphInv>>,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:38: error: clone_derived_outside - struct SubsetSumMtEphS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtEph.rs:38: error: clone_derived_outside - struct SubsetSumMtEphS — Clone should be implemented inside verus!, not derived outside
         38 |     pub struct SubsetSumMtEphS<T: MtVal> {
         39 |         pub multiset: ArraySeqMtEphS<T>,
         40 |         pub memo: Arc<RwLock<HashMap<(usize, i32), bool>, SubsetSumMtEphInv>>,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:29: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtEph.rs:29: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Errors: 3 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 dummy RwLockPredicate)
    Info: 1 total
 ❌ SubsetSumMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:25: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtPer.rs:25: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         23 |         pub struct SubsetSumMtPerInv;
         24 |         impl RwLockPredicate<HashMap<(usize, i32), bool>> for SubsetSumMtPerInv {
         26 |         }
         27 | 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:37: error: struct_outside_verus - struct SubsetSumMtPerS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtPer.rs:37: error: struct_outside_verus - struct SubsetSumMtPerS — should be inside verus!
         37 |     pub struct SubsetSumMtPerS<T: MtVal> {
         38 |         pub multiset: ArraySeqMtPerS<T>,
         39 |         pub memo: Arc<RwLock<HashMap<(usize, i32), bool>, SubsetSumMtPerInv>>,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:37: error: clone_derived_outside - struct SubsetSumMtPerS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtPer.rs:37: error: clone_derived_outside - struct SubsetSumMtPerS — Clone should be implemented inside verus!, not derived outside
         37 |     pub struct SubsetSumMtPerS<T: MtVal> {
         38 |         pub multiset: ArraySeqMtPerS<T>,
         39 |         pub memo: Arc<RwLock<HashMap<(usize, i32), bool>, SubsetSumMtPerInv>>,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:28: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtPer.rs:28: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Errors: 3 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 dummy RwLockPredicate)
    Info: 1 total
 ❌ SubsetSumStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:27: error: struct_outside_verus - struct SubsetSumStEphS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumStEph.rs:27: error: struct_outside_verus - struct SubsetSumStEphS — should be inside verus!
         27 |     pub struct SubsetSumStEphS<T: StT> {
         28 |         pub multiset: ArraySeqStEphS<T>,
         29 |         pub memo: HashMap<(usize, i32), bool>,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:27: error: clone_derived_outside - struct SubsetSumStEphS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumStEph.rs:27: error: clone_derived_outside - struct SubsetSumStEphS — Clone should be implemented inside verus!, not derived outside
         27 |     pub struct SubsetSumStEphS<T: StT> {
         28 |         pub multiset: ArraySeqStEphS<T>,
         29 |         pub memo: HashMap<(usize, i32), bool>,
    Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ SubsetSumStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:27: error: struct_outside_verus - struct SubsetSumStPerS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumStPer.rs:27: error: struct_outside_verus - struct SubsetSumStPerS — should be inside verus!
         27 |     pub struct SubsetSumStPerS<T: StT> {
         28 |         pub multiset: ArraySeqStPerS<T>,
         29 |         pub memo: HashMap<(usize, i32), bool>,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:27: error: clone_derived_outside - struct SubsetSumStPerS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumStPer.rs:27: error: clone_derived_outside - struct SubsetSumStPerS — Clone should be implemented inside verus!, not derived outside
         27 |     pub struct SubsetSumStPerS<T: StT> {
         28 |         pub multiset: ArraySeqStPerS<T>,
         29 |         pub memo: HashMap<(usize, i32), bool>,
@@ -130,13 +130,13 @@ Holes Found: 0 total
 Errors: 20 total (8 struct/enum outside verus!, 8 Clone derived outside, 4 dummy RwLockPredicate)
 
 Info: 4 total
-   SubsetSumMtPer.rs:28: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MinEditDistMtEph.rs:29: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    SubsetSumMtEph.rs:29: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    MinEditDistMtPer.rs:28: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   MinEditDistMtEph.rs:29: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   SubsetSumMtPer.rs:28: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
 
 🎉 No proof holes found! All proofs are complete.
-rnal body at this point.
-   MinEditDistMtEph.rs:29: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+al body at this point.
+   SubsetSumMtPer.rs:28: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
 
 🎉 No proof holes found! All proofs are complete.

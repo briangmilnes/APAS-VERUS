@@ -8,6 +8,8 @@ pub mod ChainedHashTable {
     // 1. module
     // 2. imports
     // 4. type definitions (inside verus!)
+    // 7. proof fns (inside verus!)
+    // 11. derive impls in verus!
     // 8. traits (outside verus! — references HashTable which contains dyn Fn types)
     // 13. derive impls outside verus!
 
@@ -22,7 +24,8 @@ pub mod ChainedHashTable {
     use crate::Types::Types::*;
 
     verus! {
-        proof fn _chained_hash_table_verified() {}
+
+        // 4. type definitions
 
         /// Parametric entry type for chained hash tables.
         /// Container type is abstract - can be Vec, LinkedList, Seq, etc.
@@ -33,6 +36,12 @@ pub mod ChainedHashTable {
             pub chain: Container,
             pub _phantom: PhantomData<(Key, Value)>,
         }
+
+        // 7. proof fns
+
+        proof fn _chained_hash_table_verified() {}
+
+        // 11. derive impls in verus!
 
         #[cfg(verus_keep_ghost)]
         impl<Key, Value, Container: core::cmp::PartialEq> PartialEqSpecImpl for ChainEntry<Key, Value, Container> {
@@ -51,12 +60,12 @@ pub mod ChainedHashTable {
         }
 
         impl<Key, Value, Container: core::cmp::PartialEq> core::cmp::PartialEq for ChainEntry<Key, Value, Container> {
-            fn eq(&self, other: &Self) -> (r: bool)
-                ensures r == (self.chain == other.chain)
+            fn eq(&self, other: &Self) -> (equal: bool)
+                ensures equal == (self.chain == other.chain)
             {
-                let r = self.chain == other.chain;
-                proof { accept(r == (self.chain == other.chain)); }
-                r
+                let equal = self.chain == other.chain;
+                proof { accept(equal == (self.chain == other.chain)); }
+                equal
             }
         }
 

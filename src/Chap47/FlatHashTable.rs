@@ -9,6 +9,7 @@ pub mod FlatHashTable {
     // 2. imports
     // 4. type definitions (inside verus!)
     // 9. impls (inside verus!: EntryTrait for FlatEntry)
+    // 11. derive impls in verus!
     // 8. traits (outside verus! — references HashTable which contains dyn Fn types)
     // 13. derive impls outside verus!
 
@@ -33,32 +34,28 @@ pub mod FlatHashTable {
         Deleted,
     }
 
-    // 11. derive impls in verus!
-
-    impl<Key: Clone, Value: Clone> Clone for FlatEntry<Key, Value> {
-        fn clone(&self) -> (cloned: Self) {
-            match self {
-                FlatEntry::Empty => FlatEntry::Empty,
-                FlatEntry::Occupied(k, v) => FlatEntry::Occupied(k.clone(), v.clone()),
-                FlatEntry::Deleted => FlatEntry::Deleted,
-            }
-        }
-    }
-
     // 9. impls
 
     impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for FlatEntry<Key, Value> {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time enum construction.
-        fn new() -> Self { FlatEntry::Empty }
+        fn new() -> (entry: Self)
+            ensures entry is Empty,
+        { FlatEntry::Empty }
 
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time enum assignment.
-        fn insert(&mut self, key: Key, value: Value) { *self = FlatEntry::Occupied(key, value); }
+        fn insert(&mut self, key: Key, value: Value)
+            ensures *self == FlatEntry::<Key, Value>::Occupied(key, value),
+        { *self = FlatEntry::Occupied(key, value); }
 
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — single match + key comparison.
-        fn lookup(&self, key: &Key) -> Option<Value> {
+        fn lookup(&self, key: &Key) -> (found: Option<Value>)
+            ensures
+                self is Empty ==> found is None,
+                self is Deleted ==> found is None,
+        {
             match self {
                 | FlatEntry::Occupied(k, v) => {
                     if *k == *key { Some(v.clone()) } else { None }
@@ -69,7 +66,11 @@ pub mod FlatHashTable {
 
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — single match + enum assignment.
-        fn delete(&mut self, key: &Key) -> B {
+        fn delete(&mut self, key: &Key) -> (deleted: B)
+            ensures
+                deleted ==> *self is Deleted,
+                !deleted ==> *self == *old(self),
+        {
             let is_match = if let FlatEntry::Occupied(k, _) = &*self {
                 *k == *key
             } else {
@@ -80,6 +81,18 @@ pub mod FlatHashTable {
                 true
             } else {
                 false
+            }
+        }
+    }
+
+    // 11. derive impls in verus!
+
+    impl<Key: Clone, Value: Clone> Clone for FlatEntry<Key, Value> {
+        fn clone(&self) -> (cloned: Self) {
+            match self {
+                FlatEntry::Empty => FlatEntry::Empty,
+                FlatEntry::Occupied(k, v) => FlatEntry::Occupied(k.clone(), v.clone()),
+                FlatEntry::Deleted => FlatEntry::Deleted,
             }
         }
     }
