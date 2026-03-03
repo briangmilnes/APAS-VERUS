@@ -959,6 +959,14 @@ pub mod ArraySeqStEph {
         }
     }
 
+    impl<T: View> ArraySeqStEphS<T> {
+        /// Connects view indexing with spec_index: self@[i] == self.spec_index(i)@.
+        pub proof fn lemma_view_index(&self, i: int)
+            requires 0 <= i < self.spec_len()
+            ensures self@[i] == self.spec_index(i)@
+        {}
+    }
+
     #[cfg(verus_keep_ghost)]
     impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqStEphS<T> {
         open spec fn obeys_eq_spec() -> bool { true }

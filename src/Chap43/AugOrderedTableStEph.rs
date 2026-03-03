@@ -130,12 +130,14 @@ broadcast use {
         fn is_empty(&self) -> (is_empty: B)
             ensures is_empty == self@.dom().is_empty(), self@.dom().finite();
         fn insert<G: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: G)
+            requires forall|v1: &V, v2: &V| combine.requires((v1, v2))
             ensures self@.dom().finite();
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             ensures self@.dom().finite();
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite();
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
+            requires forall|k: &K| f.requires((k,))
             ensures tabulated@.dom().finite();
         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (mapped: Self)
             ensures mapped@.dom().finite();
@@ -144,8 +146,10 @@ broadcast use {
         fn reduce<R, G: Fn(R, &K, &V) -> R>(&self, init: R, f: G) -> (reduced: R)
             ensures self@.dom().finite();
         fn intersection<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
+            requires forall|v1: &V, v2: &V| f.requires((v1, v2))
             ensures self@.dom().finite();
         fn union<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
+            requires forall|v1: &V, v2: &V| f.requires((v1, v2))
             ensures self@.dom().finite();
         fn difference(&mut self, other: &Self)
             ensures self@.dom().finite();
@@ -336,7 +340,6 @@ broadcast use {
         }
 
         fn intersection<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
-            ensures self@.dom().finite()
         {
             self.base_table.intersection(&other.base_table, f);
             self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
@@ -344,7 +347,6 @@ broadcast use {
         }
 
         fn union<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
-            ensures self@.dom().finite()
         {
             self.base_table.union(&other.base_table, f);
             self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);

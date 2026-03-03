@@ -62,12 +62,14 @@ broadcast use {
         fn is_empty(&self) -> (is_empty: B)
             ensures is_empty == self@.dom().is_empty();
         fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
+            requires forall|v1: &V, v2: &V| combine.requires((v1, v2))
             ensures self@.dom().finite();
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             ensures self@ == old(self)@.remove(k@), self@.dom().finite();
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite();
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+            requires forall|k: &K| f.requires((k,))
             ensures tabulated@.dom().finite();
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
             ensures mapped@.dom().finite();
@@ -76,8 +78,10 @@ broadcast use {
         fn reduce<R, F: Fn(R, &K, &V) -> R>(&self, init: R, f: F) -> (reduced: R)
             ensures self@.dom().finite();
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
+            requires forall|v1: &V, v2: &V| f.requires((v1, v2))
             ensures self@.dom().finite();
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
+            requires forall|v1: &V, v2: &V| f.requires((v1, v2))
             ensures self@.dom().finite();
         fn difference(&mut self, other: &Self)
             ensures self@.dom().finite();
@@ -235,14 +239,12 @@ broadcast use {
         }
 
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-            ensures self@.dom().finite()
         {
             self.base_table.intersection(&other.base_table, f);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
         }
 
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-            ensures self@.dom().finite()
         {
             self.base_table.union(&other.base_table, f);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }

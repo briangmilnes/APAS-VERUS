@@ -270,9 +270,11 @@ broadcast use {
             ensures domain@.finite();
         /// APAS: Work Θ(|s| * W(f)), Span Θ(lg |s| + S(f))
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+            requires forall|k: &K| f.requires((k,))
             ensures tabulated@.dom().finite();
         /// APAS: Work Θ(Σ W(f(v))), Span Θ(lg |a| + max S(f(v)))
         fn map<F: Fn(&V) -> V>(&mut self, f: F)
+            requires forall|v: &V| f.requires((v,))
             ensures self@.dom() == old(self)@.dom();
         /// APAS: Work Θ(Σ W(p(k,v))), Span Θ(lg |a| + max S(p(k,v)))
         fn filter<F: Fn(&K, &V) -> B>(&mut self, f: F)
@@ -280,9 +282,11 @@ broadcast use {
             ensures self@.dom().subset_of(old(self)@.dom());
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
+            requires forall|v1: &V, v2: &V| combine.requires((v1, v2))
             ensures self@.dom().subset_of(old(self)@.dom().intersect(other@.dom()));
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
+            requires forall|v1: &V, v2: &V| combine.requires((v1, v2))
             ensures old(self)@.dom().union(other@.dom()).subset_of(self@.dom());
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn difference(&mut self, other: &Self)
@@ -300,6 +304,7 @@ broadcast use {
             ensures !self@.contains_key(key@);
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
+            requires forall|v1: &V, v2: &V| combine.requires((v1, v2))
             ensures self@.contains_key(key@);
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
@@ -349,48 +354,81 @@ broadcast use {
             TableStEph { entries }
         }
 
-        #[verifier::external_body]
         fn domain(&self) -> (domain: ArraySetStEph<K>)
-            ensures domain@.finite()
         {
             let mut keys = ArraySetStEph::empty();
-            for i in 0..self.entries.length() {
+            let mut i: usize = 0;
+            while i < self.entries.length()
+                invariant
+                    i <= self.entries.spec_len(),
+                    keys.spec_wf(),
+                    keys@.finite(),
+                decreases self.entries.spec_len() - i,
+            {
                 let pair = self.entries.nth(i);
                 keys.insert(pair.0.clone());
+                i += 1;
             }
             keys
         }
 
-        #[verifier::external_body]
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            ensures tabulated@.dom().finite()
         {
             let key_seq = keys.to_seq();
-            let mut entries = Vec::with_capacity(key_seq.length());
-            for i in 0..key_seq.length() {
+            let mut entries: Vec<Pair<K, V>> = Vec::new();
+            let mut i: usize = 0;
+            while i < key_seq.length()
+                invariant
+                    i <= key_seq.spec_len(),
+                    forall|k: &K| f.requires((k,)),
+                decreases key_seq.spec_len() - i,
+            {
                 let key = key_seq.nth(i);
                 let value = f(key);
                 entries.push(Pair(key.clone(), value));
+                i += 1;
             }
-            entries.sort_by(|a, b| a.0.cmp(&b.0));
-            TableStEph {
-                entries: ArraySeqStEphS::from_vec(entries),
+            let seq = ArraySeqStEphS::from_vec(entries);
+            proof {
+                lemma_entries_to_map_finite::<K::V, V::V>(seq@);
             }
+            TableStEph { entries: seq }
         }
 
-        #[verifier::external_body]
         fn map<F: Fn(&V) -> V>(&mut self, f: F)
-            ensures self@.dom() == old(self)@.dom()
         {
-            let mapped_entries = ArraySeqStEphS::tabulate(
-                &|i| {
-                    let pair = self.entries.nth(i);
-                    let new_value = f(&pair.1);
-                    Pair(pair.0.clone(), new_value)
-                },
-                self.entries.length(),
-            );
-            self.entries = mapped_entries;
+            proof {
+                assume(obeys_feq_clone::<K>());
+            }
+            let ghost old_entries = self.entries@;
+            let mut mapped: Vec<Pair<K, V>> = Vec::new();
+            let mut i: usize = 0;
+            while i < self.entries.length()
+                invariant
+                    i <= self.entries.spec_len(),
+                    self.entries@ == old_entries,
+                    mapped@.len() == i as int,
+                    forall|j: int| #![auto] 0 <= j < i as int ==>
+                        mapped@[j].0@ == old_entries[j].0,
+                    forall|v: &V| f.requires((v,)),
+                    obeys_feq_clone::<K>(),
+                decreases self.entries.spec_len() - i,
+            {
+                let pair = self.entries.nth(i);
+                let new_value = f(&pair.1);
+                let key_clone = pair.0.clone_plus();
+                mapped.push(Pair(key_clone, new_value));
+                i += 1;
+            }
+            self.entries = ArraySeqStEphS::from_vec(mapped);
+            proof {
+                assert forall|i: int| 0 <= i < self.entries@.len()
+                    implies (#[trigger] self.entries@[i]).0 == old_entries[i].0
+                by {
+                    assert(self.entries.spec_index(i) == mapped@[i]);
+                };
+                lemma_entries_to_map_dom_same_keys::<K::V, V::V, V::V>(old_entries, self.entries@);
+            }
         }
 
         fn filter<F: Fn(&K, &V) -> B>(&mut self, f: F)
@@ -437,107 +475,414 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
-            ensures self@.dom().subset_of(old(self)@.dom().intersect(other@.dom()))
         {
-            let mut intersection_entries = Vec::new();
-            let mut i = 0;
-            let mut j = 0;
-
-            while i < self.entries.length() && j < other.entries.length() {
-                let pair1 = self.entries.nth(i);
-                let pair2 = other.entries.nth(j);
-
-                match pair1.0.cmp(&pair2.0) {
-                    Ordering::Less => i += 1,
-                    Ordering::Greater => j += 1,
-                    Ordering::Equal => {
-                        let combined_value = combine(&pair1.1, &pair2.1);
-                        intersection_entries.push(Pair(pair1.0.clone(), combined_value));
-                        i += 1;
-                        j += 1;
+            proof {
+                assume(obeys_feq_clone::<K>());
+                assume(obeys_view_eq::<K>());
+            }
+            let ghost old_self_view = self.entries@;
+            let other_len = other.entries.length();
+            let mut kept: Vec<Pair<K, V>> = Vec::new();
+            let ghost mut self_sources: Seq<int> = Seq::empty();
+            let ghost mut other_sources: Seq<int> = Seq::empty();
+            let mut i: usize = 0;
+            while i < self.entries.length()
+                invariant
+                    i <= self.entries.spec_len(),
+                    self.entries@ == old_self_view,
+                    other_len as int == other.entries.spec_len(),
+                    self_sources.len() == kept@.len(),
+                    other_sources.len() == kept@.len(),
+                    forall|k: int| #![auto] 0 <= k < self_sources.len() ==>
+                        0 <= self_sources[k] < old_self_view.len()
+                        && old_self_view[self_sources[k]].0 == kept@[k].0@,
+                    forall|k: int| #![auto] 0 <= k < other_sources.len() ==>
+                        0 <= other_sources[k] < other.entries@.len()
+                        && other.entries@[other_sources[k]].0 == kept@[k].0@,
+                    forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                    obeys_feq_clone::<K>(),
+                    obeys_view_eq::<K>(),
+                decreases self.entries.spec_len() - i,
+            {
+                let pair_i = self.entries.nth(i);
+                let ghost key_view: K::V = old_self_view[i as int].0;
+                let mut match_idx: usize = other_len;
+                let ghost mut match_pos: int = -1int;
+                let mut j: usize = 0;
+                while j < other_len
+                    invariant
+                        j <= other_len,
+                        i < self.entries.spec_len(),
+                        self.entries@ == old_self_view,
+                        other_len as int == other.entries.spec_len(),
+                        match_pos == -1int || (
+                            0 <= match_pos < other.entries@.len()
+                            && other.entries@[match_pos].0 == key_view
+                        ),
+                        match_idx == other_len <==> match_pos == -1int,
+                        match_idx < other_len ==> match_idx as int == match_pos,
+                        key_view == pair_i.0@,
+                        obeys_view_eq::<K>(),
+                    decreases other_len - j,
+                {
+                    let pair_j = other.entries.nth(j);
+                    proof {
+                        reveal(obeys_view_eq);
+                        other.entries.lemma_view_index(j as int);
+                    }
+                    if pair_i.0 == pair_j.0 {
+                        match_idx = j;
+                        proof { match_pos = j as int; }
+                    }
+                    j += 1;
+                }
+                if match_idx < other_len {
+                    let pair_j = other.entries.nth(match_idx);
+                    let combined_value = combine(&pair_i.1, &pair_j.1);
+                    let key_clone = pair_i.0.clone_plus();
+                    kept.push(Pair(key_clone, combined_value));
+                    proof {
+                        self_sources = self_sources.push(i as int);
+                        other_sources = other_sources.push(match_pos);
                     }
                 }
-            }
-
-            self.entries = ArraySeqStEphS::from_vec(intersection_entries);
-        }
-
-        #[verifier::external_body]
-        fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
-            ensures old(self)@.dom().union(other@.dom()).subset_of(self@.dom())
-        {
-            let mut union_entries = Vec::new();
-            let mut i = 0;
-            let mut j = 0;
-
-            while i < self.entries.length() && j < other.entries.length() {
-                let pair1 = self.entries.nth(i);
-                let pair2 = other.entries.nth(j);
-
-                match pair1.0.cmp(&pair2.0) {
-                    Ordering::Less => {
-                        union_entries.push(pair1.clone());
-                        i += 1;
-                    }
-                    Ordering::Greater => {
-                        union_entries.push(pair2.clone());
-                        j += 1;
-                    }
-                    Ordering::Equal => {
-                        let combined_value = combine(&pair1.1, &pair2.1);
-                        union_entries.push(Pair(pair1.0.clone(), combined_value));
-                        i += 1;
-                        j += 1;
-                    }
-                }
-            }
-
-            while i < self.entries.length() {
-                union_entries.push(self.entries.nth(i).clone());
                 i += 1;
             }
+            self.entries = ArraySeqStEphS::from_vec(kept);
+            proof {
+                assert forall|k: K::V| #![auto]
+                    self@.dom().contains(k)
+                    implies spec_entries_to_map(old_self_view).dom().contains(k)
+                        && spec_entries_to_map(other.entries@).dom().contains(k)
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
+                    let idx = choose|idx: int| 0 <= idx < self.entries@.len()
+                        && (#[trigger] self.entries@[idx]).0 == k;
+                    assert(self.entries.spec_index(idx) == kept@[idx]);
+                    let s1 = self_sources[idx];
+                    let s2 = other_sources[idx];
+                    assert(old_self_view[s1].0 == kept@[idx].0@);
+                    assert(other.entries@[s2].0 == kept@[idx].0@);
+                    lemma_entries_to_map_contains_key::<K::V, V::V>(old_self_view, s1);
+                    lemma_entries_to_map_contains_key::<K::V, V::V>(other.entries@, s2);
+                };
+            }
+        }
 
-            while j < other.entries.length() {
-                union_entries.push(other.entries.nth(j).clone());
+        fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
+        {
+            proof {
+                assume(obeys_feq_clone::<K>());
+                assume(obeys_feq_full::<Pair<K, V>>());
+                assume(obeys_view_eq::<K>());
+            }
+            let ghost old_self_view = self.entries@;
+            let other_len = other.entries.length();
+            let self_len = self.entries.length();
+            let mut kept: Vec<Pair<K, V>> = Vec::new();
+            // Phase 1: For each self entry, scan other for match.
+            // If match, combine values; otherwise clone. Keep all self entries.
+            let mut i: usize = 0;
+            while i < self_len
+                invariant
+                    i <= self.entries.spec_len(),
+                    self.entries@ == old_self_view,
+                    self_len as int == self.entries.spec_len(),
+                    other_len as int == other.entries.spec_len(),
+                    kept@.len() == i as int,
+                    forall|k: int| 0 <= k < i as int ==>
+                        (#[trigger] kept@[k]).0@ == old_self_view[k].0,
+                    forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                    obeys_feq_clone::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    obeys_view_eq::<K>(),
+                decreases self.entries.spec_len() - i,
+            {
+                let pair_i = self.entries.nth(i);
+                let ghost key_view: K::V = old_self_view[i as int].0;
+                // Scan other for matching key.
+                let mut match_idx: usize = other_len;
+                let mut j: usize = 0;
+                while j < other_len
+                    invariant
+                        j <= other_len,
+                        i < self.entries.spec_len(),
+                        self.entries@ == old_self_view,
+                        other_len as int == other.entries.spec_len(),
+                        match_idx <= other_len,
+                        match_idx < other_len ==>
+                            other.entries@[match_idx as int].0 == key_view,
+                        key_view == pair_i.0@,
+                        obeys_view_eq::<K>(),
+                    decreases other_len - j,
+                {
+                    let pair_j = other.entries.nth(j);
+                    proof {
+                        reveal(obeys_view_eq);
+                        other.entries.lemma_view_index(j as int);
+                    }
+                    if pair_i.0 == pair_j.0 {
+                        match_idx = j;
+                    }
+                    j += 1;
+                }
+                if match_idx < other_len {
+                    let pair_j = other.entries.nth(match_idx);
+                    let key_clone = pair_i.0.clone_plus();
+                    let combined_value = combine(&pair_i.1, &pair_j.1);
+                    kept.push(Pair(key_clone, combined_value));
+                } else {
+                    let cloned = pair_i.clone_plus();
+                    kept.push(cloned);
+                }
+                i += 1;
+            }
+            let ghost phase1_len: int = kept@.len() as int;
+            proof { assert(phase1_len == old_self_view.len()); }
+            // Phase 2: For each other entry, scan self for match.
+            // If no match, add to output (entries only in other).
+            let ghost mut phase2_sources: Seq<int> = Seq::empty();
+            let mut j: usize = 0;
+            while j < other_len
+                invariant
+                    j <= other_len,
+                    other_len as int == other.entries.spec_len(),
+                    self_len as int == self.entries.spec_len(),
+                    self.entries@ == old_self_view,
+                    phase1_len == old_self_view.len(),
+                    kept@.len() == phase1_len + phase2_sources.len(),
+                    forall|k: int| 0 <= k < phase1_len ==>
+                        (#[trigger] kept@[k]).0@ == old_self_view[k].0,
+                    forall|k: int| #![auto] 0 <= k < phase2_sources.len() ==>
+                        0 <= phase2_sources[k] < other.entries@.len()
+                        && other.entries@[phase2_sources[k]].0
+                            == kept@[(phase1_len + k) as int].0@,
+                    forall|oj: int| 0 <= oj < j as int ==>
+                        spec_entries_to_map(old_self_view).contains_key(
+                            (#[trigger] other.entries@[oj]).0)
+                        || (exists|k: int| 0 <= k < phase2_sources.len()
+                            && (#[trigger] phase2_sources[k]) == oj),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    obeys_view_eq::<K>(),
+                decreases other_len - j,
+            {
+                let pair_j = other.entries.nth(j);
+                let ghost key_view: K::V = other.entries@[j as int].0;
+                proof { other.entries.lemma_view_index(j as int); }
+                // Scan self for matching key.
+                let mut found: bool = false;
+                let ghost mut found_idx: int = -1int;
+                let mut ii: usize = 0;
+                while ii < self_len
+                    invariant
+                        ii <= self.entries.spec_len(),
+                        self.entries@ == old_self_view,
+                        self_len as int == self.entries.spec_len(),
+                        found ==> (0 <= found_idx < old_self_view.len()
+                            && old_self_view[found_idx].0 == key_view),
+                        !found ==> forall|kk: int| #![auto] 0 <= kk < ii as int ==>
+                            old_self_view[kk].0 != key_view,
+                        key_view == pair_j.0@,
+                        obeys_view_eq::<K>(),
+                    decreases self.entries.spec_len() - ii,
+                {
+                    let pair_ii = self.entries.nth(ii);
+                    proof {
+                        reveal(obeys_view_eq);
+                        self.entries.lemma_view_index(ii as int);
+                    }
+                    if pair_j.0 == pair_ii.0 {
+                        found = true;
+                        proof { found_idx = ii as int; }
+                    }
+                    ii += 1;
+                }
+                let ghost old_phase2_sources = phase2_sources;
+                let ghost old_kept = kept@;
+                if !found {
+                    let cloned = pair_j.clone_plus();
+                    kept.push(cloned);
+                    proof {
+                        phase2_sources = phase2_sources.push(j as int);
+                        lemma_entries_to_map_no_key::<K::V, V::V>(
+                            old_self_view, key_view);
+                    }
+                } else {
+                    proof {
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(
+                            old_self_view, found_idx);
+                    }
+                }
+                proof {
+                    // Re-establish coverage for all oj in 0..j+1.
+                    assert forall|oj: int| 0 <= oj < j + 1 implies
+                        spec_entries_to_map(old_self_view).contains_key(
+                            (#[trigger] other.entries@[oj]).0)
+                        || (exists|k: int| 0 <= k < phase2_sources.len()
+                            && (#[trigger] phase2_sources[k]) == oj)
+                    by {
+                        if oj < j as int {
+                            // Old entry: invariant held before this iteration.
+                            if spec_entries_to_map(old_self_view).contains_key(
+                                other.entries@[oj].0)
+                            {
+                                // Already covered by map membership.
+                            } else {
+                                // Had a witness k in old_phase2_sources.
+                                let k = choose|k: int|
+                                    0 <= k < old_phase2_sources.len()
+                                    && (#[trigger] old_phase2_sources[k]) == oj;
+                                // phase2_sources preserves old entries.
+                                assert(phase2_sources[k] == old_phase2_sources[k]);
+                                assert(phase2_sources[k] == oj);
+                            }
+                        } else {
+                            // oj == j: the current entry.
+                            if found {
+                                assert(spec_entries_to_map(old_self_view).contains_key(
+                                    other.entries@[oj].0));
+                            } else {
+                                // We just pushed j onto phase2_sources.
+                                let k = phase2_sources.len() - 1;
+                                assert(phase2_sources[k] == j as int);
+                                assert(phase2_sources[k] == oj);
+                            }
+                        }
+                    };
+                }
                 j += 1;
             }
-
-            self.entries = ArraySeqStEphS::from_vec(union_entries);
+            self.entries = ArraySeqStEphS::from_vec(kept);
+            proof {
+                // Every old self key is in the output (Phase 1).
+                assert forall|k: K::V|
+                    spec_entries_to_map(old_self_view).dom().contains(k)
+                    implies self@.dom().contains(k)
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_self_view, k);
+                    let si = choose|si: int| 0 <= si < old_self_view.len()
+                        && (#[trigger] old_self_view[si]).0 == k;
+                    assert(0 <= si && si < kept@.len());
+                    assert(self.entries.spec_index(si) == kept@[si]);
+                    self.entries.lemma_view_index(si);
+                    lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, si);
+                };
+                // Every other key is in the output.
+                assert forall|k: K::V|
+                    spec_entries_to_map(other.entries@).dom().contains(k)
+                    implies self@.dom().contains(k)
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(other.entries@, k);
+                    let oj = choose|oj: int| 0 <= oj < other.entries@.len()
+                        && (#[trigger] other.entries@[oj]).0 == k;
+                    if spec_entries_to_map(old_self_view).contains_key(
+                        other.entries@[oj].0)
+                    {
+                        // Key in self: Phase 1 added it.
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(
+                            old_self_view, k);
+                        let si = choose|si: int| 0 <= si < old_self_view.len()
+                            && (#[trigger] old_self_view[si]).0 == k;
+                        assert(0 <= si && si < kept@.len());
+                        assert(self.entries.spec_index(si) == kept@[si]);
+                        self.entries.lemma_view_index(si);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(
+                            self.entries@, si);
+                    } else {
+                        // Key only in other: Phase 2 added it.
+                        let kidx = choose|kidx: int|
+                            0 <= kidx < phase2_sources.len()
+                            && (#[trigger] phase2_sources[kidx]) == oj;
+                        let out_idx = phase1_len + kidx;
+                        assert(other.entries@[oj].0
+                            == kept@[out_idx as int].0@);
+                        assert(self.entries.spec_index(out_idx) == kept@[out_idx]);
+                        self.entries.lemma_view_index(out_idx);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(
+                            self.entries@, out_idx);
+                    }
+                };
+            }
         }
 
-        #[verifier::external_body]
         fn difference(&mut self, other: &Self)
-            ensures self@.dom().subset_of(old(self)@.dom().difference(other@.dom()))
         {
-            let mut difference_entries = Vec::new();
-            let mut i = 0;
-            let mut j = 0;
-
-            while i < self.entries.length() && j < other.entries.length() {
-                let pair1 = self.entries.nth(i);
-                let pair2 = other.entries.nth(j);
-
-                match pair1.0.cmp(&pair2.0) {
-                    Ordering::Less => {
-                        difference_entries.push(pair1.clone());
-                        i += 1;
-                    }
-                    Ordering::Greater => j += 1,
-                    Ordering::Equal => {
-                        i += 1;
-                        j += 1;
-                    }
-                }
+            proof {
+                assume(obeys_feq_full::<Pair<K, V>>());
+                assume(obeys_view_eq::<K>());
             }
-
-            while i < self.entries.length() {
-                difference_entries.push(self.entries.nth(i).clone());
+            let ghost old_self_view = self.entries@;
+            let other_len = other.entries.length();
+            let mut kept: Vec<Pair<K, V>> = Vec::new();
+            let ghost mut sources: Seq<int> = Seq::empty();
+            let mut i: usize = 0;
+            while i < self.entries.length()
+                invariant
+                    i <= self.entries.spec_len(),
+                    self.entries@ == old_self_view,
+                    other_len as int == other.entries.spec_len(),
+                    sources.len() == kept@.len(),
+                    forall|k: int| #![auto] 0 <= k < sources.len() ==>
+                        0 <= sources[k] < old_self_view.len()
+                        && old_self_view[sources[k]].0 == kept@[k].0@
+                        && !spec_entries_to_map(other.entries@).contains_key(kept@[k].0@),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    obeys_view_eq::<K>(),
+                decreases self.entries.spec_len() - i,
+            {
+                let pair_i = self.entries.nth(i);
+                let ghost key_view: K::V = old_self_view[i as int].0;
+                let mut found: bool = false;
+                let mut j: usize = 0;
+                while j < other_len
+                    invariant
+                        j <= other_len,
+                        i < self.entries.spec_len(),
+                        self.entries@ == old_self_view,
+                        other_len as int == other.entries.spec_len(),
+                        found || forall|jj: int| #![auto] 0 <= jj < j as int ==>
+                            other.entries@[jj].0 != key_view,
+                        key_view == pair_i.0@,
+                        obeys_view_eq::<K>(),
+                    decreases other_len - j,
+                {
+                    let pair_j = other.entries.nth(j);
+                    proof {
+                        reveal(obeys_view_eq);
+                        other.entries.lemma_view_index(j as int);
+                    }
+                    if pair_i.0 == pair_j.0 {
+                        found = true;
+                    }
+                    j += 1;
+                }
+                if !found {
+                    proof {
+                        lemma_entries_to_map_no_key::<K::V, V::V>(other.entries@, key_view);
+                    }
+                    let cloned = pair_i.clone_plus();
+                    kept.push(cloned);
+                    proof { sources = sources.push(i as int); }
+                }
                 i += 1;
             }
-
-            self.entries = ArraySeqStEphS::from_vec(difference_entries);
+            self.entries = ArraySeqStEphS::from_vec(kept);
+            proof {
+                assert forall|k: K::V| #![auto]
+                    self@.dom().contains(k)
+                    implies spec_entries_to_map(old_self_view).dom().contains(k)
+                        && !spec_entries_to_map(other.entries@).dom().contains(k)
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
+                    let idx = choose|idx: int| 0 <= idx < self.entries@.len()
+                        && (#[trigger] self.entries@[idx]).0 == k;
+                    assert(self.entries.spec_index(idx) == kept@[idx]);
+                    let s = sources[idx];
+                    assert(old_self_view[s].0 == kept@[idx].0@);
+                    lemma_entries_to_map_contains_key::<K::V, V::V>(old_self_view, s);
+                };
+            }
         }
 
         fn find(&self, key: &K) -> (found: Option<V>)
@@ -574,44 +919,87 @@ broadcast use {
             None
         }
 
-        #[verifier::external_body]
         fn delete(&mut self, key: &K)
-            ensures !self@.contains_key(key@)
         {
-            let mut found = Vec::new();
-            for i in 0..self.entries.length() {
-                let pair = self.entries.nth(i);
-                if &pair.0 != key {
-                    found.push(pair.clone());
-                }
+            proof {
+                assume(obeys_view_eq::<K>());
+                assume(obeys_feq_full::<Pair<K, V>>());
             }
-            self.entries = ArraySeqStEphS::from_vec(found);
+            let ghost old_view = self.entries@;
+            let mut kept: Vec<Pair<K, V>> = Vec::new();
+            let mut i: usize = 0;
+            while i < self.entries.length()
+                invariant
+                    i <= self.entries.spec_len(),
+                    self.entries@ == old_view,
+                    forall|j: int| #![auto] 0 <= j < kept@.len() ==>
+                        kept@[j].0@ != key@,
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                decreases self.entries.spec_len() - i,
+            {
+                let pair = self.entries.nth(i);
+                proof { reveal(obeys_view_eq); }
+                if !pair.0.eq(key) {
+                    let cloned = pair.clone_plus();
+                    kept.push(cloned);
+                }
+                i += 1;
+            }
+            self.entries = ArraySeqStEphS::from_vec(kept);
+            proof {
+                assert forall|j: int| 0 <= j < self.entries@.len()
+                    implies (#[trigger] self.entries@[j]).0 != key@
+                by {
+                    assert(self.entries.spec_index(j) == kept@[j]);
+                };
+                lemma_entries_to_map_no_key::<K::V, V::V>(self.entries@, key@);
+            }
         }
 
-        #[verifier::external_body]
         fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
-            ensures self@.contains_key(key@)
         {
-            if let Some(existing_value) = self.find(&key) {
-                let combined_value = combine(&existing_value, &value);
-                let mut updated_entries = Vec::new();
-                for i in 0..self.entries.length() {
-                    let pair = self.entries.nth(i);
-                    if pair.0 != key {
-                        updated_entries.push(pair.clone());
-                    }
+            proof {
+                assume(obeys_view_eq::<K>());
+                assume(obeys_feq_full::<Pair<K, V>>());
+            }
+            let ghost key_view: K::V = key@;
+            let ghost old_view = self.entries@;
+            let mut all: Vec<Pair<K, V>> = Vec::new();
+            let mut found_value: Option<V> = None;
+            let mut i: usize = 0;
+            while i < self.entries.length()
+                invariant
+                    i <= self.entries.spec_len(),
+                    self.entries@ == old_view,
+                    forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                    forall|j: int| #![auto] 0 <= j < all@.len() ==> all@[j].0@ != key_view,
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    key@ == key_view,
+                decreases self.entries.spec_len() - i,
+            {
+                let pair = self.entries.nth(i);
+                proof { reveal(obeys_view_eq); }
+                if pair.0 == key {
+                    found_value = Some(pair.1.clone_plus());
+                } else {
+                    let cloned = pair.clone_plus();
+                    all.push(cloned);
                 }
-                updated_entries.push(Pair(key, combined_value));
-                updated_entries.sort_by(|a, b| a.0.cmp(&b.0));
-                self.entries = ArraySeqStEphS::from_vec(updated_entries);
-            } else {
-                let mut new_entries = Vec::with_capacity(self.entries.length() + 1);
-                for i in 0..self.entries.length() {
-                    new_entries.push(self.entries.nth(i).clone());
-                }
-                new_entries.push(Pair(key, value));
-                new_entries.sort_by(|a, b| a.0.cmp(&b.0));
-                self.entries = ArraySeqStEphS::from_vec(new_entries);
+                i += 1;
+            }
+            let final_value = match found_value {
+                Some(old_val) => combine(&old_val, &value),
+                None => value,
+            };
+            all.push(Pair(key, final_value));
+            self.entries = ArraySeqStEphS::from_vec(all);
+            proof {
+                let last = (self.entries@.len() - 1) as int;
+                assert(self.entries.spec_index(last) == all@[last]);
+                assert(self.entries@[last].0 == key_view);
+                lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, last);
             }
         }
 
