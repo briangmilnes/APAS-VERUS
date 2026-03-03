@@ -23,31 +23,9 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:46: warning: [12] trait BalancedTreePQTrait fn empty should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:47: warning: [12] trait BalancedTreePQTrait fn singleton should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:48: warning: [12] trait BalancedTreePQTrait fn find_min should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:49: warning: [12] trait BalancedTreePQTrait fn insert should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:50: warning: [12] trait BalancedTreePQTrait fn delete_min should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:51: warning: [12] trait BalancedTreePQTrait fn meld should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:52: warning: [12] trait BalancedTreePQTrait fn from_seq should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:53: warning: [12] trait BalancedTreePQTrait fn size should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:54: warning: [12] trait BalancedTreePQTrait fn is_empty should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:55: warning: [12] trait BalancedTreePQTrait fn to_seq should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:56: warning: [12] trait BalancedTreePQTrait fn find_max should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:57: warning: [12] trait BalancedTreePQTrait fn delete_max should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:58: warning: [12] trait BalancedTreePQTrait fn insert_all should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:59: warning: [12] trait BalancedTreePQTrait fn extract_all_sorted should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:60: warning: [12] trait BalancedTreePQTrait fn contains should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:61: warning: [12] trait BalancedTreePQTrait fn remove should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:62: warning: [12] trait BalancedTreePQTrait fn range should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:63: warning: [12] trait BalancedTreePQTrait fn from_vec should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:64: warning: [12] trait BalancedTreePQTrait fn to_vec should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:65: warning: [12] trait BalancedTreePQTrait fn to_sorted_vec should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:66: warning: [12] trait BalancedTreePQTrait fn is_sorted should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:67: warning: [12] trait BalancedTreePQTrait fn height should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:68: warning: [12] trait BalancedTreePQTrait fn split should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:69: warning: [12] trait BalancedTreePQTrait fn join should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:335: warning: [13] impl BalancedTreePQExtTrait for BalancedTreePQ should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:100: warning: [12] trait BalancedTreePQTrait fn contains should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:119: warning: [12] trait BalancedTreePQTrait fn is_sorted should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:394: warning: [13] impl BalancedTreePQExtTrait for BalancedTreePQ should be inside verus!
 
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:1: info: [1] has mod declarations
@@ -125,14 +103,12 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:83: warning: [12] trait LeftistHeapNodeTrait fn is_leftist should have requires/ensures
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:84: warning: [12] trait LeftistHeapNodeTrait fn is_heap should have requires/ensures
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:85: warning: [12] trait LeftistHeapNodeTrait fn to_vec should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:117: warning: [12] trait LeftistHeapPQTrait fn extract_all_sorted should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:118: warning: [12] trait LeftistHeapPQTrait fn height should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:119: warning: [12] trait LeftistHeapPQTrait fn root_rank should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:120: warning: [12] trait LeftistHeapPQTrait fn is_valid_leftist_heap should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:123: warning: [12] trait LeftistHeapPQTrait fn to_vec should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:124: warning: [12] trait LeftistHeapPQTrait fn to_sorted_vec should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:125: warning: [12] trait LeftistHeapPQTrait fn meld_multiple should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:126: warning: [12] trait LeftistHeapPQTrait fn split should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:120: warning: [12] trait LeftistHeapPQTrait fn height should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:121: warning: [12] trait LeftistHeapPQTrait fn root_rank should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:122: warning: [12] trait LeftistHeapPQTrait fn is_valid_leftist_heap should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:125: warning: [12] trait LeftistHeapPQTrait fn to_vec should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:129: warning: [12] trait LeftistHeapPQTrait fn meld_multiple should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:130: warning: [12] trait LeftistHeapPQTrait fn split should have requires/ensures
 
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:1: info: [1] has mod declarations
@@ -141,6 +117,7 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:1: info: [4] std imports grouped with trailing blank
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:1: info: [5] vstd imports grouped with trailing blank
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:1: info: [12] all trait fns have specs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:1: info: [13] trait impls inside verus!
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:1: info: [14] Debug, Display outside verus!
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
@@ -149,8 +126,7 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:125: warning: [12] trait SortedListPQTrait fn is_sorted should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:423: warning: [18] impl Default for SortedListPQ < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:424: warning: [18] impl Default for SortedListPQ < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
 
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/UnsortedListPQ.rs:
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/UnsortedListPQ.rs:1: info: [1] has mod declarations
@@ -171,6 +147,6 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/UnsortedListPQ.rs:325: warning: [18] impl Default for UnsortedListPQ < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
 
 ════════════════════════════════════════════════════════════════
-Summary: 100 passed, 48 warnings in 6 files (checked 7 files)
+Summary: 101 passed, 23 warnings in 6 files (checked 7 files)
 ════════════════════════════════════════════════════════════════
 ��════════════════════════════════════════════════════

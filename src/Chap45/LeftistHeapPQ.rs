@@ -114,14 +114,18 @@ broadcast use {
                 ensures n as nat == self.spec_size();
             fn is_empty(&self) -> (b: bool)
                 ensures b == (self.spec_size() == 0);
-            fn extract_all_sorted(&self) -> (sorted: Vec<T>);
+            fn extract_all_sorted(&self) -> (sorted: Vec<T>)
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures sorted@.len() as nat == self.spec_size();
             fn height(&self) -> (levels: usize);
             fn root_rank(&self) -> (rank_val: usize);
             fn is_valid_leftist_heap(&self) -> (b: bool);
             fn from_vec(vec: Vec<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>();
             fn to_vec(&self) -> (v: Vec<T>);
-            fn to_sorted_vec(&self) -> (v: Vec<T>);
+            fn to_sorted_vec(&self) -> (v: Vec<T>)
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures v@.len() as nat == self.spec_size();
             fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self);
             fn split(&self, key: &T) -> (parts: (Self, Self));
         }
@@ -370,7 +374,12 @@ broadcast use {
             fn extract_all_sorted(&self) -> (sorted: Vec<T>) {
                 let mut result: Vec<T> = Vec::new();
                 let mut current_heap = self.clone();
-                while !current_heap.is_empty() {
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                while !current_heap.is_empty()
+                    invariant
+                        result@.len() as nat + current_heap.spec_size() == self.spec_size(),
+                        self.spec_size() <= usize::MAX as nat,
+                {
                     let (new_heap, min_element) = current_heap.delete_min();
                     if let Some(element) = min_element {
                         result.push(element);

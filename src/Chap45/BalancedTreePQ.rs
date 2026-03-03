@@ -42,31 +42,90 @@ broadcast use {
 
 // 8. traits
         /// Meldable Priority Queue ADT (Data Type 45.1) using balanced tree (AVL).
-        pub trait BalancedTreePQTrait<T: StT + Ord>: Sized {
-            fn empty() -> Self;
-            fn singleton(element: T) -> Self;
-            fn find_min(&self) -> Option<&T>;
-            fn insert(&self, element: T) -> Self;
-            fn delete_min(&self) -> (Self, Option<T>);
-            fn meld(&self, other: &Self) -> Self;
-            fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self;
-            fn size(&self) -> usize;
-            fn is_empty(&self) -> bool;
-            fn to_seq(&self) -> AVLTreeSeqStPerS<T>;
-            fn find_max(&self) -> Option<&T>;
-            fn delete_max(&self) -> (Self, Option<T>);
-            fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self;
-            fn extract_all_sorted(&self) -> AVLTreeSeqStPerS<T>;
-            fn contains(&self, element: &T) -> bool;
-            fn remove(&self, element: &T) -> (Self, bool);
-            fn range(&self, min_val: &T, max_val: &T) -> AVLTreeSeqStPerS<T>;
-            fn from_vec(elements: Vec<T>) -> Self;
-            fn to_vec(&self) -> Vec<T>;
-            fn to_sorted_vec(&self) -> Vec<T>;
-            fn is_sorted(&self) -> bool;
-            fn height(&self) -> usize;
-            fn split(&self, element: &T) -> (Self, bool, Self);
-            fn join(left: &Self, right: &Self) -> Self;
+        pub trait BalancedTreePQTrait<T: StT + Ord>: Sized + View<V = Seq<T::V>> {
+            fn empty() -> (pq: Self)
+                ensures pq@.len() == 0;
+
+            fn singleton(element: T) -> (pq: Self)
+                ensures pq@.len() == 1;
+
+            fn find_min(&self) -> (min_elem: Option<&T>)
+                ensures
+                    self@.len() == 0 ==> min_elem.is_none(),
+                    self@.len() > 0 ==> min_elem.is_some();
+
+            fn insert(&self, element: T) -> (pq: Self)
+                ensures pq@.len() == self@.len() + 1;
+
+            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
+                ensures
+                    self@.len() > 0 ==> min_and_rest.1.is_some(),
+                    self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,
+                    self@.len() == 0 ==> min_and_rest.1.is_none(),
+                    self@.len() == 0 ==> min_and_rest.0@.len() == self@.len();
+
+            fn meld(&self, other: &Self) -> (pq: Self)
+                ensures pq@.len() == self@.len() + other@.len();
+
+            fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> (pq: Self)
+                ensures pq@.len() == seq@.len();
+
+            fn size(&self) -> (n: usize)
+                ensures n as int == self@.len();
+
+            fn is_empty(&self) -> (b: bool)
+                ensures b == (self@.len() == 0);
+
+            fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
+                ensures seq@.len() == self@.len();
+
+            fn find_max(&self) -> (max_elem: Option<&T>)
+                ensures
+                    self@.len() == 0 ==> max_elem.is_none(),
+                    self@.len() > 0 ==> max_elem.is_some();
+
+            fn delete_max(&self) -> (max_and_rest: (Self, Option<T>))
+                ensures
+                    self@.len() > 0 ==> max_and_rest.1.is_some(),
+                    self@.len() > 0 ==> max_and_rest.0@.len() == self@.len() - 1,
+                    self@.len() == 0 ==> max_and_rest.1.is_none(),
+                    self@.len() == 0 ==> max_and_rest.0@.len() == self@.len();
+
+            fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> (pq: Self)
+                ensures pq@.len() == self@.len() + elements@.len();
+
+            fn extract_all_sorted(&self) -> (sorted: AVLTreeSeqStPerS<T>)
+                ensures sorted@.len() == self@.len();
+
+            fn contains(&self, element: &T) -> (found: bool);
+
+            fn remove(&self, element: &T) -> (rest_and_found: (Self, bool))
+                ensures
+                    rest_and_found.1 ==> rest_and_found.0@.len() == self@.len() - 1,
+                    !rest_and_found.1 ==> rest_and_found.0@.len() == self@.len();
+
+            fn range(&self, min_val: &T, max_val: &T) -> (sub: AVLTreeSeqStPerS<T>)
+                ensures sub@.len() <= self@.len();
+
+            fn from_vec(elements: Vec<T>) -> (pq: Self)
+                ensures pq@.len() == elements@.len();
+
+            fn to_vec(&self) -> (vec: Vec<T>)
+                ensures vec@.len() == self@.len();
+
+            fn to_sorted_vec(&self) -> (vec: Vec<T>)
+                ensures vec@.len() == self@.len();
+
+            fn is_sorted(&self) -> (sorted: bool);
+
+            fn height(&self) -> (h: usize)
+                ensures self@.len() == 0 ==> h == 0;
+
+            fn split(&self, element: &T) -> (parts: (Self, bool, Self))
+                ensures parts.0@.len() + parts.2@.len() == self@.len();
+
+            fn join(left: &Self, right: &Self) -> (pq: Self)
+                ensures pq@.len() == left@.len() + right@.len();
         }
 
 // 9. impls

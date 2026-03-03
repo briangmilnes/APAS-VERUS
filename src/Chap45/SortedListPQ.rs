@@ -122,7 +122,8 @@ broadcast use {
             fn to_sorted_vec(&self) -> Vec<T>
                 requires obeys_feq_clone::<T>();
 
-            fn is_sorted(&self) -> bool;
+            fn is_sorted(&self) -> (sorted: bool)
+                ensures self@.len() <= 1 ==> sorted;
         }
 
 // 9. impls
@@ -367,7 +368,7 @@ broadcast use {
                 self.to_vec()
             }
 
-            fn is_sorted(&self) -> bool {
+            fn is_sorted(&self) -> (sorted: bool) {
                 let n = self.elements.length();
                 if n <= 1 {
                     return true;
