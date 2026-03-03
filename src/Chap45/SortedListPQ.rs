@@ -63,13 +63,13 @@ broadcast use {
                     self@.len() + 1 <= usize::MAX as int,
                 ensures pq@.len() == self@.len() + 1;
 
-            fn delete_min(&self) -> (min_pair: (Self, Option<T>))
+            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires obeys_feq_clone::<T>(),
                 ensures
-                    self@.len() > 0 ==> min_pair.1.is_some(),
-                    self@.len() > 0 ==> min_pair.0@.len() == self@.len() - 1,
-                    self@.len() == 0 ==> min_pair.1.is_none(),
-                    self@.len() == 0 ==> min_pair.0@.len() == self@.len();
+                    self@.len() > 0 ==> min_and_rest.1.is_some(),
+                    self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,
+                    self@.len() == 0 ==> min_and_rest.1.is_none(),
+                    self@.len() == 0 ==> min_and_rest.0@.len() == self@.len();
 
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
@@ -105,13 +105,13 @@ broadcast use {
                     self@.len() == 0 ==> max_elem.is_none(),
                     self@.len() > 0 ==> max_elem.is_some();
 
-            fn delete_max(&self) -> (max_pair: (Self, Option<T>))
+            fn delete_max(&self) -> (max_and_rest: (Self, Option<T>))
                 requires obeys_feq_clone::<T>(),
                 ensures
-                    self@.len() > 0 ==> max_pair.1.is_some(),
-                    self@.len() > 0 ==> max_pair.0@.len() == self@.len() - 1,
-                    self@.len() == 0 ==> max_pair.1.is_none(),
-                    self@.len() == 0 ==> max_pair.0@.len() == self@.len();
+                    self@.len() > 0 ==> max_and_rest.1.is_some(),
+                    self@.len() > 0 ==> max_and_rest.0@.len() == self@.len() - 1,
+                    self@.len() == 0 ==> max_and_rest.1.is_none(),
+                    self@.len() == 0 ==> max_and_rest.0@.len() == self@.len();
 
             fn from_vec(vec: Vec<T>) -> Self
                 requires obeys_feq_clone::<T>();
@@ -122,7 +122,8 @@ broadcast use {
             fn to_sorted_vec(&self) -> Vec<T>
                 requires obeys_feq_clone::<T>();
 
-            fn is_sorted(&self) -> bool;
+            fn is_sorted(&self) -> (sorted: bool)
+                ensures self@.len() <= 1 ==> sorted;
         }
 
 // 9. impls
@@ -203,7 +204,7 @@ broadcast use {
             }
 
             /// APAS Work Θ(1), actual Work Θ(n) — rebuilds without first element.
-            fn delete_min(&self) -> (min_pair: (Self, Option<T>)) {
+            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
                 }
@@ -229,7 +230,7 @@ broadcast use {
             fn meld(&self, other: &Self) -> (pq: Self) {
                 let n = self.elements.length();
                 let m = other.elements.length();
-                let mut min_pair = ArraySeqStPerS::empty();
+                let mut result = ArraySeqStPerS::empty();
                 let mut i: usize = 0;
                 let mut j: usize = 0;
 
@@ -239,16 +240,16 @@ broadcast use {
                         n == self.elements@.len(),
                         m == other.elements@.len(),
                         i <= n, j <= m,
-                        min_pair@.len() == (i + j) as int,
+                        result@.len() == (i + j) as int,
                     decreases (n - i) + (m - j),
                 {
                     if *self.elements.nth(i) <= *other.elements.nth(j) {
                         let single_seq = ArraySeqStPerS::singleton(self.elements.nth(i).clone());
-                        min_pair = ArraySeqStPerS::append(&min_pair, &single_seq);
+                        result = ArraySeqStPerS::append(&result, &single_seq);
                         i = i + 1;
                     } else {
                         let single_seq = ArraySeqStPerS::singleton(other.elements.nth(j).clone());
-                        min_pair = ArraySeqStPerS::append(&min_pair, &single_seq);
+                        result = ArraySeqStPerS::append(&result, &single_seq);
                         j = j + 1;
                     }
                 }
@@ -259,11 +260,11 @@ broadcast use {
                         n == self.elements@.len(),
                         m == other.elements@.len(),
                         i <= n, j <= m,
-                        min_pair@.len() == (i + j) as int,
+                        result@.len() == (i + j) as int,
                     decreases n - i,
                 {
                     let single_seq = ArraySeqStPerS::singleton(self.elements.nth(i).clone());
-                    min_pair = ArraySeqStPerS::append(&min_pair, &single_seq);
+                    result = ArraySeqStPerS::append(&result, &single_seq);
                     i = i + 1;
                 }
 
@@ -273,15 +274,15 @@ broadcast use {
                         n == self.elements@.len(),
                         m == other.elements@.len(),
                         i <= n, j <= m,
-                        min_pair@.len() == (i + j) as int,
+                        result@.len() == (i + j) as int,
                     decreases m - j,
                 {
                     let single_seq = ArraySeqStPerS::singleton(other.elements.nth(j).clone());
-                    min_pair = ArraySeqStPerS::append(&min_pair, &single_seq);
+                    result = ArraySeqStPerS::append(&result, &single_seq);
                     j = j + 1;
                 }
 
-                SortedListPQ { elements: min_pair }
+                SortedListPQ { elements: result }
             }
 
             /// APAS Work Θ(n log n), actual Work Θ(n²) — repeated insert.
@@ -323,7 +324,7 @@ broadcast use {
                 }
             }
 
-            fn delete_max(&self) -> (max_pair: (Self, Option<T>)) {
+            fn delete_max(&self) -> (max_and_rest: (Self, Option<T>)) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
                 }
@@ -351,23 +352,23 @@ broadcast use {
 
             fn to_vec(&self) -> Vec<T> {
                 let n = self.elements.length();
-                let mut max_pair: Vec<T> = Vec::new();
+                let mut result: Vec<T> = Vec::new();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
                     invariant
                         n == self.elements@.len(),
-                        max_pair@.len() == i as int,
+                        result@.len() == i as int,
                 {
-                    max_pair.push(self.elements.nth(i).clone());
+                    result.push(self.elements.nth(i).clone());
                 }
-                max_pair
+                result
             }
 
             fn to_sorted_vec(&self) -> Vec<T> {
                 self.to_vec()
             }
 
-            fn is_sorted(&self) -> bool {
+            fn is_sorted(&self) -> (sorted: bool) {
                 let n = self.elements.length();
                 if n <= 1 {
                     return true;
@@ -383,6 +384,10 @@ broadcast use {
                 }
                 true
             }
+        }
+
+        impl<T: StT + Ord> Default for SortedListPQ<T> {
+            fn default() -> Self { Self::empty() }
         }
 
 // 11. derive impls in verus!
@@ -409,20 +414,16 @@ broadcast use {
         }
 
         impl<T: StT + Ord> core::cmp::PartialEq for SortedListPQ<T> {
-            fn eq(&self, other: &Self) -> (r: bool)
-                ensures r == (self@ == other@)
+            fn eq(&self, other: &Self) -> (equal: bool)
+                ensures equal == (self@ == other@)
             {
-                let r = self.elements == other.elements;
-                proof { accept(r == (self@ == other@)); }
-                r
+                let equal = self.elements == other.elements;
+                proof { accept(equal == (self@ == other@)); }
+                equal
             }
         }
 
         impl<T: StT + Ord> core::cmp::Eq for SortedListPQ<T> {}
-
-        impl<T: StT + Ord> Default for SortedListPQ<T> {
-            fn default() -> Self { Self::empty() }
-        }
     }
 
 // 13. derive impls outside verus!

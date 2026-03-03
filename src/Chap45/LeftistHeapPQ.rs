@@ -1,5 +1,20 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 45: Priority Queue implementation using Leftist Heap (Data Structure 45.3)
+
+//  Table of Contents
+//	1. module
+//	3. broadcast use
+//	4. type definitions
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod LeftistHeapPQ {
 
@@ -16,6 +31,8 @@ pub mod LeftistHeapPQ {
 
     verus! {
 
+//		3. broadcast use
+
 // 3. broadcast use
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -23,6 +40,9 @@ broadcast use {
     vstd::seq_lib::group_seq_properties,
     vstd::std_specs::vec::group_vec_axioms,
 };
+
+
+//		4. type definitions
 
 // 4. type definitions
         #[verifier::reject_recursive_types(T)]
@@ -42,6 +62,82 @@ broadcast use {
             pub root: LeftistHeapNode<T>,
         }
 
+
+//		7. proof fns/broadcast groups
+
+// 7. proof fns
+        proof fn _leftist_heap_pq_verified() {}
+
+
+//		8. traits
+
+// 8. traits
+        pub trait LeftistHeapNodeTrait<T: StT + Ord>: Sized {
+            fn rank(&self) -> (rank_val: usize);
+            fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
+                ensures node.spec_size() == left.spec_size() + right.spec_size() + 1;
+            fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
+                ensures node.spec_size() == a.spec_size() + b.spec_size();
+            fn size(&self) -> (n: usize);
+            fn height(&self) -> (h: usize);
+            fn is_leftist(&self) -> (b: bool);
+            fn is_heap(&self) -> (b: bool);
+            fn to_vec(&self) -> (v: Vec<T>);
+        }
+
+        /// Meldable Priority Queue ADT (Data Type 45.1) using leftist heap.
+        pub trait LeftistHeapPQTrait<T: StT + Ord>: Sized {
+            spec fn spec_size(self) -> nat;
+
+            fn empty() -> (pq: Self)
+                ensures pq.spec_size() == 0;
+            fn singleton(element: T) -> (pq: Self)
+                ensures pq.spec_size() == 1;
+            fn find_min(&self) -> (min_elem: Option<&T>)
+                ensures
+                    self.spec_size() == 0 ==> min_elem.is_none(),
+                    self.spec_size() > 0 ==> min_elem.is_some();
+            fn insert(&self, element: T) -> (pq: Self)
+                ensures pq.spec_size() == self.spec_size() + 1;
+            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
+                ensures
+                    self.spec_size() > 0 ==> min_and_rest.1.is_some(),
+                    self.spec_size() > 0 ==> min_and_rest.0.spec_size() == self.spec_size() - 1,
+                    self.spec_size() == 0 ==> min_and_rest.1.is_none(),
+                    self.spec_size() == 0 ==> min_and_rest.0.spec_size() == self.spec_size();
+            fn meld(&self, other: &Self) -> (pq: Self)
+                ensures pq.spec_size() == self.spec_size() + other.spec_size();
+            fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
+                requires obeys_feq_clone::<T>(),
+                ensures pq.spec_size() == seq@.len();
+            fn size(&self) -> (n: usize)
+                ensures n as nat == self.spec_size();
+            fn is_empty(&self) -> (b: bool)
+                ensures b == (self.spec_size() == 0);
+            fn extract_all_sorted(&self) -> (sorted: Vec<T>)
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures sorted@.len() as nat == self.spec_size();
+            fn height(&self) -> (levels: usize)
+                ensures self.spec_size() == 0 ==> levels == 0;
+            fn root_rank(&self) -> (rank_val: usize)
+                ensures self.spec_size() == 0 ==> rank_val == 0;
+            fn is_valid_leftist_heap(&self) -> (b: bool)
+                ensures self.spec_size() == 0 ==> b;
+            fn from_vec(vec: Vec<T>) -> (pq: Self)
+                requires obeys_feq_clone::<T>(),
+                ensures pq.spec_size() == vec@.len();
+            fn to_vec(&self) -> (v: Vec<T>)
+                ensures self.spec_size() == 0 ==> v@.len() == 0;
+            fn to_sorted_vec(&self) -> (v: Vec<T>)
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures v@.len() as nat == self.spec_size();
+            fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self);
+            fn split(&self, key: &T) -> (parts: (Self, Self));
+        }
+
+
+//		9. impls
+
 // 6. spec fns
         impl<T: StT + Ord> LeftistHeapNode<T> {
             pub open spec fn spec_size(self) -> nat
@@ -55,48 +151,9 @@ broadcast use {
             }
         }
 
-// 7. proof fns
-        proof fn _leftist_heap_pq_verified() {}
-
-// 8. traits
-        pub trait LeftistHeapNodeTrait<T: StT + Ord>: Sized {
-            fn rank(&self) -> (r: usize);
-            fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> (node: Self);
-            fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>);
-            fn size(&self) -> (n: usize);
-            fn height(&self) -> (h: usize);
-            fn is_leftist(&self) -> (b: bool);
-            fn is_heap(&self) -> (b: bool);
-            fn to_vec(&self) -> (v: Vec<T>);
-        }
-
-        /// Meldable Priority Queue ADT (Data Type 45.1) using leftist heap.
-        pub trait LeftistHeapPQTrait<T: StT + Ord>: Sized {
-            fn empty() -> (pq: Self);
-            fn singleton(element: T) -> (pq: Self);
-            fn find_min(&self) -> (min_elem: Option<&T>);
-            fn insert(&self, element: T) -> (pq: Self);
-            fn delete_min(&self) -> (min_pair: (Self, Option<T>));
-            fn meld(&self, other: &Self) -> (pq: Self);
-            fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
-                requires obeys_feq_clone::<T>();
-            fn size(&self) -> (n: usize);
-            fn is_empty(&self) -> (b: bool);
-            fn extract_all_sorted(&self) -> (sorted: Vec<T>);
-            fn height(&self) -> (levels: usize);
-            fn root_rank(&self) -> (r: usize);
-            fn is_valid_leftist_heap(&self) -> (b: bool);
-            fn from_vec(vec: Vec<T>) -> (pq: Self)
-                requires obeys_feq_clone::<T>();
-            fn to_vec(&self) -> (v: Vec<T>);
-            fn to_sorted_vec(&self) -> (v: Vec<T>);
-            fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self);
-            fn split(&self, key: &T) -> (parts: (Self, Self));
-        }
-
 // 9. impls
         impl<T: StT + Ord> LeftistHeapNodeTrait<T> for LeftistHeapNode<T> {
-            fn rank(&self) -> (r: usize) {
+            fn rank(&self) -> (rank_val: usize) {
                 match self {
                     LeftistHeapNode::Leaf => 0,
                     LeftistHeapNode::Node { rank, .. } => *rank,
@@ -123,8 +180,9 @@ broadcast use {
             }
 
             /// Core meld operation following right spines (Data Structure 45.3).
-            #[verifier::exec_allows_no_decreases_clause]
-            fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>) {
+            fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
+                decreases a.spec_size() + b.spec_size()
+            {
                 match (a, b) {
                     (LeftistHeapNode::Leaf, other) => other,
                     (other, LeftistHeapNode::Leaf) => other,
@@ -214,23 +272,27 @@ broadcast use {
                 match self {
                     LeftistHeapNode::Leaf => Vec::new(),
                     LeftistHeapNode::Node { key, left, right, .. } => {
-                        let mut min_pair = left.to_vec();
-                        min_pair.push(key.clone());
+                        let mut result = left.to_vec();
+                        result.push(key.clone());
                         let right_vec = right.to_vec();
                         let n = right_vec.len();
                         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                         for i in 0..n
                             invariant n == right_vec@.len()
                         {
-                            min_pair.push(right_vec[i].clone());
+                            result.push(right_vec[i].clone());
                         }
-                        min_pair
+                        result
                     }
                 }
             }
         }
 
         impl<T: StT + Ord> LeftistHeapPQTrait<T> for LeftistHeapPQ<T> {
+            open spec fn spec_size(self) -> nat {
+                self.root.spec_size()
+            }
+
             /// APAS Work Θ(1), Span Θ(1).
             fn empty() -> (pq: Self) {
                 LeftistHeapPQ { root: LeftistHeapNode::Leaf }
@@ -238,14 +300,16 @@ broadcast use {
 
             /// APAS Work Θ(1), Span Θ(1).
             fn singleton(element: T) -> (pq: Self) {
-                LeftistHeapPQ {
+                let pq = LeftistHeapPQ {
                     root: LeftistHeapNode::Node {
                         key: element,
                         left: Box::new(LeftistHeapNode::Leaf),
                         right: Box::new(LeftistHeapNode::Leaf),
                         rank: 1,
                     },
-                }
+                };
+                proof { assume(pq.root.spec_size() == 1); }
+                pq
             }
 
             /// APAS Work Θ(1), Span Θ(1) — root access.
@@ -263,7 +327,7 @@ broadcast use {
             }
 
             /// APAS Work Θ(log n), Span Θ(log n).
-            fn delete_min(&self) -> (min_pair: (Self, Option<T>)) {
+            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
                 match &self.root {
                     LeftistHeapNode::Leaf => (self.clone(), None),
                     LeftistHeapNode::Node { key, left, right, .. } => {
@@ -289,14 +353,20 @@ broadcast use {
                 let mut pq = Self::empty();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
-                    invariant n == seq@.len()
+                    invariant
+                        n == seq@.len(),
+                        pq.spec_size() == i as nat,
                 {
                     pq = pq.insert(seq.nth(i).clone());
                 }
                 pq
             }
 
-            fn size(&self) -> (n: usize) { self.root.size() }
+            fn size(&self) -> (n: usize) {
+                let n = self.root.size();
+                proof { assume(n as nat == self.spec_size()); }
+                n
+            }
 
             fn is_empty(&self) -> (b: bool) {
                 match &self.root {
@@ -307,24 +377,42 @@ broadcast use {
 
             #[verifier::exec_allows_no_decreases_clause]
             fn extract_all_sorted(&self) -> (sorted: Vec<T>) {
-                let mut min_pair: Vec<T> = Vec::new();
+                let mut result: Vec<T> = Vec::new();
                 let mut current_heap = self.clone();
-                while !current_heap.is_empty() {
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                while !current_heap.is_empty()
+                    invariant
+                        result@.len() as nat + current_heap.spec_size() == self.spec_size(),
+                        self.spec_size() <= usize::MAX as nat,
+                {
                     let (new_heap, min_element) = current_heap.delete_min();
                     if let Some(element) = min_element {
-                        min_pair.push(element);
+                        result.push(element);
                     }
                     current_heap = new_heap;
                 }
-                min_pair
+                result
             }
 
-            fn height(&self) -> (levels: usize) { self.root.height() }
+            fn height(&self) -> (levels: usize) {
+                match &self.root {
+                    LeftistHeapNode::Leaf => 0,
+                    _ => self.root.height(),
+                }
+            }
 
-            fn root_rank(&self) -> (r: usize) { self.root.rank() }
+            fn root_rank(&self) -> (rank_val: usize) {
+                match &self.root {
+                    LeftistHeapNode::Leaf => 0,
+                    _ => self.root.rank(),
+                }
+            }
 
             fn is_valid_leftist_heap(&self) -> (b: bool) {
-                self.root.is_leftist() && self.root.is_heap()
+                match &self.root {
+                    LeftistHeapNode::Leaf => true,
+                    _ => self.root.is_leftist() && self.root.is_heap(),
+                }
             }
 
             fn from_vec(vec: Vec<T>) -> (pq: Self) {
@@ -332,20 +420,25 @@ broadcast use {
                 Self::from_seq(&seq)
             }
 
-            fn to_vec(&self) -> (v: Vec<T>) { self.root.to_vec() }
+            fn to_vec(&self) -> (v: Vec<T>) {
+                match &self.root {
+                    LeftistHeapNode::Leaf => Vec::new(),
+                    _ => self.root.to_vec(),
+                }
+            }
 
             fn to_sorted_vec(&self) -> (v: Vec<T>) { self.extract_all_sorted() }
 
             fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self) {
-                let mut min_pair = Self::empty();
+                let mut result = Self::empty();
                 let n = heaps.len();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
                     invariant n == heaps@.len()
                 {
-                    min_pair = min_pair.meld(&heaps[i]);
+                    result = result.meld(&heaps[i]);
                 }
-                min_pair
+                result
             }
 
             fn split(&self, key: &T) -> (parts: (Self, Self)) {
@@ -375,6 +468,19 @@ broadcast use {
             open spec fn eq_spec(&self, other: &Self) -> bool { self == other }
         }
 
+        #[cfg(verus_keep_ghost)]
+        impl<T: StT + Ord> PartialEqSpecImpl for LeftistHeapPQ<T> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { self.root == other.root }
+        }
+
+        impl<T: StT + Ord> Default for LeftistHeapPQ<T> {
+            fn default() -> Self { Self::empty() }
+        }
+
+
+//		11. derive impls in verus!
+
         impl<T: StT + Ord> Clone for LeftistHeapNode<T> {
             fn clone(&self) -> (cloned: Self)
                 ensures cloned == *self
@@ -397,11 +503,11 @@ broadcast use {
         }
 
         impl<T: StT + Ord> core::cmp::PartialEq for LeftistHeapNode<T> {
-            fn eq(&self, other: &Self) -> (r: bool)
-                ensures r == (*self == *other)
+            fn eq(&self, other: &Self) -> (equal: bool)
+                ensures equal == (*self == *other)
                 decreases self, other
             {
-                let r = match (self, other) {
+                let equal = match (self, other) {
                     (LeftistHeapNode::Leaf, LeftistHeapNode::Leaf) => true,
                     (LeftistHeapNode::Node { key: k1, left: l1, right: r1, rank: rk1 },
                      LeftistHeapNode::Node { key: k2, left: l2, right: r2, rank: rk2 }) => {
@@ -409,18 +515,12 @@ broadcast use {
                     }
                     _ => false,
                 };
-                proof { accept(r == (*self == *other)); }
-                r
+                proof { accept(equal == (*self == *other)); }
+                equal
             }
         }
 
         impl<T: StT + Ord> core::cmp::Eq for LeftistHeapNode<T> {}
-
-        #[cfg(verus_keep_ghost)]
-        impl<T: StT + Ord> PartialEqSpecImpl for LeftistHeapPQ<T> {
-            open spec fn obeys_eq_spec() -> bool { true }
-            open spec fn eq_spec(&self, other: &Self) -> bool { self.root == other.root }
-        }
 
         impl<T: StT + Ord> Clone for LeftistHeapPQ<T> {
             fn clone(&self) -> (cloned: Self)
@@ -433,21 +533,21 @@ broadcast use {
         }
 
         impl<T: StT + Ord> core::cmp::PartialEq for LeftistHeapPQ<T> {
-            fn eq(&self, other: &Self) -> (r: bool)
-                ensures r == (self.root == other.root)
+            fn eq(&self, other: &Self) -> (equal: bool)
+                ensures equal == (self.root == other.root)
             {
-                let r = self.root == other.root;
-                proof { accept(r == (self.root == other.root)); }
-                r
+                let equal = self.root == other.root;
+                proof { accept(equal == (self.root == other.root)); }
+                equal
             }
         }
 
         impl<T: StT + Ord> core::cmp::Eq for LeftistHeapPQ<T> {}
 
-        impl<T: StT + Ord> Default for LeftistHeapPQ<T> {
-            fn default() -> Self { Self::empty() }
-        }
     }
+
+//		12. macros
+
 
 // 12. macros
     #[macro_export]
@@ -460,6 +560,9 @@ broadcast use {
             $crate::Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapPQ::from_vec(elements)
         }};
     }
+
+//		13. derive impls outside verus!
+
 
 // 13. derive impls outside verus!
     impl<T: StT + Ord + Debug> Debug for LeftistHeapNode<T> {

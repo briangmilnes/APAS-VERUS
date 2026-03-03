@@ -12,7 +12,9 @@ pub mod Example45_2 {
         proof fn _example_45_2_verified() {}
     }
 
-    /// Trait for Example 45.2 operations
+    pub struct Example45_2;
+
+    /// Trait for Example 45.2 operations.
     pub trait Example45_2Trait {
         /// Example 45.2: Textbook heapsort demonstration
         /// APAS: Work Θ(n log n), Span Θ(n log n)
@@ -45,6 +47,17 @@ pub mod Example45_2 {
         /// Run comprehensive demonstration of Example 45.2
         /// APAS: Work Θ(n²), Span Θ(n²) - dominated by worst implementation
         fn run_example_45_2()                      -> String;
+    }
+
+    impl Example45_2Trait for Example45_2 {
+        fn example_45_2_textbook_example()         -> HeapsortComparison<i32> { textbook_example() }
+        fn example_45_2_reverse_sorted()           -> HeapsortComparison<i32> { reverse_sorted_example() }
+        fn example_45_2_already_sorted()           -> HeapsortComparison<i32> { already_sorted_example() }
+        fn example_45_2_duplicates()               -> HeapsortComparison<i32> { duplicates_example() }
+        fn example_45_2_single_element()           -> HeapsortComparison<i32> { single_element_example() }
+        fn example_45_2_empty()                    -> HeapsortComparison<i32> { empty_example() }
+        fn example_45_2_efficiency_demonstration() -> Vec<(String, Vec<i32>)> { efficiency_demonstration() }
+        fn run_example_45_2()                      -> String { run_example_45_2() }
     }
 
     /// Example 45.2: Textbook heapsort demonstration

@@ -22,11 +22,11 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap45 | BalancedTreePQ | 26 | 28 | 0 | 1 | 2 | 27 | 1 | 0 | 28 |
+| 1 | Chap45 | BalancedTreePQ | 26 | 28 | 0 | 1 | 27 | 2 | 1 | 0 | 28 |
 | 2 | Chap45 | BinaryHeapPQ | 18 | 20 | 0 | 11 | 31 | 0 | 30 | 0 | 1 |
 | 3 | Chap45 | Example45_2 | 8 | 0 | 0 | 9 | 1 | 8 | 0 | 0 | 9 |
 | 4 | Chap45 | HeapsortExample | 2 | 4 | 0 | 21 | 2 | 22 | 1 | 0 | 23 |
-| 5 | Chap45 | LeftistHeapPQ | 23 | 26 | 0 | 3 | 26 | 3 | 3 | 3 | 23 |
+| 5 | Chap45 | LeftistHeapPQ | 23 | 26 | 0 | 3 | 26 | 3 | 10 | 4 | 15 |
 | 6 | Chap45 | SortedListPQ | 18 | 20 | 0 | 1 | 21 | 0 | 18 | 0 | 3 |
 | 7 | Chap45 | UnsortedListPQ | 15 | 17 | 0 | 1 | 18 | 0 | 16 | 0 | 2 |
 
@@ -36,71 +36,71 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `_balanced_tree_pq_verified` |  |  |  | Y | Y |  | Y |  | 42 |
-| 2 | `eq` |  | Y |  |  | Y |  |  | unknown | 60&#8209;61 |
-| 3 | `empty` | Y | Y |  |  |  | Y | Y |  | 76 |
-| 4 | `singleton` | Y | Y |  |  |  | Y | Y |  | 77 |
-| 5 | `find_min` | Y | Y |  |  |  | Y | Y |  | 78 |
-| 6 | `insert` | Y | Y |  |  |  | Y | Y |  | 79 |
-| 7 | `delete_min` | Y | Y |  |  |  | Y | Y |  | 80 |
-| 8 | `meld` | Y | Y |  |  |  | Y | Y |  | 81 |
-| 9 | `from_seq` | Y | Y |  |  |  | Y | Y |  | 82 |
-| 10 | `size` | Y | Y |  |  |  | Y | Y |  | 83 |
-| 11 | `is_empty` | Y | Y |  |  |  | Y | Y |  | 84 |
-| 12 | `to_seq` | Y | Y |  |  |  | Y | Y |  | 85 |
-| 13 | `find_max` | Y | Y |  |  |  | Y | Y |  | 86 |
-| 14 | `delete_max` | Y | Y |  |  |  | Y | Y |  | 87 |
-| 15 | `insert_all` | Y | Y |  |  |  | Y | Y |  | 88 |
-| 16 | `extract_all_sorted` | Y | Y |  |  |  | Y | Y |  | 89 |
-| 17 | `contains` | Y | Y |  |  |  | Y | Y |  | 90 |
-| 18 | `remove` | Y | Y |  |  |  | Y | Y |  | 91 |
-| 19 | `range` | Y | Y |  |  |  | Y | Y |  | 92 |
-| 20 | `from_vec` | Y | Y |  |  |  | Y | Y |  | 93 |
-| 21 | `to_vec` | Y | Y |  |  |  | Y | Y |  | 94 |
-| 22 | `to_sorted_vec` | Y | Y |  |  |  | Y | Y |  | 95 |
-| 23 | `is_sorted` | Y | Y |  |  |  | Y | Y |  | 96 |
-| 24 | `height` | Y | Y |  |  |  | Y | Y |  | 97 |
-| 25 | `split` | Y | Y |  |  |  | Y | Y |  | 98 |
-| 26 | `join` | Y | Y |  |  |  | Y | Y |  | 99 |
-| 27 | `filter` | Y | Y |  |  |  | Y | Y |  | 104 |
-| 28 | `map` | Y | Y |  |  |  | Y | Y |  | 105 |
-| 29 | `default` |  | Y |  |  |  | Y | Y |  | 361 |
+| 1 | `_balanced_tree_pq_verified` |  |  |  | Y | Y |  | Y |  | 41 |
+| 2 | `empty` | Y | Y |  |  | Y |  | Y |  | 46 |
+| 3 | `singleton` | Y | Y |  |  | Y |  | Y |  | 47 |
+| 4 | `find_min` | Y | Y |  |  | Y |  | Y |  | 48 |
+| 5 | `insert` | Y | Y |  |  | Y |  | Y |  | 49 |
+| 6 | `delete_min` | Y | Y |  |  | Y |  | Y |  | 50 |
+| 7 | `meld` | Y | Y |  |  | Y |  | Y |  | 51 |
+| 8 | `from_seq` | Y | Y |  |  | Y |  | Y |  | 52 |
+| 9 | `size` | Y | Y |  |  | Y |  | Y |  | 53 |
+| 10 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 54 |
+| 11 | `to_seq` | Y | Y |  |  | Y |  | Y |  | 55 |
+| 12 | `find_max` | Y | Y |  |  | Y |  | Y |  | 56 |
+| 13 | `delete_max` | Y | Y |  |  | Y |  | Y |  | 57 |
+| 14 | `insert_all` | Y | Y |  |  | Y |  | Y |  | 58 |
+| 15 | `extract_all_sorted` | Y | Y |  |  | Y |  | Y |  | 59 |
+| 16 | `contains` | Y | Y |  |  | Y |  | Y |  | 60 |
+| 17 | `remove` | Y | Y |  |  | Y |  | Y |  | 61 |
+| 18 | `range` | Y | Y |  |  | Y |  | Y |  | 62 |
+| 19 | `from_vec` | Y | Y |  |  | Y |  | Y |  | 63 |
+| 20 | `to_vec` | Y | Y |  |  | Y |  | Y |  | 64 |
+| 21 | `to_sorted_vec` | Y | Y |  |  | Y |  | Y |  | 65 |
+| 22 | `is_sorted` | Y | Y |  |  | Y |  | Y |  | 66 |
+| 23 | `height` | Y | Y |  |  | Y |  | Y |  | 67 |
+| 24 | `split` | Y | Y |  |  | Y |  | Y |  | 68 |
+| 25 | `join` | Y | Y |  |  | Y |  | Y |  | 69 |
+| 26 | `default` |  | Y |  |  | Y |  | Y |  | 297 |
+| 27 | `eq` |  | Y |  |  | Y |  |  | unknown | 316&#8209;317 |
+| 28 | `filter` | Y | Y |  |  |  | Y | Y |  | 331 |
+| 29 | `map` | Y | Y |  |  |  | Y | Y |  | 332 |
 
 ### Chap45/BinaryHeapPQ.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 30 | `eq` |  | Y |  |  | Y |  |  | unknown | 65&#8209;66 |
-| 31 | `left_child` |  |  |  | Y | Y |  |  | unknown | 76&#8209;78 |
-| 32 | `right_child` |  |  |  | Y | Y |  |  | unknown | 82&#8209;84 |
-| 33 | `parent` |  |  |  | Y | Y |  |  | unknown | 88&#8209;89 |
-| 34 | `swap_elements` |  |  |  | Y | Y |  |  | unknown | 105&#8209;111 |
-| 35 | `bubble_up` |  |  |  | Y | Y |  |  | unknown | 139&#8209;144 |
-| 36 | `bubble_down` |  |  |  | Y | Y |  |  | unknown | 179&#8209;185 |
-| 37 | `heapify` |  |  |  | Y | Y |  |  | unknown | 230&#8209;235 |
-| 38 | `is_heap` |  |  |  | Y | Y |  |  | unknown | 261&#8209;262 |
-| 39 | `exec_pow2` |  |  |  | Y | Y |  |  | unknown | 301&#8209;303 |
-| 40 | `lemma_log2_bound` |  |  |  | Y | Y |  |  | unknown | 328&#8209;335 |
-| 41 | `exec_log2` |  |  |  | Y | Y |  |  | unknown | 348&#8209;351 |
-| 42 | `empty` | Y | Y |  |  | Y |  |  | unknown | 373&#8209;374 |
-| 43 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 376&#8209;378 |
-| 44 | `find_min` | Y | Y |  |  | Y |  |  | unknown | 380&#8209;383 |
-| 45 | `insert` | Y | Y |  |  | Y |  |  | unknown | 385&#8209;390 |
-| 46 | `delete_min` | Y | Y |  |  | Y |  |  | unknown | 392&#8209;400 |
-| 47 | `meld` | Y | Y |  |  | Y |  |  | unknown | 402&#8209;408 |
-| 48 | `from_seq` | Y | Y |  |  | Y |  |  | unknown | 410&#8209;415 |
-| 49 | `size` | Y | Y |  |  | Y |  |  | unknown | 417&#8209;418 |
-| 50 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 420&#8209;421 |
-| 51 | `to_seq` | Y | Y |  |  | Y |  |  | unknown | 423&#8209;424 |
-| 52 | `insert_all` | Y | Y |  |  | Y |  |  | unknown | 426&#8209;430 |
-| 53 | `extract_all_sorted` | Y | Y |  |  | Y |  |  | unknown | 432&#8209;435 |
-| 54 | `is_valid_heap` | Y | Y |  |  | Y |  |  | unknown | 437&#8209;438 |
-| 55 | `height` | Y | Y |  |  | Y |  |  | unknown | 440&#8209;442 |
-| 56 | `level_elements` | Y | Y |  |  | Y |  |  | unknown | 444&#8209;448 |
-| 57 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 450&#8209;453 |
-| 58 | `to_vec` | Y | Y |  |  | Y |  |  | unknown | 455&#8209;456 |
-| 59 | `to_sorted_vec` | Y | Y |  |  | Y |  |  | unknown | 458&#8209;461 |
-| 60 | `default` |  | Y |  |  | Y |  | Y |  | 689 |
+| 30 | `lemma_log2_bound` |  |  |  | Y | Y |  |  | unknown | 102&#8209;109 |
+| 31 | `empty` | Y | Y |  |  | Y |  |  | unknown | 129&#8209;130 |
+| 32 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 132&#8209;134 |
+| 33 | `find_min` | Y | Y |  |  | Y |  |  | unknown | 136&#8209;139 |
+| 34 | `insert` | Y | Y |  |  | Y |  |  | unknown | 141&#8209;146 |
+| 35 | `delete_min` | Y | Y |  |  | Y |  |  | unknown | 148&#8209;156 |
+| 36 | `meld` | Y | Y |  |  | Y |  |  | unknown | 158&#8209;164 |
+| 37 | `from_seq` | Y | Y |  |  | Y |  |  | unknown | 166&#8209;171 |
+| 38 | `size` | Y | Y |  |  | Y |  |  | unknown | 173&#8209;174 |
+| 39 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 176&#8209;177 |
+| 40 | `to_seq` | Y | Y |  |  | Y |  |  | unknown | 179&#8209;180 |
+| 41 | `insert_all` | Y | Y |  |  | Y |  |  | unknown | 182&#8209;186 |
+| 42 | `extract_all_sorted` | Y | Y |  |  | Y |  |  | unknown | 188&#8209;191 |
+| 43 | `is_valid_heap` | Y | Y |  |  | Y |  |  | unknown | 193&#8209;194 |
+| 44 | `height` | Y | Y |  |  | Y |  |  | unknown | 196&#8209;198 |
+| 45 | `level_elements` | Y | Y |  |  | Y |  |  | unknown | 200&#8209;204 |
+| 46 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 206&#8209;209 |
+| 47 | `to_vec` | Y | Y |  |  | Y |  |  | unknown | 211&#8209;212 |
+| 48 | `to_sorted_vec` | Y | Y |  |  | Y |  |  | unknown | 214&#8209;217 |
+| 49 | `left_child` |  |  |  | Y | Y |  |  | unknown | 229&#8209;231 |
+| 50 | `right_child` |  |  |  | Y | Y |  |  | unknown | 236&#8209;238 |
+| 51 | `parent` |  |  |  | Y | Y |  |  | unknown | 243&#8209;244 |
+| 52 | `swap_elements` |  |  |  | Y | Y |  |  | unknown | 249&#8209;255 |
+| 53 | `bubble_up` |  |  |  | Y | Y |  |  | unknown | 283&#8209;288 |
+| 54 | `bubble_down` |  |  |  | Y | Y |  |  | unknown | 323&#8209;329 |
+| 55 | `heapify` |  |  |  | Y | Y |  |  | unknown | 374&#8209;379 |
+| 56 | `is_heap` |  |  |  | Y | Y |  |  | unknown | 405&#8209;406 |
+| 57 | `exec_pow2` |  |  |  | Y | Y |  |  | unknown | 432&#8209;434 |
+| 58 | `exec_log2` |  |  |  | Y | Y |  |  | unknown | 459&#8209;462 |
+| 59 | `default` |  | Y |  |  | Y |  | Y |  | 705 |
+| 60 | `eq` |  | Y |  |  | Y |  |  | unknown | 730&#8209;731 |
 
 ### Chap45/Example45_2.rs
 
@@ -149,35 +149,35 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 94 | `_leftist_heap_pq_verified` |  |  |  | Y | Y |  | Y |  | 59 |
-| 95 | `rank` | Y | Y |  |  | Y |  | Y |  | 63 |
-| 96 | `make_node` | Y | Y |  |  | Y |  |  | hole | 64 |
-| 97 | `meld_nodes` | Y | Y |  |  | Y |  | Y |  | 65 |
-| 98 | `size` x3 | Y | Y |  |  | Y |  |  | hole | 83 |
-| 99 | `height` x3 | Y | Y |  |  | Y |  |  | hole | 86 |
-| 100 | `is_leftist` | Y | Y |  |  | Y |  | Y |  | 68 |
-| 101 | `is_heap` | Y | Y |  |  | Y |  | Y |  | 69 |
-| 102 | `to_vec` x3 | Y | Y |  |  | Y |  | Y |  | 91 |
-| 103 | `empty` | Y | Y |  |  | Y |  | Y |  | 75 |
-| 104 | `singleton` | Y | Y |  |  | Y |  | Y |  | 76 |
-| 105 | `find_min` | Y | Y |  |  | Y |  | Y |  | 77 |
-| 106 | `insert` | Y | Y |  |  | Y |  | Y |  | 78 |
-| 107 | `delete_min` | Y | Y |  |  | Y |  | Y |  | 79 |
-| 108 | `meld` | Y | Y |  |  | Y |  | Y |  | 80 |
-| 109 | `from_seq` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;82 |
-| 110 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 84 |
-| 111 | `extract_all_sorted` | Y | Y |  |  | Y |  | Y |  | 85 |
-| 112 | `root_rank` | Y | Y |  |  | Y |  | Y |  | 87 |
-| 113 | `is_valid_leftist_heap` | Y | Y |  |  | Y |  | Y |  | 88 |
-| 114 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;90 |
-| 115 | `to_sorted_vec` | Y | Y |  |  | Y |  | Y |  | 92 |
-| 116 | `meld_multiple` | Y | Y |  |  | Y |  | Y |  | 93 |
-| 117 | `split` | Y | Y |  |  | Y |  | Y |  | 94 |
-| 118 | `eq` x2 |  | Y |  |  | Y |  |  | unknown | 400&#8209;402 |
-| 119 | `default` |  | Y |  |  | Y |  | Y |  | 448 |
-| 120 | `format_node` |  | Y |  |  |  | Y | Y |  | 484&#8209;495 |
-| 121 | `efficient_multi_way_merge` |  |  |  | Y |  | Y | Y |  | 502&#8209;509 |
-| 122 | `parallel_heap_construction` |  |  |  | Y |  | Y | Y |  | 511&#8209;514 |
+| 94 | `_leftist_heap_pq_verified` |  |  |  | Y | Y |  | Y |  | 69 |
+| 95 | `rank` | Y | Y |  |  | Y |  | Y |  | 76 |
+| 96 | `make_node` | Y | Y |  |  | Y |  |  | hole | 77&#8209;78 |
+| 97 | `meld_nodes` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;80 |
+| 98 | `size` x3 | Y | Y |  |  | Y |  |  | hole | 113&#8209;114 |
+| 99 | `height` x3 | Y | Y |  |  | Y |  |  | hole | 118 |
+| 100 | `is_leftist` | Y | Y |  |  | Y |  | Y |  | 83 |
+| 101 | `is_heap` | Y | Y |  |  | Y |  | Y |  | 84 |
+| 102 | `to_vec` x3 | Y | Y |  |  | Y |  | Y |  | 123 |
+| 103 | `empty` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;93 |
+| 104 | `singleton` | Y | Y |  |  | Y |  |  | hole | 94&#8209;95 |
+| 105 | `find_min` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;99 |
+| 106 | `insert` | Y | Y |  |  | Y |  |  | unknown | 100&#8209;101 |
+| 107 | `delete_min` | Y | Y |  |  | Y |  |  | unknown | 102&#8209;107 |
+| 108 | `meld` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;109 |
+| 109 | `from_seq` | Y | Y |  |  | Y |  |  | unknown | 110&#8209;112 |
+| 110 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 115&#8209;116 |
+| 111 | `extract_all_sorted` | Y | Y |  |  | Y |  | Y |  | 117 |
+| 112 | `root_rank` | Y | Y |  |  | Y |  | Y |  | 119 |
+| 113 | `is_valid_leftist_heap` | Y | Y |  |  | Y |  | Y |  | 120 |
+| 114 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 121&#8209;122 |
+| 115 | `to_sorted_vec` | Y | Y |  |  | Y |  | Y |  | 124 |
+| 116 | `meld_multiple` | Y | Y |  |  | Y |  | Y |  | 125 |
+| 117 | `split` | Y | Y |  |  | Y |  | Y |  | 126 |
+| 118 | `default` |  | Y |  |  | Y |  | Y |  | 446 |
+| 119 | `eq` x2 |  | Y |  |  | Y |  |  | unknown | 474&#8209;476 |
+| 120 | `format_node` |  | Y |  |  |  | Y | Y |  | 555&#8209;566 |
+| 121 | `efficient_multi_way_merge` |  |  |  | Y |  | Y | Y |  | 573&#8209;580 |
+| 122 | `parallel_heap_construction` |  |  |  | Y |  | Y | Y |  | 582&#8209;585 |
 
 ### Chap45/SortedListPQ.rs
 
