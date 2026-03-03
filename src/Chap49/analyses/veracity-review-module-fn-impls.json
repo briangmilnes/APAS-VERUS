@@ -1,642 +1,658 @@
 [
   {
     "id": 1,
-    "function": "new_min_edit_dist_eph_lock",
+    "function": "new",
     "file": "Chap49/MinEditDistMtEph.rs",
-    "lines": "30",
-    "spec_strength": "hole",
-    "snippet": "        fn new_min_edit_dist_eph_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, MinEditDistMtEphInv>) {"
+    "lines": "90-94",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (result: Self)\n        where\n            T: Default\n            requires obeys_feq_clone::<T>(),\n            ensures result.spec_source_len() == 0, result.spec_target_len() == 0;"
   },
   {
     "id": 2,
-    "function": "new",
+    "function": "from_sequences",
     "file": "Chap49/MinEditDistMtEph.rs",
-    "lines": "48-53",
-    "spec_strength": "",
-    "snippet": "        /// Create new minimum edit distance solver\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn new()                                                                -> Self\n        where\n            T: Default;"
+    "lines": "98-101",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_sequences(source: ArraySeqMtEphS<T>, target: ArraySeqMtEphS<T>) -> (result: Self)\n            ensures\n                result.spec_source_len() == source.spec_len(),\n                result.spec_target_len() == target.spec_len();"
   },
   {
     "id": 3,
-    "function": "from_sequences",
+    "function": "min_edit_distance",
     "file": "Chap49/MinEditDistMtEph.rs",
-    "lines": "55-58",
-    "spec_strength": "",
-    "snippet": "        /// Create from source and target sequences\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn from_sequences(source: ArraySeqMtEphS<T>, target: ArraySeqMtEphS<T>) -> Self;"
+    "lines": "105-110",
+    "spec_strength": "unknown",
+    "snippet": "        fn min_edit_distance(&mut self) -> (dist: usize)\n        where\n            T: Send + Sync + 'static\n            ensures\n                self.spec_source_len() == old(self).spec_source_len(),\n                self.spec_target_len() == old(self).spec_target_len();"
   },
   {
     "id": 4,
-    "function": "min_edit_distance",
+    "function": "source",
     "file": "Chap49/MinEditDistMtEph.rs",
-    "lines": "60-64",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)\n        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — agrees with APAS; thread::spawn on delete/insert; outside verus!, not verified\n        fn min_edit_distance(&mut self)                                         -> usize\n        where\n            T: Send + Sync + 'static;"
+    "lines": "114-115",
+    "spec_strength": "unknown",
+    "snippet": "        fn source(&self) -> (s: &ArraySeqMtEphS<T>)\n            ensures s.spec_len() == self.spec_source_len();"
   },
   {
     "id": 5,
-    "function": "source",
+    "function": "target",
     "file": "Chap49/MinEditDistMtEph.rs",
-    "lines": "66-69",
-    "spec_strength": "",
-    "snippet": "        /// Get the source sequence\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn source(&self)                                                        -> &ArraySeqMtEphS<T>;"
+    "lines": "119-120",
+    "spec_strength": "unknown",
+    "snippet": "        fn target(&self) -> (t: &ArraySeqMtEphS<T>)\n            ensures t.spec_len() == self.spec_target_len();"
   },
   {
     "id": 6,
-    "function": "target",
+    "function": "set_source",
     "file": "Chap49/MinEditDistMtEph.rs",
-    "lines": "71-74",
-    "spec_strength": "",
-    "snippet": "        /// Get the target sequence\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn target(&self)                                                        -> &ArraySeqMtEphS<T>;"
+    "lines": "124-128",
+    "spec_strength": "unknown",
+    "snippet": "        fn set_source(&mut self, index: usize, value: T)\n            requires index < old(self).spec_source_len(),\n            ensures\n                self.spec_source_len() == old(self).spec_source_len(),\n                self.spec_target_len() == old(self).spec_target_len();"
   },
   {
     "id": 7,
-    "function": "source_mut",
+    "function": "set_target",
     "file": "Chap49/MinEditDistMtEph.rs",
-    "lines": "76-79",
-    "spec_strength": "",
-    "snippet": "        /// Get mutable source sequence (ephemeral allows mutation)\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn source_mut(&mut self)                                                -> &mut ArraySeqMtEphS<T>;"
+    "lines": "132-136",
+    "spec_strength": "unknown",
+    "snippet": "        fn set_target(&mut self, index: usize, value: T)\n            requires index < old(self).spec_target_len(),\n            ensures\n                self.spec_source_len() == old(self).spec_source_len(),\n                self.spec_target_len() == old(self).spec_target_len();"
   },
   {
     "id": 8,
-    "function": "target_mut",
+    "function": "clear_memo",
     "file": "Chap49/MinEditDistMtEph.rs",
-    "lines": "81-84",
-    "spec_strength": "",
-    "snippet": "        /// Get mutable target sequence (ephemeral allows mutation)\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn target_mut(&mut self)                                                -> &mut ArraySeqMtEphS<T>;"
+    "lines": "140-143",
+    "spec_strength": "unknown",
+    "snippet": "        fn clear_memo(&mut self)\n            ensures\n                self.spec_source_len() == old(self).spec_source_len(),\n                self.spec_target_len() == old(self).spec_target_len();"
   },
   {
     "id": 9,
-    "function": "set_source",
+    "function": "memo_size",
     "file": "Chap49/MinEditDistMtEph.rs",
-    "lines": "86-89",
+    "lines": "147",
     "spec_strength": "",
-    "snippet": "        /// Set element in source sequence\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn set_source(&mut self, index: usize, value: T);"
+    "snippet": "        fn memo_size(&self) -> (count: usize);"
   },
   {
     "id": 10,
-    "function": "set_target",
+    "function": "new_arc_memo",
     "file": "Chap49/MinEditDistMtEph.rs",
-    "lines": "91-94",
-    "spec_strength": "",
-    "snippet": "        /// Set element in target sequence\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn set_target(&mut self, index: usize, value: T);"
+    "lines": "154-157",
+    "spec_strength": "hole",
+    "snippet": "    fn new_arc_memo(\n        val: HashMapWithViewPlus<Pair<usize, usize>, usize>,\n    ) -> (memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtEphMemoInv>>)\n        requires val@.dom().finite(),"
   },
   {
     "id": 11,
-    "function": "clear_memo",
+    "function": "clone_arc_memo",
     "file": "Chap49/MinEditDistMtEph.rs",
-    "lines": "96-99",
-    "spec_strength": "",
-    "snippet": "        /// Clear memoization table\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn clear_memo(&mut self);"
+    "lines": "164-166",
+    "spec_strength": "hole",
+    "snippet": "    fn clone_arc_memo<T: MtVal>(\n        s: &MinEditDistMtEphS<T>,\n    ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtEphMemoInv>>) {"
   },
   {
     "id": 12,
-    "function": "memo_size",
+    "function": "min_edit_distance_rec",
     "file": "Chap49/MinEditDistMtEph.rs",
-    "lines": "101-104",
-    "spec_strength": "",
-    "snippet": "        /// Get memoization table size\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn memo_size(&self)                                                     -> usize;"
+    "lines": "173-179",
+    "spec_strength": "hole",
+    "snippet": "    fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(\n        source: &ArraySeqMtEphS<T>,\n        target: &ArraySeqMtEphS<T>,\n        memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtEphMemoInv>>,\n        i: usize,\n        j: usize,\n    ) -> (dist: usize) {"
   },
   {
     "id": 13,
-    "function": "min_edit_distance_rec",
+    "function": "source_mut",
     "file": "Chap49/MinEditDistMtEph.rs",
-    "lines": "109-160",
+    "lines": "322-324",
     "spec_strength": "",
-    "snippet": "    fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(\n        source: &ArraySeqMtEphS<T>,\n        target: &ArraySeqMtEphS<T>,\n        memo: &Arc<RwLock<HashMap<(usize, usize), usize>, MinEditDistMtEphInv>>,\n        i: usize,\n        j: usize,\n    ) -> usize {\n        {\n            let handle = memo.acquire_read();\n            let found = handle.borrow().get(&(i, j)).copied();\n            handle.release_read();\n            if let Some(result) = found {\n                return result;\n            }\n        }\n\n        let result = match (i, j) {\n            | (i, 0) => i,\n            | (0, j) => j,\n            | (i, j) => {\n                let source_char = source.nth(i - 1).clone();\n                let target_char = target.nth(j - 1).clone();\n\n                if source_char == target_char {\n                    min_edit_distance_rec(source, target, memo, i - 1, j - 1)\n                } else {\n                    let source1 = source.clone();\n                    let target1 = target.clone();\n                    let memo1 = Arc::clone(memo);\n                    let source2 = source.clone();\n                    let target2 = target.clone();\n                    let memo2 = Arc::clone(memo);\n\n                    let handle1 = thread::spawn(move || min_edit_distance_rec(&source1, &target1, &memo1, i - 1, j));\n                    let handle2 = thread::spawn(move || min_edit_distance_rec(&source2, &target2, &memo2, i, j - 1));\n\n                    let delete_cost = handle1.join().unwrap();\n                    let insert_cost = handle2.join().unwrap();\n\n                    1 + std::cmp::min(delete_cost, insert_cost)\n                }\n            }\n        };\n\n        {\n            let (mut current, write_handle) = memo.acquire_write();\n            current.insert((i, j), result);\n            write_handle.release_write(current);\n        }\n\n        result\n    }"
+    "snippet": "        /// Get mutable source sequence (ephemeral allows mutation).\n        /// - APAS: not specified\n        fn source_mut(&mut self) -> &mut ArraySeqMtEphS<T>;"
   },
   {
     "id": 14,
-    "function": "eq",
+    "function": "target_mut",
     "file": "Chap49/MinEditDistMtEph.rs",
-    "lines": "237",
+    "lines": "326-328",
     "spec_strength": "",
-    "snippet": "        fn eq(&self, other: &Self) -> bool { self.source == other.source && self.target == other.target }"
+    "snippet": "        /// Get mutable target sequence (ephemeral allows mutation).\n        /// - APAS: not specified\n        fn target_mut(&mut self) -> &mut ArraySeqMtEphS<T>;"
   },
   {
     "id": 15,
-    "function": "new_min_edit_dist_per_lock",
-    "file": "Chap49/MinEditDistMtPer.rs",
-    "lines": "29",
-    "spec_strength": "hole",
-    "snippet": "        fn new_min_edit_dist_per_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, MinEditDistMtPerInv>) {"
+    "function": "eq",
+    "file": "Chap49/MinEditDistMtEph.rs",
+    "lines": "339",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool { self.source == other.source && self.target == other.target }"
   },
   {
     "id": 16,
     "function": "new",
     "file": "Chap49/MinEditDistMtPer.rs",
-    "lines": "47-52",
-    "spec_strength": "",
-    "snippet": "        /// Create new minimum edit distance solver\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn new()                                                                -> Self\n        where\n            T: Default;"
+    "lines": "89-93",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (result: Self)\n        where\n            T: Default\n            requires obeys_feq_clone::<T>(),\n            ensures result.spec_source_len() == 0, result.spec_target_len() == 0;"
   },
   {
     "id": 17,
     "function": "from_sequences",
     "file": "Chap49/MinEditDistMtPer.rs",
-    "lines": "54-57",
-    "spec_strength": "",
-    "snippet": "        /// Create from source and target sequences\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn from_sequences(source: ArraySeqMtPerS<T>, target: ArraySeqMtPerS<T>) -> Self;"
+    "lines": "97-100",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_sequences(source: ArraySeqMtPerS<T>, target: ArraySeqMtPerS<T>) -> (result: Self)\n            ensures\n                result.spec_source_len() == source.spec_len(),\n                result.spec_target_len() == target.spec_len();"
   },
   {
     "id": 18,
     "function": "min_edit_distance",
     "file": "Chap49/MinEditDistMtPer.rs",
-    "lines": "59-63",
+    "lines": "104-106",
     "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)\n        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — agrees with APAS; thread::spawn on delete/insert; outside verus!, not verified\n        fn min_edit_distance(&self)                                             -> usize\n        where\n            T: Send + Sync + 'static;"
+    "snippet": "        fn min_edit_distance(&self) -> (dist: usize)\n        where\n            T: Send + Sync + 'static;"
   },
   {
     "id": 19,
     "function": "source",
     "file": "Chap49/MinEditDistMtPer.rs",
-    "lines": "65-68",
-    "spec_strength": "",
-    "snippet": "        /// Get the source sequence\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn source(&self)                                                        -> &ArraySeqMtPerS<T>;"
+    "lines": "110-111",
+    "spec_strength": "unknown",
+    "snippet": "        fn source(&self) -> (s: &ArraySeqMtPerS<T>)\n            ensures s.spec_len() == self.spec_source_len();"
   },
   {
     "id": 20,
     "function": "target",
     "file": "Chap49/MinEditDistMtPer.rs",
-    "lines": "70-73",
-    "spec_strength": "",
-    "snippet": "        /// Get the target sequence\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn target(&self)                                                        -> &ArraySeqMtPerS<T>;"
+    "lines": "115-116",
+    "spec_strength": "unknown",
+    "snippet": "        fn target(&self) -> (t: &ArraySeqMtPerS<T>)\n            ensures t.spec_len() == self.spec_target_len();"
   },
   {
     "id": 21,
     "function": "memo_size",
     "file": "Chap49/MinEditDistMtPer.rs",
-    "lines": "75-78",
+    "lines": "120",
     "spec_strength": "",
-    "snippet": "        /// Get memoization table size\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn memo_size(&self)                                                     -> usize;"
+    "snippet": "        fn memo_size(&self) -> (count: usize);"
   },
   {
     "id": 22,
-    "function": "min_edit_distance_rec",
+    "function": "new_arc_memo",
     "file": "Chap49/MinEditDistMtPer.rs",
-    "lines": "83-130",
-    "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)\n    /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — parallel fork on delete/insert branches; outside verus!, not verified\n    fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(\n        table: &MinEditDistMtPerS<T>,\n        i: usize,\n        j: usize,\n    ) -> usize {\n        {\n            let handle = table.memo.acquire_read();\n            let found = handle.borrow().get(&(i, j)).copied();\n            handle.release_read();\n            if let Some(result) = found {\n                return result;\n            }\n        }\n\n        let result = match (i, j) {\n            | (i, 0) => i,\n            | (0, j) => j,\n            | (i, j) => {\n                let source_char = table.source.nth(i - 1);\n                let target_char = table.target.nth(j - 1);\n\n                if source_char == target_char {\n                    min_edit_distance_rec(table, i - 1, j - 1)\n                } else {\n                    let table_clone1 = table.clone();\n                    let table_clone2 = table.clone();\n\n                    let handle1 = thread::spawn(move || min_edit_distance_rec(&table_clone1, i - 1, j));\n                    let handle2 = thread::spawn(move || min_edit_distance_rec(&table_clone2, i, j - 1));\n\n                    let delete_cost = handle1.join().unwrap();\n                    let insert_cost = handle2.join().unwrap();\n\n                    1 + std::cmp::min(delete_cost, insert_cost)\n                }\n            }\n        };\n\n        {\n            let (mut current, write_handle) = table.memo.acquire_write();\n            current.insert((i, j), result);\n            write_handle.release_write(current);\n        }\n\n        result\n    }"
+    "lines": "127-130",
+    "spec_strength": "hole",
+    "snippet": "    fn new_arc_memo(\n        val: HashMapWithViewPlus<Pair<usize, usize>, usize>,\n    ) -> (memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>)\n        requires val@.dom().finite(),"
   },
   {
     "id": 23,
+    "function": "clone_arc_memo",
+    "file": "Chap49/MinEditDistMtPer.rs",
+    "lines": "137-139",
+    "spec_strength": "hole",
+    "snippet": "    fn clone_arc_memo<T: MtVal>(\n        s: &MinEditDistMtPerS<T>,\n    ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>) {"
+  },
+  {
+    "id": 24,
+    "function": "min_edit_distance_rec",
+    "file": "Chap49/MinEditDistMtPer.rs",
+    "lines": "146-150",
+    "spec_strength": "hole",
+    "snippet": "    fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(\n        table: &MinEditDistMtPerS<T>,\n        i: usize,\n        j: usize,\n    ) -> (dist: usize) {"
+  },
+  {
+    "id": 25,
     "function": "eq",
     "file": "Chap49/MinEditDistMtPer.rs",
-    "lines": "183",
+    "lines": "268",
     "spec_strength": "",
     "snippet": "        fn eq(&self, other: &Self) -> bool { self.source == other.source && self.target == other.target }"
   },
   {
-    "id": 24,
-    "function": "_min_edit_dist_st_eph_verified",
-    "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "23",
-    "spec_strength": "",
-    "snippet": "        proof fn _min_edit_dist_st_eph_verified() {}"
-  },
-  {
-    "id": 25,
+    "id": 26,
     "function": "new",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "39-44",
-    "spec_strength": "",
-    "snippet": "        /// Create new minimum edit distance solver\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn new()                                                                -> Self\n        where\n            T: Default;"
-  },
-  {
-    "id": 26,
-    "function": "from_sequences",
-    "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "46-49",
-    "spec_strength": "",
-    "snippet": "        /// Create from source and target sequences\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn from_sequences(source: ArraySeqStEphS<T>, target: ArraySeqStEphS<T>) -> Self;"
+    "lines": "88-92",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (result: Self)\n        where\n            T: Default\n            requires obeys_feq_clone::<T>(),\n            ensures result.spec_source_len() == 0, result.spec_target_len() == 0;"
   },
   {
     "id": 27,
-    "function": "min_edit_distance",
+    "function": "from_sequences",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "51-53",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)\n        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential, span equals work; outside verus!, not verified\n        fn min_edit_distance(&mut self)                                         -> usize;"
+    "lines": "96-99",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_sequences(source: ArraySeqStEphS<T>, target: ArraySeqStEphS<T>) -> (result: Self)\n            ensures\n                result.spec_source_len() == source.spec_len(),\n                result.spec_target_len() == target.spec_len();"
   },
   {
     "id": 28,
-    "function": "source",
+    "function": "min_edit_distance",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "55-58",
-    "spec_strength": "",
-    "snippet": "        /// Get the source sequence\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn source(&self)                                                        -> &ArraySeqStEphS<T>;"
+    "lines": "103-107",
+    "spec_strength": "unknown",
+    "snippet": "        fn min_edit_distance(&mut self) -> (dist: usize)\n            requires old(self).spec_source_len() + old(self).spec_target_len() < usize::MAX,\n            ensures\n                self.spec_source_len() == old(self).spec_source_len(),\n                self.spec_target_len() == old(self).spec_target_len();"
   },
   {
     "id": 29,
-    "function": "target",
+    "function": "source",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "60-63",
-    "spec_strength": "",
-    "snippet": "        /// Get the target sequence\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn target(&self)                                                        -> &ArraySeqStEphS<T>;"
+    "lines": "111-112",
+    "spec_strength": "unknown",
+    "snippet": "        fn source(&self) -> (s: &ArraySeqStEphS<T>)\n            ensures s.spec_len() == self.spec_source_len();"
   },
   {
     "id": 30,
-    "function": "source_mut",
+    "function": "target",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "65-68",
-    "spec_strength": "",
-    "snippet": "        /// Get mutable source sequence (ephemeral allows mutation)\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn source_mut(&mut self)                                                -> &mut ArraySeqStEphS<T>;"
+    "lines": "116-117",
+    "spec_strength": "unknown",
+    "snippet": "        fn target(&self) -> (t: &ArraySeqStEphS<T>)\n            ensures t.spec_len() == self.spec_target_len();"
   },
   {
     "id": 31,
-    "function": "target_mut",
+    "function": "set_source",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "70-73",
-    "spec_strength": "",
-    "snippet": "        /// Get mutable target sequence (ephemeral allows mutation)\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn target_mut(&mut self)                                                -> &mut ArraySeqStEphS<T>;"
+    "lines": "121-125",
+    "spec_strength": "unknown",
+    "snippet": "        fn set_source(&mut self, index: usize, value: T)\n            requires index < old(self).spec_source_len(),\n            ensures\n                self.spec_source_len() == old(self).spec_source_len(),\n                self.spec_target_len() == old(self).spec_target_len();"
   },
   {
     "id": 32,
-    "function": "set_source",
+    "function": "set_target",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "75-78",
-    "spec_strength": "",
-    "snippet": "        /// Set element in source sequence\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn set_source(&mut self, index: usize, value: T);"
+    "lines": "129-133",
+    "spec_strength": "unknown",
+    "snippet": "        fn set_target(&mut self, index: usize, value: T)\n            requires index < old(self).spec_target_len(),\n            ensures\n                self.spec_source_len() == old(self).spec_source_len(),\n                self.spec_target_len() == old(self).spec_target_len();"
   },
   {
     "id": 33,
-    "function": "set_target",
+    "function": "clear_memo",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "80-83",
-    "spec_strength": "",
-    "snippet": "        /// Set element in target sequence\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn set_target(&mut self, index: usize, value: T);"
+    "lines": "137-140",
+    "spec_strength": "unknown",
+    "snippet": "        fn clear_memo(&mut self)\n            ensures\n                self.spec_source_len() == old(self).spec_source_len(),\n                self.spec_target_len() == old(self).spec_target_len();"
   },
   {
     "id": 34,
-    "function": "clear_memo",
+    "function": "memo_size",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "85-88",
+    "lines": "144",
     "spec_strength": "",
-    "snippet": "        /// Clear memoization table\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn clear_memo(&mut self);"
+    "snippet": "        fn memo_size(&self) -> (count: usize);"
   },
   {
     "id": 35,
-    "function": "memo_size",
+    "function": "min_edit_distance_rec",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "90-93",
-    "spec_strength": "",
-    "snippet": "        /// Get memoization table size\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn memo_size(&self)                                                     -> usize;"
+    "lines": "151-166",
+    "spec_strength": "unknown",
+    "snippet": "    fn min_edit_distance_rec<T: StT>(\n        table: &mut MinEditDistStEphS<T>,\n        i: usize,\n        j: usize,\n    ) -> (dist: usize)\n        requires\n            i <= old(table).source.spec_len(),\n            j <= old(table).target.spec_len(),\n            old(table).source.spec_len() + old(table).target.spec_len() < usize::MAX,\n            spec_memo_bounded(old(table).memo@),\n        ensures\n            table.source.spec_len() == old(table).source.spec_len(),\n            table.target.spec_len() == old(table).target.spec_len(),\n            dist <= i + j,\n            spec_memo_bounded(table.memo@),\n        decreases i + j,"
   },
   {
     "id": 36,
-    "function": "min_edit_distance_rec",
+    "function": "source_mut",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "98-125",
+    "lines": "270-272",
     "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)\n    /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential memoized recursion; outside verus!, not verified\n    fn min_edit_distance_rec<T: StT>(table: &mut MinEditDistStEphS<T>, i: usize, j: usize) -> usize {\n        if let Some(&result) = table.memo.get(&(i, j)) {\n            return result;\n        }\n\n        let result = match (i, j) {\n            | (i, 0) => i,\n            | (0, j) => j,\n            | (i, j) => {\n                let source_char = table.source.nth(i - 1);\n                let target_char = table.target.nth(j - 1);\n\n                if source_char == target_char {\n                    min_edit_distance_rec(table, i - 1, j - 1)\n                } else {\n                    let delete_cost = min_edit_distance_rec(table, i - 1, j);\n                    let insert_cost = min_edit_distance_rec(table, i, j - 1);\n\n                    1 + std::cmp::min(delete_cost, insert_cost)\n                }\n            }\n        };\n\n        table.memo.insert((i, j), result);\n        result\n    }"
+    "snippet": "        /// Get mutable source sequence (ephemeral allows mutation).\n        /// - APAS: not specified\n        fn source_mut(&mut self) -> &mut ArraySeqStEphS<T>;"
   },
   {
     "id": 37,
-    "function": "_min_edit_dist_st_per_verified",
-    "file": "Chap49/MinEditDistStPer.rs",
-    "lines": "22",
+    "function": "target_mut",
+    "file": "Chap49/MinEditDistStEph.rs",
+    "lines": "274-276",
     "spec_strength": "",
-    "snippet": "        proof fn _min_edit_dist_st_per_verified() {}"
+    "snippet": "        /// Get mutable target sequence (ephemeral allows mutation).\n        /// - APAS: not specified\n        fn target_mut(&mut self) -> &mut ArraySeqStEphS<T>;"
   },
   {
     "id": 38,
     "function": "new",
     "file": "Chap49/MinEditDistStPer.rs",
-    "lines": "38-43",
-    "spec_strength": "",
-    "snippet": "        /// Create new minimum edit distance solver\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn new()                                                                -> Self\n        where\n            T: Default;"
+    "lines": "88-92",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (result: Self)\n        where\n            T: Default\n            requires obeys_feq_clone::<T>(),\n            ensures result.spec_source_len() == 0, result.spec_target_len() == 0;"
   },
   {
     "id": 39,
     "function": "from_sequences",
     "file": "Chap49/MinEditDistStPer.rs",
-    "lines": "45-48",
-    "spec_strength": "",
-    "snippet": "        /// Create from source and target sequences\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn from_sequences(source: ArraySeqStPerS<T>, target: ArraySeqStPerS<T>) -> Self;"
+    "lines": "96-99",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_sequences(source: ArraySeqStPerS<T>, target: ArraySeqStPerS<T>) -> (result: Self)\n            ensures\n                result.spec_source_len() == source.spec_len(),\n                result.spec_target_len() == target.spec_len();"
   },
   {
     "id": 40,
     "function": "min_edit_distance",
     "file": "Chap49/MinEditDistStPer.rs",
-    "lines": "50-52",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)\n        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential, span equals work; outside verus!, not verified\n        fn min_edit_distance(&self)                                             -> usize;"
+    "lines": "103-104",
+    "spec_strength": "unknown",
+    "snippet": "        fn min_edit_distance(&self) -> (dist: usize)\n            requires self.spec_source_len() + self.spec_target_len() < usize::MAX;"
   },
   {
     "id": 41,
     "function": "source",
     "file": "Chap49/MinEditDistStPer.rs",
-    "lines": "54-57",
-    "spec_strength": "",
-    "snippet": "        /// Get the source sequence\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn source(&self)                                                        -> &ArraySeqStPerS<T>;"
+    "lines": "108-109",
+    "spec_strength": "unknown",
+    "snippet": "        fn source(&self) -> (s: &ArraySeqStPerS<T>)\n            ensures s.spec_len() == self.spec_source_len();"
   },
   {
     "id": 42,
     "function": "target",
     "file": "Chap49/MinEditDistStPer.rs",
-    "lines": "59-62",
-    "spec_strength": "",
-    "snippet": "        /// Get the target sequence\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn target(&self)                                                        -> &ArraySeqStPerS<T>;"
+    "lines": "113-114",
+    "spec_strength": "unknown",
+    "snippet": "        fn target(&self) -> (t: &ArraySeqStPerS<T>)\n            ensures t.spec_len() == self.spec_target_len();"
   },
   {
     "id": 43,
     "function": "memo_size",
     "file": "Chap49/MinEditDistStPer.rs",
-    "lines": "64-67",
+    "lines": "118",
     "spec_strength": "",
-    "snippet": "        /// Get memoization table size\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn memo_size(&self)                                                     -> usize;"
+    "snippet": "        fn memo_size(&self) -> (count: usize);"
   },
   {
     "id": 44,
     "function": "min_edit_distance_rec",
     "file": "Chap49/MinEditDistStPer.rs",
-    "lines": "72-99",
-    "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)\n    /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential memoized recursion; outside verus!, not verified\n    fn min_edit_distance_rec<T: StT>(table: &mut MinEditDistStPerS<T>, i: usize, j: usize) -> usize {\n        if let Some(&result) = table.memo.get(&(i, j)) {\n            return result;\n        }\n\n        let result = match (i, j) {\n            | (i, 0) => i,\n            | (0, j) => j,\n            | (i, j) => {\n                let source_char = table.source.nth(i - 1);\n                let target_char = table.target.nth(j - 1);\n\n                if source_char == target_char {\n                    min_edit_distance_rec(table, i - 1, j - 1)\n                } else {\n                    let delete_cost = min_edit_distance_rec(table, i - 1, j);\n                    let insert_cost = min_edit_distance_rec(table, i, j - 1);\n\n                    1 + std::cmp::min(delete_cost, insert_cost)\n                }\n            }\n        };\n\n        table.memo.insert((i, j), result);\n        result\n    }"
+    "lines": "125-140",
+    "spec_strength": "unknown",
+    "snippet": "    fn min_edit_distance_rec<T: StT>(\n        table: &mut MinEditDistStPerS<T>,\n        i: usize,\n        j: usize,\n    ) -> (dist: usize)\n        requires\n            i <= old(table).source.spec_len(),\n            j <= old(table).target.spec_len(),\n            old(table).source.spec_len() + old(table).target.spec_len() < usize::MAX,\n            spec_memo_bounded(old(table).memo@),\n        ensures\n            table.source.spec_len() == old(table).source.spec_len(),\n            table.target.spec_len() == old(table).target.spec_len(),\n            dist <= i + j,\n            spec_memo_bounded(table.memo@),\n        decreases i + j,"
   },
   {
     "id": 45,
-    "function": "new_subset_sum_eph_lock",
-    "file": "Chap49/SubsetSumMtEph.rs",
-    "lines": "30",
-    "spec_strength": "hole",
-    "snippet": "        fn new_subset_sum_eph_lock(val: HashMap<(usize, i32), bool>) -> (lock: RwLock<HashMap<(usize, i32), bool>, SubsetSumMtEphInv>) {"
+    "function": "eq",
+    "file": "Chap49/MinEditDistStPer.rs",
+    "lines": "236-240",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.source == other.source\n                && self.target == other.target\n                && self.memo.inner == other.memo.inner\n        }"
   },
   {
     "id": 46,
     "function": "new",
     "file": "Chap49/SubsetSumMtEph.rs",
-    "lines": "47-52",
-    "spec_strength": "",
-    "snippet": "        /// Create new subset sum solver\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn new()                                      -> Self\n        where\n            T: Default;"
+    "lines": "88-92",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (result: Self)\n        where\n            T: Default\n            requires obeys_feq_clone::<T>(),\n            ensures result.spec_multiset_len() == 0;"
   },
   {
     "id": 47,
     "function": "from_multiset",
     "file": "Chap49/SubsetSumMtEph.rs",
-    "lines": "54-57",
-    "spec_strength": "",
-    "snippet": "        /// Create from multiset\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn from_multiset(multiset: ArraySeqMtEphS<T>) -> Self;"
+    "lines": "96-97",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_multiset(multiset: ArraySeqMtEphS<T>) -> (result: Self)\n            ensures result.spec_multiset_len() == multiset.spec_len();"
   },
   {
     "id": 48,
     "function": "subset_sum",
     "file": "Chap49/SubsetSumMtEph.rs",
-    "lines": "59-63",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(k×|S|), Span Θ(|S|)\n        /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — agrees with APAS; thread::spawn on both branches; outside verus!, not verified\n        fn subset_sum(&mut self, target: i32)         -> bool\n        where\n            T: Into<i32> + Copy + Send + Sync + 'static;"
+    "lines": "101-104",
+    "spec_strength": "unknown",
+    "snippet": "        fn subset_sum(&mut self, target: i32) -> (found: bool)\n        where\n            T: Into<i32> + Copy + Send + Sync + 'static\n            ensures self.spec_multiset_len() == old(self).spec_multiset_len();"
   },
   {
     "id": 49,
     "function": "multiset",
     "file": "Chap49/SubsetSumMtEph.rs",
-    "lines": "65-68",
-    "spec_strength": "",
-    "snippet": "        /// Get the multiset\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn multiset(&self)                            -> &ArraySeqMtEphS<T>;"
+    "lines": "108-109",
+    "spec_strength": "unknown",
+    "snippet": "        fn multiset(&self) -> (ms: &ArraySeqMtEphS<T>)\n            ensures ms.spec_len() == self.spec_multiset_len();"
   },
   {
     "id": 50,
-    "function": "multiset_mut",
+    "function": "set",
     "file": "Chap49/SubsetSumMtEph.rs",
-    "lines": "70-73",
-    "spec_strength": "",
-    "snippet": "        /// Get mutable multiset (ephemeral allows mutation)\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn multiset_mut(&mut self)                    -> &mut ArraySeqMtEphS<T>;"
+    "lines": "113-115",
+    "spec_strength": "unknown",
+    "snippet": "        fn set(&mut self, index: usize, value: T)\n            requires index < old(self).spec_multiset_len(),\n            ensures self.spec_multiset_len() == old(self).spec_multiset_len();"
   },
   {
     "id": 51,
-    "function": "set",
+    "function": "clear_memo",
     "file": "Chap49/SubsetSumMtEph.rs",
-    "lines": "75-78",
-    "spec_strength": "",
-    "snippet": "        /// Set element at index (ephemeral mutation)\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn set(&mut self, index: usize, value: T);"
+    "lines": "119-120",
+    "spec_strength": "unknown",
+    "snippet": "        fn clear_memo(&mut self)\n            ensures self.spec_multiset_len() == old(self).spec_multiset_len();"
   },
   {
     "id": 52,
-    "function": "clear_memo",
+    "function": "memo_size",
     "file": "Chap49/SubsetSumMtEph.rs",
-    "lines": "80-83",
+    "lines": "124",
     "spec_strength": "",
-    "snippet": "        /// Clear memoization table\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn clear_memo(&mut self);"
+    "snippet": "        fn memo_size(&self) -> (count: usize);"
   },
   {
     "id": 53,
-    "function": "memo_size",
+    "function": "new_arc_memo",
     "file": "Chap49/SubsetSumMtEph.rs",
-    "lines": "85-88",
-    "spec_strength": "",
-    "snippet": "        /// Get memoization table size\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn memo_size(&self)                           -> usize;"
+    "lines": "131-134",
+    "spec_strength": "hole",
+    "snippet": "    fn new_arc_memo(\n        val: HashMapWithViewPlus<Pair<usize, i32>, bool>,\n    ) -> (memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtEphMemoInv>>)\n        requires val@.dom().finite(),"
   },
   {
     "id": 54,
-    "function": "subset_sum_rec",
+    "function": "clone_arc_memo",
     "file": "Chap49/SubsetSumMtEph.rs",
-    "lines": "93-138",
-    "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(k×|S|), Span Θ(|S|)\n    /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — parallel fork on include/exclude branches; outside verus!, not verified\n    fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(\n        table: &SubsetSumMtEphS<T>,\n        i: usize,\n        j: i32,\n    ) -> bool {\n        {\n            let handle = table.memo.acquire_read();\n            let found = handle.borrow().get(&(i, j)).copied();\n            handle.release_read();\n            if let Some(result) = found {\n                return result;\n            }\n        }\n\n        let result = match (i, j) {\n            | (_, 0) => true,\n            | (0, _) => false,\n            | (i, j) => {\n                let element_value: i32 = (*table.multiset.nth(i - 1)).clone().into();\n                if element_value > j {\n                    subset_sum_rec(table, i - 1, j)\n                } else {\n                    let table_clone1 = table.clone();\n                    let table_clone2 = table.clone();\n\n                    let handle1 = thread::spawn(move || subset_sum_rec(&table_clone1, i - 1, j - element_value));\n                    let handle2 = thread::spawn(move || subset_sum_rec(&table_clone2, i - 1, j));\n\n                    let result1 = handle1.join().unwrap();\n                    let result2 = handle2.join().unwrap();\n\n                    result1 || result2\n                }\n            }\n        };\n\n        {\n            let (mut current, write_handle) = table.memo.acquire_write();\n            current.insert((i, j), result);\n            write_handle.release_write(current);\n        }\n\n        result\n    }"
+    "lines": "141-143",
+    "spec_strength": "hole",
+    "snippet": "    fn clone_arc_memo<T: MtVal>(\n        s: &SubsetSumMtEphS<T>,\n    ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtEphMemoInv>>) {"
   },
   {
     "id": 55,
-    "function": "eq",
+    "function": "subset_sum_rec",
     "file": "Chap49/SubsetSumMtEph.rs",
-    "lines": "204",
-    "spec_strength": "",
-    "snippet": "        fn eq(&self, other: &Self) -> bool { self.multiset == other.multiset }"
+    "lines": "150-154",
+    "spec_strength": "hole",
+    "snippet": "    fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(\n        table: &SubsetSumMtEphS<T>,\n        i: usize,\n        j: i32,\n    ) -> (found: bool) {"
   },
   {
     "id": 56,
-    "function": "new_subset_sum_per_lock",
-    "file": "Chap49/SubsetSumMtPer.rs",
-    "lines": "29",
-    "spec_strength": "hole",
-    "snippet": "        fn new_subset_sum_per_lock(val: HashMap<(usize, i32), bool>) -> (lock: RwLock<HashMap<(usize, i32), bool>, SubsetSumMtPerInv>) {"
+    "function": "multiset_mut",
+    "file": "Chap49/SubsetSumMtEph.rs",
+    "lines": "275-277",
+    "spec_strength": "",
+    "snippet": "        /// Get mutable multiset (ephemeral allows mutation).\n        /// - APAS: not specified\n        fn multiset_mut(&mut self) -> &mut ArraySeqMtEphS<T>;"
   },
   {
     "id": 57,
-    "function": "new",
-    "file": "Chap49/SubsetSumMtPer.rs",
-    "lines": "46-51",
-    "spec_strength": "",
-    "snippet": "        /// Create new subset sum solver\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn new()                                      -> Self\n        where\n            T: Default;"
-  },
-  {
-    "id": 58,
-    "function": "from_multiset",
-    "file": "Chap49/SubsetSumMtPer.rs",
-    "lines": "53-56",
-    "spec_strength": "",
-    "snippet": "        /// Create from multiset\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn from_multiset(multiset: ArraySeqMtPerS<T>) -> Self;"
-  },
-  {
-    "id": 59,
-    "function": "subset_sum",
-    "file": "Chap49/SubsetSumMtPer.rs",
-    "lines": "58-62",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(k×|S|), Span Θ(|S|)\n        /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — agrees with APAS; thread::spawn on both branches; outside verus!, not verified\n        fn subset_sum(&self, target: i32)             -> bool\n        where\n            T: Into<i32> + Copy + Send + Sync + 'static;"
-  },
-  {
-    "id": 60,
-    "function": "multiset",
-    "file": "Chap49/SubsetSumMtPer.rs",
-    "lines": "64-67",
-    "spec_strength": "",
-    "snippet": "        /// Get the multiset\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn multiset(&self)                            -> &ArraySeqMtPerS<T>;"
-  },
-  {
-    "id": 61,
-    "function": "memo_size",
-    "file": "Chap49/SubsetSumMtPer.rs",
-    "lines": "69-72",
-    "spec_strength": "",
-    "snippet": "        /// Get memoization table size\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn memo_size(&self)                           -> usize;"
-  },
-  {
-    "id": 62,
-    "function": "subset_sum_rec",
-    "file": "Chap49/SubsetSumMtPer.rs",
-    "lines": "77-122",
-    "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(k×|S|), Span Θ(|S|)\n    /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — parallel fork on include/exclude branches; outside verus!, not verified\n    fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(\n        table: &SubsetSumMtPerS<T>,\n        i: usize,\n        j: i32,\n    ) -> bool {\n        {\n            let handle = table.memo.acquire_read();\n            let found = handle.borrow().get(&(i, j)).copied();\n            handle.release_read();\n            if let Some(result) = found {\n                return result;\n            }\n        }\n\n        let result = match (i, j) {\n            | (_, 0) => true,\n            | (0, _) => false,\n            | (i, j) => {\n                let element_value: i32 = (*table.multiset.nth(i - 1)).into();\n                if element_value > j {\n                    subset_sum_rec(table, i - 1, j)\n                } else {\n                    let table_clone1 = table.clone();\n                    let table_clone2 = table.clone();\n\n                    let handle1 = thread::spawn(move || subset_sum_rec(&table_clone1, i - 1, j - element_value));\n                    let handle2 = thread::spawn(move || subset_sum_rec(&table_clone2, i - 1, j));\n\n                    let result1 = handle1.join().unwrap();\n                    let result2 = handle2.join().unwrap();\n\n                    result1 || result2\n                }\n            }\n        };\n\n        {\n            let (mut current, write_handle) = table.memo.acquire_write();\n            current.insert((i, j), result);\n            write_handle.release_write(current);\n        }\n\n        result\n    }"
-  },
-  {
-    "id": 63,
     "function": "eq",
-    "file": "Chap49/SubsetSumMtPer.rs",
-    "lines": "173",
+    "file": "Chap49/SubsetSumMtEph.rs",
+    "lines": "287",
     "spec_strength": "",
     "snippet": "        fn eq(&self, other: &Self) -> bool { self.multiset == other.multiset }"
   },
   {
-    "id": 64,
-    "function": "_subset_sum_st_eph_verified",
-    "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "21",
+    "id": 58,
+    "function": "new",
+    "file": "Chap49/SubsetSumMtPer.rs",
+    "lines": "87-91",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (result: Self)\n        where\n            T: Default\n            requires obeys_feq_clone::<T>(),\n            ensures result.spec_multiset_len() == 0;"
+  },
+  {
+    "id": 59,
+    "function": "from_multiset",
+    "file": "Chap49/SubsetSumMtPer.rs",
+    "lines": "95-96",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_multiset(multiset: ArraySeqMtPerS<T>) -> (result: Self)\n            ensures result.spec_multiset_len() == multiset.spec_len();"
+  },
+  {
+    "id": 60,
+    "function": "subset_sum",
+    "file": "Chap49/SubsetSumMtPer.rs",
+    "lines": "100-102",
     "spec_strength": "",
-    "snippet": "        proof fn _subset_sum_st_eph_verified() {}"
+    "snippet": "        fn subset_sum(&self, target: i32) -> (found: bool)\n        where\n            T: Into<i32> + Copy + Send + Sync + 'static;"
+  },
+  {
+    "id": 61,
+    "function": "multiset",
+    "file": "Chap49/SubsetSumMtPer.rs",
+    "lines": "106-107",
+    "spec_strength": "unknown",
+    "snippet": "        fn multiset(&self) -> (ms: &ArraySeqMtPerS<T>)\n            ensures ms.spec_len() == self.spec_multiset_len();"
+  },
+  {
+    "id": 62,
+    "function": "memo_size",
+    "file": "Chap49/SubsetSumMtPer.rs",
+    "lines": "111",
+    "spec_strength": "",
+    "snippet": "        fn memo_size(&self) -> (count: usize);"
+  },
+  {
+    "id": 63,
+    "function": "new_arc_memo",
+    "file": "Chap49/SubsetSumMtPer.rs",
+    "lines": "118-121",
+    "spec_strength": "hole",
+    "snippet": "    fn new_arc_memo(\n        val: HashMapWithViewPlus<Pair<usize, i32>, bool>,\n    ) -> (memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>)\n        requires val@.dom().finite(),"
+  },
+  {
+    "id": 64,
+    "function": "clone_arc_memo",
+    "file": "Chap49/SubsetSumMtPer.rs",
+    "lines": "128-130",
+    "spec_strength": "hole",
+    "snippet": "    fn clone_arc_memo<T: MtVal>(\n        s: &SubsetSumMtPerS<T>,\n    ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>) {"
   },
   {
     "id": 65,
-    "function": "new",
-    "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "36-41",
-    "spec_strength": "",
-    "snippet": "        /// Create new subset sum solver\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn new()                                      -> Self\n        where\n            T: Default;"
+    "function": "subset_sum_rec",
+    "file": "Chap49/SubsetSumMtPer.rs",
+    "lines": "137-141",
+    "spec_strength": "hole",
+    "snippet": "    fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(\n        table: &SubsetSumMtPerS<T>,\n        i: usize,\n        j: i32,\n    ) -> (found: bool) {"
   },
   {
     "id": 66,
-    "function": "from_multiset",
-    "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "43-46",
+    "function": "eq",
+    "file": "Chap49/SubsetSumMtPer.rs",
+    "lines": "248",
     "spec_strength": "",
-    "snippet": "        /// Create from multiset\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn from_multiset(multiset: ArraySeqStEphS<T>) -> Self;"
+    "snippet": "        fn eq(&self, other: &Self) -> bool { self.multiset == other.multiset }"
   },
   {
     "id": 67,
-    "function": "subset_sum",
+    "function": "new",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "48-52",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(k×|S|), Span Θ(|S|)\n        /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(k×|S|) — sequential, span equals work; outside verus!, not verified\n        fn subset_sum(&mut self, target: i32)         -> bool\n        where\n            T: Into<i32> + Copy;"
+    "lines": "78-82",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (result: Self)\n        where\n            T: Default\n            requires obeys_feq_clone::<T>(),\n            ensures result.spec_multiset_len() == 0;"
   },
   {
     "id": 68,
-    "function": "multiset",
+    "function": "from_multiset",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "54-57",
-    "spec_strength": "",
-    "snippet": "        /// Get the multiset\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn multiset(&self)                            -> &ArraySeqStEphS<T>;"
+    "lines": "86-87",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_multiset(multiset: ArraySeqStEphS<T>) -> (result: Self)\n            ensures result.spec_multiset_len() == multiset.spec_len();"
   },
   {
     "id": 69,
-    "function": "multiset_mut",
+    "function": "subset_sum",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "59-62",
-    "spec_strength": "",
-    "snippet": "        /// Get mutable multiset (ephemeral allows mutation)\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn multiset_mut(&mut self)                    -> &mut ArraySeqStEphS<T>;"
+    "lines": "91-94",
+    "spec_strength": "unknown",
+    "snippet": "        fn subset_sum(&mut self, target: i32) -> (found: bool)\n        where\n            T: Into<i32> + Copy\n            ensures self.spec_multiset_len() == old(self).spec_multiset_len();"
   },
   {
     "id": 70,
-    "function": "set",
+    "function": "multiset",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "64-67",
-    "spec_strength": "",
-    "snippet": "        /// Set element at index (ephemeral mutation)\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn set(&mut self, index: usize, value: T);"
+    "lines": "98-99",
+    "spec_strength": "unknown",
+    "snippet": "        fn multiset(&self) -> (ms: &ArraySeqStEphS<T>)\n            ensures ms.spec_len() == self.spec_multiset_len();"
   },
   {
     "id": 71,
-    "function": "clear_memo",
+    "function": "set",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "69-72",
-    "spec_strength": "",
-    "snippet": "        /// Clear memoization table\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn clear_memo(&mut self);"
+    "lines": "103-105",
+    "spec_strength": "unknown",
+    "snippet": "        fn set(&mut self, index: usize, value: T)\n            requires index < old(self).spec_multiset_len(),\n            ensures self.spec_multiset_len() == old(self).spec_multiset_len();"
   },
   {
     "id": 72,
-    "function": "memo_size",
+    "function": "clear_memo",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "74-77",
-    "spec_strength": "",
-    "snippet": "        /// Get memoization table size\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn memo_size(&self)                           -> usize;"
+    "lines": "109-110",
+    "spec_strength": "unknown",
+    "snippet": "        fn clear_memo(&mut self)\n            ensures self.spec_multiset_len() == old(self).spec_multiset_len();"
   },
   {
     "id": 73,
-    "function": "subset_sum_rec",
+    "function": "memo_size",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "82-104",
+    "lines": "114",
     "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(k×|S|), Span Θ(|S|)\n    /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(k×|S|) — sequential memoized recursion; outside verus!, not verified\n    fn subset_sum_rec<T: StT + Into<i32> + Copy>(table: &mut SubsetSumStEphS<T>, i: usize, j: i32) -> bool {\n        if let Some(&result) = table.memo.get(&(i, j)) {\n            return result;\n        }\n\n        let result = match (i, j) {\n            | (_, 0) => true,\n            | (0, _) => false,\n            | (i, j) => {\n                let element_value: i32 = (*table.multiset.nth(i - 1)).into();\n                if element_value > j {\n                    subset_sum_rec(table, i - 1, j)\n                } else {\n                    subset_sum_rec(table, i - 1, j - element_value) || subset_sum_rec(table, i - 1, j)\n                }\n            }\n        };\n\n        table.memo.insert((i, j), result);\n        result\n    }"
+    "snippet": "        fn memo_size(&self) -> (count: usize);"
   },
   {
     "id": 74,
-    "function": "_subset_sum_st_per_verified",
-    "file": "Chap49/SubsetSumStPer.rs",
-    "lines": "21",
-    "spec_strength": "",
-    "snippet": "        proof fn _subset_sum_st_per_verified() {}"
+    "function": "subset_sum_rec",
+    "file": "Chap49/SubsetSumStEph.rs",
+    "lines": "121-130",
+    "spec_strength": "unknown",
+    "snippet": "    fn subset_sum_rec<T: StT + Into<i32> + Copy>(\n        table: &mut SubsetSumStEphS<T>,\n        i: usize,\n        j: i32,\n    ) -> (found: bool)\n        requires\n            i <= old(table).multiset.spec_len(),\n        ensures\n            table.multiset.spec_len() == old(table).multiset.spec_len(),\n        decreases i,"
   },
   {
     "id": 75,
-    "function": "new",
-    "file": "Chap49/SubsetSumStPer.rs",
-    "lines": "36-41",
+    "function": "multiset_mut",
+    "file": "Chap49/SubsetSumStEph.rs",
+    "lines": "220-222",
     "spec_strength": "",
-    "snippet": "        /// Create new subset sum solver\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn new()                                      -> Self\n        where\n            T: Default;"
+    "snippet": "        /// Get mutable multiset (ephemeral allows mutation).\n        /// - APAS: not specified\n        fn multiset_mut(&mut self) -> &mut ArraySeqStEphS<T>;"
   },
   {
     "id": 76,
-    "function": "from_multiset",
+    "function": "new",
     "file": "Chap49/SubsetSumStPer.rs",
-    "lines": "43-46",
-    "spec_strength": "",
-    "snippet": "        /// Create from multiset\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn from_multiset(multiset: ArraySeqStPerS<T>) -> Self;"
+    "lines": "78-82",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (result: Self)\n        where\n            T: Default\n            requires obeys_feq_clone::<T>(),\n            ensures result.spec_multiset_len() == 0;"
   },
   {
     "id": 77,
-    "function": "subset_sum",
+    "function": "from_multiset",
     "file": "Chap49/SubsetSumStPer.rs",
-    "lines": "48-52",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(k×|S|), Span Θ(|S|)\n        /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(k×|S|) — sequential, span equals work; outside verus!, not verified\n        fn subset_sum(&self, target: i32)             -> bool\n        where\n            T: Into<i32> + Copy;"
+    "lines": "86-87",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_multiset(multiset: ArraySeqStPerS<T>) -> (result: Self)\n            ensures result.spec_multiset_len() == multiset.spec_len();"
   },
   {
     "id": 78,
-    "function": "multiset",
+    "function": "subset_sum",
     "file": "Chap49/SubsetSumStPer.rs",
-    "lines": "54-57",
+    "lines": "91-93",
     "spec_strength": "",
-    "snippet": "        /// Get the multiset\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn multiset(&self)                            -> &ArraySeqStPerS<T>;"
+    "snippet": "        fn subset_sum(&self, target: i32) -> (found: bool)\n        where\n            T: Into<i32> + Copy;"
   },
   {
     "id": 79,
-    "function": "memo_size",
+    "function": "multiset",
     "file": "Chap49/SubsetSumStPer.rs",
-    "lines": "59-62",
-    "spec_strength": "",
-    "snippet": "        /// Get memoization table size\n        /// - APAS: not specified\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified\n        fn memo_size(&self)                           -> usize;"
+    "lines": "97-98",
+    "spec_strength": "unknown",
+    "snippet": "        fn multiset(&self) -> (ms: &ArraySeqStPerS<T>)\n            ensures ms.spec_len() == self.spec_multiset_len();"
   },
   {
     "id": 80,
+    "function": "memo_size",
+    "file": "Chap49/SubsetSumStPer.rs",
+    "lines": "102",
+    "spec_strength": "",
+    "snippet": "        fn memo_size(&self) -> (count: usize);"
+  },
+  {
+    "id": 81,
     "function": "subset_sum_rec",
     "file": "Chap49/SubsetSumStPer.rs",
-    "lines": "67-89",
+    "lines": "109-118",
+    "spec_strength": "unknown",
+    "snippet": "    fn subset_sum_rec<T: StT + Into<i32> + Copy>(\n        table: &mut SubsetSumStPerS<T>,\n        i: usize,\n        j: i32,\n    ) -> (found: bool)\n        requires\n            i <= old(table).multiset.spec_len(),\n        ensures\n            table.multiset.spec_len() == old(table).multiset.spec_len(),\n        decreases i,"
+  },
+  {
+    "id": 82,
+    "function": "eq",
+    "file": "Chap49/SubsetSumStPer.rs",
+    "lines": "204-206",
     "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(k×|S|), Span Θ(|S|)\n    /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(k×|S|) — sequential memoized recursion; outside verus!, not verified\n    fn subset_sum_rec<T: StT + Into<i32> + Copy>(table: &mut SubsetSumStPerS<T>, i: usize, j: i32) -> bool {\n        if let Some(&result) = table.memo.get(&(i, j)) {\n            return result;\n        }\n\n        let result = match (i, j) {\n            | (_, 0) => true,\n            | (0, _) => false,\n            | (i, j) => {\n                let element_value: i32 = (*table.multiset.nth(i - 1)).into();\n                if element_value > j {\n                    subset_sum_rec(table, i - 1, j)\n                } else {\n                    subset_sum_rec(table, i - 1, j - element_value) || subset_sum_rec(table, i - 1, j)\n                }\n            }\n        };\n\n        table.memo.insert((i, j), result);\n        result\n    }"
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.multiset == other.multiset && self.memo.inner == other.memo.inner\n        }"
   }
 ]

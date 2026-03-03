@@ -1,13 +1,21 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 49: Subset Sum - persistent, multi-threaded.
-//!
-//! This module is outside verus! because it uses std::collections::HashMap for
-//! memoization (via Arc<RwLock<HashMap>>), which Verus does not support. Full
-//! verification would require replacing HashMap with a verified equivalent.
 
 pub mod SubsetSumMtPer {
 
-    use std::collections::HashMap;
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 3. broadcast use
+    // 4. type definitions
+    // 6. spec fns
+    // 8. traits
+    // 9. impls
+    // 11. derive impls in verus!
+    // 13. derive impls outside verus!
+
+    // 2. imports
+
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
     use std::sync::Arc;
@@ -18,128 +26,182 @@ pub mod SubsetSumMtPer {
 
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     verus! {
-        pub struct SubsetSumMtPerInv;
-        impl RwLockPredicate<HashMap<(usize, i32), bool>> for SubsetSumMtPerInv {
-            open spec fn inv(self, v: HashMap<(usize, i32), bool>) -> bool { true }
-        }
 
-        #[verifier::external_body]
-        fn new_subset_sum_per_lock(val: HashMap<(usize, i32), bool>) -> (lock: RwLock<HashMap<(usize, i32), bool>, SubsetSumMtPerInv>) {
-            RwLock::new(val, Ghost(SubsetSumMtPerInv))
-        }
-    }
+    // 3. broadcast use
+
+    broadcast use {
+        vstd::seq::group_seq_axioms,
+        crate::Types::Types::group_Pair_axioms,
+        vstd::std_specs::hash::group_hash_axioms,
+    };
 
     // 4. type definitions
 
-    #[derive(Clone)]
+    pub struct SubsetSumMtPerMemoInv;
+    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, i32>, bool>> for SubsetSumMtPerMemoInv {
+        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, i32>, bool>) -> bool {
+            v@.dom().finite()
+        }
+    }
+
+    #[verifier::reject_recursive_types(T)]
     pub struct SubsetSumMtPerS<T: MtVal> {
         pub multiset: ArraySeqMtPerS<T>,
-        pub memo: Arc<RwLock<HashMap<(usize, i32), bool>, SubsetSumMtPerInv>>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>,
+    }
+
+    // 6. spec fns
+
+    /// Recursive specification of the subset sum problem.
+    /// Returns true iff some subset of s[0..i) sums to j.
+    pub open spec fn spec_subset_sum(s: Seq<int>, i: nat, j: int) -> bool
+        decreases i,
+    {
+        if j == 0 { true }
+        else if i == 0 { false }
+        else {
+            let elem = s[i as int - 1];
+            if elem > j {
+                spec_subset_sum(s, (i - 1) as nat, j)
+            } else {
+                spec_subset_sum(s, (i - 1) as nat, j - elem)
+                || spec_subset_sum(s, (i - 1) as nat, j)
+            }
+        }
     }
 
     // 8. traits
 
-    /// Trait for parallel subset sum operations
+    /// Trait for parallel subset sum operations.
     pub trait SubsetSumMtPerTrait<T: MtVal>: Sized {
-        /// Create new subset sum solver
+        /// Spec: multiset length.
+        spec fn spec_multiset_len(&self) -> nat;
+
+        /// Create new subset sum solver.
         /// - APAS: not specified
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
-        fn new()                                      -> Self
+        fn new() -> (result: Self)
         where
-            T: Default;
+            T: Default
+            requires obeys_feq_clone::<T>(),
+            ensures result.spec_multiset_len() == 0;
 
-        /// Create from multiset
+        /// Create from multiset.
         /// - APAS: not specified
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
-        fn from_multiset(multiset: ArraySeqMtPerS<T>) -> Self;
+        fn from_multiset(multiset: ArraySeqMtPerS<T>) -> (result: Self)
+            ensures result.spec_multiset_len() == multiset.spec_len();
 
+        /// Solve subset sum for the given target.
         /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
-        /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — agrees with APAS; thread::spawn on both branches; outside verus!, not verified
-        fn subset_sum(&self, target: i32)             -> bool
+        fn subset_sum(&self, target: i32) -> (found: bool)
         where
             T: Into<i32> + Copy + Send + Sync + 'static;
 
-        /// Get the multiset
+        /// Get the multiset.
         /// - APAS: not specified
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
-        fn multiset(&self)                            -> &ArraySeqMtPerS<T>;
+        fn multiset(&self) -> (ms: &ArraySeqMtPerS<T>)
+            ensures ms.spec_len() == self.spec_multiset_len();
 
-        /// Get memoization table size
+        /// Get memoization table size.
         /// - APAS: not specified
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
-        fn memo_size(&self)                           -> usize;
+        fn memo_size(&self) -> (count: usize);
     }
 
     // 9. impls
 
+    /// Create Arc-wrapped memo lock with empty map.
+    #[verifier::external_body]
+    fn new_arc_memo(
+        val: HashMapWithViewPlus<Pair<usize, i32>, bool>,
+    ) -> (memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>)
+        requires val@.dom().finite(),
+    {
+        Arc::new(RwLock::new(val, Ghost(SubsetSumMtPerMemoInv)))
+    }
+
+    /// Clone Arc memo (reference count increment).
+    #[verifier::external_body]
+    fn clone_arc_memo<T: MtVal>(
+        s: &SubsetSumMtPerS<T>,
+    ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>) {
+        s.memo.clone()
+    }
+
+    /// Recursive memoized parallel subset sum solver.
     /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
-    /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — parallel fork on include/exclude branches; outside verus!, not verified
+    #[verifier::external_body]
     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
         table: &SubsetSumMtPerS<T>,
         i: usize,
         j: i32,
-    ) -> bool {
+    ) -> (found: bool) {
         {
             let handle = table.memo.acquire_read();
-            let found = handle.borrow().get(&(i, j)).copied();
+            let found = handle.borrow().get(&Pair(i, j)).copied();
             handle.release_read();
             if let Some(result) = found {
                 return result;
             }
         }
 
-        let result = match (i, j) {
-            | (_, 0) => true,
-            | (0, _) => false,
-            | (i, j) => {
-                let element_value: i32 = (*table.multiset.nth(i - 1)).into();
-                if element_value > j {
-                    subset_sum_rec(table, i - 1, j)
-                } else {
-                    let table_clone1 = table.clone();
-                    let table_clone2 = table.clone();
+        let result = if j == 0 {
+            true
+        } else if i == 0 {
+            false
+        } else {
+            let element_value: i32 = (*table.multiset.nth(i - 1)).into();
+            if element_value < 0 || element_value > j {
+                subset_sum_rec(table, i - 1, j)
+            } else {
+                let table_clone1 = table.clone();
+                let table_clone2 = table.clone();
 
-                    let handle1 = thread::spawn(move || subset_sum_rec(&table_clone1, i - 1, j - element_value));
-                    let handle2 = thread::spawn(move || subset_sum_rec(&table_clone2, i - 1, j));
+                let handle1 = thread::spawn(move || subset_sum_rec(&table_clone1, i - 1, j - element_value));
+                let handle2 = thread::spawn(move || subset_sum_rec(&table_clone2, i - 1, j));
 
-                    let result1 = handle1.join().unwrap();
-                    let result2 = handle2.join().unwrap();
+                let result1 = handle1.join().unwrap();
+                let result2 = handle2.join().unwrap();
 
-                    result1 || result2
-                }
+                result1 || result2
             }
         };
 
         {
-            let (mut current, write_handle) = table.memo.acquire_write();
-            current.insert((i, j), result);
-            write_handle.release_write(current);
+            let (mut memo, write_handle) = table.memo.acquire_write();
+            memo.insert(Pair(i, j), result);
+            write_handle.release_write(memo);
         }
 
         result
     }
 
     impl<T: MtVal> SubsetSumMtPerTrait<T> for SubsetSumMtPerS<T> {
+        open spec fn spec_multiset_len(&self) -> nat { self.multiset.spec_len() }
+
         fn new() -> Self
         where
             T: Default,
         {
+            proof { let _ = Pair_feq_trigger::<usize, i32>(); }
             Self {
                 multiset: ArraySeqMtPerS::new(0, T::default()),
-                memo: Arc::new(new_subset_sum_per_lock(HashMap::new())),
+                memo: new_arc_memo(HashMapWithViewPlus::new()),
             }
         }
 
         fn from_multiset(multiset: ArraySeqMtPerS<T>) -> Self {
+            proof { let _ = Pair_feq_trigger::<usize, i32>(); }
             Self {
                 multiset,
-                memo: Arc::new(new_subset_sum_per_lock(HashMap::new())),
+                memo: new_arc_memo(HashMapWithViewPlus::new()),
             }
         }
 
-        fn subset_sum(&self, target: i32) -> bool
+        fn subset_sum(&self, target: i32) -> (found: bool)
         where
             T: Into<i32> + Copy + Send + Sync + 'static,
         {
@@ -148,18 +210,18 @@ pub mod SubsetSumMtPer {
             }
 
             {
-                let (mut current, write_handle) = self.memo.acquire_write();
-                current.clear();
-                write_handle.release_write(current);
+                let (mut memo, write_handle) = self.memo.acquire_write();
+                memo.clear();
+                write_handle.release_write(memo);
             }
 
             let n = self.multiset.length();
             subset_sum_rec(self, n, target)
         }
 
-        fn multiset(&self) -> &ArraySeqMtPerS<T> { &self.multiset }
+        fn multiset(&self) -> (ms: &ArraySeqMtPerS<T>) { &self.multiset }
 
-        fn memo_size(&self) -> usize {
+        fn memo_size(&self) -> (count: usize) {
             let handle = self.memo.acquire_read();
             let size = handle.borrow().len();
             handle.release_read();
@@ -167,15 +229,26 @@ pub mod SubsetSumMtPer {
         }
     }
 
-    // 11. derive impls
+    // 11. derive impls in verus!
+
+    impl<T: MtVal> Clone for SubsetSumMtPerS<T> {
+        fn clone(&self) -> (cloned: Self) {
+            SubsetSumMtPerS {
+                multiset: self.multiset.clone(),
+                memo: clone_arc_memo(self),
+            }
+        }
+    }
+
+    } // verus!
+
+    // 13. derive impls outside verus!
 
     impl<T: MtVal> PartialEq for SubsetSumMtPerS<T> {
         fn eq(&self, other: &Self) -> bool { self.multiset == other.multiset }
     }
 
     impl<T: MtVal> Eq for SubsetSumMtPerS<T> {}
-
-    // 13. derive impls outside verus!
 
     impl<T: MtVal> Debug for SubsetSumMtPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
@@ -200,8 +273,6 @@ pub mod SubsetSumMtPer {
             )
         }
     }
-
-    // Note: IntoIterator not implemented for ArraySeqMtPerS, so we don't provide it here
 }
 
 #[macro_export]
