@@ -149,6 +149,6 @@ Info: 5 total
    BSTParaMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    BSTParaMtEph.rs:294: info: accept() - accept hole
    BSTParaMtEph.rs:309: info: accept() - accept hole
-s point.
+us_rwlock_external_body - Verus RwLock new requires an external body at this point.
    BSTParaMtEph.rs:294: info: accept() - accept hole
    BSTParaMtEph.rs:309: info: accept() - accept hole

@@ -287,6 +287,10 @@ broadcast use {
             }
         }
 
+        impl<T: StT + Ord> Default for UnsortedListPQ<T> {
+            fn default() -> Self { Self::empty() }
+        }
+
 // 11. derive impls in verus!
         #[cfg(verus_keep_ghost)]
         impl<T: StT + Ord> PartialEqSpecImpl for UnsortedListPQ<T> {
@@ -321,10 +325,6 @@ broadcast use {
         }
 
         impl<T: StT + Ord> core::cmp::Eq for UnsortedListPQ<T> {}
-
-        impl<T: StT + Ord> Default for UnsortedListPQ<T> {
-            fn default() -> Self { Self::empty() }
-        }
     }
 
 // 13. derive impls outside verus!

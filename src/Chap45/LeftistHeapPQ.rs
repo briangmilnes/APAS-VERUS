@@ -117,12 +117,17 @@ broadcast use {
             fn extract_all_sorted(&self) -> (sorted: Vec<T>)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures sorted@.len() as nat == self.spec_size();
-            fn height(&self) -> (levels: usize);
-            fn root_rank(&self) -> (rank_val: usize);
-            fn is_valid_leftist_heap(&self) -> (b: bool);
+            fn height(&self) -> (levels: usize)
+                ensures self.spec_size() == 0 ==> levels == 0;
+            fn root_rank(&self) -> (rank_val: usize)
+                ensures self.spec_size() == 0 ==> rank_val == 0;
+            fn is_valid_leftist_heap(&self) -> (b: bool)
+                ensures self.spec_size() == 0 ==> b;
             fn from_vec(vec: Vec<T>) -> (pq: Self)
-                requires obeys_feq_clone::<T>();
-            fn to_vec(&self) -> (v: Vec<T>);
+                requires obeys_feq_clone::<T>(),
+                ensures pq.spec_size() == vec@.len();
+            fn to_vec(&self) -> (v: Vec<T>)
+                ensures self.spec_size() == 0 ==> v@.len() == 0;
             fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures v@.len() as nat == self.spec_size();
@@ -389,12 +394,25 @@ broadcast use {
                 result
             }
 
-            fn height(&self) -> (levels: usize) { self.root.height() }
+            fn height(&self) -> (levels: usize) {
+                match &self.root {
+                    LeftistHeapNode::Leaf => 0,
+                    _ => self.root.height(),
+                }
+            }
 
-            fn root_rank(&self) -> (rank_val: usize) { self.root.rank() }
+            fn root_rank(&self) -> (rank_val: usize) {
+                match &self.root {
+                    LeftistHeapNode::Leaf => 0,
+                    _ => self.root.rank(),
+                }
+            }
 
             fn is_valid_leftist_heap(&self) -> (b: bool) {
-                self.root.is_leftist() && self.root.is_heap()
+                match &self.root {
+                    LeftistHeapNode::Leaf => true,
+                    _ => self.root.is_leftist() && self.root.is_heap(),
+                }
             }
 
             fn from_vec(vec: Vec<T>) -> (pq: Self) {
@@ -402,7 +420,12 @@ broadcast use {
                 Self::from_seq(&seq)
             }
 
-            fn to_vec(&self) -> (v: Vec<T>) { self.root.to_vec() }
+            fn to_vec(&self) -> (v: Vec<T>) {
+                match &self.root {
+                    LeftistHeapNode::Leaf => Vec::new(),
+                    _ => self.root.to_vec(),
+                }
+            }
 
             fn to_sorted_vec(&self) -> (v: Vec<T>) { self.extract_all_sorted() }
 

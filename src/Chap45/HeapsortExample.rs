@@ -23,15 +23,15 @@ pub mod HeapsortExample {
 
     verus! {
 
-// Veracity: added broadcast group
+// 3. broadcast use
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
 };
-        proof fn _heapsort_example_verified() {}
 
+// 4. type definitions
         #[verifier::reject_recursive_types(T)]
         pub struct HeapsortComparison<T: StT + Ord> {
             pub input: Vec<T>,
@@ -104,6 +104,45 @@ broadcast use {
         impl<T: StT + Ord> core::cmp::Eq for HeapsortComparison<T> {}
     }
 
+    verus! {
+
+// 5. view impls
+
+// 7. proof fns
+        proof fn _heapsort_example_verified() {}
+
+// 8. traits
+        pub trait HeapsortComparisonTrait<T: StT + Ord> {
+            /// Verify that all implementations produce the same sorted result.
+            fn all_results_match(&self) -> (matches: bool);
+            /// Check if all results are properly sorted.
+            fn all_results_sorted(&self) -> (sorted: bool);
+        }
+
+// 9. impls
+        #[verifier::external]
+        impl<T: StT + Ord> HeapsortComparisonTrait<T> for HeapsortComparison<T> {
+            fn all_results_match(&self) -> (matches: bool) {
+                let expected = &self.binary_heap_result;
+                self.unsorted_list_result == *expected
+                    && self.sorted_list_result == *expected
+                    && self.balanced_tree_result == *expected
+                    && self.leftist_heap_result == *expected
+            }
+
+            fn all_results_sorted(&self) -> (sorted: bool) {
+                fn is_sorted<T: Ord>(vec: &[T]) -> bool { vec.windows(2).all(|w| w[0] <= w[1]) }
+
+                is_sorted(&self.unsorted_list_result)
+                    && is_sorted(&self.sorted_list_result)
+                    && is_sorted(&self.balanced_tree_result)
+                    && is_sorted(&self.binary_heap_result)
+                    && is_sorted(&self.leftist_heap_result)
+            }
+        }
+
+    }
+
     /// - APAS: Work Θ(n²), Span Θ(n²) — n × O(n) deleteMin dominates.
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.
     pub fn heapsort_unsorted_list<T: StT + Ord>(sequence: &[T]) -> Vec<T> {
@@ -111,15 +150,15 @@ broadcast use {
         for element in sequence {
             pq = pq.insert(element.clone());
         }
-        let mut cloned = Vec::new();
+        let mut result = Vec::new();
         while !pq.is_empty() {
             let (new_pq, min_element) = pq.delete_min();
             if let Some(element) = min_element {
-                cloned.push(element);
+                result.push(element);
             }
             pq = new_pq;
         }
-        cloned
+        result
     }
 
     /// - APAS: Work Θ(n²), Span Θ(n²) — n × O(n) insert dominates.
@@ -129,15 +168,15 @@ broadcast use {
         for element in sequence {
             pq = pq.insert(element.clone());
         }
-        let mut cloned = Vec::new();
+        let mut result = Vec::new();
         while !pq.is_empty() {
             let (new_pq, min_element) = pq.delete_min();
             if let Some(element) = min_element {
-                cloned.push(element);
+                result.push(element);
             }
             pq = new_pq;
         }
-        cloned
+        result
     }
 
     /// - APAS: Work Θ(n log n), Span Θ(n log n)
@@ -147,15 +186,15 @@ broadcast use {
         for element in sequence {
             pq = pq.insert(element.clone());
         }
-        let mut cloned = Vec::new();
+        let mut result = Vec::new();
         while !pq.is_empty() {
             let (new_pq, min_element) = pq.delete_min();
             if let Some(element) = min_element {
-                cloned.push(element);
+                result.push(element);
             }
             pq = new_pq;
         }
-        cloned
+        result
     }
 
     /// - APAS: Work Θ(n log n), Span Θ(n log n)
@@ -165,33 +204,33 @@ broadcast use {
         for element in sequence {
             pq = pq.insert(element.clone());
         }
-        let mut cloned = Vec::new();
+        let mut result = Vec::new();
         while !pq.is_empty() {
             let (new_pq, min_element) = pq.delete_min();
             if let Some(element) = min_element {
-                cloned.push(element);
+                result.push(element);
             }
             pq = new_pq;
         }
-        cloned
+        result
     }
 
-    /// - APAS: WorkΘ(n log n), Span Θ(n log n)
+    /// - APAS: Work Θ(n log n), Span Θ(n log n)
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — each insert/delete clones tree O(n).
     pub fn heapsort_leftist_heap<T: StT + Ord>(sequence: &[T]) -> Vec<T> {
         let mut pq = LeftistHeapPQ::empty();
         for element in sequence {
             pq = pq.insert(element.clone());
         }
-        let mut elements = Vec::new();
+        let mut result = Vec::new();
         while !pq.is_empty() {
             let (new_pq, min_element) = pq.delete_min();
             if let Some(element) = min_element {
-                elements.push(element);
+                result.push(element);
             }
             pq = new_pq;
         }
-        elements
+        result
     }
 
     /// Demonstrate all heapsort variants on the same input
@@ -216,33 +255,6 @@ broadcast use {
                 .field("binary_heap_result", &self.binary_heap_result)
                 .field("leftist_heap_result", &self.leftist_heap_result)
                 .finish()
-        }
-    }
-
-    pub trait HeapsortComparisonTrait<T: StT + Ord> {
-        /// Verify that all implementations produce the same sorted elements
-        fn all_results_match(&self)  -> bool;
-        /// Check if all results are properly sorted
-        fn all_results_sorted(&self) -> bool;
-    }
-
-    impl<T: StT + Ord> HeapsortComparisonTrait<T> for HeapsortComparison<T> {
-        fn all_results_match(&self) -> bool {
-            let expected = &self.binary_heap_result;
-            self.unsorted_list_result == *expected
-                && self.sorted_list_result == *expected
-                && self.balanced_tree_result == *expected
-                && self.leftist_heap_result == *expected
-        }
-
-        fn all_results_sorted(&self) -> bool {
-            fn is_sorted<T: Ord>(vec: &[T]) -> bool { vec.windows(2).all(|w| w[0] <= w[1]) }
-
-            is_sorted(&self.unsorted_list_result)
-                && is_sorted(&self.sorted_list_result)
-                && is_sorted(&self.balanced_tree_result)
-                && is_sorted(&self.binary_heap_result)
-                && is_sorted(&self.leftist_heap_result)
         }
     }
 
@@ -285,13 +297,13 @@ broadcast use {
     /// Generate a large random-like sequence for performance testing
     pub fn large_example(size: usize) -> Vec<i32> {
         // Generate pseudo-random sequence for testing
-        let mut elements = Vec::with_capacity(size);
+        let mut result = Vec::with_capacity(size);
         let mut x: i64 = 1;
         for _ in 0..size {
             x = (x * 1103515245 + 12345) % (1i64 << 31); // Linear congruential generator
-            elements.push((x % 1000) as i32);
+            result.push((x % 1000) as i32);
         }
-        elements
+        result
     }
 
     /// Demonstrate the efficiency difference between implementations
@@ -354,12 +366,12 @@ broadcast use {
 
     /// Convert Vec to ArraySeqStPerS for use with APAS sequence types
     pub fn vec_to_array_seq<T: StT>(vec: &[T]) -> ArraySeqStPerS<T> {
-        let mut elements = ArraySeqStPerS::empty();
+        let mut result = ArraySeqStPerS::empty();
         for element in vec {
             let single_seq = ArraySeqStPerS::singleton(element.clone());
-            elements = ArraySeqStPerS::append(&elements, &single_seq);
+            result = ArraySeqStPerS::append(&result, &single_seq);
         }
-        elements
+        result
     }
 
     /// Convert Vec to AVLTreeSeqStPerS for use with balanced tree operations

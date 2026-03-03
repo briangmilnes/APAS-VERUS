@@ -97,7 +97,8 @@ broadcast use {
             fn extract_all_sorted(&self) -> (sorted: AVLTreeSeqStPerS<T>)
                 ensures sorted@.len() == self@.len();
 
-            fn contains(&self, element: &T) -> (found: bool);
+            fn contains(&self, element: &T) -> (found: bool)
+                ensures found == self@.contains(element@);
 
             fn remove(&self, element: &T) -> (rest_and_found: (Self, bool))
                 ensures
@@ -116,7 +117,8 @@ broadcast use {
             fn to_sorted_vec(&self) -> (vec: Vec<T>)
                 ensures vec@.len() == self@.len();
 
-            fn is_sorted(&self) -> (sorted: bool);
+            fn is_sorted(&self) -> (sorted: bool)
+                ensures self@.len() <= 1 ==> sorted;
 
             fn height(&self) -> (h: usize)
                 ensures self@.len() == 0 ==> h == 0;

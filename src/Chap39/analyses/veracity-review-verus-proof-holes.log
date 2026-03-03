@@ -36,6 +36,6 @@ Info: 5 total
    BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
 
 🎉 No proof holes or warnings found! All proofs are complete.
-rus RwLock new requires an external body at this point.
+ternal body at this point.
 
 🎉 No proof holes or warnings found! All proofs are complete.
