@@ -9,6 +9,10 @@ pub mod OrderedTableStEph {
     use crate::Chap42::TableStEph::TableStEph::*;
     use crate::Types::Types::*;
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::laws_eq::obeys_view_eq;
 
     verus! {
 
@@ -57,17 +61,24 @@ broadcast use {
             ensures empty@ == Map::<K::V, V::V>::empty();
         fn singleton(k: K, v: V) -> (tree: Self)
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite();
-        fn find(&self, k: &K) -> (found: Option<V>);
-        fn lookup(&self, k: &K) -> (value: Option<V>);
+        fn find(&self, k: &K) -> (found: Option<V>)
+            requires obeys_view_eq::<K>(), obeys_feq_full::<V>();
+        fn lookup(&self, k: &K) -> (value: Option<V>)
+            requires obeys_view_eq::<K>(), obeys_feq_full::<V>();
         fn is_empty(&self) -> (is_empty: B)
             ensures is_empty == self@.dom().is_empty();
         fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
+            requires
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures self@.dom().finite();
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             ensures self@ == old(self)@.remove(k@), self@.dom().finite();
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite();
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+            requires forall|k: &K| f.requires((k,))
             ensures tabulated@.dom().finite();
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
             ensures mapped@.dom().finite();
@@ -76,14 +87,26 @@ broadcast use {
         fn reduce<R, F: Fn(R, &K, &V) -> R>(&self, init: R, f: F) -> (reduced: R)
             ensures self@.dom().finite();
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
+            requires
+                forall|v1: &V, v2: &V| f.requires((v1, v2)),
+                obeys_feq_clone::<K>(),
+                obeys_view_eq::<K>(),
             ensures self@.dom().finite();
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
+            requires
+                forall|v1: &V, v2: &V| f.requires((v1, v2)),
+                obeys_feq_clone::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                obeys_view_eq::<K>(),
             ensures self@.dom().finite();
         fn difference(&mut self, other: &Self)
+            requires obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
             ensures self@.dom().finite();
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+            requires obeys_feq_full::<Pair<K, V>>()
             ensures self@.dom().finite();
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+            requires obeys_feq_full::<Pair<K, V>>()
             ensures self@.dom().finite();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite();
@@ -99,6 +122,7 @@ broadcast use {
             where Self: Sized
             ensures self@.dom().finite();
         fn join_key(&mut self, other: Self)
+            requires obeys_feq_clone::<K>(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
             ensures self@.dom().finite();
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures range@.dom().finite();
@@ -235,14 +259,12 @@ broadcast use {
         }
 
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-            ensures self@.dom().finite()
         {
             self.base_table.intersection(&other.base_table, f);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
         }
 
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-            ensures self@.dom().finite()
         {
             self.base_table.union(&other.base_table, f);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }

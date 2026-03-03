@@ -26,6 +26,8 @@ pub mod AugOrderedTableStPer {
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::laws_eq::obeys_view_eq;
 
     verus! {
 
@@ -126,17 +128,21 @@ broadcast use {
             requires obeys_feq_clone::<Pair<K, V>>(),
             ensures tree@.dom().finite(), tree.spec_wf();
         fn find(&self, k: &K) -> (found: Option<V>)
-            requires self.spec_wf(),
+            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
                     None => !self@.contains_key(k@),
                 };
         fn insert(&self, k: K, v: V) -> (updated: Self)
-            requires self.spec_wf(),
+            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
             ensures updated@.dom().finite(), updated.spec_wf();
         fn delete(&self, k: &K) -> (updated: Self)
-            requires self.spec_wf(), obeys_feq_clone::<Pair<K, V>>(),
+            requires
+                self.spec_wf(),
+                obeys_feq_clone::<Pair<K, V>>(),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures updated@.dom().finite(), updated.spec_wf();
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite();
@@ -144,22 +150,32 @@ broadcast use {
             requires forall|k: &K| f.requires((k,)),
             ensures tabulated@.dom().finite();
         fn map<G: Fn(&V) -> V>(&self, f: G) -> (mapped: Self)
-            requires forall|v: &V| f.requires((v,)),
+            requires forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
             ensures mapped@.dom().finite();
         fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (filtered: Self)
-            requires forall|k: &K, v: &V| f.requires((k, v)),
+            requires forall|k: &K, v: &V| f.requires((k, v)), obeys_feq_full::<Pair<K, V>>(),
             ensures filtered@.dom().finite();
         fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (common: Self)
-            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
+            requires
+                forall|v1: &V, v2: &V| f.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<K>(),
             ensures common@.dom().finite();
         fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (combined: Self)
-            requires self.spec_wf(), forall|v1: &V, v2: &V| f.requires((v1, v2)),
+            requires
+                self.spec_wf(),
+                forall|v1: &V, v2: &V| f.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures combined@.dom().finite(), combined.spec_wf();
         fn difference(&self, other: &Self) -> (remaining: Self)
+            requires obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
             ensures remaining@.dom().finite();
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
+            requires obeys_feq_full::<Pair<K, V>>(),
             ensures restricted@.dom().finite();
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
+            requires obeys_feq_full::<Pair<K, V>>(),
             ensures subtracted@.dom().finite();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite();
@@ -175,7 +191,11 @@ broadcast use {
             where Self: Sized,
             ensures self@.dom().finite();
         fn join_key(left: &Self, right: &Self) -> (joined: Self)
-            requires left.spec_wf(), right.spec_wf(),
+            requires
+                left.spec_wf(),
+                right.spec_wf(),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures joined@.dom().finite(), joined.spec_wf();
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures range@.dom().finite();

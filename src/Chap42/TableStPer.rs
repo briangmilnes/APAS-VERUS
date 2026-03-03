@@ -301,31 +301,39 @@ pub mod TableStPer {
 
         /// APAS: Work Θ(|a| * W(f)), Span Θ(lg |a| + S(f))
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (mapped: Self)
-            requires forall|v: &V| f.requires((v,)),
+            requires forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
             ensures mapped@.dom() == self@.dom();
 
         /// APAS: Work Θ(|a| * W(f)), Span Θ(lg |a| + S(f))
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (filtered: Self)
-            requires forall|k: &K, v: &V| f.requires((k, v)),
+            requires forall|k: &K, v: &V| f.requires((k, v)), obeys_feq_full::<Pair<K, V>>(),
             ensures filtered@.dom().subset_of(self@.dom());
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (common: Self)
-            requires forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+            requires
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<K>(),
             ensures common@.dom().subset_of(self@.dom().intersect(other@.dom()));
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (combined: Self)
-            requires self.spec_wf(), forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+            requires
+                self.spec_wf(),
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures self@.dom().union(other@.dom()).subset_of(combined@.dom()), combined.spec_wf();
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn difference(&self, other: &Self) -> (remaining: Self)
+            requires obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
             ensures remaining@.dom().subset_of(self@.dom().difference(other@.dom()));
 
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn find(&self, key: &K) -> (found: Option<V>)
-            requires self.spec_wf(),
+            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
                 match found {
                     Some(v) => self@.contains_key(key@) && self@[key@] == v@,
@@ -334,20 +342,33 @@ pub mod TableStPer {
 
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn delete(&self, key: &K) -> (updated: Self)
-            requires self.spec_wf(), obeys_feq_clone::<Pair<K, V>>(),
+            requires
+                self.spec_wf(),
+                obeys_feq_clone::<Pair<K, V>>(),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures !updated@.contains_key(key@), updated.spec_wf();
 
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
-            requires self.spec_wf(), forall|v1: &V, v2: &V| combine.requires((v1, v2)),
-            ensures updated@.contains_key(key@), updated.spec_wf();
+            requires
+                self.spec_wf(),
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
+            ensures
+                updated@.contains_key(key@),
+                updated.spec_wf(),
+                forall|k: K::V| self@.contains_key(k) ==> updated@.contains_key(k);
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
+            requires obeys_feq_full::<Pair<K, V>>(),
             ensures restricted@.dom().subset_of(self@.dom());
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
+            requires obeys_feq_full::<Pair<K, V>>(),
             ensures subtracted@.dom().subset_of(self@.dom());
 
         /// APAS: Work Θ(|a|), Span Θ(lg |a|)
@@ -429,7 +450,6 @@ pub mod TableStPer {
 
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (mapped: Self)
         {
-            proof { assume(obeys_feq_full::<K>()); }
             let ghost old_view = self.entries@;
             let mut new_entries: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
@@ -467,7 +487,6 @@ pub mod TableStPer {
 
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (filtered: Self)
         {
-            proof { assume(obeys_feq_full::<Pair<K, V>>()); }
             let ghost self_view = self.entries@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let ghost mut sources: Seq<int> = Seq::empty();
@@ -518,10 +537,6 @@ pub mod TableStPer {
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let ghost mut self_srcs: Seq<int> = Seq::empty();
             let ghost mut other_srcs: Seq<int> = Seq::empty();
-            proof {
-                assume(obeys_view_eq::<K>());
-                assume(obeys_feq_full::<K>());
-            }
             let mut i: usize = 0;
             while i < self.entries.length()
                 invariant
@@ -600,11 +615,8 @@ pub mod TableStPer {
         {
             let ghost self_view = self.entries@;
             let ghost other_view = other.entries@;
-            let mut combined = self.clone_plus();
-            proof {
-                // clone preserves entries@, so spec_wf transfers.
-                assume(combined.spec_wf());
-            }
+            // Clone ensures combined.entries@ == self.entries@, so spec_wf transfers.
+            let mut combined = self.clone();
             let mut j: usize = 0;
             while j < other.entries.length()
                 invariant
@@ -612,6 +624,13 @@ pub mod TableStPer {
                     other.entries@ == other_view,
                     forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                     combined.spec_wf(),
+                    forall|k: K::V| spec_entries_to_map(self_view).contains_key(k)
+                        ==> combined@.contains_key(k),
+                    forall|oj: int| 0 <= oj < j as int
+                        ==> combined@.contains_key(
+                            (#[trigger] other.entries@[oj]).0),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
                 decreases other.entries.spec_len() - j,
             {
                 let pair = other.entries.nth(j);
@@ -620,7 +639,21 @@ pub mod TableStPer {
                 j += 1;
             }
             proof {
-                assume(self@.dom().union(other@.dom()).subset_of(combined@.dom()));
+                assert forall|k: K::V|
+                    spec_entries_to_map(self_view).dom().contains(k)
+                    || spec_entries_to_map(other_view).dom().contains(k)
+                    implies combined@.dom().contains(k)
+                by {
+                    if spec_entries_to_map(self_view).dom().contains(k) {
+                        // From invariant: all self keys are in combined.
+                    } else {
+                        // k is in other@.dom().
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(other_view, k);
+                        let oj = choose|oj: int| 0 <= oj < other_view.len()
+                            && (#[trigger] other_view[oj]).0 == k;
+                        // From invariant: all processed other keys are in combined.
+                    }
+                };
             }
             combined
         }
@@ -631,10 +664,6 @@ pub mod TableStPer {
             let ghost other_view = other.entries@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let ghost mut sources: Seq<int> = Seq::empty();
-            proof {
-                assume(obeys_view_eq::<K>());
-                assume(obeys_feq_full::<Pair<K, V>>());
-            }
             let mut i: usize = 0;
             while i < self.entries.length()
                 invariant
@@ -702,10 +731,6 @@ pub mod TableStPer {
 
         fn find(&self, key: &K) -> (found: Option<V>)
         {
-            proof {
-                assume(obeys_view_eq::<K>());
-                assume(obeys_feq_full::<V>());
-            }
             let mut i: usize = 0;
             while i < self.entries.length()
                 invariant
@@ -736,10 +761,6 @@ pub mod TableStPer {
 
         fn delete(&self, key: &K) -> (updated: Self)
         {
-            proof {
-                assume(obeys_view_eq::<K>());
-                assume(obeys_feq_full::<Pair<K, V>>());
-            }
             let ghost self_view = self.entries@;
             let mut updated: Vec<Pair<K, V>> = Vec::new();
             let ghost mut src: Seq<int> = Seq::empty();
@@ -799,10 +820,6 @@ pub mod TableStPer {
 
         fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
         {
-            proof {
-                assume(obeys_view_eq::<K>());
-                assume(obeys_feq_full::<Pair<K, V>>());
-            }
             let ghost key_view: K::V = key@;
             let ghost self_view = self.entries@;
             let mut all: Vec<Pair<K, V>> = Vec::new();
@@ -822,6 +839,8 @@ pub mod TableStPer {
                     ),
                     forall|a: int, b: int| 0 <= a < b < src.len() ==> src[a] < src[b],
                     forall|j: int| #![auto] 0 <= j < all@.len() ==> all@[j].0@ != key_view,
+                    forall|si: int| 0 <= si < i as int && (#[trigger] self_view[si]).0 != key_view ==>
+                        exists|j: int| 0 <= j < src.len() && src[j] == si,
                     obeys_view_eq::<K>(),
                     obeys_feq_full::<Pair<K, V>>(),
                     key@ == key_view,
@@ -831,10 +850,30 @@ pub mod TableStPer {
                 proof { reveal(obeys_view_eq); }
                 if pair.0 == key {
                     found_value = Some(pair.1.clone_plus());
+                    // self_view[i].0 == key_view, so the new si==i case is vacuous.
+                    proof { assert(self_view[i as int].0 == key_view); }
                 } else {
                     let cloned = pair.clone_plus();
                     all.push(cloned);
-                    proof { src = src.push(i as int); }
+                    proof {
+                        let ghost old_src = src;
+                        src = src.push(i as int);
+                        // Re-establish invariant for all si in 0..i+1.
+                        assert forall|si: int|
+                            0 <= si < i as int + 1
+                            && (#[trigger] self_view[si]).0 != key_view
+                            implies exists|j: int| 0 <= j < src.len() && src[j] == si
+                        by {
+                            if si < i as int {
+                                let j = choose|j: int|
+                                    0 <= j < old_src.len() && old_src[j] == si;
+                                assert(src[j] == old_src[j]);
+                            } else {
+                                // si == i: just pushed.
+                                assert(src[src.len() - 1] == i as int);
+                            }
+                        };
+                    }
                 }
                 i += 1;
             }
@@ -869,13 +908,31 @@ pub mod TableStPer {
                         }
                     };
                 };
+                // Prove domain preservation: every key in self is in the result.
+                assert forall|k: K::V| #![auto]
+                    spec_entries_to_map(self_view).contains_key(k)
+                    implies spec_entries_to_map(entries@).contains_key(k)
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self_view, k);
+                    let si = choose|si: int| 0 <= si < self_view.len()
+                        && (#[trigger] self_view[si]).0 == k;
+                    if self_view[si].0 == key_view {
+                        // k == key_view: the last entry has this key.
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, last);
+                    } else {
+                        // Non-matching: was copied to all.
+                        let j = choose|j: int| 0 <= j < src.len()
+                            && (#[trigger] src[j]) == si;
+                        assert(entries.spec_index(j) == all@[j]);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, j);
+                    }
+                };
             }
             TableStPer { entries }
         }
 
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
         {
-            proof { assume(obeys_feq_full::<Pair<K, V>>()); }
             let ghost self_view = self.entries@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let ghost mut sources: Seq<int> = Seq::empty();
@@ -919,7 +976,6 @@ pub mod TableStPer {
 
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
         {
-            proof { assume(obeys_feq_full::<Pair<K, V>>()); }
             let ghost self_view = self.entries@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let ghost mut sources: Seq<int> = Seq::empty();

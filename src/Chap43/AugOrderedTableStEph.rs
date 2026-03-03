@@ -24,6 +24,10 @@ pub mod AugOrderedTableStEph {
     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::*;
     use crate::OrderedTableStEphLit;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::laws_eq::obeys_view_eq;
 
     verus! {
 
@@ -116,12 +120,14 @@ broadcast use {
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
             ensures tree@.dom().finite();
         fn find(&self, k: &K) -> (found: Option<V>)
+            requires obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
                     None => !self@.contains_key(k@),
                 };
         fn lookup(&self, k: &K) -> (value: Option<V>)
+            requires obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
                 match value {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
@@ -130,12 +136,18 @@ broadcast use {
         fn is_empty(&self) -> (is_empty: B)
             ensures is_empty == self@.dom().is_empty(), self@.dom().finite();
         fn insert<G: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: G)
+            requires
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures self@.dom().finite();
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
+            requires obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures self@.dom().finite();
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite();
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
+            requires forall|k: &K| f.requires((k,))
             ensures tabulated@.dom().finite();
         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (mapped: Self)
             ensures mapped@.dom().finite();
@@ -144,14 +156,26 @@ broadcast use {
         fn reduce<R, G: Fn(R, &K, &V) -> R>(&self, init: R, f: G) -> (reduced: R)
             ensures self@.dom().finite();
         fn intersection<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
+            requires
+                forall|v1: &V, v2: &V| f.requires((v1, v2)),
+                obeys_feq_clone::<K>(),
+                obeys_view_eq::<K>(),
             ensures self@.dom().finite();
         fn union<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
+            requires
+                forall|v1: &V, v2: &V| f.requires((v1, v2)),
+                obeys_feq_clone::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                obeys_view_eq::<K>(),
             ensures self@.dom().finite();
         fn difference(&mut self, other: &Self)
+            requires obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
             ensures self@.dom().finite();
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+            requires obeys_feq_full::<Pair<K, V>>()
             ensures self@.dom().finite();
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+            requires obeys_feq_full::<Pair<K, V>>()
             ensures self@.dom().finite();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite();
@@ -167,6 +191,7 @@ broadcast use {
             where Self: Sized,
             ensures self@.dom().finite();
         fn join_key(&mut self, other: Self)
+            requires obeys_feq_clone::<K>(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
             ensures self@.dom().finite();
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures range@.dom().finite();
@@ -336,7 +361,6 @@ broadcast use {
         }
 
         fn intersection<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
-            ensures self@.dom().finite()
         {
             self.base_table.intersection(&other.base_table, f);
             self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
@@ -344,7 +368,6 @@ broadcast use {
         }
 
         fn union<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
-            ensures self@.dom().finite()
         {
             self.base_table.union(&other.base_table, f);
             self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);

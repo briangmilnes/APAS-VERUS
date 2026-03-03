@@ -14,6 +14,8 @@ pub mod OrderedTableStPer {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
+    use vstd::laws_eq::obeys_view_eq;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
@@ -68,17 +70,21 @@ pub mod OrderedTableStPer {
             requires obeys_feq_clone::<Pair<K, V>>(),
             ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table@.dom().finite(), table.spec_wf();
         fn find(&self, k: &K) -> (found: Option<V>)
-            requires self.spec_wf(),
+            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@) && self@[k@] == v@,
                     None => !self@.contains_key(k@),
                 };
         fn insert(&self, k: K, v: V) -> (table: Self)
-            requires self.spec_wf(),
+            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
             ensures table@.dom().finite(), table.spec_wf();
         fn delete(&self, k: &K) -> (table: Self)
-            requires self.spec_wf(), obeys_feq_clone::<Pair<K, V>>(),
+            requires
+                self.spec_wf(),
+                obeys_feq_clone::<Pair<K, V>>(),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures table@ == self@.remove(k@), table@.dom().finite(), table.spec_wf();
         fn domain(&self) -> (keys: ArraySetStEph<K>)
             ensures self@.dom().finite();
@@ -86,22 +92,32 @@ pub mod OrderedTableStPer {
             requires forall|k: &K| f.requires((k,)),
             ensures table@.dom().finite();
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self)
-            requires forall|v: &V| f.requires((v,)),
+            requires forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
             ensures table@.dom().finite();
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (table: Self)
-            requires forall|k: &K, v: &V| f.requires((k, v)),
+            requires forall|k: &K, v: &V| f.requires((k, v)), obeys_feq_full::<Pair<K, V>>(),
             ensures table@.dom().finite();
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
-            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
+            requires
+                forall|v1: &V, v2: &V| f.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<K>(),
             ensures table@.dom().finite();
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
-            requires self.spec_wf(), forall|v1: &V, v2: &V| f.requires((v1, v2)),
+            requires
+                self.spec_wf(),
+                forall|v1: &V, v2: &V| f.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures table@.dom().finite(), table.spec_wf();
         fn difference(&self, other: &Self) -> (table: Self)
+            requires obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
             ensures table@.dom().finite();
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self)
+            requires obeys_feq_full::<Pair<K, V>>(),
             ensures table@.dom().finite();
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self)
+            requires obeys_feq_full::<Pair<K, V>>(),
             ensures table@.dom().finite();
         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), sorted_entries.spec_well_formed();
@@ -117,7 +133,10 @@ pub mod OrderedTableStPer {
             where Self: Sized
             ensures self@.dom().finite();
         fn join_key(left: &Self, right: &Self) -> (table: Self)
-            requires left.spec_wf(),
+            requires
+                left.spec_wf(),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures table@.dom().finite(), table.spec_wf();
         fn get_key_range(&self, k1: &K, k2: &K) -> (table: Self)
             ensures table@.dom().finite();
