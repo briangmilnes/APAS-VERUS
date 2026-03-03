@@ -31,6 +31,8 @@ pub mod BFSStPer {
         pub order: ArraySeqStPerS<N>,
     }
 
+    pub struct BFSStPer;
+
     // 6. spec fns
 
     /// All neighbor indices in the adjacency list are valid vertex indices.
@@ -161,6 +163,7 @@ pub mod BFSStPer {
                 traversal.parents.spec_len() == graph.spec_len(),
                 traversal.parents.spec_index(source as int) == source,
                 traversal.order.spec_len() > 0,
+                traversal.order.spec_len() <= graph.spec_len(),
                 traversal.order.spec_index(0) == source,
                 forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
                     ==> traversal.order.spec_index(i) < graph.spec_len(),
@@ -187,18 +190,11 @@ pub mod BFSStPer {
 
     // 9. impls
 
+    impl BFSStPerTrait for BFSStPer {
+
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     #[verifier::exec_allows_no_decreases_clause]
-    pub fn bfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> (traversal: ArraySeqStPerS<N>)
-        requires
-            source < graph.spec_len(),
-            graph.spec_len() > 0,
-            graph.spec_len() < usize::MAX,
-            spec_wf_graph(graph),
-        ensures
-            traversal.spec_len() == graph.spec_len(),
-            traversal.spec_index(source as int) == 0usize,
-            spec_distances_bounded(&traversal, graph.spec_len() as int),
+    fn bfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> (traversal: ArraySeqStPerS<N>)
     {
         broadcast use vstd::std_specs::vecdeque::group_vec_dequeue_axioms;
 
@@ -291,20 +287,7 @@ pub mod BFSStPer {
 
     /// Algorithm 54.6: BFS Tree with VecDeque. Returns parent array and BFS-order vertex sequence.
     #[verifier::exec_allows_no_decreases_clause]
-    pub fn bfs_tree(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> (traversal: BFSTreeS)
-        requires
-            source < graph.spec_len(),
-            graph.spec_len() > 0,
-            graph.spec_len() < usize::MAX,
-            spec_wf_graph(graph),
-        ensures
-            traversal.parents.spec_len() == graph.spec_len(),
-            traversal.parents.spec_index(source as int) == source,
-            traversal.order.spec_len() > 0,
-            traversal.order.spec_index(0) == source,
-            forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
-                ==> traversal.order.spec_index(i) < graph.spec_len(),
-            spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
+    fn bfs_tree(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> (traversal: BFSTreeS)
     {
         broadcast use vstd::std_specs::vecdeque::group_vec_dequeue_axioms;
 
@@ -342,8 +325,11 @@ pub mod BFSStPer {
                     parents.spec_index(queue@[j] as int) != NO_PARENT,
                 spec_parents_bounded(&parents, n as int),
                 order@.len() > 0,
+                order@.len() <= n as int,
                 order@[0] == source,
                 forall|j: int| #![auto] 0 <= j < order@.len() ==> order@[j] < n,
+                forall|j: int| #![auto] 0 <= j < order@.len() ==>
+                    parents.spec_index(order@[j] as int) != NO_PARENT,
         {
             let u_opt = queue.pop_front();
             match u_opt {
@@ -371,13 +357,16 @@ pub mod BFSStPer {
                                 parents.spec_index(queue@[j] as int) != NO_PARENT,
                             spec_parents_bounded(&parents, n as int),
                             order@.len() > 0,
+                            order@.len() <= n as int,
                             order@[0] == source,
                             forall|j: int| #![auto] 0 <= j < order@.len() ==> order@[j] < n,
+                            forall|j: int| #![auto] 0 <= j < order@.len() ==>
+                                parents.spec_index(order@[j] as int) != NO_PARENT,
                         decreases num_neighbors - i
                     {
                         let v = *neighbors.nth(i);
 
-                        if *parents.nth(v) == NO_PARENT {
+                        if *parents.nth(v) == NO_PARENT && order.len() < n {
                             let old_p_inner = parents;
                             parents = ArraySeqStPerS::update(&old_p_inner, v, u);
                             queue.push_back(v);
@@ -406,6 +395,8 @@ pub mod BFSStPer {
         let order_seq = ArraySeqStPerS::from_vec(order);
         BFSTreeS { parents, order: order_seq }
     }
+
+    } // impl BFSStPerTrait
 
     impl BFSTreeStPerTrait for BFSTreeS {
         open spec fn spec_order(&self) -> ArraySeqStPerS<N> {

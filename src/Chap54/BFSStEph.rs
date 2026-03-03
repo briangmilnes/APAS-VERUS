@@ -31,6 +31,8 @@ pub mod BFSStEph {
         pub order: ArraySeqStEphS<N>,
     }
 
+    pub struct BFSStEph;
+
     // 6. spec fns
 
     /// All neighbor indices in the adjacency list are valid vertex indices.
@@ -93,59 +95,6 @@ pub mod BFSStEph {
         }
     }
 
-    // 8. traits
-    pub trait BFSStEphTrait {
-        /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn bfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (traversal: ArraySeqStEphS<N>)
-            requires
-                source < graph.spec_len(),
-                graph.spec_len() > 0,
-                graph.spec_len() < usize::MAX,
-                spec_wf_graph(graph),
-            ensures
-                traversal.spec_len() == graph.spec_len(),
-                traversal.spec_index(source as int) == 0usize,
-                spec_distances_bounded(&traversal, graph.spec_len() as int),
-        ;
-
-        /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
-        /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn bfs_tree(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (traversal: BFSTreeS)
-            requires
-                source < graph.spec_len(),
-                graph.spec_len() > 0,
-                graph.spec_len() < usize::MAX,
-                spec_wf_graph(graph),
-            ensures
-                traversal.parents.spec_len() == graph.spec_len(),
-                traversal.parents.spec_index(source as int) == source,
-                traversal.order.spec_len() > 0,
-                traversal.order.spec_index(0) == source,
-                forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
-                    ==> traversal.order.spec_index(i) < graph.spec_len(),
-                spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
-        ;
-    }
-
-    pub trait BFSTreeStEphTrait {
-        spec fn spec_order(&self) -> ArraySeqStEphS<N>;
-
-        fn top_down_order(&self) -> (order: &ArraySeqStEphS<N>)
-            ensures
-                order.spec_len() == self.spec_order().spec_len(),
-                forall|i: int| #![auto] 0 <= i < order.spec_len() ==>
-                    order.spec_index(i) == self.spec_order().spec_index(i);
-
-        fn bottom_up_order(&self) -> (order: ArraySeqStEphS<N>)
-            requires self.spec_order().spec_len() <= usize::MAX,
-            ensures
-                order.spec_len() == self.spec_order().spec_len(),
-                forall|i: int| #![auto] 0 <= i < order.spec_len() ==>
-                    order.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i);
-    }
-
-    // 9. impls
-
     proof fn lemma_tabulate_all_unreachable(distances: &ArraySeqStEphS<N>, n: int)
         requires
             distances.spec_len() == n,
@@ -188,18 +137,65 @@ pub mod BFSStEph {
         }
     }
 
+    // 8. traits
+    pub trait BFSStEphTrait {
+        /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        fn bfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (traversal: ArraySeqStEphS<N>)
+            requires
+                source < graph.spec_len(),
+                graph.spec_len() > 0,
+                graph.spec_len() < usize::MAX,
+                spec_wf_graph(graph),
+            ensures
+                traversal.spec_len() == graph.spec_len(),
+                traversal.spec_index(source as int) == 0usize,
+                spec_distances_bounded(&traversal, graph.spec_len() as int),
+        ;
+
+        /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
+        /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        fn bfs_tree(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (traversal: BFSTreeS)
+            requires
+                source < graph.spec_len(),
+                graph.spec_len() > 0,
+                graph.spec_len() < usize::MAX,
+                spec_wf_graph(graph),
+            ensures
+                traversal.parents.spec_len() == graph.spec_len(),
+                traversal.parents.spec_index(source as int) == source,
+                traversal.order.spec_len() > 0,
+                traversal.order.spec_len() <= graph.spec_len(),
+                traversal.order.spec_index(0) == source,
+                forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
+                    ==> traversal.order.spec_index(i) < graph.spec_len(),
+                spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
+        ;
+    }
+
+    pub trait BFSTreeStEphTrait {
+        spec fn spec_order(&self) -> ArraySeqStEphS<N>;
+
+        fn top_down_order(&self) -> (order: &ArraySeqStEphS<N>)
+            ensures
+                order.spec_len() == self.spec_order().spec_len(),
+                forall|i: int| #![auto] 0 <= i < order.spec_len() ==>
+                    order.spec_index(i) == self.spec_order().spec_index(i);
+
+        fn bottom_up_order(&self) -> (order: ArraySeqStEphS<N>)
+            requires self.spec_order().spec_len() <= usize::MAX,
+            ensures
+                order.spec_len() == self.spec_order().spec_len(),
+                forall|i: int| #![auto] 0 <= i < order.spec_len() ==>
+                    order.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i);
+    }
+
+    // 9. impls
+
+    impl BFSStEphTrait for BFSStEph {
+
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     #[verifier::exec_allows_no_decreases_clause]
-    pub fn bfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (traversal: ArraySeqStEphS<N>)
-        requires
-            source < graph.spec_len(),
-            graph.spec_len() > 0,
-            graph.spec_len() < usize::MAX,
-            spec_wf_graph(graph),
-        ensures
-            traversal.spec_len() == graph.spec_len(),
-            traversal.spec_index(source as int) == 0usize,
-            spec_distances_bounded(&traversal, graph.spec_len() as int),
+    fn bfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (traversal: ArraySeqStEphS<N>)
     {
         broadcast use vstd::std_specs::vecdeque::group_vec_dequeue_axioms;
 
@@ -294,20 +290,7 @@ pub mod BFSStEph {
 
     /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
     #[verifier::exec_allows_no_decreases_clause]
-    pub fn bfs_tree(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (traversal: BFSTreeS)
-        requires
-            source < graph.spec_len(),
-            graph.spec_len() > 0,
-            graph.spec_len() < usize::MAX,
-            spec_wf_graph(graph),
-        ensures
-            traversal.parents.spec_len() == graph.spec_len(),
-            traversal.parents.spec_index(source as int) == source,
-            traversal.order.spec_len() > 0,
-            traversal.order.spec_index(0) == source,
-            forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
-                ==> traversal.order.spec_index(i) < graph.spec_len(),
-            spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
+    fn bfs_tree(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (traversal: BFSTreeS)
     {
         broadcast use vstd::std_specs::vecdeque::group_vec_dequeue_axioms;
 
@@ -345,8 +328,11 @@ pub mod BFSStEph {
                     parents.spec_index(queue@[j] as int) != NO_PARENT,
                 spec_parents_bounded(&parents, n as int),
                 order@.len() > 0,
+                order@.len() <= n as int,
                 order@[0] == source,
                 forall|j: int| #![auto] 0 <= j < order@.len() ==> order@[j] < n,
+                forall|j: int| #![auto] 0 <= j < order@.len() ==>
+                    parents.spec_index(order@[j] as int) != NO_PARENT,
         {
             let u_opt = queue.pop_front();
             match u_opt {
@@ -374,13 +360,16 @@ pub mod BFSStEph {
                                 parents.spec_index(queue@[j] as int) != NO_PARENT,
                             spec_parents_bounded(&parents, n as int),
                             order@.len() > 0,
+                            order@.len() <= n as int,
                             order@[0] == source,
                             forall|j: int| #![auto] 0 <= j < order@.len() ==> order@[j] < n,
+                            forall|j: int| #![auto] 0 <= j < order@.len() ==>
+                                parents.spec_index(order@[j] as int) != NO_PARENT,
                         decreases num_neighbors - i
                     {
                         let v = *neighbors.nth(i);
 
-                        if *parents.nth(v) == NO_PARENT {
+                        if *parents.nth(v) == NO_PARENT && order.len() < n {
                             let ghost pre_inner = *&parents;
                             let _ = parents.set(v, u);
                             queue.push_back(v);
@@ -410,6 +399,8 @@ pub mod BFSStEph {
         let order_seq = ArraySeqStEphS::from_vec(order);
         BFSTreeS { parents, order: order_seq }
     }
+
+    } // impl BFSStEphTrait
 
     impl BFSTreeStEphTrait for BFSTreeS {
         open spec fn spec_order(&self) -> ArraySeqStEphS<N> {

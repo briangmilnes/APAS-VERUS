@@ -42,6 +42,6 @@ Info: 10 total
    HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole - enum TaskState — outside verus! with accept hole comment
 
 🎉 No proof holes or warnings found! All proofs are complete.
- enum TaskState — outside verus! with accept hole comment
+   HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole - enum TaskState — outside verus! with accept hole comment
 
 🎉 No proof holes or warnings found! All proofs are complete.

@@ -4,19 +4,16 @@ Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are working in src/Chap39.
-Update your chapter's analyses:
-  veracity-review-verus-proof-holes.log - by program veracity-review-proof-holes
-  Don't review-against-prose. It's too expensive.
+You are workingin src/Chap47. Hashtables.
+I have carefully structured don't restructure.
+They're not even verusified and should be fairly simple. 
 
-Work on one file at time in this order:
-BSTTreapStEph.rs
-BSTTreapMtEph.rs
-BSTParaTreapMtEph.rs
-BSTSetTreapMtEph.rs
+It validates, rtt and ptt fine so don't start there. 
+Check verusification state, the hole checker log and style logs are up to date.
+Does the chapter say these are multithreaded?
+Are the specs good?
+Propose work.
 
-Review the verusification, specification and holes on this chapter.
-Propose fixes in a table.
 
 
 

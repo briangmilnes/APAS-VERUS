@@ -22,45 +22,78 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap66 | BoruvkaMtEph | 5 | 4 | 0 | 12 | 6 | 10 | 1 | 0 | 15 |
-| 2 | Chap66 | BoruvkaStEph | 5 | 9 | 0 | 0 | 6 | 3 | 2 | 3 | 4 |
+| 1 | Chap54 | BFSMtEph | 4 | 4 | 0 | 11 | 15 | 0 | 15 | 0 | 0 |
+| 2 | Chap54 | BFSMtPer | 4 | 4 | 0 | 11 | 15 | 0 | 15 | 0 | 0 |
+| 3 | Chap54 | BFSStEph | 4 | 4 | 0 | 4 | 8 | 0 | 8 | 0 | 0 |
+| 4 | Chap54 | BFSStPer | 4 | 4 | 0 | 4 | 8 | 0 | 8 | 0 | 0 |
 
 ## Function-by-Function Detail
 
-### Chap66/BoruvkaMtEph.rs
+### Chap54/BFSMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `eq` |  | Y |  |  | Y |  |  | unknown | 42&#8209;43 |
-| 2 | `vertex_bridges_mt` | Y |  |  | Y | Y |  | Y |  | 56&#8209;60 |
-| 3 | `bridge_star_partition_mt` | Y |  |  | Y | Y |  | Y |  | 64&#8209;69 |
-| 4 | `boruvka_mst_mt` | Y |  |  | Y | Y |  | Y |  | 73&#8209;79 |
-| 5 | `boruvka_mst_mt_with_seed` | Y |  |  | Y | Y |  | Y |  | 83&#8209;87 |
-| 6 | `mst_weight` | Y |  |  | Y | Y |  | Y |  | 91&#8209;94 |
-| 7 | `partial_cmp` |  | Y |  |  |  | Y | Y |  | 105&#8209;107 |
-| 8 | `cmp` |  | Y |  |  |  | Y | Y |  | 111&#8209;116 |
-| 9 | `hash` |  | Y |  |  |  | Y | Y |  | 120&#8209;125 |
-| 10 | `hash_coin` |  |  |  | Y |  | Y | Y |  | 140&#8209;151 |
-| 11 | `hash_coin_flips_mt` |  |  |  | Y |  | Y | Y |  | 153&#8209;186 |
-| 12 | `compute_remaining_mt` |  |  |  | Y |  | Y | Y |  | 188&#8209;224 |
-| 13 | `collect_mst_labels_mt` |  |  |  | Y |  | Y | Y |  | 226&#8209;261 |
-| 14 | `build_partition_map_mt` |  |  |  | Y |  | Y | Y |  | 263&#8209;303 |
-| 15 | `filter_tail_to_head_mt` |  |  |  | Y |  | Y | Y |  | 404&#8209;454 |
-| 16 | `reroute_edges_mt` |  |  |  | Y |  | Y | Y |  | 519&#8209;561 |
+| 1 | `lemma_tabulate_all_no_parent` |  |  |  | Y | Y |  |  | unknown | 57&#8209;62 |
+| 2 | `lemma_set_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 65&#8209;82 |
+| 3 | `lemma_copy_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 96&#8209;107 |
+| 4 | `lemma_tabulate_all_unreachable` |  |  |  | Y | Y |  |  | unknown | 117&#8209;123 |
+| 5 | `lemma_set_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 127&#8209;144 |
+| 6 | `copy_distances` |  |  |  | Y | Y |  |  | unknown | 159&#8209;164 |
+| 7 | `copy_graph` |  |  |  | Y | Y |  |  | unknown | 177&#8209;185 |
+| 8 | `lemma_copy_preserves_wf` |  |  |  | Y | Y |  |  | unknown | 210&#8209;223 |
+| 9 | `lemma_copy_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 235&#8209;246 |
+| 10 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 261&#8209;266 |
+| 11 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 269&#8209;275 |
+| 12 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 279&#8209;289 |
+| 13 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 293&#8209;308 |
+| 14 | `process_frontier_parallel` |  |  |  | Y | Y |  |  | unknown | 314&#8209;336 |
+| 15 | `process_frontier_tree_parallel` |  |  |  | Y | Y |  |  | unknown | 472&#8209;490 |
 
-### Chap66/BoruvkaStEph.rs
+### Chap54/BFSMtPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 17 | `eq` |  | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
-| 18 | `vertex_bridges` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;114 |
-| 19 | `bridge_star_partition` | Y | Y |  |  | Y |  |  | hole | 121&#8209;125 |
-| 20 | `boruvka_mst` | Y | Y |  |  | Y |  |  | hole | 129&#8209;134 |
-| 21 | `boruvka_mst_with_seed` | Y | Y |  |  | Y |  |  | hole | 138&#8209;142 |
-| 22 | `mst_weight` | Y | Y |  |  | Y |  | Y |  | 146&#8209;149 |
-| 23 | `partial_cmp` |  | Y |  |  |  | Y | Y |  | 369&#8209;371 |
-| 24 | `cmp` |  | Y |  |  |  | Y | Y |  | 375&#8209;380 |
-| 25 | `hash` |  | Y |  |  |  | Y | Y |  | 384&#8209;389 |
+| 16 | `lemma_tabulate_all_no_parent` |  |  |  | Y | Y |  |  | unknown | 57&#8209;62 |
+| 17 | `lemma_update_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 65&#8209;82 |
+| 18 | `lemma_copy_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 96&#8209;107 |
+| 19 | `lemma_tabulate_all_unreachable` |  |  |  | Y | Y |  |  | unknown | 117&#8209;123 |
+| 20 | `lemma_update_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 127&#8209;144 |
+| 21 | `copy_distances` |  |  |  | Y | Y |  |  | unknown | 159&#8209;164 |
+| 22 | `copy_graph` |  |  |  | Y | Y |  |  | unknown | 177&#8209;185 |
+| 23 | `lemma_copy_preserves_wf` |  |  |  | Y | Y |  |  | unknown | 211&#8209;224 |
+| 24 | `lemma_copy_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 237&#8209;248 |
+| 25 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 263&#8209;268 |
+| 26 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 271&#8209;277 |
+| 27 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 281&#8209;291 |
+| 28 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 295&#8209;310 |
+| 29 | `process_frontier_parallel` |  |  |  | Y | Y |  |  | unknown | 317&#8209;339 |
+| 30 | `process_frontier_tree_parallel` |  |  |  | Y | Y |  |  | unknown | 484&#8209;502 |
+
+### Chap54/BFSStEph.rs
+
+| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
+|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
+| 31 | `lemma_tabulate_all_no_parent` |  |  |  | Y | Y |  |  | unknown | 59&#8209;64 |
+| 32 | `lemma_set_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 67&#8209;84 |
+| 33 | `lemma_tabulate_all_unreachable` |  |  |  | Y | Y |  |  | unknown | 98&#8209;104 |
+| 34 | `lemma_set_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 109&#8209;126 |
+| 35 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 143&#8209;153 |
+| 36 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 157&#8209;172 |
+| 37 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 178&#8209;182 |
+| 38 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 184&#8209;189 |
+
+### Chap54/BFSStPer.rs
+
+| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
+|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
+| 39 | `lemma_tabulate_all_no_parent` |  |  |  | Y | Y |  |  | unknown | 59&#8209;64 |
+| 40 | `lemma_update_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 67&#8209;84 |
+| 41 | `lemma_tabulate_all_unreachable` |  |  |  | Y | Y |  |  | unknown | 98&#8209;104 |
+| 42 | `lemma_update_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 108&#8209;125 |
+| 43 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 142&#8209;152 |
+| 44 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 156&#8209;171 |
+| 45 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 177&#8209;181 |
+| 46 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 183&#8209;188 |
 
 
 ### Legend

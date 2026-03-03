@@ -23,8 +23,8 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtEph.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtEph.rs:1: info: [18] verus! block empty (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtEph.rs:276: warning: [20] trait BFSMtEphTrait is defined but has no impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtPer.rs:1: info: [1] has mod declarations
@@ -41,8 +41,8 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtPer.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtPer.rs:1: info: [18] verus! block empty (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtPer.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtPer.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtPer.rs:278: warning: [20] trait BFSMtPerTrait is defined but has no impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSStEph.rs:1: info: [1] has mod declarations
@@ -59,8 +59,8 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSStEph.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSStEph.rs:1: info: [18] verus! block empty (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap54/BFSStEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap54/BFSStEph.rs:96: warning: [20] trait BFSStEphTrait is defined but has no impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSStPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSStPer.rs:1: info: [1] has mod declarations
@@ -77,9 +77,10 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSStPer.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSStPer.rs:1: info: [18] verus! block empty (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap54/BFSStPer.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap54/BFSStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap54/BFSStPer.rs:137: warning: [20] trait BFSStPerTrait is defined but has no impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 60 passed, 4 warnings in 4 files (checked 4 files)
+Summary: 64 passed, 0 warnings in 0 files (checked 4 files)
+════════════════════════════════════════════════════════════════
 ════════════════════════════════════════════════════════════════

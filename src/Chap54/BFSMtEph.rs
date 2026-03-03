@@ -31,6 +31,8 @@ pub mod BFSMtEph {
         pub order: ArraySeqMtEphS<N>,
     }
 
+    pub struct BFSMtEph;
+
     // 6. spec fns
 
     pub open spec fn spec_wf_graph(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>) -> bool {
@@ -298,6 +300,7 @@ pub mod BFSMtEph {
                 traversal.parents.spec_len() == graph.spec_len(),
                 traversal.parents.spec_index(source as int) == source,
                 traversal.order.spec_len() > 0,
+                traversal.order.spec_len() <= graph.spec_len(),
                 traversal.order.spec_index(0) == source,
                 forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
                     ==> traversal.order.spec_index(i) < graph.spec_len(),
@@ -465,132 +468,6 @@ pub mod BFSMtEph {
         (all_verts, all_updates)
     }
 
-    #[verifier::exec_allows_no_decreases_clause]
-    pub fn bfs(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> (traversal: ArraySeqMtEphS<N>)
-        requires
-            source < graph.spec_len(),
-            graph.spec_len() > 0,
-            graph.spec_len() < usize::MAX,
-            spec_wf_graph(graph),
-        ensures
-            traversal.spec_len() == graph.spec_len(),
-            traversal.spec_index(source as int) == 0usize,
-            spec_distances_bounded(&traversal, graph.spec_len() as int),
-    {
-        broadcast use vstd::std_specs::vecdeque::group_vec_dequeue_axioms;
-
-        let n = graph.length();
-
-        let mut distances = ArraySeqMtEphS::tabulate(
-            &|_idx: usize| -> (r: N) ensures r == UNREACHABLE { UNREACHABLE },
-            n,
-        );
-
-        proof { lemma_tabulate_all_unreachable(&distances, n as int); }
-
-        let ghost pre_set = *&distances;
-        let _ = distances.set(source, 0);
-
-        proof { lemma_set_preserves_bounded(&distances, &pre_set, source as int, 0, n as int); }
-
-        let mut current_layer: Vec<N> = Vec::new();
-        current_layer.push(source);
-        let mut current_dist: N = 0;
-
-        while current_layer.len() > 0
-            invariant
-                n as int == graph.spec_len(),
-                distances.spec_len() == n as int,
-                source < n,
-                n > 0,
-                n < usize::MAX,
-                spec_wf_graph(graph),
-                distances.spec_index(source as int) == 0usize,
-                spec_distances_bounded(&distances, n as int),
-                forall|j: int| #![auto] 0 <= j < current_layer@.len() ==>
-                    current_layer@[j] < n,
-                current_dist < n,
-        {
-            if current_dist + 1 < n {
-                let graph_owned = copy_graph(graph);
-                let distances_snapshot = copy_distances(&distances);
-
-                proof {
-                    lemma_copy_preserves_wf(graph, &graph_owned);
-                    lemma_copy_preserves_bounded(&distances, &distances_snapshot, n as int);
-                }
-
-                let (next_vertices, distance_updates) =
-                    process_frontier_parallel(
-                        graph_owned, distances_snapshot, current_layer, current_dist + 1
-                    );
-
-                proof {
-                    assert forall|j: int| #![auto] 0 <= j < distance_updates@.len()
-                    implies
-                        distances.spec_index(distance_updates@[j].0 as int) == UNREACHABLE
-                        && distance_updates@[j].0 < n
-                        && distance_updates@[j].1 == current_dist + 1
-                    by {}
-                }
-
-                proof {
-                    assert forall|j: int| #![auto] 0 <= j < distance_updates@.len()
-                    implies distance_updates@[j].0 != source
-                    by {
-                        assert(distances.spec_index(distance_updates@[j].0 as int) == UNREACHABLE);
-                        assert(distances.spec_index(source as int) == 0usize);
-                    }
-                }
-
-                // Apply distance updates sequentially via set().
-                let mut k: usize = 0;
-                while k < distance_updates.len()
-                    invariant
-                        0 <= k <= distance_updates@.len(),
-                        distances.spec_len() == n as int,
-                        n as int == graph.spec_len(),
-                        source < n,
-                        n > 0,
-                        n < usize::MAX,
-                        spec_wf_graph(graph),
-                        distances.spec_index(source as int) == 0usize,
-                        spec_distances_bounded(&distances, n as int),
-                        current_dist + 1 < n,
-                        forall|j: int| #![auto] 0 <= j < distance_updates@.len() ==>
-                            distance_updates@[j].0 < graph.spec_len()
-                            && distance_updates@[j].1 == current_dist + 1
-                            && distance_updates@[j].0 != source,
-                    decreases distance_updates@.len() - k
-                {
-                    let pair = &distance_updates[k];
-                    let v = pair.0;
-                    let d = pair.1;
-
-                    let ghost pre_inner_set = *&distances;
-                    let _ = distances.set(v, d);
-
-                    proof {
-                        lemma_set_preserves_bounded(
-                            &distances, &pre_inner_set,
-                            v as int, d as N, n as int,
-                        );
-                        assert(distances.spec_index(source as int) == pre_inner_set.spec_index(source as int));
-                    }
-
-                    k = k + 1;
-                }
-
-                current_layer = next_vertices;
-                current_dist = current_dist + 1;
-            } else {
-                current_layer = Vec::new();
-            }
-        }
-
-        distances
-    }
-
     // Parallel frontier processing for BFS tree: collects (neighbor, parent) pairs.
     fn process_frontier_tree_parallel(
         graph: ArraySeqMtEphS<ArraySeqMtEphS<N>>,
@@ -722,22 +599,128 @@ pub mod BFSMtEph {
         all_updates
     }
 
+    impl BFSMtEphTrait for BFSMtEph {
+
+    #[verifier::exec_allows_no_decreases_clause]
+    fn bfs(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> (traversal: ArraySeqMtEphS<N>)
+    {
+        broadcast use vstd::std_specs::vecdeque::group_vec_dequeue_axioms;
+
+        let n = graph.length();
+
+        let mut distances = ArraySeqMtEphS::tabulate(
+            &|_idx: usize| -> (r: N) ensures r == UNREACHABLE { UNREACHABLE },
+            n,
+        );
+
+        proof { lemma_tabulate_all_unreachable(&distances, n as int); }
+
+        let ghost pre_set = *&distances;
+        let _ = distances.set(source, 0);
+
+        proof { lemma_set_preserves_bounded(&distances, &pre_set, source as int, 0, n as int); }
+
+        let mut current_layer: Vec<N> = Vec::new();
+        current_layer.push(source);
+        let mut current_dist: N = 0;
+
+        while current_layer.len() > 0
+            invariant
+                n as int == graph.spec_len(),
+                distances.spec_len() == n as int,
+                source < n,
+                n > 0,
+                n < usize::MAX,
+                spec_wf_graph(graph),
+                distances.spec_index(source as int) == 0usize,
+                spec_distances_bounded(&distances, n as int),
+                forall|j: int| #![auto] 0 <= j < current_layer@.len() ==>
+                    current_layer@[j] < n,
+                current_dist < n,
+        {
+            if current_dist + 1 < n {
+                let graph_owned = copy_graph(graph);
+                let distances_snapshot = copy_distances(&distances);
+
+                proof {
+                    lemma_copy_preserves_wf(graph, &graph_owned);
+                    lemma_copy_preserves_bounded(&distances, &distances_snapshot, n as int);
+                }
+
+                let (next_vertices, distance_updates) =
+                    process_frontier_parallel(
+                        graph_owned, distances_snapshot, current_layer, current_dist + 1
+                    );
+
+                proof {
+                    assert forall|j: int| #![auto] 0 <= j < distance_updates@.len()
+                    implies
+                        distances.spec_index(distance_updates@[j].0 as int) == UNREACHABLE
+                        && distance_updates@[j].0 < n
+                        && distance_updates@[j].1 == current_dist + 1
+                    by {}
+                }
+
+                proof {
+                    assert forall|j: int| #![auto] 0 <= j < distance_updates@.len()
+                    implies distance_updates@[j].0 != source
+                    by {
+                        assert(distances.spec_index(distance_updates@[j].0 as int) == UNREACHABLE);
+                        assert(distances.spec_index(source as int) == 0usize);
+                    }
+                }
+
+                // Apply distance updates sequentially via set().
+                let mut k: usize = 0;
+                while k < distance_updates.len()
+                    invariant
+                        0 <= k <= distance_updates@.len(),
+                        distances.spec_len() == n as int,
+                        n as int == graph.spec_len(),
+                        source < n,
+                        n > 0,
+                        n < usize::MAX,
+                        spec_wf_graph(graph),
+                        distances.spec_index(source as int) == 0usize,
+                        spec_distances_bounded(&distances, n as int),
+                        current_dist + 1 < n,
+                        forall|j: int| #![auto] 0 <= j < distance_updates@.len() ==>
+                            distance_updates@[j].0 < graph.spec_len()
+                            && distance_updates@[j].1 == current_dist + 1
+                            && distance_updates@[j].0 != source,
+                    decreases distance_updates@.len() - k
+                {
+                    let pair = &distance_updates[k];
+                    let v = pair.0;
+                    let d = pair.1;
+
+                    let ghost pre_inner_set = *&distances;
+                    let _ = distances.set(v, d);
+
+                    proof {
+                        lemma_set_preserves_bounded(
+                            &distances, &pre_inner_set,
+                            v as int, d as N, n as int,
+                        );
+                        assert(distances.spec_index(source as int) == pre_inner_set.spec_index(source as int));
+                    }
+
+                    k = k + 1;
+                }
+
+                current_layer = next_vertices;
+                current_dist = current_dist + 1;
+            } else {
+                current_layer = Vec::new();
+            }
+        }
+
+        distances
+    }
+
     /// Algorithm 54.6: BFS Tree with parallel frontier processing.
     #[verifier::exec_allows_no_decreases_clause]
-    pub fn bfs_tree(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> (traversal: BFSTreeS)
-        requires
-            source < graph.spec_len(),
-            graph.spec_len() > 0,
-            graph.spec_len() < usize::MAX,
-            spec_wf_graph(graph),
-        ensures
-            traversal.parents.spec_len() == graph.spec_len(),
-            traversal.parents.spec_index(source as int) == source,
-            traversal.order.spec_len() > 0,
-            traversal.order.spec_index(0) == source,
-            forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
-                ==> traversal.order.spec_index(i) < graph.spec_len(),
-            spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
+    fn bfs_tree(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> (traversal: BFSTreeS)
     {
         let n = graph.length();
 
@@ -772,8 +755,11 @@ pub mod BFSMtEph {
                 forall|j: int| #![auto] 0 <= j < current_layer@.len() ==>
                     current_layer@[j] < n,
                 order@.len() > 0,
+                order@.len() <= n as int,
                 order@[0] == source,
                 forall|j: int| #![auto] 0 <= j < order@.len() ==> order@[j] < n,
+                forall|j: int| #![auto] 0 <= j < order@.len() ==>
+                    parents.spec_index(order@[j] as int) != NO_PARENT,
         {
             let graph_owned = copy_graph(graph);
             let parents_snapshot = copy_distances(&parents);
@@ -816,15 +802,18 @@ pub mod BFSMtEph {
                     forall|j: int| #![auto] 0 <= j < next_layer@.len() ==>
                         next_layer@[j] < n,
                     order@.len() > 0,
+                    order@.len() <= n as int,
                     order@[0] == source,
                     forall|j: int| #![auto] 0 <= j < order@.len() ==> order@[j] < n,
+                    forall|j: int| #![auto] 0 <= j < order@.len() ==>
+                        parents.spec_index(order@[j] as int) != NO_PARENT,
                 decreases tree_updates@.len() - k
             {
                 let pair = &tree_updates[k];
                 let v = pair.0;
                 let u = pair.1;
 
-                if *parents.nth(v) == NO_PARENT {
+                if *parents.nth(v) == NO_PARENT && order.len() < n {
                     let ghost pre_inner = *&parents;
                     let _ = parents.set(v, u);
                     next_layer.push(v);
@@ -854,6 +843,8 @@ pub mod BFSMtEph {
         let order_seq = ArraySeqMtEphS::from_vec(order);
         BFSTreeS { parents, order: order_seq }
     }
+
+    } // impl BFSMtEphTrait
 
     impl BFSTreeMtEphTrait for BFSTreeS {
         open spec fn spec_order(&self) -> ArraySeqMtEphS<N> {

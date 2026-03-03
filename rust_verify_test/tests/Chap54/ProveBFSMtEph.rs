@@ -22,7 +22,7 @@ test_verify_one_file! {
                 graph.spec_len() < usize::MAX,
                 spec_wf_graph(graph),
         {
-            let tree = bfs_tree(graph, source);
+            let tree = BFSMtEph::bfs_tree(graph, source);
             let td = tree.top_down_order();
 
             let mut it: ArraySeqMtEphIter<usize> = td.iter();
@@ -65,7 +65,7 @@ test_verify_one_file! {
                 graph.spec_len() < usize::MAX,
                 spec_wf_graph(graph),
         {
-            let tree = bfs_tree(graph, source);
+            let tree = BFSMtEph::bfs_tree(graph, source);
             let _n = tree.order.length();
             let bu = tree.bottom_up_order();
 

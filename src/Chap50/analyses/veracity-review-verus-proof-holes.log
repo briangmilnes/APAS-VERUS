@@ -204,12 +204,12 @@ Errors: 2 total (2 assume in eq/clone (Verus workaround))
 Info: 9 total
    MatrixChainMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    MatrixChainMtEph.rs:84: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   OptBinSearchTreeMtPer.rs:45: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    OptBinSearchTreeMtEph.rs:43: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    OptBinSearchTreeMtEph.rs:56: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   MatrixChainStPer.rs:339: info: accept() - accept hole
    MatrixChainMtPer.rs:79: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    MatrixChainMtPer.rs:350: info: accept() - accept hole
    MatrixChainStEph.rs:370: info: accept() - accept hole
-   OptBinSearchTreeMtPer.rs:45: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-Eph.rs:370: info: accept() - accept hole
-   OptBinSearchTreeMtPer.rs:45: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MatrixChainStPer.rs:339: info: accept() - accept hole
+:370: info: accept() - accept hole
+   MatrixChainStPer.rs:339: info: accept() - accept hole
