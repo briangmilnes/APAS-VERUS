@@ -58,7 +58,7 @@ pub mod ParaHashTableStEph {
         fn lookup(&self, key: &Key) -> (found: Option<Value>);
         /// - APAS: N/A — inner table interface, cost depends on implementation.
         /// - Claude-Opus-4.6: N/A — abstract trait method.
-        fn delete(&mut self, key: &Key) -> (deleted: B);
+        fn delete(&mut self, key: &Key) -> (deleted: bool);
     }
 
     /// Trait for parametric nested hash tables.
@@ -67,7 +67,6 @@ pub mod ParaHashTableStEph {
         /// Takes a hash function that maps (&Key, table_size) to a bucket index.
         /// - APAS: Work O(m), Span O(m) where m is initial size.
         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
-        #[verifier::external_body]
         fn createTable(hash_fn: H, initial_size: usize) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
             ensures
                 table.initial_size == initial_size,
@@ -75,7 +74,17 @@ pub mod ParaHashTableStEph {
                 table.num_elements == 0,
                 table.table@.len() == initial_size as int,
         {
-            let table_vec = (0..initial_size).map(|_| Entry::new()).collect();
+            let mut table_vec: Vec<Entry> = Vec::new();
+            let mut i: usize = 0;
+            while i < initial_size
+                invariant
+                    i <= initial_size,
+                    table_vec@.len() == i as int,
+                decreases initial_size - i,
+            {
+                table_vec.push(Entry::new());
+                i += 1;
+            }
             HashTable {
                 table: table_vec,
                 hash_fn,
@@ -93,7 +102,9 @@ pub mod ParaHashTableStEph {
         fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
             requires
                 old(table).current_size > 0,
-                old(table).table@.len() == old(table).current_size as int;
+                old(table).table@.len() == old(table).current_size as int,
+            ensures
+                table.table@.len() == table.current_size as int;
 
         /// Looks up a key in the hash table, returning its value if found.
         /// - APAS: Work O(1) expected, Span O(1).
@@ -106,15 +117,19 @@ pub mod ParaHashTableStEph {
         /// Deletes a key from the hash table if it exists.
         /// - APAS: Work O(1) expected, Span O(1).
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
-        fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> B
+        fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
             requires
                 old(table).current_size > 0,
-                old(table).table@.len() == old(table).current_size as int;
+                old(table).table@.len() == old(table).current_size as int,
+            ensures
+                table.table@.len() == table.current_size as int;
 
         /// Accessor for metrics field.
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
-        fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics) { &table.metrics }
+        fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
+            ensures m == &table.metrics,
+        { &table.metrics }
 
         /// Returns the load (number of entries) and size (table capacity).
         /// Load factor α = load/size = num_elements/size

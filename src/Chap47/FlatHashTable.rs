@@ -128,7 +128,7 @@ pub mod FlatHashTable {
 
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — single match + enum assignment.
-        fn delete(&mut self, key: &Key) -> (deleted: B)
+        fn delete(&mut self, key: &Key) -> (deleted: bool)
             ensures
                 deleted ==> *self is Deleted,
                 !deleted ==> *self == *old(self),

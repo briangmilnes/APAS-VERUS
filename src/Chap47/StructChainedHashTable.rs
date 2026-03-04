@@ -157,7 +157,7 @@ pub mod StructChainedHashTable {
         fn chain_delete<Key: PartialEq, Value>(
             chain: Option<Box<Node<Key, Value>>>,
             key: &Key,
-        ) -> (remaining_and_deleted: (Option<Box<Node<Key, Value>>>, B))
+        ) -> (remaining_and_deleted: (Option<Box<Node<Key, Value>>>, bool))
             ensures
                 !remaining_and_deleted.1
                     ==> spec_chain_to_map(remaining_and_deleted.0) == spec_chain_to_map(chain),
@@ -202,7 +202,7 @@ pub mod StructChainedHashTable {
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(n), Span O(n) — recursive scan + rebuild, n = chain length.
-            fn delete(&mut self, key: &Key) -> (deleted: B)
+            fn delete(&mut self, key: &Key) -> (deleted: bool)
                 ensures
                     !deleted ==> spec_chain_to_map(self.head) == spec_chain_to_map(old(self).head),
             {
@@ -235,7 +235,7 @@ pub mod StructChainedHashTable {
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — delegates to delete_chained.
             #[verifier::external_body]
-            fn delete(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> B {
+            fn delete(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
                 Self::delete_chained(table, key)
             }
 

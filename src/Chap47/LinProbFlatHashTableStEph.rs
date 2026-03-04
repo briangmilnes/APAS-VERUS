@@ -72,7 +72,7 @@ pub mod LinProbFlatHashTableStEph {
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe until found or empty, then tombstone.
         #[verifier::external_body]
-        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> B {
+        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
             let mut attempt = 0;
             while attempt < table.current_size {
                 let slot = Self::probe(table, key, attempt);

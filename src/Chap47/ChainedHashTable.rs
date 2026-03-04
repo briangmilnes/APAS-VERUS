@@ -66,6 +66,8 @@ pub mod ChainedHashTable {
                 requires
                     old(table).current_size > 0,
                     old(table).table@.len() == old(table).current_size as int,
+                ensures
+                    table.table@.len() == table.current_size as int,
             {
                 let index = Self::hash_index(table, &key);
                 if index < table.table.len() {
@@ -97,10 +99,12 @@ pub mod ChainedHashTable {
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — agrees with APAS; hashes then linear scan of chain.
             #[verifier::external_body]
-            fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> B
+            fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
                 requires
                     old(table).current_size > 0,
                     old(table).table@.len() == old(table).current_size as int,
+                ensures
+                    table.table@.len() == table.current_size as int,
             {
                 let index = Self::hash_index(table, key);
                 if index < table.table.len() {

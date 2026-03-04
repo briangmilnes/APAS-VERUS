@@ -75,7 +75,7 @@ pub mod QuadProbFlatHashTableStEph {
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe until found or empty, then tombstone.
         #[verifier::external_body]
-        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> B {
+        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
             let mut attempt = 0;
             let max_attempts = table.current_size.div_ceil(2);
             while attempt < max_attempts {
