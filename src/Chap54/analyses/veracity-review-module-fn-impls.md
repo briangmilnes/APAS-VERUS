@@ -44,10 +44,10 @@
 | 9 | `lemma_copy_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 235&#8209;246 |
 | 10 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 261&#8209;266 |
 | 11 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 269&#8209;275 |
-| 12 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 279&#8209;289 |
-| 13 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 293&#8209;308 |
-| 14 | `process_frontier_parallel` |  |  |  | Y | Y |  |  | unknown | 314&#8209;336 |
-| 15 | `process_frontier_tree_parallel` |  |  |  | Y | Y |  |  | unknown | 472&#8209;490 |
+| 12 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 281&#8209;294 |
+| 13 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 298&#8209;316 |
+| 14 | `process_frontier_parallel` |  |  |  | Y | Y |  |  | unknown | 322&#8209;344 |
+| 15 | `process_frontier_tree_parallel` |  |  |  | Y | Y |  |  | unknown | 480&#8209;498 |
 
 ### Chap54/BFSMtPer.rs
 
@@ -64,10 +64,10 @@
 | 24 | `lemma_copy_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 237&#8209;248 |
 | 25 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 263&#8209;268 |
 | 26 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 271&#8209;277 |
-| 27 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 281&#8209;291 |
-| 28 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 295&#8209;310 |
-| 29 | `process_frontier_parallel` |  |  |  | Y | Y |  |  | unknown | 317&#8209;339 |
-| 30 | `process_frontier_tree_parallel` |  |  |  | Y | Y |  |  | unknown | 484&#8209;502 |
+| 27 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 283&#8209;296 |
+| 28 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 300&#8209;318 |
+| 29 | `process_frontier_parallel` |  |  |  | Y | Y |  |  | unknown | 325&#8209;347 |
+| 30 | `process_frontier_tree_parallel` |  |  |  | Y | Y |  |  | unknown | 492&#8209;510 |
 
 ### Chap54/BFSStEph.rs
 
@@ -77,10 +77,10 @@
 | 32 | `lemma_set_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 67&#8209;84 |
 | 33 | `lemma_tabulate_all_unreachable` |  |  |  | Y | Y |  |  | unknown | 98&#8209;104 |
 | 34 | `lemma_set_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 109&#8209;126 |
-| 35 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 143&#8209;153 |
-| 36 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 157&#8209;172 |
-| 37 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 178&#8209;182 |
-| 38 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 184&#8209;189 |
+| 35 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 144&#8209;157 |
+| 36 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 161&#8209;179 |
+| 37 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 185&#8209;189 |
+| 38 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 191&#8209;196 |
 
 ### Chap54/BFSStPer.rs
 
@@ -90,10 +90,10 @@
 | 40 | `lemma_update_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 67&#8209;84 |
 | 41 | `lemma_tabulate_all_unreachable` |  |  |  | Y | Y |  |  | unknown | 98&#8209;104 |
 | 42 | `lemma_update_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 108&#8209;125 |
-| 43 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 142&#8209;152 |
-| 44 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 156&#8209;171 |
-| 45 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 177&#8209;181 |
-| 46 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 183&#8209;188 |
+| 43 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 143&#8209;156 |
+| 44 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 160&#8209;178 |
+| 45 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 184&#8209;188 |
+| 46 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 190&#8209;195 |
 
 
 ### Legend

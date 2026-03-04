@@ -137,11 +137,12 @@ Holes Found: 37 total
 Errors: 1 total (1 assume in eq/clone (Verus workaround))
 
 Info: 5 total
+   ChainedHashTable.rs:67: info: accept() - accept hole
    StructChainedHashTable.rs:230: info: accept() - accept hole
    StructChainedHashTable.rs:247: info: accept() - accept hole
    StructChainedHashTable.rs:264: info: accept() - accept hole
    StructChainedHashTable.rs:278: info: accept() - accept hole
-   ChainedHashTable.rs:67: info: accept() - accept hole
-le
+
+   StructChainedHashTable.rs:247: info: accept() - accept hole
+   StructChainedHashTable.rs:264: info: accept() - accept hole
    StructChainedHashTable.rs:278: info: accept() - accept hole
-   ChainedHashTable.rs:67: info: accept() - accept hole

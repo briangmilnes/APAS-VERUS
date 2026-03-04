@@ -1,6 +1,6 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Breadth-First Search - Sequential Ephemeral (Chapter 54, Algorithms 54.3 and 54.6).
-//! Queue-based BFS for distances (54.3) and shortest-path tree (54.6).
+//! Breadth-First Search - Sequential Ephemeral (Chapter 54, Algorithms 54.5 and 54.6).
+//! Queue-based BFS for distances (54.5) and shortest-path tree (54.6).
 //! Work: O(|V| + |E|), Span: O(|V| + |E|).
 
 pub mod BFSStEph {
@@ -36,7 +36,7 @@ pub mod BFSStEph {
     // 6. spec fns
 
     /// All neighbor indices in the adjacency list are valid vertex indices.
-    pub open spec fn spec_wf_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> bool {
+    pub open spec fn spec_bfssteph_wf(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> bool {
         forall|u: int, i: int| #![auto]
             0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len()
             ==> graph.spec_index(u).spec_index(i) < graph.spec_len()
@@ -139,17 +139,21 @@ pub mod BFSStEph {
 
     // 8. traits
     pub trait BFSStEphTrait {
+        /// Algorithm 54.5: BFSDistance. Returns distance from source for every vertex.
         /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         fn bfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (traversal: ArraySeqStEphS<N>)
             requires
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
                 graph.spec_len() < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfssteph_wf(graph),
             ensures
                 traversal.spec_len() == graph.spec_len(),
                 traversal.spec_index(source as int) == 0usize,
                 spec_distances_bounded(&traversal, graph.spec_len() as int),
+                forall|v: int| #![auto] 0 <= v < traversal.spec_len()
+                    && traversal.spec_index(v) != UNREACHABLE && v != source as int
+                    ==> traversal.spec_index(v) > 0usize,
         ;
 
         /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
@@ -159,7 +163,7 @@ pub mod BFSStEph {
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
                 graph.spec_len() < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfssteph_wf(graph),
             ensures
                 traversal.parents.spec_len() == graph.spec_len(),
                 traversal.parents.spec_index(source as int) == source,
@@ -169,6 +173,9 @@ pub mod BFSStEph {
                 forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
                     ==> traversal.order.spec_index(i) < graph.spec_len(),
                 spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
+                forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
+                    ==> traversal.parents.spec_index(
+                        traversal.order.spec_index(i) as int) != NO_PARENT,
         ;
     }
 
@@ -213,7 +220,15 @@ pub mod BFSStEph {
         let _ = distances.set(source, 0);
 
         // After setting source to 0: 0 < n, so still bounded.
-        proof { lemma_set_preserves_bounded(&distances, &pre_set, source as int, 0, n as int); }
+        proof {
+            lemma_set_preserves_bounded(&distances, &pre_set, source as int, 0, n as int);
+            assert forall|v: int| 0 <= v < distances.spec_len()
+                && distances.spec_index(v) != UNREACHABLE && v != source as int
+            implies distances.spec_index(v) > 0usize
+            by {
+                assert(distances.spec_index(v) == pre_set.spec_index(v));
+            }
+        }
 
         let mut queue: VecDeque<N> = VecDeque::new();
         queue.push_back(source);
@@ -225,13 +240,16 @@ pub mod BFSStEph {
                 source < n,
                 n > 0,
                 n < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfssteph_wf(graph),
                 distances.spec_index(source as int) == 0usize,
                 forall|j: int| #![auto] 0 <= j < queue@.len() ==>
                     queue@[j] < n,
                 forall|j: int| #![auto] 0 <= j < queue@.len() ==>
                     distances.spec_index(queue@[j] as int) != UNREACHABLE,
                 spec_distances_bounded(&distances, n as int),
+                forall|v: int| #![auto] 0 <= v < distances.spec_len()
+                    && distances.spec_index(v) != UNREACHABLE && v != source as int
+                    ==> distances.spec_index(v) > 0usize,
         {
             let u_opt = queue.pop_front();
             match u_opt {
@@ -251,7 +269,7 @@ pub mod BFSStEph {
                             source < n,
                             n > 0,
                             n < usize::MAX,
-                            spec_wf_graph(graph),
+                            spec_bfssteph_wf(graph),
                             distances.spec_index(source as int) == 0usize,
                             u < n,
                             dist < n,
@@ -261,6 +279,9 @@ pub mod BFSStEph {
                             forall|j: int| #![auto] 0 <= j < queue@.len() ==>
                                 distances.spec_index(queue@[j] as int) != UNREACHABLE,
                             spec_distances_bounded(&distances, n as int),
+                            forall|w: int| #![auto] 0 <= w < distances.spec_len()
+                                && distances.spec_index(w) != UNREACHABLE && w != source as int
+                                ==> distances.spec_index(w) > 0usize,
                         decreases num_neighbors - i
                     {
                         let v = *neighbors.nth(i);
@@ -276,6 +297,18 @@ pub mod BFSStEph {
                                         &distances, &pre_inner_set,
                                         v as int, (dist + 1) as N, n as int,
                                     );
+                                    assert forall|w: int| 0 <= w < distances.spec_len()
+                                        && distances.spec_index(w) != UNREACHABLE
+                                        && w != source as int
+                                    implies distances.spec_index(w) > 0usize
+                                    by {
+                                        if w == v as int {
+                                            assert(distances.spec_index(w) == dist + 1);
+                                        } else {
+                                            assert(distances.spec_index(w)
+                                                == pre_inner_set.spec_index(w));
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -321,7 +354,7 @@ pub mod BFSStEph {
                 source < n,
                 n > 0,
                 n < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfssteph_wf(graph),
                 parents.spec_index(source as int) == source,
                 forall|j: int| #![auto] 0 <= j < queue@.len() ==> queue@[j] < n,
                 forall|j: int| #![auto] 0 <= j < queue@.len() ==>
@@ -351,7 +384,7 @@ pub mod BFSStEph {
                             source < n,
                             n > 0,
                             n < usize::MAX,
-                            spec_wf_graph(graph),
+                            spec_bfssteph_wf(graph),
                             parents.spec_index(source as int) == source,
                             u < n,
                             *neighbors == graph.spec_index(u as int),

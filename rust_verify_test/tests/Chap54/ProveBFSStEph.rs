@@ -20,7 +20,7 @@ test_verify_one_file! {
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
                 graph.spec_len() < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfssteph_wf(graph),
         {
             let tree = BFSStEph::bfs_tree(graph, source);
             let td = tree.top_down_order();
@@ -63,7 +63,7 @@ test_verify_one_file! {
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
                 graph.spec_len() < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfssteph_wf(graph),
         {
             let tree = BFSStEph::bfs_tree(graph, source);
             let _n = tree.order.length();

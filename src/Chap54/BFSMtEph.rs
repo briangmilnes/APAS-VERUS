@@ -1,7 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Breadth-First Search - Parallel Ephemeral (Chapter 54, Algorithms 54.3 and 54.6).
+//! Breadth-First Search - Parallel Ephemeral (Chapter 54, Algorithms 54.5 and 54.6).
 //! Layer-by-layer parallel BFS using HF Scheduler join() for fork-join frontier processing.
-//! Algorithm 54.3: distances. Algorithm 54.6: shortest-path tree + BFS-order iteration.
+//! Algorithm 54.5: distances. Algorithm 54.6: shortest-path tree + BFS-order iteration.
 //! Work: O(|V| + |E|), Span: O(d·lg n) where d is diameter.
 
 pub mod BFSMtEph {
@@ -35,7 +35,7 @@ pub mod BFSMtEph {
 
     // 6. spec fns
 
-    pub open spec fn spec_wf_graph(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>) -> bool {
+    pub open spec fn spec_bfsmteph_wf(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>) -> bool {
         forall|u: int, i: int| #![auto]
             0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len()
             ==> graph.spec_index(u).spec_index(i) < graph.spec_len()
@@ -212,7 +212,7 @@ pub mod BFSMtEph {
         copy: &ArraySeqMtEphS<ArraySeqMtEphS<N>>,
     )
         requires
-            spec_wf_graph(original),
+            spec_bfsmteph_wf(original),
             copy.spec_len() == original.spec_len(),
             forall|u: int| #![auto] 0 <= u < original.spec_len() ==>
                 copy.spec_index(u).spec_len() == original.spec_index(u).spec_len(),
@@ -220,7 +220,7 @@ pub mod BFSMtEph {
                 0 <= u < original.spec_len() && 0 <= i < original.spec_index(u).spec_len() ==>
                 copy.spec_index(u).spec_index(i) == original.spec_index(u).spec_index(i),
         ensures
-            spec_wf_graph(copy),
+            spec_bfsmteph_wf(copy),
     {
         assert forall|u: int, i: int|
             0 <= u < copy.spec_len() && 0 <= i < copy.spec_index(u).spec_len()
@@ -276,16 +276,21 @@ pub mod BFSMtEph {
     }
 
     pub trait BFSMtEphTrait {
+        /// Algorithm 54.5: BFSDistance. Returns distance from source for every vertex.
+        /// - APAS: Work O(|V| + |E|), Span O(d·lg n)
         fn bfs(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> (traversal: ArraySeqMtEphS<N>)
             requires
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
                 graph.spec_len() < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfsmteph_wf(graph),
             ensures
                 traversal.spec_len() == graph.spec_len(),
                 traversal.spec_index(source as int) == 0usize,
                 spec_distances_bounded(&traversal, graph.spec_len() as int),
+                forall|v: int| #![auto] 0 <= v < traversal.spec_len()
+                    && traversal.spec_index(v) != UNREACHABLE && v != source as int
+                    ==> traversal.spec_index(v) > 0usize,
         ;
 
         /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
@@ -295,7 +300,7 @@ pub mod BFSMtEph {
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
                 graph.spec_len() < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfsmteph_wf(graph),
             ensures
                 traversal.parents.spec_len() == graph.spec_len(),
                 traversal.parents.spec_index(source as int) == source,
@@ -305,6 +310,9 @@ pub mod BFSMtEph {
                 forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
                     ==> traversal.order.spec_index(i) < graph.spec_len(),
                 spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
+                forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
+                    ==> traversal.parents.spec_index(
+                        traversal.order.spec_index(i) as int) != NO_PARENT,
         ;
     }
 
@@ -320,7 +328,7 @@ pub mod BFSMtEph {
         requires
             graph.spec_len() > 0,
             graph.spec_len() < usize::MAX,
-            spec_wf_graph(&graph),
+            spec_bfsmteph_wf(&graph),
             distances.spec_len() == graph.spec_len(),
             spec_distances_bounded(&distances, graph.spec_len() as int),
             next_dist < graph.spec_len(),
@@ -355,7 +363,7 @@ pub mod BFSMtEph {
                     num_neighbors == neighbors.spec_len(),
                     n == graph.spec_len(),
                     u < n,
-                    spec_wf_graph(&graph),
+                    spec_bfsmteph_wf(&graph),
                     *neighbors == graph.spec_index(u as int),
                     next_dist < n,
                     distances.spec_len() == n,
@@ -477,7 +485,7 @@ pub mod BFSMtEph {
         requires
             graph.spec_len() > 0,
             graph.spec_len() < usize::MAX,
-            spec_wf_graph(&graph),
+            spec_bfsmteph_wf(&graph),
             parents.spec_len() == graph.spec_len(),
             spec_parents_bounded(&parents, graph.spec_len() as int),
             forall|j: int| #![auto] 0 <= j < frontier@.len() ==>
@@ -508,7 +516,7 @@ pub mod BFSMtEph {
                     num_neighbors == neighbors.spec_len(),
                     n == graph.spec_len(),
                     u < n,
-                    spec_wf_graph(&graph),
+                    spec_bfsmteph_wf(&graph),
                     *neighbors == graph.spec_index(u as int),
                     parents.spec_len() == n,
                     spec_parents_bounded(&parents, n as int),
@@ -618,7 +626,15 @@ pub mod BFSMtEph {
         let ghost pre_set = *&distances;
         let _ = distances.set(source, 0);
 
-        proof { lemma_set_preserves_bounded(&distances, &pre_set, source as int, 0, n as int); }
+        proof {
+            lemma_set_preserves_bounded(&distances, &pre_set, source as int, 0, n as int);
+            assert forall|v: int| 0 <= v < distances.spec_len()
+                && distances.spec_index(v) != UNREACHABLE && v != source as int
+            implies distances.spec_index(v) > 0usize
+            by {
+                assert(distances.spec_index(v) == pre_set.spec_index(v));
+            }
+        }
 
         let mut current_layer: Vec<N> = Vec::new();
         current_layer.push(source);
@@ -631,9 +647,12 @@ pub mod BFSMtEph {
                 source < n,
                 n > 0,
                 n < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfsmteph_wf(graph),
                 distances.spec_index(source as int) == 0usize,
                 spec_distances_bounded(&distances, n as int),
+                forall|v: int| #![auto] 0 <= v < distances.spec_len()
+                    && distances.spec_index(v) != UNREACHABLE && v != source as int
+                    ==> distances.spec_index(v) > 0usize,
                 forall|j: int| #![auto] 0 <= j < current_layer@.len() ==>
                     current_layer@[j] < n,
                 current_dist < n,
@@ -680,9 +699,12 @@ pub mod BFSMtEph {
                         source < n,
                         n > 0,
                         n < usize::MAX,
-                        spec_wf_graph(graph),
+                        spec_bfsmteph_wf(graph),
                         distances.spec_index(source as int) == 0usize,
                         spec_distances_bounded(&distances, n as int),
+                        forall|v: int| #![auto] 0 <= v < distances.spec_len()
+                            && distances.spec_index(v) != UNREACHABLE && v != source as int
+                            ==> distances.spec_index(v) > 0usize,
                         current_dist + 1 < n,
                         forall|j: int| #![auto] 0 <= j < distance_updates@.len() ==>
                             distance_updates@[j].0 < graph.spec_len()
@@ -703,6 +725,18 @@ pub mod BFSMtEph {
                             v as int, d as N, n as int,
                         );
                         assert(distances.spec_index(source as int) == pre_inner_set.spec_index(source as int));
+                        assert forall|w: int| 0 <= w < distances.spec_len()
+                            && distances.spec_index(w) != UNREACHABLE
+                            && w != source as int
+                        implies distances.spec_index(w) > 0usize
+                        by {
+                            if w == v as int {
+                                assert(distances.spec_index(w) == d);
+                            } else {
+                                assert(distances.spec_index(w)
+                                    == pre_inner_set.spec_index(w));
+                            }
+                        }
                     }
 
                     k = k + 1;
@@ -749,7 +783,7 @@ pub mod BFSMtEph {
                 source < n,
                 n > 0,
                 n < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfsmteph_wf(graph),
                 parents.spec_index(source as int) == source,
                 spec_parents_bounded(&parents, n as int),
                 forall|j: int| #![auto] 0 <= j < current_layer@.len() ==>
@@ -794,7 +828,7 @@ pub mod BFSMtEph {
                     source < n,
                     n > 0,
                     n < usize::MAX,
-                    spec_wf_graph(graph),
+                    spec_bfsmteph_wf(graph),
                     parents.spec_index(source as int) == source,
                     spec_parents_bounded(&parents, n as int),
                     forall|j: int| #![auto] 0 <= j < tree_updates@.len() ==>

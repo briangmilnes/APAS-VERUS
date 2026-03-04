@@ -1,7 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Breadth-First Search - Parallel Persistent (Chapter 54, Algorithms 54.3 and 54.6).
+//! Breadth-First Search - Parallel Persistent (Chapter 54, Algorithms 54.5 and 54.6).
 //! Layer-by-layer parallel BFS using HF Scheduler join() for fork-join frontier processing.
-//! Algorithm 54.3: distances. Algorithm 54.6: shortest-path tree + BFS-order iteration.
+//! Algorithm 54.5: distances. Algorithm 54.6: shortest-path tree + BFS-order iteration.
 //! Work: O(|V| + |E|), Span: O(d·lg n) where d is diameter.
 
 pub mod BFSMtPer {
@@ -35,7 +35,7 @@ pub mod BFSMtPer {
 
     // 6. spec fns
 
-    pub open spec fn spec_wf_graph(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>) -> bool {
+    pub open spec fn spec_bfsmtper_wf(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>) -> bool {
         forall|u: int, i: int| #![auto]
             0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len()
             ==> graph.spec_index(u).spec_index(i) < graph.spec_len()
@@ -207,13 +207,13 @@ pub mod BFSMtPer {
         )
     }
 
-    // Proves that spec_wf_graph holds for a graph copy with matching spec values.
+    // Proves that spec_bfsmtper_wf holds for a graph copy with matching spec values.
     proof fn lemma_copy_preserves_wf(
         original: &ArraySeqMtPerS<ArraySeqMtPerS<N>>,
         copy: &ArraySeqMtPerS<ArraySeqMtPerS<N>>,
     )
         requires
-            spec_wf_graph(original),
+            spec_bfsmtper_wf(original),
             copy.spec_len() == original.spec_len(),
             forall|u: int| #![auto] 0 <= u < original.spec_len() ==>
                 copy.spec_index(u).spec_len() == original.spec_index(u).spec_len(),
@@ -221,7 +221,7 @@ pub mod BFSMtPer {
                 0 <= u < original.spec_len() && 0 <= i < original.spec_index(u).spec_len() ==>
                 copy.spec_index(u).spec_index(i) == original.spec_index(u).spec_index(i),
         ensures
-            spec_wf_graph(copy),
+            spec_bfsmtper_wf(copy),
     {
         assert forall|u: int, i: int|
             0 <= u < copy.spec_len() && 0 <= i < copy.spec_index(u).spec_len()
@@ -278,16 +278,21 @@ pub mod BFSMtPer {
     }
 
     pub trait BFSMtPerTrait {
+        /// Algorithm 54.5: BFSDistance. Returns distance from source for every vertex.
+        /// - APAS: Work O(|V| + |E|), Span O(d·lg n)
         fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (traversal: ArraySeqMtPerS<N>)
             requires
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
                 graph.spec_len() < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfsmtper_wf(graph),
             ensures
                 traversal.spec_len() == graph.spec_len(),
                 traversal.spec_index(source as int) == 0usize,
                 spec_distances_bounded(&traversal, graph.spec_len() as int),
+                forall|v: int| #![auto] 0 <= v < traversal.spec_len()
+                    && traversal.spec_index(v) != UNREACHABLE && v != source as int
+                    ==> traversal.spec_index(v) > 0usize,
         ;
 
         /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
@@ -297,7 +302,7 @@ pub mod BFSMtPer {
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
                 graph.spec_len() < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfsmtper_wf(graph),
             ensures
                 traversal.parents.spec_len() == graph.spec_len(),
                 traversal.parents.spec_index(source as int) == source,
@@ -307,6 +312,9 @@ pub mod BFSMtPer {
                 forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
                     ==> traversal.order.spec_index(i) < graph.spec_len(),
                 spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
+                forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
+                    ==> traversal.parents.spec_index(
+                        traversal.order.spec_index(i) as int) != NO_PARENT,
         ;
     }
 
@@ -323,7 +331,7 @@ pub mod BFSMtPer {
         requires
             graph.spec_len() > 0,
             graph.spec_len() < usize::MAX,
-            spec_wf_graph(&graph),
+            spec_bfsmtper_wf(&graph),
             distances.spec_len() == graph.spec_len(),
             spec_distances_bounded(&distances, graph.spec_len() as int),
             next_dist < graph.spec_len(),
@@ -358,7 +366,7 @@ pub mod BFSMtPer {
                     num_neighbors == neighbors.spec_len(),
                     n == graph.spec_len(),
                     u < n,
-                    spec_wf_graph(&graph),
+                    spec_bfsmtper_wf(&graph),
                     *neighbors == graph.spec_index(u as int),
                     next_dist < n,
                     distances.spec_len() == n,
@@ -489,7 +497,7 @@ pub mod BFSMtPer {
         requires
             graph.spec_len() > 0,
             graph.spec_len() < usize::MAX,
-            spec_wf_graph(&graph),
+            spec_bfsmtper_wf(&graph),
             parents.spec_len() == graph.spec_len(),
             spec_parents_bounded(&parents, graph.spec_len() as int),
             forall|j: int| #![auto] 0 <= j < frontier@.len() ==>
@@ -520,7 +528,7 @@ pub mod BFSMtPer {
                     num_neighbors == neighbors.spec_len(),
                     n == graph.spec_len(),
                     u < n,
-                    spec_wf_graph(&graph),
+                    spec_bfsmtper_wf(&graph),
                     *neighbors == graph.spec_index(u as int),
                     parents.spec_len() == n,
                     spec_parents_bounded(&parents, n as int),
@@ -641,9 +649,12 @@ pub mod BFSMtPer {
                 source < n,
                 n > 0,
                 n < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfsmtper_wf(graph),
                 distances.spec_index(source as int) == 0usize,
                 spec_distances_bounded(&distances, n as int),
+                forall|v: int| #![auto] 0 <= v < distances.spec_len()
+                    && distances.spec_index(v) != UNREACHABLE && v != source as int
+                    ==> distances.spec_index(v) > 0usize,
                 forall|j: int| #![auto] 0 <= j < current_layer@.len() ==>
                     current_layer@[j] < n,
                 current_dist < n,
@@ -697,9 +708,12 @@ pub mod BFSMtPer {
                         source < n,
                         n > 0,
                         n < usize::MAX,
-                        spec_wf_graph(graph),
+                        spec_bfsmtper_wf(graph),
                         distances.spec_index(source as int) == 0usize,
                         spec_distances_bounded(&distances, n as int),
+                        forall|v: int| #![auto] 0 <= v < distances.spec_len()
+                            && distances.spec_index(v) != UNREACHABLE && v != source as int
+                            ==> distances.spec_index(v) > 0usize,
                         current_dist + 1 < n,
                         forall|j: int| #![auto] 0 <= j < distance_updates@.len() ==>
                             distance_updates@[j].0 < graph.spec_len()
@@ -720,6 +734,18 @@ pub mod BFSMtPer {
                             v as int, d, n as int,
                         );
                         assert(distances.spec_index(source as int) == old_d_inner.spec_index(source as int));
+                        assert forall|w: int| 0 <= w < distances.spec_len()
+                            && distances.spec_index(w) != UNREACHABLE
+                            && w != source as int
+                        implies distances.spec_index(w) > 0usize
+                        by {
+                            if w == v as int {
+                                assert(distances.spec_index(w) == d);
+                            } else {
+                                assert(distances.spec_index(w)
+                                    == old_d_inner.spec_index(w));
+                            }
+                        }
                     }
 
                     k = k + 1;
@@ -766,7 +792,7 @@ pub mod BFSMtPer {
                 source < n,
                 n > 0,
                 n < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfsmtper_wf(graph),
                 parents.spec_index(source as int) == source,
                 spec_parents_bounded(&parents, n as int),
                 forall|j: int| #![auto] 0 <= j < current_layer@.len() ==>
@@ -811,7 +837,7 @@ pub mod BFSMtPer {
                     source < n,
                     n > 0,
                     n < usize::MAX,
-                    spec_wf_graph(graph),
+                    spec_bfsmtper_wf(graph),
                     parents.spec_index(source as int) == source,
                     spec_parents_bounded(&parents, n as int),
                     forall|j: int| #![auto] 0 <= j < tree_updates@.len() ==>

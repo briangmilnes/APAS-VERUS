@@ -25,7 +25,7 @@
 | 1 | Chap42 | Example42_1 | 2 | 0 | 0 | 3 | 1 | 3 | 0 | 0 | 4 |
 | 2 | Chap42 | TableMtEph | 16 | 17 | 0 | 2 | 18 | 1 | 3 | 14 | 2 |
 | 3 | Chap42 | TableStEph | 16 | 18 | 0 | 9 | 25 | 2 | 24 | 0 | 3 |
-| 4 | Chap42 | TableStPer | 16 | 17 | 0 | 9 | 25 | 1 | 24 | 0 | 2 |
+| 4 | Chap42 | TableStPer | 16 | 17 | 0 | 9 | 25 | 1 | 24 | 1 | 1 |
 
 ## Function-by-Function Detail
 
@@ -118,12 +118,12 @@
 | 68 | `difference` | Y | Y |  |  | Y |  |  | unknown | 330&#8209;332 |
 | 69 | `find` | Y | Y |  |  | Y |  |  | unknown | 335&#8209;341 |
 | 70 | `delete` | Y | Y |  |  | Y |  |  | unknown | 344&#8209;350 |
-| 71 | `insert` | Y | Y |  |  | Y |  |  | unknown | 353&#8209;362 |
-| 72 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 365&#8209;367 |
-| 73 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 370&#8209;372 |
-| 74 | `collect` | Y | Y |  |  | Y |  | Y |  | 375 |
-| 75 | `from_sorted_entries` |  |  |  | Y | Y |  |  | unknown | 1044&#8209;1047 |
-| 76 | `eq` |  | Y |  |  |  | Y | Y |  | 1076&#8209;1078 |
+| 71 | `insert` | Y | Y |  |  | Y |  |  | unknown | 353&#8209;363 |
+| 72 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 366&#8209;368 |
+| 73 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 371&#8209;373 |
+| 74 | `collect` | Y | Y |  |  | Y |  |  | hole | 376&#8209;377 |
+| 75 | `from_sorted_entries` |  |  |  | Y | Y |  |  | unknown | 1339&#8209;1342 |
+| 76 | `eq` |  | Y |  |  |  | Y | Y |  | 1371&#8209;1373 |
 
 
 ### Legend

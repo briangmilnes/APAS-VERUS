@@ -1,6 +1,6 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Breadth-First Search - Sequential Persistent (Chapter 54, Algorithms 54.3 and 54.6).
-//! Queue-based BFS for distances (54.3) and shortest-path tree (54.6).
+//! Breadth-First Search - Sequential Persistent (Chapter 54, Algorithms 54.5 and 54.6).
+//! Queue-based BFS for distances (54.5) and shortest-path tree (54.6).
 //! Work: O(|V| + |E|), Span: O(|V| + |E|).
 
 pub mod BFSStPer {
@@ -36,7 +36,7 @@ pub mod BFSStPer {
     // 6. spec fns
 
     /// All neighbor indices in the adjacency list are valid vertex indices.
-    pub open spec fn spec_wf_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> bool {
+    pub open spec fn spec_bfsstper_wf(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> bool {
         forall|u: int, i: int| #![auto]
             0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len()
             ==> graph.spec_index(u).spec_index(i) < graph.spec_len()
@@ -138,13 +138,14 @@ pub mod BFSStPer {
 
     // 8. traits
     pub trait BFSStPerTrait {
+        /// Algorithm 54.5: BFSDistance. Returns distance from source for every vertex.
         /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         fn bfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> (traversal: ArraySeqStPerS<N>)
             requires
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
                 graph.spec_len() < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfsstper_wf(graph),
             ensures
                 traversal.spec_len() == graph.spec_len(),
                 traversal.spec_index(source as int) == 0usize,
@@ -161,7 +162,7 @@ pub mod BFSStPer {
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
                 graph.spec_len() < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfsstper_wf(graph),
             ensures
                 traversal.parents.spec_len() == graph.spec_len(),
                 traversal.parents.spec_index(source as int) == source,
@@ -228,7 +229,7 @@ pub mod BFSStPer {
                 source < n,
                 n > 0,
                 n < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfsstper_wf(graph),
                 distances.spec_index(source as int) == 0usize,
                 forall|j: int| #![auto] 0 <= j < queue@.len() ==>
                     queue@[j] < n,
@@ -257,7 +258,7 @@ pub mod BFSStPer {
                             source < n,
                             n > 0,
                             n < usize::MAX,
-                            spec_wf_graph(graph),
+                            spec_bfsstper_wf(graph),
                             distances.spec_index(source as int) == 0usize,
                             u < n,
                             dist < n,
@@ -342,7 +343,7 @@ pub mod BFSStPer {
                 source < n,
                 n > 0,
                 n < usize::MAX,
-                spec_wf_graph(graph),
+                spec_bfsstper_wf(graph),
                 parents.spec_index(source as int) == source,
                 forall|j: int| #![auto] 0 <= j < queue@.len() ==> queue@[j] < n,
                 forall|j: int| #![auto] 0 <= j < queue@.len() ==>
@@ -372,7 +373,7 @@ pub mod BFSStPer {
                             source < n,
                             n > 0,
                             n < usize::MAX,
-                            spec_wf_graph(graph),
+                            spec_bfsstper_wf(graph),
                             parents.spec_index(source as int) == source,
                             u < n,
                             *neighbors == graph.spec_index(u as int),

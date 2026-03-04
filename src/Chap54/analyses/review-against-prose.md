@@ -7,21 +7,21 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 54 — Breadth-First Search: Review Against Prose
 
-**Date:** 2026-02-19
+**Date:** 2026-03-04
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory Summary
 
 | # | File | Exec Fns | external_body | verus! | Notes |
 |---|------|:---------:|:-------------:|:------:|-------|
-| 1 | BFSStEph.rs | 4 | 0 | Yes | Sequential ephemeral BFS (54.3 + 54.6) |
-| 2 | BFSStPer.rs | 4 | 0 | Yes | Sequential persistent BFS (54.3 + 54.6) |
-| 3 | BFSMtEph.rs | 8 | 0 | Yes | Parallel ephemeral BFS via HF Scheduler join() (54.3 + 54.6) |
-| 4 | BFSMtPer.rs | 8 | 0 | Yes | Parallel persistent BFS via HF Scheduler join() (54.3 + 54.6) |
+| 1 | BFSStEph.rs | 4 | 0 | Yes | Sequential ephemeral BFS (54.5 + 54.6) |
+| 2 | BFSStPer.rs | 4 | 0 | Yes | Sequential persistent BFS (54.5 + 54.6) |
+| 3 | BFSMtEph.rs | 8 | 0 | Yes | Parallel ephemeral BFS via HF Scheduler join() (54.5 + 54.6) |
+| 4 | BFSMtPer.rs | 8 | 0 | Yes | Parallel persistent BFS via HF Scheduler join() (54.5 + 54.6) |
 
 **Totals:** 4 files, 24 exec functions, 0 `#[verifier::external_body]` holes, 24 verified functions.
 
-All files are inside `verus! {}` blocks. All exec functions carry `requires`/`ensures` specifications and are fully verified. Each file implements Algorithm 54.3 (BFS distances) and Algorithm 54.6 (BFS tree) with loop invariants and proof lemmas. Mt files use HF Scheduler `join()` for parallel fork-join frontier processing with `copy_graph`/`copy_distances` helpers for ownership duplication.
+All files are inside `verus! {}` blocks. All exec functions carry `requires`/`ensures` specifications and are fully verified. Each file implements Algorithm 54.5 (BFSDistance) and Algorithm 54.6 (BFS tree) with loop invariants and proof lemmas. Mt files use HF Scheduler `join()` for parallel fork-join frontier processing with `copy_graph`/`copy_distances` helpers for ownership duplication.
 
 ## Phase 2: Prose Inventory
 
@@ -40,7 +40,7 @@ Source: `prompts/Chap54.txt`.
 |---|------|-------------|:------------:|
 | 1 | Algorithm 54.3 — Sequential BFS: Reachability | Queue-based BFS; returns reachable set X and max distance | Yes (BFSStEph, BFSStPer) |
 | 2 | Algorithm 54.4 — Parallel BFS: Reachability | Layer-by-layer BFS; returns X and max distance | Partially (BFSMtEph, BFSMtPer) |
-| 3 | Algorithm 54.5 — Unweighted Shortest Paths (BFSDistance) | Parallel BFS returning table mapping each reachable vertex to its distance | No |
+| 3 | Algorithm 54.5 — Unweighted Shortest Paths (BFSDistance) | Parallel BFS returning table mapping each reachable vertex to its distance | Yes (all 4 variants) |
 | 4 | Algorithm 54.6 — BFS Tree with Sequences | Parallel BFS computing shortest-path tree via inject; returns parent sequence | Yes (all 4 variants) |
 
 ### Cost Specs
@@ -77,32 +77,32 @@ All exercises are text proofs; none require code implementations.
 |---|------|----------|-----------|----------------------|:---------:|
 | 1 | BFSStEph.rs | `bfs` | W O(\|V\|+\|E\|), S O(\|V\|+\|E\|) | W O(\|V\|+\|E\|), S O(\|V\|+\|E\|) | ✅ Agrees |
 | 2 | BFSStPer.rs | `bfs` | W O(\|V\|+\|E\|), S O(\|V\|+\|E\|) | W O(\|V\|+\|E\|), S O(\|V\|+\|E\|) | ✅ Agrees |
-| 3 | BFSMtEph.rs | `bfs` | W O(\|V\|+\|E\|), S O(d·lg n) | W O(\|V\|+\|E\|), S O(\|V\|+\|E\|) | ❌ Disagrees |
-| 4 | BFSMtPer.rs | `bfs` | W O(\|V\|+\|E\|), S O(d·lg n) | W O(\|V\|+\|E\|), S O(d·lg \|F_i\|) | ⚠️ Partial |
-| 5 | BFSMtPer.rs | `process_layer_parallel` | N/A (scaffolding) | W O(\|F_i\|), S O(lg \|F_i\|) | N/A |
-
-**Disagreement details:**
-- **BFSMtEph.rs `bfs`**: Despite being in an Mt module, the implementation processes each layer vertex sequentially in a `for` loop. No `thread::spawn` or parallel primitive is used. Span equals Work.
-- **BFSMtPer.rs `bfs`**: Uses `process_layer_parallel` with `thread::spawn` fork-join for neighbor collection, achieving parallelism within layers. However, distance updates after each layer are applied sequentially via a `for` loop over `distance_updates`.
+| 3 | BFSMtEph.rs | `bfs` | W O(\|V\|+\|E\|), S O(d·lg n) | W O(\|V\|+\|E\|), S O(d·lg n) | ✅ Agrees |
+| 4 | BFSMtPer.rs | `bfs` | W O(\|V\|+\|E\|), S O(d·lg n) | W O(\|V\|+\|E\|), S O(d·lg n) | ✅ Agrees |
 
 ### 3b. Implementation Fidelity
 
 | # | Module | APAS Algorithm | Fidelity | Notes |
 |---|--------|----------------|:--------:|-------|
-| 1 | BFSStEph | Alg 54.3 (Sequential BFS) | ✅ Faithful | Queue-based BFS with distance array. Uses `VecDeque`. Matches prose: pop front, mark visited, push unvisited neighbors. |
-| 2 | BFSStPer | Alg 54.3 (Sequential BFS) | ✅ Faithful | Same algorithm as StEph but uses persistent `ArraySeqStPerS::update` instead of mutable `set`. |
-| 3 | BFSMtEph | Alg 54.4 (Parallel BFS) | ❌ Sequential | Layer-by-layer structure matches prose, but within each layer, vertices are processed sequentially. No parallelism despite Mt name. |
-| 4 | BFSMtPer | Alg 54.4 (Parallel BFS) | ⚠️ Partial | Layer-by-layer with genuine fork-join in `process_layer_parallel`. But deduplication and distance updates are sequential. |
+| 1 | BFSStEph | Alg 54.5 (BFSDistance) | ✅ Faithful | Queue-based BFS returning distance array. Uses `VecDeque`. |
+| 2 | BFSStPer | Alg 54.5 (BFSDistance) | ✅ Faithful | Same algorithm as StEph but uses persistent `ArraySeqStPerS::update`. |
+| 3 | BFSMtEph | Alg 54.5 (Parallel BFS) | ✅ Faithful | Layer-by-layer with HF Scheduler join() for parallel frontier processing. |
+| 4 | BFSMtPer | Alg 54.5 (Parallel BFS) | ✅ Faithful | Layer-by-layer with HF Scheduler join() for parallel frontier processing. |
 
 **Deviation: Return type.** The prose returns `(X, max_distance)`. The implementations return a distance array (UNREACHABLE for unvisited vertices). The reachable set and max distance can be derived from this, so this is a representation choice.
 
-**Deviation: Missing algorithms.** Algorithms 54.5 (BFSDistance) and 54.6 (BFS Tree with Sequences) are not implemented.
-
 ### 3c. Spec Fidelity
 
-All functions have `#[verifier::external_body]` and **no specs** (`requires`/`ensures`). No preconditions are expressed (e.g., `source < graph.length()` is checked at runtime but not specified). No postconditions are expressed.
+All functions have full `requires`/`ensures` specifications:
 
-**Spec fidelity: N/A — no specs exist to compare against prose.**
+| # | Function | Spec Strength | Key Ensures |
+|---|----------|:------------:|-------------|
+| 1 | `bfs` | Strong | distances.len == graph.len, source distance == 0, bounded, non-source reachable > 0 |
+| 2 | `bfs_tree` | Strong | parents.len == graph.len, source parent == source, order bounded, order vertices have parents |
+| 3 | `top_down_order` | Partial | Returns owned copy of order array |
+| 4 | `bottom_up_order` | Partial | Returns reversed order array |
+
+**Gap:** No δ_G correctness spec (Def 54.1). The ensures prove structural properties but do not prove that distances equal shortest-path distances. This would require ghost state tracking discovery parents and an inductive argument over distance rounds.
 
 ## Phase 4: Parallelism Review
 
@@ -110,17 +110,17 @@ All functions have `#[verifier::external_body]` and **no specs** (`requires`/`en
 
 | # | Module | Function | Classification | Evidence |
 |---|--------|----------|:--------------:|----------|
-| 1 | BFSMtEph | `bfs` | Sequential | No `thread::spawn`, no `join`. Sequential `for` loop within layers. |
-| 2 | BFSMtPer | `bfs` | Parallel (partial) | Calls `process_layer_parallel` which uses `thread::spawn`. Distance update loop is sequential. |
-| 3 | BFSMtPer | `process_layer_parallel` | Parallel | Fork-join via `thread::spawn` + `join`. Splits layer in half recursively. |
+| 1 | BFSMtEph | `bfs` | Parallel | Uses HF Scheduler join() for parallel frontier processing. |
+| 2 | BFSMtEph | `process_frontier_parallel` | Parallel | Fork-join via HF Scheduler join(). Recursive split. |
+| 3 | BFSMtPer | `bfs` | Parallel | Uses HF Scheduler join() for parallel frontier processing. |
+| 4 | BFSMtPer | `process_frontier_parallel` | Parallel | Fork-join via HF Scheduler join(). Recursive split. |
 
 ### 4b. Span Audit
 
 | # | Module | Function | APAS Span | Actual Span | Match? | Notes |
 |---|--------|----------|-----------|-------------|:------:|-------|
-| 1 | BFSMtEph | `bfs` | O(d·lg n) | O(\|V\|+\|E\|) | ❌ | Span == Work. No parallelism. |
-| 2 | BFSMtPer | `bfs` | O(d·lg n) | O(d·lg \|F_i\|) | ⚠️ | Neighbor collection parallel; distance updates sequential per layer. |
-| 3 | BFSMtPer | `process_layer_parallel` | N/A | O(lg \|F_i\|) | N/A | Scaffolding function. |
+| 1 | BFSMtEph | `bfs` | O(d·lg n) | O(d·lg n) | ✅ | Parallel frontier processing via HF Scheduler join(). |
+| 2 | BFSMtPer | `bfs` | O(d·lg n) | O(d·lg n) | ✅ | Parallel frontier processing via HF Scheduler join(). |
 
 ## Phase 5: RTT Review
 
@@ -156,7 +156,12 @@ Good coverage of edge cases. Tests verify exact distance values. The Example 54.
 
 ## Phase 6: PTT Review
 
-**No PTTs needed.** All exec functions are `#[verifier::external_body]` — there are no verified loops, no iterators with ghost state, and no Verus-verified patterns to exercise. PTTs become relevant only when `external_body` wrappers are replaced with verified implementations.
+| # | Source Module | Test File | Tests | Status |
+|---|-------------|----------|:-----:|--------|
+| 1 | BFSStEph | `rust_verify_test/tests/Chap54/ProveBFSStEph.rs` | 6 | ✅ Present |
+| 2 | BFSMtEph | `rust_verify_test/tests/Chap54/ProveBFSMtEph.rs` | 6 | ✅ Present |
+
+PTTs verify BFS tree iterator contracts (`top_down_order`, `bottom_up_order`) across loop forms.
 
 ## Phase 7: Gap Analysis
 
@@ -164,10 +169,9 @@ Good coverage of edge cases. Tests verify exact distance values. The Example 54.
 
 | # | Prose Item | Type | Notes |
 |---|-----------|------|-------|
-| 1 | Algorithm 54.5 — BFSDistance | Algorithm | Returns table mapping vertices to distances |
-| 2 | Lemma 54.1 — Parallel BFS and Distances | Theorem | X_i and F_i invariants |
-| 3 | Theorem 54.2 — BFS Tree Gives Shortest Paths | Theorem | Shortest path property |
-| 4 | Exercise 54.1–54.4 | Text proofs | Not formalized |
+| 1 | Lemma 54.1 — Parallel BFS and Distances | Theorem | X_i and F_i invariants (δ_G correctness) |
+| 2 | Theorem 54.2 — BFS Tree Gives Shortest Paths | Theorem | Shortest path property |
+| 3 | Exercise 54.1–54.4 | Text proofs | Not formalized |
 
 ### Code with No Prose Counterpart
 
@@ -187,10 +191,10 @@ Good coverage of edge cases. Tests verify exact distance values. The Example 54.
 
 | # | File | TOC Present? | Sections |
 |---|------|:------------:|----------|
-| 1 | BFSStEph.rs | ✅ Yes | 4, 8, 9 |
-| 2 | BFSStPer.rs | ✅ Yes | 4, 8, 9 |
-| 3 | BFSMtEph.rs | ✅ Yes | 4, 8, 9 |
-| 4 | BFSMtPer.rs | ✅ Yes | 4, 8, 9 |
+| 1 | BFSStEph.rs | ✅ Yes | 4, 6, 7, 8, 9 |
+| 2 | BFSStPer.rs | ✅ Yes | 4, 6, 7, 8, 9 |
+| 3 | BFSMtEph.rs | ✅ Yes | 4, 6, 7, 8, 9 |
+| 4 | BFSMtPer.rs | ✅ Yes | 4, 6, 7, 8, 9 |
 
 ### In/Out Table
 
@@ -212,9 +216,10 @@ No derive impls in any file. The BFS modules define only type aliases, traits, a
 | 3 | Done | ~~Make BFSMtEph genuinely parallel~~ | Completed 2026-02-18. Uses HF Scheduler join() for fork-join frontier processing. |
 | 4 | Done | ~~Add specs to BFSMtPer~~ | Completed 2026-02-18. Full verification with parallel frontier processing. |
 | 5 | Done | ~~Implement Algorithm 54.6 (BFS Tree)~~ | Completed 2026-02-18. All 4 variants (StEph, StPer, MtEph, MtPer). |
-| 6 | Low | Implement Algorithm 54.5 (BFSDistance) | Table-based distance computation; not yet implemented |
-| 7 | Low | Fix 4 bare_impl errors | `impl BFSTreeS` blocks should be moved into traits per project conventions |
-| 8 | Low | Formalize Lemma 54.1 / Theorem 54.2 | Prose proofs not yet encoded as Verus proof functions |
+| 6 | Done | ~~Implement Algorithm 54.5 (BFSDistance)~~ | Our `bfs` function is Algorithm 54.5. Doc comments updated 2026-03-04. |
+| 7 | Done | ~~Rename spec_wf_graph to spec_<module>_wf~~ | Renamed in all 4 files + PTTs 2026-03-04. |
+| 8 | Done | ~~Strengthen specs (non-source > 0, order-has-parents)~~ | Added to all 4 files 2026-03-04. |
+| 9 | Low | Formalize Lemma 54.1 / Theorem 54.2 | Requires ghost state and inductive proofs over distance rounds |
 
 ## Proof Holes Summary
 
@@ -227,6 +232,6 @@ No derive impls in any file. The BFS modules define only type aliases, traits, a
 | 3 | BFSMtEph.rs | Clean |
 | 4 | BFSMtPer.rs | Clean |
 
-**Style issues:** 4 `bare_impl` errors (each file has `impl BFSTreeS` with `top_down_order` and `bottom_up_order` outside the trait). These are not proof holes but violate the trait-impl pattern convention.
+**Style:** 0 warnings across 4 files (68 checks passed). Well-formedness specs renamed to `spec_bfs<variant>_wf` convention.
 
-**Modules:** 4 files, 0 proof holes, 24 verified exec functions.
+**Modules:** 4 files, 0 proof holes, 22 proof functions, 24 verified exec functions.
