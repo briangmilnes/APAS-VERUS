@@ -315,7 +315,7 @@ broadcast use {
                         rank: 1,
                     },
                 };
-                proof { assume(pq.root.spec_size() == 1); }
+                assert(LeftistHeapNode::<T>::Leaf.spec_size() == 0);
                 pq
             }
 
@@ -583,6 +583,23 @@ broadcast use {
                     write!(f, "Node({:?}, {:?}, {:?}, {})", key, left, right, rank)
                 }
             }
+        }
+    }
+
+    impl<T: StT + Ord> Display for LeftistHeapNode<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            fn format_node<T: StT + Ord>(node: &LeftistHeapNode<T>, f: &mut Formatter<'_>, depth: usize) -> Result {
+                match node {
+                    LeftistHeapNode::Leaf => Ok(()),
+                    LeftistHeapNode::Node { key, left, right, rank } => {
+                        let indent = "  ".repeat(depth);
+                        writeln!(f, "{indent}{key}(rank:{rank})")?;
+                        format_node(left, f, depth + 1)?;
+                        format_node(right, f, depth + 1)
+                    }
+                }
+            }
+            format_node(self, f, 0)
         }
     }
 

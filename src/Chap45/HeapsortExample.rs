@@ -258,6 +258,18 @@ broadcast use {
         }
     }
 
+    impl<T: StT + Ord + fmt::Debug> fmt::Display for HeapsortComparison<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            writeln!(f, "HeapsortComparison:")?;
+            writeln!(f, "  input: {:?}", self.input)?;
+            writeln!(f, "  unsorted_list: {:?}", self.unsorted_list_result)?;
+            writeln!(f, "  sorted_list: {:?}", self.sorted_list_result)?;
+            writeln!(f, "  balanced_tree: {:?}", self.balanced_tree_result)?;
+            writeln!(f, "  binary_heap: {:?}", self.binary_heap_result)?;
+            write!(f, "  leftist_heap: {:?}", self.leftist_heap_result)
+        }
+    }
+
     /// Example from textbook - demonstrate heapsort on a small dataset
     pub fn textbook_example() -> HeapsortComparison<i32> {
         let input = vec![64, 34, 25, 12, 22, 11, 90];

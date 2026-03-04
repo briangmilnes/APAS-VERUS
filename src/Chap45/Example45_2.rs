@@ -3,101 +3,92 @@
 
 pub mod Example45_2 {
 
+    use std::fmt::{Debug, Display, Formatter, Result};
+
     use vstd::prelude::*;
     use crate::Chap45::HeapsortExample::HeapsortExample::*;
     use crate::Types::Types::*;
     pub type T = usize;
 
     verus! {
+
+// 4. type definitions
+        pub struct Example45_2;
+
+// 7. proof fns
         proof fn _example_45_2_verified() {}
 
-        pub struct Example45_2;
+// 8. traits
+        /// Trait for Example 45.2 operations.
+        pub trait Example45_2Trait {
+            /// Example 45.2: Textbook heapsort demonstration.
+            fn example_45_2_textbook_example()         -> HeapsortComparison<i32>;
+            /// Example 45.2: Reverse-sorted input demonstration.
+            fn example_45_2_reverse_sorted()           -> HeapsortComparison<i32>;
+            /// Example 45.2: Already-sorted input demonstration.
+            fn example_45_2_already_sorted()           -> HeapsortComparison<i32>;
+            /// Example 45.2: Input with duplicates demonstration.
+            fn example_45_2_duplicates()               -> HeapsortComparison<i32>;
+            /// Example 45.2: Single element demonstration.
+            fn example_45_2_single_element()           -> HeapsortComparison<i32>;
+            /// Example 45.2: Empty input demonstration.
+            fn example_45_2_empty()                    -> HeapsortComparison<i32>;
+            /// Example 45.2: Efficiency comparison demonstration.
+            fn example_45_2_efficiency_demonstration() -> Vec<(String, Vec<i32>)>;
+            /// Run comprehensive demonstration of Example 45.2.
+            fn run_example_45_2()                      -> String;
+        }
+
+// 9. impls
+        #[verifier::external]
+        impl Example45_2Trait for Example45_2 {
+            fn example_45_2_textbook_example()         -> HeapsortComparison<i32> { textbook_example() }
+            fn example_45_2_reverse_sorted()           -> HeapsortComparison<i32> { reverse_sorted_example() }
+            fn example_45_2_already_sorted()           -> HeapsortComparison<i32> { already_sorted_example() }
+            fn example_45_2_duplicates()               -> HeapsortComparison<i32> { duplicates_example() }
+            fn example_45_2_single_element()           -> HeapsortComparison<i32> { single_element_example() }
+            fn example_45_2_empty()                    -> HeapsortComparison<i32> { empty_example() }
+            fn example_45_2_efficiency_demonstration() -> Vec<(String, Vec<i32>)> { efficiency_demonstration() }
+            fn run_example_45_2()                      -> String { run_example_45_2() }
+        }
+
     }
 
-    /// Trait for Example 45.2 operations.
-    pub trait Example45_2Trait {
-        /// Example 45.2: Textbook heapsort demonstration
-        /// APAS: Work Θ(n log n), Span Θ(n log n)
-        fn example_45_2_textbook_example()         -> HeapsortComparison<i32>;
-
-        /// Example 45.2: Reverse-sorted input demonstration
-        /// APAS: Work Θ(n log n), Span Θ(n log n)
-        fn example_45_2_reverse_sorted()           -> HeapsortComparison<i32>;
-
-        /// Example 45.2: Already-sorted input demonstration
-        /// APAS: Work Θ(n log n), Span Θ(n log n)
-        fn example_45_2_already_sorted()           -> HeapsortComparison<i32>;
-
-        /// Example 45.2: Input with duplicates demonstration
-        /// APAS: Work Θ(n log n), Span Θ(n log n)
-        fn example_45_2_duplicates()               -> HeapsortComparison<i32>;
-
-        /// Example 45.2: Single element demonstration
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn example_45_2_single_element()           -> HeapsortComparison<i32>;
-
-        /// Example 45.2: Empty input demonstration
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn example_45_2_empty()                    -> HeapsortComparison<i32>;
-
-        /// Example 45.2: Efficiency comparison demonstration
-        /// APAS: Work Θ(n²), Span Θ(n²) - dominated by worst implementation
-        fn example_45_2_efficiency_demonstration() -> Vec<(String, Vec<i32>)>;
-
-        /// Run comprehensive demonstration of Example 45.2
-        /// APAS: Work Θ(n²), Span Θ(n²) - dominated by worst implementation
-        fn run_example_45_2()                      -> String;
+// 13. derive impls outside verus!
+    impl Debug for Example45_2 {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            write!(f, "Example45_2")
+        }
     }
 
-    impl Example45_2Trait for Example45_2 {
-        fn example_45_2_textbook_example()         -> HeapsortComparison<i32> { textbook_example() }
-        fn example_45_2_reverse_sorted()           -> HeapsortComparison<i32> { reverse_sorted_example() }
-        fn example_45_2_already_sorted()           -> HeapsortComparison<i32> { already_sorted_example() }
-        fn example_45_2_duplicates()               -> HeapsortComparison<i32> { duplicates_example() }
-        fn example_45_2_single_element()           -> HeapsortComparison<i32> { single_element_example() }
-        fn example_45_2_empty()                    -> HeapsortComparison<i32> { empty_example() }
-        fn example_45_2_efficiency_demonstration() -> Vec<(String, Vec<i32>)> { efficiency_demonstration() }
-        fn run_example_45_2()                      -> String { run_example_45_2() }
+    impl Display for Example45_2 {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            write!(f, "Example45_2")
+        }
     }
 
-    /// Example 45.2: Textbook heapsort demonstration
-    /// Demonstrates heapsort on the standard textbook example dataset
-    /// APAS: Work Θ(n log n), Span Θ(n log n)
+    /// Example 45.2: Textbook heapsort demonstration.
     pub fn example_45_2_textbook_example() -> HeapsortComparison<i32> { textbook_example() }
 
-    /// Example 45.2: Reverse-sorted input demonstration
-    /// Shows heapsort performance on worst-case input for some algorithms
-    /// APAS: Work Θ(n log n), Span Θ(n log n)
+    /// Example 45.2: Reverse-sorted input demonstration.
     pub fn example_45_2_reverse_sorted() -> HeapsortComparison<i32> { reverse_sorted_example() }
 
-    /// Example 45.2: Already-sorted input demonstration
-    /// Shows heapsort performance on best-case input for some algorithms
-    /// APAS: Work Θ(n log n), Span Θ(n log n)
+    /// Example 45.2: Already-sorted input demonstration.
     pub fn example_45_2_already_sorted() -> HeapsortComparison<i32> { already_sorted_example() }
 
-    /// Example 45.2: Input with duplicates demonstration
-    /// Shows heapsort performance on input with repeated elements
-    /// APAS: Work Θ(n log n), Span Θ(n log n)
+    /// Example 45.2: Input with duplicates demonstration.
     pub fn example_45_2_duplicates() -> HeapsortComparison<i32> { duplicates_example() }
 
-    /// Example 45.2: Single element demonstration
-    /// Shows heapsort performance on minimal input
-    /// APAS: Work Θ(1), Span Θ(1)
+    /// Example 45.2: Single element demonstration.
     pub fn example_45_2_single_element() -> HeapsortComparison<i32> { single_element_example() }
 
-    /// Example 45.2: Empty input demonstration
-    /// Shows heapsort performance on empty input
-    /// APAS: Work Θ(1), Span Θ(1)
+    /// Example 45.2: Empty input demonstration.
     pub fn example_45_2_empty() -> HeapsortComparison<i32> { empty_example() }
 
-    /// Example 45.2: Efficiency comparison demonstration
-    /// Shows the efficiency differences between priority queue implementations
-    /// APAS: Work Θ(n²), Span Θ(n²) - dominated by worst implementation
+    /// Example 45.2: Efficiency comparison demonstration.
     pub fn example_45_2_efficiency_demonstration() -> Vec<(String, Vec<i32>)> { efficiency_demonstration() }
 
-    /// Run comprehensive demonstration of Example 45.2
-    /// Shows all heapsort variants and their comparative performance
-    /// APAS: Work Θ(n²), Span Θ(n²) - dominated by worst implementation
+    /// Run comprehensive demonstration of Example 45.2.
     pub fn run_example_45_2() -> String {
         let mut output = String::new();
 
