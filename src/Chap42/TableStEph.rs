@@ -309,7 +309,7 @@ broadcast use {
             ensures domain@.finite();
         /// APAS: Work Θ(|s| * W(f)), Span Θ(lg |s| + S(f))
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            requires forall|k: &K| f.requires((k,))
+            requires keys.spec_wf(), forall|k: &K| f.requires((k,))
             ensures tabulated@.dom().finite();
         /// APAS: Work Θ(Σ W(f(v))), Span Θ(lg |a| + max S(f(v)))
         fn map<F: Fn(&V) -> V>(&mut self, f: F)
@@ -369,7 +369,8 @@ broadcast use {
             ensures self@.dom() =~= old(self)@.dom().difference(keys@);
 
         /// Returns a flat sequence of (K, V) pairs in key order.
-        fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>);
+        fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>)
+            ensures spec_entries_to_map(entries@) == self@;
     }
 
 
@@ -1409,7 +1410,15 @@ broadcast use {
         }
 
         fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>) {
-            self.entries.clone()
+            let entries = self.entries.clone();
+            proof {
+                assume(obeys_feq_clone::<Pair<K, V>>());
+                lemma_seq_map_cloned_view_eq(
+                    self.entries.seq@,
+                    entries.seq@,
+                );
+            }
+            entries
         }
     }
 
@@ -1430,6 +1439,12 @@ broadcast use {
 
     // 11. derive impls in verus!
 
+    impl<K: StT + Ord, V: StT> Default for TableStEph<K, V> {
+        fn default() -> Self {
+            TableStEph::empty()
+        }
+    }
+
     #[cfg(verus_keep_ghost)]
     impl<K: StT + Ord + View + PartialEq, V: StT + View + PartialEq> PartialEqSpecImpl for TableStEph<K, V> {
         open spec fn obeys_eq_spec() -> bool { true }
@@ -1439,12 +1454,12 @@ broadcast use {
     impl<K: StT + Ord + Eq + View, V: StT + Eq + View> Eq for TableStEph<K, V> {}
 
     impl<K: StT + Ord + PartialEq + View, V: StT + PartialEq + View> PartialEq for TableStEph<K, V> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
-            let r = self.entries == other.entries;
-            proof { assume(r == (self@ == other@)); }
-            r
+            let equal = self.entries == other.entries;
+            proof { assume(equal == (self@ == other@)); }
+            equal
         }
     }
 
@@ -1475,20 +1490,17 @@ broadcast use {
         }};
     }
 
-    // 13. derive impls outside verus!
-
-    impl<K: StT + Ord, V: StT> Default for TableStEph<K, V> {
-        fn default() -> Self {
-            TableStEph::empty()
-        }
-    }
-
-
     //		13. derive impls outside verus!
 
     impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug> fmt::Debug for TableStEph<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "TableStEph({:?})", self.entries)
+        }
+    }
+
+    impl<K: StT + Ord, V: StT> fmt::Display for TableStEph<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "TableStEph(len={})", self.entries.length())
         }
     }
 }

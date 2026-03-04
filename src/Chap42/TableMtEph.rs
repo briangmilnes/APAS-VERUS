@@ -33,6 +33,8 @@ pub mod TableMtEph {
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{lemma_seq_map_cloned_view_eq, obeys_feq_clone};
 
     verus! {
 
@@ -180,7 +182,8 @@ broadcast use {
             requires keys@.finite()
             ensures self@.dom() =~= old(self)@.dom().difference(keys@);
 
-        fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>);
+        fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>)
+            ensures spec_entries_to_map(entries@) == self@;
     }
 
 
@@ -788,7 +791,15 @@ broadcast use {
         }
 
         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>) {
-            self.entries.clone()
+            let entries = self.entries.clone();
+            proof {
+                assume(obeys_feq_clone::<Pair<K, V>>());
+                lemma_seq_map_cloned_view_eq(
+                    self.entries.seq@,
+                    entries.seq@,
+                );
+            }
+            entries
         }
     }
 
@@ -807,17 +818,6 @@ broadcast use {
 
     // 11. derive impls in verus!
 
-    impl<K: MtKey, V: MtVal> Clone for TableMtEph<K, V> {
-        #[verifier::external_body]
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
-        {
-            TableMtEph {
-                entries: self.entries.clone(),
-            }
-        }
-    }
-
     #[cfg(verus_keep_ghost)]
     impl<K: MtKey, V: MtVal> PartialEqSpecImpl for TableMtEph<K, V> {
         open spec fn obeys_eq_spec() -> bool { true }
@@ -827,12 +827,23 @@ broadcast use {
     impl<K: MtKey, V: MtVal> Eq for TableMtEph<K, V> {}
 
     impl<K: MtKey, V: MtVal> PartialEq for TableMtEph<K, V> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
-            let r = self.entries == other.entries;
-            proof { assume(r == (self@ == other@)); }
-            r
+            let equal = self.entries == other.entries;
+            proof { assume(equal == (self@ == other@)); }
+            equal
+        }
+    }
+
+    impl<K: MtKey, V: MtVal> Clone for TableMtEph<K, V> {
+        #[verifier::external_body]
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            TableMtEph {
+                entries: self.entries.clone(),
+            }
         }
     }
 
@@ -848,6 +859,12 @@ broadcast use {
             f.debug_struct("TableMtEph")
                 .field("size", &self.entries.length())
                 .finish()
+        }
+    }
+
+    impl<K: MtKey, V: MtVal> std::fmt::Display for TableMtEph<K, V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "TableMtEph(len={})", self.entries.length())
         }
     }
 

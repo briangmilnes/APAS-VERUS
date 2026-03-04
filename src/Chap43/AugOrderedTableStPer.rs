@@ -149,22 +149,24 @@ broadcast use {
                 obeys_feq_full::<Pair<K, V>>(),
             ensures updated@.dom().finite(), updated.spec_augorderedtablestper_wf();
         fn domain(&self) -> (domain: ArraySetStEph<K>)
+            requires obeys_feq_clone::<K>()
             ensures self@.dom().finite();
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
-            requires forall|k: &K| f.requires((k,)),
+            requires keys.spec_wf(), forall|k: &K| f.requires((k,)),
             ensures tabulated@.dom().finite();
         fn map<G: Fn(&V) -> V>(&self, f: G) -> (mapped: Self)
-            requires forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
-            ensures mapped@.dom().finite();
+            requires self.spec_augorderedtablestper_wf(), forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
+            ensures mapped@.dom().finite(), mapped.spec_augorderedtablestper_wf();
         fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (filtered: Self)
-            requires forall|k: &K, v: &V| f.requires((k, v)), obeys_feq_full::<Pair<K, V>>(),
-            ensures filtered@.dom().finite();
+            requires self.spec_augorderedtablestper_wf(), forall|k: &K, v: &V| f.requires((k, v)), obeys_feq_full::<Pair<K, V>>(),
+            ensures filtered@.dom().finite(), filtered.spec_augorderedtablestper_wf();
         fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (common: Self)
             requires
+                self.spec_augorderedtablestper_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<K>(),
-            ensures common@.dom().finite();
+            ensures common@.dom().finite(), common.spec_augorderedtablestper_wf();
         fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (combined: Self)
             requires
                 self.spec_augorderedtablestper_wf(),
@@ -173,14 +175,14 @@ broadcast use {
                 obeys_feq_full::<Pair<K, V>>(),
             ensures combined@.dom().finite(), combined.spec_augorderedtablestper_wf();
         fn difference(&self, other: &Self) -> (remaining: Self)
-            requires obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
-            ensures remaining@.dom().finite();
+            requires self.spec_augorderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
+            ensures remaining@.dom().finite(), remaining.spec_augorderedtablestper_wf();
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
-            requires obeys_feq_full::<Pair<K, V>>(),
-            ensures restricted@.dom().finite();
+            requires self.spec_augorderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
+            ensures restricted@.dom().finite(), restricted.spec_augorderedtablestper_wf();
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
-            requires obeys_feq_full::<Pair<K, V>>(),
-            ensures subtracted@.dom().finite();
+            requires self.spec_augorderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
+            ensures subtracted@.dom().finite(), subtracted.spec_augorderedtablestper_wf();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), collected.spec_well_formed();
         fn first_key(&self) -> (first: Option<K>)
@@ -350,7 +352,7 @@ broadcast use {
         }
 
         fn map<G: Fn(&V) -> V>(&self, f: G) -> (mapped: Self)
-            ensures mapped@.dom().finite()
+            ensures mapped@.dom().finite(), mapped.spec_augorderedtablestper_wf()
         {
             let new_base = self.base_table.map(f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -366,7 +368,7 @@ broadcast use {
         }
 
         fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (filtered: Self)
-            ensures filtered@.dom().finite()
+            ensures filtered@.dom().finite(), filtered.spec_augorderedtablestper_wf()
         {
             let new_base = self.base_table.filter(f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -382,7 +384,7 @@ broadcast use {
         }
 
         fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (common: Self)
-            ensures common@.dom().finite()
+            ensures common@.dom().finite(), common.spec_augorderedtablestper_wf()
         {
             let new_base = self.base_table.intersection(&other.base_table, f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -414,7 +416,7 @@ broadcast use {
         }
 
         fn difference(&self, other: &Self) -> (remaining: Self)
-            ensures remaining@.dom().finite()
+            ensures remaining@.dom().finite(), remaining.spec_augorderedtablestper_wf()
         {
             let new_base = self.base_table.difference(&other.base_table);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -430,7 +432,7 @@ broadcast use {
         }
 
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
-            ensures restricted@.dom().finite()
+            ensures restricted@.dom().finite(), restricted.spec_augorderedtablestper_wf()
         {
             let new_base = self.base_table.restrict(keys);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -446,7 +448,7 @@ broadcast use {
         }
 
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
-            ensures subtracted@.dom().finite()
+            ensures subtracted@.dom().finite(), subtracted.spec_augorderedtablestper_wf()
         {
             let new_base = self.base_table.subtract(keys);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
