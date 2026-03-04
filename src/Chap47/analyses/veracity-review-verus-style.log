@@ -1,184 +1,212 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS/src/Chap47/
-Codebase: /home/milnes/projects/APAS-VERUS
+Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap47/
+Codebase: /home/milnes/projects/APAS-VERUS-agent1
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS/src/Chap47/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap47/analyses/veracity-review-verus-style.log
 
 Checking 9 files...
 
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:77: warning: [20] trait ChainedHashTable is defined but has no impl
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:35: warning: [14] struct ChainEntry should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:77: warning: [20] trait ChainedHashTable is defined but has no impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [12] no traits (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [20] no traits defined
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:43: warning: [4] use std::... imports should be grouped with trailing blank line
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:65: warning: [13] impl ParaHashTableStEphTrait for DoubleHashFlatHashTableStEph should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:159: warning: [13] impl FlatHashTable for DoubleHashFlatHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:43: warning: [4] use std::... imports should be grouped with trailing blank line
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:65: warning: [13] impl ParaHashTableStEphTrait for DoubleHashFlatHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:159: warning: [13] impl FlatHashTable for DoubleHashFlatHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:29: warning: [14] struct DoubleHashFlatHashTableStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:29: warning: [14] struct DoubleHashFlatHashTableStEph should have impl Display outside verus!
 
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:104: warning: [20] trait FlatHashTable is defined but has no impl
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:28: warning: [14] struct FlatEntry should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:104: warning: [20] trait FlatHashTable is defined but has no impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [12] no traits (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [20] no traits defined
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:32: warning: [13] impl ParaHashTableStEphTrait for LinProbFlatHashTableStEph should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:126: warning: [13] impl FlatHashTable for LinProbFlatHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:32: warning: [13] impl ParaHashTableStEphTrait for LinProbFlatHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:126: warning: [13] impl FlatHashTable for LinProbFlatHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:26: warning: [14] struct LinProbFlatHashTableStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:26: warning: [14] struct LinProbFlatHashTableStEph should have impl Display outside verus!
 
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [12] no traits (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [20] no traits defined
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:34: warning: [13] impl EntryTrait for LinkedList should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:85: warning: [13] impl ParaHashTableStEphTrait for LinkedListChainedHashTableStEph should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:140: warning: [13] impl ChainedHashTable for LinkedListChainedHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:34: warning: [13] impl EntryTrait for LinkedList should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:85: warning: [13] impl ParaHashTableStEphTrait for LinkedListChainedHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:140: warning: [13] impl ChainedHashTable for LinkedListChainedHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:27: warning: [14] struct LinkedListChainedHashTableStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:27: warning: [14] struct LinkedListChainedHashTableStEph should have impl Display outside verus!
 
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [13] no non-derive trait impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:49: warning: [12] trait EntryTrait fn new should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:52: warning: [12] trait EntryTrait fn insert should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:55: warning: [12] trait EntryTrait fn lookup should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:58: warning: [12] trait EntryTrait fn delete should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:46: warning: [20] trait EntryTrait is defined but has no impl
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:79: warning: [20] trait ParaHashTableStEphTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:49: warning: [12] trait EntryTrait fn new should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:52: warning: [12] trait EntryTrait fn insert should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:55: warning: [12] trait EntryTrait fn lookup should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:58: warning: [12] trait EntryTrait fn delete should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:37: warning: [14] struct LoadAndSize should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:65: warning: [14] struct HashTable should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:65: warning: [14] struct HashTable should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:46: warning: [20] trait EntryTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:79: warning: [20] trait ParaHashTableStEphTrait is defined but has no impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [12] no traits (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [20] no traits defined
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:33: warning: [13] impl ParaHashTableStEphTrait for QuadProbFlatHashTableStEph should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:129: warning: [13] impl FlatHashTable for QuadProbFlatHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:33: warning: [13] impl ParaHashTableStEphTrait for QuadProbFlatHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:129: warning: [13] impl FlatHashTable for QuadProbFlatHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:27: warning: [14] struct QuadProbFlatHashTableStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:27: warning: [14] struct QuadProbFlatHashTableStEph should have impl Display outside verus!
 
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:286: warning: [13] impl ParaHashTableStEphTrait for StructChainedHashTableStEph should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:343: warning: [13] impl ChainedHashTable for StructChainedHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:286: warning: [13] impl ParaHashTableStEphTrait for StructChainedHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:343: warning: [13] impl ChainedHashTable for StructChainedHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:36: warning: [14] struct Node should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:45: warning: [14] struct ChainList should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:50: warning: [14] struct StructChainedHashTableStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:50: warning: [14] struct StructChainedHashTableStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:56: warning: [22] free spec fn spec_chain_to_map should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [12] no traits (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [20] no traits defined
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:92: warning: [13] impl ParaHashTableStEphTrait for VecChainedHashTableStEph should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:147: warning: [13] impl ChainedHashTable for VecChainedHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:92: warning: [13] impl ParaHashTableStEphTrait for VecChainedHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:147: warning: [13] impl ChainedHashTable for VecChainedHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:27: warning: [14] struct VecChainedHashTableStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:27: warning: [14] struct VecChainedHashTableStEph should have impl Display outside verus!
 
 ════════════════════════════════════════════════════════════════
-Summary: 131 passed, 22 warnings in 9 files (checked 9 files)
+Summary: 139 passed, 42 warnings in 9 files (checked 9 files)
 ════════════════════════════════════════════════════════════════

@@ -11,6 +11,7 @@ pub mod AugOrderedTableStEph {
     // 7. free functions (calculate_reduction)
     // 8. traits
     // 9. impls
+    // 10. iterators
     // 11. derive impls in verus!
     // 12. macros
     // 13. derive impls outside verus!
@@ -553,6 +554,33 @@ broadcast use {
             }
             let range_table = self.get_key_range(k1, k2);
             range_table.reduce_val()
+        }
+    }
+
+    // 10. iterators
+
+    impl<K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone> AugOrderedTableStEph<K, V, F> {
+        /// Returns an iterator over the table entries via the base ordered table.
+        pub fn iter(&self) -> (it: OrderedTableStEphIter<'_, K, V>)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.base_table.base_table.entries.seq@,
+                iter_invariant(&it),
+        {
+            self.base_table.iter()
+        }
+    }
+
+    impl<'a, K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone> std::iter::IntoIterator for &'a AugOrderedTableStEph<K, V, F> {
+        type Item = &'a Pair<K, V>;
+        type IntoIter = OrderedTableStEphIter<'a, K, V>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.base_table.base_table.entries.seq@,
+                iter_invariant(&it),
+        {
+            self.base_table.iter()
         }
     }
 

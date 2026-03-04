@@ -29,6 +29,7 @@ broadcast use {
     // 5. view impls
     // 8. traits
     // 9. impls
+    // 10. iterators
     // 11. derive impls in verus!
     // 12. macros
     // 13. derive impls outside verus!
@@ -491,6 +492,131 @@ broadcast use {
 
             *self = Self::empty();
             (from_sorted_entries(left_seq), from_sorted_entries(right_seq))
+        }
+    }
+
+    // 10. iterators
+
+    impl<K: MtKey, V: MtVal> OrderedTableMtEph<K, V> {
+        /// Returns an iterator over the table entries.
+        pub fn iter(&self) -> (it: OrderedTableMtEphIter<'_, K, V>)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.base_table.entries.seq@,
+                iter_invariant(&it),
+        {
+            OrderedTableMtEphIter { inner: self.base_table.entries.iter() }
+        }
+    }
+
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    pub struct OrderedTableMtEphIter<'a, K, V> {
+        pub inner: ArraySeqMtEphIter<'a, Pair<K, V>>,
+    }
+
+    impl<'a, K, V> View for OrderedTableMtEphIter<'a, K, V> {
+        type V = (int, Seq<Pair<K, V>>);
+        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant<'a, K, V>(it: &OrderedTableMtEphIter<'a, K, V>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<'a, K: MtKey, V: MtVal> std::iter::Iterator for OrderedTableMtEphIter<'a, K, V> {
+        type Item = &'a Pair<K, V>;
+
+        fn next(&mut self) -> (next: Option<&'a Pair<K, V>>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            self.inner.next()
+        }
+    }
+
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    pub struct OrderedTableMtEphGhostIterator<'a, K, V> {
+        pub pos: int,
+        pub elements: Seq<Pair<K, V>>,
+        pub phantom: core::marker::PhantomData<&'a (K, V)>,
+    }
+
+    impl<'a, K, V> View for OrderedTableMtEphGhostIterator<'a, K, V> {
+        type V = Seq<Pair<K, V>>;
+
+        open spec fn view(&self) -> Seq<Pair<K, V>> {
+            self.elements.take(self.pos)
+        }
+    }
+
+    impl<'a, K: MtKey, V: MtVal> vstd::pervasive::ForLoopGhostIteratorNew for OrderedTableMtEphIter<'a, K, V> {
+        type GhostIter = OrderedTableMtEphGhostIterator<'a, K, V>;
+        open spec fn ghost_iter(&self) -> OrderedTableMtEphGhostIterator<'a, K, V> {
+            OrderedTableMtEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, K: MtKey, V: MtVal> vstd::pervasive::ForLoopGhostIterator for OrderedTableMtEphGhostIterator<'a, K, V> {
+        type ExecIter = OrderedTableMtEphIter<'a, K, V>;
+        type Item = Pair<K, V>;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &OrderedTableMtEphIter<'a, K, V>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &OrderedTableMtEphIter<'a, K, V>) -> OrderedTableMtEphGhostIterator<'a, K, V> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, K: MtKey, V: MtVal> std::iter::IntoIterator for &'a OrderedTableMtEph<K, V> {
+        type Item = &'a Pair<K, V>;
+        type IntoIter = OrderedTableMtEphIter<'a, K, V>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.base_table.entries.seq@,
+                iter_invariant(&it),
+        {
+            OrderedTableMtEphIter { inner: self.base_table.entries.iter() }
         }
     }
 
