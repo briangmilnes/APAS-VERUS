@@ -10,6 +10,7 @@ pub mod OrderedSetStPer {
     // 5. view impls
     // 8. traits
     // 9. impls
+    // 10. iterators
     // 11. derive impls in verus!
     // 12. macros
     // 13. derive impls outside verus!
@@ -21,6 +22,8 @@ pub mod OrderedSetStPer {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
 
@@ -431,6 +434,150 @@ broadcast use {
         }
     }
 
+    #[verifier::external_body]
+    pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStPer<T>)
+        ensures constructed@.finite()
+    {
+        let seq = AVLTreeSeqStPerS::from_vec(elements);
+        OrderedSetStPer::from_seq(seq)
+    }
+
+    // 10. iterators
+
+    impl<T: StT + Ord> OrderedSetStPer<T> {
+        /// Returns an iterator over the set elements in sorted order.
+        #[verifier::external_body]
+        pub fn iter(&self) -> (it: OrderedSetStPerIter<'_, T>)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.base_set.elements@,
+                iter_invariant(&it),
+        {
+            let len = self.base_set.elements.length();
+            OrderedSetStPerIter { seq: &self.base_set.elements, pos: 0, len }
+        }
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct OrderedSetStPerIter<'a, T: StT + Ord> {
+        pub seq: &'a AVLTreeSeqStPerS<T>,
+        pub pos: usize,
+        pub len: usize,
+    }
+
+    impl<'a, T: StT + Ord> View for OrderedSetStPerIter<'a, T> {
+        type V = (int, Seq<T::V>);
+        open spec fn view(&self) -> (int, Seq<T::V>) { (self.pos as int, self.seq@) }
+    }
+
+    pub open spec fn iter_invariant<'a, T: StT + Ord>(it: &OrderedSetStPerIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<'a, T: StT + Ord> std::iter::Iterator for OrderedSetStPerIter<'a, T> {
+        type Item = &'a T;
+
+        #[verifier::external_body]
+        fn next(&mut self) -> (next: Option<&'a T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element@ == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            if self.pos < self.len {
+                let elem = self.seq.nth(self.pos);
+                self.pos += 1;
+                Some(elem)
+            } else {
+                None
+            }
+        }
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct OrderedSetStPerGhostIterator<'a, T: StT + Ord> {
+        pub pos: int,
+        pub elements: Seq<T::V>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+    impl<'a, T: StT + Ord> View for OrderedSetStPerGhostIterator<'a, T> {
+        type V = Seq<T::V>;
+
+        open spec fn view(&self) -> Seq<T::V> {
+            self.elements.take(self.pos)
+        }
+    }
+
+    impl<'a, T: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for OrderedSetStPerIter<'a, T> {
+        type GhostIter = OrderedSetStPerGhostIterator<'a, T>;
+        open spec fn ghost_iter(&self) -> OrderedSetStPerGhostIterator<'a, T> {
+            OrderedSetStPerGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, T: StT + Ord> vstd::pervasive::ForLoopGhostIterator for OrderedSetStPerGhostIterator<'a, T> {
+        type ExecIter = OrderedSetStPerIter<'a, T>;
+        type Item = T::V;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &OrderedSetStPerIter<'a, T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T::V> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &OrderedSetStPerIter<'a, T>) -> OrderedSetStPerGhostIterator<'a, T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: StT + Ord> std::iter::IntoIterator for &'a OrderedSetStPer<T> {
+        type Item = &'a T;
+        type IntoIter = OrderedSetStPerIter<'a, T>;
+        #[verifier::external_body]
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.base_set.elements@,
+                iter_invariant(&it),
+        {
+            let len = self.base_set.elements.length();
+            OrderedSetStPerIter { seq: &self.base_set.elements, pos: 0, len }
+        }
+    }
+
     // 11. derive impls in verus!
 
     impl<T: StT + Ord> Clone for OrderedSetStPer<T> {
@@ -443,13 +590,21 @@ broadcast use {
         }
     }
 
-    #[verifier::external_body]
-    pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStPer<T>)
-        ensures constructed@.finite()
-    {
-        let seq = AVLTreeSeqStPerS::from_vec(elements);
-        OrderedSetStPer::from_seq(seq)
+    impl<T: StT + Ord> Default for OrderedSetStPer<T> {
+        fn default() -> (d: Self)
+            ensures d@.finite(), d@.len() == 0
+        {
+            Self::empty()
+        }
     }
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: StT + Ord> PartialEqSpecImpl for OrderedSetStPer<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<T: StT + Ord> Eq for OrderedSetStPer<T> {}
 
     } // verus!
 
@@ -468,21 +623,9 @@ broadcast use {
 
     // 13. derive impls outside verus!
 
-    impl<T: StT + Ord> Default for OrderedSetStPer<T> {
-        fn default() -> Self { Self::empty() }
-    }
-
     impl<T: StT + Ord> PartialEq for OrderedSetStPer<T> {
         fn eq(&self, other: &Self) -> bool {
-            self.size() == other.size() && {
-                let seq = self.to_seq();
-                for i in 0..seq.length() {
-                    if !other.find(seq.nth(i)) {
-                        return false;
-                    }
-                }
-                true
-            }
+            self.base_set == other.base_set
         }
     }
 
@@ -493,6 +636,18 @@ broadcast use {
             for i in 0..seq.length() {
                 if i > 0 { write!(f, ", ")?; }
                 write!(f, "{:?}", seq.nth(i))?;
+            }
+            write!(f, "}}")
+        }
+    }
+
+    impl<T: StT + Ord> fmt::Display for OrderedSetStPer<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "{{")?;
+            let seq = self.to_seq();
+            for i in 0..seq.length() {
+                if i > 0 { write!(f, ", ")?; }
+                write!(f, "{}", seq.nth(i))?;
             }
             write!(f, "}}")
         }

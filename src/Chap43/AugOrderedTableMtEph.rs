@@ -13,6 +13,7 @@ pub mod AugOrderedTableMtEph {
     // 7. free functions (calculate_reduction, recalculate_reduction)
     // 8. traits
     // 9. impls
+    // 10. iterators
     // 11. derive impls in verus!
     // 12. macros
     // 13. derive impls outside verus!
@@ -551,6 +552,33 @@ broadcast use {
             } else {
                 range_table.reduce_val()
             }
+        }
+    }
+
+    // 10. iterators
+
+    impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> AugOrderedTableMtEph<K, V, F> {
+        /// Returns an iterator over the table entries via the base ordered table.
+        pub fn iter(&self) -> (it: OrderedTableMtEphIter<'_, K, V>)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.base_table.base_table.entries.seq@,
+                0 <= it@.0 <= it@.1.len(),
+        {
+            self.base_table.iter()
+        }
+    }
+
+    impl<'a, K: MtKey, V: MtVal, F: MtReduceFn<V>> std::iter::IntoIterator for &'a AugOrderedTableMtEph<K, V, F> {
+        type Item = &'a Pair<K, V>;
+        type IntoIter = OrderedTableMtEphIter<'a, K, V>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.base_table.base_table.entries.seq@,
+                0 <= it@.0 <= it@.1.len(),
+        {
+            self.base_table.iter()
         }
     }
 

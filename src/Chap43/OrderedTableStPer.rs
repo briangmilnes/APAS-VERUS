@@ -720,6 +720,8 @@ pub mod OrderedTableStPer {
 
     } // verus!
 
+    // 12. macros
+
     /// Macro for creating ordered tables from sorted key-value pairs
     #[macro_export]
     macro_rules! OrderedTableStPerLit {
@@ -731,5 +733,21 @@ pub mod OrderedTableStPer {
             let seq = $crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerS::from_vec(pairs);
             $crate::Chap43::OrderedTableStPer::OrderedTableStPer::from_sorted_entries(seq)
         }};
+    }
+
+    // 13. derive impls outside verus!
+
+    use std::fmt;
+
+    impl<K: StT + Ord, V: StT> fmt::Debug for OrderedTableStPer<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableStPer(size: {})", self.size())
+        }
+    }
+
+    impl<K: StT + Ord, V: StT> fmt::Display for OrderedTableStPer<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableStPer(size: {})", self.size())
+        }
     }
 }

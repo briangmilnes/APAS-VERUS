@@ -12,6 +12,7 @@ pub mod AugOrderedTableStPer {
     // 7. proof fns, helper fns
     // 8. traits
     // 9. impls
+    // 10. iterators
     // 11. derive impls in verus!
     // 12. macros
     // 13. derive impls outside verus!
@@ -661,24 +662,34 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    // 10. iterators
 
-    impl<K: StT + Ord, V: StT, F> Clone for AugOrderedTableStPer<K, V, F>
-    where
-        F: Fn(&V, &V) -> V + Clone,
-    {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
+    impl<K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone> AugOrderedTableStPer<K, V, F> {
+        /// Returns an iterator over the table entries via the base ordered table.
+        pub fn iter(&self) -> (it: OrderedTableStPerIter<'_, K, V>)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.base_table.base_table.entries.seq@,
+                iter_invariant(&it),
         {
-            let r = Self {
-                base_table: self.base_table.clone(),
-                cached_reduction: self.cached_reduction.clone(),
-                reducer: self.reducer.clone(),
-                identity: self.identity.clone(),
-            };
-            r
+            self.base_table.iter()
         }
     }
+
+    impl<'a, K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone> std::iter::IntoIterator for &'a AugOrderedTableStPer<K, V, F> {
+        type Item = &'a Pair<K, V>;
+        type IntoIter = OrderedTableStPerIter<'a, K, V>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.base_table.base_table.entries.seq@,
+                iter_invariant(&it),
+        {
+            self.base_table.iter()
+        }
+    }
+
+    // 11. derive impls in verus!
 
     #[cfg(verus_keep_ghost)]
     impl<K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone> PartialEqSpecImpl for AugOrderedTableStPer<K, V, F> {
@@ -695,6 +706,23 @@ broadcast use {
             let equal = self.base_table == other.base_table;
             proof { lemma_aug_view(self); lemma_aug_view(other); }
             equal
+        }
+    }
+
+    impl<K: StT + Ord, V: StT, F> Clone for AugOrderedTableStPer<K, V, F>
+    where
+        F: Fn(&V, &V) -> V + Clone,
+    {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            let r = Self {
+                base_table: self.base_table.clone(),
+                cached_reduction: self.cached_reduction.clone(),
+                reducer: self.reducer.clone(),
+                identity: self.identity.clone(),
+            };
+            r
         }
     }
 

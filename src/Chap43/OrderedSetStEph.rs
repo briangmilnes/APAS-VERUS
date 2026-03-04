@@ -10,6 +10,7 @@ pub mod OrderedSetStEph {
     // 5. view impls
     // 8. traits
     // 9. impls
+    // 10. iterators
     // 11. derive impls in verus!
     // 12. macros
     // 13. derive impls outside verus!
@@ -389,6 +390,142 @@ broadcast use {
             *self = Self::empty();
 
             (Self::from_seq(left_seq), Self::from_seq(right_seq))
+        }
+    }
+
+    // 10. iterators
+
+    impl<T: StT + Ord> OrderedSetStEph<T> {
+        /// Returns an iterator over the set elements in sorted order.
+        #[verifier::external_body]
+        pub fn iter(&self) -> (it: OrderedSetStEphIter<'_, T>)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.base_set.elements@,
+                iter_invariant(&it),
+        {
+            let len = self.base_set.elements.length();
+            OrderedSetStEphIter { seq: &self.base_set.elements, pos: 0, len }
+        }
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct OrderedSetStEphIter<'a, T: StT + Ord> {
+        pub seq: &'a AVLTreeSeqStEphS<T>,
+        pub pos: usize,
+        pub len: usize,
+    }
+
+    impl<'a, T: StT + Ord> View for OrderedSetStEphIter<'a, T> {
+        type V = (int, Seq<T::V>);
+        open spec fn view(&self) -> (int, Seq<T::V>) { (self.pos as int, self.seq@) }
+    }
+
+    pub open spec fn iter_invariant<'a, T: StT + Ord>(it: &OrderedSetStEphIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<'a, T: StT + Ord> std::iter::Iterator for OrderedSetStEphIter<'a, T> {
+        type Item = &'a T;
+
+        #[verifier::external_body]
+        fn next(&mut self) -> (next: Option<&'a T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element@ == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            if self.pos < self.len {
+                let elem = self.seq.nth(self.pos);
+                self.pos += 1;
+                Some(elem)
+            } else {
+                None
+            }
+        }
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct OrderedSetStEphGhostIterator<'a, T: StT + Ord> {
+        pub pos: int,
+        pub elements: Seq<T::V>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+    impl<'a, T: StT + Ord> View for OrderedSetStEphGhostIterator<'a, T> {
+        type V = Seq<T::V>;
+
+        open spec fn view(&self) -> Seq<T::V> {
+            self.elements.take(self.pos)
+        }
+    }
+
+    impl<'a, T: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for OrderedSetStEphIter<'a, T> {
+        type GhostIter = OrderedSetStEphGhostIterator<'a, T>;
+        open spec fn ghost_iter(&self) -> OrderedSetStEphGhostIterator<'a, T> {
+            OrderedSetStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, T: StT + Ord> vstd::pervasive::ForLoopGhostIterator for OrderedSetStEphGhostIterator<'a, T> {
+        type ExecIter = OrderedSetStEphIter<'a, T>;
+        type Item = T::V;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &OrderedSetStEphIter<'a, T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T::V> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &OrderedSetStEphIter<'a, T>) -> OrderedSetStEphGhostIterator<'a, T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: StT + Ord> std::iter::IntoIterator for &'a OrderedSetStEph<T> {
+        type Item = &'a T;
+        type IntoIter = OrderedSetStEphIter<'a, T>;
+        #[verifier::external_body]
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.base_set.elements@,
+                iter_invariant(&it),
+        {
+            let len = self.base_set.elements.length();
+            OrderedSetStEphIter { seq: &self.base_set.elements, pos: 0, len }
         }
     }
 
