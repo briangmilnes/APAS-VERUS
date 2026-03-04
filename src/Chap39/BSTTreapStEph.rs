@@ -934,4 +934,16 @@ pub mod BSTTreapStEph {
             f.debug_struct("BSTTreapStEph").field("root", &self.root).finish()
         }
     }
+
+    impl<T: StT + Ord + IsLtTransitive + fmt::Display> fmt::Display for Node<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Node(key={}, priority={}, size={})", self.key, self.priority, self.size)
+        }
+    }
+
+    impl<T: StT + Ord + IsLtTransitive> fmt::Display for BSTTreapStEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTTreapStEph(size: {})", self.size())
+        }
+    }
 }

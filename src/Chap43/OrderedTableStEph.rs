@@ -111,29 +111,68 @@ broadcast use {
             ensures self@.dom().finite();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite();
+        /// ADT 43.1 first_key. Work Θ(log n), Span Θ(log n).
         fn first_key(&self) -> (first: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> first matches None,
+                first matches Some(k) ==> self@.dom().contains(k@);
+        /// ADT 43.1 last_key. Work Θ(log n), Span Θ(log n).
         fn last_key(&self) -> (last: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> last matches None,
+                last matches Some(k) ==> self@.dom().contains(k@);
+        /// ADT 43.1 previous_key. Work Θ(log n), Span Θ(log n).
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                predecessor matches Some(pk) ==> self@.dom().contains(pk@);
+        /// ADT 43.1 next_key. Work Θ(log n), Span Θ(log n).
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                successor matches Some(nk) ==> self@.dom().contains(nk@);
+        /// ADT 43.1 split_key. Work Θ(log n), Span Θ(log n).
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.2@.dom().finite(),
+                split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],
+                split.1 matches None ==> !old(self)@.contains_key(k@);
+        /// ADT 43.1 join_key. Work Θ(log(|left|+|right|)), Span Θ(log(|left|+|right|)).
         fn join_key(&mut self, other: Self)
             requires obeys_feq_clone::<K>(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
             ensures self@.dom().finite();
+        /// ADT 43.1 get_key_range. Work Θ(log n), Span Θ(log n).
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
-            ensures range@.dom().finite();
+            ensures
+                range@.dom().finite(),
+                range@.dom().subset_of(self@.dom());
+        /// ADT 43.1 rank_key. Work Θ(log n), Span Θ(log n).
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len();
+        /// ADT 43.1 select_key. Work Θ(log n), Span Θ(log n).
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                i >= self@.dom().len() ==> selected matches None,
+                selected matches Some(k) ==> self@.dom().contains(k@);
+        /// ADT 43.1 split_rank_key. Work Θ(log n), Span Θ(log n).
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.1@.dom().finite(),
+                split.0@.dom().subset_of(old(self)@.dom()),
+                split.1@.dom().subset_of(old(self)@.dom());
     }
 
     // 9. impls
@@ -308,7 +347,10 @@ broadcast use {
 
         #[verifier::external_body]
         fn first_key(&self) -> (first: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> first matches None,
+                first matches Some(k) ==> self@.dom().contains(k@),
         {
             let entries = self.collect();
             if entries.length() == 0 {
@@ -320,7 +362,10 @@ broadcast use {
 
         #[verifier::external_body]
         fn last_key(&self) -> (last: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> last matches None,
+                last matches Some(k) ==> self@.dom().contains(k@),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -333,7 +378,9 @@ broadcast use {
 
         #[verifier::external_body]
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                predecessor matches Some(pk) ==> self@.dom().contains(pk@),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -349,7 +396,9 @@ broadcast use {
 
         #[verifier::external_body]
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                successor matches Some(nk) ==> self@.dom().contains(nk@),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -365,7 +414,13 @@ broadcast use {
 
         #[verifier::external_body]
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.2@.dom().finite(),
+                split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],
+                split.1 matches None ==> !old(self)@.contains_key(k@),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -404,7 +459,9 @@ broadcast use {
 
         #[verifier::external_body]
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
-            ensures range@.dom().finite()
+            ensures
+                range@.dom().finite(),
+                range@.dom().subset_of(self@.dom()),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -423,7 +480,9 @@ broadcast use {
 
         #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len(),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -442,7 +501,10 @@ broadcast use {
 
         #[verifier::external_body]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                i >= self@.dom().len() ==> selected matches None,
+                selected matches Some(k) ==> self@.dom().contains(k@),
         {
             let entries = self.collect();
             if i >= entries.length() {
@@ -454,7 +516,13 @@ broadcast use {
 
         #[verifier::external_body]
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.1@.dom().finite(),
+                split.0@.dom().subset_of(old(self)@.dom()),
+                split.1@.dom().subset_of(old(self)@.dom()),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -635,11 +703,29 @@ broadcast use {
 
     } // verus!
 
+    // 13. derive impls outside verus!
+
+    use std::fmt;
+
     impl<K: StT + Ord, V: StT> PartialEq for OrderedTableStEph<K, V> {
         fn eq(&self, other: &Self) -> bool {
             self.base_table == other.base_table
         }
     }
+
+    impl<K: StT + Ord, V: StT> fmt::Debug for OrderedTableStEph<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableStEph(size: {})", self.size())
+        }
+    }
+
+    impl<K: StT + Ord, V: StT> fmt::Display for OrderedTableStEph<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableStEph(size: {})", self.size())
+        }
+    }
+
+    // 12. macros
 
     /// Macro for creating ephemeral ordered tables from sorted key-value pairs
     #[macro_export]

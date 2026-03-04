@@ -65,9 +65,19 @@ broadcast use {
         fn singleton(k: K, v: V) -> (tree: Self)
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite();
 
-        fn find(&self, k: &K) -> (found: Option<V>);
+        fn find(&self, k: &K) -> (found: Option<V>)
+            ensures
+                match found {
+                    Some(v) => self@.contains_key(k@),
+                    None => !self@.contains_key(k@),
+                };
 
-        fn lookup(&self, k: &K) -> (value: Option<V>);
+        fn lookup(&self, k: &K) -> (value: Option<V>)
+            ensures
+                match value {
+                    Some(v) => self@.contains_key(k@),
+                    None => !self@.contains_key(k@),
+                };
 
         fn is_empty(&self) -> (is_empty: B)
             ensures is_empty == self@.dom().is_empty();
@@ -651,9 +661,23 @@ broadcast use {
 
     // 13. derive impls outside verus!
 
+    use std::fmt;
+
     impl<K: MtKey, V: MtVal> PartialEq for OrderedTableMtEph<K, V> {
         fn eq(&self, other: &Self) -> bool {
             self.base_table == other.base_table
+        }
+    }
+
+    impl<K: MtKey, V: MtVal> fmt::Debug for OrderedTableMtEph<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableMtEph(size: {})", self.size())
+        }
+    }
+
+    impl<K: MtKey, V: MtVal> fmt::Display for OrderedTableMtEph<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableMtEph(size: {})", self.size())
         }
     }
 
