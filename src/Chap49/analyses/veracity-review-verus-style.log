@@ -1,213 +1,213 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent2/src/Chap49/
-Codebase: /home/milnes/projects/APAS-VERUS-agent2
+Path: /home/milnes/projects/APAS-VERUS-agent4/src/Chap49/
+Codebase: /home/milnes/projects/APAS-VERUS-agent4
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent2/src/Chap49/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent4/src/Chap49/analyses/veracity-review-verus-style.log
 
 Checking 8 files...
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:147: warning: [12] trait MinEditDistMtEphTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:331: warning: [13] impl MinEditDistMtEphMutTrait for MinEditDistMtEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:46: warning: [14] struct MinEditDistMtEphMemoInv should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:46: warning: [14] struct MinEditDistMtEphMemoInv should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:338: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:342: warning: [15] impl Eq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:54: warning: [18] struct MinEditDistMtEphS should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:64: warning: [18] spec fn spec_med should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:81: warning: [18] trait MinEditDistMtEphTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:90: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:98: warning: [19] from_sequences return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:64: warning: [22] free spec fn spec_med should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:147: warning: [12] trait MinEditDistMtEphTrait fn memo_size should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:331: warning: [13] impl MinEditDistMtEphMutTrait for MinEditDistMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:46: warning: [14] struct MinEditDistMtEphMemoInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:46: warning: [14] struct MinEditDistMtEphMemoInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:338: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:342: warning: [15] impl Eq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:54: warning: [18] struct MinEditDistMtEphS should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:64: warning: [18] spec fn spec_med should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:81: warning: [18] trait MinEditDistMtEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:90: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:98: warning: [19] from_sequences return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:64: warning: [22] free spec fn spec_med should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:104: warning: [12] trait MinEditDistMtPerTrait fn min_edit_distance should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:120: warning: [12] trait MinEditDistMtPerTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:45: warning: [14] struct MinEditDistMtPerMemoInv should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:45: warning: [14] struct MinEditDistMtPerMemoInv should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:267: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:271: warning: [15] impl Eq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:53: warning: [18] struct MinEditDistMtPerS should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:63: warning: [18] spec fn spec_med should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:80: warning: [18] trait MinEditDistMtPerTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:89: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:97: warning: [19] from_sequences return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:63: warning: [22] free spec fn spec_med should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:104: warning: [12] trait MinEditDistMtPerTrait fn min_edit_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:120: warning: [12] trait MinEditDistMtPerTrait fn memo_size should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:45: warning: [14] struct MinEditDistMtPerMemoInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:45: warning: [14] struct MinEditDistMtPerMemoInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:267: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:271: warning: [15] impl Eq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:53: warning: [18] struct MinEditDistMtPerS should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:63: warning: [18] spec fn spec_med should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:80: warning: [18] trait MinEditDistMtPerTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:89: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:97: warning: [19] from_sequences return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:63: warning: [22] free spec fn spec_med should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:144: warning: [12] trait MinEditDistStEphTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:279: warning: [13] impl MinEditDistStEphMutTrait for MinEditDistStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:308: warning: [13] impl IntoIterator for MinEditDistStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:318: warning: [13] impl IntoIterator for MinEditDistStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:334: warning: [13] impl IntoIterator for MinEditDistStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: warning: [17] IntoIterator for MinEditDistStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: warning: [17] IntoIterator for MinEditDistStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:1: warning: [17] IntoIterator for MinEditDistStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:88: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:96: warning: [19] from_sequences return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:56: warning: [22] free spec fn spec_med should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStEph.rs:71: warning: [22] free spec fn spec_memo_bounded should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:144: warning: [12] trait MinEditDistStEphTrait fn memo_size should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:279: warning: [13] impl MinEditDistStEphMutTrait for MinEditDistStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:308: warning: [13] impl IntoIterator for MinEditDistStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:318: warning: [13] impl IntoIterator for MinEditDistStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:334: warning: [13] impl IntoIterator for MinEditDistStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: warning: [17] IntoIterator for MinEditDistStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: warning: [17] IntoIterator for MinEditDistStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:1: warning: [17] IntoIterator for MinEditDistStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:88: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:96: warning: [19] from_sequences return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:56: warning: [22] free spec fn spec_med should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStEph.rs:71: warning: [22] free spec fn spec_memo_bounded should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:118: warning: [12] trait MinEditDistStPerTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:267: warning: [13] impl IntoIterator for MinEditDistStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:277: warning: [13] impl IntoIterator for MinEditDistStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:235: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:243: warning: [15] impl Eq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:1: warning: [17] IntoIterator for MinEditDistStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:1: warning: [17] IntoIterator for MinEditDistStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:88: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:96: warning: [19] from_sequences return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:56: warning: [22] free spec fn spec_med should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistStPer.rs:71: warning: [22] free spec fn spec_memo_bounded should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:118: warning: [12] trait MinEditDistStPerTrait fn memo_size should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:267: warning: [13] impl IntoIterator for MinEditDistStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:277: warning: [13] impl IntoIterator for MinEditDistStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:235: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:243: warning: [15] impl Eq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:1: warning: [17] IntoIterator for MinEditDistStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:1: warning: [17] IntoIterator for MinEditDistStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:88: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:96: warning: [19] from_sequences return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:56: warning: [22] free spec fn spec_med should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistStPer.rs:71: warning: [22] free spec fn spec_memo_bounded should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:124: warning: [12] trait SubsetSumMtEphTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:280: warning: [13] impl SubsetSumMtEphMutTrait for SubsetSumMtEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:46: warning: [14] struct SubsetSumMtEphMemoInv should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:46: warning: [14] struct SubsetSumMtEphMemoInv should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:286: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:290: warning: [15] impl Eq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:54: warning: [18] struct SubsetSumMtEphS should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:63: warning: [18] spec fn spec_subset_sum should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:82: warning: [18] trait SubsetSumMtEphTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:88: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:96: warning: [19] from_multiset return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:63: warning: [22] free spec fn spec_subset_sum should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:124: warning: [12] trait SubsetSumMtEphTrait fn memo_size should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:280: warning: [13] impl SubsetSumMtEphMutTrait for SubsetSumMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:46: warning: [14] struct SubsetSumMtEphMemoInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:46: warning: [14] struct SubsetSumMtEphMemoInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:286: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:290: warning: [15] impl Eq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:54: warning: [18] struct SubsetSumMtEphS should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:63: warning: [18] spec fn spec_subset_sum should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:82: warning: [18] trait SubsetSumMtEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:88: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:96: warning: [19] from_multiset return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:63: warning: [22] free spec fn spec_subset_sum should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:100: warning: [12] trait SubsetSumMtPerTrait fn subset_sum should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:111: warning: [12] trait SubsetSumMtPerTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:45: warning: [14] struct SubsetSumMtPerMemoInv should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:45: warning: [14] struct SubsetSumMtPerMemoInv should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:247: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:251: warning: [15] impl Eq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:53: warning: [18] struct SubsetSumMtPerS should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:62: warning: [18] spec fn spec_subset_sum should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:81: warning: [18] trait SubsetSumMtPerTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:87: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:95: warning: [19] from_multiset return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:62: warning: [22] free spec fn spec_subset_sum should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:100: warning: [12] trait SubsetSumMtPerTrait fn subset_sum should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:111: warning: [12] trait SubsetSumMtPerTrait fn memo_size should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:45: warning: [14] struct SubsetSumMtPerMemoInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:45: warning: [14] struct SubsetSumMtPerMemoInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:247: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:251: warning: [15] impl Eq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:53: warning: [18] struct SubsetSumMtPerS should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:62: warning: [18] spec fn spec_subset_sum should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:81: warning: [18] trait SubsetSumMtPerTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:87: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:95: warning: [19] from_multiset return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:62: warning: [22] free spec fn spec_subset_sum should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:114: warning: [12] trait SubsetSumStEphTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:225: warning: [13] impl SubsetSumStEphMutTrait for SubsetSumStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:251: warning: [13] impl IntoIterator for SubsetSumStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:258: warning: [13] impl IntoIterator for SubsetSumStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:265: warning: [13] impl IntoIterator for SubsetSumStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: warning: [17] IntoIterator for SubsetSumStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: warning: [17] IntoIterator for SubsetSumStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:1: warning: [17] IntoIterator for SubsetSumStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:78: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:86: warning: [19] from_multiset return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStEph.rs:53: warning: [22] free spec fn spec_subset_sum should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:114: warning: [12] trait SubsetSumStEphTrait fn memo_size should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:225: warning: [13] impl SubsetSumStEphMutTrait for SubsetSumStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:251: warning: [13] impl IntoIterator for SubsetSumStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:258: warning: [13] impl IntoIterator for SubsetSumStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:265: warning: [13] impl IntoIterator for SubsetSumStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: warning: [17] IntoIterator for SubsetSumStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: warning: [17] IntoIterator for SubsetSumStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:1: warning: [17] IntoIterator for SubsetSumStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:78: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:86: warning: [19] from_multiset return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStEph.rs:53: warning: [22] free spec fn spec_subset_sum should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:91: warning: [12] trait SubsetSumStPerTrait fn subset_sum should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:102: warning: [12] trait SubsetSumStPerTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:231: warning: [13] impl IntoIterator for SubsetSumStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:238: warning: [13] impl IntoIterator for SubsetSumStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:203: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:209: warning: [15] impl Eq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:1: warning: [17] IntoIterator for SubsetSumStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:1: warning: [17] IntoIterator for SubsetSumStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:78: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:86: warning: [19] from_multiset return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumStPer.rs:53: warning: [22] free spec fn spec_subset_sum should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:91: warning: [12] trait SubsetSumStPerTrait fn subset_sum should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:102: warning: [12] trait SubsetSumStPerTrait fn memo_size should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:231: warning: [13] impl IntoIterator for SubsetSumStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:238: warning: [13] impl IntoIterator for SubsetSumStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:203: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:209: warning: [15] impl Eq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:1: warning: [17] IntoIterator for SubsetSumStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:1: warning: [17] IntoIterator for SubsetSumStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:78: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:86: warning: [19] from_multiset return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumStPer.rs:53: warning: [22] free spec fn spec_subset_sum should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
 Summary: 92 passed, 93 warnings in 8 files (checked 8 files)

@@ -1,5 +1,22 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 42 single-threaded ephemeral table implementation using ArraySeq as backing store.
+
+//  Table of Contents
+//	1. module
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod TableStEph {
 
@@ -15,6 +32,8 @@ pub mod TableStEph {
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     // Table of Contents
     // 1. module (above)
@@ -32,6 +51,8 @@ pub mod TableStEph {
 
     verus! {
 
+    //		3. broadcast use
+
     // 3. broadcast use
 
 broadcast use {
@@ -42,6 +63,9 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
+
+    //		4. type definitions
+
     // 4. type definitions
 
     #[verifier::reject_recursive_types(K)]
@@ -51,6 +75,19 @@ broadcast use {
     }
 
     pub type TableS<K, V> = TableStEph<K, V>;
+
+
+    //		5. view impls
+
+    impl<K: StT + Ord, V: StT> View for TableStEph<K, V> {
+        type V = Map<K::V, V::V>;
+        open spec fn view(&self) -> Map<K::V, V::V> {
+            spec_entries_to_map(self.entries@)
+        }
+    }
+
+
+    //		6. spec fns
 
     // 5. view impls
 
@@ -67,13 +104,6 @@ broadcast use {
         }
     }
 
-    impl<K: StT + Ord, V: StT> View for TableStEph<K, V> {
-        type V = Map<K::V, V::V>;
-        open spec fn view(&self) -> Map<K::V, V::V> {
-            spec_entries_to_map(self.entries@)
-        }
-    }
-
     // 6. spec fns
 
     // Keys in the entry sequence are unique.
@@ -82,11 +112,8 @@ broadcast use {
             0 <= i < j < entries.len() ==> (#[trigger] entries[i]).0 != (#[trigger] entries[j]).0
     }
 
-    impl<K: StT + Ord, V: StT> TableStEph<K, V> {
-        pub open spec fn spec_tablesteph_wf(&self) -> bool {
-            spec_keys_no_dups(self.entries@)
-        }
-    }
+
+    //		7. proof fns/broadcast groups
 
     // 7. proof fns
 
@@ -248,6 +275,18 @@ broadcast use {
         }
     }
 
+    pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
+        ensures spec_entries_to_map(entries).dom().finite()
+        decreases entries.len()
+    {
+        if entries.len() > 0 {
+            lemma_entries_to_map_finite::<KV, VV>(entries.drop_last());
+        }
+    }
+
+
+    //		8. traits
+
     // 8. traits
 
     /// Trait defining the Table ADT operations from Chapter 42
@@ -286,7 +325,7 @@ broadcast use {
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_feq_clone::<K>(),
                 obeys_view_eq::<K>(),
-            ensures self@.dom().subset_of(old(self)@.dom().intersect(other@.dom()));
+            ensures self@.dom() =~= old(self)@.dom().intersect(other@.dom());
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
             requires
@@ -294,11 +333,11 @@ broadcast use {
                 obeys_feq_clone::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
-            ensures old(self)@.dom().union(other@.dom()).subset_of(self@.dom());
+            ensures self@.dom() =~= old(self)@.dom().union(other@.dom());
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn difference(&mut self, other: &Self)
             requires obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
-            ensures self@.dom().subset_of(old(self)@.dom().difference(other@.dom()));
+            ensures self@.dom() =~= old(self)@.dom().difference(other@.dom());
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn find(&self, key: &K) -> (found: Option<V>)
             requires self.spec_tablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
@@ -309,26 +348,37 @@ broadcast use {
                 };
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn delete(&mut self, key: &K)
-            requires obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>()
-            ensures !self@.contains_key(key@);
+            requires old(self).spec_tablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>()
+            ensures self@ =~= old(self)@.remove(key@);
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
             requires
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
-            ensures self@.contains_key(key@);
+            ensures
+                self@.contains_key(key@),
+                self@.dom() =~= old(self)@.dom().insert(key@);
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            requires obeys_feq_full::<Pair<K, V>>()
-            ensures self@.dom().subset_of(old(self)@.dom());
+            requires keys@.finite(), obeys_feq_full::<Pair<K, V>>()
+            ensures self@.dom() =~= old(self)@.dom().intersect(keys@);
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            requires obeys_feq_full::<Pair<K, V>>()
-            ensures self@.dom().subset_of(old(self)@.dom());
+            requires keys@.finite(), obeys_feq_full::<Pair<K, V>>()
+            ensures self@.dom() =~= old(self)@.dom().difference(keys@);
 
         /// Returns a flat sequence of (K, V) pairs in key order.
         fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>);
+    }
+
+
+    //		9. impls
+
+    impl<K: StT + Ord, V: StT> TableStEph<K, V> {
+        pub open spec fn spec_tablesteph_wf(&self) -> bool {
+            spec_keys_no_dups(self.entries@)
+        }
     }
 
     // 9. impls
@@ -488,49 +538,55 @@ broadcast use {
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
         {
             let ghost old_self_view = self.entries@;
-            let other_len = other.entries.length();
+            let ghost other_view = other.entries@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();
-            let ghost mut self_sources: Seq<int> = Seq::empty();
-            let ghost mut other_sources: Seq<int> = Seq::empty();
+            let ghost mut self_srcs: Seq<int> = Seq::empty();
+            let ghost mut other_srcs: Seq<int> = Seq::empty();
             let mut i: usize = 0;
             while i < self.entries.length()
                 invariant
                     i <= self.entries.spec_len(),
                     self.entries@ == old_self_view,
-                    other_len as int == other.entries.spec_len(),
-                    self_sources.len() == kept@.len(),
-                    other_sources.len() == kept@.len(),
-                    forall|k: int| #![auto] 0 <= k < self_sources.len() ==>
-                        0 <= self_sources[k] < old_self_view.len()
-                        && old_self_view[self_sources[k]].0 == kept@[k].0@,
-                    forall|k: int| #![auto] 0 <= k < other_sources.len() ==>
-                        0 <= other_sources[k] < other.entries@.len()
-                        && other.entries@[other_sources[k]].0 == kept@[k].0@,
+                    other.entries@ == other_view,
+                    self_srcs.len() == kept@.len(),
+                    other_srcs.len() == kept@.len(),
+                    forall|k: int| #![auto] 0 <= k < self_srcs.len() ==>
+                        0 <= self_srcs[k] < old_self_view.len()
+                        && old_self_view[self_srcs[k]].0 == kept@[k].0@,
+                    forall|k: int| #![auto] 0 <= k < other_srcs.len() ==>
+                        0 <= other_srcs[k] < other_view.len()
+                        && other_view[other_srcs[k]].0 == kept@[k].0@,
                     forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                     obeys_feq_clone::<K>(),
                     obeys_view_eq::<K>(),
+                    forall|si: int| 0 <= si < i as int
+                        && (exists|oj: int| 0 <= oj < other_view.len()
+                            && other_view[oj].0 == (#[trigger] old_self_view[si]).0)
+                        ==> exists|j: int| 0 <= j < self_srcs.len() && self_srcs[j] == si,
+                    forall|si: int| 0 <= si < i as int
+                        && !(exists|oj: int| 0 <= oj < other_view.len()
+                            && other_view[oj].0 == (#[trigger] old_self_view[si]).0)
+                        ==> !spec_entries_to_map(other_view).contains_key(old_self_view[si].0),
                 decreases self.entries.spec_len() - i,
             {
                 let pair_i = self.entries.nth(i);
                 let ghost key_view: K::V = old_self_view[i as int].0;
-                let mut match_idx: usize = other_len;
-                let ghost mut match_pos: int = -1int;
+                let mut found = false;
+                let mut found_idx: usize = 0;
                 let mut j: usize = 0;
-                while j < other_len
+                while j < other.entries.length() && !found
                     invariant
-                        j <= other_len,
+                        j <= other.entries.spec_len(),
+                        other.entries@ == other_view,
                         i < self.entries.spec_len(),
                         self.entries@ == old_self_view,
-                        other_len as int == other.entries.spec_len(),
-                        match_pos == -1int || (
-                            0 <= match_pos < other.entries@.len()
-                            && other.entries@[match_pos].0 == key_view
-                        ),
-                        match_idx == other_len <==> match_pos == -1int,
-                        match_idx < other_len ==> match_idx as int == match_pos,
+                        found ==> found_idx < other.entries.spec_len()
+                            && other_view[found_idx as int].0 == key_view,
+                        !found ==> forall|jj: int| #![auto] 0 <= jj < j as int
+                            ==> other_view[jj].0 != key_view,
                         key_view == pair_i.0@,
                         obeys_view_eq::<K>(),
-                    decreases other_len - j,
+                    decreases other.entries.spec_len() - j,
                 {
                     let pair_j = other.entries.nth(j);
                     proof {
@@ -538,40 +594,69 @@ broadcast use {
                         other.entries.lemma_view_index(j as int);
                     }
                     if pair_i.0 == pair_j.0 {
-                        match_idx = j;
-                        proof { match_pos = j as int; }
+                        found = true;
+                        found_idx = j;
                     }
                     j += 1;
                 }
-                if match_idx < other_len {
-                    let pair_j = other.entries.nth(match_idx);
+                if found {
+                    let pair_j = other.entries.nth(found_idx);
                     let combined_value = combine(&pair_i.1, &pair_j.1);
                     let key_clone = pair_i.0.clone_plus();
                     kept.push(Pair(key_clone, combined_value));
                     proof {
-                        self_sources = self_sources.push(i as int);
-                        other_sources = other_sources.push(match_pos);
+                        let ghost old_self_srcs = self_srcs;
+                        self_srcs = self_srcs.push(i as int);
+                        other_srcs = other_srcs.push(found_idx as int);
+                        assert forall|si: int| 0 <= si < i as int + 1
+                            && (exists|oj: int| 0 <= oj < other_view.len()
+                                && other_view[oj].0 == (#[trigger] old_self_view[si]).0)
+                            implies exists|j: int| 0 <= j < self_srcs.len() && self_srcs[j] == si
+                        by {
+                            if si < i as int {
+                                let j = choose|j: int|
+                                    0 <= j < old_self_srcs.len() && old_self_srcs[j] == si;
+                                assert(self_srcs[j] == old_self_srcs[j]);
+                            } else {
+                                assert(self_srcs[self_srcs.len() - 1] == i as int);
+                            }
+                        };
+                    }
+                } else {
+                    proof {
+                        lemma_entries_to_map_no_key::<K::V, V::V>(other_view, key_view);
                     }
                 }
                 i += 1;
             }
             self.entries = ArraySeqStEphS::from_vec(kept);
             proof {
-                assert forall|k: K::V| #![auto]
-                    self@.dom().contains(k)
-                    implies spec_entries_to_map(old_self_view).dom().contains(k)
-                        && spec_entries_to_map(other.entries@).dom().contains(k)
+                let ghost result_dom = spec_entries_to_map(self.entries@).dom();
+                let ghost target_dom = spec_entries_to_map(old_self_view).dom().intersect(other@.dom());
+                assert forall|k: K::V| result_dom.contains(k) == target_dom.contains(k)
                 by {
-                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
-                    let idx = choose|idx: int| 0 <= idx < self.entries@.len()
-                        && (#[trigger] self.entries@[idx]).0 == k;
-                    assert(self.entries.spec_index(idx) == kept@[idx]);
-                    let s1 = self_sources[idx];
-                    let s2 = other_sources[idx];
-                    assert(old_self_view[s1].0 == kept@[idx].0@);
-                    assert(other.entries@[s2].0 == kept@[idx].0@);
-                    lemma_entries_to_map_contains_key::<K::V, V::V>(old_self_view, s1);
-                    lemma_entries_to_map_contains_key::<K::V, V::V>(other.entries@, s2);
+                    if result_dom.contains(k) {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
+                        let idx = choose|idx: int| 0 <= idx < self.entries@.len()
+                            && (#[trigger] self.entries@[idx]).0 == k;
+                        assert(self.entries.spec_index(idx) == kept@[idx]);
+                        let s1 = self_srcs[idx];
+                        let s2 = other_srcs[idx];
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(old_self_view, s1);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(other_view, s2);
+                    }
+                    if spec_entries_to_map(old_self_view).dom().contains(k)
+                        && other@.dom().contains(k) {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_self_view, k);
+                        let si = choose|si: int| 0 <= si < old_self_view.len()
+                            && (#[trigger] old_self_view[si]).0 == k;
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(other_view, k);
+                        let oj = choose|oj: int| 0 <= oj < other_view.len()
+                            && (#[trigger] other_view[oj]).0 == k;
+                        let j = choose|j: int| 0 <= j < self_srcs.len() && self_srcs[j] == si;
+                        assert(self.entries.spec_index(j) == kept@[j]);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
+                    }
                 };
             }
         }
@@ -804,12 +889,32 @@ broadcast use {
                             self.entries@, out_idx);
                     }
                 };
+                // Reverse: every output key is in old self or other.
+                assert forall|k: K::V|
+                    self@.dom().contains(k)
+                    implies spec_entries_to_map(old_self_view).dom().contains(k)
+                        || other@.dom().contains(k)
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
+                    let idx = choose|idx: int| 0 <= idx < self.entries@.len()
+                        && (#[trigger] self.entries@[idx]).0 == k;
+                    assert(self.entries.spec_index(idx) == kept@[idx]);
+                    if idx < phase1_len {
+                        self.entries.lemma_view_index(idx);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(old_self_view, idx);
+                    } else {
+                        let kidx = idx - phase1_len;
+                        let src = phase2_sources[kidx];
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(other.entries@, src);
+                    }
+                };
             }
         }
 
         fn difference(&mut self, other: &Self)
         {
             let ghost old_self_view = self.entries@;
+            let ghost other_view = other.entries@;
             let other_len = other.entries.length();
             let mut kept: Vec<Pair<K, V>> = Vec::new();
             let ghost mut sources: Seq<int> = Seq::empty();
@@ -818,12 +923,18 @@ broadcast use {
                 invariant
                     i <= self.entries.spec_len(),
                     self.entries@ == old_self_view,
+                    other.entries@ == other_view,
                     other_len as int == other.entries.spec_len(),
                     sources.len() == kept@.len(),
                     forall|k: int| #![auto] 0 <= k < sources.len() ==>
                         0 <= sources[k] < old_self_view.len()
                         && old_self_view[sources[k]].0 == kept@[k].0@
-                        && !spec_entries_to_map(other.entries@).contains_key(kept@[k].0@),
+                        && !spec_entries_to_map(other_view).contains_key(kept@[k].0@),
+                    // Coverage: every processed entry not in other has been kept.
+                    forall|si: int| 0 <= si < i as int
+                        && !spec_entries_to_map(other_view).contains_key(
+                            (#[trigger] old_self_view[si]).0)
+                        ==> exists|j: int| 0 <= j < sources.len() && sources[j] == si,
                     obeys_feq_full::<Pair<K, V>>(),
                     obeys_view_eq::<K>(),
                 decreases self.entries.spec_len() - i,
@@ -831,15 +942,19 @@ broadcast use {
                 let pair_i = self.entries.nth(i);
                 let ghost key_view: K::V = old_self_view[i as int].0;
                 let mut found: bool = false;
+                let mut found_idx: usize = 0;
                 let mut j: usize = 0;
                 while j < other_len
                     invariant
                         j <= other_len,
                         i < self.entries.spec_len(),
                         self.entries@ == old_self_view,
+                        other.entries@ == other_view,
                         other_len as int == other.entries.spec_len(),
-                        found || forall|jj: int| #![auto] 0 <= jj < j as int ==>
-                            other.entries@[jj].0 != key_view,
+                        found ==> found_idx < other.entries.spec_len()
+                            && other_view[found_idx as int].0 == key_view,
+                        !found ==> forall|jj: int| #![auto] 0 <= jj < j as int ==>
+                            other_view[jj].0 != key_view,
                         key_view == pair_i.0@,
                         obeys_view_eq::<K>(),
                     decreases other_len - j,
@@ -851,33 +966,65 @@ broadcast use {
                     }
                     if pair_i.0 == pair_j.0 {
                         found = true;
+                        found_idx = j;
                     }
                     j += 1;
                 }
                 if !found {
                     proof {
-                        lemma_entries_to_map_no_key::<K::V, V::V>(other.entries@, key_view);
+                        lemma_entries_to_map_no_key::<K::V, V::V>(other_view, key_view);
                     }
                     let cloned = pair_i.clone_plus();
                     kept.push(cloned);
-                    proof { sources = sources.push(i as int); }
+                    proof {
+                        let ghost old_sources = sources;
+                        sources = sources.push(i as int);
+                        assert forall|si: int| 0 <= si < i as int + 1
+                            && !spec_entries_to_map(other_view).contains_key(
+                                (#[trigger] old_self_view[si]).0)
+                            implies exists|j: int| 0 <= j < sources.len() && sources[j] == si
+                        by {
+                            if si < i as int {
+                                let j = choose|j: int|
+                                    0 <= j < old_sources.len() && old_sources[j] == si;
+                                assert(sources[j] == old_sources[j]);
+                            } else {
+                                assert(sources[sources.len() - 1] == i as int);
+                            }
+                        };
+                    }
+                } else {
+                    proof {
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(
+                            other_view, found_idx as int);
+                    }
                 }
                 i += 1;
             }
             self.entries = ArraySeqStEphS::from_vec(kept);
             proof {
-                assert forall|k: K::V| #![auto]
-                    self@.dom().contains(k)
-                    implies spec_entries_to_map(old_self_view).dom().contains(k)
-                        && !spec_entries_to_map(other.entries@).dom().contains(k)
+                let ghost result_dom = spec_entries_to_map(self.entries@).dom();
+                let ghost target_dom = spec_entries_to_map(old_self_view).dom().difference(
+                    other@.dom());
+                assert forall|k: K::V| result_dom.contains(k) == target_dom.contains(k)
                 by {
-                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
-                    let idx = choose|idx: int| 0 <= idx < self.entries@.len()
-                        && (#[trigger] self.entries@[idx]).0 == k;
-                    assert(self.entries.spec_index(idx) == kept@[idx]);
-                    let s = sources[idx];
-                    assert(old_self_view[s].0 == kept@[idx].0@);
-                    lemma_entries_to_map_contains_key::<K::V, V::V>(old_self_view, s);
+                    if result_dom.contains(k) {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
+                        let idx = choose|idx: int| 0 <= idx < self.entries@.len()
+                            && (#[trigger] self.entries@[idx]).0 == k;
+                        assert(self.entries.spec_index(idx) == kept@[idx]);
+                        let s = sources[idx];
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(old_self_view, s);
+                    }
+                    if spec_entries_to_map(old_self_view).dom().contains(k)
+                        && !other@.dom().contains(k) {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_self_view, k);
+                        let si = choose|si: int| 0 <= si < old_self_view.len()
+                            && (#[trigger] old_self_view[si]).0 == k;
+                        let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
+                        assert(self.entries.spec_index(j) == kept@[j]);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
+                    }
                 };
             }
         }
@@ -915,14 +1062,28 @@ broadcast use {
         fn delete(&mut self, key: &K)
         {
             let ghost old_view = self.entries@;
+            let ghost old_map = self@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();
+            let ghost mut src: Seq<int> = Seq::empty();
             let mut i: usize = 0;
             while i < self.entries.length()
                 invariant
                     i <= self.entries.spec_len(),
                     self.entries@ == old_view,
+                    src.len() == kept@.len(),
+                    forall|j: int| #![auto] 0 <= j < src.len() ==>
+                        0 <= src[j] < old_view.len()
+                        && old_view[src[j]].0 == kept@[j].0@
+                        && old_view[src[j]].1 == kept@[j].1@,
                     forall|j: int| #![auto] 0 <= j < kept@.len() ==>
                         kept@[j].0@ != key@,
+                    // Source indices are strictly increasing (implies distinct).
+                    forall|j: int| #![trigger src[j]] 0 <= j < src.len() ==> src[j] < i as int,
+                    forall|a: int, b: int| 0 <= a < b < src.len()
+                        ==> src[a] < src[b],
+                    forall|si: int| 0 <= si < i as int
+                        && (#[trigger] old_view[si]).0 != key@
+                        ==> exists|j: int| 0 <= j < src.len() && src[j] == si,
                     obeys_view_eq::<K>(),
                     obeys_feq_full::<Pair<K, V>>(),
                 decreases self.entries.spec_len() - i,
@@ -932,17 +1093,75 @@ broadcast use {
                 if !pair.0.eq(key) {
                     let cloned = pair.clone_plus();
                     kept.push(cloned);
+                    proof {
+                        let ghost old_src = src;
+                        src = src.push(i as int);
+                        assert forall|si: int| 0 <= si < i as int + 1
+                            && (#[trigger] old_view[si]).0 != key@
+                            implies exists|j: int| 0 <= j < src.len() && src[j] == si
+                        by {
+                            if si < i as int {
+                                let j = choose|j: int|
+                                    0 <= j < old_src.len() && old_src[j] == si;
+                                assert(src[j] == old_src[j]);
+                            } else {
+                                assert(src[src.len() - 1] == i as int);
+                            }
+                        };
+                    }
                 }
                 i += 1;
             }
             self.entries = ArraySeqStEphS::from_vec(kept);
             proof {
-                assert forall|j: int| 0 <= j < self.entries@.len()
-                    implies (#[trigger] self.entries@[j]).0 != key@
+                let ghost result_map = spec_entries_to_map(self.entries@);
+                let ghost target_map = old_map.remove(key@);
+                assert forall|k: K::V| result_map.dom().contains(k)
+                    implies target_map.dom().contains(k)
                 by {
-                    assert(self.entries.spec_index(j) == kept@[j]);
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
+                    let idx = choose|idx: int| 0 <= idx < self.entries@.len()
+                        && (#[trigger] self.entries@[idx]).0 == k;
+                    assert(self.entries.spec_index(idx) == kept@[idx]);
+                    let s = src[idx];
+                    lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, s);
                 };
-                lemma_entries_to_map_no_key::<K::V, V::V>(self.entries@, key@);
+                assert forall|k: K::V| target_map.dom().contains(k)
+                    implies result_map.dom().contains(k)
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_view, k);
+                    let si = choose|si: int| 0 <= si < old_view.len()
+                        && (#[trigger] old_view[si]).0 == k;
+                    let j = choose|j: int| 0 <= j < src.len() && src[j] == si;
+                    assert(self.entries.spec_index(j) == kept@[j]);
+                    lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
+                };
+                // Result entries have no duplicate keys (inherited from old).
+                assert(spec_keys_no_dups(self.entries@)) by {
+                    assert forall|i: int, j: int|
+                        0 <= i < self.entries@.len() && 0 <= j < self.entries@.len() && i != j
+                        implies (#[trigger] self.entries@[i]).0 != (#[trigger] self.entries@[j]).0
+                    by {
+                        assert(self.entries.spec_index(i) == kept@[i]);
+                        assert(self.entries.spec_index(j) == kept@[j]);
+                        let si = src[i];
+                        let sj = src[j];
+                        // src is injective, so si != sj.
+                        // old_view has no dups, so old_view[si].0 != old_view[sj].0.
+                    };
+                };
+                assert forall|k: K::V| #![auto]
+                    result_map.dom().contains(k) && target_map.dom().contains(k)
+                    implies result_map[k] == target_map[k]
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
+                    let idx = choose|idx: int| 0 <= idx < self.entries@.len()
+                        && (#[trigger] self.entries@[idx]).0 == k;
+                    assert(self.entries.spec_index(idx) == kept@[idx]);
+                    let s = src[idx];
+                    lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
+                    lemma_entries_to_map_get::<K::V, V::V>(old_view, s);
+                };
             }
         }
 
@@ -950,7 +1169,9 @@ broadcast use {
         {
             let ghost key_view: K::V = key@;
             let ghost old_view = self.entries@;
+            let ghost old_map = self@;
             let mut all: Vec<Pair<K, V>> = Vec::new();
+            let ghost mut src: Seq<int> = Seq::empty();
             let mut found_value: Option<V> = None;
             let mut i: usize = 0;
             while i < self.entries.length()
@@ -958,7 +1179,18 @@ broadcast use {
                     i <= self.entries.spec_len(),
                     self.entries@ == old_view,
                     forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                    src.len() == all@.len(),
+                    forall|j: int| #![auto] 0 <= j < src.len() ==>
+                        0 <= src[j] < old_view.len()
+                        && old_view[src[j]].0 == all@[j].0@
+                        && old_view[src[j]].1 == all@[j].1@,
                     forall|j: int| #![auto] 0 <= j < all@.len() ==> all@[j].0@ != key_view,
+                    forall|j: int| #![trigger src[j]] 0 <= j < src.len() ==> src[j] < i as int,
+                    forall|a: int, b: int| 0 <= a < b < src.len() ==> src[a] < src[b],
+                    // Coverage: every non-key entry has been kept.
+                    forall|si: int| 0 <= si < i as int
+                        && (#[trigger] old_view[si]).0 != key_view
+                        ==> exists|j: int| 0 <= j < src.len() && src[j] == si,
                     obeys_view_eq::<K>(),
                     obeys_feq_full::<Pair<K, V>>(),
                     key@ == key_view,
@@ -971,6 +1203,22 @@ broadcast use {
                 } else {
                     let cloned = pair.clone_plus();
                     all.push(cloned);
+                    proof {
+                        let ghost old_src = src;
+                        src = src.push(i as int);
+                        assert forall|si: int| 0 <= si < i as int + 1
+                            && (#[trigger] old_view[si]).0 != key_view
+                            implies exists|j: int| 0 <= j < src.len() && src[j] == si
+                        by {
+                            if si < i as int {
+                                let j = choose|j: int|
+                                    0 <= j < old_src.len() && old_src[j] == si;
+                                assert(src[j] == old_src[j]);
+                            } else {
+                                assert(src[src.len() - 1] == i as int);
+                            }
+                        };
+                    }
                 }
                 i += 1;
             }
@@ -985,6 +1233,36 @@ broadcast use {
                 assert(self.entries.spec_index(last) == all@[last]);
                 assert(self.entries@[last].0 == key_view);
                 lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, last);
+                // Domain backward: old keys + key@ are in result.
+                assert forall|k: K::V|
+                    old_map.dom().contains(k) || k == key_view
+                    implies spec_entries_to_map(self.entries@).dom().contains(k)
+                by {
+                    if k == key_view {
+                    } else {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_view, k);
+                        let si = choose|si: int| 0 <= si < old_view.len()
+                            && (#[trigger] old_view[si]).0 == k;
+                        let j = choose|j: int| 0 <= j < src.len() && src[j] == si;
+                        assert(self.entries.spec_index(j) == all@[j]);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
+                    }
+                };
+                // Domain forward: result keys are in old ∪ {key@}.
+                assert forall|k: K::V|
+                    spec_entries_to_map(self.entries@).dom().contains(k)
+                    implies old_map.dom().contains(k) || k == key_view
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
+                    let idx = choose|idx: int| 0 <= idx < self.entries@.len()
+                        && (#[trigger] self.entries@[idx]).0 == k;
+                    assert(self.entries.spec_index(idx) == all@[idx]);
+                    if idx < src.len() as int {
+                        let s = src[idx];
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, s);
+                    }
+                };
+                // Value preservation for non-key entries.
             }
         }
 
@@ -998,10 +1276,15 @@ broadcast use {
                 invariant
                     i <= self.entries.spec_len(),
                     self.entries@ == old_view,
+                    keys@.finite(),
                     sources.len() == kept@.len(),
                     forall|j: int| #![auto] 0 <= j < sources.len() ==>
                         0 <= sources[j] < old_view.len()
-                        && old_view[sources[j]].0 == kept@[j].0@,
+                        && old_view[sources[j]].0 == kept@[j].0@
+                        && keys@.contains(kept@[j].0@),
+                    forall|si: int| 0 <= si < i as int
+                        && keys@.contains((#[trigger] old_view[si]).0)
+                        ==> exists|j: int| 0 <= j < sources.len() && sources[j] == si,
                     obeys_feq_full::<Pair<K, V>>(),
                 decreases self.entries.spec_len() - i,
             {
@@ -1009,23 +1292,47 @@ broadcast use {
                 if keys.find(&pair.0) {
                     let cloned = pair.clone_plus();
                     kept.push(cloned);
-                    proof { sources = sources.push(i as int); }
+                    proof {
+                        let ghost old_sources = sources;
+                        sources = sources.push(i as int);
+                        assert forall|si: int| 0 <= si < i as int + 1
+                            && keys@.contains((#[trigger] old_view[si]).0)
+                            implies exists|j: int| 0 <= j < sources.len() && sources[j] == si
+                        by {
+                            if si < i as int {
+                                let j = choose|j: int|
+                                    0 <= j < old_sources.len() && old_sources[j] == si;
+                                assert(sources[j] == old_sources[j]);
+                            } else {
+                                assert(sources[sources.len() - 1] == i as int);
+                            }
+                        };
+                    }
                 }
                 i += 1;
             }
             self.entries = ArraySeqStEphS::from_vec(kept);
             proof {
-                assert forall|k: K::V| #![auto]
-                    self@.dom().contains(k)
-                    implies spec_entries_to_map(old_view).dom().contains(k)
+                let ghost result_dom = spec_entries_to_map(self.entries@).dom();
+                let ghost target_dom = spec_entries_to_map(old_view).dom().intersect(keys@);
+                assert forall|k: K::V| result_dom.contains(k) == target_dom.contains(k)
                 by {
-                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
-                    let idx = choose|idx: int| 0 <= idx < self.entries@.len()
-                        && (#[trigger] self.entries@[idx]).0 == k;
-                    assert(self.entries.spec_index(idx) == kept@[idx]);
-                    let s = sources[idx];
-                    assert(old_view[s].0 == kept@[idx].0@);
-                    lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, s);
+                    if result_dom.contains(k) {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
+                        let idx = choose|idx: int| 0 <= idx < self.entries@.len()
+                            && (#[trigger] self.entries@[idx]).0 == k;
+                        assert(self.entries.spec_index(idx) == kept@[idx]);
+                        let s = sources[idx];
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, s);
+                    }
+                    if spec_entries_to_map(old_view).dom().contains(k) && keys@.contains(k) {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_view, k);
+                        let si = choose|si: int| 0 <= si < old_view.len()
+                            && (#[trigger] old_view[si]).0 == k;
+                        let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
+                        assert(self.entries.spec_index(j) == kept@[j]);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
+                    }
                 };
             }
         }
@@ -1040,10 +1347,15 @@ broadcast use {
                 invariant
                     i <= self.entries.spec_len(),
                     self.entries@ == old_view,
+                    keys@.finite(),
                     sources.len() == kept@.len(),
                     forall|j: int| #![auto] 0 <= j < sources.len() ==>
                         0 <= sources[j] < old_view.len()
-                        && old_view[sources[j]].0 == kept@[j].0@,
+                        && old_view[sources[j]].0 == kept@[j].0@
+                        && !keys@.contains(kept@[j].0@),
+                    forall|si: int| 0 <= si < i as int
+                        && !keys@.contains((#[trigger] old_view[si]).0)
+                        ==> exists|j: int| 0 <= j < sources.len() && sources[j] == si,
                     obeys_feq_full::<Pair<K, V>>(),
                 decreases self.entries.spec_len() - i,
             {
@@ -1051,39 +1363,53 @@ broadcast use {
                 if !keys.find(&pair.0) {
                     let cloned = pair.clone_plus();
                     kept.push(cloned);
-                    proof { sources = sources.push(i as int); }
+                    proof {
+                        let ghost old_sources = sources;
+                        sources = sources.push(i as int);
+                        assert forall|si: int| 0 <= si < i as int + 1
+                            && !keys@.contains((#[trigger] old_view[si]).0)
+                            implies exists|j: int| 0 <= j < sources.len() && sources[j] == si
+                        by {
+                            if si < i as int {
+                                let j = choose|j: int|
+                                    0 <= j < old_sources.len() && old_sources[j] == si;
+                                assert(sources[j] == old_sources[j]);
+                            } else {
+                                assert(sources[sources.len() - 1] == i as int);
+                            }
+                        };
+                    }
                 }
                 i += 1;
             }
             self.entries = ArraySeqStEphS::from_vec(kept);
             proof {
-                assert forall|k: K::V| #![auto]
-                    self@.dom().contains(k)
-                    implies spec_entries_to_map(old_view).dom().contains(k)
+                let ghost result_dom = spec_entries_to_map(self.entries@).dom();
+                let ghost target_dom = spec_entries_to_map(old_view).dom().difference(keys@);
+                assert forall|k: K::V| result_dom.contains(k) == target_dom.contains(k)
                 by {
-                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
-                    let idx = choose|idx: int| 0 <= idx < self.entries@.len()
-                        && (#[trigger] self.entries@[idx]).0 == k;
-                    assert(self.entries.spec_index(idx) == kept@[idx]);
-                    let s = sources[idx];
-                    assert(old_view[s].0 == kept@[idx].0@);
-                    lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, s);
+                    if result_dom.contains(k) {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
+                        let idx = choose|idx: int| 0 <= idx < self.entries@.len()
+                            && (#[trigger] self.entries@[idx]).0 == k;
+                        assert(self.entries.spec_index(idx) == kept@[idx]);
+                        let s = sources[idx];
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, s);
+                    }
+                    if spec_entries_to_map(old_view).dom().contains(k) && !keys@.contains(k) {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_view, k);
+                        let si = choose|si: int| 0 <= si < old_view.len()
+                            && (#[trigger] old_view[si]).0 == k;
+                        let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
+                        assert(self.entries.spec_index(j) == kept@[j]);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
+                    }
                 };
             }
         }
 
         fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>) {
             self.entries.clone()
-        }
-    }
-
-    // 11. derive impls in verus!
-
-    impl<K: StT + Ord, V: StT> Clone for TableStEph<K, V> {
-        fn clone(&self) -> (cloned: Self) {
-            TableStEph {
-                entries: self.entries.clone(),
-            }
         }
     }
 
@@ -1099,18 +1425,43 @@ broadcast use {
         TableStEph { entries: seq }
     }
 
-    pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
-        ensures spec_entries_to_map(entries).dom().finite()
-        decreases entries.len()
-    {
-        if entries.len() > 0 {
-            lemma_entries_to_map_finite::<KV, VV>(entries.drop_last());
+
+    //		11. derive impls in verus!
+
+    // 11. derive impls in verus!
+
+    #[cfg(verus_keep_ghost)]
+    impl<K: StT + Ord + View + PartialEq, V: StT + View + PartialEq> PartialEqSpecImpl for TableStEph<K, V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<K: StT + Ord + Eq + View, V: StT + Eq + View> Eq for TableStEph<K, V> {}
+
+    impl<K: StT + Ord + PartialEq + View, V: StT + PartialEq + View> PartialEq for TableStEph<K, V> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let r = self.entries == other.entries;
+            proof { assume(r == (self@ == other@)); }
+            r
+        }
+    }
+
+    impl<K: StT + Ord, V: StT> Clone for TableStEph<K, V> {
+        fn clone(&self) -> (cloned: Self) {
+            TableStEph {
+                entries: self.entries.clone(),
+            }
         }
     }
 
     } // verus!
 
     // 12. macros
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! TableStEphLit {
@@ -1132,11 +1483,8 @@ broadcast use {
         }
     }
 
-    impl<K: StT + Ord, V: StT> PartialEq for TableStEph<K, V> {
-        fn eq(&self, other: &Self) -> bool {
-            self.entries == other.entries
-        }
-    }
+
+    //		13. derive impls outside verus!
 
     impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug> fmt::Debug for TableStEph<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

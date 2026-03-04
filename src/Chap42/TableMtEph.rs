@@ -1,5 +1,22 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 42 multi-threaded ephemeral table implementation using ArraySeqMtEph as backing store.
+
+//  Table of Contents
+//	1. module
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod TableMtEph {
 
@@ -14,7 +31,12 @@ pub mod TableMtEph {
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Types::Types::*;
 
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
+
     verus! {
+
+//		3. broadcast use
 
 // Veracity: added broadcast group
 broadcast use {
@@ -24,6 +46,9 @@ broadcast use {
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
 };
+
+
+//		4. type definitions
 
     // Table of Contents
     // 1. module (above)
@@ -48,6 +73,19 @@ broadcast use {
 
     pub type TableS<K, V> = TableMtEph<K, V>;
 
+
+//		5. view impls
+
+    impl<K: MtKey, V: MtVal> View for TableMtEph<K, V> {
+        type V = Map<K::V, V::V>;
+        open spec fn view(&self) -> Map<K::V, V::V> {
+            spec_entries_to_map(self.entries@)
+        }
+    }
+
+
+//		6. spec fns
+
     // 5. view impls
 
     pub open spec fn spec_entries_to_map<KV, VV>(entries: Seq<(KV, VV)>) -> Map<KV, VV>
@@ -61,13 +99,6 @@ broadcast use {
         }
     }
 
-    impl<K: MtKey, V: MtVal> View for TableMtEph<K, V> {
-        type V = Map<K::V, V::V>;
-        open spec fn view(&self) -> Map<K::V, V::V> {
-            spec_entries_to_map(self.entries@)
-        }
-    }
-
     // 6. spec fns
 
     // Keys in the entry sequence are unique.
@@ -76,11 +107,20 @@ broadcast use {
             0 <= i < j < entries.len() ==> (#[trigger] entries[i]).0 != (#[trigger] entries[j]).0
     }
 
-    impl<K: MtKey, V: MtVal> TableMtEph<K, V> {
-        pub open spec fn spec_tablemteph_wf(&self) -> bool {
-            spec_keys_no_dups(self.entries@)
+
+//		7. proof fns/broadcast groups
+
+    pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
+        ensures spec_entries_to_map(entries).dom().finite()
+        decreases entries.len()
+    {
+        if entries.len() > 0 {
+            lemma_entries_to_map_finite::<KV, VV>(entries.drop_last());
         }
     }
+
+
+//		8. traits
 
     // 8. traits
 
@@ -109,34 +149,47 @@ broadcast use {
             ensures self@.dom().subset_of(old(self)@.dom());
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F)
-            ensures self@.dom().subset_of(old(self)@.dom().intersect(other@.dom()));
+            ensures self@.dom() =~= old(self)@.dom().intersect(other@.dom());
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F)
-            ensures old(self)@.dom().union(other@.dom()).subset_of(self@.dom());
+            ensures self@.dom() =~= old(self)@.dom().union(other@.dom());
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn difference(&mut self, other: &Self)
-            ensures self@.dom().subset_of(old(self)@.dom().difference(other@.dom()));
+            ensures self@.dom() =~= old(self)@.dom().difference(other@.dom());
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn find(&self, key: &K) -> (found: Option<V>)
             ensures
                 match found {
-                    Some(v) => self@.contains_key(key@),
+                    Some(v) => self@.contains_key(key@) && self@[key@] == v@,
                     None => !self@.contains_key(key@),
                 };
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn delete(&mut self, key: &K)
-            ensures !self@.contains_key(key@);
+            ensures self@ =~= old(self)@.remove(key@);
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, key: K, value: V, combine: F)
-            ensures self@.contains_key(key@);
+            ensures
+                self@.contains_key(key@),
+                self@.dom() =~= old(self)@.dom().insert(key@);
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            ensures self@.dom().subset_of(old(self)@.dom());
+            requires keys@.finite()
+            ensures self@.dom() =~= old(self)@.dom().intersect(keys@);
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            ensures self@.dom().subset_of(old(self)@.dom());
+            requires keys@.finite()
+            ensures self@.dom() =~= old(self)@.dom().difference(keys@);
 
         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>);
+    }
+
+
+//		9. impls
+
+    impl<K: MtKey, V: MtVal> TableMtEph<K, V> {
+        pub open spec fn spec_tablemteph_wf(&self) -> bool {
+            spec_keys_no_dups(self.entries@)
+        }
     }
 
     // 9. impls
@@ -369,7 +422,7 @@ broadcast use {
 
         #[verifier::external_body]
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
-            ensures self@.dom().subset_of(old(self)@.dom().intersect(other@.dom()))
+            ensures self@.dom() =~= old(self)@.dom().intersect(other@.dom())
         {
             let combine = Arc::new(combine);
             let mut intersection_entries = Vec::new();
@@ -397,7 +450,7 @@ broadcast use {
 
         #[verifier::external_body]
         fn union<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
-            ensures old(self)@.dom().union(other@.dom()).subset_of(self@.dom())
+            ensures self@.dom() =~= old(self)@.dom().union(other@.dom())
         {
             let combine = Arc::new(combine);
             let mut union_entries = Vec::new();
@@ -441,7 +494,7 @@ broadcast use {
 
         #[verifier::external_body]
         fn difference(&mut self, other: &Self)
-            ensures self@.dom().subset_of(old(self)@.dom().difference(other@.dom()))
+            ensures self@.dom() =~= old(self)@.dom().difference(other@.dom())
         {
             let mut difference_entries = Vec::new();
             let mut i = 0;
@@ -478,7 +531,7 @@ broadcast use {
         fn find(&self, key: &K) -> (found: Option<V>)
             ensures
                 match found {
-                    Some(v) => self@.contains_key(key@),
+                    Some(v) => self@.contains_key(key@) && self@[key@] == v@,
                     None => !self@.contains_key(key@),
                 }
         {
@@ -501,7 +554,7 @@ broadcast use {
 
         #[verifier::external_body]
         fn delete(&mut self, key: &K)
-            ensures !self@.contains_key(key@)
+            ensures self@ =~= old(self)@.remove(key@)
         {
             let len = self.entries.length();
 
@@ -553,7 +606,9 @@ broadcast use {
 
         #[verifier::external_body]
         fn insert<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, key: K, value: V, combine: F)
-            ensures self@.contains_key(key@)
+            ensures
+                self@.contains_key(key@),
+                self@.dom() =~= old(self)@.dom().insert(key@)
         {
             if let Some(existing_value) = self.find(&key) {
                 let combined_value = combine(&existing_value, &value);
@@ -630,7 +685,7 @@ broadcast use {
 
         #[verifier::external_body]
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            ensures self@.dom().subset_of(old(self)@.dom())
+            ensures self@.dom() =~= old(self)@.dom().intersect(keys@)
         {
             let len = self.entries.length();
 
@@ -682,7 +737,7 @@ broadcast use {
 
         #[verifier::external_body]
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            ensures self@.dom().subset_of(old(self)@.dom())
+            ensures self@.dom() =~= old(self)@.dom().difference(keys@)
         {
             let len = self.entries.length();
 
@@ -737,6 +792,19 @@ broadcast use {
         }
     }
 
+    pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (constructed: TableMtEph<K, V>)
+        ensures constructed@.dom().finite()
+    {
+        let seq = ArraySeqMtEphS::from_vec(entries);
+        proof {
+            lemma_entries_to_map_finite::<K::V, V::V>(seq@);
+        }
+        TableMtEph { entries: seq }
+    }
+
+
+//		11. derive impls in verus!
+
     // 11. derive impls in verus!
 
     impl<K: MtKey, V: MtVal> Clone for TableMtEph<K, V> {
@@ -750,22 +818,21 @@ broadcast use {
         }
     }
 
-    pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (constructed: TableMtEph<K, V>)
-        ensures constructed@.dom().finite()
-    {
-        let seq = ArraySeqMtEphS::from_vec(entries);
-        proof {
-            lemma_entries_to_map_finite::<K::V, V::V>(seq@);
-        }
-        TableMtEph { entries: seq }
+    #[cfg(verus_keep_ghost)]
+    impl<K: MtKey, V: MtVal> PartialEqSpecImpl for TableMtEph<K, V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
-        ensures spec_entries_to_map(entries).dom().finite()
-        decreases entries.len()
-    {
-        if entries.len() > 0 {
-            lemma_entries_to_map_finite::<KV, VV>(entries.drop_last());
+    impl<K: MtKey, V: MtVal> Eq for TableMtEph<K, V> {}
+
+    impl<K: MtKey, V: MtVal> PartialEq for TableMtEph<K, V> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let r = self.entries == other.entries;
+            proof { assume(r == (self@ == other@)); }
+            r
         }
     }
 
@@ -773,11 +840,8 @@ broadcast use {
 
     // 13. derive impls outside verus!
 
-    impl<K: MtKey, V: MtVal> PartialEq for TableMtEph<K, V> {
-        fn eq(&self, other: &Self) -> bool {
-            self.entries == other.entries
-        }
-    }
+
+    //		13. derive impls outside verus!
 
     impl<K: MtKey, V: MtVal> std::fmt::Debug for TableMtEph<K, V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -788,6 +852,9 @@ broadcast use {
     }
 
     // 12. macros
+
+
+    //		12. macros
 
     /// Macro for creating multi-threaded ephemeral table literals
     #[macro_export]

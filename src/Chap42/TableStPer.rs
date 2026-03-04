@@ -1,5 +1,22 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 42 single-threaded persistent table implementation using ArraySeq as backing store.
+
+//  Table of Contents
+//	1. module
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod TableStPer {
 
@@ -15,6 +32,8 @@ pub mod TableStPer {
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     // Table of Contents
     // 1. module (above)
@@ -31,6 +50,8 @@ pub mod TableStPer {
 
     verus! {
 
+    //		3. broadcast use
+
     // 3. broadcast use
 
     broadcast use {
@@ -40,6 +61,34 @@ pub mod TableStPer {
         vstd::seq_lib::group_seq_properties,
         vstd::seq_lib::group_to_multiset_ensures,
     };
+
+
+    //		4. type definitions
+
+    // 4. type definitions
+
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    pub struct TableStPer<K: StT + Ord, V: StT> {
+        pub entries: ArraySeqStPerS<Pair<K, V>>,
+    }
+
+    pub type TableS<K, V> = TableStPer<K, V>;
+
+
+    //		5. view impls
+
+    // 5. view impls
+
+    impl<K: StT + Ord, V: StT> View for TableStPer<K, V> {
+        type V = Map<K::V, V::V>;
+        open spec fn view(&self) -> Map<K::V, V::V> {
+            spec_entries_to_map(self.entries@)
+        }
+    }
+
+
+    //		6. spec fns
 
     // 6. spec fns
 
@@ -54,36 +103,6 @@ pub mod TableStPer {
         }
     }
 
-    // 7. proof fns
-
-    pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
-        ensures spec_entries_to_map(entries).dom().finite()
-        decreases entries.len()
-    {
-        if entries.len() > 0 {
-            lemma_entries_to_map_finite::<KV, VV>(entries.drop_last());
-        }
-    }
-
-    // 4. type definitions
-
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct TableStPer<K: StT + Ord, V: StT> {
-        pub entries: ArraySeqStPerS<Pair<K, V>>,
-    }
-
-    pub type TableS<K, V> = TableStPer<K, V>;
-
-    // 5. view impls
-
-    impl<K: StT + Ord, V: StT> View for TableStPer<K, V> {
-        type V = Map<K::V, V::V>;
-        open spec fn view(&self) -> Map<K::V, V::V> {
-            spec_entries_to_map(self.entries@)
-        }
-    }
-
     // 6. spec fns
 
     // Keys in the entry sequence are unique.
@@ -92,9 +111,17 @@ pub mod TableStPer {
             0 <= i < j < entries.len() ==> (#[trigger] entries[i]).0 != (#[trigger] entries[j]).0
     }
 
-    impl<K: StT + Ord, V: StT> TableStPer<K, V> {
-        pub open spec fn spec_tablestper_wf(&self) -> bool {
-            spec_keys_no_dups(self.entries@)
+
+    //		7. proof fns/broadcast groups
+
+    // 7. proof fns
+
+    pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
+        ensures spec_entries_to_map(entries).dom().finite()
+        decreases entries.len()
+    {
+        if entries.len() > 0 {
+            lemma_entries_to_map_finite::<KV, VV>(entries.drop_last());
         }
     }
 
@@ -270,6 +297,9 @@ pub mod TableStPer {
         }
     }
 
+
+    //		8. traits
+
     // 8. traits
 
     /// Trait defining the Table ADT operations from Chapter 42.
@@ -375,6 +405,15 @@ pub mod TableStPer {
         /// APAS: Work Θ(|a|), Span Θ(lg |a|)
         fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
             ensures spec_entries_to_map(collected@) == self@;
+    }
+
+
+    //		9. impls
+
+    impl<K: StT + Ord, V: StT> TableStPer<K, V> {
+        pub open spec fn spec_tablestper_wf(&self) -> bool {
+            spec_keys_no_dups(self.entries@)
+        }
     }
 
     // 9. impls
@@ -1318,7 +1357,40 @@ pub mod TableStPer {
         }
     }
 
+    pub fn from_sorted_entries<K: StT + Ord, V: StT>(
+        entries: Vec<Pair<K, V>>,
+    ) -> (cloned: TableStPer<K, V>)
+        ensures cloned@.dom().finite()
+    {
+        let seq = ArraySeqStPerS::from_vec(entries);
+        proof {
+            lemma_entries_to_map_finite::<K::V, V::V>(seq@);
+        }
+        TableStPer { entries: seq }
+    }
+
+
+    //		11. derive impls in verus!
+
     // 11. derive impls in verus!
+
+    #[cfg(verus_keep_ghost)]
+    impl<K: StT + Ord + View + PartialEq, V: StT + View + PartialEq> PartialEqSpecImpl for TableStPer<K, V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<K: StT + Ord + Eq + View, V: StT + Eq + View> Eq for TableStPer<K, V> {}
+
+    impl<K: StT + Ord + PartialEq + View, V: StT + PartialEq + View> PartialEq for TableStPer<K, V> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let r = self.entries == other.entries;
+            proof { assume(r == (self@ == other@)); }
+            r
+        }
+    }
 
     impl<K: StT + Ord, V: StT> Clone for TableStPer<K, V> {
         fn clone(&self) -> (cloned: Self)
@@ -1336,21 +1408,12 @@ pub mod TableStPer {
         }
     }
 
-    pub fn from_sorted_entries<K: StT + Ord, V: StT>(
-        entries: Vec<Pair<K, V>>,
-    ) -> (cloned: TableStPer<K, V>)
-        ensures cloned@.dom().finite()
-    {
-        let seq = ArraySeqStPerS::from_vec(entries);
-        proof {
-            lemma_entries_to_map_finite::<K::V, V::V>(seq@);
-        }
-        TableStPer { entries: seq }
-    }
-
     } // verus!
 
     // 12. macros
+
+
+    //		12. macros
 
     /// Macro for creating table literals.
     #[macro_export]
@@ -1367,11 +1430,8 @@ pub mod TableStPer {
 
     // 13. derive impls outside verus!
 
-    impl<K: StT + Ord, V: StT> PartialEq for TableStPer<K, V> {
-        fn eq(&self, other: &Self) -> bool {
-            self.entries == other.entries
-        }
-    }
+
+    //		13. derive impls outside verus!
 
     impl<K: StT + Ord, V: StT> std::fmt::Debug for TableStPer<K, V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
