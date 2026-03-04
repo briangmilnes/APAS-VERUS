@@ -29,3 +29,25 @@ The `spec_` prefix already signals this is a specification. Adding `_post` is re
 | iterate | `spec_iterate` |
 | monoid | `spec_monoid` |
 | filter_len | `spec_filter_len` |
+
+## Well-formedness spec naming: `spec_<module>_wf`
+
+Name well-formedness specs `spec_<module>_wf` where `<module>` is the module name in
+lowercase with no internal underscores. Do not use bare `spec_wf`.
+
+```rust
+// Bad: bare spec_wf
+spec fn spec_wf(&self) -> bool;
+
+// Good: module name smushed lowercase
+spec fn spec_orderedtablestper_wf(&self) -> bool;
+spec fn spec_augorderedtablemteph_wf(&self) -> bool;
+```
+
+| Module | spec_wf name |
+|---|---|
+| AVLTreeSeq | `spec_avltreeseq_wf` |
+| AVLTreeSeqStEph | `spec_avltreeseqsteph_wf` |
+| AVLTreeSeqStPer | `spec_avltreeseqstper_wf` |
+| OrderedTableStPer | `spec_orderedtablestper_wf` |
+| AugOrderedTableMtEph | `spec_augorderedtablemteph_wf` |

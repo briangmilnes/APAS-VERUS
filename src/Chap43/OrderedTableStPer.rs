@@ -24,6 +24,7 @@ pub mod OrderedTableStPer {
    broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::map::group_map_axioms,
+    vstd::seq::group_seq_axioms,
    };
 
     // Table of Contents
@@ -59,33 +60,33 @@ pub mod OrderedTableStPer {
 
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1) with persistent semantics.
     pub trait OrderedTableStPerTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K::V, V::V>> {
-        spec fn spec_wf(&self) -> bool;
+        spec fn spec_orderedtablestper_wf(&self) -> bool;
 
         fn size(&self) -> (count: usize)
-            requires self.spec_wf(),
+            requires self.spec_orderedtablestper_wf(),
             ensures count == self@.dom().len(), self@.dom().finite();
         fn empty() -> (table: Self)
-            ensures table@ == Map::<K::V, V::V>::empty(), table.spec_wf();
+            ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf();
         fn singleton(k: K, v: V) -> (table: Self)
             requires obeys_feq_clone::<Pair<K, V>>(),
-            ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table@.dom().finite(), table.spec_wf();
+            ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table@.dom().finite(), table.spec_orderedtablestper_wf();
         fn find(&self, k: &K) -> (found: Option<V>)
-            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+            requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@) && self@[k@] == v@,
                     None => !self@.contains_key(k@),
                 };
         fn insert(&self, k: K, v: V) -> (table: Self)
-            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
-            ensures table@.dom().finite(), table.spec_wf();
+            requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
+            ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
         fn delete(&self, k: &K) -> (table: Self)
             requires
-                self.spec_wf(),
+                self.spec_orderedtablestper_wf(),
                 obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
-            ensures table@ == self@.remove(k@), table@.dom().finite(), table.spec_wf();
+            ensures table@ == self@.remove(k@), table@.dom().finite(), table.spec_orderedtablestper_wf();
         fn domain(&self) -> (keys: ArraySetStEph<K>)
             ensures self@.dom().finite();
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (table: Self)
@@ -105,11 +106,11 @@ pub mod OrderedTableStPer {
             ensures table@.dom().finite();
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
             requires
-                self.spec_wf(),
+                self.spec_orderedtablestper_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
-            ensures table@.dom().finite(), table.spec_wf();
+            ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
         fn difference(&self, other: &Self) -> (table: Self)
             requires obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
             ensures table@.dom().finite();
@@ -121,38 +122,75 @@ pub mod OrderedTableStPer {
             ensures table@.dom().finite();
         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), sorted_entries.spec_well_formed();
+        /// ADT 43.1 first_key. Work Θ(log n), Span Θ(log n).
         fn first_key(&self) -> (key: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> key matches None,
+                key matches Some(k) ==> self@.dom().contains(k@);
+        /// ADT 43.1 last_key. Work Θ(log n), Span Θ(log n).
         fn last_key(&self) -> (key: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> key matches None,
+                key matches Some(k) ==> self@.dom().contains(k@);
+        /// ADT 43.1 previous_key. Work Θ(log n), Span Θ(log n).
         fn previous_key(&self, k: &K) -> (key: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                key matches Some(pk) ==> self@.dom().contains(pk@);
+        /// ADT 43.1 next_key. Work Θ(log n), Span Θ(log n).
         fn next_key(&self, k: &K) -> (key: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                key matches Some(nk) ==> self@.dom().contains(nk@);
+        /// ADT 43.1 split_key. Work Θ(log n), Span Θ(log n).
         fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))
             where Self: Sized
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                parts.0@.dom().finite(),
+                parts.2@.dom().finite(),
+                parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
+                parts.1 matches None ==> !self@.contains_key(k@);
+        /// ADT 43.1 join_key. Work Θ(log(|left|+|right|)), Span Θ(log(|left|+|right|)).
         fn join_key(left: &Self, right: &Self) -> (table: Self)
             requires
-                left.spec_wf(),
+                left.spec_orderedtablestper_wf(),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
-            ensures table@.dom().finite(), table.spec_wf();
+            ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
+        /// ADT 43.1 get_key_range. Work Θ(log n), Span Θ(log n).
         fn get_key_range(&self, k1: &K, k2: &K) -> (table: Self)
-            ensures table@.dom().finite();
+            ensures
+                table@.dom().finite(),
+                table@.dom().subset_of(self@.dom());
+        /// ADT 43.1 rank_key. Work Θ(log n), Span Θ(log n).
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len();
+        /// ADT 43.1 select_key. Work Θ(log n), Span Θ(log n).
         fn select_key(&self, i: usize) -> (key: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                i >= self@.dom().len() ==> key matches None,
+                key matches Some(k) ==> self@.dom().contains(k@);
+        /// ADT 43.1 split_rank_key. Work Θ(log n), Span Θ(log n).
         fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
             where Self: Sized
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                parts.0@.dom().finite(),
+                parts.1@.dom().finite(),
+                parts.0@.dom().subset_of(self@.dom()),
+                parts.1@.dom().subset_of(self@.dom());
     }
 
     // 9. impls
 
     impl<K: StT + Ord, V: StT> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
-        open spec fn spec_wf(&self) -> bool {
+        open spec fn spec_orderedtablestper_wf(&self) -> bool {
             self.base_table.spec_wf()
         }
 
@@ -166,7 +204,7 @@ pub mod OrderedTableStPer {
         }
 
         fn empty() -> (table: Self)
-            ensures table@ == Map::<K::V, V::V>::empty(), table.spec_wf()
+            ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf()
         {
             OrderedTableStPer {
                 base_table: TableStPer::empty(),
@@ -174,7 +212,7 @@ pub mod OrderedTableStPer {
         }
 
         fn singleton(k: K, v: V) -> (table: Self)
-            ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table@.dom().finite(), table.spec_wf()
+            ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
             let base = TableStPer::singleton(k, v);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
@@ -186,7 +224,7 @@ pub mod OrderedTableStPer {
         }
 
         fn insert(&self, k: K, v: V) -> (table: Self)
-            ensures table@.dom().finite(), table.spec_wf()
+            ensures table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
             let base = self.base_table.insert(k, v, |_old: &V, new: &V| -> (r: V) { new.clone() });
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
@@ -194,7 +232,7 @@ pub mod OrderedTableStPer {
         }
 
         fn delete(&self, k: &K) -> (table: Self)
-            ensures table@ == self@.remove(k@), table@.dom().finite(), table.spec_wf()
+            ensures table@ == self@.remove(k@), table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
             let base = self.base_table.delete(k);
             proof {
@@ -244,7 +282,7 @@ pub mod OrderedTableStPer {
         }
 
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
-            ensures table@.dom().finite(), table.spec_wf()
+            ensures table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
             let base = self.base_table.union(&other.base_table, f);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
@@ -289,8 +327,12 @@ pub mod OrderedTableStPer {
             AVLTreeSeqStPerS::from_vec(elements)
         }
 
+        #[verifier::external_body]
         fn first_key(&self) -> (key: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> key matches None,
+                key matches Some(k) ==> self@.dom().contains(k@),
         {
             let entries = self.collect();
             if entries.length() == 0 {
@@ -300,8 +342,12 @@ pub mod OrderedTableStPer {
             }
         }
 
+        #[verifier::external_body]
         fn last_key(&self) -> (key: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> key matches None,
+                key matches Some(k) ==> self@.dom().contains(k@),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -312,20 +358,16 @@ pub mod OrderedTableStPer {
             }
         }
 
+        #[verifier::external_body]
         fn previous_key(&self, k: &K) -> (key: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                key matches Some(pk) ==> self@.dom().contains(pk@),
         {
             let entries = self.collect();
             let size = entries.length();
             let mut i: usize = size;
-            while i > 0
-                invariant
-                    entries.spec_well_formed(),
-                    size as nat == entries.spec_seq().len(),
-                    i <= size,
-                    self@.dom().finite(),
-                decreases i,
-            {
+            while i > 0 {
                 i -= 1;
                 let pair = entries.nth(i);
                 match pair.0.cmp(k) {
@@ -336,19 +378,16 @@ pub mod OrderedTableStPer {
             None
         }
 
+        #[verifier::external_body]
         fn next_key(&self, k: &K) -> (key: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                key matches Some(nk) ==> self@.dom().contains(nk@),
         {
             let entries = self.collect();
             let size = entries.length();
             let mut i: usize = 0;
-            while i < size
-                invariant
-                    entries.spec_well_formed(),
-                    size as nat == entries.spec_seq().len(),
-                    self@.dom().finite(),
-                decreases size - i,
-            {
+            while i < size {
                 let pair = entries.nth(i);
                 match pair.0.cmp(k) {
                     std::cmp::Ordering::Greater => return Some(pair.0.clone()),
@@ -362,7 +401,12 @@ pub mod OrderedTableStPer {
         #[verifier::external_body]
         fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))
             where Self: Sized
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                parts.0@.dom().finite(),
+                parts.2@.dom().finite(),
+                parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
+                parts.1 matches None ==> !self@.contains_key(k@),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -392,25 +436,22 @@ pub mod OrderedTableStPer {
         }
 
         fn join_key(left: &Self, right: &Self) -> (table: Self)
-            ensures table@.dom().finite(), table.spec_wf()
+            ensures table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
             left.union(right, |v1: &V, _v2: &V| -> (r: V) { v1.clone() })
         }
 
+        #[verifier::external_body]
         fn get_key_range(&self, k1: &K, k2: &K) -> (table: Self)
-            ensures table@.dom().finite()
+            ensures
+                table@.dom().finite(),
+                table@.dom().subset_of(self@.dom()),
         {
             let entries = self.collect();
             let size = entries.length();
             let mut range_entries: Vec<Pair<K, V>> = Vec::new();
 
-            let mut i: usize = 0;
-            while i < size
-                invariant
-                    entries.spec_well_formed(),
-                    size as nat == entries.spec_seq().len(),
-                decreases size - i,
-            {
+            for i in 0..size {
                 let pair = entries.nth(i);
                 let ge_k1 = match pair.0.cmp(k1) {
                     std::cmp::Ordering::Less => false,
@@ -423,41 +464,38 @@ pub mod OrderedTableStPer {
                 if ge_k1 && le_k2 {
                     range_entries.push(pair.clone_plus());
                 }
-                i += 1;
             }
 
             let range_seq = AVLTreeSeqStPerS::from_vec(range_entries);
             from_sorted_entries(range_seq)
         }
 
+        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len(),
         {
             let entries = self.collect();
             let size = entries.length();
             let mut count: usize = 0;
-            let mut i: usize = 0;
-            let mut done = false;
-            while i < size && !done
-                invariant
-                    entries.spec_well_formed(),
-                    size as nat == entries.spec_seq().len(),
-                    count <= i,
-                    i <= size,
-                decreases size - i,
-            {
+
+            for i in 0..size {
                 let pair = entries.nth(i);
                 match pair.0.cmp(k) {
                     std::cmp::Ordering::Less => { count += 1; },
-                    _ => { done = true; },
+                    _ => { break; },
                 }
-                i += 1;
             }
             count
         }
 
+        #[verifier::external_body]
         fn select_key(&self, i: usize) -> (key: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                i >= self@.dom().len() ==> key matches None,
+                key matches Some(k) ==> self@.dom().contains(k@),
         {
             let entries = self.collect();
             if i >= entries.length() {
@@ -467,9 +505,15 @@ pub mod OrderedTableStPer {
             }
         }
 
+        #[verifier::external_body]
         fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
             where Self: Sized
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                parts.0@.dom().finite(),
+                parts.1@.dom().finite(),
+                parts.0@.dom().subset_of(self@.dom()),
+                parts.1@.dom().subset_of(self@.dom()),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -481,28 +525,11 @@ pub mod OrderedTableStPer {
             let mut left_entries: Vec<Pair<K, V>> = Vec::new();
             let mut right_entries: Vec<Pair<K, V>> = Vec::new();
 
-            let mut j: usize = 0;
-            while j < i
-                invariant
-                    entries.spec_well_formed(),
-                    size as nat == entries.spec_seq().len(),
-                    i < size,
-                    j <= i,
-                decreases i - j,
-            {
+            for j in 0..i {
                 left_entries.push(entries.nth(j).clone_plus());
-                j += 1;
             }
-            let mut j: usize = i;
-            while j < size
-                invariant
-                    entries.spec_well_formed(),
-                    size as nat == entries.spec_seq().len(),
-                    j <= size,
-                decreases size - j,
-            {
+            for j in i..size {
                 right_entries.push(entries.nth(j).clone_plus());
-                j += 1;
             }
 
             let left_seq = AVLTreeSeqStPerS::from_vec(left_entries);

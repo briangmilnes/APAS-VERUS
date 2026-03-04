@@ -499,6 +499,10 @@ for small inputs.
 Name spec functions after the operation (`spec_inject`, `spec_ninject`), not as postconditions
 (no `_post` suffix).
 
+**Well-formedness specs**: `spec_<module>_wf` where `<module>` is the module name in lowercase
+with no internal underscores. Do not use bare `spec_wf`. E.g., `spec_orderedtablestper_wf`,
+`spec_augorderedtablemteph_wf`.
+
 ### XLit! Macros
 
 Use `SetLit!`, `RelationLit!`, `MappingLit!`, `PairLit!` for constructing test values.

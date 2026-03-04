@@ -6,9 +6,10 @@ pub mod AugOrderedTableStPer {
     // Table of Contents
     // 1. module
     // 2. imports
+    // 3. broadcast use
     // 4. type definitions
     // 5. view impls
-    // 7. free functions (calculate_reduction)
+    // 7. proof fns, helper fns
     // 8. traits
     // 9. impls
     // 11. derive impls in verus!
@@ -28,6 +29,8 @@ pub mod AugOrderedTableStPer {
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
 
@@ -66,6 +69,7 @@ broadcast use {
 
     // 7. free functions (calculate_reduction)
 
+    /// Fold all values in `base` through `reducer`, returning `identity` for empty tables.
     pub fn calculate_reduction<K: StT + Ord, V: StT, F>(
         base: &OrderedTableStPer<K, V>,
         reducer: &F,
@@ -75,21 +79,20 @@ broadcast use {
         F: Fn(&V, &V) -> V + Clone,
         ensures base@.dom().finite(),
     {
-        proof { assume(base.spec_wf()); }
-        let sz = base.size(); // establishes base@.dom().finite()
+        let pairs = base.collect();
+        // collect ensures: base@.dom().finite(), pairs.spec_well_formed()
+        let sz = pairs.length();
+        // length ensures: sz as nat == pairs@.len(), given spec_well_formed()
         if sz == 0 {
             return identity.clone();
         }
-        let pairs = base.collect();
-        proof {
-            assume(pairs.spec_well_formed());
-            assume(pairs@.len() == sz as int);
-        }
+        // sz > 0 so pairs@.len() > 0, safe to call nth(0).
         let mut reduced = pairs.nth(0).1.clone();
         let mut i: usize = 1;
-        while i < pairs.length()
+        while i < sz
             invariant
-                i <= pairs@.len(),
+                1 <= i <= pairs@.len(),
+                sz as nat == pairs@.len(),
                 pairs.spec_well_formed(),
             decreases pairs@.len() - i,
         {
@@ -117,33 +120,33 @@ broadcast use {
     where
         F: Fn(&V, &V) -> V + Clone,
     {
-        spec fn spec_wf(&self) -> bool;
+        spec fn spec_augorderedtablestper_wf(&self) -> bool;
 
         fn size(&self) -> (count: usize)
-            requires self.spec_wf(),
+            requires self.spec_augorderedtablestper_wf(),
             ensures count == self@.dom().len(), self@.dom().finite();
         fn empty(reducer: F, identity: V) -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_wf();
+            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_augorderedtablestper_wf();
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
             requires obeys_feq_clone::<Pair<K, V>>(),
-            ensures tree@.dom().finite(), tree.spec_wf();
+            ensures tree@.dom().finite(), tree.spec_augorderedtablestper_wf();
         fn find(&self, k: &K) -> (found: Option<V>)
-            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+            requires self.spec_augorderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
                     None => !self@.contains_key(k@),
                 };
         fn insert(&self, k: K, v: V) -> (updated: Self)
-            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
-            ensures updated@.dom().finite(), updated.spec_wf();
+            requires self.spec_augorderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
+            ensures updated@.dom().finite(), updated.spec_augorderedtablestper_wf();
         fn delete(&self, k: &K) -> (updated: Self)
             requires
-                self.spec_wf(),
+                self.spec_augorderedtablestper_wf(),
                 obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
-            ensures updated@.dom().finite(), updated.spec_wf();
+            ensures updated@.dom().finite(), updated.spec_augorderedtablestper_wf();
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite();
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
@@ -163,11 +166,11 @@ broadcast use {
             ensures common@.dom().finite();
         fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (combined: Self)
             requires
-                self.spec_wf(),
+                self.spec_augorderedtablestper_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
-            ensures combined@.dom().finite(), combined.spec_wf();
+            ensures combined@.dom().finite(), combined.spec_augorderedtablestper_wf();
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
             ensures remaining@.dom().finite();
@@ -178,34 +181,61 @@ broadcast use {
             requires obeys_feq_full::<Pair<K, V>>(),
             ensures subtracted@.dom().finite();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite();
+            ensures self@.dom().finite(), collected.spec_well_formed();
         fn first_key(&self) -> (first: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> first matches None,
+                first matches Some(k) ==> self@.dom().contains(k@);
         fn last_key(&self) -> (last: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> last matches None,
+                last matches Some(k) ==> self@.dom().contains(k@);
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                predecessor matches Some(pk) ==> self@.dom().contains(pk@);
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ensures self@.dom().finite();
-        fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self))
-            where Self: Sized,
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                successor matches Some(nk) ==> self@.dom().contains(nk@);
+        fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))
+            where Self: Sized
+            ensures
+                self@.dom().finite(),
+                parts.0@.dom().finite(),
+                parts.2@.dom().finite(),
+                parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
+                parts.1 matches None ==> !self@.contains_key(k@);
         fn join_key(left: &Self, right: &Self) -> (joined: Self)
             requires
-                left.spec_wf(),
-                right.spec_wf(),
+                left.spec_augorderedtablestper_wf(),
+                right.spec_augorderedtablestper_wf(),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
-            ensures joined@.dom().finite(), joined.spec_wf();
+            ensures joined@.dom().finite(), joined.spec_augorderedtablestper_wf();
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
-            ensures range@.dom().finite();
+            ensures
+                range@.dom().finite(),
+                range@.dom().subset_of(self@.dom());
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len();
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                i >= self@.dom().len() ==> selected matches None,
+                selected matches Some(k) ==> self@.dom().contains(k@);
         fn split_rank_key(&self, i: usize) -> (split: (Self, Self))
-            where Self: Sized,
-            ensures self@.dom().finite();
+            where Self: Sized
+            ensures
+                self@.dom().finite(),
+                split.0@.dom().finite(),
+                split.0@.dom().subset_of(self@.dom()),
+                split.1@.dom().finite(),
+                split.1@.dom().subset_of(self@.dom());
         fn reduce_val(&self) -> (reduced: V)
             ensures self@.dom().finite();
         fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
@@ -218,8 +248,8 @@ broadcast use {
     where
         F: Fn(&V, &V) -> V + Clone,
     {
-        open spec fn spec_wf(&self) -> bool {
-            self.base_table.spec_wf()
+        open spec fn spec_augorderedtablestper_wf(&self) -> bool {
+            self.base_table.spec_orderedtablestper_wf()
         }
 
         fn size(&self) -> (count: usize)
@@ -230,7 +260,7 @@ broadcast use {
         }
 
         fn empty(reducer: F, identity: V) -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_wf()
+            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_augorderedtablestper_wf()
         {
             let base = OrderedTableStPer::empty();
             let r = Self {
@@ -244,7 +274,7 @@ broadcast use {
         }
 
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
-            ensures tree@.dom().finite(), tree.spec_wf()
+            ensures tree@.dom().finite(), tree.spec_augorderedtablestper_wf()
         {
             let base = OrderedTableStPer::singleton(k, v.clone());
             let r = Self {
@@ -264,7 +294,7 @@ broadcast use {
         }
 
         fn insert(&self, k: K, v: V) -> (updated: Self)
-            ensures updated@.dom().finite(), updated.spec_wf()
+            ensures updated@.dom().finite(), updated.spec_augorderedtablestper_wf()
         {
             let new_base = self.base_table.insert(k, v);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -280,7 +310,7 @@ broadcast use {
         }
 
         fn delete(&self, k: &K) -> (updated: Self)
-            ensures updated@.dom().finite(), updated.spec_wf()
+            ensures updated@.dom().finite(), updated.spec_augorderedtablestper_wf()
         {
             let new_base = self.base_table.delete(k);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -367,7 +397,7 @@ broadcast use {
         }
 
         fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (combined: Self)
-            ensures combined@.dom().finite(), combined.spec_wf()
+            ensures combined@.dom().finite(), combined.spec_augorderedtablestper_wf()
         {
             let new_base = self.base_table.union(&other.base_table, f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -431,42 +461,57 @@ broadcast use {
         }
 
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite()
+            ensures self@.dom().finite(), collected.spec_well_formed()
         {
             proof { lemma_aug_view(self); }
             self.base_table.collect()
         }
 
         fn first_key(&self) -> (first: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> first matches None,
+                first matches Some(k) ==> self@.dom().contains(k@),
         {
             proof { lemma_aug_view(self); }
             self.base_table.first_key()
         }
 
         fn last_key(&self) -> (last: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> last matches None,
+                last matches Some(k) ==> self@.dom().contains(k@),
         {
             proof { lemma_aug_view(self); }
             self.base_table.last_key()
         }
 
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                predecessor matches Some(pk) ==> self@.dom().contains(pk@),
         {
             proof { lemma_aug_view(self); }
             self.base_table.previous_key(k)
         }
 
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                successor matches Some(nk) ==> self@.dom().contains(nk@),
         {
             proof { lemma_aug_view(self); }
             self.base_table.next_key(k)
         }
 
-        fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self))
-            ensures self@.dom().finite()
+        fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))
+            ensures
+                self@.dom().finite(),
+                parts.0@.dom().finite(),
+                parts.2@.dom().finite(),
+                parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
+                parts.1 matches None ==> !self@.contains_key(k@),
         {
             let (left_base, middle, right_base) = self.base_table.split_key(k);
 
@@ -487,12 +532,16 @@ broadcast use {
                 identity: self.identity.clone(),
             };
 
-            proof { lemma_aug_view(self); }
+            proof {
+                lemma_aug_view(self);
+                lemma_aug_view(&left);
+                lemma_aug_view(&right);
+            }
             (left, middle, right)
         }
 
         fn join_key(left: &Self, right: &Self) -> (joined: Self)
-            ensures joined@.dom().finite(), joined.spec_wf()
+            ensures joined@.dom().finite(), joined.spec_augorderedtablestper_wf()
         {
             let new_base = OrderedTableStPer::join_key(&left.base_table, &right.base_table);
             let new_reduction = if left.base_table.size() == 0 {
@@ -516,7 +565,9 @@ broadcast use {
         }
 
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
-            ensures range@.dom().finite()
+            ensures
+                range@.dom().finite(),
+                range@.dom().subset_of(self@.dom()),
         {
             let new_base = self.base_table.get_key_range(k1, k2);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -527,26 +578,39 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof {
+                lemma_aug_view(self);
+                lemma_aug_view(&r);
+            }
             r
         }
 
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len(),
         {
             proof { lemma_aug_view(self); }
             self.base_table.rank_key(k)
         }
 
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                i >= self@.dom().len() ==> selected matches None,
+                selected matches Some(k) ==> self@.dom().contains(k@),
         {
             proof { lemma_aug_view(self); }
             self.base_table.select_key(i)
         }
 
         fn split_rank_key(&self, i: usize) -> (split: (Self, Self))
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                split.0@.dom().finite(),
+                split.0@.dom().subset_of(self@.dom()),
+                split.1@.dom().finite(),
+                split.1@.dom().subset_of(self@.dom()),
         {
             let (left_base, right_base) = self.base_table.split_rank_key(i);
 
@@ -567,7 +631,11 @@ broadcast use {
                 identity: self.identity.clone(),
             };
 
-            proof { lemma_aug_view(self); }
+            proof {
+                lemma_aug_view(self);
+                lemma_aug_view(&left);
+                lemma_aug_view(&right);
+            }
             (left, right)
         }
 
@@ -612,19 +680,27 @@ broadcast use {
         }
     }
 
+    #[cfg(verus_keep_ghost)]
+    impl<K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone> PartialEqSpecImpl for AugOrderedTableStPer<K, V, F> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone> Eq for AugOrderedTableStPer<K, V, F> {}
+
+    impl<K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone> PartialEq for AugOrderedTableStPer<K, V, F> {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            let equal = self.base_table == other.base_table;
+            proof { lemma_aug_view(self); lemma_aug_view(other); }
+            equal
+        }
+    }
+
     } // verus!
 
     // 13. derive impls outside verus!
-
-    impl<K: StT + Ord, V: StT, F> PartialEq for AugOrderedTableStPer<K, V, F>
-    where
-        F: Fn(&V, &V) -> V + Clone,
-    {
-        fn eq(&self, other: &Self) -> bool {
-            self.base_table == other.base_table
-                && self.cached_reduction == other.cached_reduction
-        }
-    }
 
     impl<K: StT + Ord, V: StT, F> Display for AugOrderedTableStPer<K, V, F>
     where
