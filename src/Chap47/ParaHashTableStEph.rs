@@ -9,25 +9,16 @@ pub mod ParaHashTableStEph {
     // Table of Contents
     // 1. module
     // 2. imports
-    // 4. type definitions (inside verus!: LoadAndSize; outside verus!: HashFunGen, HashFun, HashTable)
-    // 8. traits (inside verus!: EntryTrait; outside verus!: ParaHashTableStEphTrait)
+    // 4. type definitions (inside verus!: LoadAndSize, HashTable)
+    // 8. traits (inside verus!: EntryTrait, ParaHashTableStEphTrait)
     // 13. derive impls outside verus!
 
     // 2. imports
     use std::fmt::Display;
     use std::marker::PhantomData;
-    use std::rc::Rc;
 
     use vstd::prelude::*;
     use crate::Types::Types::*;
-
-    /// Hash function generator: takes table size, returns hash function for that size.
-    /// This allows the hash function to adapt to different table sizes (e.g., hash(key) mod size).
-    /// Uses Rc for clonability during resize operations.
-    pub type HashFunGen<K> = Rc<dyn Fn(usize) -> Box<dyn Fn(&K) -> usize>>;
-
-    /// Hash function: takes a key, returns hash code.
-    pub type HashFun<K> = Box<dyn Fn(&K) -> usize>;
 
     verus! {
 
@@ -37,6 +28,18 @@ pub mod ParaHashTableStEph {
     pub struct LoadAndSize {
         pub load: f64,
         pub size: usize,
+    }
+
+    /// Parametric nested hash table structure.
+    /// Generic `H` is the hash function type: takes (&Key, usize) and returns an index.
+    pub struct HashTable<Key, Value, Entry, Metrics, H> {
+        pub table: Vec<Entry>,
+        pub hash_fn: H,
+        pub initial_size: usize,
+        pub current_size: usize,
+        pub num_elements: usize,
+        pub metrics: Metrics,
+        pub _phantom: PhantomData<(Key, Value)>,
     }
 
     // 8. traits
@@ -58,36 +61,23 @@ pub mod ParaHashTableStEph {
         fn delete(&mut self, key: &Key) -> (deleted: B);
     }
 
-    } // verus!
-
-    // 4. type definitions (outside verus! — HashTable contains Rc<dyn Fn> and Box<dyn Fn>)
-
-    /// Parametric nested hash table structure.
-    pub struct HashTable<Key, Value, Entry, Metrics> {
-        pub table: Vec<Entry>,
-        pub hash_fn_gen: HashFunGen<Key>,
-        pub hash_fn: HashFun<Key>,
-        pub initial_size: usize,
-        pub current_size: usize,
-        pub num_elements: usize,
-        pub metrics: Metrics,
-        pub _phantom: PhantomData<(Key, Value)>,
-    }
-
-    // 8. traits (outside verus! — methods reference HashTable which contains dyn Fn types)
-
     /// Trait for parametric nested hash tables.
-    pub trait ParaHashTableStEphTrait<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default> {
+    pub trait ParaHashTableStEphTrait<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default, H: Fn(&Key, usize) -> usize + Clone> {
         /// Creates an empty hash table with the given initial size.
-        /// Takes a hash function generator that produces hash functions for different table sizes.
+        /// Takes a hash function that maps (&Key, table_size) to a bucket index.
         /// - APAS: Work O(m), Span O(m) where m is initial size.
         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
-        fn createTable(hash_fn_gen: HashFunGen<Key>, initial_size: usize)           -> HashTable<Key, Value, Entry, Metrics> {
-            let table = (0..initial_size).map(|_| Entry::new()).collect();
-            let hash_fn = hash_fn_gen(initial_size);
+        #[verifier::external_body]
+        fn createTable(hash_fn: H, initial_size: usize) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
+            ensures
+                table.initial_size == initial_size,
+                table.current_size == initial_size,
+                table.num_elements == 0,
+                table.table@.len() == initial_size as int,
+        {
+            let table_vec = (0..initial_size).map(|_| Entry::new()).collect();
             HashTable {
-                table,
-                hash_fn_gen,
+                table: table_vec,
                 hash_fn,
                 initial_size,
                 current_size: initial_size,
@@ -100,28 +90,41 @@ pub mod ParaHashTableStEph {
         /// Inserts a key-value pair into the hash table.
         /// - APAS: Work O(1) expected, Span O(1).
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
-        fn insert(table: &mut HashTable<Key, Value, Entry, Metrics>, key: Key, value: Value);
+        fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
+            requires
+                old(table).current_size > 0,
+                old(table).table@.len() == old(table).current_size as int;
 
         /// Looks up a key in the hash table, returning its value if found.
         /// - APAS: Work O(1) expected, Span O(1).
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
-        fn lookup(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key)     -> Option<Value>;
+        fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value>
+            requires
+                table.current_size > 0,
+                table.table@.len() == table.current_size as int;
 
         /// Deletes a key from the hash table if it exists.
         /// - APAS: Work O(1) expected, Span O(1).
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
-        fn delete(table: &mut HashTable<Key, Value, Entry, Metrics>, key: &Key) -> B;
+        fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> B
+            requires
+                old(table).current_size > 0,
+                old(table).table@.len() == old(table).current_size as int;
 
         /// Accessor for metrics field.
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
-        fn metrics(table: &HashTable<Key, Value, Entry, Metrics>)               -> &Metrics { &table.metrics }
+        #[verifier::external_body]
+        fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics) { &table.metrics }
 
         /// Returns the load (number of entries) and size (table capacity).
         /// Load factor α = load/size = num_elements/size
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads and one division.
-        fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics>)           -> LoadAndSize {
+        #[verifier::external_body]
+        fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (result: LoadAndSize)
+            ensures result.size == table.current_size,
+        {
             let load_factor = if table.current_size == 0 {
                 0.0
             } else {
@@ -134,12 +137,19 @@ pub mod ParaHashTableStEph {
         }
 
         /// Resizes the hash table to a new size and rehashes all entries.
-        /// Uses the stored hash function generator to create a new hash function for the new size.
+        /// Clones the stored hash function for the new table.
         /// - APAS: Work O(n + m + m'), Span O(n + m + m') where n is number of elements,
         ///   m is old size, m' is new size.
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
-        fn resize(table: &HashTable<Key, Value, Entry, Metrics>, new_size: usize)   -> HashTable<Key, Value, Entry, Metrics>;
+        fn resize(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> (result: HashTable<Key, Value, Entry, Metrics, H>)
+            requires
+                new_size > 0,
+            ensures
+                result.current_size == new_size,
+                result.table@.len() == new_size as int;
     }
+
+    } // verus!
 
     // 13. derive impls outside verus!
 

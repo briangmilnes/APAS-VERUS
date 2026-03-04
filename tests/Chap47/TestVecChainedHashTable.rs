@@ -3,9 +3,11 @@ use apas_verus::Chap47::ChainedHashTable::ChainedHashTable::*;
 use apas_verus::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
 use apas_verus::Chap47::VecChainedHashTableStEph::VecChainedHashTableStEph::*;
 use apas_verus::Types::Types::*;
-use std::rc::Rc;
 
-type VecChainTable = HashTable<i32, String, Vec<(i32, String)>, ()>;
+type HashFn = fn(&i32, usize) -> usize;
+type VecChainTable = HashTable<i32, String, Vec<(i32, String)>, (), HashFn>;
+
+fn mod_hash(k: &i32, size: usize) -> usize { (*k as usize) % size }
 
 #[test]
 fn test_vec_entry_new() {
@@ -42,10 +44,9 @@ fn test_vec_entry_delete() {
 
 #[test]
 fn test_vec_chained_insert_lookup() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let mut table: VecChainTable =
-        <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, ()>>::createTable(
-            hash_fn_gen,
+        <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, (), HashFn>>::createTable(
+            mod_hash,
             10,
         );
 
@@ -65,10 +66,9 @@ fn test_vec_chained_insert_lookup() {
 
 #[test]
 fn test_vec_chained_delete() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let mut table: VecChainTable =
-        <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, ()>>::createTable(
-            hash_fn_gen,
+        <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, (), HashFn>>::createTable(
+            mod_hash,
             10,
         );
 
@@ -91,10 +91,9 @@ fn test_vec_entry_delete_nonexistent() {
 
 #[test]
 fn test_vec_chained_resize() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let mut table: VecChainTable =
-        <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, ()>>::createTable(
-            hash_fn_gen.clone(),
+        <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, (), HashFn>>::createTable(
+            mod_hash,
             4,
         );
 
@@ -119,10 +118,9 @@ fn test_vec_chained_resize() {
 
 #[test]
 fn test_vec_chained_hash_index() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let table: VecChainTable =
-        <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, ()>>::createTable(
-            hash_fn_gen,
+        <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, (), HashFn>>::createTable(
+            mod_hash,
             10,
         );
 

@@ -10,7 +10,7 @@ pub mod ChainedHashTable {
     // 4. type definitions (inside verus!)
     // 7. proof fns (inside verus!)
     // 11. derive impls in verus!
-    // 8. traits (outside verus! — references HashTable which contains dyn Fn types)
+    // 8. traits (inside verus!: ChainedHashTable)
     // 13. derive impls outside verus!
 
     // 2. imports
@@ -70,60 +70,67 @@ pub mod ChainedHashTable {
         }
 
         impl<Key, Value, Container: core::cmp::Eq> core::cmp::Eq for ChainEntry<Key, Value, Container> {}
-    }
 
-    // 8. traits (outside verus! — references HashTable which contains dyn Fn types)
+        // 8. traits
 
-    /// Chained Hash Table trait - extends ParaHashTableStEphTrait.
-    /// Uses separate chaining (linked lists or sequences) for collision resolution.
-    /// Entry type is parametric - can be ChainEntry, LinkedList, or any type implementing EntryTrait.
-    pub trait ChainedHashTable<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default>:
-        ParaHashTableStEphTrait<Key, Value, Entry, Metrics>
-    {
-        /// Computes the hash index for a key.
-        /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on hash function.
-        fn hash_index(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key) -> usize;
+        /// Chained Hash Table trait - extends ParaHashTableStEphTrait.
+        /// Uses separate chaining (linked lists or sequences) for collision resolution.
+        /// Entry type is parametric - can be ChainEntry, LinkedList, or any type implementing EntryTrait.
+        pub trait ChainedHashTable<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default, H: Fn(&Key, usize) -> usize + Clone>:
+            ParaHashTableStEphTrait<Key, Value, Entry, Metrics, H>
+        {
+            /// Computes the hash index for a key.
+            /// - APAS: Work O(1), Span O(1).
+            /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on hash function.
+            fn hash_index(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (index: usize)
+                requires
+                    table.current_size > 0,
+                ensures
+                    index < table.current_size;
 
-        /// Inserts into the chain at the hashed bucket, updating num_elements on new keys.
-        /// - APAS: Work O(1) expected, Span O(1).
-        /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — lookup to check existence, then chain insert.
-        fn insert_chained(table: &mut HashTable<Key, Value, Entry, Metrics>, key: Key, value: Value) {
-            let index = Self::hash_index(table, &key);
-            if index < table.table.len() {
-                let existed = table.table[index].lookup(&key).is_some();
-                table.table[index].insert(key, value);
-                if !existed {
-                    table.num_elements += 1;
+            /// Inserts into the chain at the hashed bucket, updating num_elements on new keys.
+            /// - APAS: Work O(1) expected, Span O(1).
+            /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — lookup to check existence, then chain insert.
+            #[verifier::external_body]
+            fn insert_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value) {
+                let index = Self::hash_index(table, &key);
+                if index < table.table.len() {
+                    let existed = table.table[index].lookup(&key).is_some();
+                    table.table[index].insert(key, value);
+                    if !existed {
+                        table.num_elements += 1;
+                    }
                 }
             }
-        }
 
-        /// Looks up in the chain at the hashed bucket.
-        /// - APAS: Work O(1+α) expected, Span O(1+α).
-        /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — agrees with APAS; hashes then linear scan of chain.
-        fn lookup_chained(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key) -> Option<Value> {
-            let index = Self::hash_index(table, key);
-            if index < table.table.len() {
-                table.table[index].lookup(key)
-            } else {
-                None
-            }
-        }
-
-        /// Deletes from the chain at the hashed bucket, updating num_elements on removal.
-        /// - APAS: Work O(1+α) expected, Span O(1+α).
-        /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — agrees with APAS; hashes then linear scan of chain.
-        fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics>, key: &Key) -> B {
-            let index = Self::hash_index(table, key);
-            if index < table.table.len() {
-                let deleted = table.table[index].delete(key);
-                if deleted {
-                    table.num_elements -= 1;
+            /// Looks up in the chain at the hashed bucket.
+            /// - APAS: Work O(1+α) expected, Span O(1+α).
+            /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — agrees with APAS; hashes then linear scan of chain.
+            #[verifier::external_body]
+            fn lookup_chained(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value> {
+                let index = Self::hash_index(table, key);
+                if index < table.table.len() {
+                    table.table[index].lookup(key)
+                } else {
+                    None
                 }
-                deleted
-            } else {
-                false
+            }
+
+            /// Deletes from the chain at the hashed bucket, updating num_elements on removal.
+            /// - APAS: Work O(1+α) expected, Span O(1+α).
+            /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — agrees with APAS; hashes then linear scan of chain.
+            #[verifier::external_body]
+            fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> B {
+                let index = Self::hash_index(table, key);
+                if index < table.table.len() {
+                    let deleted = table.table[index].delete(key);
+                    if deleted {
+                        table.num_elements -= 1;
+                    }
+                    deleted
+                } else {
+                    false
+                }
             }
         }
     }

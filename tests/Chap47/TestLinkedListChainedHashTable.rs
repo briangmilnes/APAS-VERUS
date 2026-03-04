@@ -4,10 +4,11 @@ use std::collections::LinkedList;
 use apas_verus::Chap47::ChainedHashTable::ChainedHashTable::*;
 use apas_verus::Chap47::LinkedListChainedHashTableStEph::LinkedListChainedHashTableStEph::*;
 use apas_verus::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
-use apas_verus::Types::Types::*;
-use std::rc::Rc;
 
-type LLChainTable = HashTable<i32, String, LinkedList<(i32, String)>, ()>;
+type HashFn = fn(&i32, usize) -> usize;
+type LLChainTable = HashTable<i32, String, LinkedList<(i32, String)>, (), HashFn>;
+
+fn mod_hash(k: &i32, size: usize) -> usize { (*k as usize) % size }
 
 #[test]
 fn test_linkedlist_entry_new() {
@@ -44,13 +45,11 @@ fn test_linkedlist_entry_delete() {
 
 #[test]
 fn test_linkedlist_chained_insert_lookup() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: LLChainTable = <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        LinkedList<(i32, String)>,
-        (),
-    >>::createTable(hash_fn_gen, 2);
+    let mut table: LLChainTable =
+        <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, LinkedList<(i32, String)>, (), HashFn>>::createTable(
+            mod_hash,
+            2,
+        );
 
     // Key 0 hashes to bucket 0, key 1 hashes to bucket 1
     LinkedListChainedHashTableStEph::insert(&mut table, 0, "zero".to_string());
@@ -68,13 +67,11 @@ fn test_linkedlist_chained_insert_lookup() {
 
 #[test]
 fn test_linkedlist_chained_delete() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: LLChainTable = <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        LinkedList<(i32, String)>,
-        (),
-    >>::createTable(hash_fn_gen, 2);
+    let mut table: LLChainTable =
+        <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, LinkedList<(i32, String)>, (), HashFn>>::createTable(
+            mod_hash,
+            2,
+        );
 
     LinkedListChainedHashTableStEph::insert(&mut table, 0, "zero".to_string());
     LinkedListChainedHashTableStEph::insert(&mut table, 1, "one".to_string());
@@ -88,13 +85,11 @@ fn test_linkedlist_chained_delete() {
 
 #[test]
 fn test_collision_handling() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: LLChainTable = <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        LinkedList<(i32, String)>,
-        (),
-    >>::createTable(hash_fn_gen, 2);
+    let mut table: LLChainTable =
+        <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, LinkedList<(i32, String)>, (), HashFn>>::createTable(
+            mod_hash,
+            2,
+        );
 
     // Keys 0, 2, 4 all hash to bucket 0 (collision chain)
     // Keys 1, 3, 5 all hash to bucket 1 (collision chain)
@@ -171,13 +166,11 @@ fn test_entry_lookup_not_found() {
 
 #[test]
 fn test_resize_empty_table() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let table: LLChainTable = <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        LinkedList<(i32, String)>,
-        (),
-    >>::createTable(hash_fn_gen, 2);
+    let table: LLChainTable =
+        <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, LinkedList<(i32, String)>, (), HashFn>>::createTable(
+            mod_hash,
+            2,
+        );
 
     let new_table = LinkedListChainedHashTableStEph::resize(&table, 4);
     assert_eq!(new_table.current_size, 4);
@@ -186,13 +179,11 @@ fn test_resize_empty_table() {
 
 #[test]
 fn test_resize_with_elements() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: LLChainTable = <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        LinkedList<(i32, String)>,
-        (),
-    >>::createTable(hash_fn_gen, 2);
+    let mut table: LLChainTable =
+        <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, LinkedList<(i32, String)>, (), HashFn>>::createTable(
+            mod_hash,
+            2,
+        );
 
     // Insert into both buckets
     LinkedListChainedHashTableStEph::insert(&mut table, 0, "zero".to_string());
@@ -218,13 +209,11 @@ fn test_resize_with_elements() {
 
 #[test]
 fn test_load_and_size() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: LLChainTable = <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        LinkedList<(i32, String)>,
-        (),
-    >>::createTable(hash_fn_gen, 2);
+    let mut table: LLChainTable =
+        <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, LinkedList<(i32, String)>, (), HashFn>>::createTable(
+            mod_hash,
+            2,
+        );
 
     let result = LinkedListChainedHashTableStEph::loadAndSize(&table);
     assert_eq!(result.size, 2);
@@ -241,13 +230,11 @@ fn test_load_and_size() {
 
 #[test]
 fn test_update_existing_key() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: LLChainTable = <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        LinkedList<(i32, String)>,
-        (),
-    >>::createTable(hash_fn_gen, 2);
+    let mut table: LLChainTable =
+        <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, LinkedList<(i32, String)>, (), HashFn>>::createTable(
+            mod_hash,
+            2,
+        );
 
     LinkedListChainedHashTableStEph::insert(&mut table, 0, "zero".to_string());
     LinkedListChainedHashTableStEph::insert(&mut table, 0, "ZERO".to_string());

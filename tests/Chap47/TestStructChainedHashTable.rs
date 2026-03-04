@@ -2,10 +2,11 @@
 use apas_verus::Chap47::ChainedHashTable::ChainedHashTable::*;
 use apas_verus::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
 use apas_verus::Chap47::StructChainedHashTable::StructChainedHashTable::*;
-use apas_verus::Types::Types::*;
-use std::rc::Rc;
 
-type StructChainTable = HashTable<i32, String, ChainList<i32, String>, ()>;
+type HashFn = fn(&i32, usize) -> usize;
+type StructChainTable = HashTable<i32, String, ChainList<i32, String>, (), HashFn>;
+
+fn mod_hash(k: &i32, size: usize) -> usize { (*k as usize) % size }
 
 #[test]
 fn test_chainlist_new() {
@@ -58,10 +59,9 @@ fn test_chainlist_delete_not_found() {
 
 #[test]
 fn test_struct_chained_insert_lookup() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let mut table: StructChainTable =
-        <StructChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, ChainList<i32, String>, ()>>::createTable(
-            hash_fn_gen,
+        <StructChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, ChainList<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
             10,
         );
 
@@ -81,10 +81,9 @@ fn test_struct_chained_insert_lookup() {
 
 #[test]
 fn test_struct_chained_delete() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let mut table: StructChainTable =
-        <StructChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, ChainList<i32, String>, ()>>::createTable(
-            hash_fn_gen,
+        <StructChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, ChainList<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
             10,
         );
 
@@ -106,10 +105,9 @@ fn test_chainlist_default() {
 
 #[test]
 fn test_struct_chained_resize() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let mut table: StructChainTable =
-        <StructChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, ChainList<i32, String>, ()>>::createTable(
-            hash_fn_gen.clone(),
+        <StructChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, ChainList<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
             4,
         );
 

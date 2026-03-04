@@ -2,20 +2,20 @@
 use apas_verus::Chap47::DoubleHashFlatHashTableStEph::DoubleHashFlatHashTableStEph::*;
 use apas_verus::Chap47::FlatHashTable::FlatHashTable::*;
 use apas_verus::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
-use apas_verus::Types::Types::*;
-use std::rc::Rc;
 
-type DoubleHashTable = HashTable<i32, String, FlatEntry<i32, String>, ()>;
+type HashFn = fn(&i32, usize) -> usize;
+type DoubleHashTable = HashTable<i32, String, FlatEntry<i32, String>, (), HashFn>;
+
+fn mod_hash(k: &i32, size: usize) -> usize { (*k as usize) % size }
+fn zero_hash(_k: &i32, _size: usize) -> usize { 0 }
 
 #[test]
 fn test_insert_and_lookup() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: DoubleHashTable = <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        FlatEntry<i32, String>,
-        (),
-    >>::createTable(hash_fn_gen, 11);
+    let mut table: DoubleHashTable =
+        <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
+            11,
+        );
 
     for _ in 0..11 {
         table.table.push(FlatEntry::Empty);
@@ -42,13 +42,11 @@ fn test_insert_and_lookup() {
 
 #[test]
 fn test_delete() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: DoubleHashTable = <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        FlatEntry<i32, String>,
-        (),
-    >>::createTable(hash_fn_gen, 11);
+    let mut table: DoubleHashTable =
+        <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
+            11,
+        );
 
     for _ in 0..11 {
         table.table.push(FlatEntry::Empty);
@@ -81,13 +79,11 @@ fn test_second_hash_is_odd() {
 
 #[test]
 fn test_probe_double_hash_sequence() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let table: DoubleHashTable = <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        FlatEntry<i32, String>,
-        (),
-    >>::createTable(hash_fn_gen, 11);
+    let table: DoubleHashTable =
+        <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
+            11,
+        );
 
     let key = 5;
     let slot0 = DoubleHashFlatHashTableStEph::probe(&table, &key, 0);
@@ -107,13 +103,11 @@ fn test_probe_double_hash_sequence() {
 #[test]
 fn test_probe_visits_all_slots_prime_size() {
     // APAS: When step is coprime to m (prime size), all m slots are visited
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|_size| Box::new(|_k| 0)); // Hash to 0
-    let table: DoubleHashTable = <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        FlatEntry<i32, String>,
-        (),
-    >>::createTable(hash_fn_gen, 11);
+    let table: DoubleHashTable =
+        <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            zero_hash,
+            11,
+        );
 
     let key = 1;
     let step = DoubleHashFlatHashTableStEph::second_hash(&key, 11);
@@ -132,13 +126,11 @@ fn test_probe_visits_all_slots_prime_size() {
 
 #[test]
 fn test_find_slot() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: DoubleHashTable = <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        FlatEntry<i32, String>,
-        (),
-    >>::createTable(hash_fn_gen, 11);
+    let mut table: DoubleHashTable =
+        <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
+            11,
+        );
 
     for _ in 0..11 {
         table.table.push(FlatEntry::Empty);
@@ -150,13 +142,11 @@ fn test_find_slot() {
 
 #[test]
 fn test_update_existing_key() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: DoubleHashTable = <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        FlatEntry<i32, String>,
-        (),
-    >>::createTable(hash_fn_gen, 11);
+    let mut table: DoubleHashTable =
+        <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
+            11,
+        );
 
     for _ in 0..11 {
         table.table.push(FlatEntry::Empty);
@@ -174,13 +164,11 @@ fn test_update_existing_key() {
 #[test]
 fn test_high_load_factor() {
     // APAS: Double hashing allows higher load factors than quadratic
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: DoubleHashTable = <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        FlatEntry<i32, String>,
-        (),
-    >>::createTable(hash_fn_gen, 11);
+    let mut table: DoubleHashTable =
+        <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
+            11,
+        );
 
     for _ in 0..11 {
         table.table.push(FlatEntry::Empty);
@@ -202,13 +190,11 @@ fn test_high_load_factor() {
 
 #[test]
 fn test_delete_maintains_probe_chain() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: DoubleHashTable = <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        FlatEntry<i32, String>,
-        (),
-    >>::createTable(hash_fn_gen, 11);
+    let mut table: DoubleHashTable =
+        <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
+            11,
+        );
 
     for _ in 0..11 {
         table.table.push(FlatEntry::Empty);
@@ -235,13 +221,11 @@ fn test_delete_maintains_probe_chain() {
 
 #[test]
 fn test_lookup_nonexistent_key() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: DoubleHashTable = <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        FlatEntry<i32, String>,
-        (),
-    >>::createTable(hash_fn_gen, 11);
+    let mut table: DoubleHashTable =
+        <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
+            11,
+        );
 
     for _ in 0..11 {
         table.table.push(FlatEntry::Empty);
@@ -269,13 +253,11 @@ fn test_different_probe_sequences_for_colliding_keys() {
 
 #[test]
 fn test_resize_empty_table() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let table: DoubleHashTable = <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        FlatEntry<i32, String>,
-        (),
-    >>::createTable(hash_fn_gen, 11);
+    let table: DoubleHashTable =
+        <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
+            11,
+        );
 
     let new_table = DoubleHashFlatHashTableStEph::resize(&table, 23);
     assert_eq!(new_table.current_size, 23);
@@ -284,13 +266,11 @@ fn test_resize_empty_table() {
 
 #[test]
 fn test_resize_with_elements() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: DoubleHashTable = <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        FlatEntry<i32, String>,
-        (),
-    >>::createTable(hash_fn_gen, 11);
+    let mut table: DoubleHashTable =
+        <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
+            11,
+        );
 
     DoubleHashFlatHashTableStEph::insert(&mut table, 1, "one".to_string());
     DoubleHashFlatHashTableStEph::insert(&mut table, 2, "two".to_string());
@@ -316,13 +296,11 @@ fn test_resize_with_elements() {
 
 #[test]
 fn test_load_and_size() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
-    let mut table: DoubleHashTable = <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<
-        i32,
-        String,
-        FlatEntry<i32, String>,
-        (),
-    >>::createTable(hash_fn_gen, 11);
+    let mut table: DoubleHashTable =
+        <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
+            11,
+        );
 
     let result = DoubleHashFlatHashTableStEph::loadAndSize(&table);
     assert_eq!(result.load, 0.0);

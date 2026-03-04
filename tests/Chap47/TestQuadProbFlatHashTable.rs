@@ -2,17 +2,18 @@
 use apas_verus::Chap47::FlatHashTable::FlatHashTable::*;
 use apas_verus::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
 use apas_verus::Chap47::QuadProbFlatHashTableStEph::QuadProbFlatHashTableStEph::*;
-use apas_verus::Types::Types::*;
-use std::rc::Rc;
 
-type QuadTable = HashTable<i32, String, FlatEntry<i32, String>, ()>;
+type HashFn = fn(&i32, usize) -> usize;
+type QuadTable = HashTable<i32, String, FlatEntry<i32, String>, (), HashFn>;
+
+fn mod_hash(k: &i32, size: usize) -> usize { (*k as usize) % size }
+fn zero_hash(_k: &i32, _size: usize) -> usize { 0 }
 
 #[test]
 fn test_insert_and_lookup() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let mut table: QuadTable =
-        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, ()>>::createTable(
-            hash_fn_gen,
+        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
             11,
         );
 
@@ -32,10 +33,9 @@ fn test_insert_and_lookup() {
 
 #[test]
 fn test_delete() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let mut table: QuadTable =
-        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, ()>>::createTable(
-            hash_fn_gen,
+        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
             11,
         );
 
@@ -51,10 +51,9 @@ fn test_delete() {
 
 #[test]
 fn test_probe_quadratic_sequence() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let table: QuadTable =
-        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, ()>>::createTable(
-            hash_fn_gen,
+        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
             11,
         );
 
@@ -78,10 +77,9 @@ fn test_probe_quadratic_sequence() {
 
 #[test]
 fn test_find_slot() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let mut table: QuadTable =
-        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, ()>>::createTable(
-            hash_fn_gen,
+        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
             11,
         );
 
@@ -95,10 +93,9 @@ fn test_find_slot() {
 
 #[test]
 fn test_update_existing_key() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let mut table: QuadTable =
-        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, ()>>::createTable(
-            hash_fn_gen,
+        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
             11,
         );
 
@@ -115,10 +112,9 @@ fn test_update_existing_key() {
 #[test]
 fn test_max_attempts_ceiling_m_over_2() {
     // APAS Lemma 47.1: Only first ⌈m/2⌉ probes are guaranteed distinct
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|_size| Box::new(|_k| 0)); // All keys hash to 0
     let mut table: QuadTable =
-        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, ()>>::createTable(
-            hash_fn_gen,
+        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            zero_hash,
             11,
         );
 
@@ -144,10 +140,9 @@ fn test_max_attempts_ceiling_m_over_2() {
 #[test]
 fn test_lookup_stops_at_max_attempts() {
     // Test that lookup doesn't loop forever, stops at ⌈m/2⌉ attempts
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let mut table: QuadTable =
-        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, ()>>::createTable(
-            hash_fn_gen,
+        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
             11,
         );
 
@@ -166,10 +161,9 @@ fn test_lookup_stops_at_max_attempts() {
 
 #[test]
 fn test_delete_maintains_probe_chain() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let mut table: QuadTable =
-        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, ()>>::createTable(
-            hash_fn_gen,
+        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
             11,
         );
 
@@ -195,10 +189,9 @@ fn test_delete_maintains_probe_chain() {
 #[test]
 fn test_prime_size_guarantees() {
     // APAS: If m is prime and table at least half empty, quadratic probing finds empty slot
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size)); // 13 is prime
     let mut table: QuadTable =
-        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, ()>>::createTable(
-            hash_fn_gen,
+        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
             13,
         );
 
@@ -218,10 +211,9 @@ fn test_prime_size_guarantees() {
 
 #[test]
 fn test_resize_empty_table() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let table: QuadTable =
-        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, ()>>::createTable(
-            hash_fn_gen,
+        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
             11,
         );
 
@@ -232,10 +224,9 @@ fn test_resize_empty_table() {
 
 #[test]
 fn test_resize_with_elements() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let mut table: QuadTable =
-        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, ()>>::createTable(
-            hash_fn_gen,
+        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
             11,
         );
 
@@ -263,10 +254,9 @@ fn test_resize_with_elements() {
 
 #[test]
 fn test_load_and_size() {
-    let hash_fn_gen: HashFunGen<i32> = Rc::new(|size| Box::new(move |k| (*k as N) % size));
     let mut table: QuadTable =
-        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, ()>>::createTable(
-            hash_fn_gen,
+        <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
+            mod_hash,
             11,
         );
 
