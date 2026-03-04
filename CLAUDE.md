@@ -107,6 +107,8 @@ minor). You bring:
 - Agents push their own branches (`git push origin agentN/<topic>`). Main merges agent branches.
 - See `.cursor/rules/git/merge-worktree.mdc` for the full merge workflow (phases 0–7,
   including Phase 5.5: regenerate analyses before rebasing agents).
+- After commits on main, run `scripts/rebase-agents.sh` to rebase all agents onto main
+  and force-push. See `.cursor/rules/git/rebase-agents.mdc`.
 
 ### Output Formatting
 

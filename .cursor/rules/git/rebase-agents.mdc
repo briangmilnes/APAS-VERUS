@@ -1,0 +1,41 @@
+# Rebase Agents
+
+## When to use
+
+After committing and pushing changes on main, run `scripts/rebase-agents.sh` to bring
+all agent worktrees up to date with main.
+
+## Prerequisites
+
+- Main worktree must be clean (no uncommitted changes).
+- Main must be pushed (no unpushed commits).
+- The script verifies both before proceeding.
+
+## Usage
+
+```bash
+cd ~/projects/APAS-VERUS && scripts/rebase-agents.sh
+```
+
+## What it does
+
+1. Verifies main is clean and pushed.
+2. For each agent (agent1 through agent4):
+   - `git fetch origin`
+   - `git rebase origin/main`
+   - `git push origin agentN/ready --force`
+3. On success, runs `scripts/survey-agents.sh` to show final state.
+
+## Conflict handling
+
+If any agent's rebase fails:
+- The script stops immediately (does not continue to the next agent).
+- Fix conflicts in the reported worktree directory.
+- Run `git add -A && GIT_EDITOR=true git rebase --continue` to complete that rebase.
+- Rerun `scripts/rebase-agents.sh` to continue with remaining agents.
+
+## When NOT to use
+
+- During a merge cycle (Phases 0–7). The merge workflow handles rebases at specific
+  points. Use `scripts/rebase-agents.sh` only outside the merge workflow.
+- If main has uncommitted or unpushed changes. Commit and push first.
