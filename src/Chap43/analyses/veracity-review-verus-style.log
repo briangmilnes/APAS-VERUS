@@ -1,262 +1,261 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/
-Codebase: /home/milnes/projects/APAS-VERUS-agent1
+Path: /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/
+Codebase: /home/milnes/projects/APAS-VERUS-agent2
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/analyses/veracity-review-verus-style.log
 
 Checking 11 files...
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: info: [14] Display, Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:122: warning: [12] trait AugOrderedTableMtEphTrait fn find should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:123: warning: [12] trait AugOrderedTableMtEphTrait fn lookup should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:577: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: warning: [17] collection AugOrderedTableMtEph should have an Iterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: warning: [17] collection AugOrderedTableMtEph should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/tests/Chap43/ProveAugOrderedTableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:105: warning: [18] proof fn lemma_aug_view should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs:115: warning: [18] trait AugOrderedTableMtEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:122: warning: [12] trait AugOrderedTableMtEphTrait fn find should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:123: warning: [12] trait AugOrderedTableMtEphTrait fn lookup should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:577: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: warning: [17] collection AugOrderedTableMtEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: warning: [17] collection AugOrderedTableMtEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap43/ProveAugOrderedTableMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:105: warning: [18] proof fn lemma_aug_view should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:115: warning: [18] trait AugOrderedTableMtEphTrait should come before impls (expected traits before impls)
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: info: [14] Display, Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:582: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: warning: [17] collection AugOrderedTableStEph should have an Iterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: warning: [17] collection AugOrderedTableStEph should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/tests/Chap43/ProveAugOrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:102: warning: [18] proof fn lemma_aug_view should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:112: warning: [18] trait AugOrderedTableStEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:582: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: warning: [17] collection AugOrderedTableStEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: warning: [17] collection AugOrderedTableStEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap43/ProveAugOrderedTableStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:102: warning: [18] proof fn lemma_aug_view should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:112: warning: [18] trait AugOrderedTableStEphTrait should come before impls (expected traits before impls)
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [14] Display, Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: warning: [17] collection AugOrderedTableStPer should have an Iterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: warning: [17] collection AugOrderedTableStPer should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/tests/Chap43/ProveAugOrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:109: warning: [18] proof fn lemma_aug_view should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:119: warning: [18] trait AugOrderedTableStPerTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs:684: warning: [18] impl PartialEqSpecImpl for AugOrderedTableStPer < K , V , F > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:619: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: warning: [17] collection AugOrderedTableStPer should have an Iterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: warning: [17] collection AugOrderedTableStPer should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap43/ProveAugOrderedTableStPer.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:106: warning: [18] proof fn lemma_aug_view should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:116: warning: [18] trait AugOrderedTableStPerTrait should come before impls (expected traits before impls)
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [13] no non-derive trait impls (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/Example43_1.rs:18: warning: [20] trait Example43_1Trait is defined but has no impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/Example43_1.rs:18: warning: [20] trait Example43_1Trait is defined but has no impl
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:34: warning: [14] struct OrderedSetMtEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:34: warning: [14] struct OrderedSetMtEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:34: warning: [14] struct OrderedSetMtEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:34: warning: [14] struct OrderedSetMtEph should have impl Display outside verus!
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:432: warning: [13] impl Default for OrderedSetStEph should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:38: warning: [14] struct OrderedSetStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:436: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: warning: [17] collection OrderedSetStEph should have an Iterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: warning: [17] collection OrderedSetStEph should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/tests/Chap43/ProveOrderedSetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs:408: warning: [18] fn from_sorted_elements should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:432: warning: [13] impl Default for OrderedSetStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:38: warning: [14] struct OrderedSetStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:436: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: warning: [17] collection OrderedSetStEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: warning: [17] collection OrderedSetStEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap43/ProveOrderedSetStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:408: warning: [18] fn from_sorted_elements should come before derive impls in verus! (expected impls before derive impls in verus!)
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:471: warning: [13] impl Default for OrderedSetStPer should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:37: warning: [14] struct OrderedSetStPer should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:475: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: warning: [17] collection OrderedSetStPer should have an Iterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: warning: [17] collection OrderedSetStPer should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/tests/Chap43/ProveOrderedSetStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs:447: warning: [18] fn from_sorted_elements should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:411: warning: [13] impl Default for OrderedSetStPer should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:37: warning: [14] struct OrderedSetStPer should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:415: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: warning: [17] collection OrderedSetStPer should have an Iterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: warning: [17] collection OrderedSetStPer should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap43/ProveOrderedSetStPer.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:387: warning: [18] fn from_sorted_elements should come before derive impls in verus! (expected impls before derive impls in verus!)
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:67: warning: [12] trait OrderedTableMtEphTrait fn find should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:69: warning: [12] trait OrderedTableMtEphTrait fn lookup should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:40: warning: [14] struct OrderedTableMtEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:40: warning: [14] struct OrderedTableMtEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:528: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: warning: [17] collection OrderedTableMtEph should have an Iterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: warning: [17] collection OrderedTableMtEph should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/tests/Chap43/ProveOrderedTableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:511: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:67: warning: [12] trait OrderedTableMtEphTrait fn find should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:69: warning: [12] trait OrderedTableMtEphTrait fn lookup should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:40: warning: [14] struct OrderedTableMtEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:40: warning: [14] struct OrderedTableMtEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:528: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: warning: [17] collection OrderedTableMtEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: warning: [17] collection OrderedTableMtEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap43/ProveOrderedTableMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:511: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:68: warning: [12] trait OrderedTableMtPerTrait fn find should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:374: warning: [13] impl Default for OrderedTableMtPer should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:41: warning: [14] struct OrderedTableMtPer should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:41: warning: [14] struct OrderedTableMtPer should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:68: warning: [12] trait OrderedTableMtPerTrait fn find should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:374: warning: [13] impl Default for OrderedTableMtPer should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:41: warning: [14] struct OrderedTableMtPer should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:41: warning: [14] struct OrderedTableMtPer should have impl Display outside verus!
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:40: warning: [14] struct OrderedTableStEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:40: warning: [14] struct OrderedTableStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:512: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: warning: [17] collection OrderedTableStEph should have an Iterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: warning: [17] collection OrderedTableStEph should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/tests/Chap43/ProveOrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:497: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:40: warning: [14] struct OrderedTableStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:40: warning: [14] struct OrderedTableStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:512: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: warning: [17] collection OrderedTableStEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: warning: [17] collection OrderedTableStEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap43/ProveOrderedTableStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:497: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [15] Eq, PartialEq, Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [17] Iterator<OrderedTableStPer>, IntoIterator<OrderedTableStPer>, runtime test exists, proof test exists
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:45: warning: [14] struct OrderedTableStPer should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:45: warning: [14] struct OrderedTableStPer should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:582: warning: [14] struct OrderedTableStPerIter should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:582: warning: [14] struct OrderedTableStPerIter should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:622: warning: [14] struct OrderedTableStPerGhostIterator should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:622: warning: [14] struct OrderedTableStPerGhostIterator should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:582: warning: [18] struct OrderedTableStPerIter should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:586: warning: [18] impl View for OrderedTableStPerIter < 'a , K , V > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:591: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:622: warning: [18] struct OrderedTableStPerGhostIterator should come before iterators (expected type definitions before iterators)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:628: warning: [18] impl View for OrderedTableStPerGhostIterator < 'a , K , V > should come before iterators (expected view impls before iterators)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:694: warning: [18] impl PartialEqSpecImpl for OrderedTableStPer < K , V > should come before iterators (expected impls before iterators)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:591: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: info: [15] Eq, PartialEq, Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: info: [17] Iterator<OrderedTableStPer>, IntoIterator<OrderedTableStPer>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:1: warning: [11] Seq usage should have vstd::seq::group_seq_axioms in broadcast use
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:44: warning: [14] struct OrderedTableStPer should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:44: warning: [14] struct OrderedTableStPer should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:555: warning: [14] struct OrderedTableStPerIter should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:555: warning: [14] struct OrderedTableStPerIter should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:595: warning: [14] struct OrderedTableStPerGhostIterator should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:595: warning: [14] struct OrderedTableStPerGhostIterator should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:555: warning: [18] struct OrderedTableStPerIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:559: warning: [18] impl View for OrderedTableStPerIter < 'a , K , V > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:564: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:595: warning: [18] struct OrderedTableStPerGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:601: warning: [18] impl View for OrderedTableStPerGhostIterator < 'a , K , V > should come before iterators (expected view impls before iterators)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:667: warning: [18] impl PartialEqSpecImpl for OrderedTableStPer < K , V > should come before iterators (expected impls before iterators)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:564: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 157 passed, 70 warnings in 11 files (checked 11 files)
+Summary: 155 passed, 71 warnings in 11 files (checked 11 files)
 ════════════════════════════════════════════════════════════════

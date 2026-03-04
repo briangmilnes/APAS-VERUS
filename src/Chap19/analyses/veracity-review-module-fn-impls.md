@@ -24,7 +24,7 @@
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
 | 1 | Chap19 | ArraySeqMtEph | 25 | 27 | 6 | 4 | 37 | 0 | 37 | 0 | 0 |
 | 2 | Chap19 | ArraySeqMtEphSlice | 8 | 8 | 1 | 0 | 9 | 0 | 9 | 0 | 0 |
-| 3 | Chap19 | ArraySeqStEph | 24 | 26 | 2 | 2 | 30 | 0 | 30 | 0 | 0 |
+| 3 | Chap19 | ArraySeqStEph | 24 | 26 | 3 | 2 | 31 | 0 | 31 | 0 | 0 |
 | 4 | Chap19 | ArraySeqStPer | 23 | 25 | 2 | 2 | 29 | 0 | 29 | 0 | 0 |
 
 ## Function-by-Function Detail
@@ -117,42 +117,43 @@
 | 72 | `deflate` | Y | Y |  |  | Y |  |  | unknown | 393&#8209;401 |
 | 73 | `lemma_spec_index` |  |  | Y |  | Y |  |  | unknown | 946&#8209;948 |
 | 74 | `iter` |  |  | Y |  | Y |  |  | unknown | 952&#8209;956 |
-| 75 | `next` |  | Y |  |  | Y |  |  | unknown | 992&#8209;1008 |
-| 76 | `eq` |  | Y |  |  | Y |  |  | unknown | 1116&#8209;1117 |
+| 75 | `lemma_view_index` |  |  | Y |  | Y |  |  | unknown | 964&#8209;966 |
+| 76 | `next` |  | Y |  |  | Y |  |  | unknown | 1000&#8209;1016 |
+| 77 | `eq` |  | Y |  |  | Y |  |  | unknown | 1124&#8209;1125 |
 
 ### Chap19/ArraySeqStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 77 | `lemma_flatten_bounded_by_outer_len` |  |  |  | Y | Y |  |  | unknown | 118&#8209;121 |
-| 78 | `lemma_flatten_all_satisfy` |  |  |  | Y | Y |  |  | unknown | 133&#8209;138 |
-| 79 | `new` | Y | Y |  |  | Y |  |  | unknown | 165&#8209;172 |
-| 80 | `length` | Y | Y |  |  | Y |  |  | unknown | 177&#8209;178 |
-| 81 | `nth` | Y | Y |  |  | Y |  |  | unknown | 183&#8209;185 |
-| 82 | `subseq_copy` | Y | Y |  |  | Y |  |  | unknown | 190&#8209;198 |
-| 83 | `subseq` | Y | Y |  |  | Y |  |  | unknown | 203&#8209;211 |
-| 84 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 216&#8209;219 |
-| 85 | `empty` | Y | Y |  |  | Y |  |  | unknown | 224&#8209;225 |
-| 86 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 230&#8209;235 |
-| 87 | `append` | Y | Y |  |  | Y |  |  | unknown | 240&#8209;248 |
-| 88 | `filter` | Y | Y |  |  | Y |  |  | unknown | 253&#8209;265 |
-| 89 | `update` | Y | Y |  |  | Y |  |  | unknown | 270&#8209;278 |
-| 90 | `inject` | Y | Y |  |  | Y |  |  | unknown | 284&#8209;293 |
-| 91 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 298&#8209;299 |
-| 92 | `is_singleton` | Y | Y |  |  | Y |  |  | unknown | 304&#8209;305 |
-| 93 | `iterate_iter` | Y | Y |  |  | Y |  |  | unknown | 310&#8209;311 |
-| 94 | `iterate` | Y | Y |  |  | Y |  |  | unknown | 316&#8209;320 |
-| 95 | `reduce_iter` | Y | Y |  |  | Y |  |  | unknown | 325&#8209;327 |
-| 96 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 332&#8209;336 |
-| 97 | `scan` | Y | Y |  |  | Y |  |  | unknown | 341&#8209;344 |
-| 98 | `map` | Y | Y |  |  | Y |  |  | unknown | 349&#8209;354 |
-| 99 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 359&#8209;365 |
-| 100 | `flatten` | Y | Y |  |  | Y |  |  | unknown | 370&#8209;375 |
-| 101 | `deflate` | Y | Y |  |  | Y |  |  | unknown | 380&#8209;388 |
-| 102 | `lemma_spec_index` |  |  | Y |  | Y |  |  | unknown | 955&#8209;957 |
-| 103 | `iter` |  |  | Y |  | Y |  |  | unknown | 961&#8209;965 |
-| 104 | `next` |  | Y |  |  | Y |  |  | unknown | 1001&#8209;1017 |
-| 105 | `eq` |  | Y |  |  | Y |  |  | unknown | 1125&#8209;1126 |
+| 78 | `lemma_flatten_bounded_by_outer_len` |  |  |  | Y | Y |  |  | unknown | 118&#8209;121 |
+| 79 | `lemma_flatten_all_satisfy` |  |  |  | Y | Y |  |  | unknown | 133&#8209;138 |
+| 80 | `new` | Y | Y |  |  | Y |  |  | unknown | 165&#8209;172 |
+| 81 | `length` | Y | Y |  |  | Y |  |  | unknown | 177&#8209;178 |
+| 82 | `nth` | Y | Y |  |  | Y |  |  | unknown | 183&#8209;185 |
+| 83 | `subseq_copy` | Y | Y |  |  | Y |  |  | unknown | 190&#8209;198 |
+| 84 | `subseq` | Y | Y |  |  | Y |  |  | unknown | 203&#8209;211 |
+| 85 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 216&#8209;219 |
+| 86 | `empty` | Y | Y |  |  | Y |  |  | unknown | 224&#8209;225 |
+| 87 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 230&#8209;235 |
+| 88 | `append` | Y | Y |  |  | Y |  |  | unknown | 240&#8209;248 |
+| 89 | `filter` | Y | Y |  |  | Y |  |  | unknown | 253&#8209;265 |
+| 90 | `update` | Y | Y |  |  | Y |  |  | unknown | 270&#8209;278 |
+| 91 | `inject` | Y | Y |  |  | Y |  |  | unknown | 284&#8209;293 |
+| 92 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 298&#8209;299 |
+| 93 | `is_singleton` | Y | Y |  |  | Y |  |  | unknown | 304&#8209;305 |
+| 94 | `iterate_iter` | Y | Y |  |  | Y |  |  | unknown | 310&#8209;311 |
+| 95 | `iterate` | Y | Y |  |  | Y |  |  | unknown | 316&#8209;320 |
+| 96 | `reduce_iter` | Y | Y |  |  | Y |  |  | unknown | 325&#8209;327 |
+| 97 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 332&#8209;336 |
+| 98 | `scan` | Y | Y |  |  | Y |  |  | unknown | 341&#8209;344 |
+| 99 | `map` | Y | Y |  |  | Y |  |  | unknown | 349&#8209;354 |
+| 100 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 359&#8209;365 |
+| 101 | `flatten` | Y | Y |  |  | Y |  |  | unknown | 370&#8209;375 |
+| 102 | `deflate` | Y | Y |  |  | Y |  |  | unknown | 380&#8209;388 |
+| 103 | `lemma_spec_index` |  |  | Y |  | Y |  |  | unknown | 955&#8209;957 |
+| 104 | `iter` |  |  | Y |  | Y |  |  | unknown | 961&#8209;965 |
+| 105 | `next` |  | Y |  |  | Y |  |  | unknown | 1001&#8209;1017 |
+| 106 | `eq` |  | Y |  |  | Y |  |  | unknown | 1125&#8209;1126 |
 
 
 ### Legend

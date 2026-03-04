@@ -291,7 +291,7 @@
     "id": 37,
     "function": "calculate_reduction",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "66-73",
+    "lines": "70-77",
     "spec_strength": "hole",
     "snippet": "    pub fn calculate_reduction<K: StT + Ord, V: StT, F>(\n        base: &OrderedTableStEph<K, V>,\n        reducer: &F,\n        identity: &V,\n    ) -> (reduced: V)\n    where\n        F: Fn(&V, &V) -> V + Clone,\n        ensures base@.dom().finite(),"
   },
@@ -299,7 +299,7 @@
     "id": 38,
     "function": "lemma_aug_view",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "98-101",
+    "lines": "102-105",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_aug_view<K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone>(\n        t: &AugOrderedTableStEph<K, V, F>,\n    )\n        ensures t@ =~= t.base_table@"
   },
@@ -307,7 +307,7 @@
     "id": 39,
     "function": "size",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "112-113",
+    "lines": "116-117",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self) -> (count: usize)\n            ensures count == self@.dom().len(), self@.dom().finite();"
   },
@@ -315,7 +315,7 @@
     "id": 40,
     "function": "empty",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "114-115",
+    "lines": "118-119",
     "spec_strength": "unknown",
     "snippet": "        fn empty(reducer: F, identity: V) -> (empty: Self)\n            ensures empty@ == Map::<K::V, V::V>::empty();"
   },
@@ -323,7 +323,7 @@
     "id": 41,
     "function": "singleton",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "116-117",
+    "lines": "120-121",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)\n            ensures tree@.dom().finite();"
   },
@@ -331,23 +331,23 @@
     "id": 42,
     "function": "find",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "118-123",
+    "lines": "122-128",
     "spec_strength": "hole",
-    "snippet": "        fn find(&self, k: &K) -> (found: Option<V>)\n            ensures\n                match found {\n                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],\n                    None => !self@.contains_key(k@),\n                };"
+    "snippet": "        fn find(&self, k: &K) -> (found: Option<V>)\n            requires obeys_view_eq::<K>(), obeys_feq_full::<V>()\n            ensures\n                match found {\n                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],\n                    None => !self@.contains_key(k@),\n                };"
   },
   {
     "id": 43,
     "function": "lookup",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "124-129",
+    "lines": "129-135",
     "spec_strength": "hole",
-    "snippet": "        fn lookup(&self, k: &K) -> (value: Option<V>)\n            ensures\n                match value {\n                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],\n                    None => !self@.contains_key(k@),\n                };"
+    "snippet": "        fn lookup(&self, k: &K) -> (value: Option<V>)\n            requires obeys_view_eq::<K>(), obeys_feq_full::<V>()\n            ensures\n                match value {\n                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],\n                    None => !self@.contains_key(k@),\n                };"
   },
   {
     "id": 44,
     "function": "is_empty",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "130-131",
+    "lines": "136-137",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (is_empty: B)\n            ensures is_empty == self@.dom().is_empty(), self@.dom().finite();"
   },
@@ -355,23 +355,23 @@
     "id": 45,
     "function": "insert",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "132-133",
+    "lines": "138-143",
     "spec_strength": "unknown",
-    "snippet": "        fn insert<G: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: G)\n            ensures self@.dom().finite();"
+    "snippet": "        fn insert<G: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: G)\n            requires\n                forall|v1: &V, v2: &V| combine.requires((v1, v2)),\n                obeys_view_eq::<K>(),\n                obeys_feq_full::<Pair<K, V>>(),\n            ensures self@.dom().finite();"
   },
   {
     "id": 46,
     "function": "delete",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "134-135",
+    "lines": "144-146",
     "spec_strength": "unknown",
-    "snippet": "        fn delete(&mut self, k: &K) -> (updated: Option<V>)\n            ensures self@.dom().finite();"
+    "snippet": "        fn delete(&mut self, k: &K) -> (updated: Option<V>)\n            requires obeys_view_eq::<K>(), obeys_feq_full::<V>()\n            ensures self@.dom().finite();"
   },
   {
     "id": 47,
     "function": "domain",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "136-137",
+    "lines": "147-148",
     "spec_strength": "unknown",
     "snippet": "        fn domain(&self) -> (domain: ArraySetStEph<K>)\n            ensures self@.dom().finite();"
   },
@@ -379,15 +379,15 @@
     "id": 48,
     "function": "tabulate",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "138-139",
+    "lines": "149-151",
     "spec_strength": "unknown",
-    "snippet": "        fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)\n            ensures tabulated@.dom().finite();"
+    "snippet": "        fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)\n            requires forall|k: &K| f.requires((k,))\n            ensures tabulated@.dom().finite();"
   },
   {
     "id": 49,
     "function": "map",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "140-141",
+    "lines": "152-153",
     "spec_strength": "unknown",
     "snippet": "        fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (mapped: Self)\n            ensures mapped@.dom().finite();"
   },
@@ -395,7 +395,7 @@
     "id": 50,
     "function": "filter",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "142-143",
+    "lines": "154-155",
     "spec_strength": "unknown",
     "snippet": "        fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (filtered: Self)\n            ensures filtered@.dom().finite();"
   },
@@ -403,7 +403,7 @@
     "id": 51,
     "function": "reduce",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "144-145",
+    "lines": "156-157",
     "spec_strength": "unknown",
     "snippet": "        fn reduce<R, G: Fn(R, &K, &V) -> R>(&self, init: R, f: G) -> (reduced: R)\n            ensures self@.dom().finite();"
   },
@@ -411,47 +411,47 @@
     "id": 52,
     "function": "intersection",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "146-147",
+    "lines": "158-163",
     "spec_strength": "unknown",
-    "snippet": "        fn intersection<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)\n            ensures self@.dom().finite();"
+    "snippet": "        fn intersection<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)\n            requires\n                forall|v1: &V, v2: &V| f.requires((v1, v2)),\n                obeys_feq_clone::<K>(),\n                obeys_view_eq::<K>(),\n            ensures self@.dom().finite();"
   },
   {
     "id": 53,
     "function": "union",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "148-149",
+    "lines": "164-170",
     "spec_strength": "unknown",
-    "snippet": "        fn union<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)\n            ensures self@.dom().finite();"
+    "snippet": "        fn union<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)\n            requires\n                forall|v1: &V, v2: &V| f.requires((v1, v2)),\n                obeys_feq_clone::<K>(),\n                obeys_feq_full::<Pair<K, V>>(),\n                obeys_view_eq::<K>(),\n            ensures self@.dom().finite();"
   },
   {
     "id": 54,
     "function": "difference",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "150-151",
+    "lines": "171-173",
     "spec_strength": "unknown",
-    "snippet": "        fn difference(&mut self, other: &Self)\n            ensures self@.dom().finite();"
+    "snippet": "        fn difference(&mut self, other: &Self)\n            requires obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()\n            ensures self@.dom().finite();"
   },
   {
     "id": 55,
     "function": "restrict",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "152-153",
+    "lines": "174-176",
     "spec_strength": "unknown",
-    "snippet": "        fn restrict(&mut self, keys: &ArraySetStEph<K>)\n            ensures self@.dom().finite();"
+    "snippet": "        fn restrict(&mut self, keys: &ArraySetStEph<K>)\n            requires obeys_feq_full::<Pair<K, V>>()\n            ensures self@.dom().finite();"
   },
   {
     "id": 56,
     "function": "subtract",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "154-155",
+    "lines": "177-179",
     "spec_strength": "unknown",
-    "snippet": "        fn subtract(&mut self, keys: &ArraySetStEph<K>)\n            ensures self@.dom().finite();"
+    "snippet": "        fn subtract(&mut self, keys: &ArraySetStEph<K>)\n            requires obeys_feq_full::<Pair<K, V>>()\n            ensures self@.dom().finite();"
   },
   {
     "id": 57,
     "function": "collect",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "156-157",
+    "lines": "180-181",
     "spec_strength": "unknown",
     "snippet": "        fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)\n            ensures self@.dom().finite();"
   },
@@ -459,7 +459,7 @@
     "id": 58,
     "function": "first_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "158-159",
+    "lines": "182-183",
     "spec_strength": "unknown",
     "snippet": "        fn first_key(&self) -> (first: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -467,7 +467,7 @@
     "id": 59,
     "function": "last_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "160-161",
+    "lines": "184-185",
     "spec_strength": "unknown",
     "snippet": "        fn last_key(&self) -> (last: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -475,7 +475,7 @@
     "id": 60,
     "function": "previous_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "162-163",
+    "lines": "186-187",
     "spec_strength": "unknown",
     "snippet": "        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -483,7 +483,7 @@
     "id": 61,
     "function": "next_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "164-165",
+    "lines": "188-189",
     "spec_strength": "unknown",
     "snippet": "        fn next_key(&self, k: &K) -> (successor: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -491,7 +491,7 @@
     "id": 62,
     "function": "split_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "166-168",
+    "lines": "190-192",
     "spec_strength": "unknown",
     "snippet": "        fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))\n            where Self: Sized,\n            ensures self@.dom().finite();"
   },
@@ -499,15 +499,15 @@
     "id": 63,
     "function": "join_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "169-170",
+    "lines": "193-195",
     "spec_strength": "hole",
-    "snippet": "        fn join_key(&mut self, other: Self)\n            ensures self@.dom().finite();"
+    "snippet": "        fn join_key(&mut self, other: Self)\n            requires obeys_feq_clone::<K>(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()\n            ensures self@.dom().finite();"
   },
   {
     "id": 64,
     "function": "get_key_range",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "171-172",
+    "lines": "196-197",
     "spec_strength": "unknown",
     "snippet": "        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)\n            ensures range@.dom().finite();"
   },
@@ -515,7 +515,7 @@
     "id": 65,
     "function": "rank_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "173-174",
+    "lines": "198-199",
     "spec_strength": "unknown",
     "snippet": "        fn rank_key(&self, k: &K) -> (rank: usize)\n            ensures self@.dom().finite();"
   },
@@ -523,7 +523,7 @@
     "id": 66,
     "function": "select_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "175-176",
+    "lines": "200-201",
     "spec_strength": "unknown",
     "snippet": "        fn select_key(&self, i: usize) -> (selected: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -531,7 +531,7 @@
     "id": 67,
     "function": "split_rank_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "177-179",
+    "lines": "202-204",
     "spec_strength": "unknown",
     "snippet": "        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))\n            where Self: Sized,\n            ensures self@.dom().finite();"
   },
@@ -539,7 +539,7 @@
     "id": 68,
     "function": "reduce_val",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "180-181",
+    "lines": "205-206",
     "spec_strength": "unknown",
     "snippet": "        fn reduce_val(&self) -> (reduced: V)\n            ensures self@.dom().finite();"
   },
@@ -547,7 +547,7 @@
     "id": 69,
     "function": "reduce_range",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "182-183",
+    "lines": "207-208",
     "spec_strength": "unknown",
     "snippet": "        fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)\n            ensures self@.dom().finite();"
   },
@@ -555,7 +555,7 @@
     "id": 70,
     "function": "eq",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "563-566",
+    "lines": "586-589",
     "spec_strength": "",
     "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.base_table == other.base_table\n                && self.cached_reduction == other.cached_reduction\n        }"
   },
@@ -563,7 +563,7 @@
     "id": 71,
     "function": "calculate_reduction",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "67-74",
+    "lines": "69-76",
     "spec_strength": "hole",
     "snippet": "    pub fn calculate_reduction<K: StT + Ord, V: StT, F>(\n        base: &OrderedTableStPer<K, V>,\n        reducer: &F,\n        identity: &V,\n    ) -> (reduced: V)\n    where\n        F: Fn(&V, &V) -> V + Clone,\n        ensures base@.dom().finite(),"
   },
@@ -571,7 +571,7 @@
     "id": 72,
     "function": "lemma_aug_view",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "104-107",
+    "lines": "106-109",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_aug_view<K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone>(\n        t: &AugOrderedTableStPer<K, V, F>,\n    )\n        ensures t@ =~= t.base_table@"
   },
@@ -579,7 +579,7 @@
     "id": 73,
     "function": "size",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "120-122",
+    "lines": "122-124",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_wf(),\n            ensures count == self@.dom().len(), self@.dom().finite();"
   },
@@ -587,7 +587,7 @@
     "id": 74,
     "function": "empty",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "123-124",
+    "lines": "125-126",
     "spec_strength": "unknown",
     "snippet": "        fn empty(reducer: F, identity: V) -> (empty: Self)\n            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_wf();"
   },
@@ -595,7 +595,7 @@
     "id": 75,
     "function": "singleton",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "125-127",
+    "lines": "127-129",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)\n            requires obeys_feq_clone::<Pair<K, V>>(),\n            ensures tree@.dom().finite(), tree.spec_wf();"
   },
@@ -603,31 +603,31 @@
     "id": 76,
     "function": "find",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "128-134",
+    "lines": "130-136",
     "spec_strength": "unknown",
-    "snippet": "        fn find(&self, k: &K) -> (found: Option<V>)\n            requires self.spec_wf(),\n            ensures\n                match found {\n                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],\n                    None => !self@.contains_key(k@),\n                };"
+    "snippet": "        fn find(&self, k: &K) -> (found: Option<V>)\n            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),\n            ensures\n                match found {\n                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],\n                    None => !self@.contains_key(k@),\n                };"
   },
   {
     "id": 77,
     "function": "insert",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "135-137",
+    "lines": "137-139",
     "spec_strength": "unknown",
-    "snippet": "        fn insert(&self, k: K, v: V) -> (updated: Self)\n            requires self.spec_wf(),\n            ensures updated@.dom().finite(), updated.spec_wf();"
+    "snippet": "        fn insert(&self, k: K, v: V) -> (updated: Self)\n            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),\n            ensures updated@.dom().finite(), updated.spec_wf();"
   },
   {
     "id": 78,
     "function": "delete",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "138-140",
+    "lines": "140-146",
     "spec_strength": "unknown",
-    "snippet": "        fn delete(&self, k: &K) -> (updated: Self)\n            requires self.spec_wf(), obeys_feq_clone::<Pair<K, V>>(),\n            ensures updated@.dom().finite(), updated.spec_wf();"
+    "snippet": "        fn delete(&self, k: &K) -> (updated: Self)\n            requires\n                self.spec_wf(),\n                obeys_feq_clone::<Pair<K, V>>(),\n                obeys_view_eq::<K>(),\n                obeys_feq_full::<Pair<K, V>>(),\n            ensures updated@.dom().finite(), updated.spec_wf();"
   },
   {
     "id": 79,
     "function": "domain",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "141-142",
+    "lines": "147-148",
     "spec_strength": "unknown",
     "snippet": "        fn domain(&self) -> (domain: ArraySetStEph<K>)\n            ensures self@.dom().finite();"
   },
@@ -635,7 +635,7 @@
     "id": 80,
     "function": "tabulate",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "143-145",
+    "lines": "149-151",
     "spec_strength": "unknown",
     "snippet": "        fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)\n            requires forall|k: &K| f.requires((k,)),\n            ensures tabulated@.dom().finite();"
   },
@@ -643,63 +643,63 @@
     "id": 81,
     "function": "map",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "146-148",
+    "lines": "152-154",
     "spec_strength": "unknown",
-    "snippet": "        fn map<G: Fn(&V) -> V>(&self, f: G) -> (mapped: Self)\n            requires forall|v: &V| f.requires((v,)),\n            ensures mapped@.dom().finite();"
+    "snippet": "        fn map<G: Fn(&V) -> V>(&self, f: G) -> (mapped: Self)\n            requires forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),\n            ensures mapped@.dom().finite();"
   },
   {
     "id": 82,
     "function": "filter",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "149-151",
+    "lines": "155-157",
     "spec_strength": "unknown",
-    "snippet": "        fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (filtered: Self)\n            requires forall|k: &K, v: &V| f.requires((k, v)),\n            ensures filtered@.dom().finite();"
+    "snippet": "        fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (filtered: Self)\n            requires forall|k: &K, v: &V| f.requires((k, v)), obeys_feq_full::<Pair<K, V>>(),\n            ensures filtered@.dom().finite();"
   },
   {
     "id": 83,
     "function": "intersection",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "152-154",
+    "lines": "158-163",
     "spec_strength": "unknown",
-    "snippet": "        fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (common: Self)\n            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),\n            ensures common@.dom().finite();"
+    "snippet": "        fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (common: Self)\n            requires\n                forall|v1: &V, v2: &V| f.requires((v1, v2)),\n                obeys_view_eq::<K>(),\n                obeys_feq_full::<K>(),\n            ensures common@.dom().finite();"
   },
   {
     "id": 84,
     "function": "union",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "155-157",
+    "lines": "164-170",
     "spec_strength": "unknown",
-    "snippet": "        fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (combined: Self)\n            requires self.spec_wf(), forall|v1: &V, v2: &V| f.requires((v1, v2)),\n            ensures combined@.dom().finite(), combined.spec_wf();"
+    "snippet": "        fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (combined: Self)\n            requires\n                self.spec_wf(),\n                forall|v1: &V, v2: &V| f.requires((v1, v2)),\n                obeys_view_eq::<K>(),\n                obeys_feq_full::<Pair<K, V>>(),\n            ensures combined@.dom().finite(), combined.spec_wf();"
   },
   {
     "id": 85,
     "function": "difference",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "158-159",
+    "lines": "171-173",
     "spec_strength": "unknown",
-    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            ensures remaining@.dom().finite();"
+    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),\n            ensures remaining@.dom().finite();"
   },
   {
     "id": 86,
     "function": "restrict",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "160-161",
+    "lines": "174-176",
     "spec_strength": "unknown",
-    "snippet": "        fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)\n            ensures restricted@.dom().finite();"
+    "snippet": "        fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)\n            requires obeys_feq_full::<Pair<K, V>>(),\n            ensures restricted@.dom().finite();"
   },
   {
     "id": 87,
     "function": "subtract",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "162-163",
+    "lines": "177-179",
     "spec_strength": "unknown",
-    "snippet": "        fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)\n            ensures subtracted@.dom().finite();"
+    "snippet": "        fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)\n            requires obeys_feq_full::<Pair<K, V>>(),\n            ensures subtracted@.dom().finite();"
   },
   {
     "id": 88,
     "function": "collect",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "164-165",
+    "lines": "180-181",
     "spec_strength": "unknown",
     "snippet": "        fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)\n            ensures self@.dom().finite();"
   },
@@ -707,7 +707,7 @@
     "id": 89,
     "function": "first_key",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "166-167",
+    "lines": "182-183",
     "spec_strength": "unknown",
     "snippet": "        fn first_key(&self) -> (first: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -715,7 +715,7 @@
     "id": 90,
     "function": "last_key",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "168-169",
+    "lines": "184-185",
     "spec_strength": "unknown",
     "snippet": "        fn last_key(&self) -> (last: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -723,7 +723,7 @@
     "id": 91,
     "function": "previous_key",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "170-171",
+    "lines": "186-187",
     "spec_strength": "unknown",
     "snippet": "        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -731,7 +731,7 @@
     "id": 92,
     "function": "next_key",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "172-173",
+    "lines": "188-189",
     "spec_strength": "unknown",
     "snippet": "        fn next_key(&self, k: &K) -> (successor: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -739,7 +739,7 @@
     "id": 93,
     "function": "split_key",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "174-176",
+    "lines": "190-192",
     "spec_strength": "unknown",
     "snippet": "        fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self))\n            where Self: Sized,\n            ensures self@.dom().finite();"
   },
@@ -747,15 +747,15 @@
     "id": 94,
     "function": "join_key",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "177-179",
+    "lines": "193-199",
     "spec_strength": "hole",
-    "snippet": "        fn join_key(left: &Self, right: &Self) -> (joined: Self)\n            requires left.spec_wf(), right.spec_wf(),\n            ensures joined@.dom().finite(), joined.spec_wf();"
+    "snippet": "        fn join_key(left: &Self, right: &Self) -> (joined: Self)\n            requires\n                left.spec_wf(),\n                right.spec_wf(),\n                obeys_view_eq::<K>(),\n                obeys_feq_full::<Pair<K, V>>(),\n            ensures joined@.dom().finite(), joined.spec_wf();"
   },
   {
     "id": 95,
     "function": "get_key_range",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "180-181",
+    "lines": "200-201",
     "spec_strength": "unknown",
     "snippet": "        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)\n            ensures range@.dom().finite();"
   },
@@ -763,7 +763,7 @@
     "id": 96,
     "function": "rank_key",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "182-183",
+    "lines": "202-203",
     "spec_strength": "unknown",
     "snippet": "        fn rank_key(&self, k: &K) -> (rank: usize)\n            ensures self@.dom().finite();"
   },
@@ -771,7 +771,7 @@
     "id": 97,
     "function": "select_key",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "184-185",
+    "lines": "204-205",
     "spec_strength": "unknown",
     "snippet": "        fn select_key(&self, i: usize) -> (selected: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -779,7 +779,7 @@
     "id": 98,
     "function": "split_rank_key",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "186-188",
+    "lines": "206-208",
     "spec_strength": "unknown",
     "snippet": "        fn split_rank_key(&self, i: usize) -> (split: (Self, Self))\n            where Self: Sized,\n            ensures self@.dom().finite();"
   },
@@ -787,7 +787,7 @@
     "id": 99,
     "function": "reduce_val",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "189-190",
+    "lines": "209-210",
     "spec_strength": "unknown",
     "snippet": "        fn reduce_val(&self) -> (reduced: V)\n            ensures self@.dom().finite();"
   },
@@ -795,7 +795,7 @@
     "id": 100,
     "function": "reduce_range",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "191-192",
+    "lines": "211-212",
     "spec_strength": "unknown",
     "snippet": "        fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)\n            ensures self@.dom().finite();"
   },
@@ -803,7 +803,7 @@
     "id": 101,
     "function": "eq",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "603-606",
+    "lines": "623-626",
     "spec_strength": "",
     "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.base_table == other.base_table\n                && self.cached_reduction == other.cached_reduction\n        }"
   },
@@ -1827,7 +1827,7 @@
     "id": 229,
     "function": "size",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "54-55",
+    "lines": "58-59",
     "spec_strength": "hole",
     "snippet": "        fn size(&self) -> (count: usize)\n            ensures count == self@.dom().len(), self@.dom().finite();"
   },
@@ -1835,7 +1835,7 @@
     "id": 230,
     "function": "empty",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "56-57",
+    "lines": "60-61",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty: Self)\n            ensures empty@ == Map::<K::V, V::V>::empty();"
   },
@@ -1843,7 +1843,7 @@
     "id": 231,
     "function": "singleton",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "58-59",
+    "lines": "62-63",
     "spec_strength": "hole",
     "snippet": "        fn singleton(k: K, v: V) -> (tree: Self)\n            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite();"
   },
@@ -1851,23 +1851,23 @@
     "id": 232,
     "function": "find",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "60",
+    "lines": "64-65",
     "spec_strength": "hole",
-    "snippet": "        fn find(&self, k: &K) -> (found: Option<V>);"
+    "snippet": "        fn find(&self, k: &K) -> (found: Option<V>)\n            requires obeys_view_eq::<K>(), obeys_feq_full::<V>();"
   },
   {
     "id": 233,
     "function": "lookup",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "61",
-    "spec_strength": "",
-    "snippet": "        fn lookup(&self, k: &K) -> (value: Option<V>);"
+    "lines": "66-67",
+    "spec_strength": "unknown",
+    "snippet": "        fn lookup(&self, k: &K) -> (value: Option<V>)\n            requires obeys_view_eq::<K>(), obeys_feq_full::<V>();"
   },
   {
     "id": 234,
     "function": "is_empty",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "62-63",
+    "lines": "68-69",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (is_empty: B)\n            ensures is_empty == self@.dom().is_empty();"
   },
@@ -1875,15 +1875,15 @@
     "id": 235,
     "function": "insert",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "64-65",
+    "lines": "70-75",
     "spec_strength": "unknown",
-    "snippet": "        fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)\n            ensures self@.dom().finite();"
+    "snippet": "        fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)\n            requires\n                forall|v1: &V, v2: &V| combine.requires((v1, v2)),\n                obeys_view_eq::<K>(),\n                obeys_feq_full::<Pair<K, V>>(),\n            ensures self@.dom().finite();"
   },
   {
     "id": 236,
     "function": "delete",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "66-67",
+    "lines": "76-77",
     "spec_strength": "hole",
     "snippet": "        fn delete(&mut self, k: &K) -> (updated: Option<V>)\n            ensures self@ == old(self)@.remove(k@), self@.dom().finite();"
   },
@@ -1891,7 +1891,7 @@
     "id": 237,
     "function": "domain",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "68-69",
+    "lines": "78-79",
     "spec_strength": "unknown",
     "snippet": "        fn domain(&self) -> (domain: ArraySetStEph<K>)\n            ensures self@.dom().finite();"
   },
@@ -1899,15 +1899,15 @@
     "id": 238,
     "function": "tabulate",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "70-71",
+    "lines": "80-82",
     "spec_strength": "unknown",
-    "snippet": "        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)\n            ensures tabulated@.dom().finite();"
+    "snippet": "        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)\n            requires forall|k: &K| f.requires((k,))\n            ensures tabulated@.dom().finite();"
   },
   {
     "id": 239,
     "function": "map",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "72-73",
+    "lines": "83-84",
     "spec_strength": "hole",
     "snippet": "        fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)\n            ensures mapped@.dom().finite();"
   },
@@ -1915,7 +1915,7 @@
     "id": 240,
     "function": "filter",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "74-75",
+    "lines": "85-86",
     "spec_strength": "hole",
     "snippet": "        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (filtered: Self)\n            ensures filtered@.dom().finite();"
   },
@@ -1923,7 +1923,7 @@
     "id": 241,
     "function": "reduce",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "76-77",
+    "lines": "87-88",
     "spec_strength": "hole",
     "snippet": "        fn reduce<R, F: Fn(R, &K, &V) -> R>(&self, init: R, f: F) -> (reduced: R)\n            ensures self@.dom().finite();"
   },
@@ -1931,47 +1931,47 @@
     "id": 242,
     "function": "intersection",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "78-79",
+    "lines": "89-94",
     "spec_strength": "unknown",
-    "snippet": "        fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)\n            ensures self@.dom().finite();"
+    "snippet": "        fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)\n            requires\n                forall|v1: &V, v2: &V| f.requires((v1, v2)),\n                obeys_feq_clone::<K>(),\n                obeys_view_eq::<K>(),\n            ensures self@.dom().finite();"
   },
   {
     "id": 243,
     "function": "union",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "80-81",
+    "lines": "95-101",
     "spec_strength": "unknown",
-    "snippet": "        fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)\n            ensures self@.dom().finite();"
+    "snippet": "        fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)\n            requires\n                forall|v1: &V, v2: &V| f.requires((v1, v2)),\n                obeys_feq_clone::<K>(),\n                obeys_feq_full::<Pair<K, V>>(),\n                obeys_view_eq::<K>(),\n            ensures self@.dom().finite();"
   },
   {
     "id": 244,
     "function": "difference",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "82-83",
+    "lines": "102-104",
     "spec_strength": "unknown",
-    "snippet": "        fn difference(&mut self, other: &Self)\n            ensures self@.dom().finite();"
+    "snippet": "        fn difference(&mut self, other: &Self)\n            requires obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()\n            ensures self@.dom().finite();"
   },
   {
     "id": 245,
     "function": "restrict",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "84-85",
+    "lines": "105-107",
     "spec_strength": "unknown",
-    "snippet": "        fn restrict(&mut self, keys: &ArraySetStEph<K>)\n            ensures self@.dom().finite();"
+    "snippet": "        fn restrict(&mut self, keys: &ArraySetStEph<K>)\n            requires obeys_feq_full::<Pair<K, V>>()\n            ensures self@.dom().finite();"
   },
   {
     "id": 246,
     "function": "subtract",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "86-87",
+    "lines": "108-110",
     "spec_strength": "unknown",
-    "snippet": "        fn subtract(&mut self, keys: &ArraySetStEph<K>)\n            ensures self@.dom().finite();"
+    "snippet": "        fn subtract(&mut self, keys: &ArraySetStEph<K>)\n            requires obeys_feq_full::<Pair<K, V>>()\n            ensures self@.dom().finite();"
   },
   {
     "id": 247,
     "function": "collect",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "88-89",
+    "lines": "111-112",
     "spec_strength": "hole",
     "snippet": "        fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)\n            ensures self@.dom().finite();"
   },
@@ -1979,7 +1979,7 @@
     "id": 248,
     "function": "first_key",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "90-91",
+    "lines": "113-114",
     "spec_strength": "hole",
     "snippet": "        fn first_key(&self) -> (first: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -1987,7 +1987,7 @@
     "id": 249,
     "function": "last_key",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "92-93",
+    "lines": "115-116",
     "spec_strength": "hole",
     "snippet": "        fn last_key(&self) -> (last: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -1995,7 +1995,7 @@
     "id": 250,
     "function": "previous_key",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "94-95",
+    "lines": "117-118",
     "spec_strength": "hole",
     "snippet": "        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -2003,7 +2003,7 @@
     "id": 251,
     "function": "next_key",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "96-97",
+    "lines": "119-120",
     "spec_strength": "hole",
     "snippet": "        fn next_key(&self, k: &K) -> (successor: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -2011,7 +2011,7 @@
     "id": 252,
     "function": "split_key",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "98-100",
+    "lines": "121-123",
     "spec_strength": "hole",
     "snippet": "        fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))\n            where Self: Sized\n            ensures self@.dom().finite();"
   },
@@ -2019,15 +2019,15 @@
     "id": 253,
     "function": "join_key",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "101-102",
+    "lines": "124-126",
     "spec_strength": "unknown",
-    "snippet": "        fn join_key(&mut self, other: Self)\n            ensures self@.dom().finite();"
+    "snippet": "        fn join_key(&mut self, other: Self)\n            requires obeys_feq_clone::<K>(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()\n            ensures self@.dom().finite();"
   },
   {
     "id": 254,
     "function": "get_key_range",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "103-104",
+    "lines": "127-128",
     "spec_strength": "hole",
     "snippet": "        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)\n            ensures range@.dom().finite();"
   },
@@ -2035,7 +2035,7 @@
     "id": 255,
     "function": "rank_key",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "105-106",
+    "lines": "129-130",
     "spec_strength": "hole",
     "snippet": "        fn rank_key(&self, k: &K) -> (rank: usize)\n            ensures self@.dom().finite();"
   },
@@ -2043,7 +2043,7 @@
     "id": 256,
     "function": "select_key",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "107-108",
+    "lines": "131-132",
     "spec_strength": "hole",
     "snippet": "        fn select_key(&self, i: usize) -> (selected: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -2051,7 +2051,7 @@
     "id": 257,
     "function": "split_rank_key",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "109-111",
+    "lines": "133-135",
     "spec_strength": "hole",
     "snippet": "        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))\n            where Self: Sized\n            ensures self@.dom().finite();"
   },
@@ -2059,7 +2059,7 @@
     "id": 258,
     "function": "from_sorted_entries",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "474-476",
+    "lines": "497-499",
     "spec_strength": "hole",
     "snippet": "    pub fn from_sorted_entries<K: StT + Ord, V: StT>(\n        entries: AVLTreeSeqStPerS<Pair<K, V>>,\n    ) -> (cloned: OrderedTableStEph<K, V>) {"
   },
@@ -2067,7 +2067,7 @@
     "id": 259,
     "function": "eq",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "490-492",
+    "lines": "513-515",
     "spec_strength": "",
     "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.base_table == other.base_table\n        }"
   },
@@ -2075,7 +2075,7 @@
     "id": 260,
     "function": "size",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "62-64",
+    "lines": "64-66",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_wf(),\n            ensures count == self@.dom().len(), self@.dom().finite();"
   },
@@ -2083,7 +2083,7 @@
     "id": 261,
     "function": "empty",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "65-66",
+    "lines": "67-68",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (table: Self)\n            ensures table@ == Map::<K::V, V::V>::empty(), table.spec_wf();"
   },
@@ -2091,7 +2091,7 @@
     "id": 262,
     "function": "singleton",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "67-69",
+    "lines": "69-71",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(k: K, v: V) -> (table: Self)\n            requires obeys_feq_clone::<Pair<K, V>>(),\n            ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table@.dom().finite(), table.spec_wf();"
   },
@@ -2099,31 +2099,31 @@
     "id": 263,
     "function": "find",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "70-76",
+    "lines": "72-78",
     "spec_strength": "unknown",
-    "snippet": "        fn find(&self, k: &K) -> (found: Option<V>)\n            requires self.spec_wf(),\n            ensures\n                match found {\n                    Some(v) => self@.contains_key(k@) && self@[k@] == v@,\n                    None => !self@.contains_key(k@),\n                };"
+    "snippet": "        fn find(&self, k: &K) -> (found: Option<V>)\n            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),\n            ensures\n                match found {\n                    Some(v) => self@.contains_key(k@) && self@[k@] == v@,\n                    None => !self@.contains_key(k@),\n                };"
   },
   {
     "id": 264,
     "function": "insert",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "77-79",
+    "lines": "79-81",
     "spec_strength": "unknown",
-    "snippet": "        fn insert(&self, k: K, v: V) -> (table: Self)\n            requires self.spec_wf(),\n            ensures table@.dom().finite(), table.spec_wf();"
+    "snippet": "        fn insert(&self, k: K, v: V) -> (table: Self)\n            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),\n            ensures table@.dom().finite(), table.spec_wf();"
   },
   {
     "id": 265,
     "function": "delete",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "80-82",
+    "lines": "82-88",
     "spec_strength": "hole",
-    "snippet": "        fn delete(&self, k: &K) -> (table: Self)\n            requires self.spec_wf(), obeys_feq_clone::<Pair<K, V>>(),\n            ensures table@ == self@.remove(k@), table@.dom().finite(), table.spec_wf();"
+    "snippet": "        fn delete(&self, k: &K) -> (table: Self)\n            requires\n                self.spec_wf(),\n                obeys_feq_clone::<Pair<K, V>>(),\n                obeys_view_eq::<K>(),\n                obeys_feq_full::<Pair<K, V>>(),\n            ensures table@ == self@.remove(k@), table@.dom().finite(), table.spec_wf();"
   },
   {
     "id": 266,
     "function": "domain",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "83-84",
+    "lines": "89-90",
     "spec_strength": "unknown",
     "snippet": "        fn domain(&self) -> (keys: ArraySetStEph<K>)\n            ensures self@.dom().finite();"
   },
@@ -2131,7 +2131,7 @@
     "id": 267,
     "function": "tabulate",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "85-87",
+    "lines": "91-93",
     "spec_strength": "unknown",
     "snippet": "        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (table: Self)\n            requires forall|k: &K| f.requires((k,)),\n            ensures table@.dom().finite();"
   },
@@ -2139,63 +2139,63 @@
     "id": 268,
     "function": "map",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "88-90",
+    "lines": "94-96",
     "spec_strength": "unknown",
-    "snippet": "        fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self)\n            requires forall|v: &V| f.requires((v,)),\n            ensures table@.dom().finite();"
+    "snippet": "        fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self)\n            requires forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),\n            ensures table@.dom().finite();"
   },
   {
     "id": 269,
     "function": "filter",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "91-93",
+    "lines": "97-99",
     "spec_strength": "unknown",
-    "snippet": "        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (table: Self)\n            requires forall|k: &K, v: &V| f.requires((k, v)),\n            ensures table@.dom().finite();"
+    "snippet": "        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (table: Self)\n            requires forall|k: &K, v: &V| f.requires((k, v)), obeys_feq_full::<Pair<K, V>>(),\n            ensures table@.dom().finite();"
   },
   {
     "id": 270,
     "function": "intersection",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "94-96",
+    "lines": "100-105",
     "spec_strength": "unknown",
-    "snippet": "        fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)\n            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),\n            ensures table@.dom().finite();"
+    "snippet": "        fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)\n            requires\n                forall|v1: &V, v2: &V| f.requires((v1, v2)),\n                obeys_view_eq::<K>(),\n                obeys_feq_full::<K>(),\n            ensures table@.dom().finite();"
   },
   {
     "id": 271,
     "function": "union",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "97-99",
+    "lines": "106-112",
     "spec_strength": "unknown",
-    "snippet": "        fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)\n            requires self.spec_wf(), forall|v1: &V, v2: &V| f.requires((v1, v2)),\n            ensures table@.dom().finite(), table.spec_wf();"
+    "snippet": "        fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)\n            requires\n                self.spec_wf(),\n                forall|v1: &V, v2: &V| f.requires((v1, v2)),\n                obeys_view_eq::<K>(),\n                obeys_feq_full::<Pair<K, V>>(),\n            ensures table@.dom().finite(), table.spec_wf();"
   },
   {
     "id": 272,
     "function": "difference",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "100-101",
+    "lines": "113-115",
     "spec_strength": "unknown",
-    "snippet": "        fn difference(&self, other: &Self) -> (table: Self)\n            ensures table@.dom().finite();"
+    "snippet": "        fn difference(&self, other: &Self) -> (table: Self)\n            requires obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),\n            ensures table@.dom().finite();"
   },
   {
     "id": 273,
     "function": "restrict",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "102-103",
+    "lines": "116-118",
     "spec_strength": "unknown",
-    "snippet": "        fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self)\n            ensures table@.dom().finite();"
+    "snippet": "        fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self)\n            requires obeys_feq_full::<Pair<K, V>>(),\n            ensures table@.dom().finite();"
   },
   {
     "id": 274,
     "function": "subtract",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "104-105",
+    "lines": "119-121",
     "spec_strength": "unknown",
-    "snippet": "        fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self)\n            ensures table@.dom().finite();"
+    "snippet": "        fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self)\n            requires obeys_feq_full::<Pair<K, V>>(),\n            ensures table@.dom().finite();"
   },
   {
     "id": 275,
     "function": "collect",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "106-107",
+    "lines": "122-123",
     "spec_strength": "hole",
     "snippet": "        fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)\n            ensures self@.dom().finite(), sorted_entries.spec_well_formed();"
   },
@@ -2203,7 +2203,7 @@
     "id": 276,
     "function": "first_key",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "108-109",
+    "lines": "124-125",
     "spec_strength": "unknown",
     "snippet": "        fn first_key(&self) -> (key: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -2211,7 +2211,7 @@
     "id": 277,
     "function": "last_key",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "110-111",
+    "lines": "126-127",
     "spec_strength": "unknown",
     "snippet": "        fn last_key(&self) -> (key: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -2219,7 +2219,7 @@
     "id": 278,
     "function": "previous_key",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "112-113",
+    "lines": "128-129",
     "spec_strength": "unknown",
     "snippet": "        fn previous_key(&self, k: &K) -> (key: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -2227,7 +2227,7 @@
     "id": 279,
     "function": "next_key",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "114-115",
+    "lines": "130-131",
     "spec_strength": "unknown",
     "snippet": "        fn next_key(&self, k: &K) -> (key: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -2235,7 +2235,7 @@
     "id": 280,
     "function": "split_key",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "116-118",
+    "lines": "132-134",
     "spec_strength": "hole",
     "snippet": "        fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))\n            where Self: Sized\n            ensures self@.dom().finite();"
   },
@@ -2243,15 +2243,15 @@
     "id": 281,
     "function": "join_key",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "119-121",
+    "lines": "135-140",
     "spec_strength": "unknown",
-    "snippet": "        fn join_key(left: &Self, right: &Self) -> (table: Self)\n            requires left.spec_wf(),\n            ensures table@.dom().finite(), table.spec_wf();"
+    "snippet": "        fn join_key(left: &Self, right: &Self) -> (table: Self)\n            requires\n                left.spec_wf(),\n                obeys_view_eq::<K>(),\n                obeys_feq_full::<Pair<K, V>>(),\n            ensures table@.dom().finite(), table.spec_wf();"
   },
   {
     "id": 282,
     "function": "get_key_range",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "122-123",
+    "lines": "141-142",
     "spec_strength": "unknown",
     "snippet": "        fn get_key_range(&self, k1: &K, k2: &K) -> (table: Self)\n            ensures table@.dom().finite();"
   },
@@ -2259,7 +2259,7 @@
     "id": 283,
     "function": "rank_key",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "124-125",
+    "lines": "143-144",
     "spec_strength": "unknown",
     "snippet": "        fn rank_key(&self, k: &K) -> (rank: usize)\n            ensures self@.dom().finite();"
   },
@@ -2267,7 +2267,7 @@
     "id": 284,
     "function": "select_key",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "126-127",
+    "lines": "145-146",
     "spec_strength": "unknown",
     "snippet": "        fn select_key(&self, i: usize) -> (key: Option<K>)\n            ensures self@.dom().finite();"
   },
@@ -2275,7 +2275,7 @@
     "id": 285,
     "function": "split_rank_key",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "128-130",
+    "lines": "147-149",
     "spec_strength": "unknown",
     "snippet": "        fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))\n            where Self: Sized\n            ensures self@.dom().finite();"
   },
@@ -2283,7 +2283,7 @@
     "id": 286,
     "function": "from_sorted_entries",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "496-499",
+    "lines": "515-518",
     "spec_strength": "hole",
     "snippet": "    pub fn from_sorted_entries<K: StT + Ord, V: StT>(\n        entries: AVLTreeSeqStPerS<Pair<K, V>>,\n    ) -> (table: OrderedTableStPer<K, V>)\n        ensures table@.dom().finite()"
   },
@@ -2291,7 +2291,7 @@
     "id": 287,
     "function": "iter",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "524-528",
+    "lines": "543-547",
     "spec_strength": "unknown",
     "snippet": "        pub fn iter(&self) -> (it: OrderedTableStPerIter<'_, K, V>)\n            ensures\n                it@.0 == 0,\n                it@.1 == self.base_table.entries.seq@,\n                iter_invariant(&it),"
   },
@@ -2299,7 +2299,7 @@
     "id": 288,
     "function": "next",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "552-568",
+    "lines": "571-587",
     "spec_strength": "unknown",
     "snippet": "        fn next(&mut self) -> (next: Option<&'a Pair<K, V>>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
   },
@@ -2307,7 +2307,7 @@
     "id": 289,
     "function": "eq",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "656-657",
+    "lines": "675-676",
     "spec_strength": "unknown",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   }

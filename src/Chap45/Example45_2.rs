@@ -10,9 +10,9 @@ pub mod Example45_2 {
 
     verus! {
         proof fn _example_45_2_verified() {}
-    }
 
-    pub struct Example45_2;
+        pub struct Example45_2;
+    }
 
     /// Trait for Example 45.2 operations.
     pub trait Example45_2Trait {

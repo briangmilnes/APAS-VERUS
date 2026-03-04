@@ -24,8 +24,8 @@
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
 | 1 | Chap42 | Example42_1 | 2 | 0 | 0 | 3 | 1 | 3 | 0 | 0 | 4 |
 | 2 | Chap42 | TableMtEph | 16 | 17 | 0 | 2 | 18 | 1 | 3 | 14 | 2 |
-| 3 | Chap42 | TableStEph | 16 | 18 | 0 | 9 | 25 | 2 | 12 | 12 | 3 |
-| 4 | Chap42 | TableStPer | 16 | 17 | 0 | 9 | 25 | 1 | 14 | 10 | 2 |
+| 3 | Chap42 | TableStEph | 16 | 18 | 0 | 9 | 25 | 2 | 24 | 0 | 3 |
+| 4 | Chap42 | TableStPer | 16 | 17 | 0 | 9 | 25 | 1 | 24 | 0 | 2 |
 
 ## Function-by-Function Detail
 
@@ -42,25 +42,25 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 5 | `size` | Y | Y |  |  | Y |  |  | hole | 73&#8209;74 |
-| 6 | `empty` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;77 |
-| 7 | `singleton` | Y | Y |  |  | Y |  |  | hole | 79&#8209;80 |
-| 8 | `domain` | Y | Y |  |  | Y |  |  | hole | 82&#8209;83 |
-| 9 | `tabulate` | Y | Y |  |  | Y |  |  | hole | 85&#8209;86 |
-| 10 | `map` | Y | Y |  |  | Y |  |  | hole | 88&#8209;89 |
-| 11 | `filter` | Y | Y |  |  | Y |  |  | hole | 91&#8209;92 |
-| 12 | `intersection` | Y | Y |  |  | Y |  |  | hole | 94&#8209;95 |
-| 13 | `union` | Y | Y |  |  | Y |  |  | hole | 97&#8209;98 |
-| 14 | `difference` | Y | Y |  |  | Y |  |  | hole | 100&#8209;101 |
-| 15 | `find` | Y | Y |  |  | Y |  |  | hole | 103&#8209;104 |
-| 16 | `delete` | Y | Y |  |  | Y |  |  | hole | 106&#8209;107 |
-| 17 | `insert` | Y | Y |  |  | Y |  |  | hole | 109&#8209;110 |
-| 18 | `restrict` | Y | Y |  |  | Y |  |  | hole | 112&#8209;113 |
-| 19 | `subtract` | Y | Y |  |  | Y |  |  | hole | 115&#8209;116 |
-| 20 | `entries` | Y | Y |  |  | Y |  | Y |  | 118 |
-| 21 | `from_sorted_entries` |  |  |  | Y | Y |  |  | unknown | 728&#8209;729 |
-| 22 | `lemma_entries_to_map_finite` |  |  |  | Y | Y |  |  | unknown | 738&#8209;740 |
-| 23 | `eq` |  | Y |  |  |  | Y | Y |  | 752&#8209;754 |
+| 5 | `size` | Y | Y |  |  | Y |  |  | hole | 90&#8209;91 |
+| 6 | `empty` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;94 |
+| 7 | `singleton` | Y | Y |  |  | Y |  |  | hole | 96&#8209;97 |
+| 8 | `domain` | Y | Y |  |  | Y |  |  | hole | 99&#8209;100 |
+| 9 | `tabulate` | Y | Y |  |  | Y |  |  | hole | 102&#8209;103 |
+| 10 | `map` | Y | Y |  |  | Y |  |  | hole | 105&#8209;106 |
+| 11 | `filter` | Y | Y |  |  | Y |  |  | hole | 108&#8209;109 |
+| 12 | `intersection` | Y | Y |  |  | Y |  |  | hole | 111&#8209;112 |
+| 13 | `union` | Y | Y |  |  | Y |  |  | hole | 114&#8209;115 |
+| 14 | `difference` | Y | Y |  |  | Y |  |  | hole | 117&#8209;118 |
+| 15 | `find` | Y | Y |  |  | Y |  |  | hole | 120&#8209;125 |
+| 16 | `delete` | Y | Y |  |  | Y |  |  | hole | 127&#8209;128 |
+| 17 | `insert` | Y | Y |  |  | Y |  |  | hole | 130&#8209;131 |
+| 18 | `restrict` | Y | Y |  |  | Y |  |  | hole | 133&#8209;134 |
+| 19 | `subtract` | Y | Y |  |  | Y |  |  | hole | 136&#8209;137 |
+| 20 | `entries` | Y | Y |  |  | Y |  | Y |  | 139 |
+| 21 | `from_sorted_entries` |  |  |  | Y | Y |  |  | unknown | 753&#8209;754 |
+| 22 | `lemma_entries_to_map_finite` |  |  |  | Y | Y |  |  | unknown | 763&#8209;765 |
+| 23 | `eq` |  | Y |  |  |  | Y | Y |  | 777&#8209;779 |
 
 ### Chap42/TableStEph.rs
 
@@ -76,23 +76,23 @@
 | 31 | `size` | Y | Y |  |  | Y |  |  | unknown | 258&#8209;260 |
 | 32 | `empty` | Y | Y |  |  | Y |  |  | unknown | 262&#8209;263 |
 | 33 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 265&#8209;267 |
-| 34 | `domain` | Y | Y |  |  | Y |  |  | hole | 269&#8209;270 |
-| 35 | `tabulate` | Y | Y |  |  | Y |  |  | hole | 272&#8209;273 |
-| 36 | `map` | Y | Y |  |  | Y |  |  | hole | 275&#8209;276 |
-| 37 | `filter` | Y | Y |  |  | Y |  |  | hole | 278&#8209;280 |
-| 38 | `intersection` | Y | Y |  |  | Y |  |  | hole | 282&#8209;283 |
-| 39 | `union` | Y | Y |  |  | Y |  |  | hole | 285&#8209;286 |
-| 40 | `difference` | Y | Y |  |  | Y |  |  | hole | 288&#8209;289 |
-| 41 | `find` | Y | Y |  |  | Y |  |  | hole | 291&#8209;297 |
-| 42 | `delete` | Y | Y |  |  | Y |  |  | hole | 299&#8209;300 |
-| 43 | `insert` | Y | Y |  |  | Y |  |  | hole | 302&#8209;303 |
-| 44 | `restrict` | Y | Y |  |  | Y |  |  | hole | 305&#8209;306 |
-| 45 | `subtract` | Y | Y |  |  | Y |  |  | hole | 308&#8209;309 |
-| 46 | `entries` | Y | Y |  |  | Y |  | Y |  | 312 |
-| 47 | `from_sorted_entries` |  |  |  | Y | Y |  |  | unknown | 719&#8209;722 |
-| 48 | `lemma_entries_to_map_finite` |  |  |  | Y | Y |  |  | unknown | 731&#8209;733 |
-| 49 | `default` |  | Y |  |  |  | Y | Y |  | 759&#8209;761 |
-| 50 | `eq` |  | Y |  |  |  | Y | Y |  | 765&#8209;767 |
+| 34 | `domain` | Y | Y |  |  | Y |  |  | unknown | 269&#8209;270 |
+| 35 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 272&#8209;274 |
+| 36 | `map` | Y | Y |  |  | Y |  |  | unknown | 276&#8209;278 |
+| 37 | `filter` | Y | Y |  |  | Y |  |  | unknown | 280&#8209;282 |
+| 38 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 284&#8209;289 |
+| 39 | `union` | Y | Y |  |  | Y |  |  | unknown | 291&#8209;297 |
+| 40 | `difference` | Y | Y |  |  | Y |  |  | unknown | 299&#8209;301 |
+| 41 | `find` | Y | Y |  |  | Y |  |  | unknown | 303&#8209;309 |
+| 42 | `delete` | Y | Y |  |  | Y |  |  | unknown | 311&#8209;313 |
+| 43 | `insert` | Y | Y |  |  | Y |  |  | unknown | 315&#8209;320 |
+| 44 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 322&#8209;324 |
+| 45 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 326&#8209;328 |
+| 46 | `entries` | Y | Y |  |  | Y |  | Y |  | 331 |
+| 47 | `from_sorted_entries` |  |  |  | Y | Y |  |  | unknown | 1090&#8209;1093 |
+| 48 | `lemma_entries_to_map_finite` |  |  |  | Y | Y |  |  | unknown | 1102&#8209;1104 |
+| 49 | `default` |  | Y |  |  |  | Y | Y |  | 1130&#8209;1132 |
+| 50 | `eq` |  | Y |  |  |  | Y | Y |  | 1136&#8209;1138 |
 
 ### Chap42/TableStPer.rs
 
@@ -111,19 +111,19 @@
 | 61 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 289&#8209;291 |
 | 62 | `domain` | Y | Y |  |  | Y |  |  | unknown | 294&#8209;295 |
 | 63 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 298&#8209;300 |
-| 64 | `map` | Y | Y |  |  | Y |  |  | hole | 303&#8209;305 |
-| 65 | `filter` | Y | Y |  |  | Y |  |  | hole | 308&#8209;310 |
-| 66 | `intersection` | Y | Y |  |  | Y |  |  | hole | 313&#8209;315 |
-| 67 | `union` | Y | Y |  |  | Y |  |  | hole | 318&#8209;320 |
-| 68 | `difference` | Y | Y |  |  | Y |  |  | hole | 323&#8209;324 |
-| 69 | `find` | Y | Y |  |  | Y |  |  | hole | 327&#8209;333 |
-| 70 | `delete` | Y | Y |  |  | Y |  |  | hole | 336&#8209;338 |
-| 71 | `insert` | Y | Y |  |  | Y |  |  | hole | 341&#8209;343 |
-| 72 | `restrict` | Y | Y |  |  | Y |  |  | hole | 346&#8209;347 |
-| 73 | `subtract` | Y | Y |  |  | Y |  |  | hole | 350&#8209;351 |
-| 74 | `collect` | Y | Y |  |  | Y |  | Y |  | 354 |
-| 75 | `from_sorted_entries` |  |  |  | Y | Y |  |  | unknown | 988&#8209;991 |
-| 76 | `eq` |  | Y |  |  |  | Y | Y |  | 1020&#8209;1022 |
+| 64 | `map` | Y | Y |  |  | Y |  |  | unknown | 303&#8209;305 |
+| 65 | `filter` | Y | Y |  |  | Y |  |  | unknown | 308&#8209;310 |
+| 66 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 313&#8209;318 |
+| 67 | `union` | Y | Y |  |  | Y |  |  | unknown | 321&#8209;327 |
+| 68 | `difference` | Y | Y |  |  | Y |  |  | unknown | 330&#8209;332 |
+| 69 | `find` | Y | Y |  |  | Y |  |  | unknown | 335&#8209;341 |
+| 70 | `delete` | Y | Y |  |  | Y |  |  | unknown | 344&#8209;350 |
+| 71 | `insert` | Y | Y |  |  | Y |  |  | unknown | 353&#8209;362 |
+| 72 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 365&#8209;367 |
+| 73 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 370&#8209;372 |
+| 74 | `collect` | Y | Y |  |  | Y |  | Y |  | 375 |
+| 75 | `from_sorted_entries` |  |  |  | Y | Y |  |  | unknown | 1044&#8209;1047 |
+| 76 | `eq` |  | Y |  |  |  | Y | Y |  | 1076&#8209;1078 |
 
 
 ### Legend

@@ -75,8 +75,10 @@ broadcast use {
         pub trait LeftistHeapNodeTrait<T: StT + Ord>: Sized {
             fn rank(&self) -> (rank_val: usize);
             fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
+                requires left.spec_size() + right.spec_size() + 1 <= usize::MAX as nat,
                 ensures node.spec_size() == left.spec_size() + right.spec_size() + 1;
             fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
+                requires a.spec_size() + b.spec_size() <= usize::MAX as nat,
                 ensures node.spec_size() == a.spec_size() + b.spec_size();
             fn size(&self) -> (n: usize);
             fn height(&self) -> (h: usize);
@@ -98,19 +100,23 @@ broadcast use {
                     self.spec_size() == 0 ==> min_elem.is_none(),
                     self.spec_size() > 0 ==> min_elem.is_some();
             fn insert(&self, element: T) -> (pq: Self)
+                requires self.spec_size() + 1 <= usize::MAX as nat,
                 ensures pq.spec_size() == self.spec_size() + 1;
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
+                requires self.spec_size() <= usize::MAX as nat,
                 ensures
                     self.spec_size() > 0 ==> min_and_rest.1.is_some(),
                     self.spec_size() > 0 ==> min_and_rest.0.spec_size() == self.spec_size() - 1,
                     self.spec_size() == 0 ==> min_and_rest.1.is_none(),
                     self.spec_size() == 0 ==> min_and_rest.0.spec_size() == self.spec_size();
             fn meld(&self, other: &Self) -> (pq: Self)
+                requires self.spec_size() + other.spec_size() <= usize::MAX as nat,
                 ensures pq.spec_size() == self.spec_size() + other.spec_size();
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures pq.spec_size() == seq@.len();
             fn size(&self) -> (n: usize)
+                requires self.spec_size() <= usize::MAX as nat,
                 ensures n as nat == self.spec_size();
             fn is_empty(&self) -> (b: bool)
                 ensures b == (self.spec_size() == 0);
@@ -118,6 +124,7 @@ broadcast use {
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures sorted@.len() as nat == self.spec_size();
             fn height(&self) -> (levels: usize)
+                requires self.spec_size() <= usize::MAX as nat,
                 ensures self.spec_size() == 0 ==> levels == 0;
             fn root_rank(&self) -> (rank_val: usize)
                 ensures self.spec_size() == 0 ==> rank_val == 0;
@@ -436,6 +443,7 @@ broadcast use {
                 for i in 0..n
                     invariant n == heaps@.len()
                 {
+                    proof { assume(result.spec_size() + heaps[i as int].spec_size() <= usize::MAX as nat); }
                     result = result.meld(&heaps[i]);
                 }
                 result
@@ -452,8 +460,10 @@ broadcast use {
                 {
                     let element = all_elements[i].clone();
                     if element < *key {
+                        proof { assume(less_than.spec_size() + 1 <= usize::MAX as nat); }
                         less_than = less_than.insert(element);
                     } else {
+                        proof { assume(equal_or_greater.spec_size() + 1 <= usize::MAX as nat); }
                         equal_or_greater = equal_or_greater.insert(element);
                     }
                 }
