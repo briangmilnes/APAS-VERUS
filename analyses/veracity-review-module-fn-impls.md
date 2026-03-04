@@ -22,45 +22,36 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap66 | BoruvkaMtEph | 5 | 4 | 0 | 12 | 6 | 10 | 1 | 0 | 15 |
-| 2 | Chap66 | BoruvkaStEph | 5 | 9 | 0 | 0 | 6 | 3 | 2 | 3 | 4 |
+| 1 | Chap39 | BSTSetTreapMtEph | 20 | 20 | 0 | 2 | 0 | 22 | 0 | 0 | 22 |
 
 ## Function-by-Function Detail
 
-### Chap66/BoruvkaMtEph.rs
+### Chap39/BSTSetTreapMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `eq` |  | Y |  |  | Y |  |  | unknown | 42&#8209;43 |
-| 2 | `vertex_bridges_mt` | Y |  |  | Y | Y |  | Y |  | 56&#8209;60 |
-| 3 | `bridge_star_partition_mt` | Y |  |  | Y | Y |  | Y |  | 64&#8209;69 |
-| 4 | `boruvka_mst_mt` | Y |  |  | Y | Y |  | Y |  | 73&#8209;79 |
-| 5 | `boruvka_mst_mt_with_seed` | Y |  |  | Y | Y |  | Y |  | 83&#8209;87 |
-| 6 | `mst_weight` | Y |  |  | Y | Y |  | Y |  | 91&#8209;94 |
-| 7 | `partial_cmp` |  | Y |  |  |  | Y | Y |  | 105&#8209;107 |
-| 8 | `cmp` |  | Y |  |  |  | Y | Y |  | 111&#8209;116 |
-| 9 | `hash` |  | Y |  |  |  | Y | Y |  | 120&#8209;125 |
-| 10 | `hash_coin` |  |  |  | Y |  | Y | Y |  | 140&#8209;151 |
-| 11 | `hash_coin_flips_mt` |  |  |  | Y |  | Y | Y |  | 153&#8209;186 |
-| 12 | `compute_remaining_mt` |  |  |  | Y |  | Y | Y |  | 188&#8209;224 |
-| 13 | `collect_mst_labels_mt` |  |  |  | Y |  | Y | Y |  | 226&#8209;261 |
-| 14 | `build_partition_map_mt` |  |  |  | Y |  | Y | Y |  | 263&#8209;303 |
-| 15 | `filter_tail_to_head_mt` |  |  |  | Y |  | Y | Y |  | 404&#8209;454 |
-| 16 | `reroute_edges_mt` |  |  |  | Y |  | Y | Y |  | 519&#8209;561 |
-
-### Chap66/BoruvkaStEph.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 17 | `eq` |  | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
-| 18 | `vertex_bridges` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;114 |
-| 19 | `bridge_star_partition` | Y | Y |  |  | Y |  |  | hole | 121&#8209;125 |
-| 20 | `boruvka_mst` | Y | Y |  |  | Y |  |  | hole | 129&#8209;134 |
-| 21 | `boruvka_mst_with_seed` | Y | Y |  |  | Y |  |  | hole | 138&#8209;142 |
-| 22 | `mst_weight` | Y | Y |  |  | Y |  | Y |  | 146&#8209;149 |
-| 23 | `partial_cmp` |  | Y |  |  |  | Y | Y |  | 369&#8209;371 |
-| 24 | `cmp` |  | Y |  |  |  | Y | Y |  | 375&#8209;380 |
-| 25 | `hash` |  | Y |  |  |  | Y | Y |  | 384&#8209;389 |
+| 1 | `minimum_inner` |  |  |  | Y |  | Y | Y |  | 50&#8209;58 |
+| 2 | `maximum_inner` |  |  |  | Y |  | Y | Y |  | 60&#8209;68 |
+| 3 | `empty` | Y | Y |  |  |  | Y | Y |  | 73&#8209;74 |
+| 4 | `singleton` | Y | Y |  |  |  | Y | Y |  | 75&#8209;76 |
+| 5 | `size` | Y | Y |  |  |  | Y | Y |  | 77&#8209;78 |
+| 6 | `is_empty` | Y | Y |  |  |  | Y | Y |  | 79&#8209;80 |
+| 7 | `find` | Y | Y |  |  |  | Y | Y |  | 81&#8209;82 |
+| 8 | `contains` | Y | Y |  |  |  | Y | Y |  | 83&#8209;84 |
+| 9 | `minimum` | Y | Y |  |  |  | Y | Y |  | 85&#8209;86 |
+| 10 | `maximum` | Y | Y |  |  |  | Y | Y |  | 87&#8209;88 |
+| 11 | `insert` | Y | Y |  |  |  | Y | Y |  | 89&#8209;90 |
+| 12 | `delete` | Y | Y |  |  |  | Y | Y |  | 91&#8209;92 |
+| 13 | `union` | Y | Y |  |  |  | Y | Y |  | 93&#8209;94 |
+| 14 | `intersection` | Y | Y |  |  |  | Y | Y |  | 95&#8209;96 |
+| 15 | `difference` | Y | Y |  |  |  | Y | Y |  | 97&#8209;98 |
+| 16 | `split` | Y | Y |  |  |  | Y | Y |  | 99&#8209;100 |
+| 17 | `join_pair` | Y | Y |  |  |  | Y | Y |  | 101&#8209;102 |
+| 18 | `join_m` | Y | Y |  |  |  | Y | Y |  | 103&#8209;104 |
+| 19 | `filter` | Y | Y |  |  |  | Y | Y |  | 105&#8209;106 |
+| 20 | `reduce` | Y | Y |  |  |  | Y | Y |  | 107&#8209;110 |
+| 21 | `iter_in_order` | Y | Y |  |  |  | Y | Y |  | 111&#8209;112 |
+| 22 | `as_tree` | Y | Y |  |  |  | Y | Y |  | 113&#8209;114 |
 
 
 ### Legend

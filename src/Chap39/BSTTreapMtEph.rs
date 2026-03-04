@@ -23,9 +23,14 @@ pub mod BSTTreapMtEph {
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialOrdIs;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialOrdSpec;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::total_order::total_order::IsLtTransitive;
     use crate::Types::Types::*;
 
     verus! {
@@ -101,7 +106,66 @@ pub mod BSTTreapMtEph {
     }
 
 
+    pub open spec fn spec_contains_link<T: StTInMtT + Ord>(link: &Link<T>, val: T) -> bool
+        decreases *link,
+    {
+        match link {
+            None => false,
+            Some(node) => {
+                node.key == val
+                    || spec_contains_link(&node.left, val)
+                    || spec_contains_link(&node.right, val)
+            }
+        }
+    }
+
+    pub open spec fn spec_bst_link<T: StTInMtT + Ord>(link: &Link<T>) -> bool
+        decreases *link,
+    {
+        match link {
+            None => true,
+            Some(node) => {
+                spec_bst_link(&node.left)
+                    && spec_bst_link(&node.right)
+                    && (forall|k: T| #![trigger spec_contains_link(&node.left, k)] spec_contains_link(&node.left, k) ==> k.is_lt(&node.key))
+                    && (forall|k: T| #![trigger spec_contains_link(&node.right, k)] spec_contains_link(&node.right, k) ==> node.key.is_lt(&k))
+            }
+        }
+    }
+
+
     //		7. proof fns/broadcast groups
+
+    proof fn lemma_bst_decompose<T: StTInMtT + Ord>(link: &Link<T>)
+        requires spec_bst_link(link),
+        ensures match link {
+            None => true,
+            Some(node) => {
+                spec_bst_link(&node.left)
+                && spec_bst_link(&node.right)
+                && (forall|k: T| #[trigger] spec_contains_link(&node.left, k) ==> k.is_lt(&node.key))
+                && (forall|k: T| #[trigger] spec_contains_link(&node.right, k) ==> node.key.is_lt(&k))
+            },
+        },
+    {
+    }
+
+    proof fn lemma_contains_left<T: StTInMtT + Ord>(node: &Box<Node<T>>, k: T)
+        requires spec_contains_link(&node.left, k),
+        ensures spec_contains_link(&Some(*node), k),
+    {
+    }
+
+    proof fn lemma_contains_right<T: StTInMtT + Ord>(node: &Box<Node<T>>, k: T)
+        requires spec_contains_link(&node.right, k),
+        ensures spec_contains_link(&Some(*node), k),
+    {
+    }
+
+    proof fn lemma_contains_root<T: StTInMtT + Ord>(node: &Box<Node<T>>)
+        ensures spec_contains_link(&Some(*node), node.key),
+    {
+    }
 
     proof fn lemma_height_le_size<T: StTInMtT + Ord>(link: &Link<T>)
         requires
@@ -161,14 +225,19 @@ pub mod BSTTreapMtEph {
     /// The RwLock invariant (`BSTTreapMtEphInv`) enforces `spec_size_wf_link` and
     /// `spec_size_link < usize::MAX` on every acquire, so callers need no
     /// explicit size preconditions.
-    pub trait BSTTreapMtEphTrait<T: StTInMtT + Ord>: Sized + View<V = Set<T::V>> {
+    pub trait BSTTreapMtEphTrait<T: StTInMtT + Ord + IsLtTransitive>: Sized + View<V = Set<T::V>> {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn new() -> (empty_tree: Self)
             ensures empty_tree@.finite(), empty_tree@.len() == 0;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-        fn insert(&self, value: T, priority: u64);
+        fn insert(&self, value: T, priority: u64)
+            ensures true;
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
+        fn delete(&self, target: &T)
+            ensures true;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn find(&self, target: &T) -> (found: Option<T>)
@@ -189,7 +258,8 @@ pub mod BSTTreapMtEph {
             ensures empty == (self@.len() == 0), self@.finite();
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn height(&self) -> (h: usize);
+        fn height(&self) -> (h: usize)
+            ensures true;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn minimum(&self) -> (min_val: Option<T>)
@@ -204,16 +274,21 @@ pub mod BSTTreapMtEph {
                 max_val matches Some(v) ==> self@.contains(v@);
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn in_order(&self) -> (ordered: ArraySeqStPerS<T>);
+        fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
+            ensures true;
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>);
+        fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>)
+            ensures true;
     }
 
 
     //		9. impls
 
     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
+        ensures
+            spec_size_link(&c) == spec_size_link(link),
+            spec_size_wf_link(link) ==> spec_size_wf_link(&c),
         decreases link,
     {
         match link {
@@ -276,29 +351,73 @@ pub mod BSTTreapMtEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn rotate_left<T: StTInMtT + Ord>(link: &mut Link<T>)
+    fn rotate_left<T: StTInMtT + Ord + IsLtTransitive>(link: &mut Link<T>)
         requires
             spec_size_wf_link(old(link)),
             spec_size_link(old(link)) <= usize::MAX as nat,
         ensures
             spec_size_wf_link(link),
             spec_size_link(link) == spec_size_link(old(link)),
+            forall|k: T| spec_contains_link(link, k) <==> spec_contains_link(old(link), k),
+            spec_bst_link(old(link)) ==> spec_bst_link(link),
     {
         if let Some(mut x) = link.take() {
+            let ghost bst_input = spec_bst_link(&Some(x));
+            let ghost xk = x.key;
+            let ghost orig_right = x.right;
             assert(spec_size_wf_link(&x.left));
             assert(spec_size_wf_link(&x.right));
             if let Some(mut y) = x.right.take() {
+                let ghost yk = y.key;
+                let ghost b  = y.left;
+                let ghost a  = y.right;
                 assert(spec_size_wf_link(&y.left));
                 assert(spec_size_wf_link(&y.right));
                 let ghost x_left_sz = spec_size_link(&x.left);
                 let ghost y_left_sz = spec_size_link(&y.left);
                 let ghost y_right_sz = spec_size_link(&y.right);
+                proof {
+                    if bst_input {
+                        lemma_bst_decompose(&orig_right);
+                        assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies xk.is_lt(&k) by {
+                            lemma_contains_left(&y, k);
+                        };
+                        assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies k.is_lt(&yk) by {};
+                    }
+                }
                 x.right = y.left.take();
                 assert(1 + x_left_sz + y_left_sz + 1 + y_right_sz <= usize::MAX as nat);
                 update(&mut x);
+                proof {
+                    if bst_input {
+                        assert(spec_bst_link(&x.right));
+                        assert(spec_bst_link(&x.left));
+                        assert(spec_bst_link(&Some(x)));
+                    }
+                }
                 y.left = Some(x);
                 update(&mut y);
-                proof { lemma_wf_assemble_node(&*y); }
+                proof {
+                    lemma_wf_assemble_node(&*y);
+                    reveal_with_fuel(spec_contains_link, 3);
+                    if bst_input {
+                        lemma_bst_decompose(&orig_right);
+                        assert(spec_bst_link(&y.right));
+                        lemma_contains_root(&y);
+                        assert(spec_contains_link(&orig_right, yk));
+                        assert(xk.is_lt(&yk));
+                        assert(x.right == b);
+                        assert forall |k: T| #[trigger] spec_contains_link(&y.left, k) implies k.is_lt(&yk) by {
+                            if spec_contains_link(&x.left, k) {
+                                T::is_lt_transitive(k, xk, yk);
+                            }
+                            if spec_contains_link(&x.right, k) {
+                                assert(spec_contains_link(&b, k));
+                            }
+                        };
+                        assert(spec_bst_link(&Some(y)));
+                    }
+                }
                 *link = Some(y);
             } else {
                 *link = Some(x);
@@ -306,29 +425,73 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    fn rotate_right<T: StTInMtT + Ord>(link: &mut Link<T>)
+    fn rotate_right<T: StTInMtT + Ord + IsLtTransitive>(link: &mut Link<T>)
         requires
             spec_size_wf_link(old(link)),
             spec_size_link(old(link)) <= usize::MAX as nat,
         ensures
             spec_size_wf_link(link),
             spec_size_link(link) == spec_size_link(old(link)),
+            forall|k: T| spec_contains_link(link, k) <==> spec_contains_link(old(link), k),
+            spec_bst_link(old(link)) ==> spec_bst_link(link),
     {
         if let Some(mut x) = link.take() {
+            let ghost bst_input = spec_bst_link(&Some(x));
+            let ghost xk = x.key;
+            let ghost orig_left = x.left;
             assert(spec_size_wf_link(&x.left));
             assert(spec_size_wf_link(&x.right));
             if let Some(mut y) = x.left.take() {
+                let ghost yk = y.key;
+                let ghost b  = y.right;
+                let ghost a  = y.left;
                 assert(spec_size_wf_link(&y.left));
                 assert(spec_size_wf_link(&y.right));
                 let ghost x_right_sz = spec_size_link(&x.right);
                 let ghost y_left_sz = spec_size_link(&y.left);
                 let ghost y_right_sz = spec_size_link(&y.right);
+                proof {
+                    if bst_input {
+                        lemma_bst_decompose(&orig_left);
+                        assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies k.is_lt(&xk) by {
+                            lemma_contains_right(&y, k);
+                        };
+                        assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies yk.is_lt(&k) by {};
+                    }
+                }
                 x.left = y.right.take();
                 assert(1 + y_left_sz + x_right_sz + 1 + y_right_sz <= usize::MAX as nat);
                 update(&mut x);
+                proof {
+                    if bst_input {
+                        assert(spec_bst_link(&x.right));
+                        assert(spec_bst_link(&x.left));
+                        assert(spec_bst_link(&Some(x)));
+                    }
+                }
                 y.right = Some(x);
                 update(&mut y);
-                proof { lemma_wf_assemble_node(&*y); }
+                proof {
+                    lemma_wf_assemble_node(&*y);
+                    reveal_with_fuel(spec_contains_link, 3);
+                    if bst_input {
+                        lemma_bst_decompose(&orig_left);
+                        assert(spec_bst_link(&y.left));
+                        lemma_contains_root(&y);
+                        assert(spec_contains_link(&orig_left, yk));
+                        assert(yk.is_lt(&xk));
+                        assert(x.left == b);
+                        assert forall |k: T| #[trigger] spec_contains_link(&y.right, k) implies yk.is_lt(&k) by {
+                            if spec_contains_link(&x.right, k) {
+                                T::is_lt_transitive(yk, xk, k);
+                            }
+                            if spec_contains_link(&x.left, k) {
+                                assert(spec_contains_link(&b, k));
+                            }
+                        };
+                        assert(spec_bst_link(&Some(y)));
+                    }
+                }
                 *link = Some(y);
             } else {
                 *link = Some(x);
@@ -338,23 +501,58 @@ pub mod BSTTreapMtEph {
 
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-    fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T, priority: u64)
+    fn insert_link<T: StTInMtT + Ord + IsLtTransitive>(link: &mut Link<T>, value: T, priority: u64)
         requires
             spec_size_link(old(link)) + 1 <= usize::MAX as nat,
             spec_size_wf_link(old(link)),
+            T::obeys_partial_cmp_spec(),
         ensures
             spec_size_wf_link(link),
             spec_size_link(link) <= spec_size_link(old(link)) + 1,
             spec_size_link(link) >= spec_size_link(old(link)),
+            forall|k: T| spec_contains_link(old(link), k) ==> spec_contains_link(link, k),
+            forall|k: T| spec_contains_link(link, k) ==> (spec_contains_link(old(link), k) || k == value),
+            spec_bst_link(old(link)) ==> spec_bst_link(link),
         decreases old(link),
     {
+        proof { reveal_with_fuel(spec_contains_link, 3); }
         if let Some(mut node) = link.take() {
+            let ghost orig_key = node.key;
+            let ghost orig_left = node.left;
+            let ghost orig_right = node.right;
+            proof {
+                assert forall |k: T| #![auto]
+                    spec_contains_link(old(link), k) <==>
+                    (node.key == k || spec_contains_link(&node.left, k) || spec_contains_link(&node.right, k))
+                    by {};
+            }
             assert(spec_size_wf_link(&node.left));
             assert(spec_size_wf_link(&node.right));
             if value < node.key {
                 insert_link(&mut node.left, value, priority);
                 update(&mut node);
-                proof { lemma_wf_assemble_node(&*node); }
+                proof {
+                    lemma_wf_assemble_node(&*node);
+                    assert forall |k: T| #![auto] spec_contains_link(old(link), k)
+                        implies spec_contains_link(&Some(node), k) by {
+                        if spec_contains_link(&node.left, k) { lemma_contains_left(&node, k); }
+                        if spec_contains_link(&node.right, k) { lemma_contains_right(&node, k); }
+                    };
+                    assert forall |k: T| #![auto] spec_contains_link(&Some(node), k)
+                        implies (spec_contains_link(old(link), k) || k == value) by {};
+                    if spec_bst_link(old(link)) {
+                        lemma_bst_decompose(old(link));
+                        assert(node.key == orig_key);
+                        assert forall |k: T| #[trigger] spec_contains_link(&node.left, k)
+                            implies k.is_lt(&node.key) by {
+                            if spec_contains_link(&orig_left, k) {
+                            } else {
+                                assert(value.is_lt(&node.key));
+                            }
+                        };
+                        assert(spec_bst_link(&Some(node)));
+                    }
+                }
                 *link = Some(node);
                 let need_rotate_right = match link.as_ref().unwrap().left.as_ref() {
                     Some(left) => left.priority < link.as_ref().unwrap().priority,
@@ -363,10 +561,31 @@ pub mod BSTTreapMtEph {
                 if need_rotate_right {
                     rotate_right(link);
                 }
-            } else if value > node.key {
+            } else if node.key < value {
                 insert_link(&mut node.right, value, priority);
                 update(&mut node);
-                proof { lemma_wf_assemble_node(&*node); }
+                proof {
+                    lemma_wf_assemble_node(&*node);
+                    assert forall |k: T| #![auto] spec_contains_link(old(link), k)
+                        implies spec_contains_link(&Some(node), k) by {
+                        if spec_contains_link(&node.left, k) { lemma_contains_left(&node, k); }
+                        if spec_contains_link(&node.right, k) { lemma_contains_right(&node, k); }
+                    };
+                    assert forall |k: T| #![auto] spec_contains_link(&Some(node), k)
+                        implies (spec_contains_link(old(link), k) || k == value) by {};
+                    if spec_bst_link(old(link)) {
+                        lemma_bst_decompose(old(link));
+                        assert(node.key == orig_key);
+                        assert forall |k: T| #[trigger] spec_contains_link(&node.right, k)
+                            implies node.key.is_lt(&k) by {
+                            if spec_contains_link(&orig_right, k) {
+                            } else {
+                                assert(node.key.is_lt(&value));
+                            }
+                        };
+                        assert(spec_bst_link(&Some(node)));
+                    }
+                }
                 *link = Some(node);
                 let need_rotate_left = match link.as_ref().unwrap().right.as_ref() {
                     Some(right) => right.priority < link.as_ref().unwrap().priority,
@@ -387,18 +606,183 @@ pub mod BSTTreapMtEph {
 
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-    fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T>
-        decreases *link,
+    fn delete_link<T: StTInMtT + Ord + IsLtTransitive>(link: &mut Link<T>, target: &T)
+        requires
+            spec_size_wf_link(old(link)),
+            spec_size_link(old(link)) < usize::MAX as nat,
+            T::obeys_partial_cmp_spec(),
+        ensures
+            spec_size_wf_link(link),
+            spec_size_link(link) <= spec_size_link(old(link)),
+            forall|k: T| spec_contains_link(link, k) ==> spec_contains_link(old(link), k),
+            spec_bst_link(old(link)) ==> spec_bst_link(link),
+        decreases spec_size_link(old(link)),
     {
-        match link {
-            | None => None,
-            | Some(node) => {
-                if (*target) == node.key {
-                    Some(&node.key)
-                } else if (*target) < node.key {
-                    find_link(&node.left, target)
+        proof { reveal_with_fuel(spec_contains_link, 3); }
+        if let Some(mut node) = link.take() {
+            let ghost orig_key = node.key;
+            let ghost orig_left = node.left;
+            let ghost orig_right = node.right;
+            proof {
+                assert forall |k: T| #![auto]
+                    spec_contains_link(old(link), k) <==>
+                    (node.key == k || spec_contains_link(&node.left, k) || spec_contains_link(&node.right, k))
+                    by {};
+            }
+            assert(spec_size_wf_link(&node.left));
+            assert(spec_size_wf_link(&node.right));
+            if *target < node.key {
+                delete_link(&mut node.left, target);
+                update(&mut node);
+                proof {
+                    lemma_wf_assemble_node(&*node);
+                    assert forall |k: T| #![auto] spec_contains_link(&Some(node), k)
+                        implies spec_contains_link(old(link), k) by {
+                        if spec_contains_link(&node.left, k) {
+                            assert(spec_contains_link(&orig_left, k));
+                        }
+                    };
+                    if spec_bst_link(old(link)) {
+                        lemma_bst_decompose(old(link));
+                        assert forall |k: T| #[trigger] spec_contains_link(&node.left, k)
+                            implies k.is_lt(&node.key) by {
+                            assert(spec_contains_link(&orig_left, k));
+                        };
+                    }
+                }
+                *link = Some(node);
+            } else if node.key < *target {
+                delete_link(&mut node.right, target);
+                update(&mut node);
+                proof {
+                    lemma_wf_assemble_node(&*node);
+                    assert forall |k: T| #![auto] spec_contains_link(&Some(node), k)
+                        implies spec_contains_link(old(link), k) by {
+                        if spec_contains_link(&node.right, k) {
+                            assert(spec_contains_link(&orig_right, k));
+                        }
+                    };
+                    if spec_bst_link(old(link)) {
+                        lemma_bst_decompose(old(link));
+                        assert forall |k: T| #[trigger] spec_contains_link(&node.right, k)
+                            implies node.key.is_lt(&k) by {
+                            assert(spec_contains_link(&orig_right, k));
+                        };
+                    }
+                }
+                *link = Some(node);
+            } else {
+                // Found the target.
+                if node.left.is_none() && node.right.is_none() {
+                    // Leaf: remove (link stays None from take).
+                } else if node.right.is_none() {
+                    proof {
+                        if spec_bst_link(old(link)) {
+                            lemma_bst_decompose(old(link));
+                        }
+                    }
+                    *link = node.left.take();
+                } else if node.left.is_none() {
+                    proof {
+                        if spec_bst_link(old(link)) {
+                            lemma_bst_decompose(old(link));
+                        }
+                    }
+                    *link = node.right.take();
                 } else {
-                    find_link(&node.right, target)
+                    // Two children: rotate smaller-priority child up, then recurse.
+                    let left_pri = node.left.as_ref().unwrap().priority;
+                    let right_pri = node.right.as_ref().unwrap().priority;
+                    *link = Some(node);
+                    if left_pri <= right_pri {
+                        rotate_right(link);
+                        if let Some(mut rotated) = link.take() {
+                            let ghost rot_key = rotated.key;
+                            let ghost rot_left = rotated.left;
+                            let ghost rot_right = rotated.right;
+                            proof {
+                                assert forall |k: T| #![auto]
+                                    (rot_key == k || spec_contains_link(&rot_left, k) || spec_contains_link(&rot_right, k))
+                                    <==> spec_contains_link(old(link), k)
+                                    by {};
+                                if spec_bst_link(old(link)) {
+                                    lemma_bst_decompose(&Some(rotated));
+                                    assert(spec_bst_link(&rot_left));
+                                    assert(spec_bst_link(&rot_right));
+                                    assert forall |k: T| #[trigger] spec_contains_link(&rot_left, k)
+                                        implies k.is_lt(&rot_key) by {};
+                                    assert forall |k: T| #[trigger] spec_contains_link(&rot_right, k)
+                                        implies rot_key.is_lt(&k) by {};
+                                }
+                            }
+                            delete_link(&mut rotated.right, target);
+                            update(&mut rotated);
+                            proof {
+                                lemma_wf_assemble_node(&*rotated);
+                                assert forall |k: T| #![auto] spec_contains_link(&Some(rotated), k)
+                                    implies spec_contains_link(old(link), k) by {
+                                    if spec_contains_link(&rotated.right, k) {
+                                        assert(spec_contains_link(&rot_right, k));
+                                    }
+                                    if spec_contains_link(&rotated.left, k) {
+                                        assert(spec_contains_link(&rot_left, k));
+                                    }
+                                };
+                                if spec_bst_link(old(link)) {
+                                    assert forall |k: T| #[trigger] spec_contains_link(&rotated.right, k)
+                                        implies rotated.key.is_lt(&k) by {
+                                        assert(spec_contains_link(&rot_right, k));
+                                    };
+                                    assert(spec_bst_link(&Some(rotated)));
+                                }
+                            }
+                            *link = Some(rotated);
+                        }
+                    } else {
+                        rotate_left(link);
+                        if let Some(mut rotated) = link.take() {
+                            let ghost rot_key = rotated.key;
+                            let ghost rot_left = rotated.left;
+                            let ghost rot_right = rotated.right;
+                            proof {
+                                assert forall |k: T| #![auto]
+                                    (rot_key == k || spec_contains_link(&rot_left, k) || spec_contains_link(&rot_right, k))
+                                    <==> spec_contains_link(old(link), k)
+                                    by {};
+                                if spec_bst_link(old(link)) {
+                                    lemma_bst_decompose(&Some(rotated));
+                                    assert(spec_bst_link(&rot_left));
+                                    assert(spec_bst_link(&rot_right));
+                                    assert forall |k: T| #[trigger] spec_contains_link(&rot_left, k)
+                                        implies k.is_lt(&rot_key) by {};
+                                    assert forall |k: T| #[trigger] spec_contains_link(&rot_right, k)
+                                        implies rot_key.is_lt(&k) by {};
+                                }
+                            }
+                            delete_link(&mut rotated.left, target);
+                            update(&mut rotated);
+                            proof {
+                                lemma_wf_assemble_node(&*rotated);
+                                assert forall |k: T| #![auto] spec_contains_link(&Some(rotated), k)
+                                    implies spec_contains_link(old(link), k) by {
+                                    if spec_contains_link(&rotated.left, k) {
+                                        assert(spec_contains_link(&rot_left, k));
+                                    }
+                                    if spec_contains_link(&rotated.right, k) {
+                                        assert(spec_contains_link(&rot_right, k));
+                                    }
+                                };
+                                if spec_bst_link(old(link)) {
+                                    assert forall |k: T| #[trigger] spec_contains_link(&rotated.left, k)
+                                        implies k.is_lt(&rotated.key) by {
+                                        assert(spec_contains_link(&rot_left, k));
+                                    };
+                                    assert(spec_bst_link(&Some(rotated)));
+                                }
+                            }
+                            *link = Some(rotated);
+                        }
+                    }
                 }
             }
         }
@@ -406,28 +790,77 @@ pub mod BSTTreapMtEph {
 
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-    fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T>
+    fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
+        ensures found.is_some() ==> spec_contains_link(link, *found.unwrap()),
+        decreases *link,
+    {
+        match link {
+            | None => None,
+            | Some(node) => {
+                if (*target) == node.key {
+                    proof { lemma_contains_root(node); }
+                    Some(&node.key)
+                } else if (*target) < node.key {
+                    let r = find_link(&node.left, target);
+                    proof {
+                        if r.is_some() { lemma_contains_left(node, *r.unwrap()); }
+                    }
+                    r
+                } else {
+                    let r = find_link(&node.right, target);
+                    proof {
+                        if r.is_some() { lemma_contains_right(node, *r.unwrap()); }
+                    }
+                    r
+                }
+            }
+        }
+    }
+
+    /// - APAS: Work O(log n) expected, Span O(log n) expected
+    /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
+    fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> (min_val: Option<&T>)
+        ensures min_val.is_some() ==> spec_contains_link(link, *min_val.unwrap()),
         decreases *link,
     {
         match link {
             | None => None,
             | Some(node) => match node.left {
-                | None => Some(&node.key),
-                | Some(_) => min_link(&node.left),
+                | None => {
+                    proof { lemma_contains_root(node); }
+                    Some(&node.key)
+                },
+                | Some(_) => {
+                    let r = min_link(&node.left);
+                    proof {
+                        if r.is_some() { lemma_contains_left(node, *r.unwrap()); }
+                    }
+                    r
+                },
             },
         }
     }
 
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-    fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T>
+    fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> (max_val: Option<&T>)
+        ensures max_val.is_some() ==> spec_contains_link(link, *max_val.unwrap()),
         decreases *link,
     {
         match link {
             | None => None,
             | Some(node) => match node.right {
-                | None => Some(&node.key),
-                | Some(_) => max_link(&node.right),
+                | None => {
+                    proof { lemma_contains_root(node); }
+                    Some(&node.key)
+                },
+                | Some(_) => {
+                    let r = max_link(&node.right);
+                    proof {
+                        if r.is_some() { lemma_contains_right(node, *r.unwrap()); }
+                    }
+                    r
+                },
             },
         }
     }
@@ -462,6 +895,8 @@ pub mod BSTTreapMtEph {
     /// - APAS: Work Θ(n), Span Θ(n)
     /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
     fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+        requires spec_size_wf_link(link),
+        ensures out@.len() == old(out)@.len() + spec_size_link(link) as int,
         decreases *link,
     {
         if let Some(node) = link {
@@ -474,6 +909,8 @@ pub mod BSTTreapMtEph {
     /// - APAS: Work Θ(n), Span Θ(n)
     /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
     fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+        requires spec_size_wf_link(link),
+        ensures out@.len() == old(out)@.len() + spec_size_link(link) as int,
         decreases *link,
     {
         if let Some(node) = link {
@@ -483,7 +920,7 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord> BSTTreapMtEphTrait<T> for BSTTreapMtEph<T> {
+    impl<T: StTInMtT + Ord + IsLtTransitive> BSTTreapMtEphTrait<T> for BSTTreapMtEph<T> {
         #[verifier::external_body]
         fn new() -> (empty_tree: Self)
             ensures empty_tree@.finite(), empty_tree@.len() == 0
@@ -500,6 +937,13 @@ pub mod BSTTreapMtEph {
             if sz + 1 < usize::MAX {
                 insert_link(&mut current, value, priority);
             }
+            write_handle.release_write(current);
+        }
+
+        #[verifier::external_body]
+        fn delete(&self, target: &T) {
+            let (mut current, write_handle) = self.root.acquire_write();
+            delete_link(&mut current, target);
             write_handle.release_write(current);
         }
 
@@ -532,7 +976,6 @@ pub mod BSTTreapMtEph {
             result
         }
 
-        #[verifier::external_body]
         fn is_empty(&self) -> (empty: bool)
             ensures empty == (self@.len() == 0), self@.finite()
         {
@@ -591,8 +1034,10 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord> Default for BSTTreapMtEph<T> {
-        fn default() -> Self { Self::new() }
+    impl<T: StTInMtT + Ord + IsLtTransitive> Default for BSTTreapMtEph<T> {
+        fn default() -> (d: Self)
+            ensures d@.finite(), d@.len() == 0,
+        { Self::new() }
     }
 
 
