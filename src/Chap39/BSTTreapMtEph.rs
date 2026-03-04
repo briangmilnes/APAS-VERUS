@@ -5,6 +5,7 @@
 //  Table of Contents
 //	1. module
 //	4. type definitions
+//	5. view impls
 //	6. spec fns
 //	7. proof fns/broadcast groups
 //	8. traits
@@ -51,6 +52,16 @@ pub mod BSTTreapMtEph {
 
     pub type BSTreeTreap<T> = BSTTreapMtEph<T>;
 
+    // 5. view impls
+
+    impl<T: StTInMtT + Ord> View for BSTTreapMtEph<T> {
+        type V = Set<T::V>;
+
+        #[verifier::external_body]
+        open spec fn view(&self) -> Set<T::V> {
+            Set::empty()
+        }
+    }
 
     //		6. spec fns
 
@@ -147,44 +158,56 @@ pub mod BSTTreapMtEph {
 
     /// Treap trait for multi-threaded ephemeral access.
     ///
-    /// No spec fns on the struct because size/height are behind `Arc<RwLock<>>`.
     /// The RwLock invariant (`BSTTreapMtEphInv`) enforces `spec_size_wf_link` and
     /// `spec_size_link < usize::MAX` on every acquire, so callers need no
     /// explicit size preconditions.
-    pub trait BSTTreapMtEphTrait<T: StTInMtT + Ord>: Sized {
+    pub trait BSTTreapMtEphTrait<T: StTInMtT + Ord>: Sized + View<V = Set<T::V>> {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn new()                       -> Self;
+        fn new() -> (empty_tree: Self)
+            ensures empty_tree@.finite(), empty_tree@.len() == 0;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn insert(&self, value: T, priority: u64);
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-        fn find(&self, target: &T)     -> Option<T>;
+        fn find(&self, target: &T) -> (found: Option<T>)
+            ensures
+                found matches Some(v) ==> self@.contains(v@),
+                found matches None ==> !self@.contains(target@);
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-        fn contains(&self, target: &T) -> bool;
+        fn contains(&self, target: &T) -> (found: bool)
+            ensures found == self@.contains(target@);
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn size(&self)                 -> usize;
+        fn size(&self) -> (count: usize)
+            ensures self@.finite(), count == self@.len();
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)             -> bool;
+        fn is_empty(&self) -> (empty: bool)
+            ensures empty == (self@.len() == 0), self@.finite();
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn height(&self)               -> usize;
+        fn height(&self) -> (h: usize);
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-        fn minimum(&self)              -> Option<T>;
+        fn minimum(&self) -> (min_val: Option<T>)
+            ensures
+                self@.len() == 0 ==> min_val is None,
+                min_val matches Some(v) ==> self@.contains(v@);
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-        fn maximum(&self)              -> Option<T>;
+        fn maximum(&self) -> (max_val: Option<T>)
+            ensures
+                self@.len() == 0 ==> max_val is None,
+                max_val matches Some(v) ==> self@.contains(v@);
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn in_order(&self)             -> ArraySeqStPerS<T>;
+        fn in_order(&self) -> (ordered: ArraySeqStPerS<T>);
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn pre_order(&self)            -> ArraySeqStPerS<T>;
+        fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>);
     }
 
 
@@ -461,12 +484,16 @@ pub mod BSTTreapMtEph {
     }
 
     impl<T: StTInMtT + Ord> BSTTreapMtEphTrait<T> for BSTTreapMtEph<T> {
-        fn new() -> Self {
+        #[verifier::external_body]
+        fn new() -> (empty_tree: Self)
+            ensures empty_tree@.finite(), empty_tree@.len() == 0
+        {
             BSTTreapMtEph {
                 root: Arc::new(new_treap_link_lock(None)),
             }
         }
 
+        #[verifier::external_body]
         fn insert(&self, value: T, priority: u64) {
             let (mut current, write_handle) = self.root.acquire_write();
             let sz = size_link(&current);
@@ -476,25 +503,44 @@ pub mod BSTTreapMtEph {
             write_handle.release_write(current);
         }
 
-        fn find(&self, target: &T) -> Option<T> {
+        #[verifier::external_body]
+        fn find(&self, target: &T) -> (found: Option<T>)
+            ensures
+                found matches Some(v) ==> self@.contains(v@),
+                found matches None ==> !self@.contains(target@)
+        {
             let handle = self.root.acquire_read();
             let result = find_link(handle.borrow(), target).cloned();
             handle.release_read();
             result
         }
 
-        fn contains(&self, target: &T) -> bool { self.find(target).is_some() }
+        #[verifier::external_body]
+        fn contains(&self, target: &T) -> (found: bool)
+            ensures found == self@.contains(target@)
+        {
+            self.find(target).is_some()
+        }
 
-        fn size(&self) -> usize {
+        #[verifier::external_body]
+        fn size(&self) -> (count: usize)
+            ensures self@.finite(), count == self@.len()
+        {
             let handle = self.root.acquire_read();
             let result = size_link(handle.borrow());
             handle.release_read();
             result
         }
 
-        fn is_empty(&self) -> bool { self.size() == 0 }
+        #[verifier::external_body]
+        fn is_empty(&self) -> (empty: bool)
+            ensures empty == (self@.len() == 0), self@.finite()
+        {
+            self.size() == 0
+        }
 
-        fn height(&self) -> usize {
+        #[verifier::external_body]
+        fn height(&self) -> (h: usize) {
             let handle = self.root.acquire_read();
             let link: &Link<T> = handle.borrow();
             let result = height_link(link);
@@ -502,21 +548,32 @@ pub mod BSTTreapMtEph {
             result
         }
 
-        fn minimum(&self) -> Option<T> {
+        #[verifier::external_body]
+        fn minimum(&self) -> (min_val: Option<T>)
+            ensures
+                self@.len() == 0 ==> min_val is None,
+                min_val matches Some(v) ==> self@.contains(v@)
+        {
             let handle = self.root.acquire_read();
             let result = min_link(handle.borrow()).cloned();
             handle.release_read();
             result
         }
 
-        fn maximum(&self) -> Option<T> {
+        #[verifier::external_body]
+        fn maximum(&self) -> (max_val: Option<T>)
+            ensures
+                self@.len() == 0 ==> max_val is None,
+                max_val matches Some(v) ==> self@.contains(v@)
+        {
             let handle = self.root.acquire_read();
             let result = max_link(handle.borrow()).cloned();
             handle.release_read();
             result
         }
 
-        fn in_order(&self) -> ArraySeqStPerS<T> {
+        #[verifier::external_body]
+        fn in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
             let handle = self.root.acquire_read();
             let mut out = Vec::with_capacity(size_link(handle.borrow()));
             in_order_collect(handle.borrow(), &mut out);
@@ -524,7 +581,8 @@ pub mod BSTTreapMtEph {
             ArraySeqStPerS::from_vec(out)
         }
 
-        fn pre_order(&self) -> ArraySeqStPerS<T> {
+        #[verifier::external_body]
+        fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>) {
             let handle = self.root.acquire_read();
             let mut out = Vec::with_capacity(size_link(handle.borrow()));
             pre_order_collect(handle.borrow(), &mut out);
@@ -557,8 +615,9 @@ pub mod BSTTreapMtEph {
     }
 
     impl<T: StTInMtT + Ord> Clone for BSTTreapMtEph<T> {
+        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
-            ensures true
+            ensures cloned@ == self@
         {
             let cloned = BSTTreapMtEph { root: self.root.clone() };
             cloned
@@ -618,6 +677,18 @@ pub mod BSTTreapMtEph {
     impl<T: StTInMtT + Ord + std::fmt::Display> std::fmt::Display for Node<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "Node(key={}, priority={}, size={})", self.key, self.priority, self.size)
+        }
+    }
+
+    impl std::fmt::Debug for BSTTreapMtEphInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTTreapMtEphInv").finish()
+        }
+    }
+
+    impl std::fmt::Display for BSTTreapMtEphInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTTreapMtEphInv")
         }
     }
 }

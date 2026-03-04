@@ -22,15 +22,19 @@ pub mod BSTSetTreapMtEph {
 
     pub type BSTSetTreapMt<T> = BSTSetTreapMtEph<T>;
 
-    } // verus!
-
-    // 6. helper functions
+    // 11. derive impls in verus!
 
     impl<T: MtKey> Clone for BSTSetTreapMtEph<T> {
-        fn clone(&self) -> Self {
+        fn clone(&self) -> (cloned: Self)
+            ensures true
+        {
             BSTSetTreapMtEph { tree: self.tree.clone() }
         }
     }
+
+    } // verus!
+
+    // 6. helper functions
 
     fn minimum_inner<T: MtKey + 'static>(tree: &ParamTreap<T>) -> Option<T> {
         match tree.expose_with_priority() {
@@ -190,7 +194,13 @@ pub mod BSTSetTreapMtEph {
 
     impl<T: MtKey + fmt::Debug> fmt::Debug for BSTSetTreapMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("BSTSetTreapMtEph").finish()
+            write!(f, "BSTSetTreapMtEph(size: {})", self.size())
+        }
+    }
+
+    impl<T: MtKey> fmt::Display for BSTSetTreapMtEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTSetTreapMtEph(size: {})", self.size())
         }
     }
 }

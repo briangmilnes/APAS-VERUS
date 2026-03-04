@@ -11,8 +11,8 @@ pub mod OrderedSetMtEph {
     // 8. traits
     // 9. impls
     // 11. derive impls in verus!
-    // 12. macros
     // 13. derive impls outside verus!
+    // 12. macros
 
     use vstd::prelude::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
@@ -394,6 +394,22 @@ broadcast use {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    use std::fmt;
+
+    impl<T: MtKey + 'static> fmt::Debug for OrderedSetMtEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetMtEph(size: {})", self.size())
+        }
+    }
+
+    impl<T: MtKey + 'static> fmt::Display for OrderedSetMtEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetMtEph(size: {})", self.size())
+        }
+    }
 
     // 12. macros
 

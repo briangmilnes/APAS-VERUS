@@ -92,38 +92,70 @@ broadcast use {
             ensures constructed@.finite();
 
         // Ordering operations (ADT 43.1)
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// ADT 43.1 first(A) = min[|A|]. Work Θ(log n), Span Θ(log n).
         fn first(&self) -> (first: Option<T>)
-            ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+            ensures
+                self@.finite(),
+                self@.len() == 0 <==> first matches None,
+                first matches Some(v) ==> self@.contains(v@);
+        /// ADT 43.1 last(A) = max[|A|]. Work Θ(log n), Span Θ(log n).
         fn last(&self) -> (last: Option<T>)
-            ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+            ensures
+                self@.finite(),
+                self@.len() == 0 <==> last matches None,
+                last matches Some(v) ==> self@.contains(v@);
+        /// ADT 43.1 previous(A, k) = max{k' in A | k' < k}. Work Θ(log n), Span Θ(log n).
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
-            ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+            ensures
+                self@.finite(),
+                predecessor matches Some(v) ==> self@.contains(v@);
+        /// ADT 43.1 next(A, k) = min{k' in A | k' > k}. Work Θ(log n), Span Θ(log n).
         fn next(&self, k: &T) -> (successor: Option<T>)
-            ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+            ensures
+                self@.finite(),
+                successor matches Some(v) ==> self@.contains(v@);
+        /// ADT 43.1 split(A, k) = ({k' < k}, k in A, {k' > k}). Work Θ(log n), Span Θ(log n).
         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
-            ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log(|self| + |other|)), Span Θ(log(|self| + |other|)), Parallelism Θ(1)
+            ensures
+                self@.finite(),
+                old(self)@.finite(),
+                split.1 == old(self)@.contains(k@),
+                split.0@.finite(),
+                split.2@.finite(),
+                split.0@.subset_of(old(self)@),
+                split.2@.subset_of(old(self)@),
+                split.0@.disjoint(split.2@);
+        /// ADT 43.1 join(A1, A2) = A1 union A2. Work Θ(log(|left|+|right|)), Span Θ(log(|left|+|right|)).
         fn join(&mut self, other: Self)
             ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// ADT 43.1 getRange(A, k1, k2) = {k in A | k1 <= k <= k2}. Work Θ(log n), Span Θ(log n).
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
-            ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+            ensures
+                self@.finite(),
+                range@.finite(),
+                range@.subset_of(self@);
+        /// ADT 43.1 rank(A, k) = |{k' in A | k' < k}|. Work Θ(log n), Span Θ(log n).
         fn rank(&self, k: &T) -> (rank: usize)
-            ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+            ensures
+                self@.finite(),
+                rank <= self@.len();
+        /// ADT 43.1 select(A, i) = k in A such that rank(A, k) = i. Work Θ(log n), Span Θ(log n).
         fn select(&self, i: usize) -> (selected: Option<T>)
-            ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+            ensures
+                self@.finite(),
+                i >= self@.len() ==> selected matches None,
+                selected matches Some(v) ==> self@.contains(v@);
+        /// ADT 43.1 splitRank(A, i). Work Θ(log n), Span Θ(log n).
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
-            ensures self@.finite();
+            ensures
+                self@.finite(),
+                old(self)@.finite(),
+                split.0@.finite(),
+                split.1@.finite(),
+                split.0@.subset_of(old(self)@),
+                split.1@.subset_of(old(self)@);
     }
 
     // 9. impls
@@ -219,7 +251,10 @@ broadcast use {
 
         #[verifier::external_body]
         fn first(&self) -> (first: Option<T>)
-            ensures self@.finite()
+            ensures
+                self@.finite(),
+                self@.len() == 0 <==> first matches None,
+                first matches Some(v) ==> self@.contains(v@),
         {
             if self.size() == 0 {
                 None
@@ -231,7 +266,10 @@ broadcast use {
 
         #[verifier::external_body]
         fn last(&self) -> (last: Option<T>)
-            ensures self@.finite()
+            ensures
+                self@.finite(),
+                self@.len() == 0 <==> last matches None,
+                last matches Some(v) ==> self@.contains(v@),
         {
             let size = self.size();
             if size == 0 {
@@ -244,7 +282,9 @@ broadcast use {
 
         #[verifier::external_body]
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
-            ensures self@.finite()
+            ensures
+                self@.finite(),
+                predecessor matches Some(v) ==> self@.contains(v@),
         {
             let seq = self.to_seq();
             let size = seq.length();
@@ -260,7 +300,9 @@ broadcast use {
 
         #[verifier::external_body]
         fn next(&self, k: &T) -> (successor: Option<T>)
-            ensures self@.finite()
+            ensures
+                self@.finite(),
+                successor matches Some(v) ==> self@.contains(v@),
         {
             let seq = self.to_seq();
             let size = seq.length();
@@ -277,7 +319,15 @@ broadcast use {
         #[verifier::external_body]
         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
-            ensures self@.finite()
+            ensures
+                self@.finite(),
+                old(self)@.finite(),
+                split.1 == old(self)@.contains(k@),
+                split.0@.finite(),
+                split.2@.finite(),
+                split.0@.subset_of(old(self)@),
+                split.2@.subset_of(old(self)@),
+                split.0@.disjoint(split.2@),
         {
             let seq = self.to_seq();
 
@@ -311,7 +361,10 @@ broadcast use {
 
         #[verifier::external_body]
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
-            ensures self@.finite()
+            ensures
+                self@.finite(),
+                range@.finite(),
+                range@.subset_of(self@),
         {
             let seq = self.to_seq();
 
@@ -331,7 +384,9 @@ broadcast use {
 
         #[verifier::external_body]
         fn rank(&self, k: &T) -> (rank: usize)
-            ensures self@.finite()
+            ensures
+                self@.finite(),
+                rank <= self@.len(),
         {
             let seq = self.to_seq();
             let size = seq.length();
@@ -350,7 +405,10 @@ broadcast use {
 
         #[verifier::external_body]
         fn select(&self, i: usize) -> (selected: Option<T>)
-            ensures self@.finite()
+            ensures
+                self@.finite(),
+                i >= self@.len() ==> selected matches None,
+                selected matches Some(v) ==> self@.contains(v@),
         {
             let seq = self.to_seq();
             if i >= seq.length() {
@@ -363,7 +421,13 @@ broadcast use {
         #[verifier::external_body]
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
-            ensures self@.finite()
+            ensures
+                self@.finite(),
+                old(self)@.finite(),
+                split.0@.finite(),
+                split.1@.finite(),
+                split.0@.subset_of(old(self)@),
+                split.1@.subset_of(old(self)@),
         {
             let seq = self.to_seq();
             let size = seq.length();
@@ -591,6 +655,18 @@ broadcast use {
             for i in 0..seq.length() {
                 if i > 0 { write!(f, ", ")?; }
                 write!(f, "{:?}", seq.nth(i))?;
+            }
+            write!(f, "}}")
+        }
+    }
+
+    impl<T: StT + Ord> fmt::Display for OrderedSetStEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "{{")?;
+            let seq = self.to_seq();
+            for i in 0..seq.length() {
+                if i > 0 { write!(f, ", ")?; }
+                write!(f, "{}", seq.nth(i))?;
             }
             write!(f, "}}")
         }

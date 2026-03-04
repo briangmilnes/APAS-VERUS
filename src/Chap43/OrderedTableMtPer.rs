@@ -371,7 +371,21 @@ broadcast use {
 
     // 13. derive impls outside verus!
 
+    use std::fmt;
+
     impl<K: MtKey + 'static, V: MtKey + 'static> Default for OrderedTableMtPer<K, V> {
         fn default() -> Self { Self::empty() }
+    }
+
+    impl<K: MtKey + 'static, V: MtKey + 'static> fmt::Debug for OrderedTableMtPer<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableMtPer(size: {})", self.size())
+        }
+    }
+
+    impl<K: MtKey + 'static, V: MtKey + 'static> fmt::Display for OrderedTableMtPer<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableMtPer(size: {})", self.size())
+        }
     }
 }

@@ -6,8 +6,9 @@
 //	1. module
 //	4. type definitions
 //	6. spec fns
-//	8. traits
 //	9. impls
+//	11. derive impls in verus!
+//	8. traits
 //	12. macros
 //	13. derive impls outside verus!
 
@@ -80,21 +81,20 @@ pub mod BSTParaTreapMtEph {
         RwLock::new(val, Ghost(BSTParaTreapMtEphInv))
     }
 
-    } // verus!
+    //		11. derive impls in verus!
 
-    //		13. derive impls outside verus!
-
-    impl<T: MtKey> Clone for Exposed<T> {
-        fn clone(&self) -> Self {
-            match self {
-                Exposed::Leaf => Exposed::Leaf,
-                Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
-            }
+    impl<T: MtKey> Clone for ParamTreap<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures true
+        {
+            ParamTreap { root: self.root.clone() }
         }
     }
 
     impl<T: MtKey> Clone for NodeInner<T> {
-        fn clone(&self) -> Self {
+        fn clone(&self) -> (cloned: Self)
+            ensures true
+        {
             NodeInner {
                 key: self.key.clone(),
                 priority: self.priority,
@@ -105,11 +105,18 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    impl<T: MtKey> Clone for ParamTreap<T> {
-        fn clone(&self) -> Self {
-            ParamTreap { root: self.root.clone() }
+    impl<T: MtKey> Clone for Exposed<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures true
+        {
+            match self {
+                Exposed::Leaf => Exposed::Leaf,
+                Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
+            }
         }
     }
+
+    } // verus!
 
     //		9. impls
 
@@ -539,5 +546,66 @@ pub mod BSTParaTreapMtEph {
             $( __tree.insert($x); )*
             __tree
         }};
+    }
+
+    //		13. derive impls outside verus!
+
+    use std::fmt;
+
+    impl fmt::Debug for BSTParaTreapMtEphInv {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("BSTParaTreapMtEphInv").finish()
+        }
+    }
+
+    impl fmt::Display for BSTParaTreapMtEphInv {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTParaTreapMtEphInv")
+        }
+    }
+
+    impl<T: MtKey> fmt::Debug for Exposed<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match self {
+                Exposed::Leaf => write!(f, "Exposed::Leaf"),
+                Exposed::Node(_, _, _) => write!(f, "Exposed::Node(...)"),
+            }
+        }
+    }
+
+    impl<T: MtKey> fmt::Display for Exposed<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match self {
+                Exposed::Leaf => write!(f, "Leaf"),
+                Exposed::Node(_, _, _) => write!(f, "Node(...)"),
+            }
+        }
+    }
+
+    impl<T: MtKey> fmt::Debug for NodeInner<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("NodeInner")
+                .field("priority", &self.priority)
+                .field("size", &self.size)
+                .finish()
+        }
+    }
+
+    impl<T: MtKey> fmt::Display for NodeInner<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "NodeInner(priority={}, size={})", self.priority, self.size)
+        }
+    }
+
+    impl<T: MtKey> fmt::Debug for ParamTreap<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "ParamTreap(size: {})", self.size())
+        }
+    }
+
+    impl<T: MtKey> fmt::Display for ParamTreap<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "ParamTreap(size: {})", self.size())
+        }
     }
 }

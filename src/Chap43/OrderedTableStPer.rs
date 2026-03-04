@@ -237,7 +237,7 @@ pub mod OrderedTableStPer {
             let base = self.base_table.delete(k);
             proof {
                 lemma_entries_to_map_finite::<K::V, V::V>(base.entries@);
-                assume(spec_entries_to_map(base.entries@) == spec_entries_to_map(self.base_table.entries@).remove(k@));
+                assert(base@ =~= self.base_table@.remove(k@));
             }
             OrderedTableStPer { base_table: base }
         }
