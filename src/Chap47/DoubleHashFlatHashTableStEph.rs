@@ -189,4 +189,18 @@ pub mod DoubleHashFlatHashTableStEph {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for DoubleHashFlatHashTableStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "DoubleHashFlatHashTableStEph")
+        }
+    }
+
+    impl std::fmt::Display for DoubleHashFlatHashTableStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "DoubleHashFlatHashTableStEph")
+        }
+    }
 }

@@ -154,4 +154,18 @@ pub mod LinProbFlatHashTableStEph {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for LinProbFlatHashTableStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "LinProbFlatHashTableStEph")
+        }
+    }
+
+    impl std::fmt::Display for LinProbFlatHashTableStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "LinProbFlatHashTableStEph")
+        }
+    }
 }

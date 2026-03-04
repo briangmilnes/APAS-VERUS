@@ -9,6 +9,7 @@ pub mod QuadProbFlatHashTableStEph {
     // 2. imports
     // 4. type definitions (inside verus!)
     // 9. impls (inside verus!)
+    // 13. derive impls outside verus!
 
     // 2. imports
     use std::marker::PhantomData;
@@ -158,4 +159,18 @@ pub mod QuadProbFlatHashTableStEph {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for QuadProbFlatHashTableStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "QuadProbFlatHashTableStEph")
+        }
+    }
+
+    impl std::fmt::Display for QuadProbFlatHashTableStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "QuadProbFlatHashTableStEph")
+        }
+    }
 }

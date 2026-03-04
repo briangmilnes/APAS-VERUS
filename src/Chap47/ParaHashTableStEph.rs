@@ -114,7 +114,6 @@ pub mod ParaHashTableStEph {
         /// Accessor for metrics field.
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
-        #[verifier::external_body]
         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics) { &table.metrics }
 
         /// Returns the load (number of entries) and size (table capacity).
@@ -122,8 +121,8 @@ pub mod ParaHashTableStEph {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads and one division.
         #[verifier::external_body]
-        fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (result: LoadAndSize)
-            ensures result.size == table.current_size,
+        fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
+            ensures load_and_size.size == table.current_size,
         {
             let load_factor = if table.current_size == 0 {
                 0.0
@@ -141,12 +140,12 @@ pub mod ParaHashTableStEph {
         /// - APAS: Work O(n + m + m'), Span O(n + m + m') where n is number of elements,
         ///   m is old size, m' is new size.
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
-        fn resize(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> (result: HashTable<Key, Value, Entry, Metrics, H>)
+        fn resize(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> (resized: HashTable<Key, Value, Entry, Metrics, H>)
             requires
                 new_size > 0,
             ensures
-                result.current_size == new_size,
-                result.table@.len() == new_size as int;
+                resized.current_size == new_size,
+                resized.table@.len() == new_size as int;
     }
 
     } // verus!
@@ -159,6 +158,32 @@ pub mod ParaHashTableStEph {
                 .field("load", &self.load)
                 .field("size", &self.size)
                 .finish()
+        }
+    }
+
+    impl std::fmt::Display for LoadAndSize {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "LoadAndSize(load={}, size={})", self.load, self.size)
+        }
+    }
+
+    impl<Key, Value, Entry: std::fmt::Debug, Metrics: std::fmt::Debug, H> std::fmt::Debug
+        for HashTable<Key, Value, Entry, Metrics, H>
+    {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("HashTable")
+                .field("current_size", &self.current_size)
+                .field("num_elements", &self.num_elements)
+                .field("initial_size", &self.initial_size)
+                .finish()
+        }
+    }
+
+    impl<Key, Value, Entry: std::fmt::Debug, Metrics: std::fmt::Debug, H> std::fmt::Display
+        for HashTable<Key, Value, Entry, Metrics, H>
+    {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "HashTable(size={}, elements={})", self.current_size, self.num_elements)
         }
     }
 }

@@ -10,6 +10,7 @@ pub mod VecChainedHashTableStEph {
     // 4. type definitions (inside verus!)
     // 7. proof fns (inside verus!)
     // 9. impls (inside verus!: EntryTrait for Vec, ParaHashTableStEphTrait, ChainedHashTable)
+    // 13. derive impls outside verus!
 
     // 2. imports
     use std::marker::PhantomData;
@@ -35,11 +36,15 @@ pub mod VecChainedHashTableStEph {
         impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for Vec<(Key, Value)> {
             /// - APAS: Work O(1), Span O(1).
             /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty Vec construction.
-            fn new() -> (entry: Self) { Vec::new() }
+            fn new() -> (entry: Self)
+                ensures entry@.len() == 0,
+            { Vec::new() }
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(n) worst case, Span O(n) — linear scan for duplicate key, n = chain length.
-            fn insert(&mut self, key: Key, value: Value) {
+            fn insert(&mut self, key: Key, value: Value)
+                ensures self@.len() >= 1,
+            {
                 let mut i: usize = 0;
                 while i < self.len()
                     decreases self.len() - i,
@@ -156,6 +161,20 @@ pub mod VecChainedHashTableStEph {
             fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> usize {
                 (table.hash_fn)(key, table.current_size)
             }
+        }
+    }
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for VecChainedHashTableStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "VecChainedHashTableStEph")
+        }
+    }
+
+    impl std::fmt::Display for VecChainedHashTableStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "VecChainedHashTableStEph")
         }
     }
 }

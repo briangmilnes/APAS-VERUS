@@ -212,76 +212,6 @@ pub mod StructChainedHashTable {
             }
         }
 
-        // 11. derive impls in verus!
-
-        impl<Key: Clone, Value: Clone> Clone for Node<Key, Value> {
-            fn clone(&self) -> (cloned: Self)
-                ensures cloned == *self
-                decreases self
-            {
-                let cloned = Node {
-                    key: self.key.clone(),
-                    value: self.value.clone(),
-                    next: match &self.next {
-                        None => None,
-                        Some(b) => Some(Box::new((**b).clone())),
-                    },
-                };
-                proof { accept(cloned == *self); }
-                cloned
-            }
-        }
-
-        impl<Key: PartialEq, Value: PartialEq> core::cmp::PartialEq for Node<Key, Value> {
-            fn eq(&self, other: &Self) -> (equal: bool)
-                ensures equal == (*self == *other)
-                decreases self, other
-            {
-                let equal = self.key == other.key
-                    && self.value == other.value
-                    && match (&self.next, &other.next) {
-                        (None, None) => true,
-                        (Some(a), Some(b)) => (**a) == (**b),
-                        _ => false,
-                    };
-                proof { accept(equal == (*self == *other)); }
-                equal
-            }
-        }
-
-        impl<Key: PartialEq, Value: PartialEq> core::cmp::Eq for Node<Key, Value> {}
-
-        impl<Key: Clone, Value: Clone> Clone for ChainList<Key, Value> {
-            fn clone(&self) -> (cloned: Self)
-                ensures cloned == *self
-            {
-                let cloned = ChainList {
-                    head: match &self.head {
-                        None => None,
-                        Some(b) => Some(Box::new((**b).clone())),
-                    },
-                };
-                proof { accept(cloned == *self); }
-                cloned
-            }
-        }
-
-        impl<Key: PartialEq, Value: PartialEq> core::cmp::PartialEq for ChainList<Key, Value> {
-            fn eq(&self, other: &Self) -> (equal: bool)
-                ensures equal == (*self == *other)
-            {
-                let equal = match (&self.head, &other.head) {
-                    (None, None) => true,
-                    (Some(a), Some(b)) => (**a) == (**b),
-                    _ => false,
-                };
-                proof { accept(equal == (*self == *other)); }
-                equal
-            }
-        }
-
-        impl<Key: PartialEq, Value: PartialEq> core::cmp::Eq for ChainList<Key, Value> {}
-
         // 9. impls (ParaHashTableStEphTrait, ChainedHashTable)
 
         impl<Key: StT, Value: StT, Metrics: Default, H: Fn(&Key, usize) -> usize + Clone>
@@ -355,6 +285,76 @@ pub mod StructChainedHashTable {
                 (table.hash_fn)(key, table.current_size)
             }
         }
+
+        // 11. derive impls in verus!
+
+        impl<Key: Clone, Value: Clone> Clone for Node<Key, Value> {
+            fn clone(&self) -> (cloned: Self)
+                ensures cloned == *self
+                decreases self
+            {
+                let cloned = Node {
+                    key: self.key.clone(),
+                    value: self.value.clone(),
+                    next: match &self.next {
+                        None => None,
+                        Some(b) => Some(Box::new((**b).clone())),
+                    },
+                };
+                proof { accept(cloned == *self); }
+                cloned
+            }
+        }
+
+        impl<Key: PartialEq, Value: PartialEq> core::cmp::PartialEq for Node<Key, Value> {
+            fn eq(&self, other: &Self) -> (equal: bool)
+                ensures equal == (*self == *other)
+                decreases self, other
+            {
+                let equal = self.key == other.key
+                    && self.value == other.value
+                    && match (&self.next, &other.next) {
+                        (None, None) => true,
+                        (Some(a), Some(b)) => (**a) == (**b),
+                        _ => false,
+                    };
+                proof { accept(equal == (*self == *other)); }
+                equal
+            }
+        }
+
+        impl<Key: PartialEq, Value: PartialEq> core::cmp::Eq for Node<Key, Value> {}
+
+        impl<Key: Clone, Value: Clone> Clone for ChainList<Key, Value> {
+            fn clone(&self) -> (cloned: Self)
+                ensures cloned == *self
+            {
+                let cloned = ChainList {
+                    head: match &self.head {
+                        None => None,
+                        Some(b) => Some(Box::new((**b).clone())),
+                    },
+                };
+                proof { accept(cloned == *self); }
+                cloned
+            }
+        }
+
+        impl<Key: PartialEq, Value: PartialEq> core::cmp::PartialEq for ChainList<Key, Value> {
+            fn eq(&self, other: &Self) -> (equal: bool)
+                ensures equal == (*self == *other)
+            {
+                let equal = match (&self.head, &other.head) {
+                    (None, None) => true,
+                    (Some(a), Some(b)) => (**a) == (**b),
+                    _ => false,
+                };
+                proof { accept(equal == (*self == *other)); }
+                equal
+            }
+        }
+
+        impl<Key: PartialEq, Value: PartialEq> core::cmp::Eq for ChainList<Key, Value> {}
     }
 
     // 13. derive impls outside verus!
@@ -369,11 +369,35 @@ pub mod StructChainedHashTable {
         }
     }
 
+    impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Display for Node<Key, Value> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{:?}", self)
+        }
+    }
+
     impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Debug for ChainList<Key, Value> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("ChainList")
                 .field("head", &self.head)
                 .finish()
+        }
+    }
+
+    impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Display for ChainList<Key, Value> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{:?}", self)
+        }
+    }
+
+    impl std::fmt::Debug for StructChainedHashTableStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "StructChainedHashTableStEph")
+        }
+    }
+
+    impl std::fmt::Display for StructChainedHashTableStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "StructChainedHashTableStEph")
         }
     }
 }

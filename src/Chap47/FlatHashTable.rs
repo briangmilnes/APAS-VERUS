@@ -7,10 +7,10 @@ pub mod FlatHashTable {
     // Table of Contents
     // 1. module
     // 2. imports
-    // 4. type definitions (inside verus!)
+    // 4. type definitions (inside verus!: FlatEntry)
+    // 8. traits (inside verus!: FlatHashTable)
     // 9. impls (inside verus!: EntryTrait for FlatEntry)
     // 11. derive impls in verus!
-    // 8. traits (inside verus!: FlatHashTable)
     // 13. derive impls outside verus!
 
     // 2. imports
@@ -32,6 +32,68 @@ pub mod FlatHashTable {
         Occupied(Key, Value),
         /// Deleted slot - previously occupied, now available for insertion
         Deleted,
+    }
+
+    // 8. traits
+
+    /// Flat Hash Table trait - extends ParaHashTableStEphTrait.
+    /// Uses open addressing (linear probing, quadratic probing, double hashing).
+    /// Entry type is parametric - can be FlatEntry or any type implementing EntryTrait.
+    pub trait FlatHashTable<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default, H: Fn(&Key, usize) -> usize + Clone>:
+        ParaHashTableStEphTrait<Key, Value, Entry, Metrics, H>
+    {
+        /// Probes for the next slot in the sequence.
+        /// - APAS: Work O(1), Span O(1).
+        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on probing strategy.
+        fn probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize)
+            requires
+                table.current_size > 0,
+            ensures
+                slot < table.current_size;
+
+        /// Finds the first available slot (Empty or Deleted) for insertion.
+        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on probing strategy.
+        fn find_slot(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (slot: usize)
+            requires
+                table.current_size > 0,
+            ensures
+                slot < table.current_size;
+
+        /// Inserts using linear probing as default.
+        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — delegates to find_slot then O(1) write.
+        #[verifier::external_body]
+        fn insert_with_probe(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
+            requires
+                old(table).current_size > 0,
+                old(table).table@.len() == old(table).current_size as int,
+        {
+            let slot = Self::find_slot(table, &key);
+            if slot < table.table.len() {
+                table.table[slot].insert(key, value);
+            }
+        }
+
+        /// Looks up using probe sequence.
+        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — iterates probe sequence until found or empty.
+        #[verifier::external_body]
+        fn lookup_with_probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value>
+            requires
+                table.current_size > 0,
+                table.table@.len() == table.current_size as int,
+        {
+            for attempt in 0..table.current_size {
+                let slot = Self::probe(table, key, attempt);
+                if slot < table.table.len() {
+                    if let Some(val) = table.table[slot].lookup(key) {
+                        return Some(val);
+                    }
+                }
+            }
+            None
+        }
     }
 
     // 9. impls
@@ -97,60 +159,6 @@ pub mod FlatHashTable {
         }
     }
 
-    // 8. traits
-
-    /// Flat Hash Table trait - extends ParaHashTableStEphTrait.
-    /// Uses open addressing (linear probing, quadratic probing, double hashing).
-    /// Entry type is parametric - can be FlatEntry or any type implementing EntryTrait.
-    pub trait FlatHashTable<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default, H: Fn(&Key, usize) -> usize + Clone>:
-        ParaHashTableStEphTrait<Key, Value, Entry, Metrics, H>
-    {
-        /// Probes for the next slot in the sequence.
-        /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on probing strategy.
-        fn probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize)
-            requires
-                table.current_size > 0,
-            ensures
-                slot < table.current_size;
-
-        /// Finds the first available slot (Empty or Deleted) for insertion.
-        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on probing strategy.
-        fn find_slot(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (slot: usize)
-            requires
-                table.current_size > 0,
-            ensures
-                slot < table.current_size;
-
-        /// Inserts using linear probing as default.
-        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — delegates to find_slot then O(1) write.
-        #[verifier::external_body]
-        fn insert_with_probe(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value) {
-            let slot = Self::find_slot(table, &key);
-            if slot < table.table.len() {
-                table.table[slot].insert(key, value);
-            }
-        }
-
-        /// Looks up using probe sequence.
-        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — iterates probe sequence until found or empty.
-        #[verifier::external_body]
-        fn lookup_with_probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value> {
-            for attempt in 0..table.current_size {
-                let slot = Self::probe(table, key, attempt);
-                if slot < table.table.len() {
-                    if let Some(val) = table.table[slot].lookup(key) {
-                        return Some(val);
-                    }
-                }
-            }
-            None
-        }
-    }
-
     } // verus!
 
     // 13. derive impls outside verus!
@@ -162,6 +170,12 @@ pub mod FlatHashTable {
                 FlatEntry::Occupied(k, v) => f.debug_tuple("Occupied").field(k).field(v).finish(),
                 FlatEntry::Deleted => write!(f, "Deleted"),
             }
+        }
+    }
+
+    impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Display for FlatEntry<Key, Value> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{:?}", self)
         }
     }
 }
