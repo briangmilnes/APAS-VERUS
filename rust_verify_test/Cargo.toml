@@ -130,3 +130,16 @@ path = "tests/Chap54/ProveBFSStEph.rs"
 [[test]]
 name = "ProveBFSMtEph"
 path = "tests/Chap54/ProveBFSMtEph.rs"
+
+# Standards proof tests
+[[test]]
+name = "ProveViewStandard"
+path = "tests/standards/ProveViewStandard.rs"
+
+[[test]]
+name = "ProveDeepViewStandard"
+path = "tests/standards/ProveDeepViewStandard.rs"
+
+[[test]]
+name = "ProveIteratorsStandard"
+path = "tests/standards/ProveIteratorsStandard.rs"

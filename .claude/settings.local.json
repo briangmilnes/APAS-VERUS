@@ -73,7 +73,11 @@
       "Edit(~/projects/APAS-VERUS*/.claude/**)",
       "Glob(~/projects/**)",
       "Grep(~/projects/**)",
-      "WebFetch(domain:verus-lang.github.io)"
+      "WebFetch(domain:verus-lang.github.io)",
+      "Bash(/home/milnes/projects/verusfmt/target/release/verusfmt:*)",
+      "Bash(rustfmt:*)",
+      "Bash(vargo build:*)",
+      "Bash(comm:*)"
     ]
   }
 }

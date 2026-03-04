@@ -214,6 +214,16 @@ pub mod experiments {
 //    pub mod external_body_accept_hole;
 }
 
+pub mod standards {
+    pub mod mod_standard;
+    pub mod view_standard;
+    pub mod deep_view_standard;
+    pub mod iterators_standard;
+    pub mod mut_standard;
+    pub mod multi_struct_standard;
+    pub mod table_of_contents_standard;
+}
+
 pub mod vstdplus {
     pub mod accept;
     pub mod pervasives_plus;

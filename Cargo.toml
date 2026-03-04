@@ -274,6 +274,35 @@ path = "tests/Chap27/TestScanContractStEph.rs"
 name = "TestScanContractMtEph"
 path = "tests/Chap27/TestScanContractMtEph.rs"
 
+# Standards tests
+[[test]]
+name = "TestModStandard"
+path = "tests/standards/TestModStandard.rs"
+
+[[test]]
+name = "TestViewStandard"
+path = "tests/standards/TestViewStandard.rs"
+
+[[test]]
+name = "TestDeepViewStandard"
+path = "tests/standards/TestDeepViewStandard.rs"
+
+[[test]]
+name = "TestIteratorsStandard"
+path = "tests/standards/TestIteratorsStandard.rs"
+
+[[test]]
+name = "TestMutStandard"
+path = "tests/standards/TestMutStandard.rs"
+
+[[test]]
+name = "TestMultiStructStandard"
+path = "tests/standards/TestMultiStructStandard.rs"
+
+[[test]]
+name = "TestTableOfContentsStandard"
+path = "tests/standards/TestTableOfContentsStandard.rs"
+
 # Experiments removed - use verus-proof-time-testing project instead
 # [[test]]
 # name = "test_verify_harness"
