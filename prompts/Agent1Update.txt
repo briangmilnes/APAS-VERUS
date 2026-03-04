@@ -6,7 +6,9 @@ REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs.
 
 Do not review-against-prose.md to start, it's too costly for this.
 
-src/Chap42
+You are working in src/Chap43/. 
+
+Your analyses have been updated.
 It validates, rtt and ptt fine so don't start there. 
 Check verusification state, the hole checker log and style logs are up to date.
 Does the chapter say these are multithreaded?

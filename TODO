@@ -25,19 +25,24 @@ src/Chap19/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap21/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap23/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap26/analyses/veracity-review-verus-proof-holes.log - clean
+src/Chap27/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap28/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap30/analyses/veracity-review-verus-proof-holes.log - clean but it's stub.
 src/Chap35/analyses/veracity-review-verus-proof-holes.log - clean. 
 src/Chap44/analyses/veracity-review-verus-proof-holes.log - clean 
 src/Chap36/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap27/analyses/veracity-review-verus-proof-holes.log - clean
 
-4 in process:
-src/Chap42/analyses/veracity-review-verus-proof-holes.log - Agent1
-src/Chap45/analyses/veracity-review-verus-proof-holes.log - Agent2
-src/Chap47/analyses/veracity-review-verus-proof-holes.log - Agent3
-src/Chap49/analyses/veracity-review-verus-proof-holes.log - Agent4
+in process:
+
+src/Chap43/analyses/veracity-review-verus-proof-holes.log - Agent1 AugOrderedTables, bad.
+src/Chap45/analyses/veracity-review-verus-proof-holes.log - Agent2 
+src/Chap47/analyses/veracity-review-verus-proof-holes.log - Agent3 Hashtables.
+src/Chap42/analyses/veracity-review-verus-proof-holes.log - Agent4 Tables. 
 src/Chap54/analyses/veracity-review-verus-proof-holes.log - Main. BFS.
+
+Stalled: 
+
+src/Chap49/analyses/veracity-review-verus-proof-holes.log 
 
 22 unfinished: 
 
@@ -46,7 +51,7 @@ src/Chap38/analyses/veracity-review-verus-proof-holes.log - started
 src/Chap39/analyses/veracity-review-verus-proof-holes.log - started
 src/Chap37/analyses/veracity-review-verus-proof-holes.log - started
 src/Chap41/analyses/veracity-review-verus-proof-holes.log - bad
-src/Chap43/analyses/veracity-review-verus-proof-holes.log - AugOrderedTables, bad.
+
 src/Chap47/analyses/veracity-review-verus-proof-holes.log - hashtables not even verusified
 src/Chap50/analyses/veracity-review-verus-proof-holes.log - unclean, iterator status.
 src/Chap51/analyses/veracity-review-verus-proof-holes.log - unclean, not even verusified and specified.

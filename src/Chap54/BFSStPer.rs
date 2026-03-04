@@ -149,6 +149,9 @@ pub mod BFSStPer {
                 traversal.spec_len() == graph.spec_len(),
                 traversal.spec_index(source as int) == 0usize,
                 spec_distances_bounded(&traversal, graph.spec_len() as int),
+                forall|v: int| #![auto] 0 <= v < traversal.spec_len()
+                    && traversal.spec_index(v) != UNREACHABLE && v != source as int
+                    ==> traversal.spec_index(v) > 0usize,
         ;
 
         /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
@@ -168,6 +171,9 @@ pub mod BFSStPer {
                 forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
                     ==> traversal.order.spec_index(i) < graph.spec_len(),
                 spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
+                forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
+                    ==> traversal.parents.spec_index(
+                        traversal.order.spec_index(i) as int) != NO_PARENT,
         ;
     }
 
@@ -229,6 +235,9 @@ pub mod BFSStPer {
                 forall|j: int| #![auto] 0 <= j < queue@.len() ==>
                     distances.spec_index(queue@[j] as int) != UNREACHABLE,
                 spec_distances_bounded(&distances, n as int),
+                forall|v: int| #![auto] 0 <= v < distances.spec_len()
+                    && distances.spec_index(v) != UNREACHABLE && v != source as int
+                    ==> distances.spec_index(v) > 0usize,
         {
             let u_opt = queue.pop_front();
             match u_opt {
@@ -258,6 +267,9 @@ pub mod BFSStPer {
                             forall|j: int| #![auto] 0 <= j < queue@.len() ==>
                                 distances.spec_index(queue@[j] as int) != UNREACHABLE,
                             spec_distances_bounded(&distances, n as int),
+                            forall|w: int| #![auto] 0 <= w < distances.spec_len()
+                                && distances.spec_index(w) != UNREACHABLE && w != source as int
+                                ==> distances.spec_index(w) > 0usize,
                         decreases num_neighbors - i
                     {
                         let v = *neighbors.nth(i);
@@ -273,6 +285,18 @@ pub mod BFSStPer {
                                         &distances, &old_d_inner,
                                         v as int, (dist + 1) as N, n as int,
                                     );
+                                    assert forall|w: int| 0 <= w < distances.spec_len()
+                                        && distances.spec_index(w) != UNREACHABLE
+                                        && w != source as int
+                                    implies distances.spec_index(w) > 0usize
+                                    by {
+                                        if w == v as int {
+                                            assert(distances.spec_index(w) == dist + 1);
+                                        } else {
+                                            assert(distances.spec_index(w)
+                                                == old_d_inner.spec_index(w));
+                                        }
+                                    }
                                 }
                             }
                         }
