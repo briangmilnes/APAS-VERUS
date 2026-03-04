@@ -4,14 +4,15 @@ Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are working in src/Chap45. Heaps. 
+You are now working in and only in src/Chap37/.
 
 It validates, rtt and ptt fine so don't start there. 
 Fix trigger warnings as they occur using the rules.
 Check verusification state, the hole checker log and style logs are up to date.
 Does the chapter say these are multithreaded?
 Are the specs good?
-Propose work.
+Which is the simplest tree module? 
+Propose work just on that one. 
 
 
 

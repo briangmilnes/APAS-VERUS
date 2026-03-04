@@ -35,12 +35,14 @@ pub mod BFSMtEph {
 
     // 6. spec fns
 
+    /// All neighbor indices in the adjacency list are valid vertex indices.
     pub open spec fn spec_bfsmteph_wf(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>) -> bool {
         forall|u: int, i: int| #![auto]
             0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len()
             ==> graph.spec_index(u).spec_index(i) < graph.spec_len()
     }
 
+    /// Every distance entry is either UNREACHABLE or bounded by n.
     pub open spec fn spec_distances_bounded(distances: &ArraySeqMtEphS<N>, n: int) -> bool {
         forall|j: int| #![auto] 0 <= j < distances.spec_len() ==>
             distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
