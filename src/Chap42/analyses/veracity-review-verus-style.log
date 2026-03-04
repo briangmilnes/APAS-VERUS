@@ -1,119 +1,119 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent2/src/Chap42/
-Codebase: /home/milnes/projects/APAS-VERUS-agent2
+Path: /home/milnes/projects/APAS-VERUS/src/Chap42/
+Codebase: /home/milnes/projects/APAS-VERUS
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent2/src/Chap42/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap42/analyses/veracity-review-verus-style.log
 
 Checking 4 files...
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [13] no non-derive trait impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/Example42_1.rs:20: warning: [20] trait Example42_1Trait is defined but has no impl
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap42/Example42_1.rs:20: warning: [20] trait Example42_1Trait is defined but has no impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:139: warning: [12] trait TableMtEphTrait fn entries should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:45: warning: [14] struct TableMtEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:776: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:64: warning: [18] impl View for TableMtEph < K , V > should come before spec fns (expected view impls before spec fns)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:88: warning: [18] trait TableMtEphTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:753: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:763: warning: [18] proof fn lemma_entries_to_map_finite should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:53: warning: [22] free spec fn spec_entries_to_map should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:74: warning: [22] free spec fn spec_keys_no_dups should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:139: warning: [12] trait TableMtEphTrait fn entries should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:45: warning: [14] struct TableMtEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:776: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:64: warning: [18] impl View for TableMtEph < K , V > should come before spec fns (expected view impls before spec fns)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:88: warning: [18] trait TableMtEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:753: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:763: warning: [18] proof fn lemma_entries_to_map_finite should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:53: warning: [22] free spec fn spec_entries_to_map should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:74: warning: [22] free spec fn spec_keys_no_dups should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:331: warning: [12] trait TableStEphTrait fn entries should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1129: warning: [13] impl Default for TableStEph should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:49: warning: [14] struct TableStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1135: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:70: warning: [18] impl View for TableStEph < K , V > should come before spec fns (expected view impls before spec fns)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:94: warning: [18] proof fn lemma_entries_to_map_key_in_seq should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:113: warning: [18] proof fn lemma_entries_to_map_contains_key should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:127: warning: [18] proof fn lemma_entries_to_map_len should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:166: warning: [18] proof fn lemma_entries_to_map_no_key should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:176: warning: [18] proof fn lemma_entries_to_map_get should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:214: warning: [18] proof fn lemma_entries_to_map_dom_subset should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:233: warning: [18] proof fn lemma_entries_to_map_dom_same_keys should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:254: warning: [18] trait TableStEphTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1090: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1102: warning: [18] proof fn lemma_entries_to_map_finite should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:59: warning: [22] free spec fn spec_entries_to_map should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:80: warning: [22] free spec fn spec_keys_no_dups should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:331: warning: [12] trait TableStEphTrait fn entries should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1129: warning: [13] impl Default for TableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:49: warning: [14] struct TableStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1135: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:70: warning: [18] impl View for TableStEph < K , V > should come before spec fns (expected view impls before spec fns)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:94: warning: [18] proof fn lemma_entries_to_map_key_in_seq should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:113: warning: [18] proof fn lemma_entries_to_map_contains_key should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:127: warning: [18] proof fn lemma_entries_to_map_len should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:166: warning: [18] proof fn lemma_entries_to_map_no_key should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:176: warning: [18] proof fn lemma_entries_to_map_get should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:214: warning: [18] proof fn lemma_entries_to_map_dom_subset should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:233: warning: [18] proof fn lemma_entries_to_map_dom_same_keys should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:254: warning: [18] trait TableStEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1090: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1102: warning: [18] proof fn lemma_entries_to_map_finite should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:59: warning: [22] free spec fn spec_entries_to_map should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:80: warning: [22] free spec fn spec_keys_no_dups should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:375: warning: [12] trait TableStPerTrait fn collect should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:72: warning: [14] struct TableStPer should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1075: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:72: warning: [18] struct TableStPer should come before proof fns/broadcast groups (expected type definitions before proof fns/broadcast groups)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:76: warning: [18] type TableS should come before proof fns/broadcast groups (expected type definitions before proof fns/broadcast groups)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:80: warning: [18] impl View for TableStPer < K , V > should come before proof fns/broadcast groups (expected view impls before proof fns/broadcast groups)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:90: warning: [18] spec fn spec_keys_no_dups should come before proof fns/broadcast groups (expected spec fns before proof fns/broadcast groups)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:105: warning: [18] proof fn lemma_entries_to_map_get should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:146: warning: [18] proof fn lemma_entries_to_map_dom_subset should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:165: warning: [18] proof fn lemma_entries_to_map_contains_key should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:181: warning: [18] proof fn lemma_entries_to_map_no_key should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:191: warning: [18] proof fn lemma_entries_to_map_key_in_seq should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:210: warning: [18] proof fn lemma_entries_to_map_len should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:255: warning: [18] proof fn lemma_entries_to_map_dom_same_keys should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:276: warning: [18] trait TableStPerTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1044: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:46: warning: [22] free spec fn spec_entries_to_map should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:90: warning: [22] free spec fn spec_keys_no_dups should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:72: warning: [14] struct TableStPer should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1370: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:72: warning: [18] struct TableStPer should come before proof fns/broadcast groups (expected type definitions before proof fns/broadcast groups)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:76: warning: [18] type TableS should come before proof fns/broadcast groups (expected type definitions before proof fns/broadcast groups)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:80: warning: [18] impl View for TableStPer < K , V > should come before proof fns/broadcast groups (expected view impls before proof fns/broadcast groups)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:90: warning: [18] spec fn spec_keys_no_dups should come before proof fns/broadcast groups (expected spec fns before proof fns/broadcast groups)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:105: warning: [18] proof fn lemma_entries_to_map_get should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:146: warning: [18] proof fn lemma_entries_to_map_dom_subset should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:165: warning: [18] proof fn lemma_entries_to_map_contains_key should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:181: warning: [18] proof fn lemma_entries_to_map_no_key should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:191: warning: [18] proof fn lemma_entries_to_map_key_in_seq should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:210: warning: [18] proof fn lemma_entries_to_map_len should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:255: warning: [18] proof fn lemma_entries_to_map_dom_same_keys should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:276: warning: [18] trait TableStPerTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1339: warning: [18] fn from_sorted_entries should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:46: warning: [22] free spec fn spec_entries_to_map should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:90: warning: [22] free spec fn spec_keys_no_dups should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 53 passed, 45 warnings in 4 files (checked 4 files)
+Summary: 54 passed, 44 warnings in 4 files (checked 4 files)
 ════════════════════════════════════════════════════════════════

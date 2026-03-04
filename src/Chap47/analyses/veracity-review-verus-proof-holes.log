@@ -1,44 +1,129 @@
 ❌ ChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ChainedHashTable.rs:57: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:94: external_body - #[verifier::external_body]
+        95 |             fn insert_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:109: external_body - #[verifier::external_body]
+       110 |             fn lookup_chained(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:122: external_body - #[verifier::external_body]
+       123 |             fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> B {
+/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:57: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         53 |             fn clone(&self) -> (cloned: Self)
             ...
         55 |             {
         56 |                 let cloned = ChainEntry { chain: self.chain.clone(), _phantom: PhantomData };
         58 |                 cloned
         59 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ChainedHashTable.rs:67: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:67: info: accept() - accept hole
+   Holes: 3 total
+      3 × external_body
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
-✓ DoubleHashFlatHashTableStEph.rs
-✓ FlatHashTable.rs
-✓ LinProbFlatHashTableStEph.rs
+❌ DoubleHashFlatHashTableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:40: external_body - #[verifier::external_body]
+        41 |         pub fn second_hash<Key: StT + Hash>(key: &Key, table_size: usize) -> usize {
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:70: external_body - #[verifier::external_body]
+        71 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:90: external_body - #[verifier::external_body]
+        91 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:108: external_body - #[verifier::external_body]
+       109 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> B {
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:130: external_body - #[verifier::external_body]
+       131 |         fn resize(
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:167: external_body - #[verifier::external_body]
+       168 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> usize {
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:176: external_body - #[verifier::external_body]
+       177 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> usize {
+   Holes: 7 total
+      7 × external_body
+❌ FlatHashTable.rs
+/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:129: external_body - #[verifier::external_body]
+       130 |         fn insert_with_probe(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:140: external_body - #[verifier::external_body]
+       141 |         fn lookup_with_probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value> {
+   Holes: 2 total
+      2 × external_body
+❌ LinProbFlatHashTableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:36: external_body - #[verifier::external_body]
+        37 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:56: external_body - #[verifier::external_body]
+        57 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:74: external_body - #[verifier::external_body]
+        75 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> B {
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:96: external_body - #[verifier::external_body]
+        97 |         fn resize(
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:133: external_body - #[verifier::external_body]
+       134 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> usize {
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:141: external_body - #[verifier::external_body]
+       142 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> usize {
+   Holes: 6 total
+      6 × external_body
 ✓ LinkedListChainedHashTableStEph.rs
    1 clean proof function
 ❌ ParaHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:66: error: struct_outside_verus - struct HashTable — should be inside verus!
-        66 |     pub struct HashTable<Key, Value, Entry, Metrics> {
-        67 |         pub table: Vec<Entry>,
-        68 |         pub hash_fn_gen: HashFunGen<Key>,
-   Errors: 1 total (1 struct/enum outside verus!)
-✓ QuadProbFlatHashTableStEph.rs
-ℹ StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:228: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:245: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:262: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:276: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:70: external_body - #[verifier::external_body]
+        71 |         fn createTable(hash_fn: H, initial_size: usize) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:117: external_body - #[verifier::external_body]
+       118 |         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics) { &table.metrics }
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:124: external_body - #[verifier::external_body]
+       125 |         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (result: LoadAndSize)
+   Holes: 3 total
+      3 × external_body
+❌ QuadProbFlatHashTableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:37: external_body - #[verifier::external_body]
+        38 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:57: external_body - #[verifier::external_body]
+        58 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:76: external_body - #[verifier::external_body]
+        77 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> B {
+/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:99: external_body - #[verifier::external_body]
+       100 |         fn resize(
+/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:136: external_body - #[verifier::external_body]
+       137 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> usize {
+/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:144: external_body - #[verifier::external_body]
+       145 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> usize {
+   Holes: 6 total
+      6 × external_body
+❌ StructChainedHashTable.rs
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:293: external_body - #[verifier::external_body]
+       294 |             fn insert(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:300: external_body - #[verifier::external_body]
+       301 |             fn lookup(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:307: external_body - #[verifier::external_body]
+       308 |             fn delete(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> B {
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:314: external_body - #[verifier::external_body]
+       315 |             fn resize(
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:353: external_body - #[verifier::external_body]
+       354 |             fn hash_index(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> usize {
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:230: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:247: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:264: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:278: info: accept() - accept hole
+   Holes: 5 total
+      5 × external_body
    Info: 4 total
-   1 clean proof function
-✓ VecChainedHashTableStEph.rs
-   1 clean proof function
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ VecChainedHashTableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:97: external_body - #[verifier::external_body]
+        98 |             fn insert(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:104: external_body - #[verifier::external_body]
+       105 |             fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:111: external_body - #[verifier::external_body]
+       112 |             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> B {
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:118: external_body - #[verifier::external_body]
+       119 |             fn resize(
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:155: external_body - #[verifier::external_body]
+       156 |             fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> usize {
+   Holes: 5 total
+      5 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   9 clean (no holes)
-   0 holed (contains holes)
+   1 clean (no holes)
+   8 holed (contains holes)
    9 total
 
 Proof Functions:
@@ -46,18 +131,17 @@ Proof Functions:
    0 holed
    4 total
 
-Holes Found: 0 total
+Holes Found: 37 total
+   37 × external_body
 
-Errors: 2 total (1 struct/enum outside verus!, 1 assume in eq/clone (Verus workaround))
+Errors: 1 total (1 assume in eq/clone (Verus workaround))
 
 Info: 5 total
+   StructChainedHashTable.rs:230: info: accept() - accept hole
+   StructChainedHashTable.rs:247: info: accept() - accept hole
+   StructChainedHashTable.rs:264: info: accept() - accept hole
+   StructChainedHashTable.rs:278: info: accept() - accept hole
    ChainedHashTable.rs:67: info: accept() - accept hole
-   StructChainedHashTable.rs:228: info: accept() - accept hole
-   StructChainedHashTable.rs:245: info: accept() - accept hole
-   StructChainedHashTable.rs:262: info: accept() - accept hole
-   StructChainedHashTable.rs:276: info: accept() - accept hole
-
-🎉 No proof holes found! All proofs are complete.
-e.rs:276: info: accept() - accept hole
-
-🎉 No proof holes found! All proofs are complete.
+le
+   StructChainedHashTable.rs:278: info: accept() - accept hole
+   ChainedHashTable.rs:67: info: accept() - accept hole
