@@ -77,7 +77,7 @@ broadcast use {
     }
 
     impl<K: MtKey, V: MtVal> TableMtEph<K, V> {
-        pub open spec fn spec_wf(&self) -> bool {
+        pub open spec fn spec_tablemteph_wf(&self) -> bool {
             spec_keys_no_dups(self.entries@)
         }
     }

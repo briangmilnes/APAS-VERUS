@@ -83,7 +83,7 @@ broadcast use {
     }
 
     impl<K: StT + Ord, V: StT> TableStEph<K, V> {
-        pub open spec fn spec_wf(&self) -> bool {
+        pub open spec fn spec_tablesteph_wf(&self) -> bool {
             spec_keys_no_dups(self.entries@)
         }
     }
@@ -252,11 +252,11 @@ broadcast use {
 
     /// Trait defining the Table ADT operations from Chapter 42
     pub trait TableStEphTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K::V, V::V>> {
-        spec fn spec_wf(&self) -> bool;
+        spec fn spec_tablesteph_wf(&self) -> bool;
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
-            requires self.spec_wf()
+            requires self.spec_tablesteph_wf()
             ensures count == self@.len();
         /// APAS: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
@@ -301,7 +301,7 @@ broadcast use {
             ensures self@.dom().subset_of(old(self)@.dom().difference(other@.dom()));
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn find(&self, key: &K) -> (found: Option<V>)
-            requires self.spec_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            requires self.spec_tablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
                 match found {
                     Some(v) => self@.contains_key(key@) && self@[key@] == v@,
@@ -334,7 +334,7 @@ broadcast use {
     // 9. impls
 
     impl<K: StT + Ord, V: StT> TableStEphTrait<K, V> for TableStEph<K, V> {
-        open spec fn spec_wf(&self) -> bool {
+        open spec fn spec_tablesteph_wf(&self) -> bool {
             spec_keys_no_dups(self.entries@)
         }
 
@@ -888,7 +888,7 @@ broadcast use {
             while i < self.entries.length()
                 invariant
                     i <= self.entries.spec_len(),
-                    self.spec_wf(),
+                    self.spec_tablesteph_wf(),
                     forall|j: int| #![auto] 0 <= j < i as int ==>
                         self.entries@[j].0 != key@,
                     obeys_view_eq::<K>(),

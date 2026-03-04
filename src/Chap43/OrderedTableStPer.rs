@@ -191,7 +191,7 @@ pub mod OrderedTableStPer {
 
     impl<K: StT + Ord, V: StT> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
         open spec fn spec_orderedtablestper_wf(&self) -> bool {
-            self.base_table.spec_wf()
+            self.base_table.spec_tablestper_wf()
         }
 
         fn size(&self) -> (count: usize)

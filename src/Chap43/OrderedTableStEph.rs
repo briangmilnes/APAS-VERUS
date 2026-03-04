@@ -142,7 +142,7 @@ broadcast use {
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite()
         {
-            proof { assume(self.base_table.spec_wf()); }
+            proof { assume(self.base_table.spec_tablesteph_wf()); }
             let r = self.base_table.size();
             proof {
                 assert(self@ =~= self.base_table@);
@@ -169,7 +169,7 @@ broadcast use {
         }
 
         fn find(&self, k: &K) -> (found: Option<V>) {
-            proof { assume(self.base_table.spec_wf()); }
+            proof { assume(self.base_table.spec_tablesteph_wf()); }
             self.base_table.find(k)
         }
 
