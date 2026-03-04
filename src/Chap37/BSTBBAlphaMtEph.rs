@@ -47,6 +47,15 @@ pub mod BSTBBAlphaMtEph {
         }
     }
 
+    pub trait BSTBBAlphaMtEphTrait<T: TotalOrder>: Sized {
+        fn new() -> Self;
+        fn insert(&self, value: T);
+        fn contains(&self, target: &T) -> (found: bool);
+        fn size(&self) -> (n: usize);
+        fn is_empty(&self) -> (b: bool);
+        fn height(&self) -> (h: usize);
+    }
+
     // 6. spec fns
 
     // Weight-balance spec is imported from BSTBBAlphaStEph.
@@ -230,7 +239,7 @@ pub mod BSTBBAlphaMtEph {
 
     // Public API: lock operations are fully verified through vstd::rwlock.
 
-    impl<T: TotalOrder> BSTBBAlphaMtEph<T> {
+    impl<T: TotalOrder> BSTBBAlphaMtEphTrait<T> for BSTBBAlphaMtEph<T> {
         pub fn new() -> (tree: Self)
         {
             BSTBBAlphaMtEph {

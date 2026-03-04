@@ -46,6 +46,15 @@ pub mod BSTPlainMtEph {
         }
     }
 
+    pub trait BSTPlainMtEphTrait<T: TotalOrder>: Sized {
+        fn new() -> Self;
+        fn insert(&self, value: T);
+        fn contains(&self, target: &T) -> (found: bool);
+        fn size(&self) -> (n: usize);
+        fn is_empty(&self) -> (b: bool);
+        fn height(&self) -> (h: usize);
+    }
+
     // 9. impls
 
     #[verifier::reject_recursive_types(T)]
@@ -225,7 +234,7 @@ pub mod BSTPlainMtEph {
 
     // Public API: lock operations are fully verified through vstd::rwlock.
 
-    impl<T: TotalOrder> BSTPlainMtEph<T> {
+    impl<T: TotalOrder> BSTPlainMtEphTrait<T> for BSTPlainMtEph<T> {
         pub fn new() -> (tree: Self)
         {
             BSTPlainMtEph {

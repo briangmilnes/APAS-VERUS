@@ -73,7 +73,8 @@
       "Edit(~/projects/APAS-VERUS*/.claude/**)",
       "Glob(~/projects/**)",
       "Grep(~/projects/**)",
-      "WebFetch(domain:verus-lang.github.io)"
+      "WebFetch(domain:verus-lang.github.io)",
+      "Bash(do wc:*)"
     ]
   }
 }

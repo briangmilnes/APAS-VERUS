@@ -136,8 +136,10 @@ broadcast use {
             fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures v@.len() as nat == self.spec_size();
-            fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self);
-            fn split(&self, key: &T) -> (parts: (Self, Self));
+            fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self)
+                ensures heaps@.len() == 0 ==> pq.spec_size() == 0;
+            fn split(&self, key: &T) -> (parts: (Self, Self))
+                requires self.spec_size() <= usize::MAX as nat;
         }
 
 
@@ -437,7 +439,9 @@ broadcast use {
                 let n = heaps.len();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
-                    invariant n == heaps@.len()
+                    invariant
+                        n == heaps@.len(),
+                        heaps@.len() == 0 ==> result.spec_size() == 0,
                 {
                     proof { assume(result.spec_size() + heaps[i as int].spec_size() <= usize::MAX as nat); }
                     result = result.meld(&heaps[i]);
