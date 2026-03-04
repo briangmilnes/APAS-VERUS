@@ -65,13 +65,11 @@ broadcast use {
 
 //		7. proof fns/broadcast groups
 
-// 7. proof fns
         proof fn _leftist_heap_pq_verified() {}
 
 
 //		8. traits
 
-// 8. traits
         pub trait LeftistHeapNodeTrait<T: StT + Ord>: Sized {
             fn rank(&self) -> (rank_val: usize);
             fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
@@ -145,7 +143,6 @@ broadcast use {
 
 //		9. impls
 
-// 6. spec fns
         impl<T: StT + Ord> LeftistHeapNode<T> {
             pub open spec fn spec_size(self) -> nat
                 decreases self
@@ -158,7 +155,6 @@ broadcast use {
             }
         }
 
-// 9. impls
         impl<T: StT + Ord> LeftistHeapNodeTrait<T> for LeftistHeapNode<T> {
             fn rank(&self) -> (rank_val: usize) {
                 match self {
@@ -471,7 +467,8 @@ broadcast use {
             }
         }
 
-// 11. derive impls in verus!
+//		11. derive impls in verus!
+
         #[cfg(verus_keep_ghost)]
         impl<T: StT + Ord> PartialEqSpecImpl for LeftistHeapNode<T> {
             open spec fn obeys_eq_spec() -> bool { true }
@@ -488,8 +485,6 @@ broadcast use {
             fn default() -> Self { Self::empty() }
         }
 
-
-//		11. derive impls in verus!
 
         impl<T: StT + Ord> Clone for LeftistHeapNode<T> {
             fn clone(&self) -> (cloned: Self)
@@ -558,8 +553,6 @@ broadcast use {
 
 //		12. macros
 
-
-// 12. macros
     #[macro_export]
     macro_rules! LeftistHeapPQLit {
         () => {
@@ -573,8 +566,6 @@ broadcast use {
 
 //		13. derive impls outside verus!
 
-
-// 13. derive impls outside verus!
     impl<T: StT + Ord + Debug> Debug for LeftistHeapNode<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             match self {
