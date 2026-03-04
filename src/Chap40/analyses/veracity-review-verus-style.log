@@ -1,124 +1,124 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent4/src/Chap40/
-Codebase: /home/milnes/projects/APAS-VERUS-agent4
+Path: /home/milnes/projects/APAS-VERUS/src/Chap40/
+Codebase: /home/milnes/projects/APAS-VERUS
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent4/src/Chap40/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap40/analyses/veracity-review-verus-style.log
 
 Checking 3 files...
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:38: warning: [14] struct Node should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:81: warning: [14] struct BSTKeyValueStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:81: warning: [18] struct BSTKeyValueStEph should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:97: warning: [18] type BSTreeKeyValue should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:101: warning: [18] spec fn spec_height_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:114: warning: [18] spec fn spec_node_count_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:123: warning: [18] spec fn spec_content_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:135: warning: [18] spec fn spec_min_key_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:147: warning: [18] spec fn spec_max_key_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:161: warning: [18] impl View for BSTKeyValueStEph < K , V > should come before derive impls in verus! (expected view impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:170: warning: [18] proof fn lemma_content_left_contains_key should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:178: warning: [18] proof fn lemma_content_right_contains_key should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:187: warning: [18] proof fn lemma_rotate_left_preserves_keys should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:203: warning: [18] proof fn lemma_rotate_right_preserves_keys should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:219: warning: [18] proof fn lemma_left_key_in_link should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:233: warning: [18] proof fn lemma_right_key_in_link should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:247: warning: [18] proof fn lemma_node_key_in_link should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:261: warning: [18] trait BSTKeyValueStEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:424: warning: [18] impl BSTKeyValueStEphTrait for BSTKeyValueStEph < K , V > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:741: warning: [18] impl Default for BSTreeKeyValue < K , V > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:101: warning: [22] free spec fn spec_height_link should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:114: warning: [22] free spec fn spec_node_count_link should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:123: warning: [22] free spec fn spec_content_link should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:135: warning: [22] free spec fn spec_min_key_link should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:147: warning: [22] free spec fn spec_max_key_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:38: warning: [14] struct Node should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:81: warning: [14] struct BSTKeyValueStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:81: warning: [18] struct BSTKeyValueStEph should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:97: warning: [18] type BSTreeKeyValue should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:101: warning: [18] spec fn spec_height_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:114: warning: [18] spec fn spec_node_count_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:123: warning: [18] spec fn spec_content_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:135: warning: [18] spec fn spec_min_key_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:147: warning: [18] spec fn spec_max_key_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:161: warning: [18] impl View for BSTKeyValueStEph < K , V > should come before derive impls in verus! (expected view impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:170: warning: [18] proof fn lemma_content_left_contains_key should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:178: warning: [18] proof fn lemma_content_right_contains_key should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:187: warning: [18] proof fn lemma_rotate_left_preserves_keys should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:203: warning: [18] proof fn lemma_rotate_right_preserves_keys should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:219: warning: [18] proof fn lemma_left_key_in_link should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:233: warning: [18] proof fn lemma_right_key_in_link should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:247: warning: [18] proof fn lemma_node_key_in_link should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:261: warning: [18] trait BSTKeyValueStEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:424: warning: [18] impl BSTKeyValueStEphTrait for BSTKeyValueStEph < K , V > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:741: warning: [18] impl Default for BSTreeKeyValue < K , V > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:101: warning: [22] free spec fn spec_height_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:114: warning: [22] free spec fn spec_node_count_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:123: warning: [22] free spec fn spec_content_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:135: warning: [22] free spec fn spec_min_key_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:147: warning: [22] free spec fn spec_max_key_link should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:84: warning: [12] trait NodeTrait fn new should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:33: warning: [14] struct Node should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:116: warning: [14] struct SumOp should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:135: warning: [14] struct CountOp should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:152: warning: [14] struct BSTReducedStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:83: warning: [18] trait NodeTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:87: warning: [18] impl NodeTrait for Node < K , V , R > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:102: warning: [18] trait ReduceOp should come before derive impls in verus! (expected traits before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:116: warning: [18] struct SumOp should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:122: warning: [18] impl ReduceOp for SumOp < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:135: warning: [18] struct CountOp should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:141: warning: [18] impl ReduceOp for CountOp < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:152: warning: [18] struct BSTReducedStEph should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:166: warning: [18] type BSTreeReduced should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:170: warning: [18] spec fn spec_size_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:177: warning: [18] spec fn spec_size_wf_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:190: warning: [18] spec fn spec_height_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:203: warning: [18] spec fn spec_content_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:217: warning: [18] impl View for BSTReducedStEph < K , V , R , Op > should come before derive impls in verus! (expected view impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:226: warning: [18] proof fn lemma_wf_assemble should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:240: warning: [18] trait BSTReducedStEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:437: warning: [18] impl BSTReducedStEphTrait for BSTReducedStEph < K , V , R , Op > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:801: warning: [18] type BSTSumStEph should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:802: warning: [18] type BSTCountStEph should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:806: warning: [18] impl Default for BSTreeReduced < K , V , R , Op > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:170: warning: [22] free spec fn spec_size_link should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:177: warning: [22] free spec fn spec_size_wf_link should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:190: warning: [22] free spec fn spec_height_link should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:203: warning: [22] free spec fn spec_content_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:84: warning: [12] trait NodeTrait fn new should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:33: warning: [14] struct Node should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:116: warning: [14] struct SumOp should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:135: warning: [14] struct CountOp should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:152: warning: [14] struct BSTReducedStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:83: warning: [18] trait NodeTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:87: warning: [18] impl NodeTrait for Node < K , V , R > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:102: warning: [18] trait ReduceOp should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:116: warning: [18] struct SumOp should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:122: warning: [18] impl ReduceOp for SumOp < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:135: warning: [18] struct CountOp should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:141: warning: [18] impl ReduceOp for CountOp < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:152: warning: [18] struct BSTReducedStEph should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:166: warning: [18] type BSTreeReduced should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:170: warning: [18] spec fn spec_size_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:177: warning: [18] spec fn spec_size_wf_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:190: warning: [18] spec fn spec_height_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:203: warning: [18] spec fn spec_content_link should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:217: warning: [18] impl View for BSTReducedStEph < K , V , R , Op > should come before derive impls in verus! (expected view impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:226: warning: [18] proof fn lemma_wf_assemble should come before derive impls in verus! (expected proof fns/broadcast groups before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:240: warning: [18] trait BSTReducedStEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:437: warning: [18] impl BSTReducedStEphTrait for BSTReducedStEph < K , V , R , Op > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:801: warning: [18] type BSTSumStEph should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:802: warning: [18] type BSTCountStEph should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:806: warning: [18] impl Default for BSTreeReduced < K , V , R , Op > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:170: warning: [22] free spec fn spec_size_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:177: warning: [22] free spec fn spec_size_wf_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:190: warning: [22] free spec fn spec_height_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:203: warning: [22] free spec fn spec_content_link should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:164: warning: [12] trait NodeTrait fn new should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:32: warning: [14] struct Node should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:42: warning: [14] struct BSTSizeStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:99: warning: [18] impl View for BSTSizeStEph < T > should come before spec fns (expected view impls before spec fns)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:779: warning: [18] impl Default for BSTreeSize < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:50: warning: [22] free spec fn spec_size_link should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:59: warning: [22] free spec fn spec_size_wf_link should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:72: warning: [22] free spec fn spec_height_link should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:85: warning: [22] free spec fn spec_content_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:164: warning: [12] trait NodeTrait fn new should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:32: warning: [14] struct Node should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:42: warning: [14] struct BSTSizeStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:99: warning: [18] impl View for BSTSizeStEph < T > should come before spec fns (expected view impls before spec fns)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:779: warning: [18] impl Default for BSTreeSize < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:50: warning: [22] free spec fn spec_size_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:59: warning: [22] free spec fn spec_size_wf_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:72: warning: [22] free spec fn spec_height_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:85: warning: [22] free spec fn spec_content_link should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
 Summary: 43 passed, 63 warnings in 3 files (checked 3 files)

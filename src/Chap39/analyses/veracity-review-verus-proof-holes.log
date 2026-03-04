@@ -1,14 +1,42 @@
 ℹ BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:77: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Info: 1 total
 ✓ BSTSetTreapMtEph.rs
-ℹ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:199: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:212: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:224: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:554: info: accept() - accept hole
+❌ BSTTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:60: external_body - #[verifier::external_body]
+        61 |         open spec fn view(&self) -> Set<T::V> {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:487: external_body - #[verifier::external_body]
+       488 |         fn new() -> (empty_tree: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:496: external_body - #[verifier::external_body]
+       497 |         fn insert(&self, value: T, priority: u64) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:506: external_body - #[verifier::external_body]
+       507 |         fn find(&self, target: &T) -> (found: Option<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:518: external_body - #[verifier::external_body]
+       519 |         fn contains(&self, target: &T) -> (found: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:525: external_body - #[verifier::external_body]
+       526 |         fn size(&self) -> (count: usize)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:535: external_body - #[verifier::external_body]
+       536 |         fn is_empty(&self) -> (empty: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:542: external_body - #[verifier::external_body]
+       543 |         fn height(&self) -> (h: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:551: external_body - #[verifier::external_body]
+       552 |         fn minimum(&self) -> (min_val: Option<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:563: external_body - #[verifier::external_body]
+       564 |         fn maximum(&self) -> (max_val: Option<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:575: external_body - #[verifier::external_body]
+       576 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:584: external_body - #[verifier::external_body]
+       585 |         fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:618: external_body - #[verifier::external_body]
+       619 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:222: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:235: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:247: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:612: info: accept() - accept hole
+   Holes: 13 total
+      13 × external_body
    Info: 4 total
-   3 clean proof functions
+   Proof functions: 3 total (3 clean, 0 holed)
 ✓ BSTTreapStEph.rs
    8 clean proof functions
 
@@ -17,8 +45,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   4 clean (no holes)
-   0 holed (contains holes)
+   3 clean (no holes)
+   1 holed (contains holes)
    4 total
 
 Proof Functions:
@@ -26,16 +54,14 @@ Proof Functions:
    0 holed
    11 total
 
-Holes Found: 0 total
+Holes Found: 13 total
+   13 × external_body
 
 Info: 5 total
-   BSTTreapMtEph.rs:199: info: accept() - accept hole
-   BSTTreapMtEph.rs:212: info: accept() - accept hole
-   BSTTreapMtEph.rs:224: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   BSTTreapMtEph.rs:554: info: accept() - accept hole
-   BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-
-🎉 No proof holes or warnings found! All proofs are complete.
-ternal body at this point.
-
-🎉 No proof holes or warnings found! All proofs are complete.
+   BSTParaTreapMtEph.rs:77: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   BSTTreapMtEph.rs:222: info: accept() - accept hole
+   BSTTreapMtEph.rs:235: info: accept() - accept hole
+   BSTTreapMtEph.rs:247: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   BSTTreapMtEph.rs:612: info: accept() - accept hole
+us RwLock new requires an external body at this point.
+   BSTTreapMtEph.rs:612: info: accept() - accept hole
