@@ -9,6 +9,7 @@ I have carefully structured don't restructure.
 They're not even verusified and should be fairly simple. 
 
 It validates, rtt and ptt fine so don't start there. 
+Fix trigger warnings as they occur using the rules.
 Check verusification state, the hole checker log and style logs are up to date.
 Does the chapter say these are multithreaded?
 Are the specs good?

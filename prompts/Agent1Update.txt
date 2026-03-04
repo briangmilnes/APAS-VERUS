@@ -6,10 +6,11 @@ REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs.
 
 Do not review-against-prose.md to start, it's too costly for this.
 
-You are working in src/Chap43/. 
+You are working in src/Chap39. 
 
 Your analyses have been updated.
 It validates, rtt and ptt fine so don't start there. 
+Fix trigger warnings as they occur using the rules.
 Check verusification state, the hole checker log and style logs are up to date.
 Does the chapter say these are multithreaded?
 Are the specs good?

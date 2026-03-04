@@ -7,6 +7,7 @@ REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs.
 You are working in src/Chap45. Heaps. 
 
 It validates, rtt and ptt fine so don't start there. 
+Fix trigger warnings as they occur using the rules.
 Check verusification state, the hole checker log and style logs are up to date.
 Does the chapter say these are multithreaded?
 Are the specs good?

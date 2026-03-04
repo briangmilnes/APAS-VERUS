@@ -560,11 +560,11 @@ broadcast use {
                     obeys_feq_clone::<K>(),
                     obeys_view_eq::<K>(),
                     forall|si: int| 0 <= si < i as int
-                        && (exists|oj: int| 0 <= oj < other_view.len()
+                        && (exists|oj: int| #![auto] 0 <= oj < other_view.len()
                             && other_view[oj].0 == (#[trigger] old_self_view[si]).0)
                         ==> exists|j: int| 0 <= j < self_srcs.len() && self_srcs[j] == si,
                     forall|si: int| 0 <= si < i as int
-                        && !(exists|oj: int| 0 <= oj < other_view.len()
+                        && !(exists|oj: int| #![auto] 0 <= oj < other_view.len()
                             && other_view[oj].0 == (#[trigger] old_self_view[si]).0)
                         ==> !spec_entries_to_map(other_view).contains_key(old_self_view[si].0),
                 decreases self.entries.spec_len() - i,
@@ -609,7 +609,7 @@ broadcast use {
                         self_srcs = self_srcs.push(i as int);
                         other_srcs = other_srcs.push(found_idx as int);
                         assert forall|si: int| 0 <= si < i as int + 1
-                            && (exists|oj: int| 0 <= oj < other_view.len()
+                            && (exists|oj: int| #![auto] 0 <= oj < other_view.len()
                                 && other_view[oj].0 == (#[trigger] old_self_view[si]).0)
                             implies exists|j: int| 0 <= j < self_srcs.len() && self_srcs[j] == si
                         by {
@@ -1234,7 +1234,7 @@ broadcast use {
                 assert(self.entries@[last].0 == key_view);
                 lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, last);
                 // Domain backward: old keys + key@ are in result.
-                assert forall|k: K::V|
+                assert forall|k: K::V| #![auto]
                     old_map.dom().contains(k) || k == key_view
                     implies spec_entries_to_map(self.entries@).dom().contains(k)
                 by {
@@ -1249,7 +1249,7 @@ broadcast use {
                     }
                 };
                 // Domain forward: result keys are in old ∪ {key@}.
-                assert forall|k: K::V|
+                assert forall|k: K::V| #![auto]
                     spec_entries_to_map(self.entries@).dom().contains(k)
                     implies old_map.dom().contains(k) || k == key_view
                 by {
