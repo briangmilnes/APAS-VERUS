@@ -942,8 +942,7 @@ broadcast use {
             {
                 let pair_i = self.entries.nth(i);
                 let ghost key_view: K::V = old_self_view[i as int].0;
-                let mut found: bool = false;
-                let mut found_idx: usize = 0;
+                let mut match_idx: usize = other_len;
                 let mut j: usize = 0;
                 while j < other_len
                     invariant
@@ -952,10 +951,12 @@ broadcast use {
                         self.entries@ == old_self_view,
                         other.entries@ == other_view,
                         other_len as int == other.entries.spec_len(),
-                        found ==> found_idx < other.entries.spec_len()
-                            && other_view[found_idx as int].0 == key_view,
-                        !found ==> forall|jj: int| #![auto] 0 <= jj < j as int ==>
-                            other_view[jj].0 != key_view,
+                        match_idx <= other_len,
+                        match_idx < other_len ==>
+                            other_view[match_idx as int].0 == key_view,
+                        match_idx == other_len ==>
+                            forall|jj: int| #![auto] 0 <= jj < j as int ==>
+                                other_view[jj].0 != key_view,
                         key_view == pair_i.0@,
                         obeys_view_eq::<K>(),
                     decreases other_len - j,
@@ -966,12 +967,11 @@ broadcast use {
                         other.entries.lemma_view_index(j as int);
                     }
                     if pair_i.0 == pair_j.0 {
-                        found = true;
-                        found_idx = j;
+                        match_idx = j;
                     }
                     j += 1;
                 }
-                if !found {
+                if match_idx == other_len {
                     proof {
                         lemma_entries_to_map_no_key::<K::V, V::V>(other_view, key_view);
                     }
@@ -997,7 +997,7 @@ broadcast use {
                 } else {
                     proof {
                         lemma_entries_to_map_contains_key::<K::V, V::V>(
-                            other_view, found_idx as int);
+                            other_view, match_idx as int);
                     }
                 }
                 i += 1;

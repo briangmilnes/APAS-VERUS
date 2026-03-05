@@ -33,41 +33,41 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `lemma_tabulate_all_no_parent` |  |  |  | Y | Y |  |  | unknown | 57&#8209;62 |
-| 2 | `lemma_set_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 65&#8209;82 |
-| 3 | `lemma_copy_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 96&#8209;107 |
-| 4 | `lemma_tabulate_all_unreachable` |  |  |  | Y | Y |  |  | unknown | 117&#8209;123 |
-| 5 | `lemma_set_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 127&#8209;144 |
-| 6 | `copy_distances` |  |  |  | Y | Y |  |  | unknown | 159&#8209;164 |
-| 7 | `copy_graph` |  |  |  | Y | Y |  |  | unknown | 177&#8209;185 |
-| 8 | `lemma_copy_preserves_wf` |  |  |  | Y | Y |  |  | unknown | 210&#8209;223 |
-| 9 | `lemma_copy_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 235&#8209;246 |
-| 10 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 261&#8209;266 |
-| 11 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 269&#8209;275 |
-| 12 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 281&#8209;294 |
-| 13 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 298&#8209;316 |
-| 14 | `process_frontier_parallel` |  |  |  | Y | Y |  |  | unknown | 322&#8209;344 |
-| 15 | `process_frontier_tree_parallel` |  |  |  | Y | Y |  |  | unknown | 480&#8209;498 |
+| 1 | `lemma_tabulate_all_no_parent` |  |  |  | Y | Y |  |  | unknown | 59&#8209;64 |
+| 2 | `lemma_set_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 67&#8209;84 |
+| 3 | `lemma_copy_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 98&#8209;109 |
+| 4 | `lemma_tabulate_all_unreachable` |  |  |  | Y | Y |  |  | unknown | 119&#8209;125 |
+| 5 | `lemma_set_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 129&#8209;146 |
+| 6 | `copy_distances` |  |  |  | Y | Y |  |  | unknown | 161&#8209;166 |
+| 7 | `copy_graph` |  |  |  | Y | Y |  |  | unknown | 179&#8209;187 |
+| 8 | `lemma_copy_preserves_wf` |  |  |  | Y | Y |  |  | unknown | 212&#8209;225 |
+| 9 | `lemma_copy_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 237&#8209;248 |
+| 10 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 263&#8209;268 |
+| 11 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 271&#8209;277 |
+| 12 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 283&#8209;296 |
+| 13 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 300&#8209;318 |
+| 14 | `process_frontier_parallel` |  |  |  | Y | Y |  |  | unknown | 324&#8209;346 |
+| 15 | `process_frontier_tree_parallel` |  |  |  | Y | Y |  |  | unknown | 482&#8209;500 |
 
 ### Chap54/BFSMtPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 16 | `lemma_tabulate_all_no_parent` |  |  |  | Y | Y |  |  | unknown | 57&#8209;62 |
-| 17 | `lemma_update_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 65&#8209;82 |
-| 18 | `lemma_copy_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 96&#8209;107 |
-| 19 | `lemma_tabulate_all_unreachable` |  |  |  | Y | Y |  |  | unknown | 117&#8209;123 |
-| 20 | `lemma_update_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 127&#8209;144 |
-| 21 | `copy_distances` |  |  |  | Y | Y |  |  | unknown | 159&#8209;164 |
-| 22 | `copy_graph` |  |  |  | Y | Y |  |  | unknown | 177&#8209;185 |
-| 23 | `lemma_copy_preserves_wf` |  |  |  | Y | Y |  |  | unknown | 211&#8209;224 |
-| 24 | `lemma_copy_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 237&#8209;248 |
-| 25 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 263&#8209;268 |
-| 26 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 271&#8209;277 |
-| 27 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 283&#8209;296 |
-| 28 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 300&#8209;318 |
-| 29 | `process_frontier_parallel` |  |  |  | Y | Y |  |  | unknown | 325&#8209;347 |
-| 30 | `process_frontier_tree_parallel` |  |  |  | Y | Y |  |  | unknown | 492&#8209;510 |
+| 16 | `lemma_tabulate_all_no_parent` |  |  |  | Y | Y |  |  | unknown | 59&#8209;64 |
+| 17 | `lemma_update_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 67&#8209;84 |
+| 18 | `lemma_copy_preserves_parents_bounded` |  |  |  | Y | Y |  |  | unknown | 98&#8209;109 |
+| 19 | `lemma_tabulate_all_unreachable` |  |  |  | Y | Y |  |  | unknown | 119&#8209;125 |
+| 20 | `lemma_update_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 129&#8209;146 |
+| 21 | `copy_distances` |  |  |  | Y | Y |  |  | unknown | 161&#8209;166 |
+| 22 | `copy_graph` |  |  |  | Y | Y |  |  | unknown | 179&#8209;187 |
+| 23 | `lemma_copy_preserves_wf` |  |  |  | Y | Y |  |  | unknown | 213&#8209;226 |
+| 24 | `lemma_copy_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 239&#8209;250 |
+| 25 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 265&#8209;270 |
+| 26 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 273&#8209;279 |
+| 27 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 285&#8209;298 |
+| 28 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 302&#8209;320 |
+| 29 | `process_frontier_parallel` |  |  |  | Y | Y |  |  | unknown | 327&#8209;349 |
+| 30 | `process_frontier_tree_parallel` |  |  |  | Y | Y |  |  | unknown | 494&#8209;512 |
 
 ### Chap54/BFSStEph.rs
 

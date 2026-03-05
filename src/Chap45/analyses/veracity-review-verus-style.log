@@ -120,8 +120,6 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:83: warning: [12] trait LeftistHeapNodeTrait fn is_leftist should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:84: warning: [12] trait LeftistHeapNodeTrait fn is_heap should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:85: warning: [12] trait LeftistHeapNodeTrait fn to_vec should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:139: warning: [12] trait LeftistHeapPQTrait fn meld_multiple should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:140: warning: [12] trait LeftistHeapPQTrait fn split should have requires/ensures
 
 /home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [1] has mod declarations
@@ -162,5 +160,5 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
 
 ════════════════════════════════════════════════════════════════
-Summary: 113 passed, 26 warnings in 5 files (checked 7 files)
+Summary: 113 passed, 24 warnings in 5 files (checked 7 files)
 ════════════════════════════════════════════════════════════════

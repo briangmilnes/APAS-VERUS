@@ -78,7 +78,8 @@
       "Bash(rustfmt:*)",
       "Bash(vargo build:*)",
       "Bash(comm:*)",
-      "Bash(do wc:*)"
+      "Bash(do wc:*)",
+      "Bash(read f:*)"
     ]
   }
 }

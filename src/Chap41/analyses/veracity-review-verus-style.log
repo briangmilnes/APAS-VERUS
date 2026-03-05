@@ -134,13 +134,13 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:575: warning: [13] impl Default for ArraySetStEph should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:54: warning: [14] struct ArraySetStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:579: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:80: warning: [18] proof fn lemma_filter_remove should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:119: warning: [18] proof fn lemma_push_preserves_no_dups should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:145: warning: [18] proof fn lemma_subseq_no_dups_subset should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:165: warning: [18] trait ArraySetStEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:591: warning: [13] impl Default for ArraySetStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:56: warning: [14] struct ArraySetStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:595: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:82: warning: [18] proof fn lemma_filter_remove should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:121: warning: [18] proof fn lemma_push_preserves_no_dups should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:147: warning: [18] proof fn lemma_subseq_no_dups_subset should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:167: warning: [18] trait ArraySetStEphTrait should come before impls (expected traits before impls)
 
 /home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [1] has mod declarations

@@ -579,7 +579,7 @@
     "id": 73,
     "function": "lemma_filter_remove",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "80-83",
+    "lines": "82-85",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_filter_remove<V>(s: Seq<V>, v: V)\n        requires s.no_duplicates()\n        ensures s.filter(|e: V| e != v).to_set() =~= s.to_set().remove(v)\n        decreases s.len()"
   },
@@ -587,7 +587,7 @@
     "id": 74,
     "function": "lemma_push_preserves_no_dups",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "119-124",
+    "lines": "121-126",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_push_preserves_no_dups<V>(s: Seq<V>, x: V)\n        requires\n            s.no_duplicates(),\n            !s.contains(x),\n        ensures\n            s.push(x).no_duplicates()"
   },
@@ -595,7 +595,7 @@
     "id": 75,
     "function": "lemma_subseq_no_dups_subset",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "145-151",
+    "lines": "147-153",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_subseq_no_dups_subset<V>(orig: Seq<V>, sub: Seq<V>)\n        requires\n            orig.no_duplicates(),\n            forall|i: int| #![trigger sub[i]] 0 <= i < sub.len() ==> orig.contains(sub[i]),\n            sub.no_duplicates(),\n        ensures\n            sub.to_set().subset_of(orig.to_set())"
   },
@@ -603,7 +603,7 @@
     "id": 76,
     "function": "size",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "168-170",
+    "lines": "170-172",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_wf()\n            ensures count == self@.len(), self@.finite();"
   },
@@ -611,15 +611,15 @@
     "id": 77,
     "function": "to_seq",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "172-173",
-    "spec_strength": "unknown",
-    "snippet": "        fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)\n            ensures self@.finite();"
+    "lines": "174-179",
+    "spec_strength": "hole",
+    "snippet": "        fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)\n            requires self.spec_wf(),\n            ensures\n                self@.finite(),\n                seq@.no_duplicates(),\n                seq@.to_set() =~= self@;"
   },
   {
     "id": 78,
     "function": "empty",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "175-176",
+    "lines": "181-182",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty: Self)\n            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_wf();"
   },
@@ -627,7 +627,7 @@
     "id": 79,
     "function": "singleton",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "178-179",
+    "lines": "184-185",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_wf();"
   },
@@ -635,7 +635,7 @@
     "id": 80,
     "function": "from_seq",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "181-182",
+    "lines": "187-188",
     "spec_strength": "unknown",
     "snippet": "        fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)\n            ensures constructed@.finite(), constructed.spec_wf();"
   },
@@ -643,7 +643,7 @@
     "id": 81,
     "function": "filter",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "184-191",
+    "lines": "190-197",
     "spec_strength": "hole",
     "snippet": "        fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)\n            requires\n                self.spec_wf(),\n                self@.finite(),\n            ensures\n                filtered@.finite(),\n                filtered@.subset_of(self@),\n                filtered.spec_wf();"
   },
@@ -651,7 +651,7 @@
     "id": 82,
     "function": "intersection",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "193-202",
+    "lines": "199-208",
     "spec_strength": "hole",
     "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_wf(),\n                other.spec_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                common@ == self@.intersect(other@),\n                common@.finite(),\n                common.spec_wf();"
   },
@@ -659,7 +659,7 @@
     "id": 83,
     "function": "difference",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "204-213",
+    "lines": "210-219",
     "spec_strength": "hole",
     "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_wf(),\n                other.spec_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining@.finite(),\n                remaining.spec_wf();"
   },
@@ -667,7 +667,7 @@
     "id": 84,
     "function": "union",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "215-224",
+    "lines": "221-230",
     "spec_strength": "hole",
     "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_wf(),\n                other.spec_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                combined@ == self@.union(other@),\n                combined@.finite(),\n                combined.spec_wf();"
   },
@@ -675,7 +675,7 @@
     "id": 85,
     "function": "find",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "226-228",
+    "lines": "232-234",
     "spec_strength": "hole",
     "snippet": "        fn find(&self, x: &T) -> (found: B)\n            requires self@.finite(),\n            ensures found == self@.contains(x@);"
   },
@@ -683,7 +683,7 @@
     "id": 86,
     "function": "delete",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "230-237",
+    "lines": "236-243",
     "spec_strength": "hole",
     "snippet": "        fn delete(&mut self, x: &T)\n            requires\n                old(self).spec_wf(),\n                old(self)@.finite(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self@.finite(),\n                self.spec_wf();"
   },
@@ -691,7 +691,7 @@
     "id": 87,
     "function": "insert",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "239-246",
+    "lines": "245-252",
     "spec_strength": "hole",
     "snippet": "        fn insert(&mut self, x: T)\n            requires\n                old(self).spec_wf(),\n                old(self)@.finite(),\n            ensures\n                self@ == old(self)@.insert(x@),\n                self@.finite(),\n                self.spec_wf();"
   },
@@ -699,7 +699,7 @@
     "id": 88,
     "function": "default",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "576",
+    "lines": "592",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::empty() }"
   },
@@ -707,7 +707,7 @@
     "id": 89,
     "function": "eq",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "580-589",
+    "lines": "596-605",
     "spec_strength": "",
     "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.size() == other.size() && {\n                for i in 0..self.elements.length() {\n                    if !other.find(self.elements.nth(i)) {\n                        return false;\n                    }\n                }\n                true\n            }\n        }"
   },

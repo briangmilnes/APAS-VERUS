@@ -26,12 +26,12 @@
 | 2 | Chap37 | AVLTreeSeqMtPer | 11 | 14 | 0 | 13 | 25 | 2 | 11 | 12 | 4 |
 | 3 | Chap37 | AVLTreeSeqStEph | 18 | 21 | 0 | 12 | 30 | 3 | 17 | 13 | 3 |
 | 4 | Chap37 | AVLTreeSeqStPer | 13 | 16 | 0 | 14 | 27 | 3 | 11 | 14 | 5 |
-| 5 | Chap37 | BSTAVLMtEph | 0 | 0 | 6 | 8 | 14 | 0 | 6 | 0 | 8 |
+| 5 | Chap37 | BSTAVLMtEph | 6 | 6 | 0 | 8 | 14 | 0 | 6 | 0 | 8 |
 | 6 | Chap37 | BSTAVLStEph | 0 | 0 | 0 | 17 | 17 | 0 | 15 | 0 | 2 |
-| 7 | Chap37 | BSTBBAlphaMtEph | 0 | 0 | 6 | 5 | 11 | 0 | 3 | 0 | 8 |
-| 8 | Chap37 | BSTBBAlphaStEph | 0 | 0 | 0 | 12 | 12 | 0 | 10 | 0 | 2 |
-| 9 | Chap37 | BSTPlainMtEph | 0 | 0 | 6 | 5 | 11 | 0 | 3 | 0 | 8 |
-| 10 | Chap37 | BSTPlainStEph | 0 | 0 | 0 | 12 | 12 | 0 | 10 | 0 | 2 |
+| 7 | Chap37 | BSTBBAlphaMtEph | 6 | 6 | 0 | 5 | 11 | 0 | 3 | 0 | 8 |
+| 8 | Chap37 | BSTBBAlphaStEph | 10 | 10 | 0 | 7 | 17 | 0 | 17 | 0 | 0 |
+| 9 | Chap37 | BSTPlainMtEph | 6 | 6 | 0 | 5 | 11 | 0 | 3 | 0 | 8 |
+| 10 | Chap37 | BSTPlainStEph | 10 | 10 | 0 | 7 | 17 | 0 | 17 | 0 | 0 |
 | 11 | Chap37 | BSTRBMtEph | 14 | 16 | 0 | 20 | 1 | 35 | 0 | 1 | 35 |
 | 12 | Chap37 | BSTRBStEph | 0 | 0 | 0 | 15 | 15 | 0 | 13 | 0 | 2 |
 | 13 | Chap37 | BSTSetAVLMtEph | 20 | 20 | 0 | 3 | 23 | 0 | 0 | 0 | 23 |
@@ -194,20 +194,20 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 127 | `lemma_bst_deep` |  |  |  | Y | Y |  |  | unknown | 53&#8209;85 |
-| 128 | `rotate_right` |  |  |  | Y | Y |  |  | unknown | 100&#8209;104 |
-| 129 | `rotate_left` |  |  |  | Y | Y |  |  | unknown | 166&#8209;170 |
-| 130 | `insert_node` |  |  |  | Y | Y |  |  | unknown | 233&#8209;242 |
-| 131 | `contains_node` |  |  |  | Y | Y |  |  | unknown | 325&#8209;328 |
-| 132 | `find_node` |  |  |  | Y | Y |  |  | unknown | 350&#8209;355 |
-| 133 | `min_node` |  |  |  | Y | Y |  | Y |  | 377&#8209;378 |
-| 134 | `max_node` |  |  |  | Y | Y |  | Y |  | 389&#8209;390 |
-| 135 | `new` |  |  | Y |  | Y |  | Y |  | 404 |
-| 136 | `insert` |  |  | Y |  | Y |  | Y |  | 414 |
-| 137 | `contains` |  |  | Y |  | Y |  | Y |  | 437 |
-| 138 | `size` |  |  | Y |  | Y |  | Y |  | 446 |
-| 139 | `is_empty` |  |  | Y |  | Y |  | Y |  | 456 |
-| 140 | `height` |  |  | Y |  | Y |  | Y |  | 465 |
+| 127 | `new` | Y | Y |  |  | Y |  | Y |  | 52 |
+| 128 | `insert` | Y | Y |  |  | Y |  | Y |  | 53 |
+| 129 | `contains` | Y | Y |  |  | Y |  | Y |  | 54 |
+| 130 | `size` | Y | Y |  |  | Y |  | Y |  | 55 |
+| 131 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 56 |
+| 132 | `height` | Y | Y |  |  | Y |  | Y |  | 57 |
+| 133 | `lemma_bst_deep` |  |  |  | Y | Y |  |  | unknown | 62&#8209;94 |
+| 134 | `rotate_right` |  |  |  | Y | Y |  |  | unknown | 109&#8209;113 |
+| 135 | `rotate_left` |  |  |  | Y | Y |  |  | unknown | 175&#8209;179 |
+| 136 | `insert_node` |  |  |  | Y | Y |  |  | unknown | 242&#8209;251 |
+| 137 | `contains_node` |  |  |  | Y | Y |  |  | unknown | 334&#8209;337 |
+| 138 | `find_node` |  |  |  | Y | Y |  |  | unknown | 359&#8209;364 |
+| 139 | `min_node` |  |  |  | Y | Y |  | Y |  | 386&#8209;387 |
+| 140 | `max_node` |  |  |  | Y | Y |  | Y |  | 398&#8209;399 |
 
 ### Chap37/BSTAVLStEph.rs
 
@@ -235,333 +235,343 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 158 | `insert_node` |  |  |  | Y | Y |  |  | unknown | 63&#8209;72 |
-| 159 | `contains_node` |  |  |  | Y | Y |  |  | unknown | 155&#8209;158 |
-| 160 | `find_node` |  |  |  | Y | Y |  |  | unknown | 180&#8209;185 |
-| 161 | `min_node` |  |  |  | Y | Y |  | Y |  | 207&#8209;208 |
-| 162 | `max_node` |  |  |  | Y | Y |  | Y |  | 219&#8209;220 |
-| 163 | `new` |  |  | Y |  | Y |  | Y |  | 234 |
-| 164 | `insert` |  |  | Y |  | Y |  | Y |  | 244 |
-| 165 | `contains` |  |  | Y |  | Y |  | Y |  | 267 |
-| 166 | `size` |  |  | Y |  | Y |  | Y |  | 276 |
-| 167 | `is_empty` |  |  | Y |  | Y |  | Y |  | 286 |
-| 168 | `height` |  |  | Y |  | Y |  | Y |  | 295 |
+| 158 | `new` | Y | Y |  |  | Y |  | Y |  | 51 |
+| 159 | `insert` | Y | Y |  |  | Y |  | Y |  | 52 |
+| 160 | `contains` | Y | Y |  |  | Y |  | Y |  | 53 |
+| 161 | `size` | Y | Y |  |  | Y |  | Y |  | 54 |
+| 162 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 55 |
+| 163 | `height` | Y | Y |  |  | Y |  | Y |  | 56 |
+| 164 | `insert_node` |  |  |  | Y | Y |  |  | unknown | 72&#8209;81 |
+| 165 | `contains_node` |  |  |  | Y | Y |  |  | unknown | 164&#8209;167 |
+| 166 | `find_node` |  |  |  | Y | Y |  |  | unknown | 189&#8209;194 |
+| 167 | `min_node` |  |  |  | Y | Y |  | Y |  | 216&#8209;217 |
+| 168 | `max_node` |  |  |  | Y | Y |  | Y |  | 228&#8209;229 |
 
 ### Chap37/BSTBBAlphaStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 169 | `insert_node` |  |  |  | Y | Y |  |  | unknown | 60&#8209;67 |
-| 170 | `contains_node` |  |  |  | Y | Y |  |  | unknown | 189&#8209;192 |
-| 171 | `find_node` |  |  |  | Y | Y |  |  | unknown | 222&#8209;227 |
-| 172 | `min_node` |  |  |  | Y | Y |  | Y |  | 257&#8209;258 |
-| 173 | `max_node` |  |  |  | Y | Y |  | Y |  | 272&#8209;273 |
-| 174 | `bb_new` |  |  |  | Y | Y |  |  | unknown | 287&#8209;290 |
-| 175 | `bb_size` |  |  |  | Y | Y |  |  | unknown | 295&#8209;297 |
-| 176 | `bb_is_empty` |  |  |  | Y | Y |  |  | unknown | 302&#8209;303 |
-| 177 | `bb_height` |  |  |  | Y | Y |  |  | unknown | 308&#8209;310 |
-| 178 | `bb_insert` |  |  |  | Y | Y |  |  | unknown | 315&#8209;321 |
-| 179 | `bb_contains` |  |  |  | Y | Y |  |  | unknown | 326&#8209;328 |
-| 180 | `bb_find` |  |  |  | Y | Y |  |  | unknown | 333&#8209;337 |
+| 169 | `new` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;72 |
+| 170 | `size` | Y | Y |  |  | Y |  |  | unknown | 73&#8209;75 |
+| 171 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;77 |
+| 172 | `height` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;80 |
+| 173 | `insert` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;87 |
+| 174 | `contains` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;90 |
+| 175 | `find` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;95 |
+| 176 | `delete` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;102 |
+| 177 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;108 |
+| 178 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 109&#8209;114 |
+| 179 | `insert_node` |  |  |  | Y | Y |  |  | unknown | 163&#8209;170 |
+| 180 | `contains_node` |  |  |  | Y | Y |  |  | unknown | 292&#8209;295 |
+| 181 | `find_node` |  |  |  | Y | Y |  |  | unknown | 325&#8209;330 |
+| 182 | `min_node` |  |  |  | Y | Y |  |  | unknown | 360&#8209;366 |
+| 183 | `max_node` |  |  |  | Y | Y |  |  | unknown | 380&#8209;386 |
+| 184 | `delete_min_node` |  |  |  | Y | Y |  |  | unknown | 401&#8209;412 |
+| 185 | `delete_node` |  |  |  | Y | Y |  |  | unknown | 515&#8209;522 |
 
 ### Chap37/BSTPlainMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 181 | `insert_node` |  |  |  | Y | Y |  |  | unknown | 58&#8209;67 |
-| 182 | `contains_node` |  |  |  | Y | Y |  |  | unknown | 150&#8209;153 |
-| 183 | `find_node` |  |  |  | Y | Y |  |  | unknown | 175&#8209;180 |
-| 184 | `min_node` |  |  |  | Y | Y |  | Y |  | 202&#8209;203 |
-| 185 | `max_node` |  |  |  | Y | Y |  | Y |  | 214&#8209;215 |
-| 186 | `new` |  |  | Y |  | Y |  | Y |  | 229 |
-| 187 | `insert` |  |  | Y |  | Y |  | Y |  | 239 |
-| 188 | `contains` |  |  | Y |  | Y |  | Y |  | 262 |
-| 189 | `is_empty` |  |  | Y |  | Y |  | Y |  | 271 |
-| 190 | `size` |  |  | Y |  | Y |  | Y |  | 280 |
-| 191 | `height` |  |  | Y |  | Y |  | Y |  | 290 |
+| 186 | `new` | Y | Y |  |  | Y |  | Y |  | 50 |
+| 187 | `insert` | Y | Y |  |  | Y |  | Y |  | 51 |
+| 188 | `contains` | Y | Y |  |  | Y |  | Y |  | 52 |
+| 189 | `size` | Y | Y |  |  | Y |  | Y |  | 53 |
+| 190 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 54 |
+| 191 | `height` | Y | Y |  |  | Y |  | Y |  | 55 |
+| 192 | `insert_node` |  |  |  | Y | Y |  |  | unknown | 67&#8209;76 |
+| 193 | `contains_node` |  |  |  | Y | Y |  |  | unknown | 159&#8209;162 |
+| 194 | `find_node` |  |  |  | Y | Y |  |  | unknown | 184&#8209;189 |
+| 195 | `min_node` |  |  |  | Y | Y |  | Y |  | 211&#8209;212 |
+| 196 | `max_node` |  |  |  | Y | Y |  | Y |  | 223&#8209;224 |
 
 ### Chap37/BSTPlainStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 192 | `insert_node` |  |  |  | Y | Y |  |  | unknown | 64&#8209;71 |
-| 193 | `contains_node` |  |  |  | Y | Y |  |  | unknown | 193&#8209;196 |
-| 194 | `find_node` |  |  |  | Y | Y |  |  | unknown | 226&#8209;231 |
-| 195 | `min_node` |  |  |  | Y | Y |  | Y |  | 261&#8209;262 |
-| 196 | `max_node` |  |  |  | Y | Y |  | Y |  | 276&#8209;277 |
-| 197 | `bst_new` |  |  |  | Y | Y |  |  | unknown | 291&#8209;294 |
-| 198 | `bst_size` |  |  |  | Y | Y |  |  | unknown | 299&#8209;301 |
-| 199 | `bst_is_empty` |  |  |  | Y | Y |  |  | unknown | 306&#8209;307 |
-| 200 | `bst_height` |  |  |  | Y | Y |  |  | unknown | 312&#8209;314 |
-| 201 | `bst_insert` |  |  |  | Y | Y |  |  | unknown | 319&#8209;325 |
-| 202 | `bst_contains` |  |  |  | Y | Y |  |  | unknown | 330&#8209;332 |
-| 203 | `bst_find` |  |  |  | Y | Y |  |  | unknown | 337&#8209;341 |
+| 197 | `new` | Y | Y |  |  | Y |  |  | unknown | 73&#8209;76 |
+| 198 | `size` | Y | Y |  |  | Y |  |  | unknown | 77&#8209;79 |
+| 199 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 80&#8209;81 |
+| 200 | `height` | Y | Y |  |  | Y |  |  | unknown | 82&#8209;84 |
+| 201 | `insert` | Y | Y |  |  | Y |  |  | unknown | 85&#8209;91 |
+| 202 | `contains` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;94 |
+| 203 | `find` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;99 |
+| 204 | `delete` | Y | Y |  |  | Y |  |  | unknown | 100&#8209;106 |
+| 205 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 107&#8209;112 |
+| 206 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 113&#8209;118 |
+| 207 | `insert_node` |  |  |  | Y | Y |  |  | unknown | 167&#8209;174 |
+| 208 | `contains_node` |  |  |  | Y | Y |  |  | unknown | 296&#8209;299 |
+| 209 | `find_node` |  |  |  | Y | Y |  |  | unknown | 329&#8209;334 |
+| 210 | `min_node` |  |  |  | Y | Y |  |  | unknown | 364&#8209;370 |
+| 211 | `max_node` |  |  |  | Y | Y |  |  | unknown | 384&#8209;390 |
+| 212 | `delete_min_node` |  |  |  | Y | Y |  |  | unknown | 405&#8209;416 |
+| 213 | `delete_node` |  |  |  | Y | Y |  |  | unknown | 523&#8209;530 |
 
 ### Chap37/BSTRBMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 204 | `new_rb_link_lock` |  |  |  | Y | Y |  |  | hole | 333 |
-| 205 | `new_node` |  |  |  | Y |  | Y | Y |  | 34&#8209;42 |
-| 206 | `is_red` |  |  |  | Y |  | Y | Y |  | 44 |
-| 207 | `size_link` |  |  |  | Y |  | Y | Y |  | 46 |
-| 208 | `update` |  |  |  | Y |  | Y | Y |  | 48 |
-| 209 | `rotate_left` |  |  |  | Y |  | Y | Y |  | 50&#8209;67 |
-| 210 | `rotate_right` |  |  |  | Y |  | Y | Y |  | 69&#8209;86 |
-| 211 | `flip_colors` |  |  |  | Y |  | Y | Y |  | 88&#8209;107 |
-| 212 | `fix_up` |  |  |  | Y |  | Y | Y |  | 109&#8209;143 |
-| 213 | `insert_link` |  |  |  | Y |  | Y | Y |  | 145&#8209;159 |
-| 214 | `find_link` |  |  |  | Y |  | Y | Y |  | 161&#8209;174 |
-| 215 | `min_link` |  |  |  | Y |  | Y | Y |  | 176&#8209;184 |
-| 216 | `max_link` |  |  |  | Y |  | Y | Y |  | 186&#8209;194 |
-| 217 | `in_order_collect` |  |  |  | Y |  | Y | Y |  | 196&#8209;202 |
-| 218 | `pre_order_collect` |  |  |  | Y |  | Y | Y |  | 204&#8209;210 |
-| 219 | `in_order_parallel` |  |  |  | Y |  | Y | Y |  | 214&#8209;229 |
-| 220 | `pre_order_parallel` |  |  |  | Y |  | Y | Y |  | 231&#8209;246 |
-| 221 | `build_balanced` |  |  |  | Y |  | Y | Y |  | 248&#8209;267 |
-| 222 | `filter_parallel` |  |  |  | Y |  | Y | Y |  | 269&#8209;294 |
-| 223 | `reduce_parallel` |  |  |  | Y |  | Y | Y |  | 296&#8209;318 |
-| 224 | `new` | Y | Y |  |  |  | Y | Y |  | 353&#8209;354 |
-| 225 | `from_sorted_slice` | Y | Y |  |  |  | Y | Y |  | 355&#8209;356 |
-| 226 | `insert` | Y | Y |  |  |  | Y | Y |  | 357&#8209;358 |
-| 227 | `find` | Y | Y |  |  |  | Y | Y |  | 359&#8209;360 |
-| 228 | `contains` | Y | Y |  |  |  | Y | Y |  | 361 |
-| 229 | `size` | Y | Y |  |  |  | Y | Y |  | 362 |
-| 230 | `is_empty` | Y | Y |  |  |  | Y | Y |  | 363 |
-| 231 | `height` | Y | Y |  |  |  | Y | Y |  | 364 |
-| 232 | `minimum` | Y | Y |  |  |  | Y | Y |  | 365 |
-| 233 | `maximum` | Y | Y |  |  |  | Y | Y |  | 366 |
-| 234 | `in_order` | Y | Y |  |  |  | Y | Y |  | 367&#8209;368 |
-| 235 | `pre_order` | Y | Y |  |  |  | Y | Y |  | 369&#8209;370 |
-| 236 | `filter` | Y | Y |  |  |  | Y | Y |  | 371&#8209;374 |
-| 237 | `reduce` | Y | Y |  |  |  | Y | Y |  | 375&#8209;378 |
-| 238 | `height_rec` |  | Y |  |  |  | Y | Y |  | 416&#8209;421 |
-| 239 | `default` |  | Y |  |  |  | Y | Y |  | 486 |
+| 214 | `new_rb_link_lock` |  |  |  | Y | Y |  |  | hole | 333 |
+| 215 | `new_node` |  |  |  | Y |  | Y | Y |  | 34&#8209;42 |
+| 216 | `is_red` |  |  |  | Y |  | Y | Y |  | 44 |
+| 217 | `size_link` |  |  |  | Y |  | Y | Y |  | 46 |
+| 218 | `update` |  |  |  | Y |  | Y | Y |  | 48 |
+| 219 | `rotate_left` |  |  |  | Y |  | Y | Y |  | 50&#8209;67 |
+| 220 | `rotate_right` |  |  |  | Y |  | Y | Y |  | 69&#8209;86 |
+| 221 | `flip_colors` |  |  |  | Y |  | Y | Y |  | 88&#8209;107 |
+| 222 | `fix_up` |  |  |  | Y |  | Y | Y |  | 109&#8209;143 |
+| 223 | `insert_link` |  |  |  | Y |  | Y | Y |  | 145&#8209;159 |
+| 224 | `find_link` |  |  |  | Y |  | Y | Y |  | 161&#8209;174 |
+| 225 | `min_link` |  |  |  | Y |  | Y | Y |  | 176&#8209;184 |
+| 226 | `max_link` |  |  |  | Y |  | Y | Y |  | 186&#8209;194 |
+| 227 | `in_order_collect` |  |  |  | Y |  | Y | Y |  | 196&#8209;202 |
+| 228 | `pre_order_collect` |  |  |  | Y |  | Y | Y |  | 204&#8209;210 |
+| 229 | `in_order_parallel` |  |  |  | Y |  | Y | Y |  | 214&#8209;229 |
+| 230 | `pre_order_parallel` |  |  |  | Y |  | Y | Y |  | 231&#8209;246 |
+| 231 | `build_balanced` |  |  |  | Y |  | Y | Y |  | 248&#8209;267 |
+| 232 | `filter_parallel` |  |  |  | Y |  | Y | Y |  | 269&#8209;294 |
+| 233 | `reduce_parallel` |  |  |  | Y |  | Y | Y |  | 296&#8209;318 |
+| 234 | `new` | Y | Y |  |  |  | Y | Y |  | 353&#8209;354 |
+| 235 | `from_sorted_slice` | Y | Y |  |  |  | Y | Y |  | 355&#8209;356 |
+| 236 | `insert` | Y | Y |  |  |  | Y | Y |  | 357&#8209;358 |
+| 237 | `find` | Y | Y |  |  |  | Y | Y |  | 359&#8209;360 |
+| 238 | `contains` | Y | Y |  |  |  | Y | Y |  | 361 |
+| 239 | `size` | Y | Y |  |  |  | Y | Y |  | 362 |
+| 240 | `is_empty` | Y | Y |  |  |  | Y | Y |  | 363 |
+| 241 | `height` | Y | Y |  |  |  | Y | Y |  | 364 |
+| 242 | `minimum` | Y | Y |  |  |  | Y | Y |  | 365 |
+| 243 | `maximum` | Y | Y |  |  |  | Y | Y |  | 366 |
+| 244 | `in_order` | Y | Y |  |  |  | Y | Y |  | 367&#8209;368 |
+| 245 | `pre_order` | Y | Y |  |  |  | Y | Y |  | 369&#8209;370 |
+| 246 | `filter` | Y | Y |  |  |  | Y | Y |  | 371&#8209;374 |
+| 247 | `reduce` | Y | Y |  |  |  | Y | Y |  | 375&#8209;378 |
+| 248 | `height_rec` |  | Y |  |  |  | Y | Y |  | 416&#8209;421 |
+| 249 | `default` |  | Y |  |  |  | Y | Y |  | 486 |
 
 ### Chap37/BSTRBStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 240 | `lemma_bst_deep` |  |  |  | Y | Y |  |  | unknown | 41&#8209;73 |
-| 241 | `rotate_right` |  |  |  | Y | Y |  |  | unknown | 87&#8209;93 |
-| 242 | `rotate_left` |  |  |  | Y | Y |  |  | unknown | 185&#8209;191 |
-| 243 | `insert_node` |  |  |  | Y | Y |  |  | unknown | 282&#8209;289 |
-| 244 | `contains_node` |  |  |  | Y | Y |  |  | unknown | 411&#8209;414 |
-| 245 | `find_node` |  |  |  | Y | Y |  |  | unknown | 444&#8209;449 |
-| 246 | `min_node` |  |  |  | Y | Y |  | Y |  | 479&#8209;480 |
-| 247 | `max_node` |  |  |  | Y | Y |  | Y |  | 494&#8209;495 |
-| 248 | `rb_new` |  |  |  | Y | Y |  |  | unknown | 509&#8209;512 |
-| 249 | `rb_size` |  |  |  | Y | Y |  |  | unknown | 517&#8209;519 |
-| 250 | `rb_is_empty` |  |  |  | Y | Y |  |  | unknown | 524&#8209;525 |
-| 251 | `rb_height` |  |  |  | Y | Y |  |  | unknown | 530&#8209;532 |
-| 252 | `rb_insert` |  |  |  | Y | Y |  |  | unknown | 537&#8209;543 |
-| 253 | `rb_contains` |  |  |  | Y | Y |  |  | unknown | 548&#8209;550 |
-| 254 | `rb_find` |  |  |  | Y | Y |  |  | unknown | 555&#8209;559 |
+| 250 | `lemma_bst_deep` |  |  |  | Y | Y |  |  | unknown | 41&#8209;73 |
+| 251 | `rotate_right` |  |  |  | Y | Y |  |  | unknown | 87&#8209;93 |
+| 252 | `rotate_left` |  |  |  | Y | Y |  |  | unknown | 185&#8209;191 |
+| 253 | `insert_node` |  |  |  | Y | Y |  |  | unknown | 282&#8209;289 |
+| 254 | `contains_node` |  |  |  | Y | Y |  |  | unknown | 411&#8209;414 |
+| 255 | `find_node` |  |  |  | Y | Y |  |  | unknown | 444&#8209;449 |
+| 256 | `min_node` |  |  |  | Y | Y |  | Y |  | 479&#8209;480 |
+| 257 | `max_node` |  |  |  | Y | Y |  | Y |  | 494&#8209;495 |
+| 258 | `rb_new` |  |  |  | Y | Y |  |  | unknown | 509&#8209;512 |
+| 259 | `rb_size` |  |  |  | Y | Y |  |  | unknown | 517&#8209;519 |
+| 260 | `rb_is_empty` |  |  |  | Y | Y |  |  | unknown | 524&#8209;525 |
+| 261 | `rb_height` |  |  |  | Y | Y |  |  | unknown | 530&#8209;532 |
+| 262 | `rb_insert` |  |  |  | Y | Y |  |  | unknown | 537&#8209;543 |
+| 263 | `rb_contains` |  |  |  | Y | Y |  |  | unknown | 548&#8209;550 |
+| 264 | `rb_find` |  |  |  | Y | Y |  |  | unknown | 555&#8209;559 |
 
 ### Chap37/BSTSetAVLMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 255 | `values_vec` |  |  |  | Y | Y |  | Y |  | 24 |
-| 256 | `rebuild_from_vec` |  |  |  | Y | Y |  | Y |  | 26 |
-| 257 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 34&#8209;36 |
-| 258 | `empty` | Y | Y |  |  | Y |  | Y |  | 47 |
-| 259 | `singleton` | Y | Y |  |  | Y |  | Y |  | 49 |
-| 260 | `size` | Y | Y |  |  | Y |  | Y |  | 51 |
-| 261 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 53 |
-| 262 | `find` | Y | Y |  |  | Y |  | Y |  | 55 |
-| 263 | `contains` | Y | Y |  |  | Y |  | Y |  | 57 |
-| 264 | `minimum` | Y | Y |  |  | Y |  | Y |  | 59 |
-| 265 | `maximum` | Y | Y |  |  | Y |  | Y |  | 61 |
-| 266 | `insert` | Y | Y |  |  | Y |  | Y |  | 63 |
-| 267 | `delete` | Y | Y |  |  | Y |  | Y |  | 65 |
-| 268 | `union` | Y | Y |  |  | Y |  | Y |  | 67 |
-| 269 | `intersection` | Y | Y |  |  | Y |  | Y |  | 69 |
-| 270 | `difference` | Y | Y |  |  | Y |  | Y |  | 71 |
-| 271 | `split` | Y | Y |  |  | Y |  | Y |  | 73 |
-| 272 | `join_pair` | Y | Y |  |  | Y |  | Y |  | 75 |
-| 273 | `join_m` | Y | Y |  |  | Y |  | Y |  | 77 |
-| 274 | `filter` | Y | Y |  |  | Y |  | Y |  | 79 |
-| 275 | `reduce` | Y | Y |  |  | Y |  | Y |  | 81 |
-| 276 | `iter_in_order` | Y | Y |  |  | Y |  | Y |  | 83 |
-| 277 | `as_tree` | Y | Y |  |  | Y |  | Y |  | 85 |
+| 265 | `values_vec` |  |  |  | Y | Y |  | Y |  | 24 |
+| 266 | `rebuild_from_vec` |  |  |  | Y | Y |  | Y |  | 26 |
+| 267 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 34&#8209;36 |
+| 268 | `empty` | Y | Y |  |  | Y |  | Y |  | 47 |
+| 269 | `singleton` | Y | Y |  |  | Y |  | Y |  | 49 |
+| 270 | `size` | Y | Y |  |  | Y |  | Y |  | 51 |
+| 271 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 53 |
+| 272 | `find` | Y | Y |  |  | Y |  | Y |  | 55 |
+| 273 | `contains` | Y | Y |  |  | Y |  | Y |  | 57 |
+| 274 | `minimum` | Y | Y |  |  | Y |  | Y |  | 59 |
+| 275 | `maximum` | Y | Y |  |  | Y |  | Y |  | 61 |
+| 276 | `insert` | Y | Y |  |  | Y |  | Y |  | 63 |
+| 277 | `delete` | Y | Y |  |  | Y |  | Y |  | 65 |
+| 278 | `union` | Y | Y |  |  | Y |  | Y |  | 67 |
+| 279 | `intersection` | Y | Y |  |  | Y |  | Y |  | 69 |
+| 280 | `difference` | Y | Y |  |  | Y |  | Y |  | 71 |
+| 281 | `split` | Y | Y |  |  | Y |  | Y |  | 73 |
+| 282 | `join_pair` | Y | Y |  |  | Y |  | Y |  | 75 |
+| 283 | `join_m` | Y | Y |  |  | Y |  | Y |  | 77 |
+| 284 | `filter` | Y | Y |  |  | Y |  | Y |  | 79 |
+| 285 | `reduce` | Y | Y |  |  | Y |  | Y |  | 81 |
+| 286 | `iter_in_order` | Y | Y |  |  | Y |  | Y |  | 83 |
+| 287 | `as_tree` | Y | Y |  |  | Y |  | Y |  | 85 |
 
 ### Chap37/BSTSetBBAlphaMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 278 | `empty` | Y | Y |  |  | Y |  | Y |  | 26 |
-| 279 | `singleton` | Y | Y |  |  | Y |  | Y |  | 28 |
-| 280 | `size` | Y | Y |  |  | Y |  | Y |  | 30 |
-| 281 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 32 |
-| 282 | `find` | Y | Y |  |  | Y |  | Y |  | 34 |
-| 283 | `contains` | Y | Y |  |  | Y |  | Y |  | 36 |
-| 284 | `minimum` | Y | Y |  |  | Y |  | Y |  | 38 |
-| 285 | `maximum` | Y | Y |  |  | Y |  | Y |  | 40 |
-| 286 | `insert` | Y | Y |  |  | Y |  | Y |  | 42 |
-| 287 | `delete` | Y | Y |  |  | Y |  | Y |  | 44 |
-| 288 | `union` | Y | Y |  |  | Y |  | Y |  | 46 |
-| 289 | `intersection` | Y | Y |  |  | Y |  | Y |  | 48 |
-| 290 | `difference` | Y | Y |  |  | Y |  | Y |  | 50 |
-| 291 | `split` | Y | Y |  |  | Y |  | Y |  | 52 |
-| 292 | `join_pair` | Y | Y |  |  | Y |  | Y |  | 54 |
-| 293 | `join_m` | Y | Y |  |  | Y |  | Y |  | 56 |
-| 294 | `filter` | Y | Y |  |  | Y |  | Y |  | 58 |
-| 295 | `reduce` | Y | Y |  |  | Y |  | Y |  | 60 |
-| 296 | `iter_in_order` | Y | Y |  |  | Y |  | Y |  | 62 |
-| 297 | `as_tree` | Y | Y |  |  | Y |  | Y |  | 64 |
-| 298 | `values_vec` |  |  |  | Y | Y |  | Y |  | 67 |
-| 299 | `rebuild_from_vec` |  |  |  | Y | Y |  | Y |  | 70 |
-| 300 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 75 |
+| 288 | `empty` | Y | Y |  |  | Y |  | Y |  | 26 |
+| 289 | `singleton` | Y | Y |  |  | Y |  | Y |  | 28 |
+| 290 | `size` | Y | Y |  |  | Y |  | Y |  | 30 |
+| 291 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 32 |
+| 292 | `find` | Y | Y |  |  | Y |  | Y |  | 34 |
+| 293 | `contains` | Y | Y |  |  | Y |  | Y |  | 36 |
+| 294 | `minimum` | Y | Y |  |  | Y |  | Y |  | 38 |
+| 295 | `maximum` | Y | Y |  |  | Y |  | Y |  | 40 |
+| 296 | `insert` | Y | Y |  |  | Y |  | Y |  | 42 |
+| 297 | `delete` | Y | Y |  |  | Y |  | Y |  | 44 |
+| 298 | `union` | Y | Y |  |  | Y |  | Y |  | 46 |
+| 299 | `intersection` | Y | Y |  |  | Y |  | Y |  | 48 |
+| 300 | `difference` | Y | Y |  |  | Y |  | Y |  | 50 |
+| 301 | `split` | Y | Y |  |  | Y |  | Y |  | 52 |
+| 302 | `join_pair` | Y | Y |  |  | Y |  | Y |  | 54 |
+| 303 | `join_m` | Y | Y |  |  | Y |  | Y |  | 56 |
+| 304 | `filter` | Y | Y |  |  | Y |  | Y |  | 58 |
+| 305 | `reduce` | Y | Y |  |  | Y |  | Y |  | 60 |
+| 306 | `iter_in_order` | Y | Y |  |  | Y |  | Y |  | 62 |
+| 307 | `as_tree` | Y | Y |  |  | Y |  | Y |  | 64 |
+| 308 | `values_vec` |  |  |  | Y | Y |  | Y |  | 67 |
+| 309 | `rebuild_from_vec` |  |  |  | Y | Y |  | Y |  | 70 |
+| 310 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 75 |
 
 ### Chap37/BSTSetPlainMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 301 | `empty` | Y | Y |  |  | Y |  | Y |  | 26 |
-| 302 | `singleton` | Y | Y |  |  | Y |  | Y |  | 28 |
-| 303 | `size` | Y | Y |  |  | Y |  | Y |  | 30 |
-| 304 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 32 |
-| 305 | `find` | Y | Y |  |  | Y |  | Y |  | 34 |
-| 306 | `contains` | Y | Y |  |  | Y |  | Y |  | 36 |
-| 307 | `minimum` | Y | Y |  |  | Y |  | Y |  | 38 |
-| 308 | `maximum` | Y | Y |  |  | Y |  | Y |  | 40 |
-| 309 | `insert` | Y | Y |  |  | Y |  | Y |  | 42 |
-| 310 | `delete` | Y | Y |  |  | Y |  | Y |  | 44 |
-| 311 | `union` | Y | Y |  |  | Y |  | Y |  | 46 |
-| 312 | `intersection` | Y | Y |  |  | Y |  | Y |  | 48 |
-| 313 | `difference` | Y | Y |  |  | Y |  | Y |  | 50 |
-| 314 | `split` | Y | Y |  |  | Y |  | Y |  | 52 |
-| 315 | `join_pair` | Y | Y |  |  | Y |  | Y |  | 54 |
-| 316 | `join_m` | Y | Y |  |  | Y |  | Y |  | 56 |
-| 317 | `filter` | Y | Y |  |  | Y |  | Y |  | 58 |
-| 318 | `reduce` | Y | Y |  |  | Y |  | Y |  | 60 |
-| 319 | `iter_in_order` | Y | Y |  |  | Y |  | Y |  | 62 |
-| 320 | `as_tree` | Y | Y |  |  | Y |  | Y |  | 64 |
-| 321 | `values_vec` |  |  |  | Y | Y |  | Y |  | 67 |
-| 322 | `rebuild_from_vec` |  |  |  | Y | Y |  | Y |  | 70 |
-| 323 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 75 |
+| 311 | `empty` | Y | Y |  |  | Y |  | Y |  | 26 |
+| 312 | `singleton` | Y | Y |  |  | Y |  | Y |  | 28 |
+| 313 | `size` | Y | Y |  |  | Y |  | Y |  | 30 |
+| 314 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 32 |
+| 315 | `find` | Y | Y |  |  | Y |  | Y |  | 34 |
+| 316 | `contains` | Y | Y |  |  | Y |  | Y |  | 36 |
+| 317 | `minimum` | Y | Y |  |  | Y |  | Y |  | 38 |
+| 318 | `maximum` | Y | Y |  |  | Y |  | Y |  | 40 |
+| 319 | `insert` | Y | Y |  |  | Y |  | Y |  | 42 |
+| 320 | `delete` | Y | Y |  |  | Y |  | Y |  | 44 |
+| 321 | `union` | Y | Y |  |  | Y |  | Y |  | 46 |
+| 322 | `intersection` | Y | Y |  |  | Y |  | Y |  | 48 |
+| 323 | `difference` | Y | Y |  |  | Y |  | Y |  | 50 |
+| 324 | `split` | Y | Y |  |  | Y |  | Y |  | 52 |
+| 325 | `join_pair` | Y | Y |  |  | Y |  | Y |  | 54 |
+| 326 | `join_m` | Y | Y |  |  | Y |  | Y |  | 56 |
+| 327 | `filter` | Y | Y |  |  | Y |  | Y |  | 58 |
+| 328 | `reduce` | Y | Y |  |  | Y |  | Y |  | 60 |
+| 329 | `iter_in_order` | Y | Y |  |  | Y |  | Y |  | 62 |
+| 330 | `as_tree` | Y | Y |  |  | Y |  | Y |  | 64 |
+| 331 | `values_vec` |  |  |  | Y | Y |  | Y |  | 67 |
+| 332 | `rebuild_from_vec` |  |  |  | Y | Y |  | Y |  | 70 |
+| 333 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 75 |
 
 ### Chap37/BSTSetRBMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 324 | `empty` | Y | Y |  |  | Y |  | Y |  | 26 |
-| 325 | `singleton` | Y | Y |  |  | Y |  | Y |  | 28 |
-| 326 | `size` | Y | Y |  |  | Y |  | Y |  | 30 |
-| 327 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 32 |
-| 328 | `find` | Y | Y |  |  | Y |  | Y |  | 34 |
-| 329 | `contains` | Y | Y |  |  | Y |  | Y |  | 36 |
-| 330 | `minimum` | Y | Y |  |  | Y |  | Y |  | 38 |
-| 331 | `maximum` | Y | Y |  |  | Y |  | Y |  | 40 |
-| 332 | `insert` | Y | Y |  |  | Y |  | Y |  | 42 |
-| 333 | `delete` | Y | Y |  |  | Y |  | Y |  | 44 |
-| 334 | `union` | Y | Y |  |  | Y |  | Y |  | 46 |
-| 335 | `intersection` | Y | Y |  |  | Y |  | Y |  | 48 |
-| 336 | `difference` | Y | Y |  |  | Y |  | Y |  | 50 |
-| 337 | `split` | Y | Y |  |  | Y |  | Y |  | 52 |
-| 338 | `join_pair` | Y | Y |  |  | Y |  | Y |  | 54 |
-| 339 | `join_m` | Y | Y |  |  | Y |  | Y |  | 56 |
-| 340 | `filter` | Y | Y |  |  | Y |  | Y |  | 58 |
-| 341 | `reduce` | Y | Y |  |  | Y |  | Y |  | 60 |
-| 342 | `iter_in_order` | Y | Y |  |  | Y |  | Y |  | 62 |
-| 343 | `as_tree` | Y | Y |  |  | Y |  | Y |  | 64 |
-| 344 | `values_vec` |  |  |  | Y | Y |  | Y |  | 67 |
-| 345 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 70 |
+| 334 | `empty` | Y | Y |  |  | Y |  | Y |  | 26 |
+| 335 | `singleton` | Y | Y |  |  | Y |  | Y |  | 28 |
+| 336 | `size` | Y | Y |  |  | Y |  | Y |  | 30 |
+| 337 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 32 |
+| 338 | `find` | Y | Y |  |  | Y |  | Y |  | 34 |
+| 339 | `contains` | Y | Y |  |  | Y |  | Y |  | 36 |
+| 340 | `minimum` | Y | Y |  |  | Y |  | Y |  | 38 |
+| 341 | `maximum` | Y | Y |  |  | Y |  | Y |  | 40 |
+| 342 | `insert` | Y | Y |  |  | Y |  | Y |  | 42 |
+| 343 | `delete` | Y | Y |  |  | Y |  | Y |  | 44 |
+| 344 | `union` | Y | Y |  |  | Y |  | Y |  | 46 |
+| 345 | `intersection` | Y | Y |  |  | Y |  | Y |  | 48 |
+| 346 | `difference` | Y | Y |  |  | Y |  | Y |  | 50 |
+| 347 | `split` | Y | Y |  |  | Y |  | Y |  | 52 |
+| 348 | `join_pair` | Y | Y |  |  | Y |  | Y |  | 54 |
+| 349 | `join_m` | Y | Y |  |  | Y |  | Y |  | 56 |
+| 350 | `filter` | Y | Y |  |  | Y |  | Y |  | 58 |
+| 351 | `reduce` | Y | Y |  |  | Y |  | Y |  | 60 |
+| 352 | `iter_in_order` | Y | Y |  |  | Y |  | Y |  | 62 |
+| 353 | `as_tree` | Y | Y |  |  | Y |  | Y |  | 64 |
+| 354 | `values_vec` |  |  |  | Y | Y |  | Y |  | 67 |
+| 355 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 70 |
 
 ### Chap37/BSTSetSplayMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 346 | `empty` | Y | Y |  |  | Y |  | Y |  | 26 |
-| 347 | `singleton` | Y | Y |  |  | Y |  | Y |  | 28 |
-| 348 | `size` | Y | Y |  |  | Y |  | Y |  | 30 |
-| 349 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 32 |
-| 350 | `find` | Y | Y |  |  | Y |  | Y |  | 34 |
-| 351 | `contains` | Y | Y |  |  | Y |  | Y |  | 36 |
-| 352 | `minimum` | Y | Y |  |  | Y |  | Y |  | 38 |
-| 353 | `maximum` | Y | Y |  |  | Y |  | Y |  | 40 |
-| 354 | `insert` | Y | Y |  |  | Y |  | Y |  | 42 |
-| 355 | `delete` | Y | Y |  |  | Y |  | Y |  | 44 |
-| 356 | `union` | Y | Y |  |  | Y |  | Y |  | 46 |
-| 357 | `intersection` | Y | Y |  |  | Y |  | Y |  | 48 |
-| 358 | `difference` | Y | Y |  |  | Y |  | Y |  | 50 |
-| 359 | `split` | Y | Y |  |  | Y |  | Y |  | 52 |
-| 360 | `join_pair` | Y | Y |  |  | Y |  | Y |  | 54 |
-| 361 | `join_m` | Y | Y |  |  | Y |  | Y |  | 56 |
-| 362 | `filter` | Y | Y |  |  | Y |  | Y |  | 58 |
-| 363 | `reduce` | Y | Y |  |  | Y |  | Y |  | 60 |
-| 364 | `iter_in_order` | Y | Y |  |  | Y |  | Y |  | 62 |
-| 365 | `as_tree` | Y | Y |  |  | Y |  | Y |  | 64 |
-| 366 | `values_vec` |  |  |  | Y | Y |  | Y |  | 67 |
-| 367 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 71 |
+| 356 | `empty` | Y | Y |  |  | Y |  | Y |  | 26 |
+| 357 | `singleton` | Y | Y |  |  | Y |  | Y |  | 28 |
+| 358 | `size` | Y | Y |  |  | Y |  | Y |  | 30 |
+| 359 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 32 |
+| 360 | `find` | Y | Y |  |  | Y |  | Y |  | 34 |
+| 361 | `contains` | Y | Y |  |  | Y |  | Y |  | 36 |
+| 362 | `minimum` | Y | Y |  |  | Y |  | Y |  | 38 |
+| 363 | `maximum` | Y | Y |  |  | Y |  | Y |  | 40 |
+| 364 | `insert` | Y | Y |  |  | Y |  | Y |  | 42 |
+| 365 | `delete` | Y | Y |  |  | Y |  | Y |  | 44 |
+| 366 | `union` | Y | Y |  |  | Y |  | Y |  | 46 |
+| 367 | `intersection` | Y | Y |  |  | Y |  | Y |  | 48 |
+| 368 | `difference` | Y | Y |  |  | Y |  | Y |  | 50 |
+| 369 | `split` | Y | Y |  |  | Y |  | Y |  | 52 |
+| 370 | `join_pair` | Y | Y |  |  | Y |  | Y |  | 54 |
+| 371 | `join_m` | Y | Y |  |  | Y |  | Y |  | 56 |
+| 372 | `filter` | Y | Y |  |  | Y |  | Y |  | 58 |
+| 373 | `reduce` | Y | Y |  |  | Y |  | Y |  | 60 |
+| 374 | `iter_in_order` | Y | Y |  |  | Y |  | Y |  | 62 |
+| 375 | `as_tree` | Y | Y |  |  | Y |  | Y |  | 64 |
+| 376 | `values_vec` |  |  |  | Y | Y |  | Y |  | 67 |
+| 377 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 71 |
 
 ### Chap37/BSTSplayMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 368 | `new_splay_link_lock` |  |  |  | Y | Y |  |  | hole | 355 |
-| 369 | `new_node` |  |  |  | Y |  | Y | Y |  | 27&#8209;34 |
-| 370 | `size_link` |  |  |  | Y |  | Y | Y |  | 36 |
-| 371 | `update` |  |  |  | Y |  | Y | Y |  | 38 |
-| 372 | `splay` |  |  |  | Y |  | Y | Y |  | 40&#8209;151 |
-| 373 | `bst_insert` |  |  |  | Y |  | Y | Y |  | 153&#8209;171 |
-| 374 | `insert_link` |  |  |  | Y |  | Y | Y |  | 173&#8209;182 |
-| 375 | `find_link` |  |  |  | Y |  | Y | Y |  | 184&#8209;197 |
-| 376 | `min_link` |  |  |  | Y |  | Y | Y |  | 199&#8209;207 |
-| 377 | `max_link` |  |  |  | Y |  | Y | Y |  | 209&#8209;217 |
-| 378 | `in_order_collect` |  |  |  | Y |  | Y | Y |  | 219&#8209;225 |
-| 379 | `pre_order_collect` |  |  |  | Y |  | Y | Y |  | 227&#8209;233 |
-| 380 | `in_order_parallel` |  |  |  | Y |  | Y | Y |  | 237&#8209;252 |
-| 381 | `pre_order_parallel` |  |  |  | Y |  | Y | Y |  | 254&#8209;269 |
-| 382 | `build_balanced` |  |  |  | Y |  | Y | Y |  | 271&#8209;289 |
-| 383 | `filter_parallel` |  |  |  | Y |  | Y | Y |  | 291&#8209;316 |
-| 384 | `reduce_parallel` |  |  |  | Y |  | Y | Y |  | 318&#8209;340 |
-| 385 | `new` | Y | Y |  |  |  | Y | Y |  | 375&#8209;376 |
-| 386 | `from_sorted_slice` | Y | Y |  |  |  | Y | Y |  | 377&#8209;378 |
-| 387 | `insert` | Y | Y |  |  |  | Y | Y |  | 379&#8209;380 |
-| 388 | `find` | Y | Y |  |  |  | Y | Y |  | 381&#8209;382 |
-| 389 | `contains` | Y | Y |  |  |  | Y | Y |  | 383&#8209;384 |
-| 390 | `size` | Y | Y |  |  |  | Y | Y |  | 385&#8209;386 |
-| 391 | `is_empty` | Y | Y |  |  |  | Y | Y |  | 387&#8209;388 |
-| 392 | `height` | Y | Y |  |  |  | Y | Y |  | 389&#8209;390 |
-| 393 | `minimum` | Y | Y |  |  |  | Y | Y |  | 391&#8209;392 |
-| 394 | `maximum` | Y | Y |  |  |  | Y | Y |  | 393&#8209;394 |
-| 395 | `in_order` | Y | Y |  |  |  | Y | Y |  | 395&#8209;396 |
-| 396 | `pre_order` | Y | Y |  |  |  | Y | Y |  | 397&#8209;398 |
-| 397 | `filter` | Y | Y |  |  |  | Y | Y |  | 399&#8209;402 |
-| 398 | `reduce` | Y | Y |  |  |  | Y | Y |  | 403&#8209;406 |
-| 399 | `height_rec` |  | Y |  |  |  | Y | Y |  | 441&#8209;446 |
-| 400 | `default` |  | Y |  |  |  | Y | Y |  | 511 |
+| 378 | `new_splay_link_lock` |  |  |  | Y | Y |  |  | hole | 355 |
+| 379 | `new_node` |  |  |  | Y |  | Y | Y |  | 27&#8209;34 |
+| 380 | `size_link` |  |  |  | Y |  | Y | Y |  | 36 |
+| 381 | `update` |  |  |  | Y |  | Y | Y |  | 38 |
+| 382 | `splay` |  |  |  | Y |  | Y | Y |  | 40&#8209;151 |
+| 383 | `bst_insert` |  |  |  | Y |  | Y | Y |  | 153&#8209;171 |
+| 384 | `insert_link` |  |  |  | Y |  | Y | Y |  | 173&#8209;182 |
+| 385 | `find_link` |  |  |  | Y |  | Y | Y |  | 184&#8209;197 |
+| 386 | `min_link` |  |  |  | Y |  | Y | Y |  | 199&#8209;207 |
+| 387 | `max_link` |  |  |  | Y |  | Y | Y |  | 209&#8209;217 |
+| 388 | `in_order_collect` |  |  |  | Y |  | Y | Y |  | 219&#8209;225 |
+| 389 | `pre_order_collect` |  |  |  | Y |  | Y | Y |  | 227&#8209;233 |
+| 390 | `in_order_parallel` |  |  |  | Y |  | Y | Y |  | 237&#8209;252 |
+| 391 | `pre_order_parallel` |  |  |  | Y |  | Y | Y |  | 254&#8209;269 |
+| 392 | `build_balanced` |  |  |  | Y |  | Y | Y |  | 271&#8209;289 |
+| 393 | `filter_parallel` |  |  |  | Y |  | Y | Y |  | 291&#8209;316 |
+| 394 | `reduce_parallel` |  |  |  | Y |  | Y | Y |  | 318&#8209;340 |
+| 395 | `new` | Y | Y |  |  |  | Y | Y |  | 375&#8209;376 |
+| 396 | `from_sorted_slice` | Y | Y |  |  |  | Y | Y |  | 377&#8209;378 |
+| 397 | `insert` | Y | Y |  |  |  | Y | Y |  | 379&#8209;380 |
+| 398 | `find` | Y | Y |  |  |  | Y | Y |  | 381&#8209;382 |
+| 399 | `contains` | Y | Y |  |  |  | Y | Y |  | 383&#8209;384 |
+| 400 | `size` | Y | Y |  |  |  | Y | Y |  | 385&#8209;386 |
+| 401 | `is_empty` | Y | Y |  |  |  | Y | Y |  | 387&#8209;388 |
+| 402 | `height` | Y | Y |  |  |  | Y | Y |  | 389&#8209;390 |
+| 403 | `minimum` | Y | Y |  |  |  | Y | Y |  | 391&#8209;392 |
+| 404 | `maximum` | Y | Y |  |  |  | Y | Y |  | 393&#8209;394 |
+| 405 | `in_order` | Y | Y |  |  |  | Y | Y |  | 395&#8209;396 |
+| 406 | `pre_order` | Y | Y |  |  |  | Y | Y |  | 397&#8209;398 |
+| 407 | `filter` | Y | Y |  |  |  | Y | Y |  | 399&#8209;402 |
+| 408 | `reduce` | Y | Y |  |  |  | Y | Y |  | 403&#8209;406 |
+| 409 | `height_rec` |  | Y |  |  |  | Y | Y |  | 441&#8209;446 |
+| 410 | `default` |  | Y |  |  |  | Y | Y |  | 511 |
 
 ### Chap37/BSTSplayStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 401 | `new_node` |  |  |  | Y | Y |  | Y |  | 38 |
-| 402 | `size_link` |  |  |  | Y | Y |  |  | unknown | 67&#8209;68 |
-| 403 | `height_link` |  |  |  | Y | Y |  |  | unknown | 77&#8209;80 |
-| 404 | `update` |  |  |  | Y | Y |  |  | hole | 94&#8209;99 |
-| 405 | `splay` |  |  |  | Y | Y |  | Y |  | 110&#8209;111 |
-| 406 | `bst_insert` |  |  |  | Y | Y |  | Y |  | 231&#8209;232 |
-| 407 | `insert_link` |  |  |  | Y | Y |  | Y |  | 255 |
-| 408 | `find_link` |  |  |  | Y | Y |  | Y |  | 266&#8209;267 |
-| 409 | `min_link` |  |  |  | Y | Y |  | Y |  | 283&#8209;284 |
-| 410 | `max_link` |  |  |  | Y | Y |  | Y |  | 295&#8209;296 |
-| 411 | `in_order_collect` |  |  |  | Y | Y |  | Y |  | 307&#8209;308 |
-| 412 | `pre_order_collect` |  |  |  | Y | Y |  | Y |  | 317&#8209;318 |
-| 413 | `new` | Y | Y |  |  | Y |  | Y |  | 346&#8209;348 |
-| 414 | `size` | Y | Y |  |  | Y |  | Y |  | 350 |
-| 415 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 352 |
-| 416 | `height` | Y | Y |  |  | Y |  |  | unknown | 354&#8209;355 |
-| 417 | `insert` | Y | Y |  |  | Y |  | Y |  | 357 |
-| 418 | `find` | Y | Y |  |  | Y |  | Y |  | 359 |
-| 419 | `contains` | Y | Y |  |  | Y |  | Y |  | 361 |
-| 420 | `minimum` | Y | Y |  |  | Y |  | Y |  | 363 |
-| 421 | `maximum` | Y | Y |  |  | Y |  | Y |  | 365 |
-| 422 | `in_order` | Y | Y |  |  | Y |  | Y |  | 367 |
-| 423 | `pre_order` | Y | Y |  |  | Y |  | Y |  | 369 |
-| 424 | `default` |  | Y |  |  | Y |  | Y |  | 410 |
+| 411 | `new_node` |  |  |  | Y | Y |  | Y |  | 38 |
+| 412 | `size_link` |  |  |  | Y | Y |  |  | unknown | 67&#8209;68 |
+| 413 | `height_link` |  |  |  | Y | Y |  |  | unknown | 77&#8209;80 |
+| 414 | `update` |  |  |  | Y | Y |  |  | hole | 94&#8209;99 |
+| 415 | `splay` |  |  |  | Y | Y |  | Y |  | 110&#8209;111 |
+| 416 | `bst_insert` |  |  |  | Y | Y |  | Y |  | 231&#8209;232 |
+| 417 | `insert_link` |  |  |  | Y | Y |  | Y |  | 255 |
+| 418 | `find_link` |  |  |  | Y | Y |  | Y |  | 266&#8209;267 |
+| 419 | `min_link` |  |  |  | Y | Y |  | Y |  | 283&#8209;284 |
+| 420 | `max_link` |  |  |  | Y | Y |  | Y |  | 295&#8209;296 |
+| 421 | `in_order_collect` |  |  |  | Y | Y |  | Y |  | 307&#8209;308 |
+| 422 | `pre_order_collect` |  |  |  | Y | Y |  | Y |  | 317&#8209;318 |
+| 423 | `new` | Y | Y |  |  | Y |  | Y |  | 346&#8209;348 |
+| 424 | `size` | Y | Y |  |  | Y |  | Y |  | 350 |
+| 425 | `is_empty` | Y | Y |  |  | Y |  | Y |  | 352 |
+| 426 | `height` | Y | Y |  |  | Y |  |  | unknown | 354&#8209;355 |
+| 427 | `insert` | Y | Y |  |  | Y |  | Y |  | 357 |
+| 428 | `find` | Y | Y |  |  | Y |  | Y |  | 359 |
+| 429 | `contains` | Y | Y |  |  | Y |  | Y |  | 361 |
+| 430 | `minimum` | Y | Y |  |  | Y |  | Y |  | 363 |
+| 431 | `maximum` | Y | Y |  |  | Y |  | Y |  | 365 |
+| 432 | `in_order` | Y | Y |  |  | Y |  | Y |  | 367 |
+| 433 | `pre_order` | Y | Y |  |  | Y |  | Y |  | 369 |
+| 434 | `default` |  | Y |  |  | Y |  | Y |  | 410 |
 
 
 ### Legend

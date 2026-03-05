@@ -22,17 +22,17 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap43 | AugOrderedTableMtEph | 32 | 33 | 1 | 3 | 36 | 1 | 30 | 4 | 3 |
+| 1 | Chap43 | AugOrderedTableMtEph | 32 | 33 | 1 | 3 | 36 | 1 | 32 | 4 | 1 |
 | 2 | Chap43 | AugOrderedTableStEph | 31 | 32 | 1 | 2 | 34 | 1 | 30 | 4 | 1 |
 | 3 | Chap43 | AugOrderedTableStPer | 28 | 28 | 2 | 2 | 32 | 0 | 30 | 2 | 0 |
 | 4 | Chap43 | Example43_1 | 2 | 0 | 0 | 3 | 1 | 3 | 0 | 0 | 4 |
 | 5 | Chap43 | OrderedSetMtEph | 22 | 22 | 0 | 0 | 22 | 0 | 0 | 22 | 0 |
 | 6 | Chap43 | OrderedSetStEph | 22 | 24 | 1 | 1 | 24 | 2 | 11 | 13 | 2 |
 | 7 | Chap43 | OrderedSetStPer | 22 | 24 | 1 | 1 | 25 | 1 | 14 | 11 | 1 |
-| 8 | Chap43 | OrderedTableMtEph | 29 | 31 | 1 | 1 | 32 | 1 | 14 | 16 | 3 |
+| 8 | Chap43 | OrderedTableMtEph | 29 | 31 | 1 | 1 | 32 | 1 | 16 | 16 | 1 |
 | 9 | Chap43 | OrderedTableMtPer | 19 | 20 | 0 | 0 | 19 | 1 | 0 | 19 | 1 |
 | 10 | Chap43 | OrderedTableStEph | 29 | 31 | 1 | 1 | 32 | 1 | 14 | 18 | 1 |
-| 11 | Chap43 | OrderedTableStPer | 26 | 28 | 1 | 1 | 30 | 0 | 18 | 12 | 0 |
+| 11 | Chap43 | OrderedTableStPer | 26 | 28 | 1 | 1 | 30 | 0 | 19 | 11 | 0 |
 
 ## Function-by-Function Detail
 
@@ -46,37 +46,37 @@
 | 4 | `size` | Y | Y |  |  | Y |  |  | unknown | 117&#8209;118 |
 | 5 | `empty` | Y | Y |  |  | Y |  |  | unknown | 119&#8209;120 |
 | 6 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 121&#8209;122 |
-| 7 | `find` | Y | Y |  |  | Y |  | Y |  | 123 |
-| 8 | `lookup` | Y | Y |  |  | Y |  | Y |  | 124 |
-| 9 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 125&#8209;126 |
-| 10 | `insert` | Y | Y |  |  | Y |  |  | unknown | 127&#8209;128 |
-| 11 | `delete` | Y | Y |  |  | Y |  |  | unknown | 129&#8209;130 |
-| 12 | `domain` | Y | Y |  |  | Y |  |  | unknown | 131&#8209;132 |
-| 13 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 133&#8209;139 |
-| 14 | `map` | Y | Y |  |  | Y |  |  | unknown | 140&#8209;141 |
-| 15 | `filter` | Y | Y |  |  | Y |  |  | unknown | 142&#8209;143 |
-| 16 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 144&#8209;145 |
-| 17 | `union` | Y | Y |  |  | Y |  |  | unknown | 146&#8209;147 |
-| 18 | `difference` | Y | Y |  |  | Y |  |  | unknown | 148&#8209;149 |
-| 19 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 150&#8209;151 |
-| 20 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 152&#8209;153 |
-| 21 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 154&#8209;155 |
-| 22 | `collect` | Y | Y |  |  | Y |  |  | unknown | 156&#8209;157 |
-| 23 | `first_key` | Y | Y |  |  | Y |  |  | unknown | 158&#8209;159 |
-| 24 | `last_key` | Y | Y |  |  | Y |  |  | unknown | 160&#8209;161 |
-| 25 | `previous_key` | Y | Y |  |  | Y |  |  | unknown | 162&#8209;163 |
-| 26 | `next_key` | Y | Y |  |  | Y |  |  | unknown | 164&#8209;165 |
-| 27 | `split_key` | Y | Y |  |  | Y |  |  | unknown | 166&#8209;168 |
-| 28 | `join_key` | Y | Y |  |  | Y |  |  | hole | 169&#8209;170 |
-| 29 | `get_key_range` | Y | Y |  |  | Y |  |  | unknown | 171&#8209;172 |
-| 30 | `rank_key` | Y | Y |  |  | Y |  |  | unknown | 173&#8209;174 |
-| 31 | `select_key` | Y | Y |  |  | Y |  |  | unknown | 175&#8209;176 |
-| 32 | `split_rank_key` | Y | Y |  |  | Y |  |  | unknown | 177&#8209;179 |
-| 33 | `reduce_val` | Y | Y |  |  | Y |  |  | unknown | 180&#8209;181 |
-| 34 | `reduce_range` | Y | Y |  |  | Y |  |  | unknown | 182&#8209;183 |
-| 35 | `reduce_range_parallel` | Y | Y |  |  | Y |  |  | hole | 184&#8209;185 |
-| 36 | `iter` |  |  | Y |  | Y |  |  | unknown | 562&#8209;566 |
-| 37 | `eq` |  | Y |  |  |  | Y | Y |  | 606&#8209;609 |
+| 7 | `find` | Y | Y |  |  | Y |  |  | unknown | 123&#8209;128 |
+| 8 | `lookup` | Y | Y |  |  | Y |  |  | unknown | 129&#8209;134 |
+| 9 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 135&#8209;136 |
+| 10 | `insert` | Y | Y |  |  | Y |  |  | unknown | 137&#8209;138 |
+| 11 | `delete` | Y | Y |  |  | Y |  |  | unknown | 139&#8209;140 |
+| 12 | `domain` | Y | Y |  |  | Y |  |  | unknown | 141&#8209;142 |
+| 13 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 143&#8209;149 |
+| 14 | `map` | Y | Y |  |  | Y |  |  | unknown | 150&#8209;151 |
+| 15 | `filter` | Y | Y |  |  | Y |  |  | unknown | 152&#8209;153 |
+| 16 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 154&#8209;155 |
+| 17 | `union` | Y | Y |  |  | Y |  |  | unknown | 156&#8209;157 |
+| 18 | `difference` | Y | Y |  |  | Y |  |  | unknown | 158&#8209;159 |
+| 19 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 160&#8209;161 |
+| 20 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 162&#8209;163 |
+| 21 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 164&#8209;165 |
+| 22 | `collect` | Y | Y |  |  | Y |  |  | unknown | 166&#8209;167 |
+| 23 | `first_key` | Y | Y |  |  | Y |  |  | unknown | 168&#8209;169 |
+| 24 | `last_key` | Y | Y |  |  | Y |  |  | unknown | 170&#8209;171 |
+| 25 | `previous_key` | Y | Y |  |  | Y |  |  | unknown | 172&#8209;173 |
+| 26 | `next_key` | Y | Y |  |  | Y |  |  | unknown | 174&#8209;175 |
+| 27 | `split_key` | Y | Y |  |  | Y |  |  | unknown | 176&#8209;178 |
+| 28 | `join_key` | Y | Y |  |  | Y |  |  | hole | 179&#8209;180 |
+| 29 | `get_key_range` | Y | Y |  |  | Y |  |  | unknown | 181&#8209;182 |
+| 30 | `rank_key` | Y | Y |  |  | Y |  |  | unknown | 183&#8209;184 |
+| 31 | `select_key` | Y | Y |  |  | Y |  |  | unknown | 185&#8209;186 |
+| 32 | `split_rank_key` | Y | Y |  |  | Y |  |  | unknown | 187&#8209;189 |
+| 33 | `reduce_val` | Y | Y |  |  | Y |  |  | unknown | 190&#8209;191 |
+| 34 | `reduce_range` | Y | Y |  |  | Y |  |  | unknown | 192&#8209;193 |
+| 35 | `reduce_range_parallel` | Y | Y |  |  | Y |  |  | hole | 194&#8209;195 |
+| 36 | `iter` |  |  | Y |  | Y |  |  | unknown | 572&#8209;576 |
+| 37 | `eq` |  | Y |  |  |  | Y | Y |  | 616&#8209;619 |
 
 ### Chap43/AugOrderedTableStEph.rs
 
@@ -130,30 +130,30 @@
 | 78 | `find` | Y | Y |  |  | Y |  |  | unknown | 134&#8209;140 |
 | 79 | `insert` | Y | Y |  |  | Y |  |  | unknown | 141&#8209;143 |
 | 80 | `delete` | Y | Y |  |  | Y |  |  | unknown | 144&#8209;150 |
-| 81 | `domain` | Y | Y |  |  | Y |  |  | unknown | 151&#8209;152 |
-| 82 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 153&#8209;155 |
-| 83 | `map` | Y | Y |  |  | Y |  |  | unknown | 156&#8209;158 |
-| 84 | `filter` | Y | Y |  |  | Y |  |  | unknown | 159&#8209;161 |
-| 85 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 162&#8209;167 |
-| 86 | `union` | Y | Y |  |  | Y |  |  | unknown | 168&#8209;174 |
-| 87 | `difference` | Y | Y |  |  | Y |  |  | unknown | 175&#8209;177 |
-| 88 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 178&#8209;180 |
-| 89 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 181&#8209;183 |
-| 90 | `collect` | Y | Y |  |  | Y |  |  | unknown | 184&#8209;185 |
-| 91 | `first_key` | Y | Y |  |  | Y |  |  | unknown | 186&#8209;190 |
-| 92 | `last_key` | Y | Y |  |  | Y |  |  | unknown | 191&#8209;195 |
-| 93 | `previous_key` | Y | Y |  |  | Y |  |  | unknown | 196&#8209;199 |
-| 94 | `next_key` | Y | Y |  |  | Y |  |  | unknown | 200&#8209;203 |
-| 95 | `split_key` | Y | Y |  |  | Y |  |  | unknown | 204&#8209;211 |
-| 96 | `join_key` | Y | Y |  |  | Y |  |  | hole | 212&#8209;218 |
-| 97 | `get_key_range` | Y | Y |  |  | Y |  |  | unknown | 219&#8209;222 |
-| 98 | `rank_key` | Y | Y |  |  | Y |  |  | unknown | 223&#8209;226 |
-| 99 | `select_key` | Y | Y |  |  | Y |  |  | unknown | 227&#8209;231 |
-| 100 | `split_rank_key` | Y | Y |  |  | Y |  |  | unknown | 232&#8209;239 |
-| 101 | `reduce_val` | Y | Y |  |  | Y |  |  | unknown | 240&#8209;241 |
-| 102 | `reduce_range` | Y | Y |  |  | Y |  |  | unknown | 242&#8209;243 |
-| 103 | `iter` |  |  | Y |  | Y |  |  | unknown | 669&#8209;673 |
-| 104 | `eq` |  |  | Y |  | Y |  |  | unknown | 703&#8209;704 |
+| 81 | `domain` | Y | Y |  |  | Y |  |  | unknown | 151&#8209;153 |
+| 82 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 154&#8209;156 |
+| 83 | `map` | Y | Y |  |  | Y |  |  | unknown | 157&#8209;159 |
+| 84 | `filter` | Y | Y |  |  | Y |  |  | unknown | 160&#8209;162 |
+| 85 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 163&#8209;169 |
+| 86 | `union` | Y | Y |  |  | Y |  |  | unknown | 170&#8209;176 |
+| 87 | `difference` | Y | Y |  |  | Y |  |  | unknown | 177&#8209;179 |
+| 88 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 180&#8209;182 |
+| 89 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 183&#8209;185 |
+| 90 | `collect` | Y | Y |  |  | Y |  |  | unknown | 186&#8209;187 |
+| 91 | `first_key` | Y | Y |  |  | Y |  |  | unknown | 188&#8209;192 |
+| 92 | `last_key` | Y | Y |  |  | Y |  |  | unknown | 193&#8209;197 |
+| 93 | `previous_key` | Y | Y |  |  | Y |  |  | unknown | 198&#8209;201 |
+| 94 | `next_key` | Y | Y |  |  | Y |  |  | unknown | 202&#8209;205 |
+| 95 | `split_key` | Y | Y |  |  | Y |  |  | unknown | 206&#8209;213 |
+| 96 | `join_key` | Y | Y |  |  | Y |  |  | hole | 214&#8209;220 |
+| 97 | `get_key_range` | Y | Y |  |  | Y |  |  | unknown | 221&#8209;224 |
+| 98 | `rank_key` | Y | Y |  |  | Y |  |  | unknown | 225&#8209;228 |
+| 99 | `select_key` | Y | Y |  |  | Y |  |  | unknown | 229&#8209;233 |
+| 100 | `split_rank_key` | Y | Y |  |  | Y |  |  | unknown | 234&#8209;241 |
+| 101 | `reduce_val` | Y | Y |  |  | Y |  |  | unknown | 242&#8209;243 |
+| 102 | `reduce_range` | Y | Y |  |  | Y |  |  | unknown | 244&#8209;245 |
+| 103 | `iter` |  |  | Y |  | Y |  |  | unknown | 671&#8209;675 |
+| 104 | `eq` |  |  | Y |  | Y |  |  | unknown | 705&#8209;706 |
 
 ### Chap43/Example43_1.rs
 
@@ -207,20 +207,20 @@
 | 140 | `difference` | Y | Y |  |  | Y |  |  | unknown | 85&#8209;86 |
 | 141 | `to_seq` | Y | Y |  |  | Y |  |  | hole | 88&#8209;89 |
 | 142 | `from_seq` | Y | Y |  |  | Y |  |  | hole | 91&#8209;92 |
-| 143 | `first` | Y | Y |  |  | Y |  |  | hole | 96&#8209;97 |
-| 144 | `last` | Y | Y |  |  | Y |  |  | hole | 99&#8209;100 |
-| 145 | `previous` | Y | Y |  |  | Y |  |  | hole | 102&#8209;103 |
-| 146 | `next` x2 | Y | Y |  |  | Y |  |  | hole | 105&#8209;106 |
-| 147 | `split` | Y | Y |  |  | Y |  |  | hole | 108&#8209;110 |
-| 148 | `join` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;113 |
-| 149 | `get_range` | Y | Y |  |  | Y |  |  | hole | 115&#8209;116 |
-| 150 | `rank` | Y | Y |  |  | Y |  |  | hole | 118&#8209;119 |
-| 151 | `select` | Y | Y |  |  | Y |  |  | hole | 121&#8209;122 |
-| 152 | `split_rank` | Y | Y |  |  | Y |  |  | hole | 124&#8209;126 |
-| 153 | `iter` |  |  | Y |  | Y |  |  | hole | 401&#8209;405 |
-| 154 | `from_sorted_elements` |  |  |  | Y | Y |  |  | hole | 545&#8209;546 |
-| 155 | `default` |  | Y |  |  |  | Y | Y |  | 570 |
-| 156 | `eq` |  | Y |  |  |  | Y | Y |  | 574&#8209;584 |
+| 143 | `first` | Y | Y |  |  | Y |  |  | hole | 96&#8209;100 |
+| 144 | `last` | Y | Y |  |  | Y |  |  | hole | 102&#8209;106 |
+| 145 | `previous` | Y | Y |  |  | Y |  |  | hole | 108&#8209;111 |
+| 146 | `next` x2 | Y | Y |  |  | Y |  |  | hole | 113&#8209;116 |
+| 147 | `split` | Y | Y |  |  | Y |  |  | hole | 118&#8209;128 |
+| 148 | `join` | Y | Y |  |  | Y |  |  | unknown | 130&#8209;131 |
+| 149 | `get_range` | Y | Y |  |  | Y |  |  | hole | 133&#8209;137 |
+| 150 | `rank` | Y | Y |  |  | Y |  |  | hole | 139&#8209;142 |
+| 151 | `select` | Y | Y |  |  | Y |  |  | hole | 144&#8209;148 |
+| 152 | `split_rank` | Y | Y |  |  | Y |  |  | hole | 150&#8209;158 |
+| 153 | `iter` |  |  | Y |  | Y |  |  | hole | 465&#8209;469 |
+| 154 | `from_sorted_elements` |  |  |  | Y | Y |  |  | hole | 609&#8209;610 |
+| 155 | `default` |  | Y |  |  |  | Y | Y |  | 634 |
+| 156 | `eq` |  | Y |  |  |  | Y | Y |  | 638&#8209;648 |
 
 ### Chap43/OrderedSetStPer.rs
 
@@ -260,36 +260,36 @@
 | 183 | `size` | Y | Y |  |  | Y |  |  | unknown | 59&#8209;60 |
 | 184 | `empty` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;63 |
 | 185 | `singleton` | Y | Y |  |  | Y |  |  | hole | 65&#8209;66 |
-| 186 | `find` | Y | Y |  |  | Y |  | Y |  | 68 |
-| 187 | `lookup` | Y | Y |  |  | Y |  | Y |  | 70 |
-| 188 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 72&#8209;73 |
-| 189 | `insert` | Y | Y |  |  | Y |  |  | unknown | 75&#8209;76 |
-| 190 | `delete` | Y | Y |  |  | Y |  |  | hole | 78&#8209;79 |
-| 191 | `domain` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;82 |
-| 192 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 84&#8209;85 |
-| 193 | `map` | Y | Y |  |  | Y |  |  | hole | 87&#8209;88 |
-| 194 | `filter` | Y | Y |  |  | Y |  |  | hole | 90&#8209;91 |
-| 195 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;94 |
-| 196 | `union` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;97 |
-| 197 | `difference` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;100 |
-| 198 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 102&#8209;103 |
-| 199 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 105&#8209;106 |
-| 200 | `reduce` | Y | Y |  |  | Y |  |  | hole | 108&#8209;109 |
-| 201 | `collect` | Y | Y |  |  | Y |  |  | hole | 111&#8209;112 |
-| 202 | `first_key` | Y | Y |  |  | Y |  |  | hole | 114&#8209;115 |
-| 203 | `last_key` | Y | Y |  |  | Y |  |  | hole | 117&#8209;118 |
-| 204 | `previous_key` | Y | Y |  |  | Y |  |  | hole | 120&#8209;121 |
-| 205 | `next_key` | Y | Y |  |  | Y |  |  | hole | 123&#8209;124 |
-| 206 | `split_key` | Y | Y |  |  | Y |  |  | hole | 126&#8209;128 |
-| 207 | `join_key` | Y | Y |  |  | Y |  |  | unknown | 130&#8209;131 |
-| 208 | `get_key_range` | Y | Y |  |  | Y |  |  | hole | 133&#8209;134 |
-| 209 | `rank_key` | Y | Y |  |  | Y |  |  | hole | 136&#8209;137 |
-| 210 | `select_key` | Y | Y |  |  | Y |  |  | hole | 139&#8209;140 |
-| 211 | `split_rank_key` | Y | Y |  |  | Y |  |  | hole | 142&#8209;144 |
-| 212 | `iter` |  |  | Y |  | Y |  |  | unknown | 502&#8209;506 |
-| 213 | `next` |  | Y |  |  | Y |  |  | unknown | 530&#8209;546 |
-| 214 | `from_sorted_entries` |  |  |  | Y | Y |  |  | hole | 637&#8209;638 |
-| 215 | `eq` |  | Y |  |  |  | Y | Y |  | 655&#8209;657 |
+| 186 | `find` | Y | Y |  |  | Y |  |  | unknown | 68&#8209;73 |
+| 187 | `lookup` | Y | Y |  |  | Y |  |  | unknown | 75&#8209;80 |
+| 188 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 82&#8209;83 |
+| 189 | `insert` | Y | Y |  |  | Y |  |  | unknown | 85&#8209;86 |
+| 190 | `delete` | Y | Y |  |  | Y |  |  | hole | 88&#8209;89 |
+| 191 | `domain` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;92 |
+| 192 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;95 |
+| 193 | `map` | Y | Y |  |  | Y |  |  | hole | 97&#8209;98 |
+| 194 | `filter` | Y | Y |  |  | Y |  |  | hole | 100&#8209;101 |
+| 195 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;104 |
+| 196 | `union` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;107 |
+| 197 | `difference` | Y | Y |  |  | Y |  |  | unknown | 109&#8209;110 |
+| 198 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;113 |
+| 199 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 115&#8209;116 |
+| 200 | `reduce` | Y | Y |  |  | Y |  |  | hole | 118&#8209;119 |
+| 201 | `collect` | Y | Y |  |  | Y |  |  | hole | 121&#8209;122 |
+| 202 | `first_key` | Y | Y |  |  | Y |  |  | hole | 124&#8209;125 |
+| 203 | `last_key` | Y | Y |  |  | Y |  |  | hole | 127&#8209;128 |
+| 204 | `previous_key` | Y | Y |  |  | Y |  |  | hole | 130&#8209;131 |
+| 205 | `next_key` | Y | Y |  |  | Y |  |  | hole | 133&#8209;134 |
+| 206 | `split_key` | Y | Y |  |  | Y |  |  | hole | 136&#8209;138 |
+| 207 | `join_key` | Y | Y |  |  | Y |  |  | unknown | 140&#8209;141 |
+| 208 | `get_key_range` | Y | Y |  |  | Y |  |  | hole | 143&#8209;144 |
+| 209 | `rank_key` | Y | Y |  |  | Y |  |  | hole | 146&#8209;147 |
+| 210 | `select_key` | Y | Y |  |  | Y |  |  | hole | 149&#8209;150 |
+| 211 | `split_rank_key` | Y | Y |  |  | Y |  |  | hole | 152&#8209;154 |
+| 212 | `iter` |  |  | Y |  | Y |  |  | unknown | 512&#8209;516 |
+| 213 | `next` |  | Y |  |  | Y |  |  | unknown | 540&#8209;556 |
+| 214 | `from_sorted_entries` |  |  |  | Y | Y |  |  | hole | 647&#8209;648 |
+| 215 | `eq` |  | Y |  |  |  | Y | Y |  | 667&#8209;669 |
 
 ### Chap43/OrderedTableMtPer.rs
 
@@ -314,7 +314,7 @@
 | 232 | `rank_key` | Y | Y |  |  | Y |  |  | hole | 107&#8209;108 |
 | 233 | `select_key` | Y | Y |  |  | Y |  |  | hole | 110&#8209;111 |
 | 234 | `split_rank_key` | Y | Y |  |  | Y |  |  | hole | 113&#8209;115 |
-| 235 | `default` |  | Y |  |  |  | Y | Y |  | 375 |
+| 235 | `default` |  | Y |  |  |  | Y | Y |  | 377 |
 
 ### Chap43/OrderedTableStEph.rs
 
@@ -339,20 +339,20 @@
 | 252 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;108 |
 | 253 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 109&#8209;111 |
 | 254 | `collect` | Y | Y |  |  | Y |  |  | hole | 112&#8209;113 |
-| 255 | `first_key` | Y | Y |  |  | Y |  |  | hole | 114&#8209;115 |
-| 256 | `last_key` | Y | Y |  |  | Y |  |  | hole | 116&#8209;117 |
-| 257 | `previous_key` | Y | Y |  |  | Y |  |  | hole | 118&#8209;119 |
-| 258 | `next_key` | Y | Y |  |  | Y |  |  | hole | 120&#8209;121 |
-| 259 | `split_key` | Y | Y |  |  | Y |  |  | hole | 122&#8209;124 |
-| 260 | `join_key` | Y | Y |  |  | Y |  |  | unknown | 125&#8209;127 |
-| 261 | `get_key_range` | Y | Y |  |  | Y |  |  | hole | 128&#8209;129 |
-| 262 | `rank_key` | Y | Y |  |  | Y |  |  | hole | 130&#8209;131 |
-| 263 | `select_key` | Y | Y |  |  | Y |  |  | hole | 132&#8209;133 |
-| 264 | `split_rank_key` | Y | Y |  |  | Y |  |  | hole | 134&#8209;136 |
-| 265 | `iter` |  |  | Y |  | Y |  |  | unknown | 491&#8209;495 |
-| 266 | `next` |  | Y |  |  | Y |  |  | unknown | 519&#8209;535 |
-| 267 | `from_sorted_entries` |  |  |  | Y | Y |  |  | hole | 623&#8209;625 |
-| 268 | `eq` |  | Y |  |  |  | Y | Y |  | 639&#8209;641 |
+| 255 | `first_key` | Y | Y |  |  | Y |  |  | hole | 115&#8209;119 |
+| 256 | `last_key` | Y | Y |  |  | Y |  |  | hole | 121&#8209;125 |
+| 257 | `previous_key` | Y | Y |  |  | Y |  |  | hole | 127&#8209;130 |
+| 258 | `next_key` | Y | Y |  |  | Y |  |  | hole | 132&#8209;135 |
+| 259 | `split_key` | Y | Y |  |  | Y |  |  | hole | 137&#8209;145 |
+| 260 | `join_key` | Y | Y |  |  | Y |  |  | unknown | 147&#8209;149 |
+| 261 | `get_key_range` | Y | Y |  |  | Y |  |  | hole | 151&#8209;154 |
+| 262 | `rank_key` | Y | Y |  |  | Y |  |  | hole | 156&#8209;159 |
+| 263 | `select_key` | Y | Y |  |  | Y |  |  | hole | 161&#8209;165 |
+| 264 | `split_rank_key` | Y | Y |  |  | Y |  |  | hole | 167&#8209;175 |
+| 265 | `iter` |  |  | Y |  | Y |  |  | unknown | 559&#8209;563 |
+| 266 | `next` |  | Y |  |  | Y |  |  | unknown | 587&#8209;603 |
+| 267 | `from_sorted_entries` |  |  |  | Y | Y |  |  | hole | 691&#8209;693 |
+| 268 | `eq` |  | Y |  |  |  | Y | Y |  | 711&#8209;713 |
 
 ### Chap43/OrderedTableStPer.rs
 
@@ -363,31 +363,31 @@
 | 271 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;72 |
 | 272 | `find` | Y | Y |  |  | Y |  |  | unknown | 73&#8209;79 |
 | 273 | `insert` | Y | Y |  |  | Y |  |  | unknown | 80&#8209;82 |
-| 274 | `delete` | Y | Y |  |  | Y |  |  | hole | 83&#8209;89 |
-| 275 | `domain` | Y | Y |  |  | Y |  |  | unknown | 90&#8209;91 |
-| 276 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;94 |
-| 277 | `map` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;97 |
-| 278 | `filter` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;100 |
-| 279 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 101&#8209;106 |
-| 280 | `union` | Y | Y |  |  | Y |  |  | unknown | 107&#8209;113 |
-| 281 | `difference` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;116 |
-| 282 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 117&#8209;119 |
-| 283 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 120&#8209;122 |
-| 284 | `collect` | Y | Y |  |  | Y |  |  | hole | 123&#8209;124 |
-| 285 | `first_key` | Y | Y |  |  | Y |  |  | hole | 126&#8209;130 |
-| 286 | `last_key` | Y | Y |  |  | Y |  |  | hole | 132&#8209;136 |
-| 287 | `previous_key` | Y | Y |  |  | Y |  |  | hole | 138&#8209;141 |
-| 288 | `next_key` | Y | Y |  |  | Y |  |  | hole | 143&#8209;146 |
-| 289 | `split_key` | Y | Y |  |  | Y |  |  | hole | 148&#8209;155 |
-| 290 | `join_key` | Y | Y |  |  | Y |  |  | unknown | 157&#8209;162 |
-| 291 | `get_key_range` | Y | Y |  |  | Y |  |  | hole | 164&#8209;167 |
-| 292 | `rank_key` | Y | Y |  |  | Y |  |  | hole | 169&#8209;172 |
-| 293 | `select_key` | Y | Y |  |  | Y |  |  | hole | 174&#8209;178 |
-| 294 | `split_rank_key` | Y | Y |  |  | Y |  |  | hole | 180&#8209;187 |
-| 295 | `from_sorted_entries` |  |  |  | Y | Y |  |  | hole | 542&#8209;545 |
-| 296 | `iter` |  |  | Y |  | Y |  |  | unknown | 570&#8209;574 |
-| 297 | `next` |  | Y |  |  | Y |  |  | unknown | 598&#8209;614 |
-| 298 | `eq` |  | Y |  |  | Y |  |  | unknown | 702&#8209;703 |
+| 274 | `delete` | Y | Y |  |  | Y |  |  | unknown | 83&#8209;89 |
+| 275 | `domain` | Y | Y |  |  | Y |  |  | unknown | 90&#8209;92 |
+| 276 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;95 |
+| 277 | `map` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;98 |
+| 278 | `filter` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;101 |
+| 279 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 102&#8209;108 |
+| 280 | `union` | Y | Y |  |  | Y |  |  | unknown | 109&#8209;115 |
+| 281 | `difference` | Y | Y |  |  | Y |  |  | unknown | 116&#8209;118 |
+| 282 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 119&#8209;121 |
+| 283 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 122&#8209;124 |
+| 284 | `collect` | Y | Y |  |  | Y |  |  | hole | 125&#8209;126 |
+| 285 | `first_key` | Y | Y |  |  | Y |  |  | hole | 128&#8209;132 |
+| 286 | `last_key` | Y | Y |  |  | Y |  |  | hole | 134&#8209;138 |
+| 287 | `previous_key` | Y | Y |  |  | Y |  |  | hole | 140&#8209;143 |
+| 288 | `next_key` | Y | Y |  |  | Y |  |  | hole | 145&#8209;148 |
+| 289 | `split_key` | Y | Y |  |  | Y |  |  | hole | 150&#8209;157 |
+| 290 | `join_key` | Y | Y |  |  | Y |  |  | unknown | 159&#8209;164 |
+| 291 | `get_key_range` | Y | Y |  |  | Y |  |  | hole | 166&#8209;169 |
+| 292 | `rank_key` | Y | Y |  |  | Y |  |  | hole | 171&#8209;174 |
+| 293 | `select_key` | Y | Y |  |  | Y |  |  | hole | 176&#8209;180 |
+| 294 | `split_rank_key` | Y | Y |  |  | Y |  |  | hole | 182&#8209;189 |
+| 295 | `from_sorted_entries` |  |  |  | Y | Y |  |  | hole | 544&#8209;547 |
+| 296 | `iter` |  |  | Y |  | Y |  |  | unknown | 572&#8209;576 |
+| 297 | `next` |  | Y |  |  | Y |  |  | unknown | 600&#8209;616 |
+| 298 | `eq` |  | Y |  |  | Y |  |  | unknown | 704&#8209;705 |
 
 
 ### Legend

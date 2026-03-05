@@ -27,7 +27,7 @@
 | 3 | Chap41 | AVLTreeSetStEph | 12 | 14 | 0 | 0 | 12 | 2 | 0 | 12 | 2 |
 | 4 | Chap41 | AVLTreeSetStPer | 12 | 14 | 0 | 0 | 12 | 2 | 0 | 12 | 2 |
 | 5 | Chap41 | ArraySetEnumMtEph | 13 | 14 | 0 | 0 | 13 | 1 | 0 | 13 | 1 |
-| 6 | Chap41 | ArraySetStEph | 12 | 14 | 0 | 3 | 15 | 2 | 8 | 7 | 2 |
+| 6 | Chap41 | ArraySetStEph | 12 | 14 | 0 | 3 | 15 | 2 | 7 | 8 | 2 |
 | 7 | Chap41 | Example41_3 | 3 | 3 | 0 | 8 | 9 | 0 | 0 | 4 | 5 |
 
 ## Function-by-Function Detail
@@ -133,23 +133,23 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 73 | `lemma_filter_remove` |  |  |  | Y | Y |  |  | unknown | 80&#8209;83 |
-| 74 | `lemma_push_preserves_no_dups` |  |  |  | Y | Y |  |  | unknown | 119&#8209;124 |
-| 75 | `lemma_subseq_no_dups_subset` |  |  |  | Y | Y |  |  | unknown | 145&#8209;151 |
-| 76 | `size` | Y | Y |  |  | Y |  |  | unknown | 168&#8209;170 |
-| 77 | `to_seq` | Y | Y |  |  | Y |  |  | unknown | 172&#8209;173 |
-| 78 | `empty` | Y | Y |  |  | Y |  |  | unknown | 175&#8209;176 |
-| 79 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 178&#8209;179 |
-| 80 | `from_seq` | Y | Y |  |  | Y |  |  | unknown | 181&#8209;182 |
-| 81 | `filter` | Y | Y |  |  | Y |  |  | hole | 184&#8209;191 |
-| 82 | `intersection` | Y | Y |  |  | Y |  |  | hole | 193&#8209;202 |
-| 83 | `difference` | Y | Y |  |  | Y |  |  | hole | 204&#8209;213 |
-| 84 | `union` | Y | Y |  |  | Y |  |  | hole | 215&#8209;224 |
-| 85 | `find` | Y | Y |  |  | Y |  |  | hole | 226&#8209;228 |
-| 86 | `delete` | Y | Y |  |  | Y |  |  | hole | 230&#8209;237 |
-| 87 | `insert` | Y | Y |  |  | Y |  |  | hole | 239&#8209;246 |
-| 88 | `default` |  | Y |  |  |  | Y | Y |  | 576 |
-| 89 | `eq` |  | Y |  |  |  | Y | Y |  | 580&#8209;589 |
+| 73 | `lemma_filter_remove` |  |  |  | Y | Y |  |  | unknown | 82&#8209;85 |
+| 74 | `lemma_push_preserves_no_dups` |  |  |  | Y | Y |  |  | unknown | 121&#8209;126 |
+| 75 | `lemma_subseq_no_dups_subset` |  |  |  | Y | Y |  |  | unknown | 147&#8209;153 |
+| 76 | `size` | Y | Y |  |  | Y |  |  | unknown | 170&#8209;172 |
+| 77 | `to_seq` | Y | Y |  |  | Y |  |  | hole | 174&#8209;179 |
+| 78 | `empty` | Y | Y |  |  | Y |  |  | unknown | 181&#8209;182 |
+| 79 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 184&#8209;185 |
+| 80 | `from_seq` | Y | Y |  |  | Y |  |  | unknown | 187&#8209;188 |
+| 81 | `filter` | Y | Y |  |  | Y |  |  | hole | 190&#8209;197 |
+| 82 | `intersection` | Y | Y |  |  | Y |  |  | hole | 199&#8209;208 |
+| 83 | `difference` | Y | Y |  |  | Y |  |  | hole | 210&#8209;219 |
+| 84 | `union` | Y | Y |  |  | Y |  |  | hole | 221&#8209;230 |
+| 85 | `find` | Y | Y |  |  | Y |  |  | hole | 232&#8209;234 |
+| 86 | `delete` | Y | Y |  |  | Y |  |  | hole | 236&#8209;243 |
+| 87 | `insert` | Y | Y |  |  | Y |  |  | hole | 245&#8209;252 |
+| 88 | `default` |  | Y |  |  |  | Y | Y |  | 592 |
+| 89 | `eq` |  | Y |  |  |  | Y | Y |  | 596&#8209;605 |
 
 ### Chap41/Example41_3.rs
 
