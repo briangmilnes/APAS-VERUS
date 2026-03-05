@@ -1,5 +1,21 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Key-Value BST (dictionary/table) with ephemeral treap structure.
+
+//  Table of Contents
+//  1. module
+//  3. broadcast use
+//  4. type definitions
+//  5. view impls
+//  6. spec fns
+//  7. proof fns/broadcast groups
+//  8. traits
+//  9. impls
+//  11. derive impls in verus!
+//  12. macros
+//  13. derive impls outside verus!
+
+// 1. module
 
 pub mod BSTKeyValueStEph {
 
@@ -9,27 +25,19 @@ pub mod BSTKeyValueStEph {
 
     use vstd::prelude::*;
 
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
+
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
-
     // 3. broadcast use
     broadcast use { vstd::map::group_map_axioms, vstd::map_lib::group_map_union, vstd::set::group_set_axioms };
+
+
 
     // 4. type definitions
 
@@ -43,58 +51,25 @@ pub mod BSTKeyValueStEph {
         pub right: Link<K, V>,
     }
 
-    fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (cloned: Link<K, V>)
-        ensures
-            spec_content_link(&cloned) == spec_content_link(link),
-            spec_node_count_link(&cloned) == spec_node_count_link(link),
-        decreases *link,
-    {
-        match link {
-            None => None,
-            Some(node) => {
-                let k = node.key.clone();
-                let v = node.value.clone();
-                proof { assume(k == node.key && v == node.value); } // clone bridge, cf. PartialEq pattern
-                Some(Box::new(Node {
-                    key: k,
-                    value: v,
-                    priority: node.priority,
-                    left: clone_link(&node.left),
-                    right: clone_link(&node.right),
-                }))
-            }
-        }
-    }
-
-    impl<K: StT + Ord, V: StT> Clone for Node<K, V> {
-        fn clone(&self) -> Self {
-            Node {
-                key: self.key.clone(),
-                value: self.value.clone(),
-                priority: self.priority,
-                left: clone_link(&self.left),
-                right: clone_link(&self.right),
-            }
-        }
-    }
-
     pub struct BSTKeyValueStEph<K: StT + Ord, V: StT> {
         pub root: Link<K, V>,
         pub size: usize,
     }
 
-    impl<K: StT + Ord, V: StT> Clone for BSTKeyValueStEph<K, V> {
-        fn clone(&self) -> (cloned: Self)
-            ensures true,
-        {
-            BSTKeyValueStEph {
-                root: self.root.clone(),
-                size: self.size,
-            }
+    pub type BSTreeKeyValue<K, V> = BSTKeyValueStEph<K, V>;
+
+
+
+    // 5. view impls
+
+    impl<K: StT + Ord, V: StT> View for BSTKeyValueStEph<K, V> {
+        type V = Map<K, V>;
+        open spec fn view(&self) -> Map<K, V> {
+            spec_content_link(&self.root)
         }
     }
 
-    pub type BSTreeKeyValue<K, V> = BSTKeyValueStEph<K, V>;
+
 
     // 6. spec fns
 
@@ -156,14 +131,7 @@ pub mod BSTKeyValueStEph {
         }
     }
 
-    // 5. view impls
 
-    impl<K: StT + Ord, V: StT> View for BSTKeyValueStEph<K, V> {
-        type V = Map<K, V>;
-        open spec fn view(&self) -> Map<K, V> {
-            spec_content_link(&self.root)
-        }
-    }
 
     // 7. proof fns
 
@@ -189,8 +157,8 @@ pub mod BSTKeyValueStEph {
         xk: K, xv: V, yk: K, yv: V,
     )
         ensures
-            forall|k: K| #![auto]
-                a.union_prefer_right(
+            forall|k: K|
+                #[trigger] a.union_prefer_right(
                     b.union_prefer_right(c).insert(yk, yv)
                 ).insert(xk, xv).contains_key(k)
                 ==>
@@ -205,8 +173,8 @@ pub mod BSTKeyValueStEph {
         xk: K, xv: V, yk: K, yv: V,
     )
         ensures
-            forall|k: K| #![auto]
-                a.union_prefer_right(b).insert(xk, xv)
+            forall|k: K|
+                #[trigger] a.union_prefer_right(b).insert(xk, xv)
                     .union_prefer_right(c).insert(yk, yv).contains_key(k)
                 ==>
                 a.union_prefer_right(
@@ -256,7 +224,19 @@ pub mod BSTKeyValueStEph {
     {
     }
 
+
+
     // 8. traits
+
+    pub trait NodeTrait<K: StT + Ord, V: StT>: Sized {
+        spec fn spec_height(&self) -> nat;
+        spec fn spec_node_count(&self) -> nat;
+        spec fn spec_content(&self) -> Map<K, V>;
+        spec fn spec_min_key(&self) -> Option<K>;
+        spec fn spec_max_key(&self) -> Option<K>;
+
+        fn new(key: K, value: V, priority: u64) -> (node: Self);
+    }
 
     pub trait BSTKeyValueStEphTrait<K: StT + Ord + TotalOrder, V: StT>: Sized + View<V = Map<K, V>> {
         spec fn spec_size(&self) -> nat;
@@ -344,13 +324,6 @@ pub mod BSTKeyValueStEph {
 
         // Internal associated functions.
 
-        fn new_node(key: K, value: V, priority: u64) -> (node: Node<K, V>)
-            ensures
-                node.key == key,
-                node.value == value,
-                node.priority == priority,
-                node.left is None,
-                node.right is None;
         fn height_link(link: &Link<K, V>) -> (height: usize)
             requires spec_height_link(link) < usize::MAX as nat,
             ensures height == spec_height_link(link),
@@ -419,7 +392,101 @@ pub mod BSTKeyValueStEph {
             ensures maximum.len() <= items.len();
     }
 
+
+
+    fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (cloned: Link<K, V>)
+        ensures
+            spec_content_link(&cloned) == spec_content_link(link),
+            spec_node_count_link(&cloned) == spec_node_count_link(link),
+        decreases *link,
+    {
+        match link {
+            None => None,
+            Some(node) => {
+                let k = node.key.clone();
+                let v = node.value.clone();
+                proof { assume(k == node.key && v == node.value); } // clone bridge, cf. PartialEq pattern
+                Some(Box::new(Node {
+                    key: k,
+                    value: v,
+                    priority: node.priority,
+                    left: clone_link(&node.left),
+                    right: clone_link(&node.right),
+                }))
+            }
+        }
+    }
+
     // 9. impls
+
+    impl<K: StT + Ord, V: StT> NodeTrait<K, V> for Node<K, V> {
+        open spec fn spec_height(&self) -> nat
+            decreases *self,
+        {
+            let l = match self.left { None => 0nat, Some(n) => NodeTrait::spec_height(&*n) };
+            let r = match self.right { None => 0nat, Some(n) => NodeTrait::spec_height(&*n) };
+            1 + if l >= r { l } else { r }
+        }
+
+        open spec fn spec_node_count(&self) -> nat
+            decreases *self,
+        {
+            let l = match self.left { None => 0nat, Some(n) => NodeTrait::spec_node_count(&*n) };
+            let r = match self.right { None => 0nat, Some(n) => NodeTrait::spec_node_count(&*n) };
+            1 + l + r
+        }
+
+        open spec fn spec_content(&self) -> Map<K, V>
+            decreases *self,
+        {
+            let l = match self.left { None => Map::empty(), Some(n) => NodeTrait::spec_content(&*n) };
+            let r = match self.right { None => Map::empty(), Some(n) => NodeTrait::spec_content(&*n) };
+            l.union_prefer_right(r).insert(self.key, self.value)
+        }
+
+        open spec fn spec_min_key(&self) -> Option<K>
+            decreases *self,
+        {
+            match self.left {
+                None => Some(self.key),
+                Some(n) => NodeTrait::spec_min_key(&*n),
+            }
+        }
+
+        open spec fn spec_max_key(&self) -> Option<K>
+            decreases *self,
+        {
+            match self.right {
+                None => Some(self.key),
+                Some(n) => NodeTrait::spec_max_key(&*n),
+            }
+        }
+
+        fn new(key: K, value: V, priority: u64) -> (node: Self)
+            ensures
+                node.key == key,
+                node.value == value,
+                node.priority == priority,
+                node.left is None,
+                node.right is None,
+        {
+            Node { key, value, priority, left: None, right: None }
+        }
+    }
+
+    fn compare_kv_links<K: StT + Ord, V: StT>(a: &Link<K, V>, b: &Link<K, V>) -> (equal: bool)
+        decreases *a,
+    {
+        match (a, b) {
+            (None, None) => true,
+            (Some(an), Some(bn)) => {
+                an.key == bn.key && an.value == bn.value
+                    && compare_kv_links(&an.left, &bn.left)
+                    && compare_kv_links(&an.right, &bn.right)
+            }
+            _ => false,
+        }
+    }
 
     impl<K: StT + Ord + TotalOrder, V: StT> BSTKeyValueStEphTrait<K, V> for BSTKeyValueStEph<K, V> {
         open spec fn spec_size(&self) -> nat { self.size as nat }
@@ -476,10 +543,6 @@ pub mod BSTKeyValueStEph {
         fn maximum_key(&self) -> Option<&K> { Self::max_key_link(&self.root) }
 
         // Internal associated functions.
-
-        fn new_node(key: K, value: V, priority: u64) -> (node: Node<K, V>) {
-            Node { key, value, priority, left: None, right: None }
-        }
 
         fn height_link(link: &Link<K, V>) -> (height: usize)
             decreases *link,
@@ -582,7 +645,7 @@ pub mod BSTKeyValueStEph {
                     }
                 }
             } else {
-                *link = Some(Box::new(Self::new_node(key, value, priority)));
+                *link = Some(Box::new(Node::new(key, value, priority)));
                 true
             }
         }
@@ -710,7 +773,7 @@ pub mod BSTKeyValueStEph {
             let priority = items[min_idx].2;
             let left = Self::build_treap_from_vec(items, start, min_idx);
             let right = Self::build_treap_from_vec(items, min_idx + 1, end);
-            let mut node = Self::new_node(key, value, priority);
+            let mut node = Node::new(key, value, priority);
             node.left = left;
             node.right = right;
             Some(Box::new(node))
@@ -744,9 +807,56 @@ pub mod BSTKeyValueStEph {
         { Self::new() }
     }
 
+
+
+    impl<K: StT + Ord, V: StT> Clone for Node<K, V> {
+        fn clone(&self) -> Self {
+            Node {
+                key: self.key.clone(),
+                value: self.value.clone(),
+                priority: self.priority,
+                left: clone_link(&self.left),
+                right: clone_link(&self.right),
+            }
+        }
+    }
+
+    impl<K: StT + Ord, V: StT> Clone for BSTKeyValueStEph<K, V> {
+        fn clone(&self) -> (cloned: Self)
+            ensures
+                cloned@ == self@,
+                cloned.size == self.size,
+        {
+            BSTKeyValueStEph {
+                root: clone_link(&self.root),
+                size: self.size,
+            }
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<K: StT + Ord, V: StT> PartialEqSpecImpl for BSTKeyValueStEph<K, V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<K: StT + Ord, V: StT> Eq for BSTKeyValueStEph<K, V> {}
+
+    impl<K: StT + Ord, V: StT> PartialEq for BSTKeyValueStEph<K, V> {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            let equal = compare_kv_links(&self.root, &other.root) && self.size == other.size;
+            proof { assume(equal == (self@ == other@)); }
+            equal
+        }
+    }
+
     }
 
     // 13. derive impls outside verus!
+
+
 
     impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug> fmt::Debug for Node<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -769,7 +879,21 @@ pub mod BSTKeyValueStEph {
         }
     }
 
+    impl<K: StT + Ord + fmt::Display, V: StT + fmt::Display> fmt::Display for Node<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "({}: {})", self.key, self.value)
+        }
+    }
+
+    impl<K: StT + Ord + fmt::Display, V: StT + fmt::Display> fmt::Display for BSTKeyValueStEph<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTKeyValueStEph(size={})", self.size)
+        }
+    }
+
     // 12. macros
+
+
 
     #[macro_export]
     macro_rules! BSTKeyValueStEphLit {
