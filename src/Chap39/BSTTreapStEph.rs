@@ -6,7 +6,6 @@
 //	1. module
 //	4. type definitions
 //	6. spec fns
-//	7. proof fns/broadcast groups
 //	8. traits
 //	9. impls
 //	11. derive impls in verus!
@@ -51,17 +50,9 @@ pub mod BSTTreapStEph {
     pub type BSTreeTreap<T> = BSTTreapStEph<T>;
 
 
-    //		6. spec fns
+    // 6. spec fns
 
-    pub open spec fn spec_size_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>) -> nat
-        decreases *link,
-    {
-        match link {
-            None => 0,
-            Some(node) => node.size as nat,
-        }
-    }
-
+    // Free spec fn: reveal_with_fuel cannot reference trait methods with generic params.
     pub open spec fn spec_contains_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>, target: T) -> bool
         decreases *link,
     {
@@ -75,199 +66,18 @@ pub mod BSTTreapStEph {
         }
     }
 
-    pub open spec fn spec_bst_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>) -> bool
-        decreases *link,
-    {
-        match link {
-            None => true,
-            Some(node) => {
-                spec_bst_link(&node.left)
-                    && spec_bst_link(&node.right)
-                    && (forall|k: T| #![trigger spec_contains_link(&node.left, k)] spec_contains_link(&node.left, k) ==> k.is_lt(&node.key))
-                    && (forall|k: T| #![trigger spec_contains_link(&node.right, k)] spec_contains_link(&node.right, k) ==> node.key.is_lt(&k))
-            }
-        }
-    }
-
-    pub open spec fn spec_size_wf_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>) -> bool
-        decreases *link,
-    {
-        match link {
-            None => true,
-            Some(node) => {
-                node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right)
-                    && spec_size_wf_link(&node.left)
-                    && spec_size_wf_link(&node.right)
-            }
-        }
-    }
-
-    pub open spec fn spec_in_order_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>) -> Seq<T>
-        decreases *link,
-    {
-        match link {
-            None => Seq::empty(),
-            Some(node) => {
-                spec_in_order_link(&node.left)
-                    + seq![node.key]
-                    + spec_in_order_link(&node.right)
-            }
-        }
-    }
-
-    pub open spec fn spec_pre_order_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>) -> Seq<T>
-        decreases *link,
-    {
-        match link {
-            None => Seq::empty(),
-            Some(node) => {
-                seq![node.key]
-                    + spec_pre_order_link(&node.left)
-                    + spec_pre_order_link(&node.right)
-            }
-        }
-    }
-
-    pub open spec fn spec_min_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>) -> Option<T>
-        decreases *link,
-    {
-        match link {
-            None => None,
-            Some(node) => match node.left {
-                None => Some(node.key),
-                Some(_) => spec_min_link(&node.left),
-            },
-        }
-    }
-
-    pub open spec fn spec_max_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>) -> Option<T>
-        decreases *link,
-    {
-        match link {
-            None => None,
-            Some(node) => match node.right {
-                None => Some(node.key),
-                Some(_) => spec_max_link(&node.right),
-            },
-        }
-    }
-
-    pub open spec fn spec_height_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>) -> nat
-        decreases *link,
-    {
-        match link {
-            None => 0,
-            Some(node) => {
-                let lh = spec_height_link(&node.left);
-                let rh = spec_height_link(&node.right);
-                let m = if lh >= rh { lh } else { rh };
-                1 + m
-            }
-        }
-    }
-
-    //		7. proof fns/broadcast groups
-
-    proof fn lemma_height_le_size<T: StT + Ord + IsLtTransitive>(link: &Link<T>)
-        requires
-            spec_size_wf_link(link),
-            spec_size_link(link) < usize::MAX as nat,
-        ensures spec_height_link(link) <= spec_size_link(link),
-        decreases *link,
-    {
-        match link {
-            None => {},
-            Some(node) => {
-                lemma_size_wf_child_bounded(link);
-                lemma_height_le_size(&node.left);
-                lemma_height_le_size(&node.right);
-                assert(spec_height_link(link) <= spec_size_link(link));
-            }
-        }
-    }
-
-    proof fn lemma_size_wf_child_bounded<T: StT + Ord + IsLtTransitive>(link: &Link<T>)
-        requires
-            spec_size_wf_link(link),
-            spec_size_link(link) > 0,
-            spec_size_link(link) < usize::MAX as nat,
-        ensures
-            match link {
-                None => true,
-                Some(node) => {
-                    spec_size_link(&node.left) < usize::MAX as nat
-                    && spec_size_link(&node.right) < usize::MAX as nat
-                },
-            },
-        decreases *link,
-    {
-        match link {
-            None => {},
-            Some(node) => {
-                assert(node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right));
-                assert(spec_size_link(&node.left) < node.size as nat);
-                assert(spec_size_link(&node.right) < node.size as nat);
-                assert(node.size as nat == spec_size_link(link));
-            }
-        }
-    }
-
-    proof fn lemma_wf_decompose<T: StT + Ord + IsLtTransitive>(link: &Link<T>)
-        requires spec_size_wf_link(link),
-        ensures match link {
-            None => true,
-            Some(node) => {
-                node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right)
-                && spec_size_wf_link(&node.left)
-                && spec_size_wf_link(&node.right)
-            },
-        },
-    {
-    }
-
-    proof fn lemma_wf_assemble_node<T: StT + Ord + IsLtTransitive>(node: &Box<Node<T>>)
-        requires
-            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),
-            spec_size_wf_link(&node.left),
-            spec_size_wf_link(&node.right),
-        ensures spec_size_wf_link(&Some(*node)),
-    {
-    }
-
-    proof fn lemma_contains_left<T: StT + Ord + IsLtTransitive>(node: &Box<Node<T>>, k: T)
-        requires spec_contains_link(&node.left, k),
-        ensures spec_contains_link(&Some(*node), k),
-    {
-    }
-
-    proof fn lemma_contains_right<T: StT + Ord + IsLtTransitive>(node: &Box<Node<T>>, k: T)
-        requires spec_contains_link(&node.right, k),
-        ensures spec_contains_link(&Some(*node), k),
-    {
-    }
-
-    proof fn lemma_bst_decompose<T: StT + Ord + IsLtTransitive>(link: &Link<T>)
-        requires spec_bst_link(link),
-        ensures match link {
-            None => true,
-            Some(node) => {
-                spec_bst_link(&node.left)
-                && spec_bst_link(&node.right)
-                && (forall|k: T| #[trigger] spec_contains_link(&node.left, k) ==> k.is_lt(&node.key))
-                && (forall|k: T| #[trigger] spec_contains_link(&node.right, k) ==> node.key.is_lt(&k))
-            },
-        },
-    {
-    }
-
-    proof fn lemma_contains_root<T: StT + Ord + IsLtTransitive>(node: &Box<Node<T>>)
-        ensures spec_contains_link(&Some(*node), node.key),
-    {
-    }
-
     //		8. traits
 
     pub trait BSTTreapStEphTrait<T: StT + Ord + IsLtTransitive> {
+        spec fn spec_size_link(link: &Link<T>) -> nat;
+        spec fn spec_bst_link(link: &Link<T>) -> bool;
+        spec fn spec_size_wf_link(link: &Link<T>) -> bool;
+        spec fn spec_in_order_link(link: &Link<T>) -> Seq<T>;
+        spec fn spec_pre_order_link(link: &Link<T>) -> Seq<T>;
+        spec fn spec_min_link(link: &Link<T>) -> Option<T>;
+        spec fn spec_max_link(link: &Link<T>) -> Option<T>;
+        spec fn spec_height_link(link: &Link<T>) -> nat;
+
         spec fn spec_size(self) -> nat;
         spec fn spec_wf(self) -> bool;
         spec fn spec_bst(self) -> bool;
@@ -277,6 +87,67 @@ pub mod BSTTreapStEph {
         spec fn spec_max(self) -> Option<T>;
         spec fn spec_in_order(self) -> Seq<T>;
         spec fn spec_pre_order(self) -> Seq<T>;
+
+        proof fn lemma_height_le_size(link: &Link<T>)
+            requires
+                Self::spec_size_wf_link(link),
+                Self::spec_size_link(link) < usize::MAX as nat,
+            ensures Self::spec_height_link(link) <= Self::spec_size_link(link);
+
+        proof fn lemma_size_wf_child_bounded(link: &Link<T>)
+            requires
+                Self::spec_size_wf_link(link),
+                Self::spec_size_link(link) > 0,
+                Self::spec_size_link(link) < usize::MAX as nat,
+            ensures
+                match link {
+                    None => true,
+                    Some(node) => {
+                        Self::spec_size_link(&node.left) < usize::MAX as nat
+                        && Self::spec_size_link(&node.right) < usize::MAX as nat
+                    },
+                };
+
+        proof fn lemma_wf_decompose(link: &Link<T>)
+            requires Self::spec_size_wf_link(link),
+            ensures match link {
+                None => true,
+                Some(node) => {
+                    node.size as nat == 1 + Self::spec_size_link(&node.left) + Self::spec_size_link(&node.right)
+                    && Self::spec_size_wf_link(&node.left)
+                    && Self::spec_size_wf_link(&node.right)
+                },
+            };
+
+        proof fn lemma_wf_assemble_node(node: &Box<Node<T>>)
+            requires
+                node.size as nat == 1 + Self::spec_size_link(&node.left) + Self::spec_size_link(&node.right),
+                Self::spec_size_wf_link(&node.left),
+                Self::spec_size_wf_link(&node.right),
+            ensures Self::spec_size_wf_link(&Some(*node));
+
+        proof fn lemma_contains_left(node: &Box<Node<T>>, k: T)
+            requires spec_contains_link(&node.left, k),
+            ensures spec_contains_link(&Some(*node), k);
+
+        proof fn lemma_contains_right(node: &Box<Node<T>>, k: T)
+            requires spec_contains_link(&node.right, k),
+            ensures spec_contains_link(&Some(*node), k);
+
+        proof fn lemma_bst_decompose(link: &Link<T>)
+            requires Self::spec_bst_link(link),
+            ensures match link {
+                None => true,
+                Some(node) => {
+                    Self::spec_bst_link(&node.left)
+                    && Self::spec_bst_link(&node.right)
+                    && (forall|k: T| #[trigger] spec_contains_link(&node.left, k) ==> k.is_lt(&node.key))
+                    && (forall|k: T| #[trigger] spec_contains_link(&node.right, k) ==> node.key.is_lt(&k))
+                },
+            };
+
+        proof fn lemma_contains_root(node: &Box<Node<T>>)
+            ensures spec_contains_link(&Some(*node), node.key);
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -317,6 +188,17 @@ pub mod BSTTreapStEph {
                 old(self).spec_bst() ==> self.spec_bst();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
+        fn delete(&mut self, target: &T)
+            requires
+                old(self).spec_wf(),
+                T::obeys_partial_cmp_spec(),
+            ensures
+                self.spec_wf(),
+                self.spec_size() <= old(self).spec_size(),
+                forall|k: T| self.spec_contains(k) ==> old(self).spec_contains(k),
+                old(self).spec_bst() ==> self.spec_bst();
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn find(&self, target: &T)     -> (found: Option<&T>)
             ensures found.is_some() ==> self.spec_contains(*found.unwrap());
         /// - APAS: Work O(log n) expected, Span O(log n) expected
@@ -351,246 +233,98 @@ pub mod BSTTreapStEph {
         /// - APAS: Work Θ(1), Span Θ(1)
         fn new_node(key: T, priority: u64) -> (n: Node<T>)
             ensures
-                spec_size_wf_link(&Some(Box::new(n))),
-                n.size == 1,
-        {
-            let n = Node {
-                key,
-                priority,
-                size: 1,
-                left: None,
-                right: None,
-            };
-            assert(spec_size_wf_link(&n.left));
-            assert(spec_size_wf_link(&n.right));
-            n
-        }
+                Self::spec_size_wf_link(&Some(Box::new(n))),
+                n.size == 1;
 
         /// - APAS: Work Θ(1), Span Θ(1)
         fn size_link(link: &Link<T>) -> (sz: usize)
-            ensures sz as nat == spec_size_link(link),
-        {
-            match link.as_ref() {
-                None => 0,
-                Some(n) => n.size,
-            }
-        }
+            ensures sz as nat == Self::spec_size_link(link);
 
         /// - APAS: Work Θ(1), Span Θ(1)
         fn update_size(node: &mut Box<Node<T>>)
-            requires 1 + spec_size_link(&old(node).left) + spec_size_link(&old(node).right) <= usize::MAX as nat,
+            requires 1 + Self::spec_size_link(&old(node).left) + Self::spec_size_link(&old(node).right) <= usize::MAX as nat,
             ensures
-                node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),
+                node.size as nat == 1 + Self::spec_size_link(&node.left) + Self::spec_size_link(&node.right),
                 node.key == old(node).key,
                 node.left == old(node).left,
-                node.right == old(node).right,
-        {
-            let l = Self::size_link(&node.left);
-            let r = Self::size_link(&node.right);
-            node.size = 1 + l + r;
-        }
+                node.right == old(node).right;
 
-        fn rotate_left(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>)
+        fn rotate_left(x: Box<Node<T>>) -> (rotated: Box<Node<T>>)
             requires
-                spec_size_wf_link(&Some(x)),
-                spec_size_link(&Some(x)) <= usize::MAX as nat,
+                Self::spec_size_wf_link(&Some(x)),
+                Self::spec_size_link(&Some(x)) <= usize::MAX as nat,
             ensures
-                spec_size_wf_link(&Some(rotated)),
-                spec_size_link(&Some(rotated)) == spec_size_link(&Some(x)),
-                spec_bst_link(&Some(x)) ==> spec_bst_link(&Some(rotated)),
-                forall|k: T| spec_contains_link(&Some(rotated), k) <==> spec_contains_link(&Some(x), k),
-        {
-            let ghost bst_input = spec_bst_link(&Some(x));
-            let ghost xk = x.key;
-            let ghost orig_right = x.right;
-            assert(spec_size_wf_link(&x.left));
-            assert(spec_size_wf_link(&x.right));
-            if let Some(mut y) = x.right.take() {
-                let ghost yk = y.key;
-                let ghost b  = y.left;
-                let ghost c  = y.right;
+                Self::spec_size_wf_link(&Some(rotated)),
+                Self::spec_size_link(&Some(rotated)) == Self::spec_size_link(&Some(x)),
+                Self::spec_bst_link(&Some(x)) ==> Self::spec_bst_link(&Some(rotated)),
+                forall|k: T| spec_contains_link(&Some(rotated), k) <==> spec_contains_link(&Some(x), k);
 
-                assert(spec_size_wf_link(&y.left));
-                assert(spec_size_wf_link(&y.right));
-                let ghost x_left_sz = spec_size_link(&x.left);
-                let ghost y_left_sz = spec_size_link(&y.left);
-                let ghost y_right_sz = spec_size_link(&y.right);
-
-                proof {
-                    if bst_input {
-                        lemma_bst_decompose(&orig_right);
-                        assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies xk.is_lt(&k) by {
-                            lemma_contains_left(&y, k);
-                        };
-                        assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies k.is_lt(&yk) by {};
-                    }
-                }
-
-                x.right = y.left.take();
-                assert(1 + x_left_sz + y_left_sz + 1 + y_right_sz <= usize::MAX as nat);
-                Self::update_size(&mut x);
-
-                proof {
-                    if bst_input {
-                        assert(spec_bst_link(&x.left));
-                        assert(spec_bst_link(&x.right));
-                        assert(spec_bst_link(&Some(x)));
-                    }
-                }
-
-                y.left = Some(x);
-                Self::update_size(&mut y);
-                proof {
-                    lemma_wf_assemble_node(&y);
-                    reveal_with_fuel(spec_contains_link, 3);
-                    if bst_input {
-                        lemma_bst_decompose(&orig_right);
-                        assert(spec_bst_link(&y.right));
-                        lemma_contains_root(&y);
-                        lemma_contains_root(&y);
-                        assert(spec_contains_link(&orig_right, yk));
-                        assert(xk.is_lt(&yk));
-                        assert(x.right == b);
-                        assert forall |k: T| #[trigger] spec_contains_link(&y.left, k) implies k.is_lt(&yk) by {
-                            if spec_contains_link(&x.left, k) {
-                                T::is_lt_transitive(k, xk, yk);
-                            }
-                            if spec_contains_link(&x.right, k) {
-                                assert(spec_contains_link(&b, k));
-                            }
-                        };
-                        assert(spec_bst_link(&Some(y)));
-                    }
-                }
-                y
-            } else {
-                x
-            }
-        }
-
-        fn rotate_right(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>)
+        fn rotate_right(x: Box<Node<T>>) -> (rotated: Box<Node<T>>)
             requires
-                spec_size_wf_link(&Some(x)),
-                spec_size_link(&Some(x)) <= usize::MAX as nat,
+                Self::spec_size_wf_link(&Some(x)),
+                Self::spec_size_link(&Some(x)) <= usize::MAX as nat,
             ensures
-                spec_size_wf_link(&Some(rotated)),
-                spec_size_link(&Some(rotated)) == spec_size_link(&Some(x)),
-                spec_bst_link(&Some(x)) ==> spec_bst_link(&Some(rotated)),
-                forall|k: T| spec_contains_link(&Some(rotated), k) <==> spec_contains_link(&Some(x), k),
-        {
-            let ghost bst_input = spec_bst_link(&Some(x));
-            let ghost xk = x.key;
-            let ghost orig_left = x.left;
-            assert(spec_size_wf_link(&x.left));
-            assert(spec_size_wf_link(&x.right));
-            if let Some(mut y) = x.left.take() {
-                let ghost yk = y.key;
-                let ghost b  = y.right;
-                let ghost a  = y.left;
-
-                assert(spec_size_wf_link(&y.left));
-                assert(spec_size_wf_link(&y.right));
-                let ghost x_right_sz = spec_size_link(&x.right);
-                let ghost y_left_sz = spec_size_link(&y.left);
-                let ghost y_right_sz = spec_size_link(&y.right);
-
-                proof {
-                    if bst_input {
-                        lemma_bst_decompose(&orig_left);
-                        assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies k.is_lt(&xk) by {
-                            lemma_contains_right(&y, k);
-                        };
-                        assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies yk.is_lt(&k) by {};
-                    }
-                }
-
-                x.left = y.right.take();
-                assert(1 + y_left_sz + x_right_sz + 1 + y_right_sz <= usize::MAX as nat);
-                Self::update_size(&mut x);
-
-                proof {
-                    if bst_input {
-                        assert(spec_bst_link(&x.right));
-                        assert(spec_bst_link(&x.left));
-                        assert(spec_bst_link(&Some(x)));
-                    }
-                }
-
-                y.right = Some(x);
-                Self::update_size(&mut y);
-                proof {
-                    lemma_wf_assemble_node(&y);
-                    reveal_with_fuel(spec_contains_link, 3);
-                    if bst_input {
-                        lemma_bst_decompose(&orig_left);
-                        assert(spec_bst_link(&y.left));
-                        lemma_contains_root(&y);
-                        assert(spec_contains_link(&orig_left, yk));
-                        assert(yk.is_lt(&xk));
-                        assert(x.left == b);
-                        assert forall |k: T| #[trigger] spec_contains_link(&y.right, k) implies yk.is_lt(&k) by {
-                            if spec_contains_link(&x.right, k) {
-                                T::is_lt_transitive(yk, xk, k);
-                            }
-                            if spec_contains_link(&x.left, k) {
-                                assert(spec_contains_link(&b, k));
-                            }
-                        };
-                        assert(spec_bst_link(&Some(y)));
-                    }
-                }
-                y
-            } else {
-                x
-            }
-        }
+                Self::spec_size_wf_link(&Some(rotated)),
+                Self::spec_size_link(&Some(rotated)) == Self::spec_size_link(&Some(x)),
+                Self::spec_bst_link(&Some(x)) ==> Self::spec_bst_link(&Some(rotated)),
+                forall|k: T| spec_contains_link(&Some(rotated), k) <==> spec_contains_link(&Some(x), k);
 
         fn clone_link(link: &Link<T>) -> (c: Link<T>)
             ensures
-                spec_size_link(&c) == spec_size_link(link),
-                spec_size_wf_link(link) ==> spec_size_wf_link(&c);
+                Self::spec_size_link(&c) == Self::spec_size_link(link),
+                Self::spec_size_wf_link(link) ==> Self::spec_size_wf_link(&c);
 
         fn height_link(link: &Link<T>) -> (h: usize)
             requires
-                spec_size_link(link) < usize::MAX as nat,
-                spec_size_wf_link(link),
-            ensures h as nat == spec_height_link(link);
+                Self::spec_size_link(link) < usize::MAX as nat,
+                Self::spec_size_wf_link(link),
+            ensures h as nat == Self::spec_height_link(link);
 
         fn insert_link(link: Link<T>, value: T, priority: u64) -> (inserted: Link<T>)
             requires
-                spec_size_link(&link) + 1 <= usize::MAX as nat,
-                spec_size_wf_link(&link),
+                Self::spec_size_link(&link) + 1 <= usize::MAX as nat,
+                Self::spec_size_wf_link(&link),
                 T::obeys_partial_cmp_spec(),
             ensures
-                spec_size_wf_link(&inserted),
-                spec_size_link(&inserted) <= spec_size_link(&link) + 1,
-                spec_size_link(&inserted) >= spec_size_link(&link),
+                Self::spec_size_wf_link(&inserted),
+                Self::spec_size_link(&inserted) <= Self::spec_size_link(&link) + 1,
+                Self::spec_size_link(&inserted) >= Self::spec_size_link(&link),
                 forall|k: T| spec_contains_link(&link, k) ==> spec_contains_link(&inserted, k),
                 forall|k: T| spec_contains_link(&inserted, k) ==> (spec_contains_link(&link, k) || k == value),
-                spec_bst_link(&link) ==> spec_bst_link(&inserted);
+                Self::spec_bst_link(&link) ==> Self::spec_bst_link(&inserted);
+
+        fn delete_link(link: Link<T>, target: &T) -> (deleted: Link<T>)
+            requires
+                Self::spec_size_wf_link(&link),
+                T::obeys_partial_cmp_spec(),
+            ensures
+                Self::spec_size_wf_link(&deleted),
+                Self::spec_size_link(&deleted) <= Self::spec_size_link(&link),
+                forall|k: T| spec_contains_link(&deleted, k) ==> spec_contains_link(&link, k),
+                Self::spec_bst_link(&link) ==> Self::spec_bst_link(&deleted);
 
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             ensures found.is_some() ==> spec_contains_link(link, *found.unwrap());
 
         fn min_link(link: &Link<T>) -> (min_val: Option<&T>)
-            ensures match (min_val, spec_min_link(link)) {
+            ensures match (min_val, Self::spec_min_link(link)) {
                 (Some(rv), Some(sv)) => *rv == sv,
                 (None, None) => true,
                 _ => false,
             };
 
         fn max_link(link: &Link<T>) -> (max_val: Option<&T>)
-            ensures match (max_val, spec_max_link(link)) {
+            ensures match (max_val, Self::spec_max_link(link)) {
                 (Some(rv), Some(sv)) => *rv == sv,
                 (None, None) => true,
                 _ => false,
             };
 
         fn in_order_vec(link: &Link<T>) -> (ordered: Vec<T>)
-            ensures ordered@.len() == spec_in_order_link(link).len();
+            ensures ordered@.len() == Self::spec_in_order_link(link).len();
 
         fn pre_order_vec(link: &Link<T>) -> (ordered: Vec<T>)
-            ensures ordered@.len() == spec_pre_order_link(link).len();
+            ensures ordered@.len() == Self::spec_pre_order_link(link).len();
 
     }
 
@@ -598,15 +332,161 @@ pub mod BSTTreapStEph {
     //		9. impls
 
     impl<T: StT + Ord + IsLtTransitive> BSTTreapStEphTrait<T> for BSTTreapStEph<T> {
-        open spec fn spec_size(self) -> nat { spec_size_link(&self.root) }
-        open spec fn spec_wf(self) -> bool { spec_size_wf_link(&self.root) }
-        open spec fn spec_bst(self) -> bool { spec_bst_link(&self.root) }
-        open spec fn spec_height(self) -> nat { spec_height_link(&self.root) }
+        open spec fn spec_size_link(link: &Link<T>) -> nat
+            decreases *link,
+        {
+            match link {
+                None => 0,
+                Some(node) => node.size as nat,
+            }
+        }
+
+        open spec fn spec_bst_link(link: &Link<T>) -> bool
+            decreases *link,
+        {
+            match link {
+                None => true,
+                Some(node) => {
+                    Self::spec_bst_link(&node.left)
+                        && Self::spec_bst_link(&node.right)
+                        && (forall|k: T| #![trigger spec_contains_link(&node.left, k)] spec_contains_link(&node.left, k) ==> k.is_lt(&node.key))
+                        && (forall|k: T| #![trigger spec_contains_link(&node.right, k)] spec_contains_link(&node.right, k) ==> node.key.is_lt(&k))
+                }
+            }
+        }
+
+        open spec fn spec_size_wf_link(link: &Link<T>) -> bool
+            decreases *link,
+        {
+            match link {
+                None => true,
+                Some(node) => {
+                    node.size as nat == 1 + Self::spec_size_link(&node.left) + Self::spec_size_link(&node.right)
+                        && Self::spec_size_wf_link(&node.left)
+                        && Self::spec_size_wf_link(&node.right)
+                }
+            }
+        }
+
+        open spec fn spec_in_order_link(link: &Link<T>) -> Seq<T>
+            decreases *link,
+        {
+            match link {
+                None => Seq::empty(),
+                Some(node) => {
+                    Self::spec_in_order_link(&node.left)
+                        + seq![node.key]
+                        + Self::spec_in_order_link(&node.right)
+                }
+            }
+        }
+
+        open spec fn spec_pre_order_link(link: &Link<T>) -> Seq<T>
+            decreases *link,
+        {
+            match link {
+                None => Seq::empty(),
+                Some(node) => {
+                    seq![node.key]
+                        + Self::spec_pre_order_link(&node.left)
+                        + Self::spec_pre_order_link(&node.right)
+                }
+            }
+        }
+
+        open spec fn spec_min_link(link: &Link<T>) -> Option<T>
+            decreases *link,
+        {
+            match link {
+                None => None,
+                Some(node) => match node.left {
+                    None => Some(node.key),
+                    Some(_) => Self::spec_min_link(&node.left),
+                },
+            }
+        }
+
+        open spec fn spec_max_link(link: &Link<T>) -> Option<T>
+            decreases *link,
+        {
+            match link {
+                None => None,
+                Some(node) => match node.right {
+                    None => Some(node.key),
+                    Some(_) => Self::spec_max_link(&node.right),
+                },
+            }
+        }
+
+        open spec fn spec_height_link(link: &Link<T>) -> nat
+            decreases *link,
+        {
+            match link {
+                None => 0,
+                Some(node) => {
+                    let lh = Self::spec_height_link(&node.left);
+                    let rh = Self::spec_height_link(&node.right);
+                    let m = if lh >= rh { lh } else { rh };
+                    1 + m
+                }
+            }
+        }
+
+        open spec fn spec_size(self) -> nat { Self::spec_size_link(&self.root) }
+        open spec fn spec_wf(self) -> bool { Self::spec_size_wf_link(&self.root) }
+        open spec fn spec_bst(self) -> bool { Self::spec_bst_link(&self.root) }
+        open spec fn spec_height(self) -> nat { Self::spec_height_link(&self.root) }
         open spec fn spec_contains(self, target: T) -> bool { spec_contains_link(&self.root, target) }
-        open spec fn spec_min(self) -> Option<T> { spec_min_link(&self.root) }
-        open spec fn spec_max(self) -> Option<T> { spec_max_link(&self.root) }
-        open spec fn spec_in_order(self) -> Seq<T> { spec_in_order_link(&self.root) }
-        open spec fn spec_pre_order(self) -> Seq<T> { spec_pre_order_link(&self.root) }
+        open spec fn spec_min(self) -> Option<T> { Self::spec_min_link(&self.root) }
+        open spec fn spec_max(self) -> Option<T> { Self::spec_max_link(&self.root) }
+        open spec fn spec_in_order(self) -> Seq<T> { Self::spec_in_order_link(&self.root) }
+        open spec fn spec_pre_order(self) -> Seq<T> { Self::spec_pre_order_link(&self.root) }
+
+        proof fn lemma_height_le_size(link: &Link<T>)
+            decreases *link,
+        {
+            match link {
+                None => {},
+                Some(node) => {
+                    Self::lemma_size_wf_child_bounded(link);
+                    Self::lemma_height_le_size(&node.left);
+                    Self::lemma_height_le_size(&node.right);
+                    assert(Self::spec_height_link(link) <= Self::spec_size_link(link));
+                }
+            }
+        }
+
+        proof fn lemma_size_wf_child_bounded(link: &Link<T>)
+            decreases *link,
+        {
+            match link {
+                None => {},
+                Some(node) => {
+                    assert(node.size as nat == 1 + Self::spec_size_link(&node.left) + Self::spec_size_link(&node.right));
+                    assert(Self::spec_size_link(&node.left) < node.size as nat);
+                    assert(Self::spec_size_link(&node.right) < node.size as nat);
+                    assert(node.size as nat == Self::spec_size_link(link));
+                }
+            }
+        }
+
+        proof fn lemma_wf_decompose(link: &Link<T>) {
+        }
+
+        proof fn lemma_wf_assemble_node(node: &Box<Node<T>>) {
+        }
+
+        proof fn lemma_contains_left(node: &Box<Node<T>>, k: T) {
+        }
+
+        proof fn lemma_contains_right(node: &Box<Node<T>>, k: T) {
+        }
+
+        proof fn lemma_bst_decompose(link: &Link<T>) {
+        }
+
+        proof fn lemma_contains_root(node: &Box<Node<T>>) {
+        }
 
         fn new() -> Self { BSTTreapStEph { root: None } }
 
@@ -620,6 +500,10 @@ pub mod BSTTreapStEph {
 
         fn insert(&mut self, value: T, priority: u64) {
             self.root = Self::insert_link(self.root.take(), value, priority);
+        }
+
+        fn delete(&mut self, target: &T) {
+            self.root = Self::delete_link(self.root.take(), target);
         }
 
         fn find(&self, target: &T) -> Option<&T> {
@@ -640,6 +524,172 @@ pub mod BSTTreapStEph {
 
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             ArraySeqStPerS::from_vec(Self::pre_order_vec(&self.root))
+        }
+
+        /// - APAS: Work Θ(1), Span Θ(1)
+        fn new_node(key: T, priority: u64) -> (n: Node<T>) {
+            let n = Node {
+                key,
+                priority,
+                size: 1,
+                left: None,
+                right: None,
+            };
+            assert(Self::spec_size_wf_link(&n.left));
+            assert(Self::spec_size_wf_link(&n.right));
+            n
+        }
+
+        /// - APAS: Work Θ(1), Span Θ(1)
+        fn size_link(link: &Link<T>) -> (sz: usize) {
+            match link.as_ref() {
+                None => 0,
+                Some(n) => n.size,
+            }
+        }
+
+        /// - APAS: Work Θ(1), Span Θ(1)
+        fn update_size(node: &mut Box<Node<T>>) {
+            let l = Self::size_link(&node.left);
+            let r = Self::size_link(&node.right);
+            node.size = 1 + l + r;
+        }
+
+        fn rotate_left(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>) {
+            let ghost bst_input = Self::spec_bst_link(&Some(x));
+            let ghost xk = x.key;
+            let ghost orig_right = x.right;
+            assert(Self::spec_size_wf_link(&x.left));
+            assert(Self::spec_size_wf_link(&x.right));
+            if let Some(mut y) = x.right.take() {
+                let ghost yk = y.key;
+                let ghost b  = y.left;
+                let ghost c  = y.right;
+
+                assert(Self::spec_size_wf_link(&y.left));
+                assert(Self::spec_size_wf_link(&y.right));
+                let ghost x_left_sz = Self::spec_size_link(&x.left);
+                let ghost y_left_sz = Self::spec_size_link(&y.left);
+                let ghost y_right_sz = Self::spec_size_link(&y.right);
+
+                proof {
+                    if bst_input {
+                        Self::lemma_bst_decompose(&orig_right);
+                        assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies xk.is_lt(&k) by {
+                            Self::lemma_contains_left(&y, k);
+                        };
+                        assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies k.is_lt(&yk) by {};
+                    }
+                }
+
+                x.right = y.left.take();
+                assert(1 + x_left_sz + y_left_sz + 1 + y_right_sz <= usize::MAX as nat);
+                Self::update_size(&mut x);
+
+                proof {
+                    if bst_input {
+                        assert(Self::spec_bst_link(&x.left));
+                        assert(Self::spec_bst_link(&x.right));
+                        assert(Self::spec_bst_link(&Some(x)));
+                    }
+                }
+
+                y.left = Some(x);
+                Self::update_size(&mut y);
+                proof {
+                    Self::lemma_wf_assemble_node(&y);
+                    reveal_with_fuel(spec_contains_link, 3);
+                    if bst_input {
+                        Self::lemma_bst_decompose(&orig_right);
+                        assert(Self::spec_bst_link(&y.right));
+                        Self::lemma_contains_root(&y);
+                        Self::lemma_contains_root(&y);
+                        assert(spec_contains_link(&orig_right, yk));
+                        assert(xk.is_lt(&yk));
+                        assert(x.right == b);
+                        assert forall |k: T| #[trigger] spec_contains_link(&y.left, k) implies k.is_lt(&yk) by {
+                            if spec_contains_link(&x.left, k) {
+                                T::is_lt_transitive(k, xk, yk);
+                            }
+                            if spec_contains_link(&x.right, k) {
+                                assert(spec_contains_link(&b, k));
+                            }
+                        };
+                        assert(Self::spec_bst_link(&Some(y)));
+                    }
+                }
+                y
+            } else {
+                x
+            }
+        }
+
+        fn rotate_right(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>) {
+            let ghost bst_input = Self::spec_bst_link(&Some(x));
+            let ghost xk = x.key;
+            let ghost orig_left = x.left;
+            assert(Self::spec_size_wf_link(&x.left));
+            assert(Self::spec_size_wf_link(&x.right));
+            if let Some(mut y) = x.left.take() {
+                let ghost yk = y.key;
+                let ghost b  = y.right;
+                let ghost a  = y.left;
+
+                assert(Self::spec_size_wf_link(&y.left));
+                assert(Self::spec_size_wf_link(&y.right));
+                let ghost x_right_sz = Self::spec_size_link(&x.right);
+                let ghost y_left_sz = Self::spec_size_link(&y.left);
+                let ghost y_right_sz = Self::spec_size_link(&y.right);
+
+                proof {
+                    if bst_input {
+                        Self::lemma_bst_decompose(&orig_left);
+                        assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies k.is_lt(&xk) by {
+                            Self::lemma_contains_right(&y, k);
+                        };
+                        assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies yk.is_lt(&k) by {};
+                    }
+                }
+
+                x.left = y.right.take();
+                assert(1 + y_left_sz + x_right_sz + 1 + y_right_sz <= usize::MAX as nat);
+                Self::update_size(&mut x);
+
+                proof {
+                    if bst_input {
+                        assert(Self::spec_bst_link(&x.right));
+                        assert(Self::spec_bst_link(&x.left));
+                        assert(Self::spec_bst_link(&Some(x)));
+                    }
+                }
+
+                y.right = Some(x);
+                Self::update_size(&mut y);
+                proof {
+                    Self::lemma_wf_assemble_node(&y);
+                    reveal_with_fuel(spec_contains_link, 3);
+                    if bst_input {
+                        Self::lemma_bst_decompose(&orig_left);
+                        assert(Self::spec_bst_link(&y.left));
+                        Self::lemma_contains_root(&y);
+                        assert(spec_contains_link(&orig_left, yk));
+                        assert(yk.is_lt(&xk));
+                        assert(x.left == b);
+                        assert forall |k: T| #[trigger] spec_contains_link(&y.right, k) implies yk.is_lt(&k) by {
+                            if spec_contains_link(&x.right, k) {
+                                T::is_lt_transitive(yk, xk, k);
+                            }
+                            if spec_contains_link(&x.left, k) {
+                                assert(spec_contains_link(&b, k));
+                            }
+                        };
+                        assert(Self::spec_bst_link(&Some(y)));
+                    }
+                }
+                y
+            } else {
+                x
+            }
         }
 
         fn clone_link(link: &Link<T>) -> (c: Link<T>)
@@ -667,16 +717,16 @@ pub mod BSTTreapStEph {
             match link {
                 | None => 0,
                 | Some(node) => {
-                    proof { lemma_size_wf_child_bounded(link); }
+                    proof { Self::lemma_size_wf_child_bounded(link); }
                     let lh = Self::height_link(&node.left);
                     let rh = Self::height_link(&node.right);
                     let m = if lh >= rh { lh } else { rh };
                     proof {
-                        lemma_height_le_size(&node.left);
-                        lemma_height_le_size(&node.right);
-                        assert(lh as nat == spec_height_link(&node.left));
-                        assert(rh as nat == spec_height_link(&node.right));
-                        assert(m as nat <= spec_size_link(&node.left) || m as nat <= spec_size_link(&node.right));
+                        Self::lemma_height_le_size(&node.left);
+                        Self::lemma_height_le_size(&node.right);
+                        assert(lh as nat == Self::spec_height_link(&node.left));
+                        assert(rh as nat == Self::spec_height_link(&node.right));
+                        assert(m as nat <= Self::spec_size_link(&node.left) || m as nat <= Self::spec_size_link(&node.right));
                         assert(m < usize::MAX);
                     }
                     1 + m
@@ -691,7 +741,7 @@ pub mod BSTTreapStEph {
             match link {
                 None => {
                     let n = Box::new(Node { key: value, priority, size: 1, left: None, right: None });
-                    proof { lemma_wf_assemble_node(&n); }
+                    proof { Self::lemma_wf_assemble_node(&n); }
                     Some(n)
                 },
                 Some(mut node) => {
@@ -704,22 +754,22 @@ pub mod BSTTreapStEph {
                             (node.key == k || spec_contains_link(&node.left, k) || spec_contains_link(&node.right, k))
                             by {};
                     }
-                    assert(spec_size_wf_link(&node.left));
-                    assert(spec_size_wf_link(&node.right));
+                    assert(Self::spec_size_wf_link(&node.left));
+                    assert(Self::spec_size_wf_link(&node.right));
                     if value < node.key {
                         node.left = Self::insert_link(node.left.take(), value, priority);
                         Self::update_size(&mut node);
                         proof {
-                            lemma_wf_assemble_node(&node);
+                            Self::lemma_wf_assemble_node(&node);
                             assert forall |k: T| #![auto] spec_contains_link(&link, k)
                                 implies spec_contains_link(&Some(node), k) by {
-                                if spec_contains_link(&node.left, k) { lemma_contains_left(&node, k); }
-                                if spec_contains_link(&node.right, k) { lemma_contains_right(&node, k); }
+                                if spec_contains_link(&node.left, k) { Self::lemma_contains_left(&node, k); }
+                                if spec_contains_link(&node.right, k) { Self::lemma_contains_right(&node, k); }
                             };
                             assert forall |k: T| #![auto] spec_contains_link(&Some(node), k)
                                 implies (spec_contains_link(&link, k) || k == value) by {};
-                            if spec_bst_link(&link) {
-                                lemma_bst_decompose(&link);
+                            if Self::spec_bst_link(&link) {
+                                Self::lemma_bst_decompose(&link);
                                 assert(node.key == orig_key);
                                 assert forall |k: T| #[trigger] spec_contains_link(&node.left, k)
                                     implies k.is_lt(&node.key) by {
@@ -728,7 +778,7 @@ pub mod BSTTreapStEph {
                                         assert(value.is_lt(&node.key));
                                     }
                                 };
-                                assert(spec_bst_link(&Some(node)));
+                                assert(Self::spec_bst_link(&Some(node)));
                             }
                         }
                         let needs_rotate = match &node.left {
@@ -740,16 +790,16 @@ pub mod BSTTreapStEph {
                         node.right = Self::insert_link(node.right.take(), value, priority);
                         Self::update_size(&mut node);
                         proof {
-                            lemma_wf_assemble_node(&node);
+                            Self::lemma_wf_assemble_node(&node);
                             assert forall |k: T| #![auto] spec_contains_link(&link, k)
                                 implies spec_contains_link(&Some(node), k) by {
-                                if spec_contains_link(&node.left, k) { lemma_contains_left(&node, k); }
-                                if spec_contains_link(&node.right, k) { lemma_contains_right(&node, k); }
+                                if spec_contains_link(&node.left, k) { Self::lemma_contains_left(&node, k); }
+                                if spec_contains_link(&node.right, k) { Self::lemma_contains_right(&node, k); }
                             };
                             assert forall |k: T| #![auto] spec_contains_link(&Some(node), k)
                                 implies (spec_contains_link(&link, k) || k == value) by {};
-                            if spec_bst_link(&link) {
-                                lemma_bst_decompose(&link);
+                            if Self::spec_bst_link(&link) {
+                                Self::lemma_bst_decompose(&link);
                                 assert(node.key == orig_key);
                                 assert forall |k: T| #[trigger] spec_contains_link(&node.right, k)
                                     implies node.key.is_lt(&k) by {
@@ -758,7 +808,7 @@ pub mod BSTTreapStEph {
                                         assert(node.key.is_lt(&value));
                                     }
                                 };
-                                assert(spec_bst_link(&Some(node)));
+                                assert(Self::spec_bst_link(&Some(node)));
                             }
                         }
                         let needs_rotate = match &node.right {
@@ -773,6 +823,188 @@ pub mod BSTTreapStEph {
             }
         }
 
+        fn delete_link(link: Link<T>, target: &T) -> (deleted: Link<T>)
+            decreases Self::spec_size_link(&link),
+        {
+            proof { reveal_with_fuel(spec_contains_link, 3); }
+            match link {
+                None => None,
+                Some(mut node) => {
+                    let ghost orig_key = node.key;
+                    let ghost orig_left = node.left;
+                    let ghost orig_right = node.right;
+                    proof {
+                        assert forall |k: T| #![auto]
+                            spec_contains_link(&link, k) <==>
+                            (node.key == k || spec_contains_link(&node.left, k) || spec_contains_link(&node.right, k))
+                            by {};
+                    }
+                    assert(Self::spec_size_wf_link(&node.left));
+                    assert(Self::spec_size_wf_link(&node.right));
+                    if *target < node.key {
+                        // Target in left subtree.
+                        node.left = Self::delete_link(node.left.take(), target);
+                        Self::update_size(&mut node);
+                        proof {
+                            Self::lemma_wf_assemble_node(&node);
+                            assert forall |k: T| #![auto] spec_contains_link(&Some(node), k)
+                                implies spec_contains_link(&link, k) by {
+                                if spec_contains_link(&node.left, k) {
+                                    assert(spec_contains_link(&orig_left, k));
+                                }
+                            };
+                            if Self::spec_bst_link(&link) {
+                                Self::lemma_bst_decompose(&link);
+                                assert forall |k: T| #[trigger] spec_contains_link(&node.left, k)
+                                    implies k.is_lt(&node.key) by {
+                                    assert(spec_contains_link(&orig_left, k));
+                                };
+                            }
+                        }
+                        Some(node)
+                    } else if node.key < *target {
+                        // Target in right subtree.
+                        node.right = Self::delete_link(node.right.take(), target);
+                        Self::update_size(&mut node);
+                        proof {
+                            Self::lemma_wf_assemble_node(&node);
+                            assert forall |k: T| #![auto] spec_contains_link(&Some(node), k)
+                                implies spec_contains_link(&link, k) by {
+                                if spec_contains_link(&node.right, k) {
+                                    assert(spec_contains_link(&orig_right, k));
+                                }
+                            };
+                            if Self::spec_bst_link(&link) {
+                                Self::lemma_bst_decompose(&link);
+                                assert forall |k: T| #[trigger] spec_contains_link(&node.right, k)
+                                    implies node.key.is_lt(&k) by {
+                                    assert(spec_contains_link(&orig_right, k));
+                                };
+                            }
+                        }
+                        Some(node)
+                    } else {
+                        // Found the target node.
+                        if node.left.is_none() && node.right.is_none() {
+                            // Leaf: remove.
+                            None
+                        } else if node.right.is_none() {
+                            // Only left child.
+                            proof {
+                                if Self::spec_bst_link(&link) {
+                                    Self::lemma_bst_decompose(&link);
+                                }
+                            }
+                            node.left.take()
+                        } else if node.left.is_none() {
+                            // Only right child.
+                            proof {
+                                if Self::spec_bst_link(&link) {
+                                    Self::lemma_bst_decompose(&link);
+                                }
+                            }
+                            node.right.take()
+                        } else {
+                            // Two children: rotate smaller-priority child up, then recurse.
+                            let left_pri = node.left.as_ref().unwrap().priority;
+                            let right_pri = node.right.as_ref().unwrap().priority;
+                            if left_pri <= right_pri {
+                                let mut rotated = Self::rotate_right(node);
+                                let ghost rot_key = rotated.key;
+                                let ghost rot_left = rotated.left;
+                                let ghost rot_right = rotated.right;
+                                proof {
+                                    assert forall |k: T| #![auto]
+                                        (rot_key == k || spec_contains_link(&rot_left, k) || spec_contains_link(&rot_right, k))
+                                        <==> spec_contains_link(&link, k)
+                                        by {};
+                                    if Self::spec_bst_link(&link) {
+                                        Self::lemma_bst_decompose(&Some(rotated));
+                                        assert(Self::spec_bst_link(&rot_left));
+                                        assert(Self::spec_bst_link(&rot_right));
+                                        assert forall |k: T| #[trigger] spec_contains_link(&rot_left, k)
+                                            implies k.is_lt(&rot_key) by {};
+                                        assert forall |k: T| #[trigger] spec_contains_link(&rot_right, k)
+                                            implies rot_key.is_lt(&k) by {};
+                                    }
+                                }
+                                assert(Self::spec_size_wf_link(&Some(rotated)));
+                                assert(Self::spec_size_wf_link(&rotated.right));
+                                assert(Self::spec_size_link(&rotated.right) < Self::spec_size_link(&link));
+                                rotated.right = Self::delete_link(rotated.right.take(), target);
+                                Self::update_size(&mut rotated);
+                                proof {
+                                    Self::lemma_wf_assemble_node(&rotated);
+                                    assert forall |k: T| #![auto] spec_contains_link(&Some(rotated), k)
+                                        implies spec_contains_link(&link, k) by {
+                                        if spec_contains_link(&rotated.right, k) {
+                                            assert(spec_contains_link(&rot_right, k));
+                                        }
+                                        if spec_contains_link(&rotated.left, k) {
+                                            assert(spec_contains_link(&rot_left, k));
+                                        }
+                                    };
+                                    if Self::spec_bst_link(&link) {
+                                        assert forall |k: T| #[trigger] spec_contains_link(&rotated.right, k)
+                                            implies rotated.key.is_lt(&k) by {
+                                            assert(spec_contains_link(&rot_right, k));
+                                        };
+                                        assert(Self::spec_bst_link(&Some(rotated)));
+                                    }
+                                }
+                                Some(rotated)
+                            } else {
+                                let mut rotated = Self::rotate_left(node);
+                                let ghost rot_key = rotated.key;
+                                let ghost rot_left = rotated.left;
+                                let ghost rot_right = rotated.right;
+                                proof {
+                                    assert forall |k: T| #![auto]
+                                        (rot_key == k || spec_contains_link(&rot_left, k) || spec_contains_link(&rot_right, k))
+                                        <==> spec_contains_link(&link, k)
+                                        by {};
+                                    if Self::spec_bst_link(&link) {
+                                        Self::lemma_bst_decompose(&Some(rotated));
+                                        assert(Self::spec_bst_link(&rot_left));
+                                        assert(Self::spec_bst_link(&rot_right));
+                                        assert forall |k: T| #[trigger] spec_contains_link(&rot_left, k)
+                                            implies k.is_lt(&rot_key) by {};
+                                        assert forall |k: T| #[trigger] spec_contains_link(&rot_right, k)
+                                            implies rot_key.is_lt(&k) by {};
+                                    }
+                                }
+                                assert(Self::spec_size_wf_link(&Some(rotated)));
+                                assert(Self::spec_size_wf_link(&rotated.left));
+                                assert(Self::spec_size_link(&rotated.left) < Self::spec_size_link(&link));
+                                rotated.left = Self::delete_link(rotated.left.take(), target);
+                                Self::update_size(&mut rotated);
+                                proof {
+                                    Self::lemma_wf_assemble_node(&rotated);
+                                    assert forall |k: T| #![auto] spec_contains_link(&Some(rotated), k)
+                                        implies spec_contains_link(&link, k) by {
+                                        if spec_contains_link(&rotated.left, k) {
+                                            assert(spec_contains_link(&rot_left, k));
+                                        }
+                                        if spec_contains_link(&rotated.right, k) {
+                                            assert(spec_contains_link(&rot_right, k));
+                                        }
+                                    };
+                                    if Self::spec_bst_link(&link) {
+                                        assert forall |k: T| #[trigger] spec_contains_link(&rotated.left, k)
+                                            implies k.is_lt(&rotated.key) by {
+                                            assert(spec_contains_link(&rot_left, k));
+                                        };
+                                        assert(Self::spec_bst_link(&Some(rotated)));
+                                    }
+                                }
+                                Some(rotated)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             decreases *link,
         {
@@ -780,18 +1012,18 @@ pub mod BSTTreapStEph {
                 | None => None,
                 | Some(node) => {
                     if *target == node.key {
-                        proof { lemma_contains_root(node); }
+                        proof { Self::lemma_contains_root(node); }
                         Some(&node.key)
                     } else if *target < node.key {
                         let r = Self::find_link(&node.left, target);
                         proof {
-                            if r.is_some() { lemma_contains_left(node, *r.unwrap()); }
+                            if r.is_some() { Self::lemma_contains_left(node, *r.unwrap()); }
                         }
                         r
                     } else {
                         let r = Self::find_link(&node.right, target);
                         proof {
-                            if r.is_some() { lemma_contains_right(node, *r.unwrap()); }
+                            if r.is_some() { Self::lemma_contains_right(node, *r.unwrap()); }
                         }
                         r
                     }
@@ -868,8 +1100,8 @@ pub mod BSTTreapStEph {
     impl<T: StT + Ord + IsLtTransitive> Clone for Node<T> {
         fn clone(&self) -> (cloned: Self)
             ensures
-                spec_size_link(&Some(Box::new(cloned))) == spec_size_link(&Some(Box::new(*self))),
-                spec_size_wf_link(&Some(Box::new(*self))) ==> spec_size_wf_link(&Some(Box::new(cloned))),
+                BSTTreapStEph::<T>::spec_size_link(&Some(Box::new(cloned))) == BSTTreapStEph::<T>::spec_size_link(&Some(Box::new(*self))),
+                BSTTreapStEph::<T>::spec_size_wf_link(&Some(Box::new(*self))) ==> BSTTreapStEph::<T>::spec_size_wf_link(&Some(Box::new(cloned))),
         {
             Node {
                 key: self.key.clone(),

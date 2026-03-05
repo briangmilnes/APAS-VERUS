@@ -6,9 +6,9 @@
 //	1. module
 //	4. type definitions
 //	6. spec fns
+//	8. traits
 //	9. impls
 //	11. derive impls in verus!
-//	8. traits
 //	12. macros
 //	13. derive impls outside verus!
 
@@ -18,6 +18,7 @@
 pub mod BSTParaTreapMtEph {
 
     use std::cmp::Ordering::{Equal, Greater, Less};
+    use std::fmt;
     use std::fmt::Write;
     use std::hash::{Hash, Hasher};
     use std::sync::Arc;
@@ -56,27 +57,20 @@ pub mod BSTParaTreapMtEph {
     }
 
 
-    //		6. spec fns
-
-    pub open spec fn spec_node_wf<T: MtKey>(v: &Option<Box<NodeInner<T>>>) -> bool {
-        match v {
-            None => true,
-            Some(node) => node.size >= 1 && node.size < usize::MAX,
-        }
-    }
-
-
     //		9. impls
 
     impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for BSTParaTreapMtEphInv {
         open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
-            spec_node_wf(&v)
+            match &v {
+                None => true,
+                Some(node) => node.size >= 1 && node.size < usize::MAX,
+            }
         }
     }
 
     #[verifier::external_body]
     fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BSTParaTreapMtEphInv>)
-        requires spec_node_wf(&val),
+        requires BSTParaTreapMtEphInv.inv(val),
     {
         RwLock::new(val, Ghost(BSTParaTreapMtEphInv))
     }
@@ -347,6 +341,8 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    verus! {
+
     //		8. traits
 
     pub trait ParamTreapTrait<T: MtKey + 'static>: Sized {
@@ -408,6 +404,7 @@ pub mod BSTParaTreapMtEph {
     impl<T: MtKey + 'static> ParamTreapTrait<T> for ParamTreap<T> {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        #[verifier::external_body]
         fn new() -> Self {
             ParamTreap {
                 root: Arc::new(new_treap_lock(None)),
@@ -416,6 +413,7 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        #[verifier::external_body]
         fn expose(&self) -> Exposed<T> {
             match self.expose_with_priority() {
                 | None => Exposed::Leaf,
@@ -425,6 +423,7 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        #[verifier::external_body]
         fn expose_with_priority(&self) -> Option<(ParamTreap<T>, T, i64, ParamTreap<T>)> {
             let handle = self.root.acquire_read();
             let result = handle.borrow()
@@ -436,6 +435,7 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
         /// - Claude-Opus-4.6: Work O(log(|left| + |right|)), Span O(log(|left| + |right|)) — delegates to join_with_priority
+        #[verifier::external_body]
         fn join_mid(exposed: Exposed<T>) -> Self {
             match exposed {
                 | Exposed::Leaf => ParamTreap::new(),
@@ -448,14 +448,17 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        #[verifier::external_body]
         fn size(&self) -> usize { tree_size(self) }
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        #[verifier::external_body]
         fn is_empty(&self) -> bool { self.size() == 0 }
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
+        #[verifier::external_body]
         fn insert(&self, key: T) {
             let (left, _, right) = split_inner(self, &key);
             let priority = priority_for(&key);
@@ -469,6 +472,7 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
+        #[verifier::external_body]
         fn delete(&self, key: &T) {
             let (left, _, right) = split_inner(self, key);
             let merged = join_pair_inner(left, right);
@@ -481,6 +485,7 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
+        #[verifier::external_body]
         fn find(&self, key: &T) -> Option<T> {
             match self.expose_with_priority() {
                 | None => None,
@@ -494,30 +499,37 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
+        #[verifier::external_body]
         fn split(&self, key: &T) -> (Self, bool, Self) { split_inner(self, key) }
 
         /// - APAS: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         /// - Claude-Opus-4.6: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
+        #[verifier::external_body]
         fn join_pair(&self, other: Self) -> Self { join_pair_inner(self.clone(), other) }
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
+        #[verifier::external_body]
         fn union(&self, other: &Self) -> Self { union_inner(self, other) }
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
+        #[verifier::external_body]
         fn intersect(&self, other: &Self) -> Self { intersect_inner(self, other) }
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
+        #[verifier::external_body]
         fn difference(&self, other: &Self) -> Self { difference_inner(self, other) }
 
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
+        #[verifier::external_body]
         fn filter<F: Pred<T>>(&self, predicate: F) -> Self { filter_parallel(self, predicate) }
 
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
+        #[verifier::external_body]
         fn reduce<F>(&self, op: F, base: T) -> T
         where
             F: Fn(T, T) -> T + Send + Sync + 'static,
@@ -527,12 +539,15 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(|t|), Span O(|t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|)
+        #[verifier::external_body]
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
             collect_in_order(self, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
     }
+
+    } // verus!
 
     //		12. macros
 
@@ -549,8 +564,6 @@ pub mod BSTParaTreapMtEph {
     }
 
     //		13. derive impls outside verus!
-
-    use std::fmt;
 
     impl fmt::Debug for BSTParaTreapMtEphInv {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

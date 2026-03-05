@@ -2,6 +2,17 @@
 //! Set interface as a thin shim over BSTParaTreapMtEph.
 //! All set algebra delegates to ParamTreap's split/join-based parallel algorithms.
 
+//  Table of Contents
+//	1. module
+//	4. type definitions
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//	1. module
+
 pub mod BSTSetTreapMtEph {
 
     use std::fmt;
@@ -34,7 +45,7 @@ pub mod BSTSetTreapMtEph {
 
     } // verus!
 
-    // 6. helper functions
+    // 9. impls
 
     fn minimum_inner<T: MtKey + 'static>(tree: &ParamTreap<T>) -> Option<T> {
         match tree.expose_with_priority() {
@@ -102,8 +113,6 @@ pub mod BSTSetTreapMtEph {
         /// - APAS: Work Θ(1), Span Θ(1)
         fn as_tree(&self)                            -> &ParamTreap<T>;
     }
-
-    // 9. impls
 
     impl<T: MtKey + 'static> BSTSetTreapMtEphTrait<T> for BSTSetTreapMtEph<T> {
         fn empty() -> Self {

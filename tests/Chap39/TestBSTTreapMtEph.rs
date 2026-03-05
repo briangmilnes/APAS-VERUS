@@ -401,6 +401,100 @@ fn test_contains_step_pattern() {
 }
 
 #[test]
+fn test_delete_basic() {
+    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    tree.insert(10, rand_priority());
+    tree.insert(5, rand_priority());
+    tree.insert(15, rand_priority());
+    tree.insert(3, rand_priority());
+    tree.insert(8, rand_priority());
+
+    assert_eq!(tree.size(), 5);
+
+    tree.delete(&5);
+    assert_eq!(tree.size(), 4);
+    assert!(!tree.contains(&5));
+    assert!(tree.contains(&10));
+    assert!(tree.contains(&3));
+    assert!(tree.contains(&8));
+    assert!(tree.contains(&15));
+}
+
+#[test]
+fn test_delete_root() {
+    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    tree.insert(10, rand_priority());
+    tree.insert(5, rand_priority());
+    tree.insert(15, rand_priority());
+
+    tree.delete(&10);
+    assert_eq!(tree.size(), 2);
+    assert!(!tree.contains(&10));
+    assert!(tree.contains(&5));
+    assert!(tree.contains(&15));
+}
+
+#[test]
+fn test_delete_leaf() {
+    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    tree.insert(10, rand_priority());
+    tree.insert(5, rand_priority());
+    tree.insert(15, rand_priority());
+
+    tree.delete(&5);
+    assert_eq!(tree.size(), 2);
+    assert!(!tree.contains(&5));
+}
+
+#[test]
+fn test_delete_nonexistent() {
+    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    tree.insert(10, rand_priority());
+    tree.insert(5, rand_priority());
+
+    tree.delete(&20);
+    assert_eq!(tree.size(), 2);
+    assert!(tree.contains(&10));
+    assert!(tree.contains(&5));
+}
+
+#[test]
+fn test_delete_all() {
+    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    for i in 0..10 {
+        tree.insert(i, rand_priority());
+    }
+    assert_eq!(tree.size(), 10);
+
+    for i in 0..10 {
+        tree.delete(&i);
+    }
+    assert_eq!(tree.size(), 0);
+    assert!(tree.is_empty());
+}
+
+#[test]
+fn test_delete_then_reinsert() {
+    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    tree.insert(10, rand_priority());
+    tree.insert(5, rand_priority());
+
+    tree.delete(&5);
+    assert!(!tree.contains(&5));
+
+    tree.insert(5, rand_priority());
+    assert!(tree.contains(&5));
+    assert_eq!(tree.size(), 2);
+}
+
+#[test]
+fn test_delete_from_empty() {
+    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    tree.delete(&5);
+    assert_eq!(tree.size(), 0);
+}
+
+#[test]
 fn test_debug_format() {
     let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     let debug = format!("{:?}", tree);
