@@ -5,9 +5,13 @@
 // Table of Contents
 // 1. module
 // 2. imports
+// 4. type definitions
 // 6. spec fns
+// 7. proof fns
+// 8. traits
 // 9. impls
 // 12. macros
+// 13. derive impls outside verus!
 
 // 1. module
 
@@ -24,6 +28,13 @@ pub mod BSTAVLStEph {
     #[cfg(verus_keep_ghost)]
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{tree_contains, tree_is_bst};
     use crate::vstdplus::total_order::total_order::TotalOrder;
+
+    // 4. type definitions
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTAVLStEph<T> {
+        pub root: BalBinTree<T>,
+    }
 
     // 6. spec fns
 
@@ -98,12 +109,43 @@ pub mod BSTAVLStEph {
     {
     }
 
-    // 9. impls
+    // 8. traits
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTAVLStEph<T> {
-        pub root: BalBinTree<T>,
+    pub trait BSTAVLStEphTrait<T: TotalOrder>: Sized {
+        spec fn spec_root(self) -> BalBinTree<T>;
+
+        fn new() -> (tree: Self)
+            ensures
+                tree_is_avl::<T>(tree.spec_root()),
+                forall|x: T| !tree_contains(tree.spec_root(), x);
+        fn size(&self) -> (n: usize)
+            requires self.spec_root().spec_size() <= usize::MAX,
+            ensures n == self.spec_root().spec_size();
+        fn is_empty(&self) -> (b: bool)
+            ensures b == (self.spec_root().spec_size() == 0);
+        fn height(&self) -> (h: usize)
+            requires self.spec_root().spec_height() <= usize::MAX,
+            ensures h == self.spec_root().spec_height();
+        fn insert(self, value: T) -> (inserted: Self)
+            requires
+                tree_is_avl::<T>(self.spec_root()),
+                self.spec_root().spec_height() <= usize::MAX - 1,
+            ensures
+                tree_is_avl::<T>(inserted.spec_root()),
+                tree_contains(inserted.spec_root(), value),
+                forall|x: T| #![auto] tree_contains(inserted.spec_root(), x) <==>
+                    (tree_contains(self.spec_root(), x) || x == value);
+        fn contains(&self, target: &T) -> (found: bool)
+            requires tree_is_bst::<T>(self.spec_root()),
+            ensures found == tree_contains(self.spec_root(), *target);
+        fn find(&self, target: &T) -> (found: Option<&T>)
+            requires tree_is_bst::<T>(self.spec_root()),
+            ensures
+                found.is_some() == tree_contains(self.spec_root(), *target),
+                found.is_some() ==> *found.unwrap() == *target;
     }
+
+    // 9. impls
 
     fn rotate_right<T: TotalOrder>(tree: BalBinTree<T>) -> (rotated: BalBinTree<T>)
         requires
@@ -954,61 +996,36 @@ pub mod BSTAVLStEph {
         }
     }
 
-    pub fn avl_new<T: TotalOrder>() -> (tree: BSTAVLStEph<T>)
-        ensures
-            tree_is_avl::<T>(tree.root),
-            forall|x: T| !tree_contains(tree.root, x),
-    {
-        BSTAVLStEph { root: BalBinTree::Leaf }
-    }
+    impl<T: TotalOrder> BSTAVLStEphTrait<T> for BSTAVLStEph<T> {
+        open spec fn spec_root(self) -> BalBinTree<T> { self.root }
 
-    pub fn avl_size<T: TotalOrder>(tree: &BSTAVLStEph<T>) -> (n: usize)
-        requires tree.root.spec_size() <= usize::MAX,
-        ensures n == tree.root.spec_size(),
-    {
-        tree.root.size()
-    }
+        fn new() -> (tree: Self) {
+            BSTAVLStEph { root: BalBinTree::Leaf }
+        }
 
-    pub fn avl_is_empty<T: TotalOrder>(tree: &BSTAVLStEph<T>) -> (b: bool)
-        ensures b == (tree.root.spec_size() == 0),
-    {
-        tree.root.is_leaf()
-    }
+        fn size(&self) -> (n: usize) {
+            self.root.size()
+        }
 
-    pub fn avl_height<T: TotalOrder>(tree: &BSTAVLStEph<T>) -> (h: usize)
-        requires tree.root.spec_height() <= usize::MAX,
-        ensures h == tree.root.spec_height(),
-    {
-        tree.root.height()
-    }
+        fn is_empty(&self) -> (b: bool) {
+            self.root.is_leaf()
+        }
 
-    pub fn avl_insert<T: TotalOrder>(tree: BSTAVLStEph<T>, value: T) -> (inserted: BSTAVLStEph<T>)
-        requires
-            tree_is_avl::<T>(tree.root),
-            tree.root.spec_height() <= usize::MAX - 1,
-        ensures
-            tree_is_avl::<T>(inserted.root),
-            tree_contains(inserted.root, value),
-            forall|x: T| #![auto] tree_contains(inserted.root, x) <==>
-                (tree_contains(tree.root, x) || x == value),
-    {
-        BSTAVLStEph { root: insert_node(tree.root, value) }
-    }
+        fn height(&self) -> (h: usize) {
+            self.root.height()
+        }
 
-    pub fn avl_contains<T: TotalOrder>(tree: &BSTAVLStEph<T>, target: &T) -> (found: bool)
-        requires tree_is_bst::<T>(tree.root),
-        ensures found == tree_contains(tree.root, *target),
-    {
-        contains_node(&tree.root, target)
-    }
+        fn insert(self, value: T) -> (inserted: Self) {
+            BSTAVLStEph { root: insert_node(self.root, value) }
+        }
 
-    pub fn avl_find<'a, T: TotalOrder>(tree: &'a BSTAVLStEph<T>, target: &T) -> (found: Option<&'a T>)
-        requires tree_is_bst::<T>(tree.root),
-        ensures
-            found.is_some() == tree_contains(tree.root, *target),
-            found.is_some() ==> *found.unwrap() == *target,
-    {
-        find_node(&tree.root, target)
+        fn contains(&self, target: &T) -> (found: bool) {
+            contains_node(&self.root, target)
+        }
+
+        fn find(&self, target: &T) -> (found: Option<&T>) {
+            find_node(&self.root, target)
+        }
     }
 
     } // verus!
@@ -1017,12 +1034,29 @@ pub mod BSTAVLStEph {
 
     #[macro_export]
     macro_rules! BSTAVLStEphLit {
-        () => { $crate::Chap37::BSTAVLStEph::BSTAVLStEph::avl_new() };
+        () => { <$crate::Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEph<_> as $crate::Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait<_>>::new() };
         ($($val:expr),+ $(,)?) => {{
-            let mut tree = $crate::Chap37::BSTAVLStEph::BSTAVLStEph::avl_new();
-            $(tree = $crate::Chap37::BSTAVLStEph::BSTAVLStEph::avl_insert(tree, $val);)+
+            use $crate::Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait;
+            let mut tree = $crate::Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEph::new();
+            $(tree = tree.insert($val);)+
             tree
         }};
+    }
+
+    // 13. derive impls outside verus!
+
+    impl<T: std::fmt::Debug> std::fmt::Debug for BSTAVLStEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTAVLStEph")
+                .field("root", &self.root)
+                .finish()
+        }
+    }
+
+    impl<T: std::fmt::Debug + std::fmt::Display> std::fmt::Display for BSTAVLStEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTAVLStEph({:?})", &self.root)
+        }
     }
 } // mod
 
