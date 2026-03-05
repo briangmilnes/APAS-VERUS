@@ -91,7 +91,7 @@ pub mod OrderedTableStPer {
             requires obeys_feq_clone::<K>()
             ensures self@.dom().finite();
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (table: Self)
-            requires keys.spec_wf(), forall|k: &K| f.requires((k,)),
+            requires keys.spec_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),
             ensures table@.dom().finite();
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
@@ -109,6 +109,7 @@ pub mod OrderedTableStPer {
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
+                other.spec_orderedtablestper_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
@@ -159,6 +160,7 @@ pub mod OrderedTableStPer {
         fn join_key(left: &Self, right: &Self) -> (table: Self)
             requires
                 left.spec_orderedtablestper_wf(),
+                right.spec_orderedtablestper_wf(),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
             ensures table@.dom().finite(), table.spec_orderedtablestper_wf();

@@ -41,7 +41,11 @@ Proof Functions:
 
 Holes Found: 5 total
    5 × external_body
-oles)
+═══════
+
+Modules:
+   10 clean (no holes)
+   2 holed (contains holes)
    12 total
 
 Proof Functions:

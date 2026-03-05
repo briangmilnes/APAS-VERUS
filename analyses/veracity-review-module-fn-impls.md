@@ -22,154 +22,149 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap50 | MatrixChainMtEph | 13 | 14 | 0 | 2 | 16 | 0 | 0 | 16 | 0 |
-| 2 | Chap50 | MatrixChainMtPer | 10 | 11 | 0 | 1 | 12 | 0 | 2 | 9 | 1 |
-| 3 | Chap50 | MatrixChainStEph | 12 | 13 | 0 | 0 | 13 | 0 | 12 | 1 | 0 |
-| 4 | Chap50 | MatrixChainStPer | 9 | 10 | 0 | 0 | 10 | 0 | 9 | 1 | 0 |
-| 5 | Chap50 | OptBinSearchTreeMtEph | 10 | 11 | 0 | 4 | 15 | 0 | 0 | 15 | 0 |
-| 6 | Chap50 | OptBinSearchTreeMtPer | 7 | 8 | 0 | 3 | 11 | 0 | 0 | 11 | 0 |
-| 7 | Chap50 | OptBinSearchTreeStEph | 10 | 11 | 0 | 1 | 11 | 1 | 7 | 4 | 1 |
-| 8 | Chap50 | OptBinSearchTreeStPer | 7 | 8 | 0 | 1 | 8 | 1 | 5 | 3 | 1 |
+| 1 | Chap56 | AllPairsResultStEphF64 | 7 | 7 | 0 | 0 | 7 | 0 | 3 | 0 | 4 |
+| 2 | Chap56 | AllPairsResultStEphI64 | 7 | 7 | 0 | 0 | 7 | 0 | 5 | 0 | 2 |
+| 3 | Chap56 | AllPairsResultStPerF64 | 7 | 7 | 0 | 0 | 7 | 0 | 3 | 0 | 4 |
+| 4 | Chap56 | AllPairsResultStPerI64 | 7 | 7 | 0 | 0 | 7 | 0 | 7 | 0 | 0 |
+| 5 | Chap56 | Example56_1 | 3 | 0 | 0 | 3 | 3 | 0 | 0 | 3 | 0 |
+| 6 | Chap56 | Example56_3 | 2 | 0 | 0 | 2 | 2 | 0 | 0 | 2 | 0 |
+| 7 | Chap56 | PathWeightUtilsStEph | 4 | 0 | 0 | 4 | 4 | 0 | 0 | 0 | 4 |
+| 8 | Chap56 | PathWeightUtilsStPer | 0 | 0 | 0 | 4 | 4 | 0 | 2 | 0 | 2 |
+| 9 | Chap56 | SSSPResultStEphF64 | 0 | 0 | 7 | 0 | 6 | 1 | 1 | 0 | 6 |
+| 10 | Chap56 | SSSPResultStEphI64 | 7 | 7 | 0 | 0 | 7 | 0 | 3 | 0 | 4 |
+| 11 | Chap56 | SSSPResultStPerF64 | 7 | 7 | 0 | 0 | 7 | 0 | 3 | 0 | 4 |
+| 12 | Chap56 | SSSPResultStPerI64 | 7 | 7 | 0 | 0 | 7 | 0 | 7 | 0 | 0 |
 
 ## Function-by-Function Detail
 
-### Chap50/MatrixChainMtEph.rs
+### Chap56/AllPairsResultStEphF64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `new_mceph_dim_lock` |  |  |  | Y | Y |  |  | hole | 67&#8209;69 |
-| 2 | `new_mceph_memo_lock` |  |  |  | Y | Y |  |  | hole | 85&#8209;91 |
-| 3 | `new` | Y | Y |  |  | Y |  |  | hole | 151 |
-| 4 | `from_dimensions` | Y | Y |  |  | Y |  |  | hole | 152 |
-| 5 | `from_dim_pairs` | Y | Y |  |  | Y |  |  | hole | 153 |
-| 6 | `optimal_cost` | Y | Y |  |  | Y |  |  | hole | 154 |
-| 7 | `dimensions` | Y | Y |  |  | Y |  |  | hole | 155 |
-| 8 | `set_dimension` | Y | Y |  |  | Y |  |  | hole | 156 |
-| 9 | `update_dimension` | Y | Y |  |  | Y |  |  | hole | 157 |
-| 10 | `num_matrices` | Y | Y |  |  | Y |  |  | hole | 158 |
-| 11 | `clear_memo` | Y | Y |  |  | Y |  |  | hole | 159 |
-| 12 | `memo_size` | Y | Y |  |  | Y |  |  | hole | 160 |
-| 13 | `multiply_cost` | Y | Y |  |  | Y |  |  | hole | 161 |
-| 14 | `matrix_chain_rec` | Y | Y |  |  | Y |  |  | hole | 162 |
-| 15 | `parallel_min_reduction` | Y | Y |  |  | Y |  |  | hole | 163&#8209;167 |
-| 16 | `eq` |  | Y |  |  | Y |  |  | hole | 368 |
+| 1 | `new` | Y | Y |  |  | Y |  |  | unknown | 36 |
+| 2 | `get_distance` | Y | Y |  |  | Y |  | Y |  | 38 |
+| 3 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 40 |
+| 4 | `get_predecessor` | Y | Y |  |  | Y |  | Y |  | 42 |
+| 5 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 44 |
+| 6 | `is_reachable` | Y | Y |  |  | Y |  | Y |  | 46 |
+| 7 | `extract_path` | Y | Y |  |  | Y |  | Y |  | 48 |
 
-### Chap50/MatrixChainMtPer.rs
+### Chap56/AllPairsResultStEphI64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 17 | `new_mcper_memo_lock` |  |  |  | Y | Y |  |  | hole | 80&#8209;86 |
-| 18 | `new` | Y | Y |  |  | Y |  |  | hole | 153&#8209;154 |
-| 19 | `from_dimensions` | Y | Y |  |  | Y |  |  | hole | 156&#8209;157 |
-| 20 | `from_dim_pairs` | Y | Y |  |  | Y |  |  | hole | 159&#8209;160 |
-| 21 | `optimal_cost` | Y | Y |  |  | Y |  |  | hole | 162&#8209;169 |
-| 22 | `dimensions` | Y | Y |  |  | Y |  | Y |  | 171 |
-| 23 | `num_matrices` | Y | Y |  |  | Y |  |  | unknown | 173&#8209;174 |
-| 24 | `memo_size` | Y | Y |  |  | Y |  |  | hole | 176 |
-| 25 | `multiply_cost` | Y | Y |  |  | Y |  |  | unknown | 178&#8209;186 |
-| 26 | `matrix_chain_rec` | Y | Y |  |  | Y |  |  | hole | 188&#8209;195 |
-| 27 | `parallel_min_reduction` | Y | Y |  |  | Y |  |  | hole | 197&#8209;201 |
-| 28 | `eq` |  | Y |  |  | Y |  |  | hole | 363&#8209;364 |
+| 8 | `new` | Y | Y |  |  | Y |  |  | unknown | 26 |
+| 9 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 28 |
+| 10 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 30 |
+| 11 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 32 |
+| 12 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 34 |
+| 13 | `is_reachable` | Y | Y |  |  | Y |  | Y |  | 36 |
+| 14 | `extract_path` | Y | Y |  |  | Y |  | Y |  | 38 |
 
-### Chap50/MatrixChainStEph.rs
+### Chap56/AllPairsResultStPerF64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 29 | `new` | Y | Y |  |  | Y |  |  | unknown | 136&#8209;139 |
-| 30 | `from_dimensions` | Y | Y |  |  | Y |  |  | unknown | 141&#8209;144 |
-| 31 | `from_dim_pairs` | Y | Y |  |  | Y |  |  | unknown | 146&#8209;149 |
-| 32 | `optimal_cost` | Y | Y |  |  | Y |  |  | unknown | 151&#8209;159 |
-| 33 | `dimensions` | Y | Y |  |  | Y |  |  | unknown | 161&#8209;162 |
-| 34 | `num_matrices` | Y | Y |  |  | Y |  |  | unknown | 164&#8209;165 |
-| 35 | `set_dimension` | Y | Y |  |  | Y |  |  | unknown | 167&#8209;171 |
-| 36 | `update_dimension` | Y | Y |  |  | Y |  |  | unknown | 173&#8209;178 |
-| 37 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 180&#8209;183 |
-| 38 | `memo_size` | Y | Y |  |  | Y |  |  | unknown | 185&#8209;186 |
-| 39 | `multiply_cost` | Y | Y |  |  | Y |  |  | unknown | 188&#8209;196 |
-| 40 | `matrix_chain_rec` | Y | Y |  |  | Y |  |  | unknown | 198&#8209;211 |
-| 41 | `eq` |  | Y |  |  | Y |  |  | hole | 382&#8209;383 |
+| 15 | `new` | Y | Y |  |  | Y |  |  | unknown | 35 |
+| 16 | `get_distance` | Y | Y |  |  | Y |  | Y |  | 37 |
+| 17 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 39 |
+| 18 | `get_predecessor` | Y | Y |  |  | Y |  | Y |  | 41 |
+| 19 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 43 |
+| 20 | `is_reachable` | Y | Y |  |  | Y |  | Y |  | 45 |
+| 21 | `extract_path` | Y | Y |  |  | Y |  | Y |  | 47 |
 
-### Chap50/MatrixChainStPer.rs
+### Chap56/AllPairsResultStPerI64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 42 | `new` | Y | Y |  |  | Y |  |  | unknown | 136&#8209;139 |
-| 43 | `from_dimensions` | Y | Y |  |  | Y |  |  | unknown | 141&#8209;144 |
-| 44 | `from_dim_pairs` | Y | Y |  |  | Y |  |  | unknown | 146&#8209;149 |
-| 45 | `optimal_cost` | Y | Y |  |  | Y |  |  | unknown | 151&#8209;158 |
-| 46 | `dimensions` | Y | Y |  |  | Y |  |  | unknown | 160&#8209;161 |
-| 47 | `num_matrices` | Y | Y |  |  | Y |  |  | unknown | 163&#8209;164 |
-| 48 | `memo_size` | Y | Y |  |  | Y |  |  | unknown | 166&#8209;167 |
-| 49 | `multiply_cost` | Y | Y |  |  | Y |  |  | unknown | 169&#8209;177 |
-| 50 | `matrix_chain_rec` | Y | Y |  |  | Y |  |  | unknown | 179&#8209;192 |
-| 51 | `eq` |  | Y |  |  | Y |  |  | hole | 351&#8209;352 |
+| 22 | `new` | Y | Y |  |  | Y |  |  | unknown | 41 |
+| 23 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 43 |
+| 24 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 45 |
+| 25 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 47 |
+| 26 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 49 |
+| 27 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 51 |
+| 28 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 53 |
 
-### Chap50/OptBinSearchTreeMtEph.rs
+### Chap56/Example56_1.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 52 | `new_obst_eph_keys_lock` |  |  |  | Y | Y |  |  | hole | 44&#8209;45 |
-| 53 | `new_obst_eph_memo_lock` |  |  |  | Y | Y |  |  | hole | 57&#8209;58 |
-| 54 | `new` | Y | Y |  |  | Y |  |  | hole | 82 |
-| 55 | `from_keys_probs` | Y | Y |  |  | Y |  |  | hole | 83 |
-| 56 | `from_key_probs` | Y | Y |  |  | Y |  |  | hole | 84 |
-| 57 | `optimal_cost` | Y | Y |  |  | Y |  |  | hole | 85 |
-| 58 | `keys` | Y | Y |  |  | Y |  |  | hole | 86 |
-| 59 | `set_key_prob` | Y | Y |  |  | Y |  |  | hole | 87 |
-| 60 | `update_prob` | Y | Y |  |  | Y |  |  | hole | 88 |
-| 61 | `num_keys` | Y | Y |  |  | Y |  |  | hole | 89 |
-| 62 | `clear_memo` | Y | Y |  |  | Y |  |  | hole | 90 |
-| 63 | `memo_size` | Y | Y |  |  | Y |  |  | hole | 91 |
-| 64 | `parallel_min_reduction` |  |  |  | Y | Y |  |  | hole | 97 |
-| 65 | `obst_rec` |  |  |  | Y | Y |  |  | hole | 122 |
-| 66 | `eq` x2 |  | Y |  |  | Y |  |  | hole | 271 |
+| 29 | `example_path_weight_int` | Y |  |  | Y | Y |  |  | hole | 28 |
+| 30 | `example_path_weight_float` | Y |  |  | Y | Y |  |  | hole | 32 |
+| 31 | `example_negative_weights` | Y |  |  | Y | Y |  |  | hole | 36 |
 
-### Chap50/OptBinSearchTreeMtPer.rs
+### Chap56/Example56_3.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 67 | `new_obst_per_memo_lock` |  |  |  | Y | Y |  |  | hole | 46&#8209;47 |
-| 68 | `new` | Y | Y |  |  | Y |  |  | hole | 71 |
-| 69 | `from_keys_probs` | Y | Y |  |  | Y |  |  | hole | 72 |
-| 70 | `from_key_probs` | Y | Y |  |  | Y |  |  | hole | 73 |
-| 71 | `optimal_cost` | Y | Y |  |  | Y |  |  | hole | 74 |
-| 72 | `keys` | Y | Y |  |  | Y |  |  | hole | 75 |
-| 73 | `num_keys` | Y | Y |  |  | Y |  |  | hole | 76 |
-| 74 | `memo_size` | Y | Y |  |  | Y |  |  | hole | 77 |
-| 75 | `parallel_min_reduction` |  |  |  | Y | Y |  |  | hole | 83 |
-| 76 | `obst_rec` |  |  |  | Y | Y |  |  | hole | 108 |
-| 77 | `eq` x2 |  | Y |  |  | Y |  |  | hole | 205 |
+| 32 | `example_negative_cycle` | Y |  |  | Y | Y |  |  | hole | 28 |
+| 33 | `example_undefined_shortest_path` | Y |  |  | Y | Y |  |  | hole | 32 |
 
-### Chap50/OptBinSearchTreeStEph.rs
+### Chap56/PathWeightUtilsStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 78 | `new` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;96 |
-| 79 | `from_keys_probs` | Y | Y |  |  | Y |  |  | hole | 98&#8209;102 |
-| 80 | `from_key_probs` | Y | Y |  |  | Y |  |  | unknown | 104&#8209;107 |
-| 81 | `optimal_cost` | Y | Y |  |  | Y |  |  | hole | 109 |
-| 82 | `keys` | Y | Y |  |  | Y |  |  | unknown | 111&#8209;112 |
-| 83 | `set_key_prob` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;118 |
-| 84 | `update_prob` | Y | Y |  |  | Y |  |  | hole | 120&#8209;124 |
-| 85 | `num_keys` | Y | Y |  |  | Y |  |  | unknown | 126&#8209;127 |
-| 86 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 129&#8209;132 |
-| 87 | `memo_size` | Y | Y |  |  | Y |  |  | unknown | 134&#8209;135 |
-| 88 | `obst_rec_st_eph` |  |  |  | Y | Y |  |  | hole | 141 |
-| 89 | `eq` x2 |  | Y |  |  |  | Y | Y |  | 288&#8209;290 |
+| 34 | `path_weight_int` | Y |  |  | Y | Y |  | Y |  | 37 |
+| 35 | `path_weight_float` | Y |  |  | Y | Y |  | Y |  | 39&#8209;42 |
+| 36 | `validate_subpath_property_int` | Y |  |  | Y | Y |  | Y |  | 44&#8209;48 |
+| 37 | `validate_subpath_property_float` | Y |  |  | Y | Y |  | Y |  | 50&#8209;54 |
 
-### Chap50/OptBinSearchTreeStPer.rs
+### Chap56/PathWeightUtilsStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 90 | `new` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;96 |
-| 91 | `from_keys_probs` | Y | Y |  |  | Y |  |  | hole | 98&#8209;102 |
-| 92 | `from_key_probs` | Y | Y |  |  | Y |  |  | unknown | 104&#8209;107 |
-| 93 | `optimal_cost` | Y | Y |  |  | Y |  |  | hole | 109 |
-| 94 | `keys` | Y | Y |  |  | Y |  |  | unknown | 111&#8209;112 |
-| 95 | `num_keys` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;115 |
-| 96 | `memo_size` | Y | Y |  |  | Y |  |  | unknown | 117&#8209;118 |
-| 97 | `obst_rec_st_per` |  |  |  | Y | Y |  |  | hole | 124 |
-| 98 | `eq` x2 |  | Y |  |  |  | Y | Y |  | 250&#8209;252 |
+| 38 | `path_weight_int` |  |  |  | Y | Y |  |  | unknown | 99&#8209;100 |
+| 39 | `path_weight_float` |  |  |  | Y | Y |  | Y |  | 134&#8209;137 |
+| 40 | `validate_subpath_property_int` |  |  |  | Y | Y |  |  | unknown | 165&#8209;170 |
+| 41 | `validate_subpath_property_float` |  |  |  | Y | Y |  | Y |  | 210&#8209;214 |
+
+### Chap56/SSSPResultStEphF64.rs
+
+| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
+|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
+| 42 | `new` |  |  | Y |  | Y |  |  | unknown | 36&#8209;37 |
+| 43 | `get_distance` |  |  | Y |  | Y |  | Y |  | 62 |
+| 44 | `set_distance` |  |  | Y |  | Y |  | Y |  | 69 |
+| 45 | `get_predecessor` |  |  | Y |  | Y |  | Y |  | 75 |
+| 46 | `set_predecessor` |  |  | Y |  | Y |  | Y |  | 83 |
+| 47 | `is_reachable` |  |  | Y |  | Y |  | Y |  | 89 |
+| 48 | `extract_path` |  |  | Y |  |  | Y | Y |  | 97&#8209;112 |
+
+### Chap56/SSSPResultStEphI64.rs
+
+| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
+|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
+| 49 | `new` | Y | Y |  |  | Y |  |  | unknown | 27&#8209;28 |
+| 50 | `get_distance` | Y | Y |  |  | Y |  | Y |  | 30 |
+| 51 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 32 |
+| 52 | `get_predecessor` | Y | Y |  |  | Y |  | Y |  | 34 |
+| 53 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 36 |
+| 54 | `is_reachable` | Y | Y |  |  | Y |  | Y |  | 38 |
+| 55 | `extract_path` | Y | Y |  |  | Y |  | Y |  | 40 |
+
+### Chap56/SSSPResultStPerF64.rs
+
+| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
+|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
+| 56 | `new` | Y | Y |  |  | Y |  |  | unknown | 53&#8209;54 |
+| 57 | `get_distance` | Y | Y |  |  | Y |  | Y |  | 56 |
+| 58 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 58 |
+| 59 | `get_predecessor` | Y | Y |  |  | Y |  | Y |  | 60 |
+| 60 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 62 |
+| 61 | `is_reachable` | Y | Y |  |  | Y |  | Y |  | 64 |
+| 62 | `extract_path` | Y | Y |  |  | Y |  | Y |  | 66 |
+
+### Chap56/SSSPResultStPerI64.rs
+
+| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
+|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
+| 63 | `new` | Y | Y |  |  | Y |  |  | unknown | 37&#8209;38 |
+| 64 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 40 |
+| 65 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 42 |
+| 66 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 44 |
+| 67 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 46 |
+| 68 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 48 |
+| 69 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 50 |
 
 
 ### Legend

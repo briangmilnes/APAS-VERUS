@@ -92,6 +92,7 @@ broadcast use {
             ensures self@.dom().finite();
 
         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+            requires keys@.finite()
             ensures tabulated@.dom().finite();
 
         fn map<F: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: F) -> (mapped: Self)

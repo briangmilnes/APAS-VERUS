@@ -25,15 +25,15 @@
 | 1 | Chap56 | AllPairsResultStEphF64 | 7 | 7 | 0 | 0 | 7 | 0 | 3 | 0 | 4 |
 | 2 | Chap56 | AllPairsResultStEphI64 | 7 | 7 | 0 | 0 | 7 | 0 | 5 | 0 | 2 |
 | 3 | Chap56 | AllPairsResultStPerF64 | 7 | 7 | 0 | 0 | 7 | 0 | 3 | 0 | 4 |
-| 4 | Chap56 | AllPairsResultStPerI64 | 7 | 7 | 0 | 0 | 7 | 0 | 5 | 0 | 2 |
+| 4 | Chap56 | AllPairsResultStPerI64 | 7 | 7 | 0 | 0 | 7 | 0 | 7 | 0 | 0 |
 | 5 | Chap56 | Example56_1 | 3 | 0 | 0 | 3 | 3 | 0 | 0 | 3 | 0 |
 | 6 | Chap56 | Example56_3 | 2 | 0 | 0 | 2 | 2 | 0 | 0 | 2 | 0 |
 | 7 | Chap56 | PathWeightUtilsStEph | 4 | 0 | 0 | 4 | 4 | 0 | 0 | 0 | 4 |
-| 8 | Chap56 | PathWeightUtilsStPer | 4 | 0 | 0 | 4 | 4 | 0 | 0 | 0 | 4 |
+| 8 | Chap56 | PathWeightUtilsStPer | 0 | 0 | 0 | 4 | 4 | 0 | 2 | 0 | 2 |
 | 9 | Chap56 | SSSPResultStEphF64 | 0 | 0 | 7 | 0 | 6 | 1 | 1 | 0 | 6 |
 | 10 | Chap56 | SSSPResultStEphI64 | 7 | 7 | 0 | 0 | 7 | 0 | 3 | 0 | 4 |
 | 11 | Chap56 | SSSPResultStPerF64 | 7 | 7 | 0 | 0 | 7 | 0 | 3 | 0 | 4 |
-| 12 | Chap56 | SSSPResultStPerI64 | 7 | 7 | 0 | 0 | 7 | 0 | 3 | 0 | 4 |
+| 12 | Chap56 | SSSPResultStPerI64 | 7 | 7 | 0 | 0 | 7 | 0 | 7 | 0 | 0 |
 
 ## Function-by-Function Detail
 
@@ -77,13 +77,13 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 22 | `new` | Y | Y |  |  | Y |  |  | unknown | 25 |
-| 23 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 27 |
-| 24 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 29 |
-| 25 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 31 |
-| 26 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 33 |
-| 27 | `is_reachable` | Y | Y |  |  | Y |  | Y |  | 35 |
-| 28 | `extract_path` | Y | Y |  |  | Y |  | Y |  | 37 |
+| 22 | `new` | Y | Y |  |  | Y |  |  | unknown | 41 |
+| 23 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 43 |
+| 24 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 45 |
+| 25 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 47 |
+| 26 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 49 |
+| 27 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 51 |
+| 28 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 53 |
 
 ### Chap56/Example56_1.rs
 
@@ -113,10 +113,10 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 38 | `path_weight_int` | Y |  |  | Y | Y |  | Y |  | 36 |
-| 39 | `path_weight_float` | Y |  |  | Y | Y |  | Y |  | 38&#8209;41 |
-| 40 | `validate_subpath_property_int` | Y |  |  | Y | Y |  | Y |  | 43&#8209;47 |
-| 41 | `validate_subpath_property_float` | Y |  |  | Y | Y |  | Y |  | 49&#8209;53 |
+| 38 | `path_weight_int` |  |  |  | Y | Y |  |  | unknown | 99&#8209;100 |
+| 39 | `path_weight_float` |  |  |  | Y | Y |  | Y |  | 134&#8209;137 |
+| 40 | `validate_subpath_property_int` |  |  |  | Y | Y |  |  | unknown | 165&#8209;170 |
+| 41 | `validate_subpath_property_float` |  |  |  | Y | Y |  | Y |  | 210&#8209;214 |
 
 ### Chap56/SSSPResultStEphF64.rs
 
@@ -158,13 +158,13 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 63 | `new` | Y | Y |  |  | Y |  |  | unknown | 25&#8209;26 |
-| 64 | `get_distance` | Y | Y |  |  | Y |  | Y |  | 28 |
-| 65 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 30 |
-| 66 | `get_predecessor` | Y | Y |  |  | Y |  | Y |  | 32 |
-| 67 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 34 |
-| 68 | `is_reachable` | Y | Y |  |  | Y |  | Y |  | 36 |
-| 69 | `extract_path` | Y | Y |  |  | Y |  | Y |  | 38 |
+| 63 | `new` | Y | Y |  |  | Y |  |  | unknown | 37&#8209;38 |
+| 64 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 40 |
+| 65 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 42 |
+| 66 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 44 |
+| 67 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 46 |
+| 68 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 48 |
+| 69 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 50 |
 
 
 ### Legend

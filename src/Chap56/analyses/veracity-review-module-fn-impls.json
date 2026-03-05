@@ -171,7 +171,7 @@
     "id": 22,
     "function": "new",
     "file": "Chap56/AllPairsResultStPerI64.rs",
-    "lines": "25",
+    "lines": "41",
     "spec_strength": "unknown",
     "snippet": "        fn new(n: usize) -> (empty: Self);"
   },
@@ -179,7 +179,7 @@
     "id": 23,
     "function": "get_distance",
     "file": "Chap56/AllPairsResultStPerI64.rs",
-    "lines": "27",
+    "lines": "43",
     "spec_strength": "unknown",
     "snippet": "        fn get_distance(&self, u: usize, v: usize) -> (dist: i64);"
   },
@@ -187,7 +187,7 @@
     "id": 24,
     "function": "set_distance",
     "file": "Chap56/AllPairsResultStPerI64.rs",
-    "lines": "29",
+    "lines": "45",
     "spec_strength": "unknown",
     "snippet": "        fn set_distance(self, u: usize, v: usize, dist: i64) -> (updated: Self);"
   },
@@ -195,7 +195,7 @@
     "id": 25,
     "function": "get_predecessor",
     "file": "Chap56/AllPairsResultStPerI64.rs",
-    "lines": "31",
+    "lines": "47",
     "spec_strength": "unknown",
     "snippet": "        fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>);"
   },
@@ -203,7 +203,7 @@
     "id": 26,
     "function": "set_predecessor",
     "file": "Chap56/AllPairsResultStPerI64.rs",
-    "lines": "33",
+    "lines": "49",
     "spec_strength": "unknown",
     "snippet": "        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self);"
   },
@@ -211,16 +211,16 @@
     "id": 27,
     "function": "is_reachable",
     "file": "Chap56/AllPairsResultStPerI64.rs",
-    "lines": "35",
-    "spec_strength": "",
+    "lines": "51",
+    "spec_strength": "unknown",
     "snippet": "        fn is_reachable(&self, u: usize, v: usize) -> (b: bool);"
   },
   {
     "id": 28,
     "function": "extract_path",
     "file": "Chap56/AllPairsResultStPerI64.rs",
-    "lines": "37",
-    "spec_strength": "",
+    "lines": "53",
+    "spec_strength": "unknown",
     "snippet": "        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);"
   },
   {
@@ -299,33 +299,33 @@
     "id": 38,
     "function": "path_weight_int",
     "file": "Chap56/PathWeightUtilsStPer.rs",
-    "lines": "36",
-    "spec_strength": "",
-    "snippet": "        fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>) -> Option<i64>;"
+    "lines": "99-100",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>) -> (result: Option<i64>)\n        ensures result == spec_path_weight_int(path, weights, 0, 0),"
   },
   {
     "id": 39,
     "function": "path_weight_float",
     "file": "Chap56/PathWeightUtilsStPer.rs",
-    "lines": "38-41",
+    "lines": "134-137",
     "spec_strength": "",
-    "snippet": "        fn path_weight_float(\n            path: &ArraySeqStPerS<usize>,\n            weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,\n        ) -> Option<WrappedF64>;"
+    "snippet": "    pub fn path_weight_float(\n        path: &ArraySeqStPerS<usize>,\n        weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,\n    ) -> Option<WrappedF64> {"
   },
   {
     "id": 40,
     "function": "validate_subpath_property_int",
     "file": "Chap56/PathWeightUtilsStPer.rs",
-    "lines": "43-47",
-    "spec_strength": "",
-    "snippet": "        fn validate_subpath_property_int(\n            path: &ArraySeqStPerS<usize>,\n            distances: &ArraySeqStPerS<i64>,\n            weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>,\n        ) -> bool;"
+    "lines": "165-170",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn validate_subpath_property_int(\n        path: &ArraySeqStPerS<usize>,\n        distances: &ArraySeqStPerS<i64>,\n        weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>,\n    ) -> (result: bool)\n        ensures result == spec_validate_subpath_int(path, distances, weights, 0),"
   },
   {
     "id": 41,
     "function": "validate_subpath_property_float",
     "file": "Chap56/PathWeightUtilsStPer.rs",
-    "lines": "49-53",
+    "lines": "210-214",
     "spec_strength": "",
-    "snippet": "        fn validate_subpath_property_float(\n            path: &ArraySeqStPerS<usize>,\n            distances: &ArraySeqStPerS<WrappedF64>,\n            weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,\n        ) -> bool;"
+    "snippet": "    pub fn validate_subpath_property_float(\n        path: &ArraySeqStPerS<usize>,\n        distances: &ArraySeqStPerS<WrappedF64>,\n        weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,\n    ) -> bool {"
   },
   {
     "id": 42,
@@ -499,7 +499,7 @@
     "id": 63,
     "function": "new",
     "file": "Chap56/SSSPResultStPerI64.rs",
-    "lines": "25-26",
+    "lines": "37-38",
     "spec_strength": "unknown",
     "snippet": "        fn new(n: usize, source: usize) -> (empty: Self)\n            requires source < n;"
   },
@@ -507,15 +507,15 @@
     "id": 64,
     "function": "get_distance",
     "file": "Chap56/SSSPResultStPerI64.rs",
-    "lines": "28",
-    "spec_strength": "",
+    "lines": "40",
+    "spec_strength": "unknown",
     "snippet": "        fn get_distance(&self, v: usize) -> (dist: i64);"
   },
   {
     "id": 65,
     "function": "set_distance",
     "file": "Chap56/SSSPResultStPerI64.rs",
-    "lines": "30",
+    "lines": "42",
     "spec_strength": "unknown",
     "snippet": "        fn set_distance(self, v: usize, dist: i64) -> (updated: Self);"
   },
@@ -523,15 +523,15 @@
     "id": 66,
     "function": "get_predecessor",
     "file": "Chap56/SSSPResultStPerI64.rs",
-    "lines": "32",
-    "spec_strength": "",
+    "lines": "44",
+    "spec_strength": "unknown",
     "snippet": "        fn get_predecessor(&self, v: usize) -> (pred: Option<usize>);"
   },
   {
     "id": 67,
     "function": "set_predecessor",
     "file": "Chap56/SSSPResultStPerI64.rs",
-    "lines": "34",
+    "lines": "46",
     "spec_strength": "unknown",
     "snippet": "        fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self);"
   },
@@ -539,16 +539,16 @@
     "id": 68,
     "function": "is_reachable",
     "file": "Chap56/SSSPResultStPerI64.rs",
-    "lines": "36",
-    "spec_strength": "",
+    "lines": "48",
+    "spec_strength": "unknown",
     "snippet": "        fn is_reachable(&self, v: usize) -> (b: bool);"
   },
   {
     "id": 69,
     "function": "extract_path",
     "file": "Chap56/SSSPResultStPerI64.rs",
-    "lines": "38",
-    "spec_strength": "",
+    "lines": "50",
+    "spec_strength": "unknown",
     "snippet": "        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);"
   }
 ]

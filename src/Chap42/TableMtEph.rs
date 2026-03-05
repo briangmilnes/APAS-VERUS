@@ -139,25 +139,35 @@ broadcast use {
             ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@);
         /// APAS: Work Θ(|a|), Span Θ(lg |a|)
         fn domain(&self) -> (domain: ArraySetStEph<K>)
-            ensures domain@.finite();
+            ensures domain@ =~= self@.dom();
         /// APAS: Work Θ(|s| * W(f)), Span Θ(lg |s| + S(f))
         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            ensures tabulated@.dom().finite();
+            requires keys@.finite()
+            ensures tabulated@.dom() =~= keys@;
         /// APAS: Work Θ(Σ W(f(v))), Span Θ(lg |a| + max S(f(v)))
         fn map<F: Fn(&V) -> V + Send + Sync + 'static>(&mut self, f: F)
             ensures self@.dom() == old(self)@.dom();
         /// APAS: Work Θ(Σ W(p(k,v))), Span Θ(lg |a| + max S(p(k,v)))
         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&mut self, f: F)
-            ensures self@.dom().subset_of(old(self)@.dom());
+            ensures
+                self@.dom().subset_of(old(self)@.dom()),
+                forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k];
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F)
             ensures self@.dom() =~= old(self)@.dom().intersect(other@.dom());
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F)
-            ensures self@.dom() =~= old(self)@.dom().union(other@.dom());
+            ensures
+                self@.dom() =~= old(self)@.dom().union(other@.dom()),
+                forall|k: K::V| #![auto] old(self)@.contains_key(k) && !other@.contains_key(k)
+                    ==> self@[k] == old(self)@[k],
+                forall|k: K::V| #![auto] other@.contains_key(k) && !old(self)@.contains_key(k)
+                    ==> self@[k] == other@[k];
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn difference(&mut self, other: &Self)
-            ensures self@.dom() =~= old(self)@.dom().difference(other@.dom());
+            ensures
+                self@.dom() =~= old(self)@.dom().difference(other@.dom()),
+                forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k];
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn find(&self, key: &K) -> (found: Option<V>)
             ensures
@@ -172,15 +182,21 @@ broadcast use {
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, key: K, value: V, combine: F)
             ensures
                 self@.contains_key(key@),
-                self@.dom() =~= old(self)@.dom().insert(key@);
+                self@.dom() =~= old(self)@.dom().insert(key@),
+                forall|k: K::V| #![auto] k != key@ && old(self)@.contains_key(k) ==> self@[k] == old(self)@[k],
+                !old(self)@.contains_key(key@) ==> self@[key@] == value@;
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             requires keys@.finite()
-            ensures self@.dom() =~= old(self)@.dom().intersect(keys@);
+            ensures
+                self@.dom() =~= old(self)@.dom().intersect(keys@),
+                forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k];
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             requires keys@.finite()
-            ensures self@.dom() =~= old(self)@.dom().difference(keys@);
+            ensures
+                self@.dom() =~= old(self)@.dom().difference(keys@),
+                forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k];
 
         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>)
             ensures spec_entries_to_map(entries@) == self@;
@@ -224,7 +240,6 @@ broadcast use {
 
         #[verifier::external_body]
         fn domain(&self) -> (domain: ArraySetStEph<K>)
-            ensures domain@.finite()
         {
             let mut keys = ArraySetStEph::empty();
             let len = self.entries.length();
@@ -259,7 +274,6 @@ broadcast use {
 
         #[verifier::external_body]
         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            ensures tabulated@.dom().finite()
         {
             let key_seq = keys.to_seq();
             let f = Arc::new(f);
@@ -373,7 +387,6 @@ broadcast use {
 
         #[verifier::external_body]
         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&mut self, f: F)
-            ensures self@.dom().subset_of(old(self)@.dom())
         {
             let f = Arc::new(f);
             let len = self.entries.length();
@@ -497,7 +510,6 @@ broadcast use {
 
         #[verifier::external_body]
         fn difference(&mut self, other: &Self)
-            ensures self@.dom() =~= old(self)@.dom().difference(other@.dom())
         {
             let mut difference_entries = Vec::new();
             let mut i = 0;
@@ -688,7 +700,6 @@ broadcast use {
 
         #[verifier::external_body]
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            ensures self@.dom() =~= old(self)@.dom().intersect(keys@)
         {
             let len = self.entries.length();
 
@@ -740,7 +751,6 @@ broadcast use {
 
         #[verifier::external_body]
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            ensures self@.dom() =~= old(self)@.dom().difference(keys@)
         {
             let len = self.entries.length();
 
