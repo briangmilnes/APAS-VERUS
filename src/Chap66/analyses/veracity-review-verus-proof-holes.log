@@ -31,8 +31,15 @@ Holes Found: 3 total
    3 × external_body
 
 Info: 2 total
-   BoruvkaStEph.rs:71: info: accept() - accept hole
    BoruvkaMtEph.rs:46: info: accept() - accept hole
-o: 2 total
    BoruvkaStEph.rs:71: info: accept() - accept hole
+lean
+   0 holed
+   0 total
+
+Holes Found: 3 total
+   3 × external_body
+
+Info: 2 total
    BoruvkaMtEph.rs:46: info: accept() - accept hole
+   BoruvkaStEph.rs:71: info: accept() - accept hole

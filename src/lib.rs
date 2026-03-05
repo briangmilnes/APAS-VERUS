@@ -583,21 +583,26 @@ pub mod Chap51 {
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap52 {
-    // All graph files use types from Chap37/41/42 declared outside verus!
-    // pub mod AdjSeqGraphStEph;
-    // pub mod AdjSeqGraphStPer;
-    // pub mod AdjSeqGraphMtEph;
-    // pub mod AdjSeqGraphMtPer;
+    // AdjSeq/AdjMatrix files depend only on Chap18/19 (compiled).
+    pub mod AdjSeqGraphStEph;
+    pub mod AdjSeqGraphStPer;
+    pub mod AdjSeqGraphMtEph;
+    pub mod AdjSeqGraphMtPer;
+    pub mod AdjMatrixGraphStEph;
+    pub mod AdjMatrixGraphStPer;
+    pub mod AdjMatrixGraphMtEph;
+    pub mod AdjMatrixGraphMtPer;
+    // AdjTable St files: compile but fail verification (missing obeys_view_eq/feq proofs).
     // pub mod AdjTableGraphStEph;
     // pub mod AdjTableGraphStPer;
-    // pub mod AdjTableGraphMtPer;
-    // pub mod AdjMatrixGraphStEph;
-    // pub mod AdjMatrixGraphStPer;
-    // pub mod AdjMatrixGraphMtEph;
-    // pub mod AdjMatrixGraphMtPer;
+    // AdjTable Mt/EdgeSet files depend on AVLTreeSetMtPer (Chap41, all_chapters).
+    #[cfg(feature = "all_chapters")]
+    pub mod AdjTableGraphMtPer;
+    // EdgeSet St files: fail compilation (missing Sized, subrange on wrong type).
     // pub mod EdgeSetGraphStEph;
     // pub mod EdgeSetGraphStPer;
-    // pub mod EdgeSetGraphMtPer;
+    #[cfg(feature = "all_chapters")]
+    pub mod EdgeSetGraphMtPer;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]

@@ -619,31 +619,31 @@
     "id": 78,
     "function": "new",
     "file": "Chap50/OptBinSearchTreeStEph.rs",
-    "lines": "57",
-    "spec_strength": "hole",
-    "snippet": "        fn new() -> (empty: Self);"
+    "lines": "93-96",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (empty: Self)\n            ensures\n                empty@.keys.len() == 0,\n                empty@.memo =~= Map::<(usize, usize), Probability>::empty();"
   },
   {
     "id": 79,
     "function": "from_keys_probs",
     "file": "Chap50/OptBinSearchTreeStEph.rs",
-    "lines": "58",
+    "lines": "98-102",
     "spec_strength": "hole",
-    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self);"
+    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)\n            requires keys@.len() == probs@.len(),\n            ensures\n                constructed@.keys.len() == keys@.len(),\n                constructed@.memo =~= Map::<(usize, usize), Probability>::empty();"
   },
   {
     "id": 80,
     "function": "from_key_probs",
     "file": "Chap50/OptBinSearchTreeStEph.rs",
-    "lines": "59",
-    "spec_strength": "hole",
-    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self);"
+    "lines": "104-107",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)\n            ensures\n                constructed@.keys =~= key_probs@,\n                constructed@.memo =~= Map::<(usize, usize), Probability>::empty();"
   },
   {
     "id": 81,
     "function": "optimal_cost",
     "file": "Chap50/OptBinSearchTreeStEph.rs",
-    "lines": "60",
+    "lines": "109",
     "spec_strength": "hole",
     "snippet": "        fn optimal_cost(&mut self) -> (cost: Probability);"
   },
@@ -651,55 +651,55 @@
     "id": 82,
     "function": "keys",
     "file": "Chap50/OptBinSearchTreeStEph.rs",
-    "lines": "61",
-    "spec_strength": "",
-    "snippet": "        fn keys(&self) -> (keys: &Vec<KeyProb<T>>);"
+    "lines": "111-112",
+    "spec_strength": "unknown",
+    "snippet": "        fn keys(&self) -> (keys: &Vec<KeyProb<T>>)\n            ensures keys@ =~= self@.keys;"
   },
   {
     "id": 83,
     "function": "set_key_prob",
     "file": "Chap50/OptBinSearchTreeStEph.rs",
-    "lines": "62",
-    "spec_strength": "hole",
-    "snippet": "        fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>);"
+    "lines": "114-118",
+    "spec_strength": "unknown",
+    "snippet": "        fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>)\n            requires index < old(self)@.keys.len(),\n            ensures\n                self@.keys =~= old(self)@.keys.update(index as int, key_prob),\n                self@.memo =~= Map::<(usize, usize), Probability>::empty();"
   },
   {
     "id": 84,
     "function": "update_prob",
     "file": "Chap50/OptBinSearchTreeStEph.rs",
-    "lines": "63",
+    "lines": "120-124",
     "spec_strength": "hole",
-    "snippet": "        fn update_prob(&mut self, index: usize, prob: Probability);"
+    "snippet": "        fn update_prob(&mut self, index: usize, prob: Probability)\n            requires index < old(self)@.keys.len(),\n            ensures\n                self@.keys.len() == old(self)@.keys.len(),\n                self@.memo =~= Map::<(usize, usize), Probability>::empty();"
   },
   {
     "id": 85,
     "function": "num_keys",
     "file": "Chap50/OptBinSearchTreeStEph.rs",
-    "lines": "64",
-    "spec_strength": "",
-    "snippet": "        fn num_keys(&self) -> (count: usize);"
+    "lines": "126-127",
+    "spec_strength": "unknown",
+    "snippet": "        fn num_keys(&self) -> (count: usize)\n            ensures count == self@.keys.len();"
   },
   {
     "id": 86,
     "function": "clear_memo",
     "file": "Chap50/OptBinSearchTreeStEph.rs",
-    "lines": "65",
-    "spec_strength": "",
-    "snippet": "        fn clear_memo(&mut self);"
+    "lines": "129-132",
+    "spec_strength": "unknown",
+    "snippet": "        fn clear_memo(&mut self)\n            ensures\n                self@.keys =~= old(self)@.keys,\n                self@.memo =~= Map::<(usize, usize), Probability>::empty();"
   },
   {
     "id": 87,
     "function": "memo_size",
     "file": "Chap50/OptBinSearchTreeStEph.rs",
-    "lines": "66",
-    "spec_strength": "",
-    "snippet": "        fn memo_size(&self) -> (count: usize);"
+    "lines": "134-135",
+    "spec_strength": "unknown",
+    "snippet": "        fn memo_size(&self) -> (count: usize)\n            ensures count == self@.memo.len();"
   },
   {
     "id": 88,
     "function": "obst_rec_st_eph",
     "file": "Chap50/OptBinSearchTreeStEph.rs",
-    "lines": "72",
+    "lines": "141",
     "spec_strength": "hole",
     "snippet": "    fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (cost: Probability) {"
   },
@@ -707,7 +707,7 @@
     "id": 89,
     "function": "eq`",
     "file": "Chap50/OptBinSearchTreeStEph.rs",
-    "lines": "224-226",
+    "lines": "288-290",
     "spec_strength": "",
     "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.key == other.key && (self.prob.value() - other.prob.value()).abs() < f64::EPSILON\n        }"
   },
@@ -715,31 +715,31 @@
     "id": 90,
     "function": "new",
     "file": "Chap50/OptBinSearchTreeStPer.rs",
-    "lines": "57",
-    "spec_strength": "hole",
-    "snippet": "        fn new() -> (empty: Self);"
+    "lines": "93-96",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (empty: Self)\n            ensures\n                empty@.keys.len() == 0,\n                empty@.memo =~= Map::<(usize, usize), Probability>::empty();"
   },
   {
     "id": 91,
     "function": "from_keys_probs",
     "file": "Chap50/OptBinSearchTreeStPer.rs",
-    "lines": "58",
+    "lines": "98-102",
     "spec_strength": "hole",
-    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self);"
+    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)\n            requires keys@.len() == probs@.len(),\n            ensures\n                constructed@.keys.len() == keys@.len(),\n                constructed@.memo =~= Map::<(usize, usize), Probability>::empty();"
   },
   {
     "id": 92,
     "function": "from_key_probs",
     "file": "Chap50/OptBinSearchTreeStPer.rs",
-    "lines": "59",
-    "spec_strength": "hole",
-    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self);"
+    "lines": "104-107",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)\n            ensures\n                constructed@.keys =~= key_probs@,\n                constructed@.memo =~= Map::<(usize, usize), Probability>::empty();"
   },
   {
     "id": 93,
     "function": "optimal_cost",
     "file": "Chap50/OptBinSearchTreeStPer.rs",
-    "lines": "60",
+    "lines": "109",
     "spec_strength": "hole",
     "snippet": "        fn optimal_cost(&self) -> (cost: Probability);"
   },
@@ -747,31 +747,31 @@
     "id": 94,
     "function": "keys",
     "file": "Chap50/OptBinSearchTreeStPer.rs",
-    "lines": "61",
-    "spec_strength": "",
-    "snippet": "        fn keys(&self) -> (keys: &Vec<KeyProb<T>>);"
+    "lines": "111-112",
+    "spec_strength": "unknown",
+    "snippet": "        fn keys(&self) -> (keys: &Vec<KeyProb<T>>)\n            ensures keys@ =~= self@.keys;"
   },
   {
     "id": 95,
     "function": "num_keys",
     "file": "Chap50/OptBinSearchTreeStPer.rs",
-    "lines": "62",
-    "spec_strength": "",
-    "snippet": "        fn num_keys(&self) -> (count: usize);"
+    "lines": "114-115",
+    "spec_strength": "unknown",
+    "snippet": "        fn num_keys(&self) -> (count: usize)\n            ensures count == self@.keys.len();"
   },
   {
     "id": 96,
     "function": "memo_size",
     "file": "Chap50/OptBinSearchTreeStPer.rs",
-    "lines": "63",
-    "spec_strength": "",
-    "snippet": "        fn memo_size(&self) -> (count: usize);"
+    "lines": "117-118",
+    "spec_strength": "unknown",
+    "snippet": "        fn memo_size(&self) -> (count: usize)\n            ensures count == self@.memo.len();"
   },
   {
     "id": 97,
     "function": "obst_rec_st_per",
     "file": "Chap50/OptBinSearchTreeStPer.rs",
-    "lines": "69",
+    "lines": "124",
     "spec_strength": "hole",
     "snippet": "    fn obst_rec_st_per<T: StT>(s: &mut OBSTStPerS<T>, i: usize, l: usize) -> (cost: Probability) {"
   },
@@ -779,7 +779,7 @@
     "id": 98,
     "function": "eq`",
     "file": "Chap50/OptBinSearchTreeStPer.rs",
-    "lines": "195-197",
+    "lines": "250-252",
     "spec_strength": "",
     "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.key == other.key && (self.prob.value() - other.prob.value()).abs() < f64::EPSILON\n        }"
   }

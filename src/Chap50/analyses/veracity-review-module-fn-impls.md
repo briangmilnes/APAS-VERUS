@@ -28,8 +28,8 @@
 | 4 | Chap50 | MatrixChainStPer | 9 | 10 | 0 | 0 | 10 | 0 | 9 | 1 | 0 |
 | 5 | Chap50 | OptBinSearchTreeMtEph | 10 | 11 | 0 | 4 | 15 | 0 | 0 | 15 | 0 |
 | 6 | Chap50 | OptBinSearchTreeMtPer | 7 | 8 | 0 | 3 | 11 | 0 | 0 | 11 | 0 |
-| 7 | Chap50 | OptBinSearchTreeStEph | 10 | 11 | 0 | 1 | 11 | 1 | 0 | 7 | 5 |
-| 8 | Chap50 | OptBinSearchTreeStPer | 7 | 8 | 0 | 1 | 8 | 1 | 0 | 5 | 4 |
+| 7 | Chap50 | OptBinSearchTreeStEph | 10 | 11 | 0 | 1 | 11 | 1 | 7 | 4 | 1 |
+| 8 | Chap50 | OptBinSearchTreeStPer | 7 | 8 | 0 | 1 | 8 | 1 | 5 | 3 | 1 |
 
 ## Function-by-Function Detail
 
@@ -144,32 +144,32 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 78 | `new` | Y | Y |  |  | Y |  |  | hole | 57 |
-| 79 | `from_keys_probs` | Y | Y |  |  | Y |  |  | hole | 58 |
-| 80 | `from_key_probs` | Y | Y |  |  | Y |  |  | hole | 59 |
-| 81 | `optimal_cost` | Y | Y |  |  | Y |  |  | hole | 60 |
-| 82 | `keys` | Y | Y |  |  | Y |  | Y |  | 61 |
-| 83 | `set_key_prob` | Y | Y |  |  | Y |  |  | hole | 62 |
-| 84 | `update_prob` | Y | Y |  |  | Y |  |  | hole | 63 |
-| 85 | `num_keys` | Y | Y |  |  | Y |  | Y |  | 64 |
-| 86 | `clear_memo` | Y | Y |  |  | Y |  | Y |  | 65 |
-| 87 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 66 |
-| 88 | `obst_rec_st_eph` |  |  |  | Y | Y |  |  | hole | 72 |
-| 89 | `eq` x2 |  | Y |  |  |  | Y | Y |  | 224&#8209;226 |
+| 78 | `new` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;96 |
+| 79 | `from_keys_probs` | Y | Y |  |  | Y |  |  | hole | 98&#8209;102 |
+| 80 | `from_key_probs` | Y | Y |  |  | Y |  |  | unknown | 104&#8209;107 |
+| 81 | `optimal_cost` | Y | Y |  |  | Y |  |  | hole | 109 |
+| 82 | `keys` | Y | Y |  |  | Y |  |  | unknown | 111&#8209;112 |
+| 83 | `set_key_prob` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;118 |
+| 84 | `update_prob` | Y | Y |  |  | Y |  |  | hole | 120&#8209;124 |
+| 85 | `num_keys` | Y | Y |  |  | Y |  |  | unknown | 126&#8209;127 |
+| 86 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 129&#8209;132 |
+| 87 | `memo_size` | Y | Y |  |  | Y |  |  | unknown | 134&#8209;135 |
+| 88 | `obst_rec_st_eph` |  |  |  | Y | Y |  |  | hole | 141 |
+| 89 | `eq` x2 |  | Y |  |  |  | Y | Y |  | 288&#8209;290 |
 
 ### Chap50/OptBinSearchTreeStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 90 | `new` | Y | Y |  |  | Y |  |  | hole | 57 |
-| 91 | `from_keys_probs` | Y | Y |  |  | Y |  |  | hole | 58 |
-| 92 | `from_key_probs` | Y | Y |  |  | Y |  |  | hole | 59 |
-| 93 | `optimal_cost` | Y | Y |  |  | Y |  |  | hole | 60 |
-| 94 | `keys` | Y | Y |  |  | Y |  | Y |  | 61 |
-| 95 | `num_keys` | Y | Y |  |  | Y |  | Y |  | 62 |
-| 96 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 63 |
-| 97 | `obst_rec_st_per` |  |  |  | Y | Y |  |  | hole | 69 |
-| 98 | `eq` x2 |  | Y |  |  |  | Y | Y |  | 195&#8209;197 |
+| 90 | `new` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;96 |
+| 91 | `from_keys_probs` | Y | Y |  |  | Y |  |  | hole | 98&#8209;102 |
+| 92 | `from_key_probs` | Y | Y |  |  | Y |  |  | unknown | 104&#8209;107 |
+| 93 | `optimal_cost` | Y | Y |  |  | Y |  |  | hole | 109 |
+| 94 | `keys` | Y | Y |  |  | Y |  |  | unknown | 111&#8209;112 |
+| 95 | `num_keys` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;115 |
+| 96 | `memo_size` | Y | Y |  |  | Y |  |  | unknown | 117&#8209;118 |
+| 97 | `obst_rec_st_per` |  |  |  | Y | Y |  |  | hole | 124 |
+| 98 | `eq` x2 |  | Y |  |  |  | Y | Y |  | 250&#8209;252 |
 
 
 ### Legend

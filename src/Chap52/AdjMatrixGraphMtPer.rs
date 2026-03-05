@@ -65,8 +65,8 @@ broadcast use {
     /// A well-formed adjacency matrix: square n x n.
     pub open spec fn spec_wf(g: AdjMatrixGraphMtPer) -> bool {
         g.matrix.spec_len() == g.n
-        && forall|i: int| #![auto] 0 <= i < g.n ==>
-            g.matrix.spec_index(i).spec_len() == g.n
+        && forall|i: int| 0 <= i < g.n ==>
+            #[trigger] g.matrix.spec_index(i).spec_len() == g.n
     }
 
     // 7. proof fns
@@ -114,8 +114,8 @@ broadcast use {
             ensures
                 empty.spec_wf(),
                 empty.spec_n() == n,
-                forall|u: int, v: int| #![auto]
-                    0 <= u < n && 0 <= v < n ==> !empty.spec_edge(u, v);
+                forall|u: int, v: int|
+                    0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);
 
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: N)
@@ -148,12 +148,12 @@ broadcast use {
             requires self.spec_wf()
             ensures
                 u < self.spec_n() ==> (
-                    (forall|k: int| #![auto] 0 <= k < neighbors.spec_len()
-                        ==> neighbors.spec_index(k) < self.spec_n()
+                    (forall|k: int| 0 <= k < neighbors.spec_len()
+                        ==> #[trigger] neighbors.spec_index(k) < self.spec_n()
                             && self.spec_edge(u as int, neighbors.spec_index(k) as int))
-                    && (forall|v: int| #![auto] 0 <= v < self.spec_n() && self.spec_edge(u as int, v)
-                        ==> exists|k: int| #![auto]
-                            0 <= k < neighbors.spec_len() && neighbors.spec_index(k) == v as N)
+                    && (forall|v: int| 0 <= v < self.spec_n() && #[trigger] self.spec_edge(u as int, v)
+                        ==> exists|k: int|
+                            0 <= k < neighbors.spec_len() && #[trigger] neighbors.spec_index(k) == v as N)
                 ),
                 u >= self.spec_n() ==> neighbors.spec_len() == 0;
 
@@ -173,9 +173,9 @@ broadcast use {
             ensures
                 complemented.spec_wf(),
                 complemented.spec_n() == self.spec_n(),
-                forall|i: int, j: int| #![auto]
+                forall|i: int, j: int|
                     0 <= i < self.spec_n() && 0 <= j < self.spec_n()
-                    ==> complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));
+                    ==> #[trigger] complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));
     }
 
     // 9. impls
@@ -184,8 +184,8 @@ broadcast use {
 
         open spec fn spec_wf(&self) -> bool {
             self.matrix.spec_len() == self.n
-            && forall|i: int| #![auto] 0 <= i < self.n ==>
-                self.matrix.spec_index(i).spec_len() == self.n
+            && forall|i: int| 0 <= i < self.n ==>
+                #[trigger] self.matrix.spec_index(i).spec_len() == self.n
         }
 
         open spec fn spec_n(&self) -> nat { self.n as nat }
@@ -199,7 +199,7 @@ broadcast use {
                 &|_i: usize| -> (r: ArraySeqMtPerS<bool>)
                     ensures
                         r.spec_len() == n,
-                        forall|j: int| #![auto] 0 <= j < n ==> !r.spec_index(j)
+                        forall|j: int| 0 <= j < n ==> !#[trigger] r.spec_index(j)
                 {
                     ArraySeqMtPerS::tabulate(
                         &|_j: usize| -> (r: bool) ensures !r { false },
@@ -240,7 +240,7 @@ broadcast use {
                         n as nat == self.spec_n(),
                         u < n,
                         row.spec_len() == n,
-                        forall|vi: int| #![auto] 0 <= vi < n ==> row.spec_index(vi) == self.spec_edge(u as int, vi),
+                        forall|vi: int| 0 <= vi < n ==> #[trigger] row.spec_index(vi) == self.spec_edge(u as int, vi),
                         count as nat == spec_count_true(edge_fn, v as int),
                         edge_fn == (|v: int| self.spec_edge(u as int, v)),
                         spec_count_true(edge_fn, n as int) <= usize::MAX as nat,
@@ -280,13 +280,13 @@ broadcast use {
                     n as nat == self.spec_n(),
                     u < self.spec_n(),
                     row.spec_len() == n,
-                    forall|vi: int| #![auto] 0 <= vi < n ==> row.spec_index(vi) == self.spec_edge(u as int, vi),
-                    forall|k: int| #![auto] 0 <= k < nvec@.len() as int
-                        ==> nvec@[k] < n
+                    forall|vi: int| 0 <= vi < n ==> #[trigger] row.spec_index(vi) == self.spec_edge(u as int, vi),
+                    forall|k: int| 0 <= k < nvec@.len() as int
+                        ==> #[trigger] nvec@[k] < n
                             && self.spec_edge(u as int, nvec@[k] as int),
-                    forall|j: int| #![auto] 0 <= j < v && self.spec_edge(u as int, j)
-                        ==> exists|k: int| #![auto]
-                            0 <= k < nvec@.len() as int && nvec@[k] == j as N,
+                    forall|j: int| 0 <= j < v && #[trigger] self.spec_edge(u as int, j)
+                        ==> exists|k: int|
+                            0 <= k < nvec@.len() as int && #[trigger] nvec@[k] == j as N,
                 decreases n - v
             {
                 let val = *row.nth(v);
@@ -298,7 +298,7 @@ broadcast use {
                 }
                 proof {
                     assert forall|k: int| 0 <= k < old_nvec_len as int
-                        implies nvec@[k] == pre_push[k]
+                        implies nvec@[k] == #[trigger] pre_push[k]
                     by {};
                     assert forall|j: int| 0 <= j < (v as int + 1) && self.spec_edge(u as int, j)
                         implies exists|k: int| 0 <= k < nvec@.len() as int && nvec@[k] == j as N
@@ -342,7 +342,7 @@ broadcast use {
                     self.spec_wf(),
                     n as nat == self.spec_n(),
                     row.spec_len() == n,
-                    forall|vi: int| #![auto] 0 <= vi < n ==> row.spec_index(vi) == self.spec_edge(u as int, vi),
+                    forall|vi: int| 0 <= vi < n ==> #[trigger] row.spec_index(vi) == self.spec_edge(u as int, vi),
                     count as nat == spec_count_true(edge_fn, v as int),
                     edge_fn == (|v: int| self.spec_edge(u as int, v)),
                     spec_count_true(edge_fn, n as int) <= n as nat,
@@ -364,8 +364,8 @@ broadcast use {
                     requires i < n
                     ensures
                         r.spec_len() == n,
-                        forall|j: int| #![auto] 0 <= j < n ==>
-                            r.spec_index(j) == (i as int != j && !self.matrix.spec_index(i as int).spec_index(j))
+                        forall|j: int| 0 <= j < n ==>
+                            #[trigger] r.spec_index(j) == (i as int != j && !self.matrix.spec_index(i as int).spec_index(j))
                 {
                     let row = self.matrix.nth(i);
                     ArraySeqMtPerS::tabulate(
@@ -385,4 +385,15 @@ broadcast use {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for AdjMatrixGraphMtPer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("AdjMatrixGraphMtPer")
+                .field("matrix", &self.matrix)
+                .field("n", &self.n)
+                .finish()
+        }
+    }
 }

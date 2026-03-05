@@ -100,7 +100,10 @@ pub mod EdgeSetGraphMtPer {
         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
 
         /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1]
-        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(lg m) — parallel filter + parallel neighbor set build via union.
+        /// - Work Θ(m), Span Θ(lg m) — parallel filter + parallel neighbor set build via union.
+        /// Requires external_body: filter's spec only ensures subset_of, cannot capture
+        /// predicate semantics (Verus limitation: runtime Fn closures have no spec-level interpretation).
+        /// The ensures needs exact set equality with a comprehension over filtered edges.
         #[verifier::external_body]
         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
             let u_clone = u.clone();

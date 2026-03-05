@@ -85,7 +85,7 @@ broadcast use {
         fn new(n: N) -> (empty: Self)
             ensures
                 empty.spec_num_vertices() == n,
-                forall|i: int| #![auto] 0 <= i < n ==> empty.spec_degree(i) == 0;
+                forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;
 
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: N)
@@ -108,16 +108,16 @@ broadcast use {
         fn has_edge(&self, u: N, v: N) -> (found: B)
             requires u < self.spec_num_vertices()
             ensures found == exists|j: int|
-                #![auto] 0 <= j < self.spec_degree(u as int)
-                && self.spec_neighbor(u as int, j) == v;
+                0 <= j < self.spec_degree(u as int)
+                && #[trigger] self.spec_neighbor(u as int, j) == v;
 
         /// Work Theta(1), Span Theta(1)
         fn out_neighbors(&self, u: N) -> (neighbors: &ArraySeqMtPerS<N>)
             requires u < self.spec_num_vertices()
             ensures
                 neighbors.spec_len() == self.spec_degree(u as int),
-                forall|j: int| #![auto] 0 <= j < neighbors.spec_len()
-                    ==> neighbors.spec_index(j) == self.spec_neighbor(u as int, j);
+                forall|j: int| 0 <= j < neighbors.spec_len()
+                    ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);
 
         /// Work Theta(1), Span Theta(1)
         fn out_degree(&self, u: N) -> (d: N)
@@ -192,10 +192,10 @@ broadcast use {
                     u < self.spec_num_vertices(),
                     len as nat == neighbors.spec_len(),
                     len as nat == self.spec_degree(u as int),
-                    forall|j: int| #![auto] 0 <= j < len as int
-                        ==> neighbors.spec_index(j) == self.spec_neighbor(u as int, j),
-                    forall|j: int| #![auto] 0 <= j < i
-                        ==> neighbors.spec_index(j) != v,
+                    forall|j: int| 0 <= j < len as int
+                        ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j),
+                    forall|j: int| 0 <= j < i
+                        ==> #[trigger] neighbors.spec_index(j) != v,
                 decreases len - i
             {
                 if *neighbors.nth(i) == v {
@@ -217,4 +217,12 @@ broadcast use {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for AdjSeqGraphMtPer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("AdjSeqGraphMtPer").field("adj", &self.adj).finish()
+        }
+    }
 }

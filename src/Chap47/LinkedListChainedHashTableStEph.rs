@@ -41,10 +41,16 @@ pub mod LinkedListChainedHashTableStEph {
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan for duplicate key, n = chain length.
             fn insert(&mut self, key: Key, value: Value)
-                ensures self.seq@.len() >= 1,
+                ensures
+                    self.seq@.len() >= 1,
+                    old(self).seq@.len() <= self.seq@.len(),
+                    self.seq@.len() <= old(self).seq@.len() + 1,
             {
                 let mut i: usize = 0;
                 while i < self.seq.len()
+                    invariant
+                        i <= self.seq@.len(),
+                        self.seq@ == old(self).seq@,
                     decreases self.seq.len() - i,
                 {
                     if self.seq[i].0 == key {
@@ -74,9 +80,14 @@ pub mod LinkedListChainedHashTableStEph {
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + Vec::remove, n = chain length.
-            fn delete(&mut self, key: &Key) -> (deleted: bool) {
+            fn delete(&mut self, key: &Key) -> (deleted: bool)
+                ensures !deleted ==> self.seq@ == old(self).seq@,
+            {
                 let mut i: usize = 0;
                 while i < self.seq.len()
+                    invariant
+                        i <= self.seq@.len(),
+                        self.seq@ == old(self).seq@,
                     decreases self.seq.len() - i,
                 {
                     if self.seq[i].0 == *key {

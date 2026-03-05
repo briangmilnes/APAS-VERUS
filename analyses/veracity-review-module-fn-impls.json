@@ -1,202 +1,786 @@
 [
   {
     "id": 1,
-    "function": "eq",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "42-43",
-    "spec_strength": "unknown",
-    "snippet": "            fn eq(&self, other: &Self) -> (r: bool)\n                ensures r == (self@ == other@)"
+    "function": "new_mceph_dim_lock",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "67-69",
+    "spec_strength": "hole",
+    "snippet": "    fn new_mceph_dim_lock(val: Vec<MatrixDim>)\n        -> (lock: RwLock<Vec<MatrixDim>, MatrixChainMtEphDimInv>)\n        requires val@.len() <= usize::MAX as nat"
   },
   {
     "id": 2,
-    "function": "vertex_bridges_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "56-60",
-    "spec_strength": "",
-    "snippet": "            fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(\n                edges: Arc<Vec<LabeledEdge<V>>>,\n                start: usize,\n                end: usize,\n            ) -> HashMap<V, (V, WrappedF64, usize)>;"
+    "function": "new_mceph_memo_lock",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "85-91",
+    "spec_strength": "hole",
+    "snippet": "    fn new_mceph_memo_lock(\n        val: HashMapWithViewPlus<Pair<usize, usize>, usize>,\n        Ghost(dims): Ghost<Seq<MatrixDim>>,\n    ) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MatrixChainMtEphMemoInv>)\n        requires\n            val@.dom().finite(),\n            spec_memo_correct(dims, val@),"
   },
   {
     "id": 3,
-    "function": "bridge_star_partition_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "64-69",
-    "spec_strength": "",
-    "snippet": "            fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(\n                vertices_vec: Vec<V>,\n                bridges: HashMap<V, (V, WrappedF64, usize)>,\n                seed: u64,\n                round: usize,\n            ) -> (SetStEph<V>, HashMap<V, (V, WrappedF64, usize)>);"
+    "function": "new",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "151",
+    "spec_strength": "hole",
+    "snippet": "        fn new() -> (mc: Self);"
   },
   {
     "id": 4,
-    "function": "boruvka_mst_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "73-79",
-    "spec_strength": "",
-    "snippet": "            fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(\n                vertices_vec: Vec<V>,\n                edges_vec: Vec<LabeledEdge<V>>,\n                mst_labels: SetStEph<usize>,\n                seed: u64,\n                round: usize,\n            ) -> SetStEph<usize>;"
+    "function": "from_dimensions",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "152",
+    "spec_strength": "hole",
+    "snippet": "        fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self);"
   },
   {
     "id": 5,
-    "function": "boruvka_mst_mt_with_seed",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "83-87",
-    "spec_strength": "",
-    "snippet": "            fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(\n                vertices: &SetStEph<V>,\n                edges: &SetStEph<LabeledEdge<V>>,\n                seed: u64,\n            ) -> SetStEph<usize>;"
+    "function": "from_dim_pairs",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "153",
+    "spec_strength": "hole",
+    "snippet": "        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self);"
   },
   {
     "id": 6,
-    "function": "mst_weight",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "91-94",
-    "spec_strength": "",
-    "snippet": "            fn mst_weight<V: StT + Hash>(\n                edges: &SetStEph<LabeledEdge<V>>,\n                mst_labels: &SetStEph<usize>,\n            ) -> WrappedF64;"
+    "function": "optimal_cost",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "154",
+    "spec_strength": "hole",
+    "snippet": "        fn optimal_cost(&mut self) -> (cost: usize);"
   },
   {
     "id": 7,
-    "function": "partial_cmp",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "105-107",
-    "spec_strength": "",
-    "snippet": "        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {\n            Some(self.cmp(other))\n        }"
+    "function": "dimensions",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "155",
+    "spec_strength": "hole",
+    "snippet": "        fn dimensions(&self) -> (dims: Vec<MatrixDim>);"
   },
   {
     "id": 8,
-    "function": "cmp",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "111-116",
-    "spec_strength": "",
-    "snippet": "        fn cmp(&self, other: &Self) -> std::cmp::Ordering {\n            self.0.cmp(&other.0)\n                .then_with(|| self.1.cmp(&other.1))\n                .then_with(|| self.2.val.partial_cmp(&other.2.val).unwrap_or(std::cmp::Ordering::Equal))\n                .then_with(|| self.3.cmp(&other.3))\n        }"
+    "function": "set_dimension",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "156",
+    "spec_strength": "hole",
+    "snippet": "        fn set_dimension(&mut self, index: usize, dim: MatrixDim);"
   },
   {
     "id": 9,
-    "function": "hash",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "120-125",
-    "spec_strength": "",
-    "snippet": "        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {\n            self.0.hash(state);\n            self.1.hash(state);\n            self.2.val.to_bits().hash(state);\n            self.3.hash(state);\n        }"
+    "function": "update_dimension",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "157",
+    "spec_strength": "hole",
+    "snippet": "        fn update_dimension(&mut self, index: usize, rows: usize, cols: usize);"
   },
   {
     "id": 10,
-    "function": "hash_coin",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "140-151",
-    "spec_strength": "",
-    "snippet": "    // Hash-based coin flip: deterministic from (seed, round, vertex index).\n    // Replaces sequential StdRng coin flips with a parallelizable hash function.\n    #[cfg(not(verus_keep_ghost))]\n    fn hash_coin(seed: u64, round: usize, index: usize) -> bool {\n        use std::hash::{Hash, Hasher};\n        use std::collections::hash_map::DefaultHasher;\n        let mut hasher = DefaultHasher::new();\n        seed.hash(&mut hasher);\n        round.hash(&mut hasher);\n        index.hash(&mut hasher);\n        hasher.finish() % 2 == 0\n    }"
+    "function": "num_matrices",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "158",
+    "spec_strength": "hole",
+    "snippet": "        fn num_matrices(&self) -> (n: usize);"
   },
   {
     "id": 11,
-    "function": "hash_coin_flips_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "153-186",
-    "spec_strength": "",
-    "snippet": "    /// Parallel coin flip generation using divide-and-conquer.\n    ///\n    /// - Work O(n), Span O(log n) — parallel hash-based coin generation via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        seed: u64,\n        round: usize,\n        start: usize,\n        end: usize,\n    ) -> HashMap<V, bool> {\n        let size = end - start;\n        if size == 0 {\n            return HashMap::new();\n        }\n        if size == 1 {\n            let mut coins = HashMap::new();\n            let _ = coins.insert(vertices[start].clone(), hash_coin(seed, round, start));\n            return coins;\n        }\n\n        let mid = start + size / 2;\n        let v1 = vertices.clone();\n        let v2 = vertices;\n\n        let pair = ParaPair!(\n            move || hash_coin_flips_mt(v1, seed, round, start, mid),\n            move || hash_coin_flips_mt(v2, seed, round, mid, end)\n        );\n\n        let mut merged = pair.0;\n        merged.extend(pair.1);\n        merged\n    }"
+    "function": "clear_memo",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "159",
+    "spec_strength": "hole",
+    "snippet": "        fn clear_memo(&mut self);"
   },
   {
     "id": 12,
-    "function": "compute_remaining_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "188-224",
-    "spec_strength": "",
-    "snippet": "    /// Parallel remaining-vertex filter using divide-and-conquer.\n    ///\n    /// - Work O(n), Span O(log n) — parallel filter via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn compute_remaining_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,\n        start: usize,\n        end: usize,\n    ) -> Vec<V> {\n        let size = end - start;\n        if size == 0 {\n            return Vec::new();\n        }\n        if size == 1 {\n            let v = &vertices[start];\n            if !partition.contains_key(v) {\n                return vec![v.clone()];\n            }\n            return Vec::new();\n        }\n\n        let mid = start + size / 2;\n        let v1 = vertices.clone();\n        let p1 = partition.clone();\n        let v2 = vertices;\n        let p2 = partition;\n\n        let pair = ParaPair!(\n            move || compute_remaining_mt(v1, p1, start, mid),\n            move || compute_remaining_mt(v2, p2, mid, end)\n        );\n\n        let mut left = pair.0;\n        left.extend(pair.1);\n        left\n    }"
+    "function": "memo_size",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "160",
+    "spec_strength": "hole",
+    "snippet": "        fn memo_size(&self) -> (n: usize);"
   },
   {
     "id": 13,
-    "function": "collect_mst_labels_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "226-261",
-    "spec_strength": "",
-    "snippet": "    /// Parallel MST label collection using divide-and-conquer.\n    ///\n    /// - Work O(n), Span O(log n) — parallel label extraction via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + 'static>(\n        keys: Arc<Vec<V>>,\n        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,\n        start: usize,\n        end: usize,\n    ) -> Vec<usize> {\n        let size = end - start;\n        if size == 0 {\n            return Vec::new();\n        }\n        if size == 1 {\n            if let Some((_, _, label)) = partition.get(&keys[start]) {\n                return vec![*label];\n            }\n            return Vec::new();\n        }\n\n        let mid = start + size / 2;\n        let k1 = keys.clone();\n        let p1 = partition.clone();\n        let k2 = keys;\n        let p2 = partition;\n\n        let pair = ParaPair!(\n            move || collect_mst_labels_mt(k1, p1, start, mid),\n            move || collect_mst_labels_mt(k2, p2, mid, end)\n        );\n\n        let mut left = pair.0;\n        left.extend(pair.1);\n        left\n    }"
+    "function": "multiply_cost",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "161",
+    "spec_strength": "hole",
+    "snippet": "        fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize);"
   },
   {
     "id": 14,
-    "function": "build_partition_map_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "263-303",
-    "spec_strength": "",
-    "snippet": "    /// Parallel partition map construction using divide-and-conquer.\n    /// Maps tails→heads from partition, remaining→identity.\n    ///\n    /// - Work O(n), Span O(log n) — parallel map building via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn build_partition_map_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,\n        start: usize,\n        end: usize,\n    ) -> HashMap<V, V> {\n        let size = end - start;\n        if size == 0 {\n            return HashMap::new();\n        }\n        if size == 1 {\n            let v = &vertices[start];\n            let mut heads = HashMap::new();\n            if let Some((head, _, _)) = partition.get(v) {\n                let _ = heads.insert(v.clone(), head.clone());\n            } else {\n                let _ = heads.insert(v.clone(), v.clone());\n            }\n            return heads;\n        }\n\n        let mid = start + size / 2;\n        let v1 = vertices.clone();\n        let p1 = partition.clone();\n        let v2 = vertices;\n        let p2 = partition;\n\n        let pair = ParaPair!(\n            move || build_partition_map_mt(v1, p1, start, mid),\n            move || build_partition_map_mt(v2, p2, mid, end)\n        );\n\n        let mut merged = pair.0;\n        merged.extend(pair.1);\n        merged\n    }"
+    "function": "matrix_chain_rec",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "162",
+    "spec_strength": "hole",
+    "snippet": "        fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize);"
   },
   {
     "id": 15,
-    "function": "filter_tail_to_head_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "404-454",
-    "spec_strength": "",
-    "snippet": "    /// Parallel filter: find edges from Tail→Head.\n    ///\n    /// - Claude-Opus-4.6: Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        bridges: Arc<HashMap<V, (V, WrappedF64, usize)>>,\n        coin_flips: Arc<HashMap<V, bool>>,\n        start: usize,\n        end: usize,\n    ) -> HashMap<V, (V, WrappedF64, usize)> {\n        let size = end - start;\n        if size == 0 {\n            return HashMap::new();\n        }\n\n        if size == 1 {\n            // Base case: check single vertex.\n            let u = &vertices[start];\n            if let Some((v, w, label)) = bridges.get(u) {\n                let u_heads = coin_flips.get(u).copied().unwrap_or(false);\n                let v_heads = coin_flips.get(v).copied().unwrap_or(false);\n\n                if !u_heads && v_heads {\n                    let mut min_edges = HashMap::new();\n                    let _ = min_edges.insert(u.clone(), (v.clone(), *w, *label));\n                    return min_edges;\n                }\n            }\n            return HashMap::new();\n        }\n\n        // Divide and conquer.\n        let mid = start + size / 2;\n        let verts1 = vertices.clone();\n        let bridges1 = bridges.clone();\n        let flips1 = coin_flips.clone();\n        let verts2 = vertices;\n        let bridges2 = bridges;\n        let flips2 = coin_flips;\n\n        let pair = ParaPair!(\n            move || filter_tail_to_head_mt(verts1, bridges1, flips1, start, mid),\n            move || filter_tail_to_head_mt(verts2, bridges2, flips2, mid, end)\n        );\n\n        // Merge.\n        let mut merged = pair.0;\n        merged.extend(pair.1);\n        merged\n    }"
+    "function": "parallel_min_reduction",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "163-167",
+    "spec_strength": "hole",
+    "snippet": "        fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize)\n            requires costs@.len() > 0,\n            ensures\n                costs@.contains(min),\n                forall|i: int| 0 <= i < costs@.len() ==> min <= costs@[i];"
   },
   {
     "id": 16,
-    "function": "reroute_edges_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "519-561",
-    "spec_strength": "",
-    "snippet": "    /// Parallel edge re-routing: map edges to new endpoints and remove self-edges.\n    ///\n    /// - Claude-Opus-4.6: Work O(m), Span O(log m) — parallel divide-and-conquer via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(\n        edges: Arc<Vec<LabeledEdge<V>>>,\n        partition: Arc<HashMap<V, V>>,\n        start: usize,\n        end: usize,\n    ) -> Vec<LabeledEdge<V>> {\n        let size = end - start;\n        if size == 0 {\n            return Vec::new();\n        }\n\n        if size == 1 {\n            let LabeledEdge(u, v, w, label) = &edges[start];\n            let new_u = partition.get(u).cloned().unwrap_or_else(|| u.clone());\n            let new_v = partition.get(v).cloned().unwrap_or_else(|| v.clone());\n\n            if new_u != new_v {\n                return vec![LabeledEdge(new_u, new_v, *w, *label)];\n            }\n            return Vec::new();\n        }\n\n        // Divide and conquer.\n        let mid = start + size / 2;\n        let edges1 = edges.clone();\n        let part1 = partition.clone();\n        let edges2 = edges;\n        let part2 = partition;\n\n        let pair = ParaPair!(move || reroute_edges_mt(edges1, part1, start, mid), move || {\n            reroute_edges_mt(edges2, part2, mid, end)\n        });\n\n        // Merge.\n        let mut left_result = pair.0;\n        let mut right_result = pair.1;\n        left_result.append(&mut right_result);\n        left_result\n    }"
+    "function": "eq",
+    "file": "Chap50/MatrixChainMtEph.rs",
+    "lines": "368",
+    "spec_strength": "hole",
+    "snippet": "        fn eq(&self, other: &Self) -> (r: bool) {"
   },
   {
     "id": 17,
-    "function": "eq",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "67-68",
-    "spec_strength": "unknown",
-    "snippet": "        fn eq(&self, other: &Self) -> (r: bool)\n            ensures r == (self@ == other@)"
+    "function": "new_mcper_memo_lock",
+    "file": "Chap50/MatrixChainMtPer.rs",
+    "lines": "80-86",
+    "spec_strength": "hole",
+    "snippet": "    fn new_mcper_memo_lock(\n        val: HashMapWithViewPlus<Pair<usize, usize>, usize>,\n        Ghost(dims): Ghost<Seq<MatrixDim>>,\n    ) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MatrixChainMtPerMemoInv>)\n        requires\n            val@.dom().finite(),\n            spec_memo_correct(dims, val@),"
   },
   {
     "id": 18,
-    "function": "vertex_bridges",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "106-114",
-    "spec_strength": "unknown",
-    "snippet": "        fn vertex_bridges<V: StT + Hash + Ord>(\n            edges: &SetStEph<LabeledEdge<V>>,\n        ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)\n            requires\n                obeys_key_model::<V>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,\n                spec_all_weights_finite(edges@),\n            ensures\n                forall|v: V| #[trigger] bridges@.contains_key(v@) ==> {"
+    "function": "new",
+    "file": "Chap50/MatrixChainMtPer.rs",
+    "lines": "153-154",
+    "spec_strength": "hole",
+    "snippet": "        fn new() -> (mc: Self)\n            ensures mc@.dimensions.len() == 0;"
   },
   {
     "id": 19,
-    "function": "bridge_star_partition",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "121-125",
+    "function": "from_dimensions",
+    "file": "Chap50/MatrixChainMtPer.rs",
+    "lines": "156-157",
     "spec_strength": "hole",
-    "snippet": "        fn bridge_star_partition<V: StT + Hash + Ord>(\n            vertices: &SetStEph<V>,\n            bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,\n            rng: &mut StdRng,\n        ) -> (mst_edges: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>));"
+    "snippet": "        fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)\n            ensures mc@.dimensions =~= dimensions@;"
   },
   {
     "id": 20,
-    "function": "boruvka_mst",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "129-134",
+    "function": "from_dim_pairs",
+    "file": "Chap50/MatrixChainMtPer.rs",
+    "lines": "159-160",
     "spec_strength": "hole",
-    "snippet": "        fn boruvka_mst<V: StT + Hash + Ord>(\n            vertices: &SetStEph<V>,\n            edges: &SetStEph<LabeledEdge<V>>,\n            mst_labels: SetStEph<usize>,\n            rng: &mut StdRng,\n        ) -> (mst: SetStEph<usize>);"
+    "snippet": "        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)\n            ensures mc@.dimensions.len() == dim_pairs@.len();"
   },
   {
     "id": 21,
-    "function": "boruvka_mst_with_seed",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "138-142",
+    "function": "optimal_cost",
+    "file": "Chap50/MatrixChainMtPer.rs",
+    "lines": "162-169",
     "spec_strength": "hole",
-    "snippet": "        fn boruvka_mst_with_seed<V: StT + Hash + Ord>(\n            vertices: &SetStEph<V>,\n            edges: &SetStEph<LabeledEdge<V>>,\n            seed: u64,\n        ) -> (mst: SetStEph<usize>);"
+    "snippet": "        fn optimal_cost(&self) -> (cost: usize)\n            requires\n                spec_dims_bounded(self@.dimensions),\n                self@.dimensions.len() > 1 ==>\n                    spec_costs_fit(self@.dimensions, 0, (self@.dimensions.len() - 1) as int),\n            ensures\n                cost as nat == if self@.dimensions.len() <= 1 { 0 }\n                    else { spec_chain_cost(self@.dimensions, 0, (self@.dimensions.len() - 1) as int, 0) };"
   },
   {
     "id": 22,
-    "function": "mst_weight",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "146-149",
+    "function": "dimensions",
+    "file": "Chap50/MatrixChainMtPer.rs",
+    "lines": "171",
     "spec_strength": "",
-    "snippet": "        fn mst_weight<V: StT + Hash>(\n            edges: &SetStEph<LabeledEdge<V>>,\n            mst_labels: &SetStEph<usize>,\n        ) -> (total: WrappedF64);"
+    "snippet": "        fn dimensions(&self) -> (dims: &Arc<Vec<MatrixDim>>);"
   },
   {
     "id": 23,
-    "function": "partial_cmp",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "369-371",
-    "spec_strength": "",
-    "snippet": "        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {\n            Some(self.cmp(other))\n        }"
+    "function": "num_matrices",
+    "file": "Chap50/MatrixChainMtPer.rs",
+    "lines": "173-174",
+    "spec_strength": "unknown",
+    "snippet": "        fn num_matrices(&self) -> (n: usize)\n            ensures n == self@.dimensions.len();"
   },
   {
     "id": 24,
-    "function": "cmp",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "375-380",
-    "spec_strength": "",
-    "snippet": "        fn cmp(&self, other: &Self) -> std::cmp::Ordering {\n            self.0.cmp(&other.0)\n                .then_with(|| self.1.cmp(&other.1))\n                .then_with(|| self.2.val.partial_cmp(&other.2.val).unwrap_or(std::cmp::Ordering::Equal))\n                .then_with(|| self.3.cmp(&other.3))\n        }"
+    "function": "memo_size",
+    "file": "Chap50/MatrixChainMtPer.rs",
+    "lines": "176",
+    "spec_strength": "hole",
+    "snippet": "        fn memo_size(&self) -> (n: usize);"
   },
   {
     "id": 25,
-    "function": "hash",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "384-389",
+    "function": "multiply_cost",
+    "file": "Chap50/MatrixChainMtPer.rs",
+    "lines": "178-186",
+    "spec_strength": "unknown",
+    "snippet": "        fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize)\n            requires\n                i < self@.dimensions.len(),\n                k < self@.dimensions.len(),\n                j < self@.dimensions.len(),\n                (self@.dimensions[i as int].rows as nat) * (self@.dimensions[k as int].cols as nat) <= usize::MAX as nat,\n                spec_multiply_cost(self@.dimensions, i as int, k as int, j as int) <= usize::MAX as nat,\n            ensures\n                cost as nat == spec_multiply_cost(self@.dimensions, i as int, k as int, j as int);"
+  },
+  {
+    "id": 26,
+    "function": "matrix_chain_rec",
+    "file": "Chap50/MatrixChainMtPer.rs",
+    "lines": "188-195",
+    "spec_strength": "hole",
+    "snippet": "        fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize)\n            requires\n                i <= j,\n                j < self@.dimensions.len(),\n                spec_dims_bounded(self@.dimensions),\n                spec_costs_fit(self@.dimensions, i as int, j as int),\n            ensures\n                cost as nat == spec_chain_cost(self@.dimensions, i as int, j as int, i as int);"
+  },
+  {
+    "id": 27,
+    "function": "parallel_min_reduction",
+    "file": "Chap50/MatrixChainMtPer.rs",
+    "lines": "197-201",
+    "spec_strength": "hole",
+    "snippet": "        fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize)\n            requires costs@.len() > 0,\n            ensures\n                costs@.contains(min),\n                forall|i: int| 0 <= i < costs@.len() ==> min <= costs@[i];"
+  },
+  {
+    "id": 28,
+    "function": "eq",
+    "file": "Chap50/MatrixChainMtPer.rs",
+    "lines": "363-364",
+    "spec_strength": "hole",
+    "snippet": "        fn eq(&self, other: &Self) -> (r: bool)\n            ensures r == (self@ == other@)"
+  },
+  {
+    "id": 29,
+    "function": "new",
+    "file": "Chap50/MatrixChainStEph.rs",
+    "lines": "136-139",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (mc: Self)\n            ensures\n                mc@.dimensions.len() == 0,\n                mc@.memo =~= Map::<(usize, usize), usize>::empty();"
+  },
+  {
+    "id": 30,
+    "function": "from_dimensions",
+    "file": "Chap50/MatrixChainStEph.rs",
+    "lines": "141-144",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)\n            ensures\n                mc@.dimensions =~= dimensions@,\n                mc@.memo =~= Map::<(usize, usize), usize>::empty();"
+  },
+  {
+    "id": 31,
+    "function": "from_dim_pairs",
+    "file": "Chap50/MatrixChainStEph.rs",
+    "lines": "146-149",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)\n            ensures\n                mc@.dimensions.len() == dim_pairs@.len(),\n                mc@.memo =~= Map::<(usize, usize), usize>::empty();"
+  },
+  {
+    "id": 32,
+    "function": "optimal_cost",
+    "file": "Chap50/MatrixChainStEph.rs",
+    "lines": "151-159",
+    "spec_strength": "unknown",
+    "snippet": "        fn optimal_cost(&mut self) -> (cost: usize)\n            requires\n                spec_dims_bounded(old(self)@.dimensions),\n                old(self)@.dimensions.len() > 1 ==>\n                    spec_costs_fit(old(self)@.dimensions, 0, (old(self)@.dimensions.len() - 1) as int),\n            ensures\n                self@.dimensions =~= old(self)@.dimensions,\n                cost as nat == if old(self)@.dimensions.len() <= 1 { 0 }\n                    else { spec_chain_cost(old(self)@.dimensions, 0, (old(self)@.dimensions.len() - 1) as int, 0) };"
+  },
+  {
+    "id": 33,
+    "function": "dimensions",
+    "file": "Chap50/MatrixChainStEph.rs",
+    "lines": "161-162",
+    "spec_strength": "unknown",
+    "snippet": "        fn dimensions(&self) -> (dims: &Vec<MatrixDim>)\n            ensures dims@ =~= self@.dimensions;"
+  },
+  {
+    "id": 34,
+    "function": "num_matrices",
+    "file": "Chap50/MatrixChainStEph.rs",
+    "lines": "164-165",
+    "spec_strength": "unknown",
+    "snippet": "        fn num_matrices(&self) -> (n: usize)\n            ensures n == self@.dimensions.len();"
+  },
+  {
+    "id": 35,
+    "function": "set_dimension",
+    "file": "Chap50/MatrixChainStEph.rs",
+    "lines": "167-171",
+    "spec_strength": "unknown",
+    "snippet": "        fn set_dimension(&mut self, index: usize, dim: MatrixDim)\n            requires index < old(self)@.dimensions.len(),\n            ensures\n                self@.dimensions =~= old(self)@.dimensions.update(index as int, dim),\n                self@.memo =~= Map::<(usize, usize), usize>::empty();"
+  },
+  {
+    "id": 36,
+    "function": "update_dimension",
+    "file": "Chap50/MatrixChainStEph.rs",
+    "lines": "173-178",
+    "spec_strength": "unknown",
+    "snippet": "        fn update_dimension(&mut self, index: usize, rows: usize, cols: usize)\n            requires index < old(self)@.dimensions.len(),\n            ensures\n                self@.dimensions =~= old(self)@.dimensions.update(\n                    index as int, MatrixDim { rows, cols }),\n                self@.memo =~= Map::<(usize, usize), usize>::empty();"
+  },
+  {
+    "id": 37,
+    "function": "clear_memo",
+    "file": "Chap50/MatrixChainStEph.rs",
+    "lines": "180-183",
+    "spec_strength": "unknown",
+    "snippet": "        fn clear_memo(&mut self)\n            ensures\n                self@.dimensions =~= old(self)@.dimensions,\n                self@.memo =~= Map::<(usize, usize), usize>::empty();"
+  },
+  {
+    "id": 38,
+    "function": "memo_size",
+    "file": "Chap50/MatrixChainStEph.rs",
+    "lines": "185-186",
+    "spec_strength": "unknown",
+    "snippet": "        fn memo_size(&self) -> (n: usize)\n            ensures n == self@.memo.len();"
+  },
+  {
+    "id": 39,
+    "function": "multiply_cost",
+    "file": "Chap50/MatrixChainStEph.rs",
+    "lines": "188-196",
+    "spec_strength": "unknown",
+    "snippet": "        fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize)\n            requires\n                i < self@.dimensions.len(),\n                k < self@.dimensions.len(),\n                j < self@.dimensions.len(),\n                (self@.dimensions[i as int].rows as nat) * (self@.dimensions[k as int].cols as nat) <= usize::MAX as nat,\n                spec_multiply_cost(self@.dimensions, i as int, k as int, j as int) <= usize::MAX as nat,\n            ensures\n                cost as nat == spec_multiply_cost(self@.dimensions, i as int, k as int, j as int);"
+  },
+  {
+    "id": 40,
+    "function": "matrix_chain_rec",
+    "file": "Chap50/MatrixChainStEph.rs",
+    "lines": "198-211",
+    "spec_strength": "unknown",
+    "snippet": "        fn matrix_chain_rec(&mut self, i: usize, j: usize) -> (cost: usize)\n            requires\n                i <= j,\n                j < old(self)@.dimensions.len(),\n                spec_dims_bounded(old(self)@.dimensions),\n                spec_costs_fit(old(self)@.dimensions, i as int, j as int),\n                spec_memo_correct(old(self)@.dimensions, old(self)@.memo),\n            ensures\n                self@.dimensions =~= old(self)@.dimensions,\n                self@.memo.contains_key((i, j)),\n                self@.memo[(i, j)] == cost,\n                cost as nat == spec_chain_cost(old(self)@.dimensions, i as int, j as int, i as int),\n                spec_memo_correct(self@.dimensions, self@.memo),\n            decreases j - i;"
+  },
+  {
+    "id": 41,
+    "function": "eq",
+    "file": "Chap50/MatrixChainStEph.rs",
+    "lines": "382-383",
+    "spec_strength": "hole",
+    "snippet": "        fn eq(&self, other: &Self) -> (r: bool)\n            ensures r == (self@ == other@)"
+  },
+  {
+    "id": 42,
+    "function": "new",
+    "file": "Chap50/MatrixChainStPer.rs",
+    "lines": "136-139",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (mc: Self)\n            ensures\n                mc@.dimensions.len() == 0,\n                mc@.memo =~= Map::<(usize, usize), usize>::empty();"
+  },
+  {
+    "id": 43,
+    "function": "from_dimensions",
+    "file": "Chap50/MatrixChainStPer.rs",
+    "lines": "141-144",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)\n            ensures\n                mc@.dimensions =~= dimensions@,\n                mc@.memo =~= Map::<(usize, usize), usize>::empty();"
+  },
+  {
+    "id": 44,
+    "function": "from_dim_pairs",
+    "file": "Chap50/MatrixChainStPer.rs",
+    "lines": "146-149",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)\n            ensures\n                mc@.dimensions.len() == dim_pairs@.len(),\n                mc@.memo =~= Map::<(usize, usize), usize>::empty();"
+  },
+  {
+    "id": 45,
+    "function": "optimal_cost",
+    "file": "Chap50/MatrixChainStPer.rs",
+    "lines": "151-158",
+    "spec_strength": "unknown",
+    "snippet": "        fn optimal_cost(&self) -> (cost: usize)\n            requires\n                spec_dims_bounded(self@.dimensions),\n                self@.dimensions.len() > 1 ==>\n                    spec_costs_fit(self@.dimensions, 0, (self@.dimensions.len() - 1) as int),\n            ensures\n                cost as nat == if self@.dimensions.len() <= 1 { 0 }\n                    else { spec_chain_cost(self@.dimensions, 0, (self@.dimensions.len() - 1) as int, 0) };"
+  },
+  {
+    "id": 46,
+    "function": "dimensions",
+    "file": "Chap50/MatrixChainStPer.rs",
+    "lines": "160-161",
+    "spec_strength": "unknown",
+    "snippet": "        fn dimensions(&self) -> (dims: &Vec<MatrixDim>)\n            ensures dims@ =~= self@.dimensions;"
+  },
+  {
+    "id": 47,
+    "function": "num_matrices",
+    "file": "Chap50/MatrixChainStPer.rs",
+    "lines": "163-164",
+    "spec_strength": "unknown",
+    "snippet": "        fn num_matrices(&self) -> (n: usize)\n            ensures n == self@.dimensions.len();"
+  },
+  {
+    "id": 48,
+    "function": "memo_size",
+    "file": "Chap50/MatrixChainStPer.rs",
+    "lines": "166-167",
+    "spec_strength": "unknown",
+    "snippet": "        fn memo_size(&self) -> (n: usize)\n            ensures n == self@.memo.len();"
+  },
+  {
+    "id": 49,
+    "function": "multiply_cost",
+    "file": "Chap50/MatrixChainStPer.rs",
+    "lines": "169-177",
+    "spec_strength": "unknown",
+    "snippet": "        fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize)\n            requires\n                i < self@.dimensions.len(),\n                k < self@.dimensions.len(),\n                j < self@.dimensions.len(),\n                (self@.dimensions[i as int].rows as nat) * (self@.dimensions[k as int].cols as nat) <= usize::MAX as nat,\n                spec_multiply_cost(self@.dimensions, i as int, k as int, j as int) <= usize::MAX as nat,\n            ensures\n                cost as nat == spec_multiply_cost(self@.dimensions, i as int, k as int, j as int);"
+  },
+  {
+    "id": 50,
+    "function": "matrix_chain_rec",
+    "file": "Chap50/MatrixChainStPer.rs",
+    "lines": "179-192",
+    "spec_strength": "unknown",
+    "snippet": "        fn matrix_chain_rec(&mut self, i: usize, j: usize) -> (cost: usize)\n            requires\n                i <= j,\n                j < old(self)@.dimensions.len(),\n                spec_dims_bounded(old(self)@.dimensions),\n                spec_costs_fit(old(self)@.dimensions, i as int, j as int),\n                spec_memo_correct(old(self)@.dimensions, old(self)@.memo),\n            ensures\n                self@.dimensions =~= old(self)@.dimensions,\n                self@.memo.contains_key((i, j)),\n                self@.memo[(i, j)] == cost,\n                cost as nat == spec_chain_cost(old(self)@.dimensions, i as int, j as int, i as int),\n                spec_memo_correct(self@.dimensions, self@.memo),\n            decreases j - i;"
+  },
+  {
+    "id": 51,
+    "function": "eq",
+    "file": "Chap50/MatrixChainStPer.rs",
+    "lines": "351-352",
+    "spec_strength": "hole",
+    "snippet": "        fn eq(&self, other: &Self) -> (r: bool)\n            ensures r == (self@ == other@)"
+  },
+  {
+    "id": 52,
+    "function": "new_obst_eph_keys_lock",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "44-45",
+    "spec_strength": "hole",
+    "snippet": "        fn new_obst_eph_keys_lock<T: MtVal>(val: Vec<KeyProb<T>>) -> (lock: RwLock<Vec<KeyProb<T>>, OptBSTMtEphKeysInv>)\n            requires val@.len() <= usize::MAX as nat"
+  },
+  {
+    "id": 53,
+    "function": "new_obst_eph_memo_lock",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "57-58",
+    "spec_strength": "hole",
+    "snippet": "        fn new_obst_eph_memo_lock(val: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtEphMemoInv>)\n            requires val@.dom().finite()"
+  },
+  {
+    "id": 54,
+    "function": "new",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "82",
+    "spec_strength": "hole",
+    "snippet": "        fn new() -> (empty: Self);"
+  },
+  {
+    "id": 55,
+    "function": "from_keys_probs",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "83",
+    "spec_strength": "hole",
+    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self);"
+  },
+  {
+    "id": 56,
+    "function": "from_key_probs",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "84",
+    "spec_strength": "hole",
+    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self);"
+  },
+  {
+    "id": 57,
+    "function": "optimal_cost",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "85",
+    "spec_strength": "hole",
+    "snippet": "        fn optimal_cost(&mut self) -> (cost: Probability) where T: Send + Sync + 'static;"
+  },
+  {
+    "id": 58,
+    "function": "keys",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "86",
+    "spec_strength": "hole",
+    "snippet": "        fn keys(&self) -> (keys: Vec<KeyProb<T>>);"
+  },
+  {
+    "id": 59,
+    "function": "set_key_prob",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "87",
+    "spec_strength": "hole",
+    "snippet": "        fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>);"
+  },
+  {
+    "id": 60,
+    "function": "update_prob",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "88",
+    "spec_strength": "hole",
+    "snippet": "        fn update_prob(&mut self, index: usize, prob: Probability);"
+  },
+  {
+    "id": 61,
+    "function": "num_keys",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "89",
+    "spec_strength": "hole",
+    "snippet": "        fn num_keys(&self) -> (count: usize);"
+  },
+  {
+    "id": 62,
+    "function": "clear_memo",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "90",
+    "spec_strength": "hole",
+    "snippet": "        fn clear_memo(&mut self);"
+  },
+  {
+    "id": 63,
+    "function": "memo_size",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "91",
+    "spec_strength": "hole",
+    "snippet": "        fn memo_size(&self) -> (count: usize);"
+  },
+  {
+    "id": 64,
+    "function": "parallel_min_reduction",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "97",
+    "spec_strength": "hole",
+    "snippet": "    fn parallel_min_reduction<T: MtVal>(table: &OBSTMtEphS<T>, costs: Vec<Probability>) -> (cost: Probability) {"
+  },
+  {
+    "id": 65,
+    "function": "obst_rec",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "122",
+    "spec_strength": "hole",
+    "snippet": "    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> (cost: Probability) {"
+  },
+  {
+    "id": 66,
+    "function": "eq`",
+    "file": "Chap50/OptBinSearchTreeMtEph.rs",
+    "lines": "271",
+    "spec_strength": "hole",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {"
+  },
+  {
+    "id": 67,
+    "function": "new_obst_per_memo_lock",
+    "file": "Chap50/OptBinSearchTreeMtPer.rs",
+    "lines": "46-47",
+    "spec_strength": "hole",
+    "snippet": "        fn new_obst_per_memo_lock(val: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtPerMemoInv>)\n            requires val@.dom().finite()"
+  },
+  {
+    "id": 68,
+    "function": "new",
+    "file": "Chap50/OptBinSearchTreeMtPer.rs",
+    "lines": "71",
+    "spec_strength": "hole",
+    "snippet": "        fn new() -> (empty: Self);"
+  },
+  {
+    "id": 69,
+    "function": "from_keys_probs",
+    "file": "Chap50/OptBinSearchTreeMtPer.rs",
+    "lines": "72",
+    "spec_strength": "hole",
+    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self);"
+  },
+  {
+    "id": 70,
+    "function": "from_key_probs",
+    "file": "Chap50/OptBinSearchTreeMtPer.rs",
+    "lines": "73",
+    "spec_strength": "hole",
+    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self);"
+  },
+  {
+    "id": 71,
+    "function": "optimal_cost",
+    "file": "Chap50/OptBinSearchTreeMtPer.rs",
+    "lines": "74",
+    "spec_strength": "hole",
+    "snippet": "        fn optimal_cost(&self) -> (cost: Probability) where T: Send + Sync + 'static;"
+  },
+  {
+    "id": 72,
+    "function": "keys",
+    "file": "Chap50/OptBinSearchTreeMtPer.rs",
+    "lines": "75",
+    "spec_strength": "hole",
+    "snippet": "        fn keys(&self) -> (keys: &Arc<Vec<KeyProb<T>>>);"
+  },
+  {
+    "id": 73,
+    "function": "num_keys",
+    "file": "Chap50/OptBinSearchTreeMtPer.rs",
+    "lines": "76",
+    "spec_strength": "hole",
+    "snippet": "        fn num_keys(&self) -> (count: usize);"
+  },
+  {
+    "id": 74,
+    "function": "memo_size",
+    "file": "Chap50/OptBinSearchTreeMtPer.rs",
+    "lines": "77",
+    "spec_strength": "hole",
+    "snippet": "        fn memo_size(&self) -> (count: usize);"
+  },
+  {
+    "id": 75,
+    "function": "parallel_min_reduction",
+    "file": "Chap50/OptBinSearchTreeMtPer.rs",
+    "lines": "83",
+    "spec_strength": "hole",
+    "snippet": "    fn parallel_min_reduction<T: MtVal>(table: &OBSTMtPerS<T>, costs: Vec<Probability>) -> (cost: Probability) {"
+  },
+  {
+    "id": 76,
+    "function": "obst_rec",
+    "file": "Chap50/OptBinSearchTreeMtPer.rs",
+    "lines": "108",
+    "spec_strength": "hole",
+    "snippet": "    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtPerS<T>, i: usize, l: usize) -> (cost: Probability) {"
+  },
+  {
+    "id": 77,
+    "function": "eq`",
+    "file": "Chap50/OptBinSearchTreeMtPer.rs",
+    "lines": "205",
+    "spec_strength": "hole",
+    "snippet": "        fn eq(&self, other: &Self) -> bool { self.keys == other.keys }"
+  },
+  {
+    "id": 78,
+    "function": "new",
+    "file": "Chap50/OptBinSearchTreeStEph.rs",
+    "lines": "93-96",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (empty: Self)\n            ensures\n                empty@.keys.len() == 0,\n                empty@.memo =~= Map::<(usize, usize), Probability>::empty();"
+  },
+  {
+    "id": 79,
+    "function": "from_keys_probs",
+    "file": "Chap50/OptBinSearchTreeStEph.rs",
+    "lines": "98-102",
+    "spec_strength": "hole",
+    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)\n            requires keys@.len() == probs@.len(),\n            ensures\n                constructed@.keys.len() == keys@.len(),\n                constructed@.memo =~= Map::<(usize, usize), Probability>::empty();"
+  },
+  {
+    "id": 80,
+    "function": "from_key_probs",
+    "file": "Chap50/OptBinSearchTreeStEph.rs",
+    "lines": "104-107",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)\n            ensures\n                constructed@.keys =~= key_probs@,\n                constructed@.memo =~= Map::<(usize, usize), Probability>::empty();"
+  },
+  {
+    "id": 81,
+    "function": "optimal_cost",
+    "file": "Chap50/OptBinSearchTreeStEph.rs",
+    "lines": "109",
+    "spec_strength": "hole",
+    "snippet": "        fn optimal_cost(&mut self) -> (cost: Probability);"
+  },
+  {
+    "id": 82,
+    "function": "keys",
+    "file": "Chap50/OptBinSearchTreeStEph.rs",
+    "lines": "111-112",
+    "spec_strength": "unknown",
+    "snippet": "        fn keys(&self) -> (keys: &Vec<KeyProb<T>>)\n            ensures keys@ =~= self@.keys;"
+  },
+  {
+    "id": 83,
+    "function": "set_key_prob",
+    "file": "Chap50/OptBinSearchTreeStEph.rs",
+    "lines": "114-118",
+    "spec_strength": "unknown",
+    "snippet": "        fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>)\n            requires index < old(self)@.keys.len(),\n            ensures\n                self@.keys =~= old(self)@.keys.update(index as int, key_prob),\n                self@.memo =~= Map::<(usize, usize), Probability>::empty();"
+  },
+  {
+    "id": 84,
+    "function": "update_prob",
+    "file": "Chap50/OptBinSearchTreeStEph.rs",
+    "lines": "120-124",
+    "spec_strength": "hole",
+    "snippet": "        fn update_prob(&mut self, index: usize, prob: Probability)\n            requires index < old(self)@.keys.len(),\n            ensures\n                self@.keys.len() == old(self)@.keys.len(),\n                self@.memo =~= Map::<(usize, usize), Probability>::empty();"
+  },
+  {
+    "id": 85,
+    "function": "num_keys",
+    "file": "Chap50/OptBinSearchTreeStEph.rs",
+    "lines": "126-127",
+    "spec_strength": "unknown",
+    "snippet": "        fn num_keys(&self) -> (count: usize)\n            ensures count == self@.keys.len();"
+  },
+  {
+    "id": 86,
+    "function": "clear_memo",
+    "file": "Chap50/OptBinSearchTreeStEph.rs",
+    "lines": "129-132",
+    "spec_strength": "unknown",
+    "snippet": "        fn clear_memo(&mut self)\n            ensures\n                self@.keys =~= old(self)@.keys,\n                self@.memo =~= Map::<(usize, usize), Probability>::empty();"
+  },
+  {
+    "id": 87,
+    "function": "memo_size",
+    "file": "Chap50/OptBinSearchTreeStEph.rs",
+    "lines": "134-135",
+    "spec_strength": "unknown",
+    "snippet": "        fn memo_size(&self) -> (count: usize)\n            ensures count == self@.memo.len();"
+  },
+  {
+    "id": 88,
+    "function": "obst_rec_st_eph",
+    "file": "Chap50/OptBinSearchTreeStEph.rs",
+    "lines": "141",
+    "spec_strength": "hole",
+    "snippet": "    fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (cost: Probability) {"
+  },
+  {
+    "id": 89,
+    "function": "eq`",
+    "file": "Chap50/OptBinSearchTreeStEph.rs",
+    "lines": "288-290",
     "spec_strength": "",
-    "snippet": "        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {\n            self.0.hash(state);\n            self.1.hash(state);\n            self.2.val.to_bits().hash(state);\n            self.3.hash(state);\n        }"
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.key == other.key && (self.prob.value() - other.prob.value()).abs() < f64::EPSILON\n        }"
+  },
+  {
+    "id": 90,
+    "function": "new",
+    "file": "Chap50/OptBinSearchTreeStPer.rs",
+    "lines": "93-96",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (empty: Self)\n            ensures\n                empty@.keys.len() == 0,\n                empty@.memo =~= Map::<(usize, usize), Probability>::empty();"
+  },
+  {
+    "id": 91,
+    "function": "from_keys_probs",
+    "file": "Chap50/OptBinSearchTreeStPer.rs",
+    "lines": "98-102",
+    "spec_strength": "hole",
+    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)\n            requires keys@.len() == probs@.len(),\n            ensures\n                constructed@.keys.len() == keys@.len(),\n                constructed@.memo =~= Map::<(usize, usize), Probability>::empty();"
+  },
+  {
+    "id": 92,
+    "function": "from_key_probs",
+    "file": "Chap50/OptBinSearchTreeStPer.rs",
+    "lines": "104-107",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)\n            ensures\n                constructed@.keys =~= key_probs@,\n                constructed@.memo =~= Map::<(usize, usize), Probability>::empty();"
+  },
+  {
+    "id": 93,
+    "function": "optimal_cost",
+    "file": "Chap50/OptBinSearchTreeStPer.rs",
+    "lines": "109",
+    "spec_strength": "hole",
+    "snippet": "        fn optimal_cost(&self) -> (cost: Probability);"
+  },
+  {
+    "id": 94,
+    "function": "keys",
+    "file": "Chap50/OptBinSearchTreeStPer.rs",
+    "lines": "111-112",
+    "spec_strength": "unknown",
+    "snippet": "        fn keys(&self) -> (keys: &Vec<KeyProb<T>>)\n            ensures keys@ =~= self@.keys;"
+  },
+  {
+    "id": 95,
+    "function": "num_keys",
+    "file": "Chap50/OptBinSearchTreeStPer.rs",
+    "lines": "114-115",
+    "spec_strength": "unknown",
+    "snippet": "        fn num_keys(&self) -> (count: usize)\n            ensures count == self@.keys.len();"
+  },
+  {
+    "id": 96,
+    "function": "memo_size",
+    "file": "Chap50/OptBinSearchTreeStPer.rs",
+    "lines": "117-118",
+    "spec_strength": "unknown",
+    "snippet": "        fn memo_size(&self) -> (count: usize)\n            ensures count == self@.memo.len();"
+  },
+  {
+    "id": 97,
+    "function": "obst_rec_st_per",
+    "file": "Chap50/OptBinSearchTreeStPer.rs",
+    "lines": "124",
+    "spec_strength": "hole",
+    "snippet": "    fn obst_rec_st_per<T: StT>(s: &mut OBSTStPerS<T>, i: usize, l: usize) -> (cost: Probability) {"
+  },
+  {
+    "id": 98,
+    "function": "eq`",
+    "file": "Chap50/OptBinSearchTreeStPer.rs",
+    "lines": "250-252",
+    "spec_strength": "",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.key == other.key && (self.prob.value() - other.prob.value()).abs() < f64::EPSILON\n        }"
   }
 ]

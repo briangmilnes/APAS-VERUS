@@ -21,6 +21,25 @@ pub mod OptBinSearchTreeStPer {
 
     verus! {
 
+// Table of Contents
+// 1. module
+// 2. imports
+// 3. broadcast use
+// 4. type definitions
+// 5. view impls
+// 8. traits
+// 9. impls
+// 11. derive impls in verus!
+
+// 3. broadcast use
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    crate::Types::Types::group_Pair_axioms,
+    vstd::map::group_map_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+};
+
     // 4. type definitions
     #[verifier::reject_recursive_types(T)]
     pub struct KeyProb<T: StT> {
@@ -52,15 +71,51 @@ pub mod OptBinSearchTreeStPer {
         }
     }
 
+    // 5. view impls
+    #[verifier::reject_recursive_types(T)]
+    pub ghost struct OBSTStPerV<T: StT> {
+        pub keys: Seq<KeyProb<T>>,
+        pub memo: Map<(usize, usize), Probability>,
+    }
+
+    impl<T: StT> View for OBSTStPerS<T> {
+        type V = OBSTStPerV<T>;
+        open spec fn view(&self) -> Self::V {
+            OBSTStPerV {
+                keys: self.keys@,
+                memo: self.memo@,
+            }
+        }
+    }
+
     // 8. traits
-    pub trait OBSTStPerTrait<T: StT>: Sized {
-        fn new() -> (empty: Self);
-        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self);
-        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self);
+    pub trait OBSTStPerTrait<T: StT>: Sized + View<V = OBSTStPerV<T>> {
+        fn new() -> (empty: Self)
+            ensures
+                empty@.keys.len() == 0,
+                empty@.memo =~= Map::<(usize, usize), Probability>::empty();
+
+        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)
+            requires keys@.len() == probs@.len(),
+            ensures
+                constructed@.keys.len() == keys@.len(),
+                constructed@.memo =~= Map::<(usize, usize), Probability>::empty();
+
+        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)
+            ensures
+                constructed@.keys =~= key_probs@,
+                constructed@.memo =~= Map::<(usize, usize), Probability>::empty();
+
         fn optimal_cost(&self) -> (cost: Probability);
-        fn keys(&self) -> (keys: &Vec<KeyProb<T>>);
-        fn num_keys(&self) -> (count: usize);
-        fn memo_size(&self) -> (count: usize);
+
+        fn keys(&self) -> (keys: &Vec<KeyProb<T>>)
+            ensures keys@ =~= self@.keys;
+
+        fn num_keys(&self) -> (count: usize)
+            ensures count == self@.keys.len();
+
+        fn memo_size(&self) -> (count: usize)
+            ensures count == self@.memo.len();
     }
 
     // 9. impls
@@ -94,8 +149,8 @@ pub mod OptBinSearchTreeStPer {
     }
 
     impl<T: StT> OBSTStPerTrait<T> for OBSTStPerS<T> {
-        #[verifier::external_body]
         fn new() -> (empty: Self) {
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 keys: Vec::new(),
                 memo: HashMapWithViewPlus::new(),
@@ -116,8 +171,8 @@ pub mod OptBinSearchTreeStPer {
             }
         }
 
-        #[verifier::external_body]
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 keys: key_probs,
                 memo: HashMapWithViewPlus::new(),

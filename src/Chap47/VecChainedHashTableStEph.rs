@@ -43,10 +43,16 @@ pub mod VecChainedHashTableStEph {
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(n) worst case, Span O(n) — linear scan for duplicate key, n = chain length.
             fn insert(&mut self, key: Key, value: Value)
-                ensures self@.len() >= 1,
+                ensures
+                    self@.len() >= 1,
+                    old(self)@.len() <= self@.len(),
+                    self@.len() <= old(self)@.len() + 1,
             {
                 let mut i: usize = 0;
                 while i < self.len()
+                    invariant
+                        i <= self@.len(),
+                        self@ == old(self)@,
                     decreases self.len() - i,
                 {
                     if self[i].0 == key {
@@ -76,9 +82,14 @@ pub mod VecChainedHashTableStEph {
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + Vec::remove (shifts elements), n = chain length.
-            fn delete(&mut self, key: &Key) -> (deleted: bool) {
+            fn delete(&mut self, key: &Key) -> (deleted: bool)
+                ensures !deleted ==> self@ == old(self)@,
+            {
                 let mut i: usize = 0;
                 while i < self.len()
+                    invariant
+                        i <= self@.len(),
+                        self@ == old(self)@,
                     decreases self.len() - i,
                 {
                     if self[i].0 == *key {
