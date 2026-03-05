@@ -243,6 +243,7 @@ renames, structural changes, or when refreshing analysis baselines.
 | `scripts/all-fn-impls-by-chap.sh` | `veracity-review-module-fn-impls.{md,json}` |
 | `scripts/resolve-analysis-merge.sh [dir]` | Resolves analysis-only merge conflicts (`--theirs`) |
 | `scripts/resolve-analysis-rebase.sh [dir]` | Loops through rebase steps, resolves analysis-only conflicts (`--ours`) |
+| `scripts/resolve-settings-merge.sh [dir]` | Unions `.claude/settings.local.json` allow lists from both conflict sides |
 
 **NEVER add `external_body`, `admit()`, or `assume(...)` without asking the user first.**
 

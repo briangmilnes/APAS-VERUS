@@ -325,6 +325,18 @@ This loops over all rebase steps, resolves analysis-only conflicts with `--ours`
 continues the rebase automatically. It aborts with an error if any non-analysis conflict
 is found.
 
+## Conflict resolution: .claude/settings.local.json
+
+`.claude/settings.local.json` contains per-worktree permission allow lists that diverge
+across agents. Resolve conflicts by unioning both sides:
+
+```bash
+scripts/resolve-settings-merge.sh ~/projects/APAS-VERUS-agentN
+```
+
+This extracts all unique permission strings from both sides of the conflict, deduplicates,
+sorts, and writes a clean merged file.
+
 ## Notes
 
 - Execute phases 0, 1, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6, 7 in strict order. Never skip a phase.
