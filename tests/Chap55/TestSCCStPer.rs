@@ -10,7 +10,7 @@ use apas_verus::Types::Types::*;
 fn test_single_node() {
     let adj: Vec<ArraySeqStPerS<usize>> = vec![ArraySeqStPerS::empty()];
     let graph = ArraySeqStPerS::from_vec(adj);
-    let sccs = scc(&graph);
+    let sccs = SCCStPer::scc(&graph);
     assert_eq!(sccs.length(), 1);
 }
 
@@ -19,7 +19,7 @@ fn test_two_nodes_no_edges() {
     let adj0 = ArraySeqStPerS::empty();
     let adj1 = ArraySeqStPerS::empty();
     let graph = ArraySeqStPerS::from_vec(vec![adj0, adj1]);
-    let sccs = scc(&graph);
+    let sccs = SCCStPer::scc(&graph);
     assert_eq!(sccs.length(), 2);
 }
 
@@ -29,7 +29,7 @@ fn test_simple_cycle() {
     let adj1 = ArraySeqStPerS::from_vec(vec![2]);
     let adj2 = ArraySeqStPerS::from_vec(vec![0]);
     let graph = ArraySeqStPerS::from_vec(vec![adj0, adj1, adj2]);
-    let sccs = scc(&graph);
+    let sccs = SCCStPer::scc(&graph);
     assert_eq!(sccs.length(), 1);
 }
 
@@ -40,7 +40,7 @@ fn test_two_separate_sccs() {
     let adj2 = ArraySeqStPerS::from_vec(vec![3]);
     let adj3 = ArraySeqStPerS::from_vec(vec![2]);
     let graph = ArraySeqStPerS::from_vec(vec![adj0, adj1, adj2, adj3]);
-    let sccs = scc(&graph);
+    let sccs = SCCStPer::scc(&graph);
     assert_eq!(sccs.length(), 2);
 }
 
@@ -50,7 +50,7 @@ fn test_linear_dag() {
     let adj1 = ArraySeqStPerS::from_vec(vec![2]);
     let adj2 = ArraySeqStPerS::empty();
     let graph = ArraySeqStPerS::from_vec(vec![adj0, adj1, adj2]);
-    let sccs = scc(&graph);
+    let sccs = SCCStPer::scc(&graph);
     assert_eq!(sccs.length(), 3);
 }
 
@@ -58,7 +58,7 @@ fn test_linear_dag() {
 fn test_self_loop() {
     let adj0 = ArraySeqStPerS::from_vec(vec![0]);
     let graph = ArraySeqStPerS::from_vec(vec![adj0]);
-    let sccs = scc(&graph);
+    let sccs = SCCStPer::scc(&graph);
     assert_eq!(sccs.length(), 1);
 }
 
@@ -71,6 +71,6 @@ fn test_complex_graph() {
     let adj4 = ArraySeqStPerS::from_vec(vec![5]);
     let adj5 = ArraySeqStPerS::from_vec(vec![4]);
     let graph = ArraySeqStPerS::from_vec(vec![adj0, adj1, adj2, adj3, adj4, adj5]);
-    let sccs = scc(&graph);
+    let sccs = SCCStPer::scc(&graph);
     assert!(sccs.length() >= 1);
 }

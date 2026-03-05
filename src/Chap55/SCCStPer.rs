@@ -18,18 +18,26 @@ pub mod SCCStPer {
     // Table of Contents
     // 1. module
     // 2. imports
+    // 4. type definitions
     // 8. traits
     // 9. impls
 
+    // 4. type definitions
+
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
+    pub struct SCCStPer;
 
     // 8. traits
 
     pub trait SCCStPerTrait {
-        /// Finds strongly connected components in a directed graph
+        /// Finds strongly connected components in a directed graph (Algorithm 55.18)
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>>
-            requires spec_wf_adj_list_per(graph);
+        fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (components: AVLTreeSeqStPerS<AVLTreeSetStPer<N>>)
+            requires
+                spec_wf_adj_list_per(graph),
+            ensures
+                components@.len() >= 1 || graph@.len() == 0,
+            ;
     }
 
     // 9. impls
@@ -286,51 +294,52 @@ pub mod SCCStPer {
         component
     }
 
-    /// Finds strongly connected components in a directed graph.
-    pub fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>>
-        requires spec_wf_adj_list_per(graph),
-    {
-        let finish_order = compute_finish_order(graph);
-        let transposed = transpose_graph(graph);
-
-        if !check_wf_adj_list_per(&transposed) {
-            return AVLTreeSeqStPerS::empty();
-        }
-
-        let n = transposed.length();
-        let mut visited_bool: Vec<bool> = Vec::new();
-        let mut j: usize = 0;
-        while j < n
-            invariant j <= n, visited_bool@.len() == j as int,
-            decreases n - j,
+    impl SCCStPerTrait for SCCStPer {
+        /// Finds strongly connected components in a directed graph.
+        fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>>
         {
-            visited_bool.push(false);
-            j = j + 1;
-        }
+            let finish_order = compute_finish_order(graph);
+            let transposed = transpose_graph(graph);
 
-        let finish_len = finish_order.length();
-        let mut components_vec: Vec<AVLTreeSetStPer<N>> = Vec::new();
-        let mut i: usize = 0;
-        while i < finish_len
-            invariant
-                i <= finish_len,
-                visited_bool@.len() == n,
-                n == transposed@.len(),
-                spec_wf_adj_list_per(&transposed),
-            decreases finish_len - i,
-        {
-            let vertex = *finish_order.nth(i);
-            if vertex < n && !visited_bool[vertex] {
-                let component = AVLTreeSetStPer::empty();
-                let component = dfs_reach(&transposed, &mut visited_bool, component, vertex);
-                if component.size() > 0 {
-                    components_vec.push(component);
-                }
+            if !check_wf_adj_list_per(&transposed) {
+                return AVLTreeSeqStPerS::empty();
             }
-            i = i + 1;
+
+            let n = transposed.length();
+            let mut visited_bool: Vec<bool> = Vec::new();
+            let mut j: usize = 0;
+            while j < n
+                invariant j <= n, visited_bool@.len() == j as int,
+                decreases n - j,
+            {
+                visited_bool.push(false);
+                j = j + 1;
+            }
+
+            let finish_len = finish_order.length();
+            let mut components_vec: Vec<AVLTreeSetStPer<N>> = Vec::new();
+            let mut i: usize = 0;
+            while i < finish_len
+                invariant
+                    i <= finish_len,
+                    visited_bool@.len() == n,
+                    n == transposed@.len(),
+                    spec_wf_adj_list_per(&transposed),
+                decreases finish_len - i,
+            {
+                let vertex = *finish_order.nth(i);
+                if vertex < n && !visited_bool[vertex] {
+                    let component = AVLTreeSetStPer::empty();
+                    let component = dfs_reach(&transposed, &mut visited_bool, component, vertex);
+                    if component.size() > 0 {
+                        components_vec.push(component);
+                    }
+                }
+                i = i + 1;
+            }
+            AVLTreeSeqStPerS::from_vec(components_vec)
         }
-        AVLTreeSeqStPerS::from_vec(components_vec)
-    }
+    } // impl SCCStPerTrait
 
     } // verus!
 }

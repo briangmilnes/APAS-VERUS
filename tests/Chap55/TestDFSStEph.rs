@@ -9,14 +9,14 @@ use apas_verus::Types::Types::*;
 #[test]
 fn test_empty_graph() {
     let graph = ArraySeqStEphS::<ArraySeqStEphS<usize>>::from_vec(vec![]);
-    let result = dfs(&graph, 0);
+    let result = DFSStEph::dfs(&graph, 0);
     assert_eq!(result.size(), 0);
 }
 
 #[test]
 fn test_single_vertex() {
     let graph = ArraySeqStEphS::from_vec(vec![ArraySeqStEphS::from_vec(vec![])]);
-    let result = dfs(&graph, 0);
+    let result = DFSStEph::dfs(&graph, 0);
     assert_eq!(result.size(), 1);
     assert!(result.find(&0));
 }
@@ -28,7 +28,7 @@ fn test_line_graph() {
         ArraySeqStEphS::from_vec(vec![2]),
         ArraySeqStEphS::from_vec(vec![]),
     ]);
-    let result = dfs(&graph, 0);
+    let result = DFSStEph::dfs(&graph, 0);
     assert_eq!(result.size(), 3);
 }
 
@@ -40,7 +40,7 @@ fn test_dag() {
         ArraySeqStEphS::from_vec(vec![3]),
         ArraySeqStEphS::from_vec(vec![]),
     ]);
-    let result = dfs(&graph, 0);
+    let result = DFSStEph::dfs(&graph, 0);
     assert_eq!(result.size(), 4);
 }
 
@@ -51,7 +51,7 @@ fn test_cycle() {
         ArraySeqStEphS::from_vec(vec![2]),
         ArraySeqStEphS::from_vec(vec![0]),
     ]);
-    let result = dfs(&graph, 0);
+    let result = DFSStEph::dfs(&graph, 0);
     assert_eq!(result.size(), 3);
 }
 
@@ -63,6 +63,6 @@ fn test_disconnected() {
         ArraySeqStEphS::from_vec(vec![3]),
         ArraySeqStEphS::from_vec(vec![]),
     ]);
-    let result = dfs(&graph, 0);
+    let result = DFSStEph::dfs(&graph, 0);
     assert_eq!(result.size(), 2);
 }

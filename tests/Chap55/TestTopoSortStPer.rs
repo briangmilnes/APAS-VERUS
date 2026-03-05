@@ -10,7 +10,7 @@ use apas_verus::Types::Types::*;
 fn test_single_node() {
     let adj: Vec<ArraySeqStPerS<usize>> = vec![ArraySeqStPerS::empty()];
     let graph = ArraySeqStPerS::from_vec(adj);
-    let result = topological_sort_opt(&graph);
+    let result = TopoSortStPer::topological_sort_opt(&graph);
     assert!(result.is_some());
     if let Some(order) = result {
         assert_eq!(order.length(), 1);
@@ -23,7 +23,7 @@ fn test_linear_dag() {
     let adj1 = ArraySeqStPerS::from_vec(vec![2]);
     let adj2 = ArraySeqStPerS::empty();
     let graph = ArraySeqStPerS::from_vec(vec![adj0, adj1, adj2]);
-    let result = topological_sort_opt(&graph);
+    let result = TopoSortStPer::topological_sort_opt(&graph);
     assert!(result.is_some());
 }
 
@@ -34,7 +34,7 @@ fn test_dag_with_branches() {
     let adj2 = ArraySeqStPerS::from_vec(vec![3]);
     let adj3 = ArraySeqStPerS::empty();
     let graph = ArraySeqStPerS::from_vec(vec![adj0, adj1, adj2, adj3]);
-    let result = topological_sort_opt(&graph);
+    let result = TopoSortStPer::topological_sort_opt(&graph);
     assert!(result.is_some());
 }
 
@@ -44,7 +44,7 @@ fn test_cycle_returns_none() {
     let adj1 = ArraySeqStPerS::from_vec(vec![2]);
     let adj2 = ArraySeqStPerS::from_vec(vec![0]);
     let graph = ArraySeqStPerS::from_vec(vec![adj0, adj1, adj2]);
-    let result = topological_sort_opt(&graph);
+    let result = TopoSortStPer::topological_sort_opt(&graph);
     assert!(result.is_none());
 }
 
@@ -52,7 +52,7 @@ fn test_cycle_returns_none() {
 fn test_self_loop_returns_none() {
     let adj0 = ArraySeqStPerS::from_vec(vec![0]);
     let graph = ArraySeqStPerS::from_vec(vec![adj0]);
-    let result = topological_sort_opt(&graph);
+    let result = TopoSortStPer::topological_sort_opt(&graph);
     assert!(result.is_none());
 }
 
@@ -63,14 +63,14 @@ fn test_disconnected_components() {
     let adj2 = ArraySeqStPerS::from_vec(vec![3]);
     let adj3 = ArraySeqStPerS::empty();
     let graph = ArraySeqStPerS::from_vec(vec![adj0, adj1, adj2, adj3]);
-    let result = topological_sort_opt(&graph);
+    let result = TopoSortStPer::topological_sort_opt(&graph);
     assert!(result.is_some());
 }
 
 #[test]
 fn test_empty_graph() {
     let graph = ArraySeqStPerS::<ArraySeqStPerS<usize>>::empty();
-    let result = topological_sort_opt(&graph);
+    let result = TopoSortStPer::topological_sort_opt(&graph);
     assert!(result.is_some());
 }
 
@@ -80,7 +80,7 @@ fn test_topo_sort_simple() {
     let adj1 = ArraySeqStPerS::from_vec(vec![2]);
     let adj2 = ArraySeqStPerS::empty();
     let graph = ArraySeqStPerS::from_vec(vec![adj0, adj1, adj2]);
-    let result = topo_sort(&graph);
+    let result = TopoSortStPer::topo_sort(&graph);
     assert_eq!(result.length(), 3);
 }
 
@@ -91,13 +91,13 @@ fn test_topo_sort_disconnected() {
     let adj2 = ArraySeqStPerS::from_vec(vec![3]);
     let adj3 = ArraySeqStPerS::empty();
     let graph = ArraySeqStPerS::from_vec(vec![adj0, adj1, adj2, adj3]);
-    let result = topo_sort(&graph);
+    let result = TopoSortStPer::topo_sort(&graph);
     assert_eq!(result.length(), 4);
 }
 
 #[test]
 fn test_topo_sort_empty() {
     let graph = ArraySeqStPerS::<ArraySeqStPerS<usize>>::empty();
-    let result = topo_sort(&graph);
+    let result = TopoSortStPer::topo_sort(&graph);
     assert_eq!(result.length(), 0);
 }

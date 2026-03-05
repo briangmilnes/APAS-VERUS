@@ -7,7 +7,7 @@ pub mod CycleDetectStEph {
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
-    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, spec_wf_adj_list, lemma_set_true_decreases_num_false};
+    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, spec_wf_adj_list, spec_is_dag, lemma_set_true_decreases_num_false};
     use crate::Types::Types::*;
 
     verus! {
@@ -15,17 +15,26 @@ pub mod CycleDetectStEph {
     // Table of Contents
     // 1. module
     // 2. imports
+    // 4. type definitions
     // 8. traits
     // 9. impls
 
+    // 4. type definitions
+
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
+    pub struct CycleDetectStEph;
 
     // 8. traits
 
     pub trait CycleDetectStEphTrait {
-        /// Detects if a directed graph contains a cycle
+        /// Detects if a directed graph contains a cycle (Algorithm 55.10)
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> B;
+        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (has_cycle: B)
+            requires
+                spec_wf_adj_list(graph),
+            ensures
+                has_cycle == !spec_is_dag(graph),
+            ;
     }
 
     // 9. impls
@@ -99,34 +108,35 @@ pub mod CycleDetectStEph {
         false
     }
 
-    /// Detects if a directed graph contains a cycle.
-    /// Returns true if a cycle exists, false otherwise.
-    pub fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> B
-        requires spec_wf_adj_list(graph),
-    {
-        let n = graph.length();
-        let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
-        let mut ancestors = ArraySeqStEphS::tabulate(&|_| false, n);
-
-        let mut start: usize = 0;
-        while start < n
-            invariant
-                start <= n,
-                n == graph@.len(),
-                visited@.len() == n,
-                ancestors@.len() == n,
-                spec_wf_adj_list(graph),
-            decreases n - start,
+    impl CycleDetectStEphTrait for CycleDetectStEph {
+        /// Detects if a directed graph contains a cycle.
+        /// Returns true if a cycle exists, false otherwise.
+        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> B
         {
-            if !*visited.nth(start) {
-                if dfs_check_cycle(graph, &mut visited, &mut ancestors, start) {
-                    return true;
+            let n = graph.length();
+            let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
+            let mut ancestors = ArraySeqStEphS::tabulate(&|_| false, n);
+
+            let mut start: usize = 0;
+            while start < n
+                invariant
+                    start <= n,
+                    n == graph@.len(),
+                    visited@.len() == n,
+                    ancestors@.len() == n,
+                    spec_wf_adj_list(graph),
+                decreases n - start,
+            {
+                if !*visited.nth(start) {
+                    if dfs_check_cycle(graph, &mut visited, &mut ancestors, start) {
+                        return true;
+                    }
                 }
+                start = start + 1;
             }
-            start = start + 1;
+            false
         }
-        false
-    }
+    } // impl CycleDetectStEphTrait
 
     } // verus!
 }

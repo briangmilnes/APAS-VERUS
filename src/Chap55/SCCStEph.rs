@@ -20,18 +20,26 @@ pub mod SCCStEph {
     // Table of Contents
     // 1. module
     // 2. imports
+    // 4. type definitions
     // 8. traits
     // 9. impls
 
+    // 4. type definitions
+
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
+    pub struct SCCStEph;
 
     // 8. traits
 
     pub trait SCCStEphTrait {
-        /// Finds strongly connected components in a directed graph
+        /// Finds strongly connected components in a directed graph (Algorithm 55.18)
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>>
-            requires spec_wf_adj_list(graph);
+        fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (components: AVLTreeSeqStEphS<AVLTreeSetStEph<N>>)
+            requires
+                spec_wf_adj_list(graph),
+            ensures
+                components@.len() >= 1 || graph@.len() == 0,
+            ;
     }
 
     // 9. impls
@@ -178,43 +186,44 @@ pub mod SCCStEph {
         true
     }
 
-    /// Finds strongly connected components in a directed graph.
-    pub fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>>
-        requires spec_wf_adj_list(graph),
-    {
-        let finish_order = compute_finish_order(graph);
-        let transposed = transpose_graph(graph);
-
-        if !check_wf_adj_list_eph(&transposed) {
-            return AVLTreeSeqStEphS::empty();
-        }
-
-        let n = transposed.length();
-        let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
-        let mut components_vec: Vec<AVLTreeSetStEph<N>> = Vec::new();
-
-        let finish_len = finish_order.length();
-        let mut i: usize = 0;
-        while i < finish_len
-            invariant
-                i <= finish_len,
-                visited@.len() == n,
-                n == transposed@.len(),
-                spec_wf_adj_list(&transposed),
-            decreases finish_len - i,
+    impl SCCStEphTrait for SCCStEph {
+        /// Finds strongly connected components in a directed graph.
+        fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>>
         {
-            let vertex = *finish_order.nth(i);
-            if vertex < n && !*visited.nth(vertex) {
-                let mut component = AVLTreeSetStEph::empty();
-                dfs_reach(&transposed, &mut visited, &mut component, vertex);
-                if component.size() > 0 {
-                    components_vec.push(component);
-                }
+            let finish_order = compute_finish_order(graph);
+            let transposed = transpose_graph(graph);
+
+            if !check_wf_adj_list_eph(&transposed) {
+                return AVLTreeSeqStEphS::empty();
             }
-            i = i + 1;
+
+            let n = transposed.length();
+            let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
+            let mut components_vec: Vec<AVLTreeSetStEph<N>> = Vec::new();
+
+            let finish_len = finish_order.length();
+            let mut i: usize = 0;
+            while i < finish_len
+                invariant
+                    i <= finish_len,
+                    visited@.len() == n,
+                    n == transposed@.len(),
+                    spec_wf_adj_list(&transposed),
+                decreases finish_len - i,
+            {
+                let vertex = *finish_order.nth(i);
+                if vertex < n && !*visited.nth(vertex) {
+                    let mut component = AVLTreeSetStEph::empty();
+                    dfs_reach(&transposed, &mut visited, &mut component, vertex);
+                    if component.size() > 0 {
+                        components_vec.push(component);
+                    }
+                }
+                i = i + 1;
+            }
+            AVLTreeSeqStEphS::from_vec(components_vec)
         }
-        AVLTreeSeqStEphS::from_vec(components_vec)
-    }
+    } // impl SCCStEphTrait
 
     fn dfs_reach(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,

@@ -9,18 +9,41 @@ pub mod DFSStPer {
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false};
-    use crate::Chap55::TopoSortStPer::TopoSortStPer::spec_wf_adj_list_per;
+    use crate::Chap55::TopoSortStPer::TopoSortStPer::{spec_wf_adj_list_per, spec_reachable_per};
     use crate::Types::Types::*;
 
     verus! {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions
+    // 8. traits
+    // 9. impls
+
+    // 4. type definitions
+
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
+    pub struct DFSStPer;
+
+    // 8. traits
 
     pub trait DFSStPerTrait {
         /// Performs DFS from source vertex s on adjacency list graph G
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> AVLTreeSetStPer<N>;
+        fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> (reachable: AVLTreeSetStPer<N>)
+            requires
+                source < graph@.len(),
+                spec_wf_adj_list_per(graph),
+            ensures
+                reachable@.contains(source),
+                forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),
+                forall|v: int| #![auto] 0 <= v < graph@.len()
+                    ==> (reachable@.contains(v as usize) <==> spec_reachable_per(graph, source as int, v)),
+            ;
     }
+
+    // 9. impls
 
     /// Recursive DFS helper using a bool vector for termination tracking and
     /// an AVLTreeSetStPer for persistent result accumulation.
@@ -76,26 +99,25 @@ pub mod DFSStPer {
         reachable
     }
 
-    /// Performs DFS from source vertex s on adjacency list graph G.
-    /// Returns the set of all vertices reachable from s.
-    pub fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> AVLTreeSetStPer<N>
-        requires
-            source < graph@.len(),
-            spec_wf_adj_list_per(graph),
-    {
-        let n = graph.length();
-        let mut visited_bool: Vec<bool> = Vec::new();
-        let mut j: usize = 0;
-        while j < n
-            invariant j <= n, visited_bool@.len() == j as int,
-            decreases n - j,
+    impl DFSStPerTrait for DFSStPer {
+        /// Performs DFS from source vertex s on adjacency list graph G.
+        /// Returns the set of all vertices reachable from s.
+        fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> AVLTreeSetStPer<N>
         {
-            visited_bool.push(false);
-            j = j + 1;
+            let n = graph.length();
+            let mut visited_bool: Vec<bool> = Vec::new();
+            let mut j: usize = 0;
+            while j < n
+                invariant j <= n, visited_bool@.len() == j as int,
+                decreases n - j,
+            {
+                visited_bool.push(false);
+                j = j + 1;
+            }
+            let reachable = AVLTreeSetStPer::empty();
+            dfs_recursive(graph, &mut visited_bool, reachable, source)
         }
-        let reachable = AVLTreeSetStPer::empty();
-        dfs_recursive(graph, &mut visited_bool, reachable, source)
-    }
+    } // impl DFSStPerTrait
 
     } // verus!
 }

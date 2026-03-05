@@ -8,6 +8,7 @@ pub mod CycleDetectStPer {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false};
+    use crate::Chap55::TopoSortStPer::TopoSortStPer::spec_is_dag_per;
     use crate::Types::Types::*;
 
     verus! {
@@ -19,7 +20,10 @@ pub mod CycleDetectStPer {
     // 8. traits
     // 9. impls
 
+    // 4. type definitions
+
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
+    pub struct CycleDetectStPer;
 
     // 6. spec fns
 
@@ -33,9 +37,14 @@ pub mod CycleDetectStPer {
     // 8. traits
 
     pub trait CycleDetectStPerTrait {
-        /// Detects if a directed graph contains a cycle
+        /// Detects if a directed graph contains a cycle (Algorithm 55.10)
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> B;
+        fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (has_cycle: B)
+            requires
+                spec_wf_adj_list_per(graph),
+            ensures
+                has_cycle == !spec_is_dag_per(graph),
+            ;
     }
 
     // 9. impls
@@ -105,46 +114,47 @@ pub mod CycleDetectStPer {
         false
     }
 
-    /// Detects if a directed graph contains a cycle.
-    /// Returns true if a cycle exists, false otherwise.
-    pub fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> B
-        requires spec_wf_adj_list_per(graph),
-    {
-        let n = graph.length();
-        let mut visited: Vec<bool> = Vec::new();
-        let mut ancestors: Vec<bool> = Vec::new();
-        let mut j: usize = 0;
-        while j < n
-            invariant
-                j <= n,
-                visited@.len() == j as int,
-                ancestors@.len() == j as int,
-            decreases n - j,
+    impl CycleDetectStPerTrait for CycleDetectStPer {
+        /// Detects if a directed graph contains a cycle.
+        /// Returns true if a cycle exists, false otherwise.
+        fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> B
         {
-            visited.push(false);
-            ancestors.push(false);
-            j = j + 1;
-        }
-
-        let mut start: usize = 0;
-        while start < n
-            invariant
-                start <= n,
-                n == graph@.len(),
-                visited@.len() == n,
-                ancestors@.len() == n,
-                spec_wf_adj_list_per(graph),
-            decreases n - start,
-        {
-            if !visited[start] {
-                if dfs_check_cycle(graph, &mut visited, &mut ancestors, start) {
-                    return true;
-                }
+            let n = graph.length();
+            let mut visited: Vec<bool> = Vec::new();
+            let mut ancestors: Vec<bool> = Vec::new();
+            let mut j: usize = 0;
+            while j < n
+                invariant
+                    j <= n,
+                    visited@.len() == j as int,
+                    ancestors@.len() == j as int,
+                decreases n - j,
+            {
+                visited.push(false);
+                ancestors.push(false);
+                j = j + 1;
             }
-            start = start + 1;
+
+            let mut start: usize = 0;
+            while start < n
+                invariant
+                    start <= n,
+                    n == graph@.len(),
+                    visited@.len() == n,
+                    ancestors@.len() == n,
+                    spec_wf_adj_list_per(graph),
+                decreases n - start,
+            {
+                if !visited[start] {
+                    if dfs_check_cycle(graph, &mut visited, &mut ancestors, start) {
+                        return true;
+                    }
+                }
+                start = start + 1;
+            }
+            false
         }
-        false
-    }
+    } // impl CycleDetectStPerTrait
 
     } // verus!
 }

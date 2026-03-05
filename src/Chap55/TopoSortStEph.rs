@@ -23,12 +23,16 @@ broadcast use {
     // Table of Contents
     // 1. module
     // 2. imports
+    // 4. type definitions
     // 6. spec fns
     // 7. proof fns
     // 8. traits
     // 9. impls
 
+    // 4. type definitions
+
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
+    pub struct TopoSortStEph;
 
     // 6. spec fns
 
@@ -46,6 +50,66 @@ broadcast use {
         forall|v: int, i: int| #![auto]
             0 <= v < graph@.len() && 0 <= i < graph@[v]@.len()
             ==> graph@[v]@[i] < graph@.len()
+    }
+
+    /// Whether there is a directed edge from u to v in the graph.
+    pub open spec fn spec_has_edge(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, u: int, v: int) -> bool {
+        0 <= u < graph@.len()
+        && exists|i: int| #![auto] 0 <= i < graph@[u]@.len() && graph@[u]@[i] == v
+    }
+
+    /// Whether a sequence of vertex indices forms a valid path in the graph.
+    pub open spec fn spec_is_path(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, path: Seq<int>) -> bool {
+        path.len() >= 1
+        && (forall|k: int| #![auto] 0 <= k < path.len() ==> 0 <= path[k] < graph@.len())
+        && (forall|k: int| #![auto] 0 <= k < path.len() - 1 ==> spec_has_edge(graph, path[k], path[k + 1]))
+    }
+
+    /// Whether vertex v is reachable from vertex u (Definition 55.3, reachability).
+    pub open spec fn spec_reachable(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, u: int, v: int) -> bool {
+        exists|path: Seq<int>| spec_is_path(graph, path) && path[0] == u && path.last() == v
+    }
+
+    /// Whether the graph is a directed acyclic graph (Definition 55.11).
+    pub open spec fn spec_is_dag(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> bool {
+        !exists|path: Seq<int>| spec_is_path(graph, path) && path.len() >= 2 && path[0] == path.last()
+    }
+
+    /// Whether a sequence is a valid topological ordering (Definition 55.12).
+    pub open spec fn spec_is_topo_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, order: Seq<usize>) -> bool {
+        order.len() == graph@.len()
+        && order.no_duplicates()
+        && (forall|k: int| #![auto] 0 <= k < order.len() ==> (order[k] as int) < graph@.len())
+        && (forall|i: int, j: int| #![auto]
+            0 <= i < order.len() && 0 <= j < order.len()
+            && spec_has_edge(graph, order[i] as int, order[j] as int)
+            ==> i < j)
+    }
+
+    /// Whether a set of vertices is strongly connected (Definition 55.14).
+    pub open spec fn spec_strongly_connected(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, vertices: Set<int>) -> bool {
+        forall|u: int, v: int| #![auto] vertices.contains(u) && vertices.contains(v)
+            ==> spec_reachable(graph, u, v)
+    }
+
+    /// Whether components form a valid SCC decomposition in topological order (Definition 55.17).
+    pub open spec fn spec_is_scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, components: Seq<Set<int>>) -> bool {
+        // Each component is strongly connected.
+        (forall|c: int| #![auto] 0 <= c < components.len()
+            ==> spec_strongly_connected(graph, components[c]))
+        // Components partition the vertex set.
+        && (forall|v: int| 0 <= v < graph@.len() ==>
+            exists|c: int| #![auto] 0 <= c < components.len() && components[c].contains(v))
+        // Components are disjoint.
+        && (forall|c1: int, c2: int| #![auto]
+            0 <= c1 < components.len() && 0 <= c2 < components.len() && c1 != c2
+            ==> components[c1].disjoint(components[c2]))
+        // Inter-component edges go forward (topological order).
+        && (forall|c1: int, c2: int, u: int, v: int| #![auto]
+            0 <= c1 < components.len() && 0 <= c2 < components.len()
+            && components[c1].contains(u) && components[c2].contains(v)
+            && spec_has_edge(graph, u, v) && c1 != c2
+            ==> c1 < c2)
     }
 
     // 7. proof fns
@@ -71,9 +135,15 @@ broadcast use {
     // 8. traits
 
     pub trait TopoSortStEphTrait {
-        /// Computes topological sort of a DAG
+        /// Computes topological sort of a DAG (Algorithm 55.13)
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N>;
+        fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (order: AVLTreeSeqStEphS<N>)
+            requires
+                spec_wf_adj_list(graph),
+            ensures
+                order@.len() == graph@.len(),
+                spec_is_dag(graph) ==> spec_is_topo_order(graph, order@),
+            ;
     }
 
     // 9. impls
@@ -201,8 +271,11 @@ broadcast use {
     }
 
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
-    pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> Option<AVLTreeSeqStEphS<N>>
+    pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (topo_order: Option<AVLTreeSeqStEphS<N>>)
         requires spec_wf_adj_list(graph),
+        ensures
+            topo_order.is_some() <==> spec_is_dag(graph),
+            topo_order.is_some() ==> spec_is_topo_order(graph, topo_order.unwrap()@),
     {
         let n = graph.length();
         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
@@ -241,42 +314,43 @@ broadcast use {
         Some(AVLTreeSeqStEphS::from_vec(reversed))
     }
 
-    /// Returns sequence of vertices in topological order.
-    pub fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N>
-        requires spec_wf_adj_list(graph),
-    {
-        let n = graph.length();
-        let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
-        let mut finish_order: Vec<N> = Vec::new();
+    impl TopoSortStEphTrait for TopoSortStEph {
+        /// Returns sequence of vertices in topological order.
+        fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N>
+        {
+            let n = graph.length();
+            let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
+            let mut finish_order: Vec<N> = Vec::new();
 
-        let mut start: usize = 0;
-        while start < n
-            invariant
-                start <= n,
-                n == graph@.len(),
-                visited@.len() == n,
-                spec_wf_adj_list(graph),
-            decreases n - start,
-        {
-            if !*visited.nth(start) {
-                dfs_finish_order(graph, &mut visited, &mut finish_order, start);
+            let mut start: usize = 0;
+            while start < n
+                invariant
+                    start <= n,
+                    n == graph@.len(),
+                    visited@.len() == n,
+                    spec_wf_adj_list(graph),
+                decreases n - start,
+            {
+                if !*visited.nth(start) {
+                    dfs_finish_order(graph, &mut visited, &mut finish_order, start);
+                }
+                start = start + 1;
             }
-            start = start + 1;
+            let result_len = finish_order.len();
+            let mut reversed: Vec<N> = Vec::new();
+            let mut k: usize = result_len;
+            while k > 0
+                invariant
+                    k <= result_len,
+                    result_len == finish_order@.len(),
+                decreases k,
+            {
+                k = k - 1;
+                reversed.push(finish_order[k]);
+            }
+            AVLTreeSeqStEphS::from_vec(reversed)
         }
-        let result_len = finish_order.len();
-        let mut reversed: Vec<N> = Vec::new();
-        let mut k: usize = result_len;
-        while k > 0
-            invariant
-                k <= result_len,
-                result_len == finish_order@.len(),
-            decreases k,
-        {
-            k = k - 1;
-            reversed.push(finish_order[k]);
-        }
-        AVLTreeSeqStEphS::from_vec(reversed)
-    }
+    } // impl TopoSortStEphTrait
 
     } // verus!
 }
