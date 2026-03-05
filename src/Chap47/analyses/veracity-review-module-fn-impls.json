@@ -9,43 +9,43 @@
   },
   {
     "id": 2,
-    "function": "eq",
-    "file": "Chap47/ChainedHashTable.rs",
-    "lines": "63-64",
-    "spec_strength": "unknown",
-    "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (self.chain == other.chain)"
-  },
-  {
-    "id": 3,
     "function": "hash_index",
     "file": "Chap47/ChainedHashTable.rs",
-    "lines": "85-89",
+    "lines": "55-59",
     "spec_strength": "unknown",
     "snippet": "            fn hash_index(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (index: usize)\n                requires\n                    table.current_size > 0,\n                ensures\n                    index < table.current_size;"
   },
   {
-    "id": 4,
+    "id": 3,
     "function": "insert_chained",
     "file": "Chap47/ChainedHashTable.rs",
-    "lines": "95",
+    "lines": "65-68",
     "spec_strength": "hole",
-    "snippet": "            fn insert_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value) {"
+    "snippet": "            fn insert_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)\n                requires\n                    old(table).current_size > 0,\n                    old(table).table@.len() == old(table).current_size as int,"
+  },
+  {
+    "id": 4,
+    "function": "lookup_chained",
+    "file": "Chap47/ChainedHashTable.rs",
+    "lines": "83-86",
+    "spec_strength": "unknown",
+    "snippet": "            fn lookup_chained(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value>\n                requires\n                    table.current_size > 0,\n                    table.table@.len() == table.current_size as int,"
   },
   {
     "id": 5,
-    "function": "lookup_chained",
+    "function": "delete_chained",
     "file": "Chap47/ChainedHashTable.rs",
-    "lines": "110",
+    "lines": "100-103",
     "spec_strength": "hole",
-    "snippet": "            fn lookup_chained(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value> {"
+    "snippet": "            fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> B\n                requires\n                    old(table).current_size > 0,\n                    old(table).table@.len() == old(table).current_size as int,"
   },
   {
     "id": 6,
-    "function": "delete_chained",
+    "function": "eq",
     "file": "Chap47/ChainedHashTable.rs",
-    "lines": "123",
-    "spec_strength": "hole",
-    "snippet": "            fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> B {"
+    "lines": "137-138",
+    "spec_strength": "unknown",
+    "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (self.chain == other.chain)"
   },
   {
     "id": 7,
@@ -105,67 +105,67 @@
   },
   {
     "id": 14,
-    "function": "new",
-    "file": "Chap47/FlatHashTable.rs",
-    "lines": "42-43",
-    "spec_strength": "unknown",
-    "snippet": "        fn new() -> (entry: Self)\n            ensures entry is Empty,"
-  },
-  {
-    "id": 15,
-    "function": "insert",
-    "file": "Chap47/FlatHashTable.rs",
-    "lines": "48-49",
-    "spec_strength": "unknown",
-    "snippet": "        fn insert(&mut self, key: Key, value: Value)\n            ensures *self == FlatEntry::<Key, Value>::Occupied(key, value),"
-  },
-  {
-    "id": 16,
-    "function": "lookup",
-    "file": "Chap47/FlatHashTable.rs",
-    "lines": "54-57",
-    "spec_strength": "unknown",
-    "snippet": "        fn lookup(&self, key: &Key) -> (found: Option<Value>)\n            ensures\n                self is Empty ==> found is None,\n                self is Deleted ==> found is None,"
-  },
-  {
-    "id": 17,
-    "function": "delete",
-    "file": "Chap47/FlatHashTable.rs",
-    "lines": "69-72",
-    "spec_strength": "unknown",
-    "snippet": "        fn delete(&mut self, key: &Key) -> (deleted: B)\n            ensures\n                deleted ==> *self is Deleted,\n                !deleted ==> *self == *old(self),"
-  },
-  {
-    "id": 18,
     "function": "probe",
     "file": "Chap47/FlatHashTable.rs",
-    "lines": "111-115",
+    "lines": "48-52",
     "spec_strength": "unknown",
     "snippet": "        fn probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize)\n            requires\n                table.current_size > 0,\n            ensures\n                slot < table.current_size;"
   },
   {
-    "id": 19,
+    "id": 15,
     "function": "find_slot",
     "file": "Chap47/FlatHashTable.rs",
-    "lines": "120-124",
+    "lines": "57-61",
     "spec_strength": "unknown",
     "snippet": "        fn find_slot(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (slot: usize)\n            requires\n                table.current_size > 0,\n            ensures\n                slot < table.current_size;"
   },
   {
-    "id": 20,
+    "id": 16,
     "function": "insert_with_probe",
     "file": "Chap47/FlatHashTable.rs",
-    "lines": "130",
+    "lines": "67-70",
     "spec_strength": "hole",
-    "snippet": "        fn insert_with_probe(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value) {"
+    "snippet": "        fn insert_with_probe(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)\n            requires\n                old(table).current_size > 0,\n                old(table).table@.len() == old(table).current_size as int,"
+  },
+  {
+    "id": 17,
+    "function": "lookup_with_probe",
+    "file": "Chap47/FlatHashTable.rs",
+    "lines": "82-85",
+    "spec_strength": "hole",
+    "snippet": "        fn lookup_with_probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value>\n            requires\n                table.current_size > 0,\n                table.table@.len() == table.current_size as int,"
+  },
+  {
+    "id": 18,
+    "function": "new",
+    "file": "Chap47/FlatHashTable.rs",
+    "lines": "104-105",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (entry: Self)\n            ensures entry is Empty,"
+  },
+  {
+    "id": 19,
+    "function": "insert",
+    "file": "Chap47/FlatHashTable.rs",
+    "lines": "110-111",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, key: Key, value: Value)\n            ensures *self == FlatEntry::<Key, Value>::Occupied(key, value),"
+  },
+  {
+    "id": 20,
+    "function": "lookup",
+    "file": "Chap47/FlatHashTable.rs",
+    "lines": "116-119",
+    "spec_strength": "unknown",
+    "snippet": "        fn lookup(&self, key: &Key) -> (found: Option<Value>)\n            ensures\n                self is Empty ==> found is None,\n                self is Deleted ==> found is None,"
   },
   {
     "id": 21,
-    "function": "lookup_with_probe",
+    "function": "delete",
     "file": "Chap47/FlatHashTable.rs",
-    "lines": "141",
-    "spec_strength": "hole",
-    "snippet": "        fn lookup_with_probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value> {"
+    "lines": "131-134",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&mut self, key: &Key) -> (deleted: B)\n            ensures\n                deleted ==> *self is Deleted,\n                !deleted ==> *self == *old(self),"
   },
   {
     "id": 22,
@@ -219,7 +219,7 @@
     "id": 28,
     "function": "_linked_list_chained_hash_table_verified",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "31",
+    "lines": "32",
     "spec_strength": "",
     "snippet": "        proof fn _linked_list_chained_hash_table_verified() {}"
   },
@@ -227,49 +227,49 @@
     "id": 29,
     "function": "new",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "35-37",
+    "lines": "39",
     "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(1), Span O(1).\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty LinkedList construction.\n        fn new() -> Self { LinkedList::new() }"
+    "snippet": "            fn new() -> (entry: Self) { LinkedListStEphS { seq: Vec::new() } }"
   },
   {
     "id": 30,
-    "function": "insert`",
+    "function": "insert",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "39-49",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(1+α) expected, Span O(1+α).\n        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan for duplicate key, n = chain length.\n        fn insert(&mut self, key: Key, value: Value) {\n            for (k, v) in self.iter_mut() {\n                if k == &key {\n                    *v = value;\n                    return;\n                }\n            }\n            self.push_back((key, value));\n        }"
+    "lines": "43-44",
+    "spec_strength": "hole",
+    "snippet": "            fn insert(&mut self, key: Key, value: Value)\n                ensures self.seq@.len() >= 1,"
   },
   {
     "id": 31,
-    "function": "lookup`",
+    "function": "lookup",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "51-60",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(1+α) expected, Span O(1+α).\n        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan of chain, n = chain length.\n        fn lookup(&self, key: &Key) -> Option<Value> {\n            for (k, v) in self.iter() {\n                if k == key {\n                    return Some(v.clone());\n                }\n            }\n            None\n        }"
+    "lines": "62",
+    "spec_strength": "hole",
+    "snippet": "            fn lookup(&self, key: &Key) -> (found: Option<Value>) {"
   },
   {
     "id": 32,
-    "function": "delete`",
+    "function": "delete",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "62-80",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(1+α) expected, Span O(1+α).\n        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + split_off/append, n = chain length.\n        fn delete(&mut self, key: &Key) -> B {\n            let mut found_idx = None;\n            for (idx, (k, _)) in self.iter().enumerate() {\n                if k == key {\n                    found_idx = Some(idx);\n                    break;\n                }\n            }\n            if let Some(idx) = found_idx {\n                let mut split_off = self.split_off(idx);\n                split_off.pop_front();\n                self.append(&mut split_off);\n                true\n            } else {\n                false\n            }\n        }"
+    "lines": "77",
+    "spec_strength": "hole",
+    "snippet": "            fn delete(&mut self, key: &Key) -> (deleted: B) {"
   },
   {
     "id": 33,
     "function": "resize",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "107-136",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(n + m + m'), Span O(n + m + m').\n        /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' lists, reinserts.\n        fn resize(\n            table: &HashTable<Key, Value, LinkedList<(Key, Value)>, Metrics, H>,\n            new_size: usize,\n        ) -> HashTable<Key, Value, LinkedList<(Key, Value)>, Metrics, H> {\n            let mut pairs = Vec::new();\n            for chain in &table.table {\n                for (k, v) in chain.iter() {\n                    pairs.push((k.clone(), v.clone()));\n                }\n            }\n\n            let new_table_vec = (0..new_size).map(|_| LinkedList::new()).collect();\n            let mut new_table = HashTable {\n                table: new_table_vec,\n                hash_fn: table.hash_fn.clone(),\n                initial_size: table.initial_size,\n                current_size: new_size,\n                num_elements: 0,\n                metrics: Metrics::default(),\n                _phantom: PhantomData,\n            };\n\n            for (key, value) in pairs {\n                Self::insert(&mut new_table, key, value);\n            }\n\n            new_table\n        }"
+    "lines": "120-123",
+    "spec_strength": "hole",
+    "snippet": "            fn resize(\n                table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>,\n                new_size: usize,\n            ) -> (resized: HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>) {"
   },
   {
     "id": 34,
     "function": "hash_index",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "143-147",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(1), Span O(1).\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to stored hash function.\n        fn hash_index(table: &HashTable<Key, Value, LinkedList<(Key, Value)>, Metrics, H>, key: &Key) -> usize {\n            (table.hash_fn)(key, table.current_size)\n        }"
+    "lines": "157",
+    "spec_strength": "hole",
+    "snippet": "            fn hash_index(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (index: usize) {"
   },
   {
     "id": 35,
@@ -315,31 +315,31 @@
     "id": 40,
     "function": "metrics",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "118",
-    "spec_strength": "hole",
+    "lines": "117",
+    "spec_strength": "",
     "snippet": "        fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics) { &table.metrics }"
   },
   {
     "id": 41,
     "function": "loadAndSize",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "125-126",
+    "lines": "124-125",
     "spec_strength": "hole",
-    "snippet": "        fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (result: LoadAndSize)\n            ensures result.size == table.current_size,"
+    "snippet": "        fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)\n            ensures load_and_size.size == table.current_size,"
   },
   {
     "id": 42,
     "function": "resize",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "144-149",
+    "lines": "143-148",
     "spec_strength": "unknown",
-    "snippet": "        fn resize(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> (result: HashTable<Key, Value, Entry, Metrics, H>)\n            requires\n                new_size > 0,\n            ensures\n                result.current_size == new_size,\n                result.table@.len() == new_size as int;"
+    "snippet": "        fn resize(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> (resized: HashTable<Key, Value, Entry, Metrics, H>)\n            requires\n                new_size > 0,\n            ensures\n                resized.current_size == new_size,\n                resized.table@.len() == new_size as int;"
   },
   {
     "id": 43,
     "function": "insert",
     "file": "Chap47/QuadProbFlatHashTableStEph.rs",
-    "lines": "38",
+    "lines": "39",
     "spec_strength": "hole",
     "snippet": "        fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {"
   },
@@ -347,7 +347,7 @@
     "id": 44,
     "function": "lookup",
     "file": "Chap47/QuadProbFlatHashTableStEph.rs",
-    "lines": "58",
+    "lines": "59",
     "spec_strength": "hole",
     "snippet": "        fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {"
   },
@@ -355,7 +355,7 @@
     "id": 45,
     "function": "delete",
     "file": "Chap47/QuadProbFlatHashTableStEph.rs",
-    "lines": "77",
+    "lines": "78",
     "spec_strength": "hole",
     "snippet": "        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> B {"
   },
@@ -363,7 +363,7 @@
     "id": 46,
     "function": "resize",
     "file": "Chap47/QuadProbFlatHashTableStEph.rs",
-    "lines": "100-103",
+    "lines": "101-104",
     "spec_strength": "hole",
     "snippet": "        fn resize(\n            table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,\n            new_size: usize,\n        ) -> HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H> {"
   },
@@ -371,7 +371,7 @@
     "id": 47,
     "function": "probe",
     "file": "Chap47/QuadProbFlatHashTableStEph.rs",
-    "lines": "137",
+    "lines": "138",
     "spec_strength": "hole",
     "snippet": "        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> usize {"
   },
@@ -379,7 +379,7 @@
     "id": 48,
     "function": "find_slot",
     "file": "Chap47/QuadProbFlatHashTableStEph.rs",
-    "lines": "145",
+    "lines": "146",
     "spec_strength": "hole",
     "snippet": "        fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> usize {"
   },
@@ -457,33 +457,33 @@
   },
   {
     "id": 58,
-    "function": "eq`",
-    "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "236-238",
-    "spec_strength": "unknown",
-    "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (*self == *other)\n                decreases self, other"
-  },
-  {
-    "id": 59,
     "function": "resize",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "315-318",
+    "lines": "245-248",
     "spec_strength": "hole",
     "snippet": "            fn resize(\n                table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>,\n                new_size: usize,\n            ) -> HashTable<Key, Value, ChainList<Key, Value>, Metrics, H> {"
   },
   {
-    "id": 60,
+    "id": 59,
     "function": "hash_index",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "354",
+    "lines": "284",
     "spec_strength": "hole",
     "snippet": "            fn hash_index(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> usize {"
+  },
+  {
+    "id": 60,
+    "function": "eq`",
+    "file": "Chap47/StructChainedHashTable.rs",
+    "lines": "310-312",
+    "spec_strength": "unknown",
+    "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (*self == *other)\n                decreases self, other"
   },
   {
     "id": 61,
     "function": "_vec_chained_hash_table_verified",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "31",
+    "lines": "32",
     "spec_strength": "",
     "snippet": "        proof fn _vec_chained_hash_table_verified() {}"
   },
@@ -491,23 +491,23 @@
     "id": 62,
     "function": "new",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "38",
-    "spec_strength": "",
-    "snippet": "            fn new() -> (entry: Self) { Vec::new() }"
+    "lines": "39-40",
+    "spec_strength": "unknown",
+    "snippet": "            fn new() -> (entry: Self)\n                ensures entry@.len() == 0,"
   },
   {
     "id": 63,
     "function": "insert",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "42",
+    "lines": "45-46",
     "spec_strength": "hole",
-    "snippet": "            fn insert(&mut self, key: Key, value: Value) {"
+    "snippet": "            fn insert(&mut self, key: Key, value: Value)\n                ensures self@.len() >= 1,"
   },
   {
     "id": 64,
     "function": "lookup",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "59",
+    "lines": "64",
     "spec_strength": "hole",
     "snippet": "            fn lookup(&self, key: &Key) -> (found: Option<Value>) {"
   },
@@ -515,7 +515,7 @@
     "id": 65,
     "function": "delete",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "74",
+    "lines": "79",
     "spec_strength": "hole",
     "snippet": "            fn delete(&mut self, key: &Key) -> (deleted: B) {"
   },
@@ -523,7 +523,7 @@
     "id": 66,
     "function": "resize",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "119-122",
+    "lines": "124-127",
     "spec_strength": "hole",
     "snippet": "            fn resize(\n                table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>,\n                new_size: usize,\n            ) -> HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H> {"
   },
@@ -531,7 +531,7 @@
     "id": 67,
     "function": "hash_index",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "156",
+    "lines": "161",
     "spec_strength": "hole",
     "snippet": "            fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> usize {"
   }

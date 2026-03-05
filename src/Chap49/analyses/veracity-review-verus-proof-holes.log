@@ -53,13 +53,12 @@ Holes Found: 4 total
    4 × external_body
 
 Info: 8 total
-   MinEditDistMtPer.rs:126: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   MinEditDistMtPer.rs:136: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    SubsetSumMtEph.rs:130: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    SubsetSumMtEph.rs:140: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   MinEditDistMtEph.rs:153: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   MinEditDistMtEph.rs:163: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MinEditDistMtPer.rs:126: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MinEditDistMtPer.rs:136: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    SubsetSumMtPer.rs:117: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    SubsetSumMtPer.rs:127: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-.
-   SubsetSumMtPer.rs:127: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MinEditDistMtEph.rs:153: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MinEditDistMtEph.rs:163: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+nfo: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.

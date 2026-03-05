@@ -27,8 +27,8 @@ Proof Functions:
 Holes Found: 0 total
 
 Info: 2 total
-   ArraySeqStEph.rs:1128: info: accept() - accept hole
    ArraySeqStPer.rs:1129: info: accept() - accept hole
+   ArraySeqStEph.rs:1128: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.
 fo: accept() - accept hole

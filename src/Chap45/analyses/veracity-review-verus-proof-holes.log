@@ -135,11 +135,11 @@ Info: 11 total
    LeftistHeapPQ.rs:523: info: accept() - accept hole
    LeftistHeapPQ.rs:535: info: accept() - accept hole
    LeftistHeapPQ.rs:545: info: accept() - accept hole
-   BalancedTreePQ.rs:381: info: accept() - accept hole
-   SortedListPQ.rs:421: info: accept() - accept hole
-   HeapsortExample.rs:84: info: accept() - accept hole
-   HeapsortExample.rs:99: info: accept() - accept hole
    BinaryHeapPQ.rs:719: info: accept() - accept hole
    BinaryHeapPQ.rs:734: info: accept() - accept hole
-Q.rs:719: info: accept() - accept hole
-   BinaryHeapPQ.rs:734: info: accept() - accept hole
+   SortedListPQ.rs:421: info: accept() - accept hole
+   BalancedTreePQ.rs:381: info: accept() - accept hole
+   HeapsortExample.rs:84: info: accept() - accept hole
+   HeapsortExample.rs:99: info: accept() - accept hole
+.rs:84: info: accept() - accept hole
+   HeapsortExample.rs:99: info: accept() - accept hole

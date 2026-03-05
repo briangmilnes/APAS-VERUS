@@ -268,5 +268,5 @@ Errors: 9 total (9 assume in eq/clone (Verus workaround))
 Info: 2 total
    BSTSplayMtEph.rs:354: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    BSTRBMtEph.rs:332: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-t.
+_external_body - Verus RwLock new requires an external body at this point.
    BSTRBMtEph.rs:332: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.

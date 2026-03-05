@@ -209,6 +209,7 @@ Info: 9 total
    MatrixChainMtEph.rs:84: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    MatrixChainMtPer.rs:79: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    MatrixChainMtPer.rs:350: info: accept() - accept hole
-   MatrixChainStPer.rs:339: info: accept() - accept hole
    OptBinSearchTreeMtPer.rs:45: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-nfo: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MatrixChainStPer.rs:339: info: accept() - accept hole
+es an external body at this point.
+   MatrixChainStPer.rs:339: info: accept() - accept hole
