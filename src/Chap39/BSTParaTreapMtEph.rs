@@ -5,6 +5,7 @@
 //  Table of Contents
 //	1. module
 //	4. type definitions
+//	5. view impls
 //	6. spec fns
 //	8. traits
 //	9. impls
@@ -54,6 +55,17 @@ pub mod BSTParaTreapMtEph {
     #[verifier::reject_recursive_types(T)]
     pub struct ParamTreap<T: MtKey> {
         pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaTreapMtEphInv>>,
+    }
+
+    // 5. view impls
+
+    impl<T: MtKey> View for ParamTreap<T> {
+        type V = Set<T::V>;
+
+        #[verifier::external_body]
+        open spec fn view(&self) -> Set<T::V> {
+            Set::empty()
+        }
     }
 
 
@@ -345,67 +357,86 @@ pub mod BSTParaTreapMtEph {
 
     //		8. traits
 
-    pub trait ParamTreapTrait<T: MtKey + 'static>: Sized {
+    pub trait ParamTreapTrait<T: MtKey + 'static>: Sized + View<V = Set<T::V>> {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn new()                                   -> Self;
+        fn new() -> (tree: Self)
+            ensures tree@.finite(), tree@.len() == 0;
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn expose(&self)                           -> Exposed<T>;
+        fn expose(&self) -> (exposed: Exposed<T>)
+            ensures true;
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn expose_with_priority(&self)             -> Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>;
+        fn expose_with_priority(&self) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>)
+            ensures true;
         /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
         /// - Claude-Opus-4.6: Work O(log(|left| + |right|)), Span O(log(|left| + |right|)) — delegates to join_with_priority
-        fn join_mid(exposed: Exposed<T>)           -> Self;
+        fn join_mid(exposed: Exposed<T>) -> (tree: Self)
+            ensures tree@.finite();
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn size(&self)                             -> usize;
+        fn size(&self) -> (count: usize)
+            ensures self@.finite(), count == self@.len();
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)                         -> bool;
+        fn is_empty(&self) -> (empty: bool)
+            ensures self@.finite(), empty == (self@.len() == 0);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
-        fn insert(&self, key: T);
+        fn insert(&self, key: T)
+            ensures true;
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
-        fn delete(&self, key: &T);
+        fn delete(&self, key: &T)
+            ensures true;
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
-        fn find(&self, key: &T)                    -> Option<T>;
+        fn find(&self, key: &T) -> (found: Option<T>)
+            ensures found matches Some(v) ==> self@.contains(v@);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
-        fn split(&self, key: &T)                   -> (Self, bool, Self);
+        fn split(&self, key: &T) -> (parts: (Self, bool, Self))
+            ensures
+                parts.0@.finite(), parts.2@.finite(),
+                parts.1 == self@.contains(key@);
         /// - APAS: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         /// - Claude-Opus-4.6: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
-        fn join_pair(&self, other: Self)           -> Self;
+        fn join_pair(&self, other: Self) -> (joined: Self)
+            ensures joined@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
-        fn union(&self, other: &Self)              -> Self;
+        fn union(&self, other: &Self) -> (combined: Self)
+            ensures combined@.finite(), combined@ == self@.union(other@);
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
-        fn intersect(&self, other: &Self)          -> Self;
+        fn intersect(&self, other: &Self) -> (common: Self)
+            ensures common@.finite(), common@ == self@.intersect(other@);
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
-        fn difference(&self, other: &Self)         -> Self;
+        fn difference(&self, other: &Self) -> (diff: Self)
+            ensures diff@.finite(), diff@ == self@.difference(other@);
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
-        fn filter<F: Pred<T>>(&self, predicate: F) -> Self;
+        fn filter<F: Pred<T>>(&self, predicate: F) -> (filtered: Self)
+            ensures filtered@.finite();
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
-        fn reduce<F>(&self, op: F, base: T)        -> T
+        fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
         where
-            F: Fn(T, T) -> T + Send + Sync + 'static;
+            F: Fn(T, T) -> T + Send + Sync + 'static
+            ensures true;
         /// - APAS: Work O(|t|), Span O(|t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|)
-        fn in_order(&self)                         -> ArraySeqStPerS<T>;
+        fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
+            ensures self@.finite(), ordered.spec_len() == self@.len();
     }
 
     impl<T: MtKey + 'static> ParamTreapTrait<T> for ParamTreap<T> {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         #[verifier::external_body]
-        fn new() -> Self {
+        fn new() -> (tree: Self) {
             ParamTreap {
                 root: Arc::new(new_treap_lock(None)),
             }
@@ -414,7 +445,7 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         #[verifier::external_body]
-        fn expose(&self) -> Exposed<T> {
+        fn expose(&self) -> (exposed: Exposed<T>) {
             match self.expose_with_priority() {
                 | None => Exposed::Leaf,
                 | Some((left, key, _, right)) => Exposed::Node(left, key, right),
@@ -424,7 +455,7 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         #[verifier::external_body]
-        fn expose_with_priority(&self) -> Option<(ParamTreap<T>, T, i64, ParamTreap<T>)> {
+        fn expose_with_priority(&self) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>) {
             let handle = self.root.acquire_read();
             let result = handle.borrow()
                 .as_ref()
@@ -436,7 +467,7 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
         /// - Claude-Opus-4.6: Work O(log(|left| + |right|)), Span O(log(|left| + |right|)) — delegates to join_with_priority
         #[verifier::external_body]
-        fn join_mid(exposed: Exposed<T>) -> Self {
+        fn join_mid(exposed: Exposed<T>) -> (tree: Self) {
             match exposed {
                 | Exposed::Leaf => ParamTreap::new(),
                 | Exposed::Node(left, key, right) => {
@@ -449,12 +480,12 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         #[verifier::external_body]
-        fn size(&self) -> usize { tree_size(self) }
+        fn size(&self) -> (count: usize) { tree_size(self) }
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         #[verifier::external_body]
-        fn is_empty(&self) -> bool { self.size() == 0 }
+        fn is_empty(&self) -> (empty: bool) { self.size() == 0 }
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
@@ -486,7 +517,7 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         #[verifier::external_body]
-        fn find(&self, key: &T) -> Option<T> {
+        fn find(&self, key: &T) -> (found: Option<T>) {
             match self.expose_with_priority() {
                 | None => None,
                 | Some((left, root_key, _, right)) => match key.cmp(&root_key) {
@@ -500,37 +531,37 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         #[verifier::external_body]
-        fn split(&self, key: &T) -> (Self, bool, Self) { split_inner(self, key) }
+        fn split(&self, key: &T) -> (parts: (Self, bool, Self)) { split_inner(self, key) }
 
         /// - APAS: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         /// - Claude-Opus-4.6: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         #[verifier::external_body]
-        fn join_pair(&self, other: Self) -> Self { join_pair_inner(self.clone(), other) }
+        fn join_pair(&self, other: Self) -> (joined: Self) { join_pair_inner(self.clone(), other) }
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
         #[verifier::external_body]
-        fn union(&self, other: &Self) -> Self { union_inner(self, other) }
+        fn union(&self, other: &Self) -> (combined: Self) { union_inner(self, other) }
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
         #[verifier::external_body]
-        fn intersect(&self, other: &Self) -> Self { intersect_inner(self, other) }
+        fn intersect(&self, other: &Self) -> (common: Self) { intersect_inner(self, other) }
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
         #[verifier::external_body]
-        fn difference(&self, other: &Self) -> Self { difference_inner(self, other) }
+        fn difference(&self, other: &Self) -> (diff: Self) { difference_inner(self, other) }
 
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
         #[verifier::external_body]
-        fn filter<F: Pred<T>>(&self, predicate: F) -> Self { filter_parallel(self, predicate) }
+        fn filter<F: Pred<T>>(&self, predicate: F) -> (filtered: Self) { filter_parallel(self, predicate) }
 
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
         #[verifier::external_body]
-        fn reduce<F>(&self, op: F, base: T) -> T
+        fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
         where
             F: Fn(T, T) -> T + Send + Sync + 'static,
         {
@@ -540,7 +571,7 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(|t|), Span O(|t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|)
         #[verifier::external_body]
-        fn in_order(&self) -> ArraySeqStPerS<T> {
+        fn in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
             let mut out = Vec::with_capacity(self.size());
             collect_in_order(self, &mut out);
             ArraySeqStPerS::from_vec(out)
