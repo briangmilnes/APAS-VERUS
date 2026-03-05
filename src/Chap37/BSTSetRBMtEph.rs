@@ -305,6 +305,12 @@ pub mod BSTSetRBMtEph {
         }
     }
 
+    impl<T: StTInMtT + Ord> fmt::Display for BSTSetRBMtEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTSetRBMtEph(size={})", self.size())
+        }
+    }
+
     #[macro_export]
     macro_rules! BSTSetRBMtEphLit {
         () => {

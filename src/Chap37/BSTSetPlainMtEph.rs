@@ -277,6 +277,12 @@ pub mod BSTSetPlainMtEph {
         }
     }
 
+    impl<T: StTInMtT + Ord> std::fmt::Display for BSTSetPlainMtEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTSetPlainMtEph(size={})", self.size())
+        }
+    }
+
     #[macro_export]
     macro_rules! BSTSetPlainMtEphLit {
         () => {

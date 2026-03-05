@@ -314,6 +314,32 @@ pub mod BSTBBAlphaMtEph {
 
     } // verus!
 
+    // 13. derive impls outside verus!
+
+    impl<T> std::fmt::Debug for BSTBBAlphaMtEphInv<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTBBAlphaMtEphInv").finish()
+        }
+    }
+
+    impl<T> std::fmt::Display for BSTBBAlphaMtEphInv<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTBBAlphaMtEphInv")
+        }
+    }
+
+    impl<T: TotalOrder> std::fmt::Debug for BSTBBAlphaMtEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTBBAlphaMtEph").finish()
+        }
+    }
+
+    impl<T: TotalOrder> std::fmt::Display for BSTBBAlphaMtEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTBBAlphaMtEph(size={})", self.size())
+        }
+    }
+
     // 12. macros
 
     #[macro_export]

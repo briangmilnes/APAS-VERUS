@@ -309,6 +309,32 @@ pub mod BSTPlainMtEph {
 
     } // verus!
 
+    // 13. derive impls outside verus!
+
+    impl<T> std::fmt::Debug for BSTPlainMtEphInv<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTPlainMtEphInv").finish()
+        }
+    }
+
+    impl<T> std::fmt::Display for BSTPlainMtEphInv<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTPlainMtEphInv")
+        }
+    }
+
+    impl<T: TotalOrder> std::fmt::Debug for BSTPlainMtEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTPlainMtEph").finish()
+        }
+    }
+
+    impl<T: TotalOrder> std::fmt::Display for BSTPlainMtEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTPlainMtEph(size={})", self.size())
+        }
+    }
+
     // 12. macros
 
     #[macro_export]

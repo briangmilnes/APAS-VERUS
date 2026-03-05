@@ -19,7 +19,7 @@
 pub mod AVLTreeSeqMtPer {
 
     use std::sync::Arc;
-    use std::fmt::{Debug, Formatter};
+    use std::fmt::{Debug, Display, Formatter};
 
     use vstd::prelude::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
@@ -499,6 +499,22 @@ pub mod AVLTreeSeqMtPer {
         fn default() -> Self { Self::empty() }
     }
 
+    impl<T: StTInMtT> Debug for Node<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("Node")
+                .field("value", &self.value)
+                .field("height", &self.height)
+                .field("size", &self.size)
+                .finish()
+        }
+    }
+
+    impl<T: StTInMtT> Display for Node<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{}", self.value)
+        }
+    }
+
     impl<T: StTInMtT> Debug for AVLTreeSeqMtPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             let n = size_fn(&self.root);
@@ -508,6 +524,32 @@ pub mod AVLTreeSeqMtPer {
                 write!(f, "{:?}", nth_ref(&self.root, i))?;
             }
             write!(f, "]")
+        }
+    }
+
+    impl<T: StTInMtT> Display for AVLTreeSeqMtPerS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            let n = size_fn(&self.root);
+            write!(f, "[")?;
+            for i in 0..n {
+                if i > 0 { write!(f, ", ")?; }
+                write!(f, "{}", nth_ref(&self.root, i))?;
+            }
+            write!(f, "]")
+        }
+    }
+
+    impl<T: StTInMtT> Debug for AVLTreeSeqMtPerIter<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("AVLTreeSeqMtPerIter")
+                .field("index", &self.index)
+                .finish()
+        }
+    }
+
+    impl<T: StTInMtT> Display for AVLTreeSeqMtPerIter<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AVLTreeSeqMtPerIter(index={})", self.index)
         }
     }
 

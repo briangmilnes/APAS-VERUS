@@ -967,6 +967,11 @@ pub mod BSTAVLStEph {
     }
 
     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
+        requires tree_is_bst::<T>(*node),
+        ensures
+            node.spec_size() == 0 ==> min.is_none(),
+            node.spec_size() > 0 ==> min.is_some(),
+            min.is_some() ==> tree_contains(*node, *min.unwrap()),
         decreases node.spec_size(),
     {
         match node {
@@ -982,6 +987,11 @@ pub mod BSTAVLStEph {
     }
 
     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
+        requires tree_is_bst::<T>(*node),
+        ensures
+            node.spec_size() == 0 ==> max.is_none(),
+            node.spec_size() > 0 ==> max.is_some(),
+            max.is_some() ==> tree_contains(*node, *max.unwrap()),
         decreases node.spec_size(),
     {
         match node {

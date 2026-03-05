@@ -423,9 +423,42 @@ pub mod BSTSplayMtEph {
 
     // 13. derive impls outside verus!
 
+    impl<T: StTInMtT + Ord> std::fmt::Debug for Node<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("Node")
+                .field("key", &self.key)
+                .field("size", &self.size)
+                .finish()
+        }
+    }
+
+    impl<T: StTInMtT + Ord> std::fmt::Display for Node<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{}", self.key)
+        }
+    }
+
+    impl std::fmt::Debug for BSTSplayMtEphInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTSplayMtEphInv").finish()
+        }
+    }
+
+    impl std::fmt::Display for BSTSplayMtEphInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTSplayMtEphInv")
+        }
+    }
+
     impl<T: StTInMtT + Ord> std::fmt::Debug for BSTSplayMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTSplayMtEph").finish()
+        }
+    }
+
+    impl<T: StTInMtT + Ord> std::fmt::Display for BSTSplayMtEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTSplayMtEph(size={})", self.size())
         }
     }
 

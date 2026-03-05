@@ -315,6 +315,12 @@ pub mod BSTSetAVLMtEph {
         }
     }
 
+    impl<T: StTInMtT + Ord> fmt::Display for BSTSetAVLMtEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTSetAVLMtEph(size={})", self.size())
+        }
+    }
+
     #[macro_export]
     macro_rules! BSTSetAVLMtEphLit {
         () => {

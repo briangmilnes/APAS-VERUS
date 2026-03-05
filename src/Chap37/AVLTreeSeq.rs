@@ -1219,6 +1219,50 @@ pub mod AVLTreeSeq {
         fn default() -> Self { Self::new() }
     }
 
+    impl<T: StT> Debug for AVLTreeNode<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("AVLTreeNode")
+                .field("value", &self.value)
+                .field("height", &self.height)
+                .field("left_size", &self.left_size)
+                .field("right_size", &self.right_size)
+                .finish()
+        }
+    }
+
+    impl<T: StT> Display for AVLTreeNode<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{}", self.value)
+        }
+    }
+
+    impl<'a, T: StT> Debug for AVLTreeSeqIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("AVLTreeSeqIter")
+                .field("pos", &self.pos)
+                .field("len", &self.len)
+                .finish()
+        }
+    }
+
+    impl<'a, T: StT> Display for AVLTreeSeqIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AVLTreeSeqIter(pos={}, len={})", self.pos, self.len)
+        }
+    }
+
+    impl<'a, T: StT> Debug for AVLTreeSeqGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("AVLTreeSeqGhostIterator").finish()
+        }
+    }
+
+    impl<'a, T: StT> Display for AVLTreeSeqGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AVLTreeSeqGhostIterator")
+        }
+    }
+
     impl<T: StT> Debug for AVLTreeS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             let elts = (0..self.length()).map(|i| self.nth(i));

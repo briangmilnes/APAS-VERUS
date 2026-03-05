@@ -18,7 +18,7 @@
 
 pub mod AVLTreeSeqStEph {
 
-    use std::fmt::Debug;
+    use std::fmt::{Debug, Display, Formatter};
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
@@ -777,6 +777,55 @@ pub mod AVLTreeSeqStEph {
 
     impl<T: StT> Default for AVLTreeSeqStEphS<T> {
         fn default() -> Self { Self::new() }
+    }
+
+    impl<T: StT> Debug for AVLTreeNode<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("AVLTreeNode")
+                .field("value", &self.value)
+                .field("height", &self.height)
+                .field("left_size", &self.left_size)
+                .field("right_size", &self.right_size)
+                .finish()
+        }
+    }
+
+    impl<T: StT> Display for AVLTreeNode<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{}", self.value)
+        }
+    }
+
+    impl<T: StT> Debug for AVLTreeSeqStEphS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            let n = self.length();
+            let elts = (0..n).map(|i| self.nth(i));
+            f.debug_list().entries(elts).finish()
+        }
+    }
+
+    impl<T: StT> Display for AVLTreeSeqStEphS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "[")?;
+            let n = self.length();
+            for i in 0..n {
+                if i > 0 { write!(f, ", ")?; }
+                write!(f, "{}", self.nth(i))?;
+            }
+            write!(f, "]")
+        }
+    }
+
+    impl<'a, T: StT> Debug for AVLTreeSeqIterStEph<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("AVLTreeSeqIterStEph").finish()
+        }
+    }
+
+    impl<'a, T: StT> Display for AVLTreeSeqIterStEph<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AVLTreeSeqIterStEph")
+        }
     }
 
     // Iterator (outside verus! — stack-based traversal not verified)

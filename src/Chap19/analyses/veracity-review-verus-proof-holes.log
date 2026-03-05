@@ -31,9 +31,6 @@ Info: 2 total
    ArraySeqStEph.rs:1128: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.
-
-Info: 2 total
-   ArraySeqStPer.rs:1129: info: accept() - accept hole
-   ArraySeqStEph.rs:1128: info: accept() - accept hole
+fo: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.

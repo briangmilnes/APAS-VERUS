@@ -19,7 +19,7 @@
 pub mod AVLTreeSeqStPer {
 
     use std::sync::Arc;
-    use std::fmt::{Debug, Formatter};
+    use std::fmt::{Debug, Display, Formatter};
 
     use vstd::prelude::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
@@ -509,6 +509,22 @@ pub mod AVLTreeSeqStPer {
         fn default() -> Self { Self::empty() }
     }
 
+    impl<T: StT> Debug for Node<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("Node")
+                .field("value", &self.value)
+                .field("height", &self.height)
+                .field("size", &self.size)
+                .finish()
+        }
+    }
+
+    impl<T: StT> Display for Node<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{}", self.value)
+        }
+    }
+
     impl<T: StT> Debug for AVLTreeSeqStPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             let n = size_fn(&self.root);
@@ -518,6 +534,30 @@ pub mod AVLTreeSeqStPer {
                 write!(f, "{:?}", nth_ref(&self.root, i))?;
             }
             write!(f, "]")
+        }
+    }
+
+    impl<T: StT> Display for AVLTreeSeqStPerS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            let n = size_fn(&self.root);
+            write!(f, "[")?;
+            for i in 0..n {
+                if i > 0 { write!(f, ", ")?; }
+                write!(f, "{}", nth_ref(&self.root, i))?;
+            }
+            write!(f, "]")
+        }
+    }
+
+    impl<'a, T: StT> Debug for AVLTreeSeqStPerIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("AVLTreeSeqStPerIter").finish()
+        }
+    }
+
+    impl<'a, T: StT> Display for AVLTreeSeqStPerIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AVLTreeSeqStPerIter")
         }
     }
 

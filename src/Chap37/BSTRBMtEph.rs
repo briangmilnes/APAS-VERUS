@@ -402,9 +402,58 @@ pub mod BSTRBMtEph {
 
     // 13. derive impls outside verus!
 
+    impl std::fmt::Debug for Color {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match self {
+                Color::Red => write!(f, "Red"),
+                Color::Black => write!(f, "Black"),
+            }
+        }
+    }
+
+    impl std::fmt::Display for Color {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            std::fmt::Debug::fmt(self, f)
+        }
+    }
+
+    impl<T: StTInMtT + Ord> std::fmt::Debug for Node<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("Node")
+                .field("key", &self.key)
+                .field("color", &self.color)
+                .field("size", &self.size)
+                .finish()
+        }
+    }
+
+    impl<T: StTInMtT + Ord> std::fmt::Display for Node<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{}", self.key)
+        }
+    }
+
+    impl std::fmt::Debug for BSTRBMtEphInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTRBMtEphInv").finish()
+        }
+    }
+
+    impl std::fmt::Display for BSTRBMtEphInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTRBMtEphInv")
+        }
+    }
+
     impl<T: StTInMtT + Ord> std::fmt::Debug for BSTRBMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTRBMtEph").finish()
+        }
+    }
+
+    impl<T: StTInMtT + Ord> std::fmt::Display for BSTRBMtEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTRBMtEph(size={})", self.size())
         }
     }
 

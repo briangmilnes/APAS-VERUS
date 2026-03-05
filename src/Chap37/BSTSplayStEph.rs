@@ -35,7 +35,13 @@ pub mod BSTSplayStEph {
         }
     }
 
-    fn new_node<T: StT + Ord>(key: T) -> Node<T> {
+    fn new_node<T: StT + Ord>(key: T) -> (node: Node<T>)
+        ensures
+            node.key == key,
+            node.size == 1,
+            node.left is None,
+            node.right is None,
+    {
         Node {
             key,
             size: 1,
@@ -448,6 +454,18 @@ pub mod BSTSplayStEph {
     impl<T: StT + Ord + fmt::Debug> fmt::Debug for BSTSplayStEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             f.debug_struct("BSTSplayStEph").field("root", &self.root).finish()
+        }
+    }
+
+    impl<T: StT + Ord> fmt::Display for Node<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "{}", self.key)
+        }
+    }
+
+    impl<T: StT + Ord> fmt::Display for BSTSplayStEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTSplayStEph(size={})", self.size())
         }
     }
 
