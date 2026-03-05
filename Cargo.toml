@@ -307,6 +307,10 @@ path = "tests/standards/Testtable_of_contents_standard.rs"
 name = "Testusing_closures_standard"
 path = "tests/standards/Testusing_closures_standard.rs"
 
+[[test]]
+name = "Testwrapping_iterators_standard"
+path = "tests/standards/Testwrapping_iterators_standard.rs"
+
 # Experiments removed - use verus-proof-time-testing project instead
 # [[test]]
 # name = "test_verify_harness"

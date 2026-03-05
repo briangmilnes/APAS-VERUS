@@ -34,28 +34,29 @@ src/Chap36/analyses/veracity-review-verus-proof-holes.log - clean
 
 in process:
 
-src/Chap39/analyses/veracity-review-verus-proof-holes.log - Agent1
+
+src/Chap51/analyses/veracity-review-verus-proof-holes.log - Agent1
 src/Chap37/analyses/veracity-review-verus-proof-holes.log - Agent2
-src/Chap47/analyses/veracity-review-verus-proof-holes.log - Agent3 Hashtables.
+
 src/Chap42/analyses/veracity-review-verus-proof-holes.log - Agent4 Tables. 
 src/Chap54/analyses/veracity-review-verus-proof-holes.log - Main. BFS.
 
 Stalled: 
 
+
+src/Chap39/analyses/veracity-review-verus-proof-holes.log 
 src/Chap43/analyses/veracity-review-verus-proof-holes.log - AugOrderedTables, bad.
-src/Chap45/analyses/veracity-review-verus-proof-holes.log - 
+src/Chap45/analyses/veracity-review-verus-proof-holes.log  
+src/Chap47/analyses/veracity-review-verus-proof-holes.log - Hashtables.
 src/Chap49/analyses/veracity-review-verus-proof-holes.log 
 
 22 unfinished: 
 
 src/Chap40/analyses/veracity-review-verus-proof-holes.log - started
 src/Chap38/analyses/veracity-review-verus-proof-holes.log - started
-
 src/Chap41/analyses/veracity-review-verus-proof-holes.log - bad
-
-src/Chap47/analyses/veracity-review-verus-proof-holes.log - hashtables not even verusified
 src/Chap50/analyses/veracity-review-verus-proof-holes.log - unclean, iterator status.
-src/Chap51/analyses/veracity-review-verus-proof-holes.log - unclean, not even verusified and specified.
+
 src/Chap52/analyses/veracity-review-verus-proof-holes.log - unclean, not even specified. 
 src/Chap53/analyses/veracity-review-verus-proof-holes.log - unclean, not even specified. 
 

@@ -155,3 +155,7 @@ path = "tests/standards/Provetable_of_contents_standard.rs"
 [[test]]
 name = "Proveusing_closures_standard"
 path = "tests/standards/Proveusing_closures_standard.rs"
+
+[[test]]
+name = "Provewrapping_iterators_standard"
+path = "tests/standards/Provewrapping_iterators_standard.rs"
