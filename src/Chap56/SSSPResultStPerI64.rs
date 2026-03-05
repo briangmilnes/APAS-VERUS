@@ -13,10 +13,22 @@ pub mod SSSPResultStPerI64 {
     pub const UNREACHABLE: i64 = i64::MAX;
     pub const NO_PREDECESSOR: usize = usize::MAX;
 
+    // Table of Contents
+    // 6. spec fns
+    // 8. traits
+    // 9. impls
+
     pub struct SSSPResultStPerI64 {
         pub distances: ArraySeqStPerS<i64>,
         pub predecessors: ArraySeqStPerS<usize>,
         pub source: usize,
+    }
+
+    // 6. spec fns
+
+    pub open spec fn spec_ssspresultstperi64_wf(s: &SSSPResultStPerI64) -> bool {
+        s.distances@.len() == s.predecessors@.len()
+        && s.source < s.distances@.len()
     }
 
     // 8. traits
@@ -46,6 +58,11 @@ pub mod SSSPResultStPerI64 {
                 empty.distances@.len() == n as int,
                 empty.predecessors@.len() == n as int,
                 empty.source == source,
+                forall|i: int| #![trigger empty.distances@[i]] 0 <= i < n ==>
+                    empty.distances@[i] == (if i == source as int { 0i64 } else { UNREACHABLE }),
+                forall|i: int| #![trigger empty.predecessors@[i]] 0 <= i < n ==>
+                    empty.predecessors@[i] == NO_PREDECESSOR,
+                spec_ssspresultstperi64_wf(&empty),
         {
             let distances = ArraySeqStPerS::tabulate(
                 &(|i: usize| -> (r: i64)
@@ -67,7 +84,11 @@ pub mod SSSPResultStPerI64 {
             SSSPResultStPerI64 { distances, predecessors, source }
         }
 
-        fn get_distance(&self, v: usize) -> (dist: i64) {
+        fn get_distance(&self, v: usize) -> (dist: i64)
+            ensures
+                v >= self.distances@.len() ==> dist == UNREACHABLE,
+                v < self.distances@.len() ==> dist == self.distances@[v as int],
+        {
             if v >= self.distances.length() {
                 return UNREACHABLE;
             }
@@ -80,6 +101,7 @@ pub mod SSSPResultStPerI64 {
                 v >= self.distances@.len() ==> updated.distances@ == self.distances@,
                 updated.predecessors@ == self.predecessors@,
                 updated.source == self.source,
+                spec_ssspresultstperi64_wf(&self) ==> spec_ssspresultstperi64_wf(&updated),
         {
             if v >= self.distances.seq.len() { return self; }
             let mut dist_vec = self.distances.seq;
@@ -91,7 +113,12 @@ pub mod SSSPResultStPerI64 {
             }
         }
 
-        fn get_predecessor(&self, v: usize) -> (pred: Option<usize>) {
+        fn get_predecessor(&self, v: usize) -> (pred: Option<usize>)
+            ensures
+                v >= self.predecessors@.len() ==> pred is None,
+                v < self.predecessors@.len() && self.predecessors@[v as int] == NO_PREDECESSOR ==> pred is None,
+                v < self.predecessors@.len() && self.predecessors@[v as int] != NO_PREDECESSOR ==> pred == Some(self.predecessors@[v as int]),
+        {
             if v >= self.predecessors.length() {
                 return None;
             }
@@ -105,6 +132,7 @@ pub mod SSSPResultStPerI64 {
                 v >= self.predecessors@.len() ==> updated.predecessors@ == self.predecessors@,
                 updated.distances@ == self.distances@,
                 updated.source == self.source,
+                spec_ssspresultstperi64_wf(&self) ==> spec_ssspresultstperi64_wf(&updated),
         {
             if v >= self.predecessors.seq.len() { return self; }
             let mut pred_vec = self.predecessors.seq;
@@ -116,11 +144,26 @@ pub mod SSSPResultStPerI64 {
             }
         }
 
-        fn is_reachable(&self, v: usize) -> (b: bool) {
+        fn is_reachable(&self, v: usize) -> (b: bool)
+            ensures
+                v >= self.distances@.len() ==> !b,
+                v < self.distances@.len() ==> b == (self.distances@[v as int] != UNREACHABLE),
+        {
             self.get_distance(v) != UNREACHABLE
         }
 
-        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>) {
+        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
+            ensures
+                v >= self.distances@.len() ==> path is None,
+                v < self.distances@.len() && self.distances@[v as int] == UNREACHABLE ==> path is None,
+                v >= self.predecessors@.len() ==> path is None,
+                path is Some ==> path->Some_0.spec_len() >= 1,
+                path is Some ==> path->Some_0.spec_index(0) == self.source,
+                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v,
+                path is Some ==> forall|j: int| #![trigger path->Some_0.spec_index(j)]
+                    0 <= j < path->Some_0.spec_len()
+                    ==> path->Some_0.spec_index(j) < self.predecessors.spec_len(),
+        {
             if !self.is_reachable(v) { return None; }
             let n = self.predecessors.length();
             if v >= n { return None; }
@@ -134,6 +177,10 @@ pub mod SSSPResultStPerI64 {
                     current < n,
                     n as int == self.predecessors.spec_len(),
                     path@.len() > 0,
+                    path@[0] == v,
+                    path@[path@.len() - 1] == current,
+                    forall|j: int| #![trigger path@[j]]
+                        0 <= j < path@.len() ==> path@[j] < n,
                 decreases n - steps,
             {
                 if current >= n { return None; }
@@ -152,6 +199,12 @@ pub mod SSSPResultStPerI64 {
                     k <= path_len,
                     path_len == path@.len(),
                     reversed@.len() == (path_len - k) as int,
+                    path@[0] == v,
+                    path@[path@.len() - 1] == self.source,
+                    forall|j: int| #![trigger reversed@[j]]
+                        0 <= j < reversed@.len() ==> reversed@[j] == path@[path_len - 1 - j],
+                    forall|j: int| #![trigger path@[j]]
+                        0 <= j < path@.len() ==> path@[j] < n,
                 decreases k,
             {
                 k = k - 1;
