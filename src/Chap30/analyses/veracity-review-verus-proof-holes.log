@@ -1,15 +1,15 @@
 ℹ Probability.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:49: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:63: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:72: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:80: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:103: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:110: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:117: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:124: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:130: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:138: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:145: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:49: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:63: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:72: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:80: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:103: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:110: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:117: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:124: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:130: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:138: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:145: info: external_body_accept_hole - external_body with accept hole comment
    Info: 11 total
 
 ═══════════════════════════════════════════════════════════════
@@ -42,7 +42,6 @@ Info: 11 total
    Probability.rs:145: info: external_body_accept_hole - external_body with accept hole comment
 
 🎉 No proof holes or warnings found! All proofs are complete.
-ody with accept hole comment
-   Probability.rs:145: info: external_body_accept_hole - external_body with accept hole comment
+y with accept hole comment
 
 🎉 No proof holes or warnings found! All proofs are complete.

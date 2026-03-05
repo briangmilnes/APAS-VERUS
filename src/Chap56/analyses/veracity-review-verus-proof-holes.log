@@ -3,18 +3,18 @@
 ✓ AllPairsResultStPerF64.rs
 ✓ AllPairsResultStPerI64.rs
 ❌ Example56_1.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_1.rs:44: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:44: external_body - #[verifier::external_body]
         45 |     pub fn example_path_weight_int() {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_1.rs:63: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:63: external_body - #[verifier::external_body]
         64 |     pub fn example_path_weight_float() {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_1.rs:91: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:91: external_body - #[verifier::external_body]
         92 |     pub fn example_negative_weights() {
    Holes: 3 total
       3 × external_body
 ❌ Example56_3.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_3.rs:41: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:41: external_body - #[verifier::external_body]
         42 |     pub fn example_negative_cycle() {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_3.rs:75: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:75: external_body - #[verifier::external_body]
         76 |     pub fn example_undefined_shortest_path() {
    Holes: 2 total
       2 × external_body

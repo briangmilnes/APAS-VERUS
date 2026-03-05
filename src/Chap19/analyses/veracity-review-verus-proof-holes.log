@@ -2,11 +2,11 @@
    6 clean proof functions
 ✓ ArraySeqMtEphSlice.rs
 ℹ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:1128: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1128: info: accept() - accept hole
    Info: 1 total
    2 clean proof functions
 ℹ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:1129: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1129: info: accept() - accept hole
    Info: 1 total
    2 clean proof functions
 
@@ -31,9 +31,6 @@ Info: 2 total
    ArraySeqStEph.rs:1128: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.
-
-Info: 2 total
-   ArraySeqStPer.rs:1129: info: accept() - accept hole
-   ArraySeqStEph.rs:1128: info: accept() - accept hole
+fo: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.
