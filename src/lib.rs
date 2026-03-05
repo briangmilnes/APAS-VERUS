@@ -227,6 +227,7 @@ pub mod standards {
     pub mod rwlock_standard;
     pub mod tsm_standard;
     pub mod arc_standard;
+    pub mod hfscheduler_standard;
 }
 
 pub mod vstdplus {
@@ -244,6 +245,7 @@ pub mod vstdplus {
     pub mod feq;
     pub mod clone_plus;
     pub mod smart_ptrs;
+    pub mod arc_rwlock;
     pub mod checked_int;
     pub mod checked_nat;
     pub mod hashed_checked_u32;

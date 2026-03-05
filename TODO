@@ -34,15 +34,9 @@ src/Chap36/analyses/veracity-review-verus-proof-holes.log - clean
 
 in process:
 
-
-src/Chap51/analyses/veracity-review-verus-proof-holes.log - Agent1
-src/Chap37/analyses/veracity-review-verus-proof-holes.log - Agent2
-src/Chap52/analyses/veracity-review-verus-proof-holes.log - Agent3
-src/Chap56/analyses/veracity-review-verus-proof-holes.log - Agent4 no specs.
-src/Chap54/analyses/veracity-review-verus-proof-holes.log - Main. BFS.
-
 Stalled: 
 
+src/Chap37/analyses/veracity-review-verus-proof-holes.log - 
 src/Chap39/analyses/veracity-review-verus-proof-holes.log 
 src/Chap42/analyses/veracity-review-verus-proof-holes.log - 
 src/Chap43/analyses/veracity-review-verus-proof-holes.log - AugOrderedTables, bad.
@@ -50,6 +44,10 @@ src/Chap45/analyses/veracity-review-verus-proof-holes.log
 src/Chap47/analyses/veracity-review-verus-proof-holes.log - Hashtables.
 src/Chap49/analyses/veracity-review-verus-proof-holes.log 
 src/Chap50/analyses/veracity-review-verus-proof-holes.log - Tables.  Arc<RwLock>
+src/Chap51/analyses/veracity-review-verus-proof-holes.log - 
+src/Chap52/analyses/veracity-review-verus-proof-holes.log - 
+src/Chap54/analyses/veracity-review-verus-proof-holes.log - 
+src/Chap56/analyses/veracity-review-verus-proof-holes.log - 
 
 
 22 unfinished: 

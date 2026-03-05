@@ -4,11 +4,12 @@
  Read ./rules/style/senior-prose-engineer.mdc. 
  REREAD ANY FILES BEFORE MODIFYING THEM.
 
-You are working src/Chap54. BFS.
-
-It validates, rtt and ptt fine so don't start there. 
+You are working src/Chap37 all the darn trees.
+Read src/standards/* and apply them in your proposed work.
 Fix trigger warnings as they occur using the rules.
+
 Check verusification state, the hole checker log and style logs are up to date.
 Does the chapter say these are multithreaded?
-Review the verusification, specification and holes on this chapter.
-Propose fixes in a table.
+Review the verusification, specification and holes on this chapter in
+a simplest file of each type order (StPer > StEph > MtEph). 
+Propose work in a table.

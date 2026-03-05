@@ -1,33 +1,8 @@
-Logging to: /home/milnes/projects/APAS-VERUS-agent4/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: HashMap
+Pattern: acquire_read.*thread\|thread.*acquire_read
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 102, Functions: 2456, Matches: 6
+Files: 102, Functions: 2475, Matches: 0
 
-[31m/home/milnes/projects/verus/source/vstd/std_specs/hash.rs:681: [0m
-[38;5;22mpub broadcast proof fn lemma_hashmap_deepview_dom<K: DeepView, V: DeepView>(m: HashMap<K, V>)[0m
-[38;5;22m    ensures[0m
-[38;5;22m        #[trigger] m.deep_view().dom() == m@.dom().map(|k: K| k.deep_view()),[0m
-
-[31m/home/milnes/projects/verus/source/vstd/std_specs/hash.rs:692: [0m
-[38;5;22mpub broadcast proof fn lemma_hashmap_deepview_properties<K: DeepView, V: DeepView>(m: HashMap<K, V>)[0m
-[38;5;22m    requires[0m
-[38;5;22m        crate::relations::injective(|k: K| k.deep_view()),[0m
-[38;5;22m    ensures[0m
-[38;5;22m        #![trigger m.deep_view()][0m
-[38;5;22m        // all elements in m.view() are present in m.deep_view()[0m
-[38;5;22m        forall|k: K| #[trigger][0m
-[38;5;22m            m@.contains_key(k) ==> m.deep_view().contains_key(k.deep_view())[0m
-[38;5;22m                && m.deep_view()[k.deep_view()] == m@[k].deep_view(),[0m
-[38;5;22m        // all elements in m.deep_view() are present in m.view()[0m
-[38;5;22m        forall|dk: <K as DeepView>::V| #[trigger][0m
-[38;5;22m            m.deep_view().contains_key(dk) ==> exists|k: K|[0m
-[38;5;22m                k.deep_view() == dk && #[trigger] m@.contains_key(k),[0m
-
-[31m/home/milnes/projects/verus/source/vstd/std_specs/hash.rs:723: [0m
-[38;5;22mpub broadcast proof fn lemma_hashmap_deepview_values<K: DeepView, V: DeepView>(m: HashMap<K, V>)[0m
-[38;5;22m    requires[0m
-[38;5;22m        crate::relations::injective(|k: K| k.deep_view()),[0m
-[38;5;22m    ensures[0m

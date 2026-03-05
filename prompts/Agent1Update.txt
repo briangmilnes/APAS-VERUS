@@ -4,15 +4,12 @@ Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-Do not review-against-prose.md to start, it's too costly for this.
+You are working only in src/Chap40.
 
-You are working in src/Chap51.
-
+Read src/standards/* and apply them in your proposed work.
 Fix trigger warnings as they occur using the rules.
 
-Check verusification state, the hole checker log and style logs are up to date.
-Does the chapter say these are multithreaded?
-Are the specs good?
+It does not seem to have a trait/impl type for trait, for each type in multiple files. 
 Propose work.
 
 
