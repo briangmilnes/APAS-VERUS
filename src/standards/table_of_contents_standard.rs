@@ -1,5 +1,4 @@
-// Copyright 2024-2025 A Conditions of Use, Privacy Policy, and Terms of Use
-// SPDX-License-Identifier: Apache-2.0
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Table of Contents Standard: the complete APAS-VERUS module template.
 //!
 //! Every APAS-VERUS source file follows this 13-section ordering. This file
@@ -57,6 +56,20 @@ pub mod table_of_contents_standard {
         pub seq: Vec<T>,
     }
 
+    // Component 1: Custom iterator struct.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ExampleIter<'a, T> {
+        pub inner: std::slice::Iter<'a, T>,
+    }
+
+    // Component 5: Ghost iterator struct.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ExampleGhostIterator<'a, T> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
     // 5. view impls
     //
     // View maps the concrete type to its abstract spec type.
@@ -65,6 +78,24 @@ pub mod table_of_contents_standard {
 
         open spec fn view(&self) -> Seq<T> {
             self.seq@
+        }
+    }
+
+    // Component 2: View for iterator.
+    impl<'a, T> View for ExampleIter<'a, T> {
+        type V = (int, Seq<T>);
+
+        open spec fn view(&self) -> (int, Seq<T>) {
+            self.inner@
+        }
+    }
+
+    // Component 8: View for ghost iterator.
+    impl<'a, T> View for ExampleGhostIterator<'a, T> {
+        type V = Seq<T>;
+
+        open spec fn view(&self) -> Seq<T> {
+            self.elements.take(self.pos)
         }
     }
 
@@ -80,6 +111,11 @@ pub mod table_of_contents_standard {
     /// Spec-level length. Again, only needs T: View.
     pub open spec fn spec_len<T: View>(s: &ExampleS<T>) -> nat {
         s@.len()
+    }
+
+    // Component 3: iter_invariant spec fn.
+    pub open spec fn iter_invariant<'a, T>(it: &ExampleIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
     }
 
     // 7. proof fns/broadcast groups
@@ -169,28 +205,29 @@ pub mod table_of_contents_standard {
         }
     }
 
-    // 10. iterators
-    //
-    // All 10 iterator components. See iterators_standard.rs for detailed comments.
-    // Component 1: Custom iterator struct.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ExampleIter<'a, T> {
-        pub inner: std::slice::Iter<'a, T>,
-    }
-
-    // Component 2: View for iterator.
-    impl<'a, T> View for ExampleIter<'a, T> {
-        type V = (int, Seq<T>);
-
-        open spec fn view(&self) -> (int, Seq<T>) {
-            self.inner@
+    // Component 9: iter() method with ensures.
+    impl<T> ExampleS<T> {
+        pub fn iter(&self) -> (it: ExampleIter<'_, T>)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+                iter_invariant(&it),
+        {
+            ExampleIter { inner: self.seq.iter() }
         }
     }
 
-    // Component 3: iter_invariant spec fn.
-    pub open spec fn iter_invariant<'a, T>(it: &ExampleIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
+    // PartialEqSpecImpl goes here (section 9) because the style checker sees
+    // cfg-gated trait impls as regular impls, which must precede section 10.
+    #[cfg(verus_keep_ghost)]
+    impl<T: View + PartialEq> PartialEqSpecImpl for ExampleS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
+
+    // 10. iterators
+    //
+    // Iterator trait impls. Type definitions and views are in sections 4-5.
 
     // Component 4: Iterator::next with ensures.
     impl<'a, T> std::iter::Iterator for ExampleIter<'a, T> {
@@ -217,14 +254,6 @@ pub mod table_of_contents_standard {
         {
             self.inner.next()
         }
-    }
-
-    // Component 5: Ghost iterator struct.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ExampleGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
     }
 
     // Component 6: ForLoopGhostIteratorNew.
@@ -281,27 +310,6 @@ pub mod table_of_contents_standard {
         }
     }
 
-    // Component 8: View for ghost iterator.
-    impl<'a, T> View for ExampleGhostIterator<'a, T> {
-        type V = Seq<T>;
-
-        open spec fn view(&self) -> Seq<T> {
-            self.elements.take(self.pos)
-        }
-    }
-
-    // Component 9: iter() method with ensures.
-    impl<T> ExampleS<T> {
-        pub fn iter(&self) -> (it: ExampleIter<'_, T>)
-            ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                iter_invariant(&it),
-        {
-            ExampleIter { inner: self.seq.iter() }
-        }
-    }
-
     // Component 10: IntoIterator for &Self.
     impl<'a, T> std::iter::IntoIterator for &'a ExampleS<T> {
         type Item = &'a T;
@@ -340,12 +348,6 @@ pub mod table_of_contents_standard {
         fn clone(&self) -> (out: Self) {
             ExampleS { seq: self.seq.clone() }
         }
-    }
-
-    #[cfg(verus_keep_ghost)]
-    impl<T: View + PartialEq> PartialEqSpecImpl for ExampleS<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
     impl<T: PartialEq + View> PartialEq for ExampleS<T> {
@@ -400,6 +402,30 @@ pub mod table_of_contents_standard {
     impl<T: Debug> Debug for ExampleS<T> {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
             write!(f, "ExampleS({:?})", self.seq)
+        }
+    }
+
+    impl<'a, T: Debug> Debug for ExampleIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "ExampleIter({:?})", self.inner)
+        }
+    }
+
+    impl<'a, T> Display for ExampleIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "ExampleIter")
+        }
+    }
+
+    impl<'a, T> Debug for ExampleGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "ExampleGhostIterator")
+        }
+    }
+
+    impl<'a, T> Display for ExampleGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "ExampleGhostIterator")
         }
     }
 } // pub mod table_of_contents_standard

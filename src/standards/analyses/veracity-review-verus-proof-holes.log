@@ -1,0 +1,39 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/standards/
+
+✓ deep_view_standard.rs
+   2 clean proof functions
+✓ iterators_standard.rs
+✓ mod_standard.rs
+✓ multi_struct_standard.rs
+✓ mut_standard.rs
+❌ table_of_contents_standard.rs
+/home/milnes/projects/APAS-VERUS/src/standards/table_of_contents_standard.rs:356: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       352 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       354 |         {
+       355 |             let equal = self.seq == other.seq;
+       357 |             equal
+       358 |         }
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
+   Proof functions: 1 total (1 clean, 0 holed)
+✓ view_standard.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   7 clean (no holes)
+   0 holed (contains holes)
+   7 total
+
+Proof Functions:
+   3 clean
+   0 holed
+   3 total
+
+Holes Found: 0 total
+
+Errors: 1 total (1 assume in eq/clone (Verus workaround))
+
+🎉 No proof holes found! All proofs are complete.

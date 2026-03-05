@@ -1,5 +1,4 @@
-// Copyright 2024-2025 A Conditions of Use, Privacy Policy, and Terms of Use
-// SPDX-License-Identifier: Apache-2.0
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Multi-Struct Standard: how to structure modules with multiple data types.
 //!
 //! Tree-like types with multiple node kinds use separate structs composed into
@@ -19,6 +18,8 @@
 //! Reference: src/experiments/tree_module_style.rs
 // 1. module
 pub mod multi_struct_standard {
+
+    use std::fmt::{Debug, Display, Formatter};
 
     use vstd::prelude::*;
 
@@ -284,4 +285,63 @@ pub mod multi_struct_standard {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl Debug for Leaf {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "Leaf({})", self.key)
+        }
+    }
+
+    impl Display for Leaf {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "{}", self.key)
+        }
+    }
+
+    impl Debug for Interior {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "Interior({}, {:?}, {:?})", self.key, self.left, self.right)
+        }
+    }
+
+    impl Display for Interior {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "Interior({})", self.key)
+        }
+    }
+
+    impl Debug for Node {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            match self {
+                Node::LeafNode(l) => write!(f, "{:?}", l),
+                Node::InteriorNode(i) => write!(f, "{:?}", i),
+            }
+        }
+    }
+
+    impl Display for Node {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            match self {
+                Node::LeafNode(l) => write!(f, "{}", l),
+                Node::InteriorNode(i) => write!(f, "{}", i),
+            }
+        }
+    }
+
+    impl Debug for Tree {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "Tree({:?})", self.child)
+        }
+    }
+
+    impl Display for Tree {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            match &self.child {
+                None => write!(f, "Tree(empty)"),
+                Some(n) => write!(f, "Tree({})", n),
+            }
+        }
+    }
 } // pub mod multi_struct_standard

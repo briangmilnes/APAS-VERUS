@@ -1,5 +1,4 @@
-// Copyright 2024-2025 A Conditions of Use, Privacy Policy, and Terms of Use
-// SPDX-License-Identifier: Apache-2.0
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Mut Standard: all verified &mut patterns in APAS-VERUS.
 //!
 //! Seven stable patterns (no flags needed) plus two experimental patterns
@@ -21,6 +20,8 @@
 // 1. module
 pub mod mut_standard {
 
+    use std::fmt::{Debug, Display, Formatter};
+
     use vstd::prelude::*;
 
     verus! {
@@ -34,6 +35,10 @@ pub mod mut_standard {
     pub struct Pair {
         pub fst: u64,
         pub snd: u64,
+    }
+
+    pub struct Container {
+        pub item: Option<Box<u64>>,
     }
 
     // 5. view impls
@@ -201,10 +206,6 @@ pub mod mut_standard {
     // Pattern 7: Option::take() + reassign.
     // Extract an owned value from an Option field, transform it, put it back.
     // Bridges owned-value recursion with &mut self container interface.
-    pub struct Container {
-        pub item: Option<Box<u64>>,
-    }
-
     pub fn replace_item(c: &mut Container, new_val: u64)
         ensures
             c.item == Some(Box::new(new_val)),
@@ -282,4 +283,45 @@ pub mod mut_standard {
     // See src/experiments/mut_refs_and_mut_returns.rs for verified examples.
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl Debug for Counter {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "Counter({})", self.val)
+        }
+    }
+
+    impl Display for Counter {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "{}", self.val)
+        }
+    }
+
+    impl Debug for Pair {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "Pair({}, {})", self.fst, self.snd)
+        }
+    }
+
+    impl Display for Pair {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "({}, {})", self.fst, self.snd)
+        }
+    }
+
+    impl Debug for Container {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "Container({:?})", self.item)
+        }
+    }
+
+    impl Display for Container {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            match &self.item {
+                None => write!(f, "Container(empty)"),
+                Some(v) => write!(f, "Container({})", v),
+            }
+        }
+    }
 } // pub mod mut_standard

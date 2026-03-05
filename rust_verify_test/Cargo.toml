@@ -133,13 +133,25 @@ path = "tests/Chap54/ProveBFSMtEph.rs"
 
 # Standards proof tests
 [[test]]
-name = "ProveViewStandard"
-path = "tests/standards/ProveViewStandard.rs"
+name = "Proveview_standard"
+path = "tests/standards/Proveview_standard.rs"
 
 [[test]]
-name = "ProveDeepViewStandard"
-path = "tests/standards/ProveDeepViewStandard.rs"
+name = "Provedeep_view_standard"
+path = "tests/standards/Provedeep_view_standard.rs"
 
 [[test]]
-name = "ProveIteratorsStandard"
-path = "tests/standards/ProveIteratorsStandard.rs"
+name = "Proveiterators_standard"
+path = "tests/standards/Proveiterators_standard.rs"
+
+[[test]]
+name = "Provemod_standard"
+path = "tests/standards/Provemod_standard.rs"
+
+[[test]]
+name = "Provetable_of_contents_standard"
+path = "tests/standards/Provetable_of_contents_standard.rs"
+
+[[test]]
+name = "Proveusing_closures_standard"
+path = "tests/standards/Proveusing_closures_standard.rs"

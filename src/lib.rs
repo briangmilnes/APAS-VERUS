@@ -222,6 +222,7 @@ pub mod standards {
     pub mod mut_standard;
     pub mod multi_struct_standard;
     pub mod table_of_contents_standard;
+    pub mod using_closures_standard;
 }
 
 pub mod vstdplus {

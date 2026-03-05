@@ -1,5 +1,4 @@
-// Copyright 2024-2025 A Conditions of Use, Privacy Policy, and Terms of Use
-// SPDX-License-Identifier: Apache-2.0
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Iterator Standard: how to implement verified iterators in APAS-VERUS.
 //!
 //! Every APAS-VERUS collection implements the iterator standard, which enables
@@ -9,33 +8,87 @@
 //! The canonical reference implementation is src/Chap18/ArraySeqStEph.rs.
 //! The full specification is in docs/APAS-VERUSIterators.rs.
 //!
-//! Components (all inside verus!, section 10):
-//!  1. Custom iterator struct
-//!  2. View for iterator: (int, Seq<T>)
-//!  3. iter_invariant spec fn
-//!  4. Iterator::next with two-arm ensures
-//!  5. Ghost iterator struct
-//!  6. ForLoopGhostIteratorNew impl
-//!  7. ForLoopGhostIterator impl (6 spec fns)
-//!  8. View for ghost iterator: elements.take(pos)
-//!  9. iter() method with ensures
-//! 10. IntoIterator for &Self
+//! Components (all inside verus!):
+//!  1. Custom iterator struct (section 4)
+//!  2. View for iterator: (int, Seq<T>) (section 5)
+//!  3. iter_invariant spec fn (section 6)
+//!  4. Iterator::next with two-arm ensures (section 10)
+//!  5. Ghost iterator struct (section 4)
+//!  6. ForLoopGhostIteratorNew impl (section 10)
+//!  7. ForLoopGhostIterator impl (6 spec fns) (section 10)
+//!  8. View for ghost iterator: elements.take(pos) (section 5)
+//!  9. iter() method with ensures (section 10)
+//! 10. IntoIterator for &Self (section 10)
 //!
 //! Optional: IntoIterator for Self (consuming pattern).
 // 1. module
 pub mod iterators_standard {
+
+    use std::fmt::{Debug, Display, Formatter};
 
     use vstd::prelude::*;
 
     verus! {
 
     // 4. type definitions
+
     #[verifier::reject_recursive_types(T)]
     pub struct ExampleS<T> {
         pub seq: Vec<T>,
     }
 
+    // Component 1: Custom iterator struct.
+    // Wraps the underlying Rust iterator. The inner field is pub for vstd access.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ExampleIter<'a, T> {
+        pub inner: std::slice::Iter<'a, T>,
+    }
+
+    // Component 5: Ghost iterator struct.
+    // Pure spec-level state for the ForLoopGhostIterator protocol.
+    // Fields are pub so for-loop invariants can reference iter.pos, iter.elements.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ExampleGhostIterator<'a, T> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+    // 5. view impls
+
+    // Component 2: View for iterator.
+    // The View is a pair: (position_index, full_sequence).
+    // Position starts at 0 and advances to elements.len().
+    // The sequence is fixed at creation time.
+    impl<'a, T> View for ExampleIter<'a, T> {
+        type V = (int, Seq<T>);
+
+        open spec fn view(&self) -> (int, Seq<T>) {
+            self.inner@
+        }
+    }
+
+    // Component 8: View for ghost iterator.
+    // Items seen so far: the prefix of length pos.
+    // This is what user code asserts against after the loop completes.
+    impl<'a, T> View for ExampleGhostIterator<'a, T> {
+        type V = Seq<T>;
+
+        open spec fn view(&self) -> Seq<T> {
+            self.elements.take(self.pos)
+        }
+    }
+
+    // 6. spec fns
+
+    // Component 3: iter_invariant spec fn.
+    // Bounds the position index. Users include this in loop invariants.
+    pub open spec fn iter_invariant<'a, T>(it: &ExampleIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
     // 8. traits
+
     pub trait ExampleTrait<T>: Sized {
         spec fn spec_len(&self) -> nat;
 
@@ -51,6 +104,7 @@ pub mod iterators_standard {
     }
 
     // 9. impls
+
     impl<T> ExampleTrait<T> for ExampleS<T> {
         open spec fn spec_len(&self) -> nat {
             self.seq@.len()
@@ -76,33 +130,20 @@ pub mod iterators_standard {
         }
     }
 
-    // 10. iterators
-    //
-    // All 10 components below go in section 10 of the TOC.
-    // Component 1: Custom iterator struct.
-    // Wraps the underlying Rust iterator. The inner field is pub for vstd access.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ExampleIter<'a, T> {
-        pub inner: std::slice::Iter<'a, T>,
-    }
-
-    // Component 2: View for iterator.
-    // The View is a pair: (position_index, full_sequence).
-    // Position starts at 0 and advances to elements.len().
-    // The sequence is fixed at creation time.
-    impl<'a, T> View for ExampleIter<'a, T> {
-        type V = (int, Seq<T>);
-
-        open spec fn view(&self) -> (int, Seq<T>) {
-            self.inner@
+    // Component 9: iter() method with ensures.
+    // Entry point for iteration. Position starts at 0, sequence matches data.
+    impl<T> ExampleS<T> {
+        pub fn iter(&self) -> (it: ExampleIter<'_, T>)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+                iter_invariant(&it),
+        {
+            ExampleIter { inner: self.seq.iter() }
         }
     }
 
-    // Component 3: iter_invariant spec fn.
-    // Bounds the position index. Users include this in loop invariants.
-    pub open spec fn iter_invariant<'a, T>(it: &ExampleIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
+    // 10. iterators
 
     // Component 4: Iterator::next with ensures.
     // Two arms: None (exhausted) and Some (produced an element).
@@ -132,16 +173,6 @@ pub mod iterators_standard {
         {
             self.inner.next()
         }
-    }
-
-    // Component 5: Ghost iterator struct.
-    // Pure spec-level state for the ForLoopGhostIterator protocol.
-    // Fields are pub so for-loop invariants can reference iter.pos, iter.elements.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ExampleGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
     }
 
     // Component 6: ForLoopGhostIteratorNew.
@@ -206,30 +237,6 @@ pub mod iterators_standard {
         }
     }
 
-    // Component 8: View for ghost iterator.
-    // Items seen so far: the prefix of length pos.
-    // This is what user code asserts against after the loop completes.
-    impl<'a, T> View for ExampleGhostIterator<'a, T> {
-        type V = Seq<T>;
-
-        open spec fn view(&self) -> Seq<T> {
-            self.elements.take(self.pos)
-        }
-    }
-
-    // Component 9: iter() method with ensures.
-    // Entry point for iteration. Position starts at 0, sequence matches data.
-    impl<T> ExampleS<T> {
-        pub fn iter(&self) -> (it: ExampleIter<'_, T>)
-            ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                iter_invariant(&it),
-        {
-            ExampleIter { inner: self.seq.iter() }
-        }
-    }
-
     // Component 10: IntoIterator for &Self.
     // Enables `for x in &collection` syntax.
     impl<'a, T> std::iter::IntoIterator for &'a ExampleS<T> {
@@ -264,4 +271,47 @@ pub mod iterators_standard {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl<T: Debug> Debug for ExampleS<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "ExampleS({:?})", self.seq)
+        }
+    }
+
+    impl<T: Display> Display for ExampleS<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "[")?;
+            for (i, item) in self.seq.iter().enumerate() {
+                if i > 0 { write!(f, ", ")?; }
+                write!(f, "{}", item)?;
+            }
+            write!(f, "]")
+        }
+    }
+
+    impl<'a, T: Debug> Debug for ExampleIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "ExampleIter({:?})", self.inner)
+        }
+    }
+
+    impl<'a, T> Display for ExampleIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "ExampleIter")
+        }
+    }
+
+    impl<'a, T> Debug for ExampleGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "ExampleGhostIterator")
+        }
+    }
+
+    impl<'a, T> Display for ExampleGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "ExampleGhostIterator")
+        }
+    }
 } // pub mod iterators_standard

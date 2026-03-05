@@ -276,32 +276,36 @@ path = "tests/Chap27/TestScanContractMtEph.rs"
 
 # Standards tests
 [[test]]
-name = "TestModStandard"
-path = "tests/standards/TestModStandard.rs"
+name = "Testmod_standard"
+path = "tests/standards/Testmod_standard.rs"
 
 [[test]]
-name = "TestViewStandard"
-path = "tests/standards/TestViewStandard.rs"
+name = "Testview_standard"
+path = "tests/standards/Testview_standard.rs"
 
 [[test]]
-name = "TestDeepViewStandard"
-path = "tests/standards/TestDeepViewStandard.rs"
+name = "Testdeep_view_standard"
+path = "tests/standards/Testdeep_view_standard.rs"
 
 [[test]]
-name = "TestIteratorsStandard"
-path = "tests/standards/TestIteratorsStandard.rs"
+name = "Testiterators_standard"
+path = "tests/standards/Testiterators_standard.rs"
 
 [[test]]
-name = "TestMutStandard"
-path = "tests/standards/TestMutStandard.rs"
+name = "Testmut_standard"
+path = "tests/standards/Testmut_standard.rs"
 
 [[test]]
-name = "TestMultiStructStandard"
-path = "tests/standards/TestMultiStructStandard.rs"
+name = "Testmulti_struct_standard"
+path = "tests/standards/Testmulti_struct_standard.rs"
 
 [[test]]
-name = "TestTableOfContentsStandard"
-path = "tests/standards/TestTableOfContentsStandard.rs"
+name = "Testtable_of_contents_standard"
+path = "tests/standards/Testtable_of_contents_standard.rs"
+
+[[test]]
+name = "Testusing_closures_standard"
+path = "tests/standards/Testusing_closures_standard.rs"
 
 # Experiments removed - use verus-proof-time-testing project instead
 # [[test]]

@@ -1,0 +1,34 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs
+Codebase: /home/milnes/projects/APAS-VERUS
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS/src/standards/analyses/veracity-review-verus-style.log
+
+Checking 1 files...
+
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: warning: [17] collection ExampleS should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: warning: [17] collection ExampleS should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/standards/using_closures_standard.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/standards/Proveusing_closures_standard.rs
+
+════════════════════════════════════════════════════════════════
+Summary: 16 passed, 3 warnings in 1 files (checked 1 files)
+════════════════════════════════════════════════════════════════
