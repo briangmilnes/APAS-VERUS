@@ -103,6 +103,7 @@ pub mod ParaHashTableStEph {
             requires
                 old(table).current_size > 0,
                 old(table).table@.len() == old(table).current_size as int,
+                old(table).num_elements < usize::MAX,
             ensures
                 table.table@.len() == table.current_size as int;
 
