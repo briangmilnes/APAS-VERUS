@@ -37,31 +37,30 @@ in process:
 
 src/Chap51/analyses/veracity-review-verus-proof-holes.log - Agent1
 src/Chap37/analyses/veracity-review-verus-proof-holes.log - Agent2
-
-src/Chap42/analyses/veracity-review-verus-proof-holes.log - Agent4 Tables. 
+src/Chap52/analyses/veracity-review-verus-proof-holes.log - Agent3
+src/Chap56/analyses/veracity-review-verus-proof-holes.log - Agent4 no specs.
 src/Chap54/analyses/veracity-review-verus-proof-holes.log - Main. BFS.
 
 Stalled: 
 
-
 src/Chap39/analyses/veracity-review-verus-proof-holes.log 
+src/Chap42/analyses/veracity-review-verus-proof-holes.log - 
 src/Chap43/analyses/veracity-review-verus-proof-holes.log - AugOrderedTables, bad.
 src/Chap45/analyses/veracity-review-verus-proof-holes.log  
 src/Chap47/analyses/veracity-review-verus-proof-holes.log - Hashtables.
 src/Chap49/analyses/veracity-review-verus-proof-holes.log 
+src/Chap50/analyses/veracity-review-verus-proof-holes.log - Tables.  Arc<RwLock>
+
 
 22 unfinished: 
 
 src/Chap40/analyses/veracity-review-verus-proof-holes.log - started
 src/Chap38/analyses/veracity-review-verus-proof-holes.log - started
 src/Chap41/analyses/veracity-review-verus-proof-holes.log - bad
-src/Chap50/analyses/veracity-review-verus-proof-holes.log - unclean, iterator status.
 
-src/Chap52/analyses/veracity-review-verus-proof-holes.log - unclean, not even specified. 
 src/Chap53/analyses/veracity-review-verus-proof-holes.log - unclean, not even specified. 
-
 src/Chap55/analyses/veracity-review-verus-proof-holes.log - DFS, SCCD, not fully verusified.
-src/Chap56/analyses/veracity-review-verus-proof-holes.log - all pairs, who knows what state.
+
 src/Chap57/analyses/veracity-review-verus-proof-holes.log - Dijsktra, not fully verusified.
 src/Chap58/analyses/veracity-review-verus-proof-holes.log - Bellman Ford, not fully verusified.
 src/Chap59/analyses/veracity-review-verus-proof-holes.log - Johnson, not fully verusified.

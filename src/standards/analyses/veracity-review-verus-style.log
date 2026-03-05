@@ -1,38 +1,40 @@
 Verus Style Review
 ==================
 
-Path: src/standards/wrapping_iterators_standard.rs
+Path: src/standards/arc_standard.rs
 Codebase: src/standards
 Mode: basic
 Logging to: src/standards/analyses/veracity-review-verus-style.log
 
 Checking 1 files...
 
-src/standards/wrapping_iterators_standard.rs:
-src/standards/wrapping_iterators_standard.rs:1: info: [1] has mod declarations
-src/standards/wrapping_iterators_standard.rs:1: info: [2] vstd::prelude::* before verus!
-src/standards/wrapping_iterators_standard.rs:1: info: [3] has verus! macro
-src/standards/wrapping_iterators_standard.rs:1: info: [4] std imports grouped with trailing blank
-src/standards/wrapping_iterators_standard.rs:1: info: [5] no vstd imports (ok)
-src/standards/wrapping_iterators_standard.rs:1: info: [11] Set/Seq usage has broadcast groups
-src/standards/wrapping_iterators_standard.rs:1: info: [12] all trait fns have specs
-src/standards/wrapping_iterators_standard.rs:1: info: [13] trait impls inside verus!
-src/standards/wrapping_iterators_standard.rs:1: info: [14] Debug, Display outside verus!
-src/standards/wrapping_iterators_standard.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-src/standards/wrapping_iterators_standard.rs:1: info: [16] no Lit macro definitions (ok)
-src/standards/wrapping_iterators_standard.rs:1: info: [17] Iterator<InnerS>, IntoIterator<InnerS>
-src/standards/wrapping_iterators_standard.rs:1: info: [18] definition order correct
-src/standards/wrapping_iterators_standard.rs:1: info: [19] no generic return names
-src/standards/wrapping_iterators_standard.rs:1: info: [20] all traits have impls
-src/standards/wrapping_iterators_standard.rs:1: info: [21] no broadcast use entries
-src/standards/wrapping_iterators_standard.rs:1: info: [22] spec fns: all in traits as abstract signatures
+src/standards/arc_standard.rs:
+src/standards/arc_standard.rs:1: info: [1] has mod declarations
+src/standards/arc_standard.rs:1: info: [2] vstd::prelude::* before verus!
+src/standards/arc_standard.rs:1: info: [3] has verus! macro
+src/standards/arc_standard.rs:1: info: [4] std imports grouped with trailing blank
+src/standards/arc_standard.rs:1: info: [5] no vstd imports (ok)
+src/standards/arc_standard.rs:1: info: [11] Set/Seq usage has broadcast groups
+src/standards/arc_standard.rs:1: info: [12] all trait fns have specs
+src/standards/arc_standard.rs:1: info: [13] trait impls inside verus!
+src/standards/arc_standard.rs:1: info: [14] Debug, Display outside verus!
+src/standards/arc_standard.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+src/standards/arc_standard.rs:1: info: [16] no Lit macro definitions (ok)
+src/standards/arc_standard.rs:1: info: [19] no generic return names
+src/standards/arc_standard.rs:1: info: [20] all traits have impls
+src/standards/arc_standard.rs:1: info: [21] no broadcast use entries
+src/standards/arc_standard.rs:1: info: [22] spec fns: all in traits as abstract signatures
+src/standards/arc_standard.rs:1: warning: [17] collection CollectionS should have an Iterator impl
+src/standards/arc_standard.rs:1: warning: [17] collection CollectionS should have an IntoIterator impl
+src/standards/arc_standard.rs:92: warning: [18] trait ViewArcTrait should come before impls (expected traits before impls)
+src/standards/arc_standard.rs:107: warning: [18] trait DeepViewArcTrait should come before impls (expected traits before impls)
 
 ════════════════════════════════════════════════════════════════
-Summary: 17 passed, 0 warnings in 0 files (checked 1 files)
+Summary: 15 passed, 4 warnings in 1 files (checked 1 files)
 ════════════════════════════════════════════════════════════════
 
 Reordering files with Rule 18 violations...
 
-src/standards/wrapping_iterators_standard.rs:1: info: reordered
+src/standards/arc_standard.rs:1: info: reordered
 
 Reorder complete: 1 files reordered

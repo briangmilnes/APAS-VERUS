@@ -224,6 +224,9 @@ pub mod standards {
     pub mod table_of_contents_standard;
     pub mod using_closures_standard;
     pub mod wrapping_iterators_standard;
+    pub mod rwlock_standard;
+    pub mod tsm_standard;
+    pub mod arc_standard;
 }
 
 pub mod vstdplus {

@@ -4,7 +4,7 @@ Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are working in src/Chap50/.
+You are working in src/Chap52.
 
 It validates, rtt and ptt fine so don't start there. 
 Fix trigger warnings as they occur using the rules.

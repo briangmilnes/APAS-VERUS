@@ -4,14 +4,19 @@ Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are working in src/Chap42/  Tables.
-
+You are working in src/Chap56 all pairs shortest path.
 It validates, rtt and ptt fine so don't start there. 
 Fix trigger warnings as they occur using the rules.
 Check verusification state, the hole checker log and style logs are up to date.
 Does the chapter say these are multithreaded?
 Are the specs good?
-Propose work starting with TableStPer.rs, TableStEph.rs then TableMtEph.rs.
+Don't work on the *F64 modules. 
+Propose work starting on the simplest files:
+
+AllPairsResultStPerI64.rs
+SSSPResultStPerI64.rs
+PathWeightUtilsStPer.rs
+
 
 
 
