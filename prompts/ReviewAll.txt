@@ -1,0 +1,12 @@
+
+ You are X working on branch ~/projects/APAS-VERUS main.
+
+ Run the hole detector and the styler by scripts on all chapters.
+
+ Make a table that shows for all chapters:
+  Chap#
+  Verusification
+  trait/impl correct
+  trait specified
+  if collection, then iterators.
+  

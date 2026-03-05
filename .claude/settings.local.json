@@ -79,7 +79,8 @@
       "Bash(vargo build:*)",
       "Bash(comm:*)",
       "Bash(do wc:*)",
-      "Bash(read f:*)"
+      "Bash(read f:*)",
+      "Bash(veracity-review-verus-style:*)"
     ]
   }
 }

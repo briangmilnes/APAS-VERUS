@@ -1,4 +1,5 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Wrapping Iterators Standard: how to wrap a lower-level iterator.
 //!
 //! When a module wraps another module's collection (e.g., MappingStEph wraps
@@ -16,7 +17,18 @@
 //! References:
 //! - src/Chap05/MappingStEph.rs (wraps RelationStEphIter)
 //! - src/Chap05/RelationStEph.rs (wraps SetStEphIter)
-// 1. module
+
+//  Table of Contents
+//	1. module
+//	4. type definitions
+//	5. view impls
+//	8. traits
+//	9. impls
+//	10. iterators
+//	13. derive impls outside verus!
+
+//		1. module
+
 pub mod wrapping_iterators_standard {
 
     use std::fmt::{Debug, Display, Formatter};
@@ -25,24 +37,12 @@ pub mod wrapping_iterators_standard {
 
     verus! {
 
-    // 4. type definitions
+    //		4. type definitions
 
     // Inner layer: a Vec-backed collection (like SetStEph or ArraySeqStEph).
     #[verifier::reject_recursive_types(T)]
     pub struct InnerS<T> {
         pub seq: Vec<T>,
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct InnerIter<'a, T> {
-        pub inner: std::slice::Iter<'a, T>,
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct InnerGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
     }
 
     // Outer layer: wraps InnerS (like MappingStEph wraps RelationStEph).
@@ -51,42 +51,14 @@ pub mod wrapping_iterators_standard {
         pub data: InnerS<T>,
     }
 
-    // OuterIter wraps InnerIter — the key pattern.
-    #[verifier::reject_recursive_types(T)]
-    pub struct OuterIter<'a, T> {
-        pub inner: InnerIter<'a, T>,
-    }
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct OuterGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-    // 5. view impls
+    //		5. view impls
 
     impl<T> View for InnerS<T> {
         type V = Seq<T>;
 
         open spec fn view(&self) -> Seq<T> {
             self.seq@
-        }
-    }
-
-    impl<'a, T> View for InnerIter<'a, T> {
-        type V = (int, Seq<T>);
-
-        open spec fn view(&self) -> (int, Seq<T>) {
-            self.inner@
-        }
-    }
-
-    impl<'a, T> View for InnerGhostIterator<'a, T> {
-        type V = Seq<T>;
-
-        open spec fn view(&self) -> Seq<T> {
-            self.elements.take(self.pos)
         }
     }
 
@@ -99,24 +71,8 @@ pub mod wrapping_iterators_standard {
         }
     }
 
-    /// OuterIter View delegates to self.inner@ — the wrapping pattern.
-    impl<'a, T> View for OuterIter<'a, T> {
-        type V = (int, Seq<T>);
 
-        open spec fn view(&self) -> (int, Seq<T>) {
-            self.inner@
-        }
-    }
-
-    impl<'a, T> View for OuterGhostIterator<'a, T> {
-        type V = Seq<T>;
-
-        open spec fn view(&self) -> Seq<T> {
-            self.elements.take(self.pos)
-        }
-    }
-
-    // 8. traits
+    //		8. traits
 
     pub trait InnerTrait<T>: Sized {
         spec fn spec_len(&self) -> nat;
@@ -136,7 +92,8 @@ pub mod wrapping_iterators_standard {
         ;
     }
 
-    // 9. impls
+
+    //		9. impls
 
     impl<T> InnerTrait<T> for InnerS<T> {
         open spec fn spec_len(&self) -> nat {
@@ -190,7 +147,66 @@ pub mod wrapping_iterators_standard {
         }
     }
 
-    // 10. iterators
+
+    //		10. iterators
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct InnerIter<'a, T> {
+        pub inner: std::slice::Iter<'a, T>,
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct InnerGhostIterator<'a, T> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+    // OuterIter wraps InnerIter — the key pattern.
+    #[verifier::reject_recursive_types(T)]
+    pub struct OuterIter<'a, T> {
+        pub inner: InnerIter<'a, T>,
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct OuterGhostIterator<'a, T> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+    impl<'a, T> View for InnerIter<'a, T> {
+        type V = (int, Seq<T>);
+
+        open spec fn view(&self) -> (int, Seq<T>) {
+            self.inner@
+        }
+    }
+
+    impl<'a, T> View for InnerGhostIterator<'a, T> {
+        type V = Seq<T>;
+
+        open spec fn view(&self) -> Seq<T> {
+            self.elements.take(self.pos)
+        }
+    }
+
+    /// OuterIter View delegates to self.inner@ — the wrapping pattern.
+    impl<'a, T> View for OuterIter<'a, T> {
+        type V = (int, Seq<T>);
+
+        open spec fn view(&self) -> (int, Seq<T>) {
+            self.inner@
+        }
+    }
+
+    impl<'a, T> View for OuterGhostIterator<'a, T> {
+        type V = Seq<T>;
+
+        open spec fn view(&self) -> Seq<T> {
+            self.elements.take(self.pos)
+        }
+    }
 
     // Inner layer iterators (foundation — wraps std::slice::Iter).
 
@@ -371,7 +387,7 @@ pub mod wrapping_iterators_standard {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		13. derive impls outside verus!
 
     impl<T: Debug> Debug for InnerS<T> {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
