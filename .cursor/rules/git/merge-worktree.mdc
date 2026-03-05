@@ -315,6 +315,16 @@ Files under `src/Chap*/analyses/` are regenerated in Phase 5.5. During merge and
 phases, take the incoming version (`--theirs` for merge, `--ours` for rebase) — it does
 not matter which version wins since they will all be regenerated.
 
+For rebases with many analysis conflicts across multiple commits, use the automated script:
+
+```bash
+scripts/resolve-analysis-rebase.sh ~/projects/APAS-VERUS-agentN
+```
+
+This loops over all rebase steps, resolves analysis-only conflicts with `--ours`, and
+continues the rebase automatically. It aborts with an error if any non-analysis conflict
+is found.
+
 ## Notes
 
 - Execute phases 0, 1, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6, 7 in strict order. Never skip a phase.

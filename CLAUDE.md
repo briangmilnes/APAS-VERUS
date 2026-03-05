@@ -241,6 +241,8 @@ renames, structural changes, or when refreshing analysis baselines.
 | `scripts/all-holes-by-chap.sh` | `veracity-review-verus-proof-holes.log` |
 | `scripts/all-style-by-chap.sh` | `veracity-review-verus-style.log` |
 | `scripts/all-fn-impls-by-chap.sh` | `veracity-review-module-fn-impls.{md,json}` |
+| `scripts/resolve-analysis-merge.sh [dir]` | Resolves analysis-only merge conflicts (`--theirs`) |
+| `scripts/resolve-analysis-rebase.sh [dir]` | Loops through rebase steps, resolves analysis-only conflicts (`--ours`) |
 
 **NEVER add `external_body`, `admit()`, or `assume(...)` without asking the user first.**
 
