@@ -27,7 +27,6 @@ Info: 2 total
    SpanTreeMtEph.rs:46: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
 
 🎉 No proof holes or warnings found! All proofs are complete.
- point.
-   SpanTreeMtEph.rs:46: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+RwLock new requires an external body at this point.
 
 🎉 No proof holes or warnings found! All proofs are complete.

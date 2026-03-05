@@ -12,24 +12,75 @@ pub mod BSTRBMtEph {
     use crate::Types::Types::*;
 
     verus! {
-        #[derive(Clone, Copy, PartialEq, Eq)]
-        enum Color {
-            Red,
-            Black,
-        }
 
-        #[verifier::reject_recursive_types(T)]
-        #[derive(Clone)]
-        struct Node<T: StTInMtT + Ord> {
-            key: T,
-            color: Color,
-            size: N,
-            left: Option<Box<Node<T>>>,
-            right: Option<Box<Node<T>>>,
-        }
+    // 4. type definitions
 
-        type Link<T> = Option<Box<Node<T>>>;
+    #[derive(Clone, Copy, PartialEq, Eq)]
+    enum Color {
+        Red,
+        Black,
     }
+
+    #[verifier::reject_recursive_types(T)]
+    #[derive(Clone)]
+    struct Node<T: StTInMtT + Ord> {
+        key: T,
+        color: Color,
+        size: N,
+        left: Option<Box<Node<T>>>,
+        right: Option<Box<Node<T>>>,
+    }
+
+    type Link<T> = Option<Box<Node<T>>>;
+
+    // 6. spec fns
+
+    /// Uninterpreted well-formedness for RB tree links.
+    pub open spec fn link_wf<T: StTInMtT + Ord>(link: Link<T>) -> bool;
+
+    // 8. traits
+
+    pub struct BSTRBMtEphInv;
+
+    impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTRBMtEphInv {
+        open spec fn inv(self, v: Link<T>) -> bool {
+            link_wf(v)
+        }
+    }
+
+    #[verifier::external_body] // accept hole
+    fn new_rb_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, BSTRBMtEphInv>) {
+        RwLock::new(val, Ghost(BSTRBMtEphInv))
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    #[derive(Clone)]
+    pub struct BSTRBMtEph<T: StTInMtT + Ord> {
+        root: Arc<RwLock<Link<T>, BSTRBMtEphInv>>,
+    }
+
+    pub trait BSTRBMtEphTrait<T: StTInMtT + Ord>: Sized {
+        fn new() -> Self;
+        fn from_sorted_slice(values: &[T]) -> Self;
+        fn insert(&self, value: T);
+        fn find(&self, target: &T) -> Option<T>;
+        fn contains(&self, target: &T) -> B;
+        fn size(&self) -> N;
+        fn is_empty(&self) -> B;
+        fn height(&self) -> N;
+        fn minimum(&self) -> Option<T>;
+        fn maximum(&self) -> Option<T>;
+        fn in_order(&self) -> ArraySeqStPerS<T>;
+        fn pre_order(&self) -> ArraySeqStPerS<T>;
+        fn filter<F>(&self, predicate: F) -> ArraySeqStPerS<T>
+        where
+            F: Fn(&T) -> bool + Send + Sync;
+        fn reduce<F>(&self, op: F, identity: T) -> T
+        where
+            F: Fn(T, T) -> T + Send + Sync;
+    }
+
+    // 9. impls
 
     fn new_node<T: StTInMtT + Ord>(key: T) -> Node<T> {
         Node {
@@ -41,11 +92,26 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn is_red<T: StTInMtT + Ord>(link: &Link<T>) -> bool { matches!(link, Some(node) if node.color == Color::Red) }
+    fn is_red<T: StTInMtT + Ord>(link: &Link<T>) -> bool {
+        match link {
+            Some(node) => node.color == Color::Red,
+            None => false,
+        }
+    }
 
-    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> N { link.as_ref().map_or(0, |n| n.size) }
+    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> N {
+        match link.as_ref() {
+            None => 0,
+            Some(n) => n.size,
+        }
+    }
 
-    fn update<T: StTInMtT + Ord>(node: &mut Node<T>) { node.size = 1 + size_link(&node.left) + size_link(&node.right); }
+    fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {
+        let ls = size_link(&node.left);
+        let rs = size_link(&node.right);
+        assume(ls as int + rs as int + 1 <= usize::MAX as int);
+        node.size = 1 + ls + rs;
+    }
 
     fn rotate_left<T: StTInMtT + Ord>(link: &mut Link<T>) {
         if let Some(mut h) = link.take() {
@@ -142,7 +208,9 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T) {
+    fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T)
+        decreases old(link),
+    {
         if let Some(node) = link.as_mut() {
             if value < node.key {
                 insert_link(&mut node.left, value);
@@ -158,7 +226,9 @@ pub mod BSTRBMtEph {
         fix_up(link);
     }
 
-    fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T> {
+    fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T>
+        decreases *link,
+    {
         match link {
             | None => None,
             | Some(node) => {
@@ -173,7 +243,9 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T> {
+    fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T>
+        decreases *link,
+    {
         match link {
             | None => None,
             | Some(node) => match node.left {
@@ -183,7 +255,9 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T> {
+    fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T>
+        decreases *link,
+    {
         match link {
             | None => None,
             | Some(node) => match node.right {
@@ -193,7 +267,9 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>) {
+    fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+        decreases *link,
+    {
         if let Some(node) = link {
             in_order_collect(&node.left, out);
             out.push(node.key.clone());
@@ -201,7 +277,9 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>) {
+    fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+        decreases *link,
+    {
         if let Some(node) = link {
             out.push(node.key.clone());
             pre_order_collect(&node.left, out);
@@ -209,9 +287,9 @@ pub mod BSTRBMtEph {
         }
     }
 
-    // Parallel traversals
-
-    fn in_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> Vec<T> {
+    fn in_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> Vec<T>
+        decreases *link,
+    {
         match link {
             | None => Vec::new(),
             | Some(node) => {
@@ -228,7 +306,9 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn pre_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> Vec<T> {
+    fn pre_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> Vec<T>
+        decreases *link,
+    {
         match link {
             | None => Vec::new(),
             | Some(node) => {
@@ -245,19 +325,20 @@ pub mod BSTRBMtEph {
         }
     }
 
-    // Parallel construction from sorted slice
-    fn build_balanced<T: StTInMtT + Ord>(values: &[T]) -> Link<T> {
+    fn build_balanced<T: StTInMtT + Ord>(values: &[T]) -> Link<T>
+        decreases values.len(),
+    {
         if values.is_empty() {
             return None;
         }
         let mid = values.len() / 2;
-        
+
         use crate::Types::Types::Pair;
         let Pair(left, right) = crate::ParaPair!(
             move || build_balanced(&values[..mid]),
             move || build_balanced(&values[mid + 1..])
         );
-        
+
         let mut node = Box::new(new_node(values[mid].clone()));
         node.left = left;
         node.right = right;
@@ -266,23 +347,23 @@ pub mod BSTRBMtEph {
         Some(node)
     }
 
-    // Parallel filter
     fn filter_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, predicate: &Arc<F>) -> Vec<T>
-    where
-        F: Fn(&T) -> bool + Send + Sync,
+        where
+            F: Fn(&T) -> bool + Send + Sync,
+        decreases *link,
     {
         match link {
             | None => Vec::new(),
             | Some(node) => {
                 let pred_left = Arc::clone(predicate);
                 let pred_right = Arc::clone(predicate);
-                
+
                 use crate::Types::Types::Pair;
                 let Pair(left_vals, right_vals) = crate::ParaPair!(
                     move || filter_parallel(&node.left, &pred_left),
                     move || filter_parallel(&node.right, &pred_right)
                 );
-                
+
                 let mut result = left_vals;
                 if predicate(&node.key) {
                     result.push(node.key.clone());
@@ -293,10 +374,10 @@ pub mod BSTRBMtEph {
         }
     }
 
-    // Parallel reduce
     fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> T
-    where
-        F: Fn(T, T) -> T + Send + Sync,
+        where
+            F: Fn(T, T) -> T + Send + Sync,
+        decreases *link,
     {
         match link {
             | None => identity,
@@ -304,42 +385,22 @@ pub mod BSTRBMtEph {
                 let op_left = Arc::clone(op);
                 let op_right = Arc::clone(op);
                 let id_left = identity.clone();
-                
+
                 use crate::Types::Types::Pair;
                 let Pair(left_acc, right_acc) = crate::ParaPair!(
                     move || reduce_parallel(&node.left, &op_left, id_left),
                     move || reduce_parallel(&node.right, &op_right, identity)
                 );
-                
+
                 let with_key = op(left_acc, node.key.clone());
                 op(with_key, right_acc)
             }
         }
     }
 
-    verus! {
-        /// Uninterpreted well-formedness for RB tree links (Node is outside verus!).
-        pub open spec fn link_wf<T: StTInMtT + Ord>(link: Link<T>) -> bool;
+    } // verus!
 
-        pub struct BSTRBMtEphInv;
-
-        impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTRBMtEphInv {
-            open spec fn inv(self, v: Link<T>) -> bool {
-                link_wf(v)
-            }
-        }
-
-        #[verifier::external_body] // accept hole
-        fn new_rb_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, BSTRBMtEphInv>) {
-            RwLock::new(val, Ghost(BSTRBMtEphInv))
-        }
-
-        #[verifier::reject_recursive_types(T)]
-        #[derive(Clone)]
-        pub struct BSTRBMtEph<T: StTInMtT + Ord> {
-            root: Arc<RwLock<Link<T>, BSTRBMtEphInv>>,
-        }
-    }
+    // 13. derive impls outside verus!
 
     impl<T: StTInMtT + Ord> std::fmt::Debug for BSTRBMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -348,35 +409,6 @@ pub mod BSTRBMtEph {
     }
 
     pub type BSTreeRB<T> = BSTRBMtEph<T>;
-
-    pub trait BSTRBMtEphTrait<T: StTInMtT + Ord>: Sized {
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn new()                       -> Self;
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n) - Parallel construction from sorted slice
-        fn from_sorted_slice(values: &[T]) -> Self;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n) with locking
-        fn insert(&self, value: T);
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n) with locking
-        fn find(&self, target: &T)     -> Option<T>;
-        fn contains(&self, target: &T) -> B;
-        fn size(&self)                 -> N;
-        fn is_empty(&self)             -> B;
-        fn height(&self)               -> N;
-        fn minimum(&self)              -> Option<T>;
-        fn maximum(&self)              -> Option<T>;
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n) - Parallel traversal
-        fn in_order(&self)             -> ArraySeqStPerS<T>;
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n) - Parallel traversal
-        fn pre_order(&self)            -> ArraySeqStPerS<T>;
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n) - Parallel filter
-        fn filter<F>(&self, predicate: F) -> ArraySeqStPerS<T>
-        where
-            F: Fn(&T) -> bool + Send + Sync;
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n) - Parallel reduce
-        fn reduce<F>(&self, op: F, identity: T) -> T
-        where
-            F: Fn(T, T) -> T + Send + Sync;
-    }
 
     impl<T: StTInMtT + Ord> BSTRBMtEphTrait<T> for BSTRBMtEph<T> {
         fn new() -> Self {

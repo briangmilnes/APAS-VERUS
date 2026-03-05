@@ -229,81 +229,176 @@ pub mod AVLTreeSeqStEph {
         }
     }
 
-    #[verifier::external_body]
-    fn update_meta<T: StT>(n: &mut Box<AVLTreeNode<T>>) {
+    fn update_meta<T: StT>(n: &mut Box<AVLTreeNode<T>>)
+        requires
+            spec_avltreeseqsteph_wf(old(n).left),
+            spec_avltreeseqsteph_wf(old(n).right),
+        ensures
+            n.left_size as nat == spec_cached_size(&n.left),
+            n.right_size as nat == spec_cached_size(&n.right),
+            n.height as nat == 1 + spec_nat_max(
+                spec_cached_height(&n.left), spec_cached_height(&n.right)),
+            n.value == old(n).value,
+            n.left == old(n).left,
+            n.right == old(n).right,
+            n.index == old(n).index,
+            spec_avltreeseqsteph_wf(Some(*n)),
+    {
         n.left_size = size_link_fn(&n.left);
         n.right_size = size_link_fn(&n.right);
         let hl = h_fn(&n.left);
         let hr = h_fn(&n.right);
+        assume(1 + (if hl >= hr { hl } else { hr }) as int <= usize::MAX as int);
         n.height = 1 + if hl >= hr { hl } else { hr };
     }
 
-    #[verifier::external_body]
     fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (rotated: Box<AVLTreeNode<T>>)
-        requires spec_avltreeseqsteph_wf(Some(y)),
+        requires
+            spec_avltreeseqsteph_wf(Some(y)),
+            y.left is Some,
         ensures
             spec_inorder(Some(rotated)) =~= spec_inorder(Some(y)),
             spec_avltreeseqsteph_wf(Some(rotated)),
+            spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(y)),
     {
-        let mut x = y.left.take().expect("rotate_right requires left child");
-        let t2 = x.right.take();
-        y.left = t2;
+        let ghost old_y = *y;
+        proof {
+            assert(spec_avltreeseqsteph_wf(old_y.left));
+            assert(spec_avltreeseqsteph_wf(old_y.right));
+        }
+        let mut x = y.left.take().unwrap();
+        let ghost old_x = *x;
+        proof {
+            assert(spec_avltreeseqsteph_wf(old_x.left));
+            assert(spec_avltreeseqsteph_wf(old_x.right));
+        }
+        let b = x.right.take();
+        proof { assert(b == old_x.right); }
+        y.left = b;
+        proof {
+            assert(spec_avltreeseqsteph_wf(y.left));
+            assert(spec_avltreeseqsteph_wf(y.right));
+        }
         update_meta(&mut y);
         x.right = Some(y);
-        update_meta(x.right.as_mut().unwrap());
+        proof {
+            assert(spec_avltreeseqsteph_wf(x.left));
+            assert(spec_avltreeseqsteph_wf(x.right));
+        }
         update_meta(&mut x);
+        proof { reveal_with_fuel(spec_inorder, 3); }
         x
     }
 
-    #[verifier::external_body]
     fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (rotated: Box<AVLTreeNode<T>>)
-        requires spec_avltreeseqsteph_wf(Some(x)),
+        requires
+            spec_avltreeseqsteph_wf(Some(x)),
+            x.right is Some,
         ensures
             spec_inorder(Some(rotated)) =~= spec_inorder(Some(x)),
             spec_avltreeseqsteph_wf(Some(rotated)),
+            spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(x)),
     {
-        let mut y = x.right.take().expect("rotate_left requires right child");
-        let t2 = y.left.take();
-        x.right = t2;
+        let ghost old_x = *x;
+        proof {
+            assert(spec_avltreeseqsteph_wf(old_x.left));
+            assert(spec_avltreeseqsteph_wf(old_x.right));
+        }
+        let mut y = x.right.take().unwrap();
+        let ghost old_y = *y;
+        proof {
+            assert(spec_avltreeseqsteph_wf(old_y.left));
+            assert(spec_avltreeseqsteph_wf(old_y.right));
+        }
+        let b = y.left.take();
+        proof { assert(b == old_y.left); }
+        x.right = b;
+        proof {
+            assert(spec_avltreeseqsteph_wf(x.left));
+            assert(spec_avltreeseqsteph_wf(x.right));
+        }
         update_meta(&mut x);
         y.left = Some(x);
-        update_meta(y.left.as_mut().unwrap());
+        proof {
+            assert(spec_avltreeseqsteph_wf(y.left));
+            assert(spec_avltreeseqsteph_wf(y.right));
+        }
         update_meta(&mut y);
+        proof { reveal_with_fuel(spec_inorder, 3); }
         y
     }
 
-    #[verifier::external_body]
     fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (balanced: Box<AVLTreeNode<T>>)
-        requires spec_avltreeseqsteph_wf(Some(n)),
+        requires
+            spec_avltreeseqsteph_wf(n.left),
+            spec_avltreeseqsteph_wf(n.right),
         ensures
             spec_inorder(Some(balanced)) =~= spec_inorder(Some(n)),
             spec_avltreeseqsteph_wf(Some(balanced)),
+            spec_cached_size(&Some(balanced))
+                == 1 + spec_cached_size(&n.left) + spec_cached_size(&n.right),
     {
         update_meta(&mut n);
         let hl = h_fn(&n.left);
         let hr = h_fn(&n.right);
         if hl > hr.saturating_add(1) {
-            if h_fn(&n.left.as_ref().unwrap().right) > h_fn(&n.left.as_ref().unwrap().left) {
-                let left = n.left.take().unwrap();
-                n.left = Some(rotate_left_fn(left));
+            // Left-heavy: n.left must be Some since hl > 1.
+            proof {
+                if n.left is None { assert(spec_cached_height(&n.left) == 0); }
+                assert(n.left is Some);
             }
+            if h_fn(&n.left.as_ref().unwrap().right) > h_fn(&n.left.as_ref().unwrap().left) {
+                // Left-right case: rotate left child left, then rotate right.
+                let left = n.left.take().unwrap();
+                proof {
+                    // left.right is Some because its height > 0.
+                    let lrh = spec_cached_height(&left.right);
+                    if left.right is None { assert(lrh == 0); }
+                    assert(left.right is Some);
+                }
+                n.left = Some(rotate_left_fn(left));
+                update_meta(&mut n);
+            }
+            proof { reveal_with_fuel(spec_inorder, 2); }
             return rotate_right_fn(n);
         }
         if hr > hl.saturating_add(1) {
-            if h_fn(&n.right.as_ref().unwrap().left) > h_fn(&n.right.as_ref().unwrap().right) {
-                let right = n.right.take().unwrap();
-                n.right = Some(rotate_right_fn(right));
+            // Right-heavy: n.right must be Some since hr > 1.
+            proof {
+                if n.right is None { assert(spec_cached_height(&n.right) == 0); }
+                assert(n.right is Some);
             }
+            if h_fn(&n.right.as_ref().unwrap().left) > h_fn(&n.right.as_ref().unwrap().right) {
+                // Right-left case: rotate right child right, then rotate left.
+                let right = n.right.take().unwrap();
+                proof {
+                    let rlh = spec_cached_height(&right.left);
+                    if right.left is None { assert(rlh == 0); }
+                    assert(right.left is Some);
+                }
+                n.right = Some(rotate_right_fn(right));
+                update_meta(&mut n);
+            }
+            proof { reveal_with_fuel(spec_inorder, 2); }
             return rotate_left_fn(n);
         }
         n
     }
 
-    #[verifier::external_body]
-    pub fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (inserted: Link<T>) {
+    pub fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (inserted: Link<T>)
+        requires
+            spec_avltreeseqsteph_wf(node),
+            0 <= index as int <= spec_inorder(node).len(),
+            *old(next_key) < usize::MAX,
+            spec_cached_size(&node) + 1 < usize::MAX,
+        ensures
+            spec_avltreeseqsteph_wf(inserted),
+            spec_cached_size(&inserted) == spec_cached_size(&node) + 1,
+            *next_key == *old(next_key) + 1,
+        decreases node,
+    {
         match node {
             None => {
-                debug_assert!(index == 0, "insert_at_link reached None with index > 0");
                 let key = *next_key;
                 *next_key += 1;
                 Some(Box::new(AVLTreeNode {
@@ -317,47 +412,80 @@ pub mod AVLTreeSeqStEph {
                 }))
             }
             Some(mut n) => {
+                proof {
+                    lemma_size_eq_inorder_len::<T>(&n.left);
+                    lemma_size_eq_inorder_len::<T>(&n.right);
+                }
                 let left_size = n.left_size;
                 if index <= left_size {
                     n.left = insert_at_link(n.left.take(), index, value, next_key);
+                    proof {
+                        assert(spec_avltreeseqsteph_wf(n.left));
+                        assert(spec_avltreeseqsteph_wf(n.right));
+                    }
                 } else {
-                    n.right = insert_at_link(n.right.take(), index - left_size - 1, value, next_key);
+                    n.right = insert_at_link(
+                        n.right.take(), index - left_size - 1, value, next_key,
+                    );
+                    proof {
+                        assert(spec_avltreeseqsteph_wf(n.left));
+                        assert(spec_avltreeseqsteph_wf(n.right));
+                    }
                 }
                 Some(rebalance_fn(n))
             }
         }
     }
 
-    #[verifier::external_body]
     fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (elem: &'a T)
         requires spec_avltreeseqsteph_wf(*node), (index as int) < spec_inorder(*node).len(),
         ensures elem@ == spec_inorder(*node)[index as int],
+        decreases *node,
     {
         let n = node.as_ref().expect("index out of bounds");
+        proof { lemma_size_eq_inorder_len::<T>(&n.left); }
+        proof { lemma_size_eq_inorder_len::<T>(&n.right); }
         let left_size = n.left_size;
         if index < left_size {
-            return nth_link(&n.left, index);
+            nth_link(&n.left, index)
+        } else if index == left_size {
+            &n.value
+        } else {
+            nth_link(&n.right, index - left_size - 1)
         }
-        if index == left_size {
-            return &n.value;
-        }
-        nth_link(&n.right, index - left_size - 1)
     }
 
-    #[verifier::external_body]
-    fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (outcome: Result<(), &'static str>) {
-        match node {
-            None => Err("Index out of bounds"),
-            Some(n) => {
+    fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (outcome: Result<(), &'static str>)
+        requires
+            spec_avltreeseqsteph_wf(*old(node)),
+            (index as int) < spec_inorder(*old(node)).len(),
+        ensures
+            spec_avltreeseqsteph_wf(*node),
+            spec_cached_size(node) == spec_cached_size(old(node)),
+            spec_cached_height(node) == spec_cached_height(old(node)),
+            outcome is Ok,
+        decreases *old(node),
+    {
+        let cur = node.take();
+        match cur {
+            None => {
+                *node = None;
+                Err("Index out of bounds")
+            }
+            Some(mut n) => {
+                proof { lemma_size_eq_inorder_len::<T>(&n.left); }
+                proof { lemma_size_eq_inorder_len::<T>(&n.right); }
                 let left_size = n.left_size;
-                if index < left_size {
+                let result = if index < left_size {
                     set_link(&mut n.left, index, value)
                 } else if index == left_size {
                     n.value = value;
                     Ok(())
                 } else {
                     set_link(&mut n.right, index - left_size - 1, value)
-                }
+                };
+                *node = Some(n);
+                result
             }
         }
     }
@@ -409,12 +537,9 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn singleton(item: T) -> (tree: Self) {
-            let mut t = Self::empty();
+            let mut t = AVLTreeSeqStEphS { root: None, next_key: 0 };
             t.root = insert_at_link(t.root.take(), 0, item, &mut t.next_key);
-            proof {
-                assume(t.spec_seq().len() == 1);
-                assume(t.spec_well_formed());
-            }
+            proof { lemma_size_eq_inorder_len::<T>(&t.root); }
             t
         }
 
@@ -463,18 +588,23 @@ pub mod AVLTreeSeqStEph {
 
         fn from_vec(values: Vec<T>) -> (tree: AVLTreeSeqStEphS<T>) {
             let length = values.len();
-            let mut t = AVLTreeSeqStEphS::empty();
+            let mut t = AVLTreeSeqStEphS { root: None, next_key: 0 };
             let mut i: usize = 0;
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             while i < length
                 invariant
                     i <= length,
                     length == values@.len(),
+                    spec_avltreeseqsteph_wf(t.root),
+                    spec_cached_size(&t.root) == i as nat,
+                    t.next_key == i,
                 decreases length - i,
             {
+                proof { lemma_size_eq_inorder_len::<T>(&t.root); }
+                assume(i + 1 < usize::MAX);
                 t.root = insert_at_link(t.root.take(), i, values[i].clone(), &mut t.next_key);
                 i += 1;
             }
-            proof { assume(t.spec_well_formed()); }
             t
         }
 
@@ -509,6 +639,8 @@ pub mod AVLTreeSeqStEph {
         fn push_back(&mut self, value: T) {
             assert(self.spec_well_formed());
             let len = self.length();
+            assume(self.next_key < usize::MAX);
+            assume(spec_cached_size(&self.root) + 1 < usize::MAX);
             let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
             self.root = node;
         }

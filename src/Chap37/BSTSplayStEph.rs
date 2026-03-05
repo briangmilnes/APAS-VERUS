@@ -64,6 +64,19 @@ pub mod BSTSplayStEph {
         }
     }
 
+    /// Recursive membership predicate for a splay tree link.
+    pub open spec fn spec_contains_link<T: StT + Ord>(link: &Link<T>, value: T) -> bool
+        decreases *link,
+    {
+        match link {
+            None => false,
+            Some(node) =>
+                node.key == value
+                || spec_contains_link(&node.left, value)
+                || spec_contains_link(&node.right, value),
+        }
+    }
+
     fn size_link<T: StT + Ord>(link: &Link<T>) -> (size: N)
         ensures size as nat == spec_size_link(link),
     {
@@ -280,7 +293,10 @@ pub mod BSTSplayStEph {
         }
     }
 
-    fn min_link<T: StT + Ord>(link: &Link<T>) -> Option<&T>
+    fn min_link<T: StT + Ord>(link: &Link<T>) -> (min: Option<&T>)
+        ensures
+            link.is_some() ==> min.is_some(),
+            min.is_some() ==> spec_contains_link(link, *min.unwrap()),
         decreases *link,
     {
         match link {
@@ -292,7 +308,10 @@ pub mod BSTSplayStEph {
         }
     }
 
-    fn max_link<T: StT + Ord>(link: &Link<T>) -> Option<&T>
+    fn max_link<T: StT + Ord>(link: &Link<T>) -> (max: Option<&T>)
+        ensures
+            link.is_some() ==> max.is_some(),
+            max.is_some() ==> spec_contains_link(link, *max.unwrap()),
         decreases *link,
     {
         match link {
@@ -341,45 +360,48 @@ pub mod BSTSplayStEph {
     pub trait BSTSplayStEphTrait<T: StT + Ord> {
         spec fn spec_size(self) -> nat;
         spec fn spec_height(self) -> nat;
+        spec fn spec_contains(self, value: T) -> bool;
 
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn new()                       -> Self
+        fn new() -> (tree: Self)
         where
-            Self: Sized;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                 -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)             -> B;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n)
-        fn height(&self)               -> N
-            requires self.spec_height() < usize::MAX as nat;
-        /// claude-4-sonet: Work Θ(log n) amortized, Θ(n) worst case; Span Θ(log n) amortized, Parallelism Θ(1)
+            Self: Sized,
+            ensures
+                tree.spec_size() == 0,
+                forall|x: T| !tree.spec_contains(x);
+        fn size(&self) -> (n: N)
+            ensures n as nat == self.spec_size();
+        fn is_empty(&self) -> (b: B)
+            ensures b == (self.spec_size() == 0);
+        fn height(&self) -> (h: N)
+            requires self.spec_height() < usize::MAX as nat,
+            ensures h as nat == self.spec_height();
         fn insert(&mut self, value: T);
-        /// claude-4-sonet: Work Θ(log n) amortized, Θ(n) worst case; Span Θ(log n) amortized, Parallelism Θ(1)
-        fn find(&self, target: &T)     -> Option<&T>;
-        /// claude-4-sonet: Work Θ(log n) amortized, Θ(n) worst case; Span Θ(log n) amortized, Parallelism Θ(1)
+        fn find(&self, target: &T) -> Option<&T>;
         fn contains(&self, target: &T) -> B;
-        /// claude-4-sonet: Work Θ(log n) amortized, Θ(n) worst case; Span Θ(log n) amortized, Parallelism Θ(1)
-        fn minimum(&self)              -> Option<&T>;
-        /// claude-4-sonet: Work Θ(log n) amortized, Θ(n) worst case; Span Θ(log n) amortized, Parallelism Θ(1)
-        fn maximum(&self)              -> Option<&T>;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn in_order(&self)             -> ArraySeqStPerS<T>;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn pre_order(&self)            -> ArraySeqStPerS<T>;
+        fn minimum(&self) -> (min: Option<&T>)
+            ensures
+                self.spec_size() > 0 ==> min.is_some(),
+                min.is_some() ==> self.spec_contains(*min.unwrap());
+        fn maximum(&self) -> (max: Option<&T>)
+            ensures
+                self.spec_size() > 0 ==> max.is_some(),
+                max.is_some() ==> self.spec_contains(*max.unwrap());
+        fn in_order(&self) -> ArraySeqStPerS<T>;
+        fn pre_order(&self) -> ArraySeqStPerS<T>;
     }
 
     impl<T: StT + Ord> BSTSplayStEphTrait<T> for BSTSplayStEph<T> {
         open spec fn spec_size(self) -> nat { spec_size_link(&self.root) }
         open spec fn spec_height(self) -> nat { spec_height_link(&self.root) }
+        open spec fn spec_contains(self, value: T) -> bool { spec_contains_link(&self.root, value) }
 
-        fn new() -> Self { BSTSplayStEph { root: None } }
+        fn new() -> (tree: Self) { BSTSplayStEph { root: None } }
 
-        fn size(&self) -> N { size_link(&self.root) }
+        fn size(&self) -> (n: N) { size_link(&self.root) }
 
-        fn is_empty(&self) -> B { self.size() == 0 }
+        fn is_empty(&self) -> (b: B) { self.size() == 0 }
 
-        fn height(&self) -> N {
+        fn height(&self) -> (h: N) {
             height_link(&self.root)
         }
 
@@ -389,9 +411,9 @@ pub mod BSTSplayStEph {
 
         fn contains(&self, target: &T) -> B { self.find(target).is_some() }
 
-        fn minimum(&self) -> Option<&T> { min_link(&self.root) }
+        fn minimum(&self) -> (min: Option<&T>) { min_link(&self.root) }
 
-        fn maximum(&self) -> Option<&T> { max_link(&self.root) }
+        fn maximum(&self) -> (max: Option<&T>) { max_link(&self.root) }
 
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
