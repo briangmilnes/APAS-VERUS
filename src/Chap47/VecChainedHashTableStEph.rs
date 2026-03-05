@@ -76,7 +76,7 @@ pub mod VecChainedHashTableStEph {
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + Vec::remove (shifts elements), n = chain length.
-            fn delete(&mut self, key: &Key) -> (deleted: B) {
+            fn delete(&mut self, key: &Key) -> (deleted: bool) {
                 let mut i: usize = 0;
                 while i < self.len()
                     decreases self.len() - i,
@@ -114,7 +114,7 @@ pub mod VecChainedHashTableStEph {
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — delegates to delete_chained.
             #[verifier::external_body]
-            fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> B {
+            fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
                 Self::delete_chained(table, key)
             }
 
