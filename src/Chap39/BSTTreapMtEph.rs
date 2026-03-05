@@ -264,22 +264,26 @@ pub mod BSTTreapMtEph {
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn minimum(&self) -> (min_val: Option<T>)
             ensures
+                self@.finite(),
                 self@.len() == 0 ==> min_val is None,
+                self@.len() > 0 ==> min_val is Some,
                 min_val matches Some(v) ==> self@.contains(v@);
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn maximum(&self) -> (max_val: Option<T>)
             ensures
+                self@.finite(),
                 self@.len() == 0 ==> max_val is None,
+                self@.len() > 0 ==> max_val is Some,
                 max_val matches Some(v) ==> self@.contains(v@);
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
-            ensures true;
+            ensures self@.finite(), ordered.spec_len() == self@.len();
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>)
-            ensures true;
+            ensures self@.finite(), preordered.spec_len() == self@.len();
     }
 
 
@@ -994,7 +998,9 @@ pub mod BSTTreapMtEph {
         #[verifier::external_body]
         fn minimum(&self) -> (min_val: Option<T>)
             ensures
+                self@.finite(),
                 self@.len() == 0 ==> min_val is None,
+                self@.len() > 0 ==> min_val is Some,
                 min_val matches Some(v) ==> self@.contains(v@)
         {
             let handle = self.root.acquire_read();
@@ -1006,7 +1012,9 @@ pub mod BSTTreapMtEph {
         #[verifier::external_body]
         fn maximum(&self) -> (max_val: Option<T>)
             ensures
+                self@.finite(),
                 self@.len() == 0 ==> max_val is None,
+                self@.len() > 0 ==> max_val is Some,
                 max_val matches Some(v) ==> self@.contains(v@)
         {
             let handle = self.root.acquire_read();

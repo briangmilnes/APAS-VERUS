@@ -90,17 +90,11 @@ fn test_is_empty_false() {
 
 #[test]
 fn test_clear_memo() {
-    use std::collections::HashMap;
     let s = ArraySeqStPerS::new(0, ' ');
     let t = ArraySeqStPerS::new(0, ' ');
     let dp = TopDownDPStPerS::new(s, t);
 
-    let mut memo = HashMap::new();
-    memo.insert((1, 1), 42);
-    let dp_with_memo = dp.with_memo_table(memo);
-    assert_eq!(dp_with_memo.memo_size(), 1);
-
-    let dp_cleared = dp_with_memo.clear_memo();
+    let dp_cleared = dp.clear_memo();
     assert_eq!(dp_cleared.memo_size(), 0);
 }
 

@@ -171,13 +171,13 @@
 | 113 | `is_valid_leftist_heap` | Y | Y |  |  | Y |  |  | unknown | 129&#8209;130 |
 | 114 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 131&#8209;133 |
 | 115 | `to_sorted_vec` | Y | Y |  |  | Y |  |  | unknown | 136&#8209;138 |
-| 116 | `meld_multiple` | Y | Y |  |  | Y |  |  | hole | 139&#8209;140 |
-| 117 | `split` | Y | Y |  |  | Y |  |  | hole | 141&#8209;142 |
-| 118 | `default` |  | Y |  |  | Y |  | Y |  | 489 |
-| 119 | `eq` x2 |  | Y |  |  | Y |  |  | unknown | 515&#8209;517 |
-| 120 | `format_node` x2 |  | Y |  |  |  | Y | Y |  | 586&#8209;596 |
-| 121 | `efficient_multi_way_merge` |  |  |  | Y |  | Y | Y |  | 627&#8209;634 |
-| 122 | `parallel_heap_construction` |  |  |  | Y |  | Y | Y |  | 636&#8209;639 |
+| 116 | `meld_multiple` | Y | Y |  |  | Y |  |  | hole | 139 |
+| 117 | `split` | Y | Y |  |  | Y |  |  | hole | 140 |
+| 118 | `default` |  | Y |  |  | Y |  | Y |  | 485 |
+| 119 | `eq` x2 |  | Y |  |  | Y |  |  | unknown | 511&#8209;513 |
+| 120 | `format_node` x2 |  | Y |  |  |  | Y | Y |  | 582&#8209;592 |
+| 121 | `efficient_multi_way_merge` |  |  |  | Y |  | Y | Y |  | 623&#8209;630 |
+| 122 | `parallel_heap_construction` |  |  |  | Y |  | Y | Y |  | 632&#8209;635 |
 
 ### Chap45/SortedListPQ.rs
 

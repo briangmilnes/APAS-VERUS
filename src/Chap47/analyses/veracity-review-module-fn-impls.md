@@ -27,7 +27,7 @@
 | 3 | Chap47 | FlatHashTable | 4 | 4 | 0 | 0 | 8 | 0 | 6 | 2 | 0 |
 | 4 | Chap47 | LinProbFlatHashTableStEph | 0 | 0 | 6 | 0 | 6 | 0 | 0 | 6 | 0 |
 | 5 | Chap47 | LinkedListChainedHashTableStEph | 0 | 4 | 5 | 1 | 7 | 0 | 0 | 5 | 2 |
-| 6 | Chap47 | ParaHashTableStEph | 8 | 0 | 0 | 0 | 8 | 0 | 6 | 1 | 1 |
+| 6 | Chap47 | ParaHashTableStEph | 8 | 0 | 0 | 0 | 8 | 0 | 4 | 2 | 2 |
 | 7 | Chap47 | QuadProbFlatHashTableStEph | 0 | 0 | 6 | 0 | 6 | 0 | 0 | 6 | 0 |
 | 8 | Chap47 | StructChainedHashTable | 0 | 6 | 5 | 4 | 12 | 0 | 4 | 5 | 3 |
 | 9 | Chap47 | VecChainedHashTableStEph | 0 | 4 | 5 | 1 | 7 | 0 | 1 | 5 | 1 |
@@ -40,10 +40,10 @@
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 1 | `_chained_hash_table_verified` |  |  |  | Y | Y |  | Y |  | 42 |
 | 2 | `hash_index` | Y |  |  |  | Y |  |  | unknown | 55&#8209;59 |
-| 3 | `insert_chained` | Y |  |  |  | Y |  |  | hole | 65&#8209;70 |
-| 4 | `lookup_chained` | Y |  |  |  | Y |  |  | unknown | 85&#8209;88 |
-| 5 | `delete_chained` | Y |  |  |  | Y |  |  | hole | 102&#8209;107 |
-| 6 | `eq` |  | Y |  |  | Y |  |  | unknown | 141&#8209;142 |
+| 3 | `insert_chained` | Y |  |  |  | Y |  |  | hole | 65&#8209;68 |
+| 4 | `lookup_chained` | Y |  |  |  | Y |  |  | unknown | 83&#8209;86 |
+| 5 | `delete_chained` | Y |  |  |  | Y |  |  | hole | 100&#8209;103 |
+| 6 | `eq` |  | Y |  |  | Y |  |  | unknown | 137&#8209;138 |
 
 ### Chap47/DoubleHashFlatHashTableStEph.rs
 
@@ -98,13 +98,13 @@
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 35 | `new` | Y |  |  |  | Y |  | Y |  | 52 |
-| 36 | `insert` x2 | Y |  |  |  | Y |  |  | unknown | 102&#8209;107 |
-| 37 | `lookup` x2 | Y |  |  |  | Y |  |  | unknown | 112&#8209;115 |
-| 38 | `delete` x2 | Y |  |  |  | Y |  |  | unknown | 120&#8209;125 |
-| 39 | `createTable` | Y |  |  |  | Y |  |  | unknown | 70&#8209;75 |
-| 40 | `metrics` | Y |  |  |  | Y |  |  | unknown | 130&#8209;131 |
-| 41 | `loadAndSize` | Y |  |  |  | Y |  |  | hole | 139&#8209;140 |
-| 42 | `resize` | Y |  |  |  | Y |  |  | unknown | 158&#8209;163 |
+| 36 | `insert` x2 | Y |  |  |  | Y |  |  | unknown | 93&#8209;96 |
+| 37 | `lookup` x2 | Y |  |  |  | Y |  |  | unknown | 101&#8209;104 |
+| 38 | `delete` x2 | Y |  |  |  | Y |  |  | unknown | 109&#8209;112 |
+| 39 | `createTable` | Y |  |  |  | Y |  |  | hole | 71&#8209;76 |
+| 40 | `metrics` | Y |  |  |  | Y |  | Y |  | 117 |
+| 41 | `loadAndSize` | Y |  |  |  | Y |  |  | hole | 124&#8209;125 |
+| 42 | `resize` | Y |  |  |  | Y |  |  | unknown | 143&#8209;148 |
 
 ### Chap47/QuadProbFlatHashTableStEph.rs
 

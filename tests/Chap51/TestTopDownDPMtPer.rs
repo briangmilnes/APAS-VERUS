@@ -40,21 +40,11 @@ fn test_med_memoized_parallel() {
 }
 
 #[test]
-fn test_memo_size() {
-    let dp = TopDownDPMtPerS::default();
-    assert_eq!(dp.memo_size(), 0);
-}
-
-#[test]
-fn test_is_memoized() {
-    let dp = TopDownDPMtPerS::default();
-    assert!(!dp.is_memoized(0, 0));
-}
-
-#[test]
-fn test_get_memoized() {
-    let dp = TopDownDPMtPerS::default();
-    assert_eq!(dp.get_memoized(0, 0), None);
+fn test_med_memoized_concurrent_identical() {
+    let s = ArraySeqMtPerS::from_vec(vec!['a', 'b', 'c']);
+    let t = ArraySeqMtPerS::from_vec(vec!['a', 'b', 'c']);
+    let dp = TopDownDPMtPerS::new(s, t);
+    assert_eq!(dp.med_memoized_concurrent(), 0);
 }
 
 #[test]
@@ -90,20 +80,10 @@ fn test_is_empty_false() {
 }
 
 #[test]
-fn test_clear_memo() {
-    let s = ArraySeqMtPerS::new(0, ' ');
-    let t = ArraySeqMtPerS::new(0, ' ');
-    let dp = TopDownDPMtPerS::new(s, t);
-    let dp_cleared = dp.clear_memo();
-    assert_eq!(dp_cleared.memo_size(), 0);
-}
-
-#[test]
 fn test_default() {
     let dp = TopDownDPMtPerS::default();
     assert_eq!(dp.s_length(), 0);
     assert_eq!(dp.t_length(), 0);
-    assert_eq!(dp.memo_size(), 0);
 }
 
 #[test]

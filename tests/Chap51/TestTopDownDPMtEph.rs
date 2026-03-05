@@ -40,66 +40,6 @@ fn test_med_memoized_parallel() {
 }
 
 #[test]
-fn test_memo_size() {
-    let dp = TopDownDPMtEphS::default();
-    assert_eq!(dp.memo_size(), 0);
-}
-
-#[test]
-fn test_is_memoized() {
-    let dp = TopDownDPMtEphS::default();
-    assert!(!dp.is_memoized(0, 0));
-}
-
-#[test]
-fn test_get_memoized() {
-    let dp = TopDownDPMtEphS::default();
-    assert_eq!(dp.get_memoized(0, 0), None);
-}
-
-#[test]
-fn test_insert_memo() {
-    let s = ArraySeqMtEphS::from_vec(vec!['a', 'b']);
-    let t = ArraySeqMtEphS::from_vec(vec!['x', 'y']);
-    let mut dp = TopDownDPMtEphS::new(s, t);
-    
-    // Initially not memoized
-    assert!(!dp.is_memoized(1, 1));
-    assert_eq!(dp.get_memoized(1, 1), None);
-    assert_eq!(dp.memo_size(), 0);
-    
-    // Insert memo value
-    dp.insert_memo(1, 1, 42);
-    
-    // Now should be memoized
-    assert!(dp.is_memoized(1, 1));
-    assert_eq!(dp.get_memoized(1, 1), Some(42));
-    assert_eq!(dp.memo_size(), 1);
-    
-    // Insert another
-    dp.insert_memo(0, 1, 7);
-    assert!(dp.is_memoized(0, 1));
-    assert_eq!(dp.get_memoized(0, 1), Some(7));
-    assert_eq!(dp.memo_size(), 2);
-}
-
-#[test]
-fn test_insert_memo_overwrite() {
-    let s = ArraySeqMtEphS::from_vec(vec!['a']);
-    let t = ArraySeqMtEphS::from_vec(vec!['x']);
-    let mut dp = TopDownDPMtEphS::new(s, t);
-    
-    // Insert initial value
-    dp.insert_memo(0, 0, 10);
-    assert_eq!(dp.get_memoized(0, 0), Some(10));
-    
-    // Overwrite with new value
-    dp.insert_memo(0, 0, 20);
-    assert_eq!(dp.get_memoized(0, 0), Some(20));
-    assert_eq!(dp.memo_size(), 1); // Still only one entry
-}
-
-#[test]
 fn test_s_length() {
     let s = ArraySeqMtEphS::from_vec(vec!['a', 'b', 'c']);
     let t = ArraySeqMtEphS::new(0, ' ');
@@ -132,20 +72,10 @@ fn test_is_empty_false() {
 }
 
 #[test]
-fn test_clear_memo() {
-    let s = ArraySeqMtEphS::new(0, ' ');
-    let t = ArraySeqMtEphS::new(0, ' ');
-    let mut dp = TopDownDPMtEphS::new(s, t);
-    dp.clear_memo();
-    assert_eq!(dp.memo_size(), 0);
-}
-
-#[test]
 fn test_default() {
     let dp = TopDownDPMtEphS::default();
     assert_eq!(dp.s_length(), 0);
     assert_eq!(dp.t_length(), 0);
-    assert_eq!(dp.memo_size(), 0);
 }
 
 #[test]
@@ -170,4 +100,38 @@ fn test_partial_eq() {
     let dp2 = TopDownDPMtEphS::new(s2, t2);
 
     assert_eq!(dp1, dp2);
+}
+
+#[test]
+fn test_med_memoized_concurrent_identical() {
+    let s = ArraySeqMtEphS::from_vec(vec!['a', 'b', 'c']);
+    let t = ArraySeqMtEphS::from_vec(vec!['a', 'b', 'c']);
+    let mut dp = TopDownDPMtEphS::new(s, t);
+    assert_eq!(dp.med_memoized_concurrent(), 0);
+}
+
+#[test]
+fn test_set_s() {
+    let s = ArraySeqMtEphS::from_vec(vec!['a', 'b']);
+    let t = ArraySeqMtEphS::from_vec(vec!['x', 'y']);
+    let mut dp = TopDownDPMtEphS::new(s, t);
+    assert_eq!(dp.s_length(), 2);
+
+    let new_s = ArraySeqMtEphS::from_vec(vec!['p', 'q', 'r']);
+    dp.set_s(new_s);
+    assert_eq!(dp.s_length(), 3);
+    assert_eq!(dp.t_length(), 2);
+}
+
+#[test]
+fn test_set_t() {
+    let s = ArraySeqMtEphS::from_vec(vec!['a', 'b']);
+    let t = ArraySeqMtEphS::from_vec(vec!['x', 'y']);
+    let mut dp = TopDownDPMtEphS::new(s, t);
+    assert_eq!(dp.t_length(), 2);
+
+    let new_t = ArraySeqMtEphS::from_vec(vec!['m']);
+    dp.set_t(new_t);
+    assert_eq!(dp.s_length(), 2);
+    assert_eq!(dp.t_length(), 1);
 }

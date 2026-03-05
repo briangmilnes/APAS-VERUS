@@ -923,23 +923,23 @@
     "id": 116,
     "function": "meld_multiple",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "139-140",
+    "lines": "139",
     "spec_strength": "hole",
-    "snippet": "            fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self)\n                ensures heaps@.len() == 0 ==> pq.spec_size() == 0;"
+    "snippet": "            fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self);"
   },
   {
     "id": 117,
     "function": "split",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "141-142",
+    "lines": "140",
     "spec_strength": "hole",
-    "snippet": "            fn split(&self, key: &T) -> (parts: (Self, Self))\n                requires self.spec_size() <= usize::MAX as nat;"
+    "snippet": "            fn split(&self, key: &T) -> (parts: (Self, Self));"
   },
   {
     "id": 118,
     "function": "default",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "489",
+    "lines": "485",
     "spec_strength": "",
     "snippet": "            fn default() -> Self { Self::empty() }"
   },
@@ -947,7 +947,7 @@
     "id": 119,
     "function": "eq`",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "515-517",
+    "lines": "511-513",
     "spec_strength": "unknown",
     "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (*self == *other)\n                decreases self, other"
   },
@@ -955,7 +955,7 @@
     "id": 120,
     "function": "format_node`",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "586-596",
+    "lines": "582-592",
     "spec_strength": "",
     "snippet": "            fn format_node<T: StT + Ord>(node: &LeftistHeapNode<T>, f: &mut Formatter<'_>, depth: usize) -> Result {\n                match node {\n                    LeftistHeapNode::Leaf => Ok(()),\n                    LeftistHeapNode::Node { key, left, right, rank } => {\n                        let indent = \"  \".repeat(depth);\n                        writeln!(f, \"{indent}{key}(rank:{rank})\")?;\n                        format_node(left, f, depth + 1)?;\n                        format_node(right, f, depth + 1)\n                    }\n                }\n            }"
   },
@@ -963,7 +963,7 @@
     "id": 121,
     "function": "efficient_multi_way_merge",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "627-634",
+    "lines": "623-630",
     "spec_strength": "",
     "snippet": "    /// Efficient multi-way merge using O(log n) meld operations.\n    pub fn efficient_multi_way_merge<T: StT + Ord>(sequences: Vec<Vec<T>>) -> Vec<T> {\n        let heaps = sequences.into_iter()\n            .map(|seq| LeftistHeapPQ::from_vec(seq))\n            .collect::<Vec<LeftistHeapPQ<T>>>();\n        let merged_heap = LeftistHeapPQ::meld_multiple(&heaps);\n        merged_heap.extract_all_sorted()\n    }"
   },
@@ -971,7 +971,7 @@
     "id": 122,
     "function": "parallel_heap_construction",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "636-639",
+    "lines": "632-635",
     "spec_strength": "",
     "snippet": "    /// Parallel heap construction using reduce pattern.\n    pub fn parallel_heap_construction<T: StT + Ord>(elements: Vec<T>) -> LeftistHeapPQ<T> {\n        LeftistHeapPQ::from_vec(elements)\n    }"
   },

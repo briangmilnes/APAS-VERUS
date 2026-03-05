@@ -19,15 +19,15 @@
     "id": 3,
     "function": "insert_chained",
     "file": "Chap47/ChainedHashTable.rs",
-    "lines": "65-70",
+    "lines": "65-68",
     "spec_strength": "hole",
-    "snippet": "            fn insert_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)\n                requires\n                    old(table).current_size > 0,\n                    old(table).table@.len() == old(table).current_size as int,\n                ensures\n                    table.table@.len() == table.current_size as int,"
+    "snippet": "            fn insert_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)\n                requires\n                    old(table).current_size > 0,\n                    old(table).table@.len() == old(table).current_size as int,"
   },
   {
     "id": 4,
     "function": "lookup_chained",
     "file": "Chap47/ChainedHashTable.rs",
-    "lines": "85-88",
+    "lines": "83-86",
     "spec_strength": "unknown",
     "snippet": "            fn lookup_chained(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value>\n                requires\n                    table.current_size > 0,\n                    table.table@.len() == table.current_size as int,"
   },
@@ -35,15 +35,15 @@
     "id": 5,
     "function": "delete_chained",
     "file": "Chap47/ChainedHashTable.rs",
-    "lines": "102-107",
+    "lines": "100-103",
     "spec_strength": "hole",
-    "snippet": "            fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)\n                requires\n                    old(table).current_size > 0,\n                    old(table).table@.len() == old(table).current_size as int,\n                ensures\n                    table.table@.len() == table.current_size as int,"
+    "snippet": "            fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> B\n                requires\n                    old(table).current_size > 0,\n                    old(table).table@.len() == old(table).current_size as int,"
   },
   {
     "id": 6,
     "function": "eq",
     "file": "Chap47/ChainedHashTable.rs",
-    "lines": "141-142",
+    "lines": "137-138",
     "spec_strength": "unknown",
     "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (self.chain == other.chain)"
   },
@@ -77,7 +77,7 @@
     "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
     "lines": "109",
     "spec_strength": "hole",
-    "snippet": "        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {"
+    "snippet": "        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> B {"
   },
   {
     "id": 11,
@@ -165,7 +165,7 @@
     "file": "Chap47/FlatHashTable.rs",
     "lines": "131-134",
     "spec_strength": "unknown",
-    "snippet": "        fn delete(&mut self, key: &Key) -> (deleted: bool)\n            ensures\n                deleted ==> *self is Deleted,\n                !deleted ==> *self == *old(self),"
+    "snippet": "        fn delete(&mut self, key: &Key) -> (deleted: B)\n            ensures\n                deleted ==> *self is Deleted,\n                !deleted ==> *self == *old(self),"
   },
   {
     "id": 22,
@@ -189,7 +189,7 @@
     "file": "Chap47/LinProbFlatHashTableStEph.rs",
     "lines": "75",
     "spec_strength": "hole",
-    "snippet": "        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {"
+    "snippet": "        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> B {"
   },
   {
     "id": 25,
@@ -253,7 +253,7 @@
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
     "lines": "77",
     "spec_strength": "hole",
-    "snippet": "            fn delete(&mut self, key: &Key) -> (deleted: bool) {"
+    "snippet": "            fn delete(&mut self, key: &Key) -> (deleted: B) {"
   },
   {
     "id": 33,
@@ -283,15 +283,15 @@
     "id": 36,
     "function": "insert`",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "102-107",
+    "lines": "93-96",
     "spec_strength": "unknown",
-    "snippet": "        fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)\n            requires\n                old(table).current_size > 0,\n                old(table).table@.len() == old(table).current_size as int,\n            ensures\n                table.table@.len() == table.current_size as int;"
+    "snippet": "        fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)\n            requires\n                old(table).current_size > 0,\n                old(table).table@.len() == old(table).current_size as int;"
   },
   {
     "id": 37,
     "function": "lookup`",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "112-115",
+    "lines": "101-104",
     "spec_strength": "unknown",
     "snippet": "        fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value>\n            requires\n                table.current_size > 0,\n                table.table@.len() == table.current_size as int;"
   },
@@ -299,31 +299,31 @@
     "id": 38,
     "function": "delete`",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "120-125",
+    "lines": "109-112",
     "spec_strength": "unknown",
-    "snippet": "        fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)\n            requires\n                old(table).current_size > 0,\n                old(table).table@.len() == old(table).current_size as int,\n            ensures\n                table.table@.len() == table.current_size as int;"
+    "snippet": "        fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> B\n            requires\n                old(table).current_size > 0,\n                old(table).table@.len() == old(table).current_size as int;"
   },
   {
     "id": 39,
     "function": "createTable",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "70-75",
-    "spec_strength": "unknown",
+    "lines": "71-76",
+    "spec_strength": "hole",
     "snippet": "        fn createTable(hash_fn: H, initial_size: usize) -> (table: HashTable<Key, Value, Entry, Metrics, H>)\n            ensures\n                table.initial_size == initial_size,\n                table.current_size == initial_size,\n                table.num_elements == 0,\n                table.table@.len() == initial_size as int,"
   },
   {
     "id": 40,
     "function": "metrics",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "130-131",
-    "spec_strength": "unknown",
-    "snippet": "        fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)\n            ensures m == &table.metrics,"
+    "lines": "117",
+    "spec_strength": "",
+    "snippet": "        fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics) { &table.metrics }"
   },
   {
     "id": 41,
     "function": "loadAndSize",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "139-140",
+    "lines": "124-125",
     "spec_strength": "hole",
     "snippet": "        fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)\n            ensures load_and_size.size == table.current_size,"
   },
@@ -331,7 +331,7 @@
     "id": 42,
     "function": "resize",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "158-163",
+    "lines": "143-148",
     "spec_strength": "unknown",
     "snippet": "        fn resize(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> (resized: HashTable<Key, Value, Entry, Metrics, H>)\n            requires\n                new_size > 0,\n            ensures\n                resized.current_size == new_size,\n                resized.table@.len() == new_size as int;"
   },
@@ -357,7 +357,7 @@
     "file": "Chap47/QuadProbFlatHashTableStEph.rs",
     "lines": "78",
     "spec_strength": "hole",
-    "snippet": "        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {"
+    "snippet": "        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> B {"
   },
   {
     "id": 46,
@@ -421,7 +421,7 @@
     "file": "Chap47/StructChainedHashTable.rs",
     "lines": "157-164",
     "spec_strength": "unknown",
-    "snippet": "        fn chain_delete<Key: PartialEq, Value>(\n            chain: Option<Box<Node<Key, Value>>>,\n            key: &Key,\n        ) -> (remaining_and_deleted: (Option<Box<Node<Key, Value>>>, bool))\n            ensures\n                !remaining_and_deleted.1\n                    ==> spec_chain_to_map(remaining_and_deleted.0) == spec_chain_to_map(chain),\n            decreases chain,"
+    "snippet": "        fn chain_delete<Key: PartialEq, Value>(\n            chain: Option<Box<Node<Key, Value>>>,\n            key: &Key,\n        ) -> (remaining_and_deleted: (Option<Box<Node<Key, Value>>>, B))\n            ensures\n                !remaining_and_deleted.1\n                    ==> spec_chain_to_map(remaining_and_deleted.0) == spec_chain_to_map(chain),\n            decreases chain,"
   },
   {
     "id": 54,
@@ -453,7 +453,7 @@
     "file": "Chap47/StructChainedHashTable.rs",
     "lines": "205-207",
     "spec_strength": "hole",
-    "snippet": "            fn delete(&mut self, key: &Key) -> (deleted: bool)\n                ensures\n                    !deleted ==> spec_chain_to_map(self.head) == spec_chain_to_map(old(self).head),"
+    "snippet": "            fn delete(&mut self, key: &Key) -> (deleted: B)\n                ensures\n                    !deleted ==> spec_chain_to_map(self.head) == spec_chain_to_map(old(self).head),"
   },
   {
     "id": 58,
@@ -517,7 +517,7 @@
     "file": "Chap47/VecChainedHashTableStEph.rs",
     "lines": "79",
     "spec_strength": "hole",
-    "snippet": "            fn delete(&mut self, key: &Key) -> (deleted: bool) {"
+    "snippet": "            fn delete(&mut self, key: &Key) -> (deleted: B) {"
   },
   {
     "id": 66,
