@@ -1,110 +1,110 @@
 ❌ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:134: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:134: external - #[verifier::external]
        135 |         impl<T: StT + Ord> BalancedTreePQTrait<T> for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:356: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:356: external - #[verifier::external]
        357 |         impl<T: StT + Ord> Default for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:381: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:381: info: accept() - accept hole
    Holes: 2 total
       2 × external
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 ℹ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:719: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:734: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:719: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:734: info: accept() - accept hole
    Info: 2 total
    1 clean proof function
 ❌ Example45_2.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:43: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:43: external - #[verifier::external]
         44 |         impl Example45_2Trait for Example45_2 {
    Holes: 1 total
       1 × external
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:123: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:123: external - #[verifier::external]
        124 |         impl<T: StT + Ord> HeapsortComparisonTrait<T> for HeapsortComparison<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:84: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:99: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:84: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:99: info: accept() - accept hole
    Holes: 1 total
       1 × external
    Info: 2 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:175: assume() - proof { assume(fr < usize::MAX); }
-       166 |             fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> (node: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:177: assume() - proof { assume(fr < usize::MAX); }
+       168 |             fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> (node: Self) {
             ...
-       173 |                 };
-       174 |                 let fr = final_right.rank();
-       176 |                 let node_rank = fr + 1;
-       177 |                 LeftistHeapNode::Node {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:221: assume() - proof { assume(ls + rs + 1 <= usize::MAX); }
-       213 |             fn size(&self) -> (n: usize)
+       175 |                 };
+       176 |                 let fr = final_right.rank();
+       178 |                 let node_rank = fr + 1;
+       179 |                 LeftistHeapNode::Node {
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:223: assume() - proof { assume(ls + rs + 1 <= usize::MAX); }
+       215 |             fn size(&self) -> (n: usize)
             ...
-       219 |                         let ls = left.size();
-       220 |                         let rs = right.size();
-       222 |                         1 + ls + rs
-       223 |                     }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:236: assume() - proof { assume(mh + 1 <= usize::MAX); }
-       227 |             fn height(&self) -> (h: usize)
+       221 |                         let ls = left.size();
+       222 |                         let rs = right.size();
+       224 |                         1 + ls + rs
+       225 |                     }
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:238: assume() - proof { assume(mh + 1 <= usize::MAX); }
+       229 |             fn height(&self) -> (h: usize)
             ...
-       234 |                         let rh = right.height();
-       235 |                         let mh = if lh >= rh { lh } else { rh };
-       237 |                         1 + mh
-       238 |                     }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:370: assume() - proof { assume(n as nat == self.spec_size()); }
-       368 |             fn size(&self) -> (n: usize) {
-       369 |                 let n = self.root.size();
-       371 |                 n
-       372 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:442: assume() - proof { assume(result.spec_size() + heaps[i as int].spec_siz
-       435 |             fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self) {
+       236 |                         let rh = right.height();
+       237 |                         let mh = if lh >= rh { lh } else { rh };
+       239 |                         1 + mh
+       240 |                     }
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:372: assume() - proof { assume(n as nat == self.spec_size()); }
+       370 |             fn size(&self) -> (n: usize) {
+       371 |                 let n = self.root.size();
+       373 |                 n
+       374 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:446: assume() - proof { assume(result.spec_size() + heaps[i as int].spec_siz
+       437 |             fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self) {
             ...
-       440 |                     invariant n == heaps@.len()
-       441 |                 {
-       443 |                     result = result.meld(&heaps[i]);
-       444 |                 }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:459: assume() - proof { assume(less_than.spec_size() + 1 <= usize::MAX as na
-       448 |             fn split(&self, key: &T) -> (parts: (Self, Self)) {
+       444 |                         heaps@.len() == 0 ==> result.spec_size() == 0,
+       445 |                 {
+       447 |                     result = result.meld(&heaps[i]);
+       448 |                 }
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:463: assume() - proof { assume(less_than.spec_size() + 1 <= usize::MAX as na
+       452 |             fn split(&self, key: &T) -> (parts: (Self, Self)) {
             ...
-       457 |                     let element = all_elements[i].clone();
-       458 |                     if element < *key {
-       460 |                         less_than = less_than.insert(element);
-       461 |                     } else {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:462: assume() - proof { assume(equal_or_greater.spec_size() + 1 <= usize::MA
-       448 |             fn split(&self, key: &T) -> (parts: (Self, Self)) {
+       461 |                     let element = all_elements[i].clone();
+       462 |                     if element < *key {
+       464 |                         less_than = less_than.insert(element);
+       465 |                     } else {
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:466: assume() - proof { assume(equal_or_greater.spec_size() + 1 <= usize::MA
+       452 |             fn split(&self, key: &T) -> (parts: (Self, Self)) {
             ...
-       460 |                         less_than = less_than.insert(element);
-       461 |                     } else {
-       463 |                         equal_or_greater = equal_or_greater.insert(element);
-       464 |                     }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:503: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:523: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:535: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:545: info: accept() - accept hole
+       464 |                         less_than = less_than.insert(element);
+       465 |                     } else {
+       467 |                         equal_or_greater = equal_or_greater.insert(element);
+       468 |                     }
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:507: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:527: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:539: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:549: info: accept() - accept hole
    Holes: 7 total
       7 × assume()
    Info: 4 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:406: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:406: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        401 |             fn clone(&self) -> (cloned: Self)
             ...
        404 |                 let cloned = SortedListPQ { elements: self.elements.clone() };
        405 |                 proof {
        407 |                     lemma_seq_map_cloned_view_eq(
        408 |                         self.elements.seq@,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:421: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:421: info: accept() - accept hole
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:307: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:307: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        302 |             fn clone(&self) -> (cloned: Self)
             ...
        305 |                 let cloned = UnsortedListPQ { elements: self.elements.clone() };
        306 |                 proof {
        308 |                     lemma_seq_map_cloned_view_eq(
        309 |                         self.elements.seq@,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:322: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:322: info: accept() - accept hole
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
@@ -130,16 +130,17 @@ Holes Found: 11 total
 Errors: 2 total (2 assume in eq/clone (Verus workaround))
 
 Info: 11 total
-   UnsortedListPQ.rs:322: info: accept() - accept hole
-   LeftistHeapPQ.rs:503: info: accept() - accept hole
-   LeftistHeapPQ.rs:523: info: accept() - accept hole
-   LeftistHeapPQ.rs:535: info: accept() - accept hole
-   LeftistHeapPQ.rs:545: info: accept() - accept hole
    BinaryHeapPQ.rs:719: info: accept() - accept hole
    BinaryHeapPQ.rs:734: info: accept() - accept hole
-   SortedListPQ.rs:421: info: accept() - accept hole
+   LeftistHeapPQ.rs:507: info: accept() - accept hole
+   LeftistHeapPQ.rs:527: info: accept() - accept hole
+   LeftistHeapPQ.rs:539: info: accept() - accept hole
+   LeftistHeapPQ.rs:549: info: accept() - accept hole
+   UnsortedListPQ.rs:322: info: accept() - accept hole
    BalancedTreePQ.rs:381: info: accept() - accept hole
    HeapsortExample.rs:84: info: accept() - accept hole
    HeapsortExample.rs:99: info: accept() - accept hole
-.rs:84: info: accept() - accept hole
+   SortedListPQ.rs:421: info: accept() - accept hole
+ info: accept() - accept hole
    HeapsortExample.rs:99: info: accept() - accept hole
+   SortedListPQ.rs:421: info: accept() - accept hole

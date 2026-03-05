@@ -14,17 +14,13 @@
    2 clean proof functions
 ✓ AdjSeqGraphStPer.rs
    2 clean proof functions
-❌ AdjTableGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:178: external_body - #[verifier::external_body]
-       179 |         fn delete_vertex(&self, v: &V) -> Self {
-   Holes: 1 total
-      1 × external_body
+✓ AdjTableGraphMtPer.rs
 ✓ AdjTableGraphStEph.rs
    1 clean proof function
 ✓ AdjTableGraphStPer.rs
 ❌ EdgeSetGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphMtPer.rs:104: external_body - #[verifier::external_body]
-       105 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:107: external_body - #[verifier::external_body]
+       108 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
    Holes: 1 total
       1 × external_body
 ✓ EdgeSetGraphStEph.rs
@@ -35,8 +31,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   12 clean (no holes)
-   2 holed (contains holes)
+   13 clean (no holes)
+   1 holed (contains holes)
    14 total
 
 Proof Functions:
@@ -44,12 +40,12 @@ Proof Functions:
    0 holed
    21 total
 
-Holes Found: 2 total
-   2 × external_body
+Holes Found: 1 total
+   1 × external_body
 f Functions:
    21 clean
    0 holed
    21 total
 
-Holes Found: 2 total
-   2 × external_body
+Holes Found: 1 total
+   1 × external_body

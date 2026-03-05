@@ -81,7 +81,8 @@
       "Bash(do wc:*)",
       "Bash(read f:*)",
       "Bash(veracity-review-verus-style:*)",
-      "Bash(stat:*)"
+      "Bash(stat:*)",
+      "Bash(/home/milnes/projects/APAS-VERUS/scripts/resolve-analysis-rebase.sh:*)"
     ]
   }
 }

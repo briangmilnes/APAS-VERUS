@@ -1,6 +1,6 @@
 ℹ SpanTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/SpanTreeMtEph.rs:35: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/SpanTreeMtEph.rs:46: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:35: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:46: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Info: 2 total
 ✓ SpanTreeStEph.rs
 ✓ TSPApproxStEph.rs
@@ -27,7 +27,6 @@ Info: 2 total
    SpanTreeMtEph.rs:46: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
 
 🎉 No proof holes or warnings found! All proofs are complete.
- point.
-   SpanTreeMtEph.rs:46: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+ternal body at this point.
 
 🎉 No proof holes or warnings found! All proofs are complete.
