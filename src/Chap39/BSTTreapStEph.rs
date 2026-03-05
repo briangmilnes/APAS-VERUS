@@ -749,8 +749,8 @@ pub mod BSTTreapStEph {
                     let ghost orig_left = node.left;
                     let ghost orig_right = node.right;
                     proof {
-                        assert forall |k: T| #![auto]
-                            spec_contains_link(&link, k) <==>
+                        assert forall |k: T|
+                            #[trigger] spec_contains_link(&link, k) <==>
                             (node.key == k || spec_contains_link(&node.left, k) || spec_contains_link(&node.right, k))
                             by {};
                     }
@@ -761,12 +761,12 @@ pub mod BSTTreapStEph {
                         Self::update_size(&mut node);
                         proof {
                             Self::lemma_wf_assemble_node(&node);
-                            assert forall |k: T| #![auto] spec_contains_link(&link, k)
+                            assert forall |k: T| #[trigger] spec_contains_link(&link, k)
                                 implies spec_contains_link(&Some(node), k) by {
                                 if spec_contains_link(&node.left, k) { Self::lemma_contains_left(&node, k); }
                                 if spec_contains_link(&node.right, k) { Self::lemma_contains_right(&node, k); }
                             };
-                            assert forall |k: T| #![auto] spec_contains_link(&Some(node), k)
+                            assert forall |k: T| #[trigger] spec_contains_link(&Some(node), k)
                                 implies (spec_contains_link(&link, k) || k == value) by {};
                             if Self::spec_bst_link(&link) {
                                 Self::lemma_bst_decompose(&link);
@@ -791,12 +791,12 @@ pub mod BSTTreapStEph {
                         Self::update_size(&mut node);
                         proof {
                             Self::lemma_wf_assemble_node(&node);
-                            assert forall |k: T| #![auto] spec_contains_link(&link, k)
+                            assert forall |k: T| #[trigger] spec_contains_link(&link, k)
                                 implies spec_contains_link(&Some(node), k) by {
                                 if spec_contains_link(&node.left, k) { Self::lemma_contains_left(&node, k); }
                                 if spec_contains_link(&node.right, k) { Self::lemma_contains_right(&node, k); }
                             };
-                            assert forall |k: T| #![auto] spec_contains_link(&Some(node), k)
+                            assert forall |k: T| #[trigger] spec_contains_link(&Some(node), k)
                                 implies (spec_contains_link(&link, k) || k == value) by {};
                             if Self::spec_bst_link(&link) {
                                 Self::lemma_bst_decompose(&link);
@@ -834,8 +834,8 @@ pub mod BSTTreapStEph {
                     let ghost orig_left = node.left;
                     let ghost orig_right = node.right;
                     proof {
-                        assert forall |k: T| #![auto]
-                            spec_contains_link(&link, k) <==>
+                        assert forall |k: T|
+                            #[trigger] spec_contains_link(&link, k) <==>
                             (node.key == k || spec_contains_link(&node.left, k) || spec_contains_link(&node.right, k))
                             by {};
                     }
@@ -847,7 +847,7 @@ pub mod BSTTreapStEph {
                         Self::update_size(&mut node);
                         proof {
                             Self::lemma_wf_assemble_node(&node);
-                            assert forall |k: T| #![auto] spec_contains_link(&Some(node), k)
+                            assert forall |k: T| #[trigger] spec_contains_link(&Some(node), k)
                                 implies spec_contains_link(&link, k) by {
                                 if spec_contains_link(&node.left, k) {
                                     assert(spec_contains_link(&orig_left, k));
@@ -868,7 +868,7 @@ pub mod BSTTreapStEph {
                         Self::update_size(&mut node);
                         proof {
                             Self::lemma_wf_assemble_node(&node);
-                            assert forall |k: T| #![auto] spec_contains_link(&Some(node), k)
+                            assert forall |k: T| #[trigger] spec_contains_link(&Some(node), k)
                                 implies spec_contains_link(&link, k) by {
                                 if spec_contains_link(&node.right, k) {
                                     assert(spec_contains_link(&orig_right, k));
@@ -914,9 +914,9 @@ pub mod BSTTreapStEph {
                                 let ghost rot_left = rotated.left;
                                 let ghost rot_right = rotated.right;
                                 proof {
-                                    assert forall |k: T| #![auto]
+                                    assert forall |k: T|
+                                        #[trigger] spec_contains_link(&link, k) <==>
                                         (rot_key == k || spec_contains_link(&rot_left, k) || spec_contains_link(&rot_right, k))
-                                        <==> spec_contains_link(&link, k)
                                         by {};
                                     if Self::spec_bst_link(&link) {
                                         Self::lemma_bst_decompose(&Some(rotated));
@@ -935,7 +935,7 @@ pub mod BSTTreapStEph {
                                 Self::update_size(&mut rotated);
                                 proof {
                                     Self::lemma_wf_assemble_node(&rotated);
-                                    assert forall |k: T| #![auto] spec_contains_link(&Some(rotated), k)
+                                    assert forall |k: T| #[trigger] spec_contains_link(&Some(rotated), k)
                                         implies spec_contains_link(&link, k) by {
                                         if spec_contains_link(&rotated.right, k) {
                                             assert(spec_contains_link(&rot_right, k));
@@ -959,9 +959,9 @@ pub mod BSTTreapStEph {
                                 let ghost rot_left = rotated.left;
                                 let ghost rot_right = rotated.right;
                                 proof {
-                                    assert forall |k: T| #![auto]
+                                    assert forall |k: T|
+                                        #[trigger] spec_contains_link(&link, k) <==>
                                         (rot_key == k || spec_contains_link(&rot_left, k) || spec_contains_link(&rot_right, k))
-                                        <==> spec_contains_link(&link, k)
                                         by {};
                                     if Self::spec_bst_link(&link) {
                                         Self::lemma_bst_decompose(&Some(rotated));
@@ -980,7 +980,7 @@ pub mod BSTTreapStEph {
                                 Self::update_size(&mut rotated);
                                 proof {
                                     Self::lemma_wf_assemble_node(&rotated);
-                                    assert forall |k: T| #![auto] spec_contains_link(&Some(rotated), k)
+                                    assert forall |k: T| #[trigger] spec_contains_link(&Some(rotated), k)
                                         implies spec_contains_link(&link, k) by {
                                         if spec_contains_link(&rotated.left, k) {
                                             assert(spec_contains_link(&rot_left, k));

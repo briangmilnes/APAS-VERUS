@@ -7,9 +7,9 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 39 — Treaps: Review Against Prose
 
-**Date:** 2026-02-28 (updated)
+**Date:** 2026-03-05 (updated)
 **Reviewer:** Claude-Opus-4.6
-**Previous reviews:** 2026-02-19, 2026-02-27, 2026-02-28
+**Previous reviews:** 2026-02-19, 2026-02-27, 2026-02-28, 2026-03-05
 
 ## Phase 1: Inventory (tool-generated)
 
@@ -271,92 +271,91 @@ BSTTreapStEph.rs and BSTTreapMtEph.rs are inside `verus!` but have no iterators 
 
 ## Proof Holes Summary
 
-From `veracity-review-proof-holes -d src/Chap39/`:
+From `veracity-review-proof-holes -d src/Chap39/` (2026-03-05):
 
 ```
 Modules:
-   3 clean (no holes)
-   1 holed (contains holes)
+   1 clean (no holes)
+   3 holed (contains holes)
    4 total
 
 Proof Functions:
-   11 clean
+   7 clean
    0 holed
-   11 total
+   7 total
 
-Holes Found: 1 total
-   1 × assume()
-
-Location:
-  BSTTreapStEph.rs:470 — assume(forall |k: T| spec_contains_link(&y.left, k) ==> k.is_lt(&yk))
-    In: rotate_left (line 388)
-    Purpose: BST rotation preserves ordering — all keys in new y.left < yk.
-    Blocker: Verus cannot prove is_lt transitivity through partial_cmp_spec for generic T.
+Holes Found: 41 total
+   41 × external_body
 
 Info (5):
-  BSTParaTreapMtEph.rs:76  — verus_rwlock_external_body (expected, unfixable)
-  BSTTreapMtEph.rs:199     — accept() for recursive type structural equality
-  BSTTreapMtEph.rs:212     — accept() for recursive type structural equality
-  BSTTreapMtEph.rs:224     — verus_rwlock_external_body (expected, unfixable)
-  BSTTreapMtEph.rs:554     — accept() for recursive type structural equality
+  BSTParaTreapMtEph.rs:83  — verus_rwlock_external_body (expected, unfixable)
+  BSTTreapMtEph.rs:301     — accept() for recursive type structural equality
+  BSTTreapMtEph.rs:314     — accept() for recursive type structural equality
+  BSTTreapMtEph.rs:326     — verus_rwlock_external_body (expected, unfixable)
+  BSTTreapMtEph.rs:1065    — accept() for recursive type structural equality
 ```
 
-The accept() calls bridge structural equality for recursive types behind RwLock. The external_body calls are inherent to Verus RwLock::new.
+**BSTTreapStEph is fully clean** — the is_lt transitivity blocker was resolved via `IsLtTransitive` trait bound. No assume() or external_body in StEph. The 41 external_body holes are in MtEph (13), ParaTreapMtEph (18), and SetTreapMtEph (10) — all at threading/RwLock boundaries.
 
 ## Verus Style Review Summary
 
-From `veracity-review-verus-style`: **56 passed, 23 warnings** across 4 files.
+From `veracity-review-verus-style` (2026-03-05): **66 passed, 6 warnings** across 4 files.
 
 | # | File | Warnings | Details |
 |---|------|:--------:|---------|
-| 1 | BSTTreapStEph | 6 | [12] 6 trait fns missing requires/ensures (find, contains, min, max, in_order, pre_order) |
-| 2 | BSTTreapMtEph | 11 | [12] 11 trait fns missing requires/ensures |
-| 3 | BSTParaTreapMtEph | 4 | [13] trait impl outside verus!, [15] 3x Clone outside verus! |
-| 4 | BSTSetTreapMtEph | 2 | [13] trait impl outside verus!, [15] Clone outside verus! |
+| 1 | BSTTreapStEph | 1 | [22] free spec fn `spec_contains_link` (must stay free: `reveal_with_fuel` limitation) |
+| 2 | BSTTreapMtEph | 5 | [22] 5 free spec fns should be in trait (deferred to NodeTrait design) |
+| 3 | BSTParaTreapMtEph | 0 | All checks pass |
+| 4 | BSTSetTreapMtEph | 0 | All checks pass |
 
-The [13]/[15] warnings on ParaTreap and SetTreap are expected: those modules are not yet verusified. The [12] warnings on MtEph and StEph identify the spec gaps documented in Phase 3c.
+The [22] warnings on StEph/MtEph are documented: `spec_contains_link` must remain free due to `reveal_with_fuel` limitation; the 4 other MtEph free spec fns will move to a `NodeTrait` when designed.
 
 ## Verusification Table
 
 | # | Module | Inside V! | Spec Coverage | Proof Holes | Proof Fns | Spec Fns | Status |
 |---|--------|:---------:|:-------------:|:-----------:|:---------:|:--------:|--------|
-| 1 | BSTTreapStEph | 33/33 | 23/33 (70%) | 1 assume() | 8 | 7+3 trait | BST proof infra + find/traversal specs |
-| 2 | BSTTreapMtEph | 28/28 | 9/28 (32%) | 0 | 3 | 7 | Structurally verified |
-| 3 | BSTParaTreapMtEph | 1/33 (3%) | 0/33 (0%) | 0 | 0 | 0 | Unverified |
-| 4 | BSTSetTreapMtEph | 0/22 (0%) | 0/22 (0%) | 0 | 0 | 0 | Unverified |
-| | **Totals** | **62/116** | **32/116 (28%)** | **1** | **11** | **17** | |
+| 1 | BSTTreapStEph | 35/35 | 35/35 (100%) | 0 | 8 | 7+9 trait | Fully verified: BST + containment + wf |
+| 2 | BSTTreapMtEph | 34/34 | 22/34 (65%) | 13 ext_body | 7 | 5 free | Structurally verified + BST proofs |
+| 3 | BSTParaTreapMtEph | 18/33 (55%) | 18/33 (55%) | 18 ext_body | 0 | 0 | Threading boundary external_body |
+| 4 | BSTSetTreapMtEph | 22/22 (100%) | 12/22 (55%) | 10 ext_body | 0 | 0 | Shim delegating to ParaTreap |
+| | **Totals** | **109/124** | **87/124 (70%)** | **41 ext_body** | **15** | **21** | |
 
 ### Spec Strength Classification
 
-**BSTTreapStEph** (23 specified functions):
+**BSTTreapStEph** (35 specified functions — all functions have specs):
 
 | # | Function | Strength | Notes |
 |---|----------|:--------:|-------|
-| 1 | new | Strong | Ensures size==0, wf. |
+| 1 | new | Strong | Ensures size==0, wf, bst. |
 | 2 | size | Strong | Ensures sz == spec_size(). |
 | 3 | is_empty | Strong | Ensures empty == (size==0). |
-| 4 | height | Partial | Requires only; no ensures on result value. |
-| 5 | insert | Partial | Ensures wf + bounded size. Missing: spec_contains_link. |
-| 6 | clone_link | Partial | Ensures size preserved. Missing: structural eq. |
-| 7 | size_link | Strong | Ensures sz == spec_size_link. |
-| 8 | height_link | Strong | Ensures h == spec_height_link. |
-| 9 | update_size | Strong | Ensures correct size field + key/children unchanged. |
-| 10 | rotate_left | Partial | Ensures wf + size preserved + BST preserved. **Has 1 assume().** |
-| 11 | rotate_right | Partial | Ensures wf + size preserved. Missing: BST property. |
-| 12 | insert_link | Partial | Ensures wf + bounded size. Missing: spec_contains_link. |
-| 13 | lemma_height_le_size | Strong | height <= size. |
-| 14 | lemma_size_wf_child_bounded | Strong | Children bounded under MAX. |
-| 15 | lemma_wf_decompose | Strong | Decomposes node wf. |
-| 16 | lemma_wf_assemble_node | Strong | Assembles node wf. |
-| 17 | lemma_contains_left | Strong | Containment propagation: child left to parent. |
-| 18 | lemma_contains_right | Strong | Containment propagation: child right to parent. |
-| 19 | lemma_bst_decompose | Strong | BST decomposes to children + quantified bounds. |
-| 20 | lemma_contains_root | Strong | Root key is contained in its own subtree. |
-| 21 | find_link | Partial | Forward containment: `found.is_some() ==> spec_contains_link(link, *found.unwrap())`. Reverse direction blocked by PartialEq spec bridge. |
-| 22 | in_order_vec | Partial | Length preservation: `ordered@.len() == spec_in_order_link(link).len()`. Full structural `=~=` blocked by generic Clone axiom gap. |
-| 23 | pre_order_vec | Partial | Length preservation: `ordered@.len() == spec_pre_order_link(link).len()`. Same Clone blocker. |
+| 4 | height | Strong | Ensures h == spec_height(). |
+| 5 | insert | Strong | Ensures wf, bounded size, containment (both dirs), BST preserved. |
+| 6 | delete | Strong | Ensures wf, bounded size, containment preserved, BST preserved. |
+| 7 | find | Partial | Forward containment only. Reverse blocked by PartialEq spec bridge. |
+| 8 | contains | Partial | Existential: `found ==> exists v, spec_contains(v)`. Blocked by PartialEq. |
+| 9 | minimum | Strong | Ensures match with spec_min_link. |
+| 10 | maximum | Strong | Ensures match with spec_max_link. |
+| 11 | in_order | Partial | Length only. Full structural blocked by Clone axiom gap. |
+| 12 | pre_order | Partial | Length only. Same Clone blocker. |
+| 13 | new_node | Strong | Ensures wf, size==1. |
+| 14 | size_link | Strong | Ensures sz == spec_size_link. |
+| 15 | update_size | Strong | Ensures correct size + key/children unchanged. |
+| 16 | rotate_left | Strong | Ensures wf + size + BST + containment biconditional. No assume. |
+| 17 | rotate_right | Strong | Ensures wf + size + BST + containment biconditional. |
+| 18 | clone_link | Partial | Ensures size preserved. Missing: structural eq. |
+| 19 | height_link | Strong | Ensures h == spec_height_link. |
+| 20 | insert_link | Strong | Ensures wf + size bounds + containment (both dirs) + BST. |
+| 21 | delete_link | Strong | Ensures wf + size bounds + containment + BST. |
+| 22 | find_link | Partial | Forward containment only. |
+| 23 | min_link | Strong | Ensures match with spec_min_link. |
+| 24 | max_link | Strong | Ensures match with spec_max_link. |
+| 25 | in_order_vec | Partial | Length preservation only. |
+| 26 | pre_order_vec | Partial | Length preservation only. |
+| 27-34 | 8 proof lemmas | Strong | All clean, no holes. |
+| 35 | default | Strong | Ensures size==0, wf, bst. |
 
-**Summary:** 12 strong, 8 partial (rotate_left has 1 assume; find_link, in_order_vec, pre_order_vec have partial specs), 0 weak, 10 none.
+**Summary:** 27 strong, 8 partial (find/contains: PartialEq bridge; in_order/pre_order: Clone gap; clone_link: structural eq), 0 weak, 0 none.
 
 **BSTTreapMtEph** (9 specified functions):
 
@@ -376,51 +375,41 @@ The [13]/[15] warnings on ParaTreap and SetTreap are expected: those modules are
 
 ## Proposed Fixes Table
 
-| # | Sev | Chap | File | Function(s) | Issue | Fix | Deps |
-|---|-----|------|------|-------------|-------|-----|------|
-| 1 | Critical | 39 | BSTTreapStEph.rs | rotate_left:470 | `assume()` for is_lt transitivity in BST rotation proof. | Prove via lemma establishing transitivity of `is_lt` for `StT + Ord`, or add a `lemma_is_lt_transitive` using `partial_cmp_spec` + `Ordering` semantics. Alternative: strengthen `spec_bst_link` to use `<=` on priorities and prove containment chains. | — |
-| 2 | Critical | 39 | BSTTreapStEph.rs | rotate_right | BST property not preserved in ensures. | Add `spec_bst_link(&Some(x)) ==> spec_bst_link(&Some(rotated))` to ensures. Mirror rotate_left proof using the 4 BST lemmas. Same is_lt transitivity blocker as #1. | #1 |
-| 3 | Critical | 39 | BSTTreapStEph.rs | insert_link | ensures does not preserve `spec_bst_link` or guarantee `spec_contains_link(key)`. | Add `requires spec_bst_link` + `ensures spec_bst_link, spec_contains_link(&inserted, value)`. Prove via case analysis on cmp + rotation BST specs. | #1, #2 |
-| 4 | Critical | 39 | BSTTreapStEph.rs | insert (trait) | ensures missing BST + containment postconditions. | Propagate insert_link spec to trait: `requires spec_bst()` + `ensures spec_bst(), spec_contains_link`. | #3 |
-| 5 | Critical | 39 | BSTTreapMtEph.rs | insert_link | Same gap as StEph: no BST/containment postcondition. | Mirror StEph fix. Needs BST lemma infrastructure added to MtEph first. | #3 |
-| 6 | ~~High~~ DONE | 39 | BSTTreapStEph.rs | find_link | ~~No spec.~~ Partial spec added. | `ensures found.is_some() ==> spec_contains_link(link, *found.unwrap())`. Forward direction only; reverse blocked by PartialEq spec bridge for generic T. | — |
-| 7 | High | 39 | BSTTreapStEph.rs | contains | No spec. Delegates to find. | Add `ensures c == spec_contains_link(link, target)`. | #6 |
-| 8 | High | 39 | BSTTreapStEph.rs | min_link, max_link | No spec. | Add ensures relating result to spec ordering. Needs BST invariant. | #3 |
-| 9 | High | 39 | BSTTreapStEph.rs | height (trait) | requires only, no ensures. | Add `ensures h as nat == spec_height_link(&self.root)`. Trivial: propagate from height_link. | — |
-| 10 | ~~Medium~~ DONE | 39 | BSTTreapStEph.rs | in_order_vec | ~~No spec.~~ Length spec added. | `ensures ordered@.len() == spec_in_order_link(link).len()`. Full structural `=~=` blocked by generic Clone axiom gap. Restructured to use `Vec::append`. | — |
-| 11 | ~~Medium~~ DONE | 39 | BSTTreapStEph.rs | pre_order_vec | ~~No spec.~~ Length spec added. | `ensures ordered@.len() == spec_pre_order_link(link).len()`. Same Clone blocker. Restructured to use `Vec::append`. | — |
-| 12 | Medium | 39 | BSTTreapMtEph.rs | 11 trait fns | No requires/ensures. Style warning [12]. | Blocked: Arc<RwLock<>> hides spec fn access. May need internal invariant strengthening. | #5 |
-| 13 | Medium | 39 | BSTParaTreapMtEph.rs | All 32 fns | Outside verus!. No specs. | Move algorithmic core inside verus!. Large effort. | — |
-| 14 | Medium | 39 | BSTSetTreapMtEph.rs | All 22 fns | Outside verus!. No specs. | Blocked on ParaTreap verusification (#13). | #13 |
-| 15 | Low | 39 | BSTSetTreapMtEph.rs | — | No TOC header. | Add `// Table of Contents` block. | — |
-| 16 | Low | 39 | BSTSetTreapMtEph.rs | — | Section comment `// 6. helper functions` is non-standard. | Rename or remove. | — |
-| 17 | Low | 39 | BSTParaTreapMtEph.rs | Clone impls | [15] Clone outside verus!. | Move inside when verusified. | #13 |
+All critical and high-severity items from previous reviews have been resolved. Remaining items:
 
-### Priority Summary
+| # | Sev | Chap | File | Function(s) | Issue | Status |
+|---|-----|------|------|-------------|-------|--------|
+| 1 | ~~Critical~~ | 39 | BSTTreapStEph.rs | rotate_left | ~~assume() for is_lt transitivity~~ | DONE — resolved via `IsLtTransitive` trait bound. |
+| 2 | ~~Critical~~ | 39 | BSTTreapStEph.rs | rotate_right | ~~Missing BST preservation~~ | DONE — BST + containment biconditional in ensures. |
+| 3 | ~~Critical~~ | 39 | BSTTreapStEph.rs | insert_link | ~~Missing BST/containment~~ | DONE — full containment (both dirs) + BST in ensures. |
+| 4 | ~~Critical~~ | 39 | BSTTreapStEph.rs | insert (trait) | ~~Missing BST/containment~~ | DONE — propagated from insert_link. |
+| 5 | Medium | 39 | BSTTreapMtEph.rs | insert_link | MtEph has BST proofs but trait fns lack specs due to Arc<RwLock<>>. | Open |
+| 6 | ~~High~~ | 39 | BSTTreapStEph.rs | find_link | ~~No spec~~ | DONE — partial (forward containment). Reverse blocked by PartialEq bridge. |
+| 7 | Medium | 39 | BSTTreapStEph.rs | contains | Weak existential spec. | Blocked by PartialEq spec bridge. |
+| 8 | ~~High~~ | 39 | BSTTreapStEph.rs | min_link, max_link | ~~No spec~~ | DONE — match with spec_min_link/spec_max_link. |
+| 9 | ~~High~~ | 39 | BSTTreapStEph.rs | height | ~~No ensures~~ | DONE — ensures h == spec_height(). |
+| 10 | ~~Medium~~ | 39 | BSTTreapStEph.rs | in_order_vec | ~~No spec~~ | DONE — length preservation. Full structural blocked by Clone gap. |
+| 11 | ~~Medium~~ | 39 | BSTTreapStEph.rs | pre_order_vec | ~~No spec~~ | DONE — length preservation. Same Clone blocker. |
+| 12 | Medium | 39 | BSTTreapMtEph.rs | trait fns | No requires/ensures on trait methods. | Blocked by Arc<RwLock<>> hiding spec fn access. |
+| 13 | Medium | 39 | BSTParaTreapMtEph.rs | All fns | Outside verus! with external_body. | Large effort — threading boundary. |
+| 14 | Medium | 39 | BSTSetTreapMtEph.rs | All fns | external_body delegations. | Blocked on #13. |
+| 15 | ~~Low~~ | 39 | BSTSetTreapMtEph.rs | — | ~~No TOC header~~ | DONE — TOC present. |
+| 16 | Medium | 39 | Both St/Mt | free spec fns | [22] style warnings: 6 free spec fns should be in traits. | `spec_contains_link` must stay free (reveal_with_fuel). Others deferred to NodeTrait design. |
+| 17 | HIGH | 39 | Both St/Mt | `#![auto]` triggers | 24 `#![auto]` annotations in insert_link/delete_link. | DONE — replaced with explicit `#[trigger]` (2026-03-05). |
 
-| Severity | Count | Actionable Now? |
-|----------|:-----:|:---------------:|
-| Critical | 5 | #1 is the key blocker — is_lt transitivity. Once solved, #2-4 follow. #5 (MtEph mirror) follows #3. |
-| High | 3 (1 done) | #6 DONE (partial). #9 (height ensures) is trivial and independent. #7-8 need BST invariant from #3. |
-| Medium | 3 (2 done) | #10-11 DONE (partial). #12-14 are larger efforts. |
-| Low | 3 | Minor style/testing. |
-
-### Recommended Execution Order
-
-1. **Solve is_lt transitivity** (#1): The `assume()` at line 470 bridges a gap where Verus cannot prove `k.is_lt(&xk) && xk.is_lt(&yk) ==> k.is_lt(&yk)` for generic `T: StT + Ord`. Options: (a) write a `lemma_is_lt_transitive` exploiting `partial_cmp_spec` and `Ordering` semantics; (b) add a `PartialOrdTransitive` bound or use vstd's `TotalOrderSpec`; (c) restructure the proof to avoid chained comparisons.
-2. **StEph rotate_right BST spec** (#2): Mirror rotate_left, applying the same transitivity approach.
-3. **StEph insert_link BST+contains** (#3, #4): Add `spec_bst_link` + `spec_contains_link` ensures.
-4. **StEph height ensures** (#9): Propagate height_link's existing spec to trait. Trivial.
-5. ~~**StEph find/contains specs** (#6, #7)~~: #6 DONE (partial: forward containment). #7 (contains) still needs find_link bidirectional spec.
-6. **StEph min/max specs** (#8): After BST invariant.
-7. ~~**StEph in_order/pre_order specs** (#10, #11)~~: DONE (partial: length preservation). Full structural specs blocked by generic Clone axiom gap.
-8. **MtEph mirrors** (#5, #12): After StEph specs are stable, port BST lemmas + specs.
-9. **ParaTreap verusification** (#13): Large work item. Independent track.
-
-### Blockers Discovered During #6, #10, #11
+### Remaining Blockers
 
 | # | Blocker | Affects | Description |
 |---|---------|---------|-------------|
-| 1 | Generic Clone axiom gap | #10, #11 full specs | `T: Clone` has no spec guaranteeing `clone(x) == x`. `cloned(a, b)` in vstd is trivially true for unspecified Clone. Blocks `ordered@ =~= spec_in_order_link(link)`. |
-| 2 | PartialEq spec bridge | #6 reverse direction | For generic `T: PartialEq`, exec `==` does not bridge to spec `==` without `obeys_eq_spec()` being true. Blocks `spec_contains_link(link, *target)`. |
-| 3 | is_lt transitivity | #1 (pre-existing) | Verus cannot prove `k.is_lt(&xk) && xk.is_lt(&yk) ==> k.is_lt(&yk)` for generic T. |
+| 1 | Generic Clone axiom gap | in_order/pre_order full specs | `T: Clone` has no spec guaranteeing `clone(x) == x`. Blocks structural `=~=`. |
+| 2 | PartialEq spec bridge | find/contains bidirectional | For generic `T: PartialEq`, exec `==` does not bridge to spec `==` without `obeys_eq_spec()`. |
+
+### Remaining Work
+
+| # | Priority | Task | Effort |
+|---|----------|------|--------|
+| 1 | Medium | Design and implement NodeTrait (multi-struct spec style) for Link/Node | Large |
+| 2 | Medium | Strengthen MtEph trait specs (blocked by Arc<RwLock<>> design) | Large |
+| 3 | Medium | ParaTreap verusification — move algorithmic core inside verus! | Large |
+| 4 | Low | Resolve PartialEq bridge for find/contains bidirectional specs | Blocked by Verus |
+| 5 | Low | Resolve Clone axiom gap for full structural traversal specs | Blocked by Verus |
