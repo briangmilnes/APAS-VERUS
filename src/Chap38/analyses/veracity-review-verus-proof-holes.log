@@ -144,11 +144,11 @@ Holes Found: 33 total
 Errors: 1 total (1 assume in eq/clone (Verus workaround))
 
 Info: 5 total
+   BSTParaStEph.rs:858: info: accept() - accept hole
+   BSTParaStEph.rs:873: info: accept() - accept hole
    BSTParaMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    BSTParaMtEph.rs:294: info: accept() - accept hole
    BSTParaMtEph.rs:309: info: accept() - accept hole
-   BSTParaStEph.rs:858: info: accept() - accept hole
-   BSTParaStEph.rs:873: info: accept() - accept hole
-9: info: accept() - accept hole
-   BSTParaStEph.rs:858: info: accept() - accept hole
-   BSTParaStEph.rs:873: info: accept() - accept hole
+us_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   BSTParaMtEph.rs:294: info: accept() - accept hole
+   BSTParaMtEph.rs:309: info: accept() - accept hole

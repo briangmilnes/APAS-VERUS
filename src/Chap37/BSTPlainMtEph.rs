@@ -1,6 +1,19 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Ephemeral binary search tree with vstd::rwlock for verified multi-threaded access.
 //! Verusified: BST ordering flows through the lock invariant — no external_body.
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	4. type definitions
+//	8. traits
+//	9. impls
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 // Table of Contents
 // 1. module
@@ -19,6 +32,8 @@ pub mod BSTPlainMtEph {
 
     verus! {
 
+    //		2. imports
+
     // 2. imports
 
     use vstd::rwlock::{RwLock, RwLockPredicate, ReadHandle, WriteHandle};
@@ -26,6 +41,9 @@ pub mod BSTPlainMtEph {
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{tree_contains, tree_is_bst};
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+
+
+    //		4. type definitions
 
     // 4. type definitions
 
@@ -36,15 +54,15 @@ pub mod BSTPlainMtEph {
         _phantom: PhantomData<T>,
     }
 
-    // 8. traits
+    // 9. impls
 
-    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BSTPlainMtEphInv<T> {
-        open spec fn inv(self, tree: BalBinTree<T>) -> bool {
-            tree_is_bst::<T>(tree)
-                && tree.spec_size() <= usize::MAX
-                && tree.spec_height() <= usize::MAX
-        }
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTPlainMtEph<T: TotalOrder> {
+        root: RwLock<BalBinTree<T>, BSTPlainMtEphInv<T>>,
     }
+
+
+    //		8. traits
 
     pub trait BSTPlainMtEphTrait<T: TotalOrder>: Sized {
         fn new() -> Self;
@@ -55,11 +73,17 @@ pub mod BSTPlainMtEph {
         fn height(&self) -> (h: usize);
     }
 
-    // 9. impls
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTPlainMtEph<T: TotalOrder> {
-        root: RwLock<BalBinTree<T>, BSTPlainMtEphInv<T>>,
+    //		9. impls
+
+    // 8. traits
+
+    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BSTPlainMtEphInv<T> {
+        open spec fn inv(self, tree: BalBinTree<T>) -> bool {
+            tree_is_bst::<T>(tree)
+                && tree.spec_size() <= usize::MAX
+                && tree.spec_height() <= usize::MAX
+        }
     }
 
     // Verified BST operations (same proofs as BSTPlainStEph).
@@ -311,6 +335,9 @@ pub mod BSTPlainMtEph {
 
     // 13. derive impls outside verus!
 
+
+    //		13. derive impls outside verus!
+
     impl<T> std::fmt::Debug for BSTPlainMtEphInv<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTPlainMtEphInv").finish()
@@ -336,6 +363,9 @@ pub mod BSTPlainMtEph {
     }
 
     // 12. macros
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! BSTPlainMtEphLit {

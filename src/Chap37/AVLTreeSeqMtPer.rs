@@ -1,5 +1,24 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! MtPer (immutable, thread-safe, structurally shared) AVL tree sequence using Arc path-copying.
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+//	10. iterators
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 // Table of Contents
 // 1. module
@@ -27,10 +46,15 @@ pub mod AVLTreeSeqMtPer {
 
     verus! {
 
+    //		2. imports
+
     // 2. imports
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
+
+
+    //		3. broadcast use
 
     // 3. broadcast use
 
@@ -41,6 +65,9 @@ pub mod AVLTreeSeqMtPer {
         vstd::seq_lib::group_seq_properties,
         vstd::seq_lib::group_to_multiset_ensures,
     };
+
+
+    //		4. type definitions
 
     // 4. type definitions
 
@@ -60,6 +87,9 @@ pub mod AVLTreeSeqMtPer {
         pub root: Link<T>,
     }
 
+
+    //		5. view impls
+
     // 5. view impls
 
     impl<T: StTInMtT> View for AVLTreeSeqMtPerS<T> {
@@ -68,6 +98,9 @@ pub mod AVLTreeSeqMtPer {
             spec_inorder(self.root)
         }
     }
+
+
+    //		6. spec fns
 
     // 6. spec fns
 
@@ -118,6 +151,9 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
+
+    //		7. proof fns/broadcast groups
+
     // 7. proof fns
 
     /// Under well-formedness, cached size equals in-order sequence length.
@@ -134,6 +170,9 @@ pub mod AVLTreeSeqMtPer {
             }
         }
     }
+
+
+    //		8. traits
 
     // 8. traits
 
@@ -176,6 +215,9 @@ pub mod AVLTreeSeqMtPer {
 
         fn values_in_order(&self) -> (values: Vec<T>);
     }
+
+
+    //		9. impls
 
     // 9. impls
 
@@ -462,6 +504,18 @@ pub mod AVLTreeSeqMtPer {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
+
+    //		10. iterators
+
+    // 10. iterators (struct inside verus!; Iterator impl outside)
+    pub struct AVLTreeSeqMtPerIter<T: StTInMtT> {
+        pub values: Vec<T>,
+        pub index: usize,
+    }
+
+
+    //		11. derive impls in verus!
+
     impl<T: StTInMtT> Eq for AVLTreeSeqMtPerS<T> {}
 
     impl<T: StTInMtT> PartialEq for AVLTreeSeqMtPerS<T> {
@@ -485,12 +539,6 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
-    // 10. iterators (struct inside verus!; Iterator impl outside)
-    pub struct AVLTreeSeqMtPerIter<T: StTInMtT> {
-        pub values: Vec<T>,
-        pub index: usize,
-    }
-
     } // verus!
 
     // 13. derive impls outside verus!
@@ -498,6 +546,9 @@ pub mod AVLTreeSeqMtPer {
     impl<T: StTInMtT> Default for AVLTreeSeqMtPerS<T> {
         fn default() -> Self { Self::empty() }
     }
+
+
+    //		13. derive impls outside verus!
 
     impl<T: StTInMtT> Debug for Node<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -579,6 +630,9 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 }
+
+//		12. macros
+
 
 #[macro_export]
 macro_rules! AVLTreeSeqMtPerLit {

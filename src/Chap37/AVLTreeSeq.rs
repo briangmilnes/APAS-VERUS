@@ -1,9 +1,25 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Implicit-order AVL tree providing O(lg(n)) nth and set by maintaining subtree sizes.
 //!
 //! Abstract:
 //! - `AVLTreeS<T>` stores a balanced binary tree; in-order traversal defines the sequence order.
 //! - `AVLTreeNode<T>` stores `value`, `height`, `left_size`, `right_size`, and children.
+
+//  Table of Contents
+//	1. module
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+//	10. iterators
+//	11. derive impls in verus!
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 // Table of Contents
 // 1. module
@@ -39,6 +55,8 @@ pub mod AVLTreeSeq {
 
     verus! {
 
+    //		4. type definitions
+
     // 4. type definitions
     pub type Link<T> = Option<Box<AVLTreeNode<T>>>;
 
@@ -57,12 +75,8 @@ pub mod AVLTreeSeq {
         pub next_key: N,
     }
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct AVLTreeSeqIter<'a, T: StT> {
-        pub tree: &'a AVLTreeS<T>,
-        pub pos: usize,
-        pub len: usize,
-    }
+
+    //		5. view impls
 
     // 5. view impls
 
@@ -73,12 +87,8 @@ pub mod AVLTreeSeq {
         }
     }
 
-    impl<'a, T: StT> View for AVLTreeSeqIter<'a, T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) {
-            (self.pos as int, spec_avltreeseq_inorder_values(self.tree.root))
-        }
-    }
+
+    //		6. spec fns
 
     // 6. spec fns
 
@@ -136,6 +146,17 @@ pub mod AVLTreeSeq {
         }
     }
 
+    pub open spec fn spec_avltreeseq_subseq<V>(seq: Seq<V>, start: nat, length: nat) -> Seq<V> {
+        let n = seq.len();
+        let s = if start < n { start } else { n };
+        let e_raw = start + length;
+        let e = if e_raw < n { e_raw } else { n };
+        if e <= s { Seq::<V>::empty() } else { seq.subrange(s as int, e as int) }
+    }
+
+
+    //		7. proof fns/broadcast groups
+
     // 7. proof fns
 
     proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)
@@ -152,18 +173,6 @@ pub mod AVLTreeSeq {
         }
     }
 
-    pub open spec fn spec_avltreeseq_subseq<V>(seq: Seq<V>, start: nat, length: nat) -> Seq<V> {
-        let n = seq.len();
-        let s = if start < n { start } else { n };
-        let e_raw = start + length;
-        let e = if e_raw < n { e_raw } else { n };
-        if e <= s { Seq::<V>::empty() } else { seq.subrange(s as int, e as int) }
-    }
-
-    pub open spec fn iter_invariant<'a, T: StT>(it: &AVLTreeSeqIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
     proof fn lemma_inorder_values_maps_to_inorder<T: StT>(link: Link<T>)
         ensures spec_avltreeseq_inorder_values(link).map_values(|t: T| t@) =~= spec_avltreeseq_inorder(link),
         decreases link,
@@ -176,6 +185,9 @@ pub mod AVLTreeSeq {
             }
         }
     }
+
+
+    //		8. traits
 
     // 8. traits
 
@@ -290,6 +302,9 @@ pub mod AVLTreeSeq {
             requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>(),
             ensures values@.map_values(|t: T| t@) =~= self.spec_avltreeseq_seq();
     }
+
+
+    //		9. impls
 
     // 9. impls
 
@@ -1064,6 +1079,33 @@ pub mod AVLTreeSeq {
         }
     }
 
+    #[cfg(verus_keep_ghost)]
+    impl<T: StT> PartialEqSpecImpl for AVLTreeS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+
+    //		10. iterators
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSeqIter<'a, T: StT> {
+        pub tree: &'a AVLTreeS<T>,
+        pub pos: usize,
+        pub len: usize,
+    }
+
+    impl<'a, T: StT> View for AVLTreeSeqIter<'a, T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) {
+            (self.pos as int, spec_avltreeseq_inorder_values(self.tree.root))
+        }
+    }
+
+    pub open spec fn iter_invariant<'a, T: StT>(it: &AVLTreeSeqIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
     // 10. iterators
 
     impl<'a, T: StT> std::iter::Iterator for AVLTreeSeqIter<'a, T> {
@@ -1152,6 +1194,9 @@ pub mod AVLTreeSeq {
         }
     }
 
+
+    //		11. derive impls in verus!
+
     // 11. derive impls in verus!
 
     impl<T: StT> Clone for AVLTreeNode<T> {
@@ -1167,12 +1212,6 @@ pub mod AVLTreeSeq {
                 index: self.index,
             }
         }
-    }
-
-    #[cfg(verus_keep_ghost)]
-    impl<T: StT> PartialEqSpecImpl for AVLTreeS<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
     impl<T: StT> Eq for AVLTreeS<T> {}
@@ -1218,6 +1257,9 @@ pub mod AVLTreeSeq {
     impl<T: StT> Default for AVLTreeS<T> {
         fn default() -> Self { Self::new() }
     }
+
+
+    //		13. derive impls outside verus!
 
     impl<T: StT> Debug for AVLTreeNode<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {

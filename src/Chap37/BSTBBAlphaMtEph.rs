@@ -1,6 +1,19 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Ephemeral weight-balanced (BB[α]) binary search tree with vstd::rwlock for verified multi-threaded access.
 //! Verusified: BST ordering + weight-balance spec fully verified; lock operations are verified.
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	4. type definitions
+//	8. traits
+//	9. impls
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 // Table of Contents
 // 1. module
@@ -23,6 +36,8 @@ pub mod BSTBBAlphaMtEph {
 
     verus! {
 
+    //		2. imports
+
     // 2. imports
 
     use crate::Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::{tree_is_bb, weight_balanced};
@@ -30,30 +45,14 @@ pub mod BSTBBAlphaMtEph {
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
+
+    //		4. type definitions
+
     // 4. type definitions
 
     /// Lock invariant: the stored tree satisfies BST ordering.
     struct BSTBBAlphaMtEphInv<T> {
         _phantom: PhantomData<T>,
-    }
-
-    // 8. traits
-
-    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BSTBBAlphaMtEphInv<T> {
-        open spec fn inv(self, tree: BalBinTree<T>) -> bool {
-            tree_is_bst::<T>(tree)
-                && tree.spec_size() <= usize::MAX
-                && tree.spec_height() <= usize::MAX
-        }
-    }
-
-    pub trait BSTBBAlphaMtEphTrait<T: TotalOrder>: Sized {
-        fn new() -> Self;
-        fn insert(&self, value: T);
-        fn contains(&self, target: &T) -> (found: bool);
-        fn size(&self) -> (n: usize);
-        fn is_empty(&self) -> (b: bool);
-        fn height(&self) -> (h: usize);
     }
 
     // 6. spec fns
@@ -65,6 +64,31 @@ pub mod BSTBBAlphaMtEph {
     #[verifier::reject_recursive_types(T)]
     pub struct BSTBBAlphaMtEph<T: TotalOrder> {
         root: RwLock<BalBinTree<T>, BSTBBAlphaMtEphInv<T>>,
+    }
+
+
+    //		8. traits
+
+    pub trait BSTBBAlphaMtEphTrait<T: TotalOrder>: Sized {
+        fn new() -> Self;
+        fn insert(&self, value: T);
+        fn contains(&self, target: &T) -> (found: bool);
+        fn size(&self) -> (n: usize);
+        fn is_empty(&self) -> (b: bool);
+        fn height(&self) -> (h: usize);
+    }
+
+
+    //		9. impls
+
+    // 8. traits
+
+    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BSTBBAlphaMtEphInv<T> {
+        open spec fn inv(self, tree: BalBinTree<T>) -> bool {
+            tree_is_bst::<T>(tree)
+                && tree.spec_size() <= usize::MAX
+                && tree.spec_height() <= usize::MAX
+        }
     }
 
     // Verified BST insert (same proof as BSTBBAlphaStEph / BSTPlainStEph).
@@ -316,6 +340,9 @@ pub mod BSTBBAlphaMtEph {
 
     // 13. derive impls outside verus!
 
+
+    //		13. derive impls outside verus!
+
     impl<T> std::fmt::Debug for BSTBBAlphaMtEphInv<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTBBAlphaMtEphInv").finish()
@@ -341,6 +368,9 @@ pub mod BSTBBAlphaMtEph {
     }
 
     // 12. macros
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! BSTBBAlphaMtEphLit {

@@ -1,5 +1,18 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Ephemeral splay-style (simple BST) structure with interior locking for multi-threaded access.
+
+//  Table of Contents
+//	1. module
+//	4. type definitions
+//	6. spec fns
+//	8. traits
+//	9. impls
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod BSTSplayMtEph {
 
@@ -12,6 +25,8 @@ pub mod BSTSplayMtEph {
     use crate::Types::Types::*;
 
     verus! {
+
+    //		4. type definitions
 
     // 4. type definitions
 
@@ -26,31 +41,26 @@ pub mod BSTSplayMtEph {
 
     type Link<T> = Option<Box<Node<T>>>;
 
-    // 6. spec fns
-
-    /// Uninterpreted well-formedness for splay tree links.
-    pub open spec fn link_wf<T: StTInMtT + Ord>(link: Link<T>) -> bool;
-
     // 8. traits
 
     pub struct BSTSplayMtEphInv;
-
-    impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTSplayMtEphInv {
-        open spec fn inv(self, v: Link<T>) -> bool {
-            link_wf(v)
-        }
-    }
-
-    #[verifier::external_body] // accept hole
-    fn new_splay_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, BSTSplayMtEphInv>) {
-        RwLock::new(val, Ghost(BSTSplayMtEphInv))
-    }
 
     #[verifier::reject_recursive_types(T)]
     #[derive(Clone)]
     pub struct BSTSplayMtEph<T: StTInMtT + Ord> {
         root: Arc<RwLock<Link<T>, BSTSplayMtEphInv>>,
     }
+
+
+    //		6. spec fns
+
+    // 6. spec fns
+
+    /// Uninterpreted well-formedness for splay tree links.
+    pub open spec fn link_wf<T: StTInMtT + Ord>(link: Link<T>) -> bool;
+
+
+    //		8. traits
 
     pub trait BSTSplayMtEphTrait<T: StTInMtT + Ord>: Sized {
         fn new() -> Self;
@@ -71,6 +81,20 @@ pub mod BSTSplayMtEph {
         fn reduce<F>(&self, op: F, identity: T) -> T
         where
             F: Fn(T, T) -> T + Send + Sync;
+    }
+
+
+    //		9. impls
+
+    impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTSplayMtEphInv {
+        open spec fn inv(self, v: Link<T>) -> bool {
+            link_wf(v)
+        }
+    }
+
+    #[verifier::external_body] // accept hole
+    fn new_splay_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, BSTSplayMtEphInv>) {
+        RwLock::new(val, Ghost(BSTSplayMtEphInv))
     }
 
     // 9. impls
@@ -423,6 +447,9 @@ pub mod BSTSplayMtEph {
 
     // 13. derive impls outside verus!
 
+
+    //		13. derive impls outside verus!
+
     impl<T: StTInMtT + Ord> std::fmt::Debug for Node<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("Node")
@@ -568,6 +595,9 @@ pub mod BSTSplayMtEph {
     impl<T: StTInMtT + Ord> Default for BSTSplayMtEph<T> {
         fn default() -> Self { Self::new() }
     }
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! BSTSplayMtEphLit {

@@ -1,5 +1,18 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Ephemeral Red-Black balanced binary search tree with interior locking for multi-threaded access.
+
+//  Table of Contents
+//	1. module
+//	4. type definitions
+//	6. spec fns
+//	8. traits
+//	9. impls
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod BSTRBMtEph {
 
@@ -12,6 +25,8 @@ pub mod BSTRBMtEph {
     use crate::Types::Types::*;
 
     verus! {
+
+    //		4. type definitions
 
     // 4. type definitions
 
@@ -33,31 +48,26 @@ pub mod BSTRBMtEph {
 
     type Link<T> = Option<Box<Node<T>>>;
 
-    // 6. spec fns
-
-    /// Uninterpreted well-formedness for RB tree links.
-    pub open spec fn link_wf<T: StTInMtT + Ord>(link: Link<T>) -> bool;
-
     // 8. traits
 
     pub struct BSTRBMtEphInv;
-
-    impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTRBMtEphInv {
-        open spec fn inv(self, v: Link<T>) -> bool {
-            link_wf(v)
-        }
-    }
-
-    #[verifier::external_body] // accept hole
-    fn new_rb_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, BSTRBMtEphInv>) {
-        RwLock::new(val, Ghost(BSTRBMtEphInv))
-    }
 
     #[verifier::reject_recursive_types(T)]
     #[derive(Clone)]
     pub struct BSTRBMtEph<T: StTInMtT + Ord> {
         root: Arc<RwLock<Link<T>, BSTRBMtEphInv>>,
     }
+
+
+    //		6. spec fns
+
+    // 6. spec fns
+
+    /// Uninterpreted well-formedness for RB tree links.
+    pub open spec fn link_wf<T: StTInMtT + Ord>(link: Link<T>) -> bool;
+
+
+    //		8. traits
 
     pub trait BSTRBMtEphTrait<T: StTInMtT + Ord>: Sized {
         fn new() -> Self;
@@ -78,6 +88,20 @@ pub mod BSTRBMtEph {
         fn reduce<F>(&self, op: F, identity: T) -> T
         where
             F: Fn(T, T) -> T + Send + Sync;
+    }
+
+
+    //		9. impls
+
+    impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTRBMtEphInv {
+        open spec fn inv(self, v: Link<T>) -> bool {
+            link_wf(v)
+        }
+    }
+
+    #[verifier::external_body] // accept hole
+    fn new_rb_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, BSTRBMtEphInv>) {
+        RwLock::new(val, Ghost(BSTRBMtEphInv))
     }
 
     // 9. impls
@@ -402,6 +426,9 @@ pub mod BSTRBMtEph {
 
     // 13. derive impls outside verus!
 
+
+    //		13. derive impls outside verus!
+
     impl std::fmt::Debug for Color {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             match self {
@@ -566,6 +593,9 @@ pub mod BSTRBMtEph {
     impl<T: StTInMtT + Ord> Default for BSTRBMtEph<T> {
         fn default() -> Self { Self::new() }
     }
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! BSTRBMtEphLit {

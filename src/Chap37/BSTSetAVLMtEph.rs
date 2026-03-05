@@ -1,5 +1,17 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Set interface built atop the AVL multi-threaded BST implementation.
+
+//  Table of Contents
+//	1. module
+//	4. type definitions
+//	8. traits
+//	9. impls
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod BSTSetAVLMtEph {
 
@@ -14,6 +26,8 @@ pub mod BSTSetAVLMtEph {
 
     verus! {
 
+    //		4. type definitions
+
     #[derive(Clone)]
     pub struct BSTSetAVLMtEph<T: StTInMtT + Ord> {
         tree: BSTAVLMtEph<T>,
@@ -21,26 +35,8 @@ pub mod BSTSetAVLMtEph {
 
     pub type BSTSetAVLMt<T> = BSTSetAVLMtEph<T>;
 
-    fn values_vec<T: StTInMtT + Ord>(tree: &BSTAVLMtEph<T>) -> Vec<T> { tree.in_order().iter().cloned().collect() }
 
-    fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> BSTAVLMtEph<T> {
-        let tree = BSTAVLMtEph::new();
-        for value in values {
-            tree.insert(value);
-        }
-        tree
-    }
-
-    fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> BSTSetAVLMtEph<T>
-    where
-        I: IntoIterator<Item = T>,
-    {
-        let tree = BSTAVLMtEph::new();
-        for value in values {
-            tree.insert(value);
-        }
-        BSTSetAVLMtEph { tree }
-    }
+    //		8. traits
 
     pub trait BSTSetAVLMtEphTrait<T: StTInMtT + Ord>: Sized {
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
@@ -83,6 +79,30 @@ pub mod BSTSetAVLMtEph {
         fn iter_in_order(&self)                      -> ArraySeqStPerS<T>;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn as_tree(&self)                            -> &BSTAVLMtEph<T>;
+    }
+
+
+    //		9. impls
+
+    fn values_vec<T: StTInMtT + Ord>(tree: &BSTAVLMtEph<T>) -> Vec<T> { tree.in_order().iter().cloned().collect() }
+
+    fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> BSTAVLMtEph<T> {
+        let tree = BSTAVLMtEph::new();
+        for value in values {
+            tree.insert(value);
+        }
+        tree
+    }
+
+    fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> BSTSetAVLMtEph<T>
+    where
+        I: IntoIterator<Item = T>,
+    {
+        let tree = BSTAVLMtEph::new();
+        for value in values {
+            tree.insert(value);
+        }
+        BSTSetAVLMtEph { tree }
     }
 
     impl<T: StTInMtT + Ord> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
@@ -309,6 +329,9 @@ pub mod BSTSetAVLMtEph {
 
     }
 
+
+    //		13. derive impls outside verus!
+
     impl<T: StTInMtT + Ord + fmt::Debug> fmt::Debug for BSTSetAVLMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             f.debug_struct("BSTSetAVLMtEph").field("tree", &self.tree).finish()
@@ -320,6 +343,9 @@ pub mod BSTSetAVLMtEph {
             write!(f, "BSTSetAVLMtEph(size={})", self.size())
         }
     }
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! BSTSetAVLMtEphLit {

@@ -1,5 +1,24 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! StEphemeral (mutable) implicit-order AVL tree sequence.
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+//	10. iterators
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 // Table of Contents
 // 1. module
@@ -26,10 +45,15 @@ pub mod AVLTreeSeqStEph {
 
     verus! {
 
+    //		2. imports
+
     // 2. imports
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
+
+
+    //		3. broadcast use
 
     // 3. broadcast use
 
@@ -40,6 +64,9 @@ pub mod AVLTreeSeqStEph {
         vstd::seq_lib::group_seq_properties,
         vstd::seq_lib::group_to_multiset_ensures,
     };
+
+
+    //		4. type definitions
 
     // 4. type definitions
 
@@ -60,11 +87,8 @@ pub mod AVLTreeSeqStEph {
         pub next_key: N,
     }
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct AVLTreeSeqIterStEph<'a, T: StT> {
-        pub stack: Vec<&'a AVLTreeNode<T>>,
-        pub current: Option<&'a AVLTreeNode<T>>,
-    }
+
+    //		5. view impls
 
     // 5. view impls
 
@@ -74,6 +98,9 @@ pub mod AVLTreeSeqStEph {
             spec_inorder(self.root)
         }
     }
+
+
+    //		6. spec fns
 
     // 6. spec fns
 
@@ -124,6 +151,9 @@ pub mod AVLTreeSeqStEph {
         }
     }
 
+
+    //		7. proof fns/broadcast groups
+
     // 7. proof fns
 
     /// Under well-formedness, cached size equals in-order sequence length.
@@ -140,6 +170,9 @@ pub mod AVLTreeSeqStEph {
             }
         }
     }
+
+
+    //		8. traits
 
     // 8. traits
 
@@ -205,6 +238,9 @@ pub mod AVLTreeSeqStEph {
         fn delete_value(&mut self, target: &T) -> (deleted: bool)
             requires old(self).spec_well_formed();
     }
+
+
+    //		9. impls
 
     // 9. impls
 
@@ -722,6 +758,24 @@ pub mod AVLTreeSeqStEph {
         }
     }
 
+    #[cfg(verus_keep_ghost)]
+    impl<T: StT> PartialEqSpecImpl for AVLTreeSeqStEphS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+
+    //		10. iterators
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSeqIterStEph<'a, T: StT> {
+        pub stack: Vec<&'a AVLTreeNode<T>>,
+        pub current: Option<&'a AVLTreeNode<T>>,
+    }
+
+
+    //		11. derive impls in verus!
+
     // 10. iterators (structs inside verus!, impl outside)
 
     // 11. derive impls in verus!
@@ -739,12 +793,6 @@ pub mod AVLTreeSeqStEph {
                 index: self.index,
             }
         }
-    }
-
-    #[cfg(verus_keep_ghost)]
-    impl<T: StT> PartialEqSpecImpl for AVLTreeSeqStEphS<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
     impl<T: StT> Eq for AVLTreeSeqStEphS<T> {}
@@ -778,6 +826,9 @@ pub mod AVLTreeSeqStEph {
     impl<T: StT> Default for AVLTreeSeqStEphS<T> {
         fn default() -> Self { Self::new() }
     }
+
+
+    //		13. derive impls outside verus!
 
     impl<T: StT> Debug for AVLTreeNode<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -847,6 +898,9 @@ pub mod AVLTreeSeqStEph {
             Some(value_ref)
         }
     }
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! AVLTreeSeqStEphLit {
