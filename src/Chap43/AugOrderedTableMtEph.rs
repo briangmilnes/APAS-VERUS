@@ -146,6 +146,7 @@ broadcast use {
             reducer: F,
             identity: V,
         ) -> (domain: Self)
+            requires keys@.finite()
             ensures domain@.dom().finite();
         fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self)
             ensures mapped@.dom().finite();

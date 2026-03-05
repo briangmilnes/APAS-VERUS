@@ -152,7 +152,7 @@ broadcast use {
             requires obeys_feq_clone::<K>()
             ensures self@.dom().finite();
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
-            requires keys.spec_wf(), forall|k: &K| f.requires((k,)),
+            requires keys.spec_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),
             ensures tabulated@.dom().finite();
         fn map<G: Fn(&V) -> V>(&self, f: G) -> (mapped: Self)
             requires self.spec_augorderedtablestper_wf(), forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
@@ -170,6 +170,7 @@ broadcast use {
         fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (combined: Self)
             requires
                 self.spec_augorderedtablestper_wf(),
+                other.spec_augorderedtablestper_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),

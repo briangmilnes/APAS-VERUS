@@ -56,6 +56,8 @@ broadcast use {
 
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1) with ephemeral semantics.
     pub trait OrderedTableStEphTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K::V, V::V>> {
+        spec fn spec_wf(&self) -> bool;
+
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite();
         fn empty() -> (empty: Self)
@@ -77,9 +79,10 @@ broadcast use {
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             ensures self@ == old(self)@.remove(k@), self@.dom().finite();
         fn domain(&self) -> (domain: ArraySetStEph<K>)
+            requires obeys_feq_clone::<K>()
             ensures self@.dom().finite();
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            requires keys.spec_wf(), forall|k: &K| f.requires((k,))
+            requires keys.spec_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>()
             ensures tabulated@.dom().finite();
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
             ensures mapped@.dom().finite();
@@ -101,13 +104,13 @@ broadcast use {
                 obeys_view_eq::<K>(),
             ensures self@.dom().finite();
         fn difference(&mut self, other: &Self)
-            requires obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
+            requires old(self).spec_wf(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
             ensures self@.dom().finite();
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            requires obeys_feq_full::<Pair<K, V>>()
+            requires old(self).spec_wf(), obeys_feq_full::<Pair<K, V>>()
             ensures self@.dom().finite();
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            requires obeys_feq_full::<Pair<K, V>>()
+            requires old(self).spec_wf(), obeys_feq_full::<Pair<K, V>>()
             ensures self@.dom().finite();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite();
@@ -178,6 +181,10 @@ broadcast use {
     // 9. impls
 
     impl<K: StT + Ord, V: StT> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+        open spec fn spec_wf(&self) -> bool {
+            self.base_table.spec_tablesteph_wf()
+        }
+
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite()
         {
