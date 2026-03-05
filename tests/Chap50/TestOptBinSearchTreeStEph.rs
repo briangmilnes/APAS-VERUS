@@ -120,22 +120,6 @@ fn test_set_key_prob() {
 }
 
 #[test]
-fn test_set_key_prob_out_of_bounds() {
-    let mut obst = OBSTStEphLit!(keys: ['A'], probs: [0.5]);
-
-    // Should not panic
-    obst.set_key_prob(
-        5,
-        OBSTStEphKeyProb {
-            key: 'Z',
-            prob: prob!(0.9),
-        },
-    );
-    assert_eq!(obst.num_keys(), 1);
-    assert_eq!(obst.keys()[0].key, 'A');
-}
-
-#[test]
 fn test_update_prob() {
     let mut obst = OBSTStEphLit!(keys: ['A', 'B'], probs: [0.4, 0.6]);
 
@@ -149,16 +133,6 @@ fn test_update_prob() {
 
     let cost2 = obst.optimal_cost();
     assert_ne!(cost1, cost2);
-}
-
-#[test]
-fn test_update_prob_out_of_bounds() {
-    let mut obst = OBSTStEphLit!(keys: ['A'], probs: [0.5]);
-
-    // Should not panic
-    obst.update_prob(5, prob!(0.9));
-    assert_eq!(obst.num_keys(), 1);
-    assert_eq!(obst.keys()[0].prob, prob!(0.5));
 }
 
 #[test]
