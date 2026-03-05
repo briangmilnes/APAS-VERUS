@@ -907,25 +907,25 @@ path = "tests/Chap52/TestEdgeSetGraphMtEph.rs"
 # name = "TestEdgeSetGraphStPer"
 # path = "disabled"
 
-# [[test]]  # module commented out in lib.rs
+# [[test]]  # Requires AVLTreeSetMtPer (all_chapters feature)
 # name = "TestGraphSearchMtPer"
 # path = "disabled"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestGraphSearchStEph"
-# path = "disabled"
+[[test]]
+name = "TestGraphSearchStEph"
+path = "tests/Chap53/TestGraphSearchStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestGraphSearchStPer"
-# path = "disabled"
+[[test]]
+name = "TestGraphSearchStPer"
+path = "tests/Chap53/TestGraphSearchStPer.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestPQMinStEph"
-# path = "disabled"
+[[test]]
+name = "TestPQMinStEph"
+path = "tests/Chap53/TestPQMinStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestPQMinStPer"
-# path = "disabled"
+[[test]]
+name = "TestPQMinStPer"
+path = "tests/Chap53/TestPQMinStPer.rs"
 
 [[test]]
 name = "TestBFSMtEph"

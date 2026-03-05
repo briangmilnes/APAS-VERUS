@@ -53,6 +53,7 @@ pub mod GraphSearchStEph {
     }
 
     impl<V: StT + Ord> SelectionStrategy<V> for SelectOne {
+        #[verifier::external_body]
         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (AVLTreeSetStEph<V>, B) {
             if frontier.size() == 0 {
                 (AVLTreeSetStEph::empty(), false)
@@ -74,6 +75,7 @@ pub mod GraphSearchStEph {
     }
 
     /// Recursive graph exploration helper (Algorithm 53.1 loop body).
+    #[verifier::external_body]
     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
         graph: &G,
         strategy: &S,
@@ -90,8 +92,12 @@ pub mod GraphSearchStEph {
 
         let mut new_neighbors = AVLTreeSetStEph::empty();
         let selected_seq = selected.to_seq();
+        let len = selected_seq.length();
         let mut i: usize = 0;
-        while i < selected_seq.length()
+        while i < len
+            invariant
+                i <= len,
+            decreases len - i,
         {
             let v = selected_seq.nth(i);
             let neighbors = graph(v);
@@ -138,6 +144,36 @@ pub mod GraphSearchStEph {
                 .field("visited", &self.visited)
                 .field("parent", &self.parent)
                 .finish()
+        }
+    }
+
+    impl<V: StT + Ord> std::fmt::Display for SearchResult<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SearchResult(visited={})", self.visited.size())
+        }
+    }
+
+    impl std::fmt::Debug for SelectAll {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SelectAll")
+        }
+    }
+
+    impl std::fmt::Display for SelectAll {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SelectAll")
+        }
+    }
+
+    impl std::fmt::Debug for SelectOne {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SelectOne")
+        }
+    }
+
+    impl std::fmt::Display for SelectOne {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SelectOne")
         }
     }
 }

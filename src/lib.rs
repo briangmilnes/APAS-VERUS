@@ -609,12 +609,11 @@ pub mod Chap52 {
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap53 {
-    // All files use types from Chap41/42/45 declared outside verus!
-    // pub mod PQMinStEph;
-    // pub mod PQMinStPer;
-    // pub mod GraphSearchStEph;
-    // pub mod GraphSearchStPer;
-    // pub mod GraphSearchMtPer;
+    pub mod PQMinStEph;
+    pub mod PQMinStPer;
+    pub mod GraphSearchStEph;
+    pub mod GraphSearchStPer;
+    // pub mod GraphSearchMtPer; // Requires AVLTreeSetMtPer (all_chapters feature)
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
