@@ -36,8 +36,9 @@ broadcast use {
     // 4. type definitions
 
     #[derive(Clone)]
+    #[verifier::reject_recursive_types(V)]
     pub struct AdjTableGraphStPer<V: StT + Ord> {
-        adj: OrderedTableStPer<V, AVLTreeSetStPer<V>>,
+        pub adj: OrderedTableStPer<V, AVLTreeSetStPer<V>>,
     }
 
     // 5. view impls
@@ -49,7 +50,7 @@ broadcast use {
 
     // 8. traits
 
-    pub trait AdjTableGraphStPerTrait<V: StT + Ord> {
+    pub trait AdjTableGraphStPerTrait<V: StT + Ord>: Sized {
         spec fn spec_adj(&self) -> Map<<V as View>::V, Set<<V as View>::V>>;
         spec fn spec_num_edges(&self) -> nat;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
@@ -115,17 +116,15 @@ broadcast use {
 
         fn num_vertices(&self) -> N { self.adj.size() }
 
-        fn num_edges(&self) -> (m: N)
-            requires self.spec_num_edges() <= usize::MAX as nat
-            ensures m as nat == self.spec_num_edges()
-        {
+        fn num_edges(&self) -> (m: N) {
             let domain = self.adj.domain();
             let seq = domain.to_seq();
+            let len = seq.length();
             let mut count: usize = 0;
             let mut i: usize = 0;
-            while i < seq.length()
-                invariant i <= seq.length()
-                decreases seq.length() - i
+            while i < len
+                invariant i <= len, len == seq.spec_len()
+                decreases len - i
             {
                 let v = seq.nth(i).clone();
                 if let Some(neighbors) = self.adj.find(&v) {
@@ -141,14 +140,16 @@ broadcast use {
         {
             let domain_set = self.adj.domain();
             let seq = domain_set.to_seq();
+            let len = seq.length();
             let mut vertices = AVLTreeSetStPer::empty();
             let mut i: usize = 0;
-            while i < seq.length()
+            while i < len
                 invariant
-                    i <= seq.length(),
+                    i <= len,
+                    len == seq.spec_len(),
                     vertices@.finite(),
-                    vertices@ == seq.subrange(0, i as int).to_set(),
-                decreases seq.length() - i
+                    vertices@ == seq@.subrange(0, i as int).to_set(),
+                decreases len - i
             {
                 vertices = vertices.insert(seq.nth(i).clone());
                 i += 1;
@@ -192,11 +193,12 @@ broadcast use {
             let new_adj = self.adj.delete(&v_clone);
             let domain = new_adj.domain();
             let seq = domain.to_seq();
+            let len = seq.length();
             let mut result_adj = new_adj;
             let mut i: usize = 0;
-            while i < seq.length()
-                invariant i <= seq.length()
-                decreases seq.length() - i
+            while i < len
+                invariant i <= len, len == seq.spec_len()
+                decreases len - i
             {
                 let u = seq.nth(i).clone();
                 if let Some(neighbors) = result_adj.find(&u) {

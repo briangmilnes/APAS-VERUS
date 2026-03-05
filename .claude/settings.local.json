@@ -80,7 +80,8 @@
       "Bash(comm:*)",
       "Bash(do wc:*)",
       "Bash(read f:*)",
-      "Bash(veracity-review-verus-style:*)"
+      "Bash(veracity-review-verus-style:*)",
+      "Bash(stat:*)"
     ]
   }
 }

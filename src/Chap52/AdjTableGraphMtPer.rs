@@ -7,14 +7,9 @@
 pub mod AdjTableGraphMtPer {
 
     use vstd::prelude::*;
-    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
-    use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::*;
-    use crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait;
     use crate::Chap43::OrderedSetMtEph::OrderedSetMtEph::OrderedSetMtEphTrait;
     use crate::Chap43::OrderedTableMtPer::OrderedTableMtPer::*;
-    use crate::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::spec_sum_adj_sizes;
     use crate::Types::Types::*;
 
     verus! {
@@ -32,6 +27,7 @@ broadcast use {
     // 2. imports (above)
     // 4. type definitions
     // 5. view impls
+    // 6. spec fns
     // 8. traits
     // 9. impls
     // 11. derive impls in verus!
@@ -54,6 +50,21 @@ broadcast use {
     impl<V: StTInMtT + Ord + 'static> View for AdjTableGraphMtPer<V> {
         type V = Self;
         open spec fn view(&self) -> Self::V { *self }
+    }
+
+    // 6. spec fns
+
+    /// Sum of all neighbor set sizes across all vertices in the adjacency map.
+    /// Local copy — standalone rule forbids importing from StEph.
+    pub open spec fn spec_sum_adj_sizes<VV>(m: Map<VV, Set<VV>>) -> nat
+        decreases m.dom().len()
+    {
+        if m.dom().is_empty() {
+            0
+        } else {
+            let k = m.dom().choose();
+            m[k].len() + spec_sum_adj_sizes(m.remove(k))
+        }
     }
 
     // 8. traits
@@ -174,63 +185,16 @@ broadcast use {
         }
 
         /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3, isolated vertex]
-        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(lg² n) — parallel computation of new neighbor sets, sequential table rebuild.
-        #[verifier::external_body]
-        fn delete_vertex(&self, v: &V) -> Self {
-            const SEQUENTIAL_CUTOFF: usize = 1;
-
+        /// - Work Θ(|V| lg |V|), Span Θ(lg² |V|) — map is parallel via treap.
+        fn delete_vertex(&self, v: &V) -> (updated: Self)
+            ensures !updated.spec_adj().dom().contains(v@)
+        {
+            let without_v = self.adj.delete(v);
             let v_clone = v.clone();
-            let new_adj = self.adj.delete(&v_clone);
-            let domain = new_adj.domain();
-            let seq = domain.to_seq();
-            let len = seq.length();
-
-            if len <= SEQUENTIAL_CUTOFF {
-                let mut result_adj = new_adj;
-                for i in 0..len {
-                    let u = seq.nth(i);
-                    if let Some(neighbors) = result_adj.find(u) {
-                        let new_neighbors = neighbors.delete(&v_clone);
-                        result_adj = result_adj.insert(u.clone(), new_neighbors);
-                    }
-                }
-                return AdjTableGraphMtPer { adj: result_adj };
-            }
-
-            let mid = len / 2;
-            let new_adj_left = new_adj.clone();
-            let new_adj_right = new_adj.clone();
-            let seq_clone = seq.clone();
-            let v_clone_left = v_clone.clone();
-
-            let f1 = move || -> Vec<(V, AVLTreeSetMtPer<V>)> {
-                let mut updates = Vec::with_capacity(mid);
-                for i in 0..mid {
-                    let u = seq_clone.nth(i);
-                    if let Some(neighbors) = new_adj_left.find(u) {
-                        updates.push((u.clone(), neighbors.delete(&v_clone_left)));
-                    }
-                }
-                updates
-            };
-
-            let f2 = move || -> Vec<(V, AVLTreeSetMtPer<V>)> {
-                let mut right_updates = Vec::with_capacity(len - mid);
-                for i in mid..len {
-                    let u = seq.nth(i);
-                    if let Some(neighbors) = new_adj_right.find(u) {
-                        right_updates.push((u.clone(), neighbors.delete(&v_clone)));
-                    }
-                }
-                right_updates
-            };
-
-            let (left_updates, right_updates) = join(f1, f2);
-            let mut result_adj = new_adj;
-            for (u, new_neighbors) in left_updates.into_iter().chain(right_updates) {
-                result_adj = result_adj.insert(u, new_neighbors);
-            }
-            AdjTableGraphMtPer { adj: result_adj }
+            let cleaned = without_v.map(move |_k: &V, neighbors: &AVLTreeSetMtPer<V>| {
+                neighbors.delete(&v_clone)
+            });
+            AdjTableGraphMtPer { adj: cleaned }
         }
 
         fn insert_edge(&self, u: V, v: V) -> (updated: Self)

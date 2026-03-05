@@ -90,7 +90,7 @@ broadcast use {
         fn new(n: N) -> (empty: Self)
             ensures
                 empty.spec_num_vertices() == n,
-                forall|i: int| #![auto] 0 <= i < n ==> empty.spec_degree(i) == 0;
+                forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;
 
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: N)
@@ -113,16 +113,16 @@ broadcast use {
         fn has_edge(&self, u: N, v: N) -> (found: B)
             requires u < self.spec_num_vertices()
             ensures found == exists|j: int|
-                #![auto] 0 <= j < self.spec_degree(u as int)
-                && self.spec_neighbor(u as int, j) == v;
+                0 <= j < self.spec_degree(u as int)
+                && #[trigger] self.spec_neighbor(u as int, j) == v;
 
         /// Work Theta(1), Span Theta(1)
         fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtEphS<N>)
             requires u < self.spec_num_vertices()
             ensures
                 neighbors.spec_len() == self.spec_degree(u as int),
-                forall|j: int| #![auto] 0 <= j < neighbors.spec_len()
-                    ==> neighbors.spec_index(j) == self.spec_neighbor(u as int, j);
+                forall|j: int| 0 <= j < neighbors.spec_len()
+                    ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);
 
         /// Work Theta(1), Span Theta(1)
         fn out_degree(&self, u: N) -> (d: N)
@@ -136,18 +136,18 @@ broadcast use {
                 v < old(self).spec_num_vertices(),
             ensures
                 self.spec_num_vertices() == old(self).spec_num_vertices(),
-                forall|i: int| #![auto] 0 <= i < old(self).spec_num_vertices() && i != u as int
-                    ==> self.spec_degree(i) == old(self).spec_degree(i),
-                forall|i: int, j: int| #![auto]
+                forall|i: int| 0 <= i < old(self).spec_num_vertices() && i != u as int
+                    ==> #[trigger] self.spec_degree(i) == old(self).spec_degree(i),
+                forall|i: int, j: int|
                     0 <= i < old(self).spec_num_vertices() && i != u as int
                     && 0 <= j < old(self).spec_degree(i)
-                    ==> self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j),
-                exists ==> (exists|j: int| #![auto]
+                    ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j),
+                exists ==> (exists|j: int|
                     0 <= j < self.spec_degree(u as int)
-                    && self.spec_neighbor(u as int, j) == v),
-                !exists ==> forall|j: int| #![auto]
+                    && #[trigger] self.spec_neighbor(u as int, j) == v),
+                !exists ==> forall|j: int|
                     0 <= j < self.spec_degree(u as int)
-                    ==> self.spec_neighbor(u as int, j) != v;
+                    ==> #[trigger] self.spec_neighbor(u as int, j) != v;
     }
 
     // 9. impls
@@ -217,10 +217,10 @@ broadcast use {
                     u < self.spec_num_vertices(),
                     len as nat == neighbors.spec_len(),
                     len as nat == self.spec_degree(u as int),
-                    forall|j: int| #![auto] 0 <= j < len as int
-                        ==> neighbors.spec_index(j) == self.spec_neighbor(u as int, j),
-                    forall|j: int| #![auto] 0 <= j < i
-                        ==> neighbors.spec_index(j) != v,
+                    forall|j: int| 0 <= j < len as int
+                        ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j),
+                    forall|j: int| 0 <= j < i
+                        ==> #[trigger] neighbors.spec_index(j) != v,
                 decreases len - i
             {
                 if *neighbors.nth(i) == v {
@@ -263,10 +263,10 @@ broadcast use {
                         i <= old_len,
                         u < self.spec_num_vertices(),
                         old_len as nat == self.spec_degree(u as int),
-                        !found ==> forall|j: int| #![auto] 0 <= j < i
-                            ==> self.spec_neighbor(u as int, j) != v,
-                        found ==> exists|j: int| #![auto] 0 <= j < self.spec_degree(u as int)
-                            && self.spec_neighbor(u as int, j) == v,
+                        !found ==> forall|j: int| 0 <= j < i
+                            ==> #[trigger] self.spec_neighbor(u as int, j) != v,
+                        found ==> exists|j: int| 0 <= j < self.spec_degree(u as int)
+                            && #[trigger] self.spec_neighbor(u as int, j) == v,
                     decreases old_len - i
                 {
                     let elem = *self.adj.nth(u).nth(i);
@@ -287,8 +287,8 @@ broadcast use {
                             u < self.spec_num_vertices(),
                             old_len as nat == self.spec_degree(u as int),
                             new_vec@.len() == j as int,
-                            forall|k: int| #![auto] 0 <= k < j
-                                ==> new_vec@[k] == self.spec_neighbor(u as int, k),
+                            forall|k: int| 0 <= k < j
+                                ==> #[trigger] new_vec@[k] == self.spec_neighbor(u as int, k),
                         decreases old_len - j
                     {
                         new_vec.push(*self.adj.nth(u).nth(j));
@@ -309,8 +309,8 @@ broadcast use {
                         j <= old_len,
                         u < self.spec_num_vertices(),
                         old_len as nat == self.spec_degree(u as int),
-                        forall|k: int| #![auto] 0 <= k < new_vec@.len() as int
-                            ==> new_vec@[k] != v,
+                        forall|k: int| 0 <= k < new_vec@.len() as int
+                            ==> #[trigger] new_vec@[k] != v,
                     decreases old_len - j
                 {
                     let neighbor = *self.adj.nth(u).nth(j);
@@ -326,4 +326,12 @@ broadcast use {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for AdjSeqGraphMtEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("AdjSeqGraphMtEph").field("adj", &self.adj).finish()
+        }
+    }
 }

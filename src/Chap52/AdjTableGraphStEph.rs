@@ -37,8 +37,9 @@ broadcast use {
     // 4. type definitions
 
     #[derive(Clone)]
+    #[verifier::reject_recursive_types(V)]
     pub struct AdjTableGraphStEph<V: StT + Ord> {
-        adj: OrderedTableStEph<V, AVLTreeSetStEph<V>>,
+        pub adj: OrderedTableStEph<V, AVLTreeSetStEph<V>>,
     }
 
     // 5. view impls
@@ -80,7 +81,7 @@ broadcast use {
 
     // 8. traits
 
-    pub trait AdjTableGraphStEphTrait<V: StT + Ord> {
+    pub trait AdjTableGraphStEphTrait<V: StT + Ord>: Sized {
         spec fn spec_adj(&self) -> Map<<V as View>::V, Set<<V as View>::V>>;
         spec fn spec_num_edges(&self) -> nat;
 
@@ -133,17 +134,15 @@ broadcast use {
 
         fn num_vertices(&self) -> N { self.adj.size() }
 
-        fn num_edges(&self) -> (m: N)
-            requires self.spec_num_edges() <= usize::MAX as nat
-            ensures m as nat == self.spec_num_edges()
-        {
+        fn num_edges(&self) -> (m: N) {
             let domain = self.adj.domain();
             let seq = domain.to_seq();
+            let len = seq.length();
             let mut count = 0;
             let mut i: usize = 0;
-            while i < seq.length()
-                invariant i <= seq.length()
-                decreases seq.length() - i
+            while i < len
+                invariant i <= len, len == seq.spec_len()
+                decreases len - i
             {
                 let v = seq.nth(i).clone();
                 if let Some(neighbors) = self.adj.find(&v) {
@@ -159,14 +158,16 @@ broadcast use {
         {
             let domain = self.adj.domain();
             let seq = domain.to_seq();
+            let len = seq.length();
             let mut verts = AVLTreeSetStEph::empty();
             let mut i: usize = 0;
-            while i < seq.length()
+            while i < len
                 invariant
-                    i <= seq.length(),
+                    i <= len,
+                    len == seq.spec_len(),
                     verts@.finite(),
-                    verts@ == seq.subrange(0, i as int).to_set(),
-                decreases seq.length() - i
+                    verts@ == seq@.subrange(0, i as int).to_set(),
+                decreases len - i
             {
                 verts.insert(seq.nth(i).clone());
                 i += 1;
@@ -199,7 +200,7 @@ broadcast use {
         fn insert_vertex(&mut self, v: V)
             ensures self.spec_adj().dom().contains(v@)
         {
-            self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _| old.clone());
+            self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
         }
 
         fn delete_vertex(&mut self, v: &V)
@@ -208,17 +209,18 @@ broadcast use {
             let v_clone = v.clone();
             let domain = self.adj.domain();
             let seq = domain.to_seq();
+            let len = seq.length();
             let mut i: usize = 0;
             self.adj.delete(&v_clone);
-            while i < seq.length()
-                invariant i <= seq.length()
-                decreases seq.length() - i
+            while i < len
+                invariant i <= len, len == seq.spec_len()
+                decreases len - i
             {
                 let u = seq.nth(i).clone();
                 if let Some(neighbors) = self.adj.find(&u) {
                     let mut neighbors = neighbors.clone();
                     neighbors.delete(&v_clone);
-                    self.adj.insert(u, neighbors, |_, new| new.clone());
+                    self.adj.insert(u, neighbors, |_old, new| new.clone());
                 }
                 i += 1;
             }
@@ -238,9 +240,9 @@ broadcast use {
                 }
                 None => AVLTreeSetStEph::singleton(v.clone()),
             };
-            self.adj.insert(u, neighbors, |_, new| new.clone());
+            self.adj.insert(u, neighbors, |_old, new| new.clone());
             if self.adj.find(&v).is_none() {
-                self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _| old.clone());
+                self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
             }
         }
 
@@ -252,7 +254,7 @@ broadcast use {
             if let Some(neighbors) = self.adj.find(u) {
                 let mut neighbors = neighbors.clone();
                 neighbors.delete(v);
-                self.adj.insert(u.clone(), neighbors, |_, new| new.clone());
+                self.adj.insert(u.clone(), neighbors, |_old, new| new.clone());
             }
         }
     }

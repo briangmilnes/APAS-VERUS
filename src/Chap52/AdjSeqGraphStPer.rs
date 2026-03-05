@@ -89,17 +89,17 @@ broadcast use {
         fn new(n: N) -> (empty: Self)
             ensures
                 empty.spec_num_vertices() == n,
-                forall|i: int| #![auto] 0 <= i < n ==> empty.spec_degree(i) == 0;
+                forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;
 
         /// Work Theta(1), Span Theta(1)
         fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<N>>) -> (constructed: Self)
             ensures
                 constructed.spec_num_vertices() == adj.spec_len(),
-                forall|i: int| #![auto] 0 <= i < adj.spec_len() ==>
-                    constructed.spec_degree(i) == adj.spec_index(i).spec_len(),
-                forall|i: int, j: int| #![auto] 0 <= i < adj.spec_len()
+                forall|i: int| 0 <= i < adj.spec_len() ==>
+                    #[trigger] constructed.spec_degree(i) == adj.spec_index(i).spec_len(),
+                forall|i: int, j: int| 0 <= i < adj.spec_len()
                     && 0 <= j < adj.spec_index(i).spec_len()
-                    ==> constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);
+                    ==> #[trigger] constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);
 
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: N)
@@ -122,16 +122,16 @@ broadcast use {
         fn has_edge(&self, u: N, v: N) -> (found: B)
             requires u < self.spec_num_vertices()
             ensures found == exists|j: int|
-                #![auto] 0 <= j < self.spec_degree(u as int)
-                && self.spec_neighbor(u as int, j) == v;
+                0 <= j < self.spec_degree(u as int)
+                && #[trigger] self.spec_neighbor(u as int, j) == v;
 
         /// Work Theta(1), Span Theta(1)
         fn out_neighbors(&self, u: N) -> (neighbors: &ArraySeqStPerS<N>)
             requires u < self.spec_num_vertices()
             ensures
                 neighbors.spec_len() == self.spec_degree(u as int),
-                forall|j: int| #![auto] 0 <= j < neighbors.spec_len()
-                    ==> neighbors.spec_index(j) == self.spec_neighbor(u as int, j);
+                forall|j: int| 0 <= j < neighbors.spec_len()
+                    ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);
 
         /// Work Theta(1), Span Theta(1)
         fn out_degree(&self, u: N) -> (d: N)
@@ -145,30 +145,30 @@ broadcast use {
                 v < self.spec_num_vertices(),
             ensures
                 updated.spec_num_vertices() == self.spec_num_vertices(),
-                forall|i: int| #![auto] 0 <= i < self.spec_num_vertices() && i != u as int
-                    ==> updated.spec_degree(i) == self.spec_degree(i),
-                forall|i: int, j: int| #![auto]
+                forall|i: int| 0 <= i < self.spec_num_vertices() && i != u as int
+                    ==> #[trigger] updated.spec_degree(i) == self.spec_degree(i),
+                forall|i: int, j: int|
                     0 <= i < self.spec_num_vertices() && i != u as int
                     && 0 <= j < self.spec_degree(i)
-                    ==> updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),
-                exists|j: int| #![auto]
+                    ==> #[trigger] updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),
+                exists|j: int|
                     0 <= j < updated.spec_degree(u as int)
-                    && updated.spec_neighbor(u as int, j) == v;
+                    && #[trigger] updated.spec_neighbor(u as int, j) == v;
 
         /// Work Theta(n + deg(u)), Span Theta(n + deg(u))
         fn delete_edge(&self, u: N, v: N) -> (updated: Self)
             requires u < self.spec_num_vertices()
             ensures
                 updated.spec_num_vertices() == self.spec_num_vertices(),
-                forall|i: int| #![auto] 0 <= i < self.spec_num_vertices() && i != u as int
-                    ==> updated.spec_degree(i) == self.spec_degree(i),
-                forall|i: int, j: int| #![auto]
+                forall|i: int| 0 <= i < self.spec_num_vertices() && i != u as int
+                    ==> #[trigger] updated.spec_degree(i) == self.spec_degree(i),
+                forall|i: int, j: int|
                     0 <= i < self.spec_num_vertices() && i != u as int
                     && 0 <= j < self.spec_degree(i)
-                    ==> updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),
-                forall|j: int| #![auto]
+                    ==> #[trigger] updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),
+                forall|j: int|
                     0 <= j < updated.spec_degree(u as int)
-                    ==> updated.spec_neighbor(u as int, j) != v;
+                    ==> #[trigger] updated.spec_neighbor(u as int, j) != v;
     }
 
     // 9. impls
@@ -242,10 +242,10 @@ broadcast use {
                     u < self.spec_num_vertices(),
                     len as nat == neighbors.spec_len(),
                     len as nat == self.spec_degree(u as int),
-                    forall|j: int| #![auto] 0 <= j < len as int
-                        ==> neighbors.spec_index(j) == self.spec_neighbor(u as int, j),
-                    forall|j: int| #![auto] 0 <= j < i
-                        ==> neighbors.spec_index(j) != v,
+                    forall|j: int| 0 <= j < len as int
+                        ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j),
+                    forall|j: int| 0 <= j < i
+                        ==> #[trigger] neighbors.spec_index(j) != v,
                 decreases len - i
             {
                 if *neighbors.nth(i) == v {
@@ -279,12 +279,12 @@ broadcast use {
                     u < self.spec_num_vertices(),
                     deg_u as nat == self.spec_degree(u as int),
                     deg_u as nat == src_u.spec_len(),
-                    forall|j: int| #![auto] 0 <= j < deg_u as int
-                        ==> src_u.spec_index(j) == self.spec_neighbor(u as int, j),
-                    !found ==> forall|j: int| #![auto] 0 <= j < fi
-                        ==> self.spec_neighbor(u as int, j) != v,
-                    found ==> exists|j: int| #![auto] 0 <= j < self.spec_degree(u as int)
-                        && self.spec_neighbor(u as int, j) == v,
+                    forall|j: int| 0 <= j < deg_u as int
+                        ==> #[trigger] src_u.spec_index(j) == self.spec_neighbor(u as int, j),
+                    !found ==> forall|j: int| 0 <= j < fi
+                        ==> #[trigger] self.spec_neighbor(u as int, j) != v,
+                    found ==> exists|j: int| 0 <= j < self.spec_degree(u as int)
+                        && #[trigger] self.spec_neighbor(u as int, j) == v,
                 decreases deg_u - fi
             {
                 if *src_u.nth(fi) == v {
@@ -323,11 +323,11 @@ broadcast use {
                         u < self.spec_num_vertices(),
                         deg_u as nat == self.spec_degree(u as int),
                         deg_u as nat == src_u.spec_len(),
-                        forall|k: int| #![auto] 0 <= k < deg_u as int
-                            ==> src_u.spec_index(k) == self.spec_neighbor(u as int, k),
+                        forall|k: int| 0 <= k < deg_u as int
+                            ==> #[trigger] src_u.spec_index(k) == self.spec_neighbor(u as int, k),
                         nvec@.len() == j as int,
-                        forall|k: int| #![auto] 0 <= k < j
-                            ==> nvec@[k] == self.spec_neighbor(u as int, k),
+                        forall|k: int| 0 <= k < j
+                            ==> #[trigger] nvec@[k] == self.spec_neighbor(u as int, k),
                     decreases deg_u - j
                 {
                     nvec.push(*src_u.nth(j));
@@ -347,13 +347,13 @@ broadcast use {
                     ensures
                         k as int != u as int ==> (
                             r.spec_len() == self.adj.spec_index(k as int).spec_len()
-                            && forall|l: int| #![auto] 0 <= l < r.spec_len()
-                                ==> r.spec_index(l) == self.adj.spec_index(k as int).spec_index(l)
+                            && forall|l: int| 0 <= l < r.spec_len()
+                                ==> #[trigger] r.spec_index(l) == self.adj.spec_index(k as int).spec_index(l)
                         ),
                         k as int == u as int ==> (
                             r.spec_len() == new_neighbors.spec_len()
-                            && forall|l: int| #![auto] 0 <= l < r.spec_len()
-                                ==> r.spec_index(l) == new_neighbors.spec_index(l)
+                            && forall|l: int| 0 <= l < r.spec_len()
+                                ==> #[trigger] r.spec_index(l) == new_neighbors.spec_index(l)
                         )
                 {
                     if k == u {
@@ -401,8 +401,8 @@ broadcast use {
                     u < self.spec_num_vertices(),
                     deg_u as nat == self.spec_degree(u as int),
                     deg_u as nat == src_u.spec_len(),
-                    forall|k: int| #![auto] 0 <= k < nvec@.len() as int
-                        ==> nvec@[k] != v,
+                    forall|k: int| 0 <= k < nvec@.len() as int
+                        ==> #[trigger] nvec@[k] != v,
                 decreases deg_u - j
             {
                 let neighbor = *src_u.nth(j);
@@ -420,13 +420,13 @@ broadcast use {
                     ensures
                         k as int != u as int ==> (
                             r.spec_len() == self.adj.spec_index(k as int).spec_len()
-                            && forall|l: int| #![auto] 0 <= l < r.spec_len()
-                                ==> r.spec_index(l) == self.adj.spec_index(k as int).spec_index(l)
+                            && forall|l: int| 0 <= l < r.spec_len()
+                                ==> #[trigger] r.spec_index(l) == self.adj.spec_index(k as int).spec_index(l)
                         ),
                         k as int == u as int ==> (
                             r.spec_len() == new_neighbors.spec_len()
-                            && forall|l: int| #![auto] 0 <= l < r.spec_len()
-                                ==> r.spec_index(l) == new_neighbors.spec_index(l)
+                            && forall|l: int| 0 <= l < r.spec_len()
+                                ==> #[trigger] r.spec_index(l) == new_neighbors.spec_index(l)
                         )
                 {
                     if k == u {
