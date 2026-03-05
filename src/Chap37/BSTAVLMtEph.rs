@@ -48,6 +48,15 @@ pub mod BSTAVLMtEph {
         }
     }
 
+    pub trait BSTAVLMtEphTrait<T: TotalOrder>: Sized {
+        fn new() -> Self;
+        fn insert(&self, value: T);
+        fn contains(&self, target: &T) -> (found: bool);
+        fn size(&self) -> (n: usize);
+        fn is_empty(&self) -> (b: bool);
+        fn height(&self) -> (h: usize);
+    }
+
     // 7. proof fns
 
     proof fn lemma_bst_deep<T: TotalOrder>(tree: BalBinTree<T>)
@@ -400,7 +409,7 @@ pub mod BSTAVLMtEph {
 
     // Public API: lock operations are fully verified through vstd::rwlock.
 
-    impl<T: TotalOrder> BSTAVLMtEph<T> {
+    impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
         pub fn new() -> (tree: Self)
         {
             BSTAVLMtEph {

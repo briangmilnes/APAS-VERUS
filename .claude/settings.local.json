@@ -77,7 +77,8 @@
       "Bash(/home/milnes/projects/verusfmt/target/release/verusfmt:*)",
       "Bash(rustfmt:*)",
       "Bash(vargo build:*)",
-      "Bash(comm:*)"
+      "Bash(comm:*)",
+      "Bash(do wc:*)"
     ]
   }
 }
