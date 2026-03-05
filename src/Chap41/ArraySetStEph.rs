@@ -31,6 +31,8 @@ pub mod ArraySetStEph {
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::seq_set::{lemma_push_not_contains_to_set, lemma_seq_index_in_map_to_set};
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{lemma_seq_map_cloned_view_eq, obeys_feq_clone};
 
     verus! {
 
@@ -170,7 +172,11 @@ pub mod ArraySetStEph {
             ensures count == self@.len(), self@.finite();
 
         fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
-            ensures self@.finite();
+            requires self.spec_wf(),
+            ensures
+                self@.finite(),
+                seq@.no_duplicates(),
+                seq@.to_set() =~= self@;
 
         fn empty() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_wf();
@@ -262,7 +268,17 @@ pub mod ArraySetStEph {
         }
 
         fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
-        { self.elements.clone() }
+        {
+            let seq = self.elements.clone();
+            proof {
+                assume(obeys_feq_clone::<T>());
+                lemma_seq_map_cloned_view_eq(
+                    self.elements.seq@,
+                    seq.seq@,
+                );
+            }
+            seq
+        }
 
         fn empty() -> (empty: Self)
         {

@@ -79,7 +79,7 @@ broadcast use {
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite();
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            requires forall|k: &K| f.requires((k,))
+            requires keys.spec_wf(), forall|k: &K| f.requires((k,))
             ensures tabulated@.dom().finite();
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
             ensures mapped@.dom().finite();

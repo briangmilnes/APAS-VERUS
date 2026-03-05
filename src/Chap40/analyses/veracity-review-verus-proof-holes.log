@@ -1,5 +1,5 @@
 ❌ BSTKeyValueStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:57: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:57: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         46 |     fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (cloned: Link<K, V>)
             ...
         55 |                 let k = node.key.clone();
@@ -9,21 +9,21 @@
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 7 total (7 clean, 0 holed)
 ❌ BSTReducedStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:55: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:55: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         43 |     fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (cloned: Link<K, V, R>)
             ...
         53 |                 let k = node.key.clone();
         54 |                 let v = node.value.clone();
         56 |                 Some(Box::new(Node {
         57 |                     key: k,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:127: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:129: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:147: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:127: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:129: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:147: info: external_body_accept_hole - external_body with accept hole comment
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Info: 3 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ BSTSizeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:744: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:744: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        733 |     fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)
             ...
        742 |             Some(node) => {
@@ -57,6 +57,6 @@ Info: 3 total
    BSTReducedStEph.rs:147: info: external_body_accept_hole - external_body with accept hole comment
 
 🎉 No proof holes found! All proofs are complete.
-external_body with accept hole comment
+TReducedStEph.rs:147: info: external_body_accept_hole - external_body with accept hole comment
 
 🎉 No proof holes found! All proofs are complete.
