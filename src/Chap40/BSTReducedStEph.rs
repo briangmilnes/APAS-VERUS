@@ -1,5 +1,20 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! BST with general reduced values augmentation using associative functions.
+
+//  Table of Contents
+//  1. module
+//  4. type definitions
+//  5. view impls
+//  6. spec fns
+//  7. proof fns
+//  8. traits
+//  9. impls
+//  11. derive impls in verus!
+//  12. macros
+//  13. derive impls outside verus!
+
+// 1. module
 
 pub mod BSTReducedStEph {
 
@@ -8,23 +23,13 @@ pub mod BSTReducedStEph {
 
     use vstd::prelude::*;
 
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
+
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
     verus! {
-
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
 
     // 4. type definitions
 
@@ -40,130 +45,34 @@ pub mod BSTReducedStEph {
         pub right: Link<K, V, R>,
     }
 
-    fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (cloned: Link<K, V, R>)
-        ensures
-            spec_content_link(&cloned) == spec_content_link(link),
-            spec_size_link(&cloned) == spec_size_link(link),
-            spec_size_wf_link(link) ==> spec_size_wf_link(&cloned),
-        decreases *link,
-    {
-        match link {
-            None => None,
-            Some(node) => {
-                let k = node.key.clone();
-                let v = node.value.clone();
-                proof { assume(k == node.key && v == node.value); } // clone bridge, cf. PartialEq pattern
-                Some(Box::new(Node {
-                    key: k,
-                    value: v,
-                    priority: node.priority,
-                    size: node.size,
-                    reduced_value: node.reduced_value.clone(),
-                    left: clone_link(&node.left),
-                    right: clone_link(&node.right),
-                }))
-            }
-        }
-    }
-
-    impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
-        fn clone(&self) -> Self {
-            Node {
-                key: self.key.clone(),
-                value: self.value.clone(),
-                priority: self.priority,
-                size: self.size,
-                reduced_value: self.reduced_value.clone(),
-                left: clone_link(&self.left),
-                right: clone_link(&self.right),
-            }
-        }
-    }
-
-    trait NodeTrait<K: StT + Ord, V: StT, R: StT>: Sized {
-        fn new(key: K, value: V, priority: u64, reduced_value: R) -> Self;
-    }
-
-    impl<K: StT + Ord, V: StT, R: StT> NodeTrait<K, V, R> for Node<K, V, R> {
-        fn new(key: K, value: V, priority: u64, reduced_value: R) -> Self {
-            Node {
-                key,
-                value,
-                priority,
-                size: 1,
-                reduced_value,
-                left: None,
-                right: None,
-            }
-        }
-    }
-
-    /// Trait for associative reduction operations
-    pub trait ReduceOp<V: StT, R: StT> {
-        spec fn spec_identity() -> R;
-        spec fn spec_combine(a: R, b: R) -> R;
-        spec fn spec_lift(value: V) -> R;
-
-        fn identity() -> (id_val: R)
-            ensures id_val == Self::spec_identity();
-        fn combine(a: R, b: R) -> (combined: R)
-            ensures combined == Self::spec_combine(a, b);
-        fn lift(value: &V) -> (lifted: R)
-            ensures lifted == Self::spec_lift(*value);
-    }
-
     /// Example: Sum reduction for numeric values
     pub struct SumOp<T>(PhantomData<T>);
 
-    impl<T> Clone for SumOp<T> {
-        fn clone(&self) -> Self { SumOp(PhantomData) }
-    }
-
-    impl<T: ArithmeticT> ReduceOp<T, T> for SumOp<T> {
-        uninterp spec fn spec_identity() -> T;
-        uninterp spec fn spec_combine(a: T, b: T) -> T;
-        open spec fn spec_lift(value: T) -> T { value }
-
-        #[verifier::external_body] // accept hole: T::default() not expressible in spec
-        fn identity() -> (id_val: T) { T::default() }
-        #[verifier::external_body] // accept hole
-        fn combine(a: T, b: T) -> (combined: T) { a + b }
-        fn lift(value: &T) -> (lifted: T) { *value }
-    }
-
     /// Example: Count reduction (counts number of elements)
     pub struct CountOp<T>(PhantomData<T>);
-
-    impl<T> Clone for CountOp<T> {
-        fn clone(&self) -> Self { CountOp(PhantomData) }
-    }
-
-    impl<T: StT> ReduceOp<T, usize> for CountOp<T> {
-        open spec fn spec_identity() -> usize { 0 }
-        open spec fn spec_combine(a: usize, b: usize) -> usize { (a + b) as usize }
-        open spec fn spec_lift(value: T) -> usize { 1 }
-
-        fn identity() -> (id_val: usize) { 0 }
-        #[verifier::external_body] // accept hole
-        fn combine(a: usize, b: usize) -> (combined: usize) { a + b }
-        fn lift(_value: &T) -> (lifted: usize) { 1 }
-    }
 
     pub struct BSTReducedStEph<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> {
         pub root: Link<K, V, R>,
         pub _op: PhantomData<Op>,
     }
 
-    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> Clone for BSTReducedStEph<K, V, R, Op> {
-        fn clone(&self) -> Self {
-            BSTReducedStEph {
-                root: self.root.clone(),
-                _op: PhantomData,
-            }
+    pub type BSTreeReduced<K, V, R, Op> = BSTReducedStEph<K, V, R, Op>;
+
+    // Type aliases for common reductions
+    pub type BSTSumStEph<K, V> = BSTReducedStEph<K, V, V, SumOp<V>>;
+
+    pub type BSTCountStEph<K, V> = BSTReducedStEph<K, V, usize, CountOp<V>>;
+
+
+    // 5. view impls
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> View for BSTReducedStEph<K, V, R, Op> {
+        type V = Map<K, V>;
+        open spec fn view(&self) -> Map<K, V> {
+            spec_content_link(&self.root)
         }
     }
 
-    pub type BSTreeReduced<K, V, R, Op> = BSTReducedStEph<K, V, R, Op>;
 
     // 6. spec fns
 
@@ -212,14 +121,6 @@ pub mod BSTReducedStEph {
         }
     }
 
-    // 5. view impls
-
-    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> View for BSTReducedStEph<K, V, R, Op> {
-        type V = Map<K, V>;
-        open spec fn view(&self) -> Map<K, V> {
-            spec_content_link(&self.root)
-        }
-    }
 
     // 7. proof fns
 
@@ -235,7 +136,34 @@ pub mod BSTReducedStEph {
         ensures spec_size_wf_link(link),
     {}
 
+
     // 8. traits
+
+    pub trait NodeTrait<K: StT + Ord, V: StT, R: StT>: Sized {
+        spec fn spec_size(&self) -> nat;
+
+        spec fn spec_size_wf(&self) -> bool;
+
+        spec fn spec_height(&self) -> nat;
+
+        spec fn spec_content(&self) -> Map<K, V>;
+
+        fn new(key: K, value: V, priority: u64, reduced_value: R) -> (node: Self);
+    }
+
+    /// Trait for associative reduction operations
+    pub trait ReduceOp<V: StT, R: StT> {
+        spec fn spec_identity() -> R;
+        spec fn spec_combine(a: R, b: R) -> R;
+        spec fn spec_lift(value: V) -> R;
+
+        fn identity() -> (id_val: R)
+            ensures id_val == Self::spec_identity();
+        fn combine(a: R, b: R) -> (combined: R)
+            ensures combined == Self::spec_combine(a, b);
+        fn lift(value: &V) -> (lifted: R)
+            ensures lifted == Self::spec_lift(*value);
+    }
 
     pub trait BSTReducedStEphTrait<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>: Sized + View<V = Map<K, V>> {
         spec fn spec_size(&self) -> nat;
@@ -432,7 +360,122 @@ pub mod BSTReducedStEph {
             decreases *link;
     }
 
+
     // 9. impls
+
+    fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (cloned: Link<K, V, R>)
+        ensures
+            spec_content_link(&cloned) == spec_content_link(link),
+            spec_size_link(&cloned) == spec_size_link(link),
+            spec_size_wf_link(link) ==> spec_size_wf_link(&cloned),
+        decreases *link,
+    {
+        match link {
+            None => None,
+            Some(node) => {
+                let k = node.key.clone();
+                let v = node.value.clone();
+                proof { assume(k == node.key && v == node.value); } // clone bridge, cf. PartialEq pattern
+                Some(Box::new(Node {
+                    key: k,
+                    value: v,
+                    priority: node.priority,
+                    size: node.size,
+                    reduced_value: node.reduced_value.clone(),
+                    left: clone_link(&node.left),
+                    right: clone_link(&node.right),
+                }))
+            }
+        }
+    }
+
+    impl<K: StT + Ord, V: StT, R: StT> NodeTrait<K, V, R> for Node<K, V, R> {
+        open spec fn spec_size(&self) -> nat {
+            self.size as nat
+        }
+
+        open spec fn spec_size_wf(&self) -> bool
+            decreases *self,
+        {
+            self.size as nat == 1 + spec_size_link(&self.left) + spec_size_link(&self.right)
+            && spec_size_wf_link(&self.left)
+            && spec_size_wf_link(&self.right)
+        }
+
+        open spec fn spec_height(&self) -> nat
+            decreases *self,
+        {
+            let l = spec_height_link(&self.left);
+            let r = spec_height_link(&self.right);
+            1 + if l >= r { l } else { r }
+        }
+
+        open spec fn spec_content(&self) -> Map<K, V>
+            decreases *self,
+        {
+            let l = spec_content_link(&self.left);
+            let r = spec_content_link(&self.right);
+            l.union_prefer_right(r).insert(self.key, self.value)
+        }
+
+        fn new(key: K, value: V, priority: u64, reduced_value: R) -> (node: Self)
+            ensures
+                node.key == key,
+                node.value == value,
+                node.priority == priority,
+                node.size == 1,
+                node.reduced_value == reduced_value,
+                node.left is None,
+                node.right is None,
+        {
+            Node {
+                key,
+                value,
+                priority,
+                size: 1,
+                reduced_value,
+                left: None,
+                right: None,
+            }
+        }
+    }
+
+    impl<T: ArithmeticT> ReduceOp<T, T> for SumOp<T> {
+        uninterp spec fn spec_identity() -> T;
+        uninterp spec fn spec_combine(a: T, b: T) -> T;
+        open spec fn spec_lift(value: T) -> T { value }
+
+        #[verifier::external_body] // accept hole: T::default() not expressible in spec
+        fn identity() -> (id_val: T) { T::default() }
+        #[verifier::external_body] // accept hole
+        fn combine(a: T, b: T) -> (combined: T) { a + b }
+        fn lift(value: &T) -> (lifted: T) { *value }
+    }
+
+    impl<T: StT> ReduceOp<T, usize> for CountOp<T> {
+        open spec fn spec_identity() -> usize { 0 }
+        open spec fn spec_combine(a: usize, b: usize) -> usize { (a + b) as usize }
+        open spec fn spec_lift(value: T) -> usize { 1 }
+
+        fn identity() -> (id_val: usize) { 0 }
+        #[verifier::external_body] // accept hole
+        fn combine(a: usize, b: usize) -> (combined: usize) { a + b }
+        fn lift(_value: &T) -> (lifted: usize) { 1 }
+    }
+
+    fn compare_reduced_links<K: StT + Ord, V: StT, R: StT>(a: &Link<K, V, R>, b: &Link<K, V, R>) -> (equal: bool)
+        decreases *a,
+    {
+        match (a, b) {
+            (None, None) => true,
+            (Some(an), Some(bn)) => {
+                an.key == bn.key && an.value == bn.value
+                    && compare_reduced_links(&an.left, &bn.left)
+                    && compare_reduced_links(&an.right, &bn.right)
+            }
+            _ => false,
+        }
+    }
 
     impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> BSTReducedStEphTrait<K, V, R, Op>
         for BSTReducedStEph<K, V, R, Op>
@@ -797,16 +840,62 @@ pub mod BSTReducedStEph {
         }
     }
 
-    // Type aliases for common reductions
-    pub type BSTSumStEph<K, V> = BSTReducedStEph<K, V, V, SumOp<V>>;
-    pub type BSTCountStEph<K, V> = BSTReducedStEph<K, V, usize, CountOp<V>>;
-
     // 11. derive impls in verus!
 
     impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> Default for BSTreeReduced<K, V, R, Op> {
         fn default() -> (default_val: Self)
             ensures default_val.spec_size() == 0, default_val.spec_wf(), default_val@ == Map::<K, V>::empty(),
         { Self::new() }
+    }
+
+
+    impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
+        fn clone(&self) -> Self {
+            Node {
+                key: self.key.clone(),
+                value: self.value.clone(),
+                priority: self.priority,
+                size: self.size,
+                reduced_value: self.reduced_value.clone(),
+                left: clone_link(&self.left),
+                right: clone_link(&self.right),
+            }
+        }
+    }
+
+    impl<T> Clone for SumOp<T> {
+        fn clone(&self) -> Self { SumOp(PhantomData) }
+    }
+
+    impl<T> Clone for CountOp<T> {
+        fn clone(&self) -> Self { CountOp(PhantomData) }
+    }
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> Clone for BSTReducedStEph<K, V, R, Op> {
+        fn clone(&self) -> Self {
+            BSTReducedStEph {
+                root: self.root.clone(),
+                _op: PhantomData,
+            }
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> PartialEqSpecImpl for BSTReducedStEph<K, V, R, Op> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> Eq for BSTReducedStEph<K, V, R, Op> {}
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> PartialEq for BSTReducedStEph<K, V, R, Op> {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            let equal = compare_reduced_links(&self.root, &other.root);
+            proof { assume(equal == (self@ == other@)); }
+            equal
+        }
     }
 
     }
@@ -847,6 +936,35 @@ pub mod BSTReducedStEph {
                 .field("left", &self.left)
                 .field("right", &self.right)
                 .finish()
+        }
+    }
+
+    impl<T> fmt::Display for SumOp<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "SumOp")
+        }
+    }
+
+    impl<T> fmt::Display for CountOp<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "CountOp")
+        }
+    }
+
+    impl<K: StT + Ord + fmt::Display, V: StT + fmt::Display, R: StT + fmt::Display> fmt::Display for Node<K, V, R> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "({}: {} r={})", self.key, self.value, self.reduced_value)
+        }
+    }
+
+    impl<K: StT + Ord + fmt::Display, V: StT + fmt::Display, R: StT + fmt::Display, Op: ReduceOp<V, R>> fmt::Display
+        for BSTReducedStEph<K, V, R, Op>
+    {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match &self.root {
+                None => write!(f, "BSTReducedStEph(empty)"),
+                Some(_) => write!(f, "BSTReducedStEph(non-empty)"),
+            }
         }
     }
 

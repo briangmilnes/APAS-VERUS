@@ -1,5 +1,21 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Size-augmented BST with O(1) size queries and rank/select operations.
+
+//  Table of Contents
+//  1. module
+//  2. imports
+//  4. type definitions
+//  5. view impls
+//  6. spec fns
+//  7. proof fns
+//  8. traits
+//  9. impls
+//  11. derive impls in verus!
+//  12. macros
+//  13. derive impls outside verus!
+
+// 1. module
 
 pub mod BSTSizeStEph {
 
@@ -9,20 +25,10 @@ pub mod BSTSizeStEph {
 
     verus! {
 
-    // Table of Contents
-    // 1. module
     // 2. imports
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
 
-    // 2. imports
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
@@ -32,7 +38,7 @@ pub mod BSTSizeStEph {
     pub struct Node<T: StT + Ord> {
         pub key: T,
         pub priority: u64,
-        pub size: N,
+        pub size: usize,
         pub left: Link<T>,
         pub right: Link<T>,
     }
@@ -44,6 +50,17 @@ pub mod BSTSizeStEph {
     }
 
     pub type BSTreeSize<T> = BSTSizeStEph<T>;
+
+
+    // 5. view impls
+
+    impl<T: StT + Ord> View for BSTSizeStEph<T> {
+        type V = Set<T>;
+        open spec fn view(&self) -> Set<T> {
+            spec_content_link(&self.root)
+        }
+    }
+
 
     // 6. spec fns
 
@@ -94,14 +111,6 @@ pub mod BSTSizeStEph {
         }
     }
 
-    // 5. view impls
-
-    impl<T: StT + Ord> View for BSTSizeStEph<T> {
-        type V = Set<T>;
-        open spec fn view(&self) -> Set<T> {
-            spec_content_link(&self.root)
-        }
-    }
 
     // 7. proof fns
 
@@ -158,10 +167,19 @@ pub mod BSTSizeStEph {
         ensures spec_size_wf_link(link),
     {}
 
+
     // 8. traits
 
-    trait NodeTrait<T: StT + Ord>: Sized {
-        fn new(key: T, priority: u64) -> Self;
+    pub trait NodeTrait<T: StT + Ord>: Sized {
+        spec fn spec_size(&self) -> nat;
+
+        spec fn spec_size_wf(&self) -> bool;
+
+        spec fn spec_height(&self) -> nat;
+
+        spec fn spec_content(&self) -> Set<T>;
+
+        fn new(key: T, priority: u64) -> (node: Self);
     }
 
     pub trait BSTSizeStEphTrait<T: StT + Ord>: Sized + View<V = Set<T>> {
@@ -176,13 +194,13 @@ pub mod BSTSizeStEph {
                 empty.spec_wf(),
                 empty@ == Set::<T>::empty();
         /// - APAS: Work Θ(1), Span Θ(1)
-        fn size(&self) -> (count: N)
+        fn size(&self) -> (count: usize)
             ensures count as nat == self.spec_size();
         /// - APAS: Work Θ(1), Span Θ(1)
-        fn is_empty(&self) -> (is_empty: B)
+        fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == (self.spec_size() == 0);
         /// - APAS: Work Θ(n), Span Θ(n)
-        fn height(&self) -> (height: N)
+        fn height(&self) -> (height: usize)
             requires
                 self.spec_size() < usize::MAX as nat,
                 self.spec_wf(),
@@ -208,7 +226,7 @@ pub mod BSTSizeStEph {
             requires self.spec_wf(),
             ensures self.spec_size() == 0 ==> found is None;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
-        fn contains(&self, target: &T) -> (contains: B)
+        fn contains(&self, target: &T) -> (contains: bool)
             requires self.spec_wf(),
             ensures self.spec_size() == 0 ==> !contains;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
@@ -228,17 +246,17 @@ pub mod BSTSizeStEph {
             requires self.spec_wf(),
             ensures ordered.spec_len() == self.spec_size();
         /// - APAS: Work Θ(log n), Span Θ(log n) — Algorithm 40.1
-        fn rank(&self, key: &T) -> (rank: N)
+        fn rank(&self, key: &T) -> (rank: usize)
             requires
                 self.spec_size() < usize::MAX as nat,
                 self.spec_wf(),
             ensures
                 rank as nat <= self.spec_size();
         /// - APAS: Work Θ(log n), Span Θ(log n) — Algorithm 40.1
-        fn select(&self, rank: N) -> (selected: Option<&T>)
+        fn select(&self, rank: usize) -> (selected: Option<&T>)
             ensures (rank == 0 || rank as nat > self.spec_size()) ==> selected is None;
         /// - APAS: Work Θ(log n), Span Θ(log n) — Exercise 40.1
-        fn split_rank(&self, rank: N) -> (split: (BSTSizeStEph<T>, BSTSizeStEph<T>))
+        fn split_rank(&self, rank: usize) -> (split: (BSTSizeStEph<T>, BSTSizeStEph<T>))
             requires self.spec_wf(),
             ensures
                 spec_size_wf_link(&split.0.root),
@@ -246,7 +264,7 @@ pub mod BSTSizeStEph {
 
         // Internal associated functions.
 
-        fn size_link(link: &Link<T>) -> (count: N)
+        fn size_link(link: &Link<T>) -> (count: usize)
             ensures count as nat == spec_size_link(link);
         fn update_size(node: &mut Node<T>)
             requires
@@ -299,7 +317,7 @@ pub mod BSTSizeStEph {
                 link.is_none() ==> maximum.is_none(),
                 link.is_some() ==> maximum.is_some(),
             decreases *link;
-        fn height_link(link: &Link<T>) -> (h: N)
+        fn height_link(link: &Link<T>) -> (h: usize)
             requires
                 spec_size_link(link) < usize::MAX as nat,
                 spec_size_wf_link(link),
@@ -324,21 +342,57 @@ pub mod BSTSizeStEph {
             decreases end - start;
         fn filter_by_key(items: &Vec<(T, u64)>, key: &T) -> (filtered: Vec<(T, u64)>)
             ensures filtered.len() <= items.len();
-        fn rank_link(link: &Link<T>, key: &T) -> (rank: N)
+        fn rank_link(link: &Link<T>, key: &T) -> (rank: usize)
             requires
                 spec_size_link(link) < usize::MAX as nat,
                 spec_size_wf_link(link),
             ensures rank as nat <= spec_size_link(link),
             decreases *link;
-        fn select_link(link: &Link<T>, rank: N) -> (selected: Option<&T>)
+        fn select_link(link: &Link<T>, rank: usize) -> (selected: Option<&T>)
             ensures link.is_none() ==> selected.is_none(),
             decreases *link;
     }
 
+
     // 9. impls
 
     impl<T: StT + Ord> NodeTrait<T> for Node<T> {
-        fn new(key: T, priority: u64) -> Self {
+        open spec fn spec_size(&self) -> nat {
+            self.size as nat
+        }
+
+        open spec fn spec_size_wf(&self) -> bool
+            decreases *self,
+        {
+            self.size as nat == 1 + spec_size_link(&self.left) + spec_size_link(&self.right)
+            && spec_size_wf_link(&self.left)
+            && spec_size_wf_link(&self.right)
+        }
+
+        open spec fn spec_height(&self) -> nat
+            decreases *self,
+        {
+            let l = spec_height_link(&self.left);
+            let r = spec_height_link(&self.right);
+            1 + if l >= r { l } else { r }
+        }
+
+        open spec fn spec_content(&self) -> Set<T>
+            decreases *self,
+        {
+            spec_content_link(&self.left)
+                .union(spec_content_link(&self.right))
+                .insert(self.key)
+        }
+
+        fn new(key: T, priority: u64) -> (node: Self)
+            ensures
+                node.key == key,
+                node.priority == priority,
+                node.size == 1,
+                node.left is None,
+                node.right is None,
+        {
             Node {
                 key,
                 priority,
@@ -349,6 +403,22 @@ pub mod BSTSizeStEph {
         }
     }
 
+    fn compare_links<T: StT + Ord>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
+        decreases *a,
+    {
+        match (a, b) {
+            (None, None) => true,
+            (Some(an), Some(bn)) => {
+                if an.key != bn.key {
+                    false
+                } else {
+                    compare_links(&an.left, &bn.left) && compare_links(&an.right, &bn.right)
+                }
+            }
+            _ => false,
+        }
+    }
+
     impl<T: StT + Ord> BSTSizeStEphTrait<T> for BSTSizeStEph<T> {
         open spec fn spec_size(&self) -> nat { spec_size_link(&self.root) }
         open spec fn spec_wf(&self) -> bool { spec_size_wf_link(&self.root) }
@@ -356,11 +426,11 @@ pub mod BSTSizeStEph {
 
         fn new() -> (empty: Self) { BSTSizeStEph { root: None } }
 
-        fn size(&self) -> (count: N) { Self::size_link(&self.root) }
+        fn size(&self) -> (count: usize) { Self::size_link(&self.root) }
 
-        fn is_empty(&self) -> (is_empty: B) { self.size() == 0 }
+        fn is_empty(&self) -> (is_empty: bool) { self.size() == 0 }
 
-        fn height(&self) -> (height: N) { Self::height_link(&self.root) }
+        fn height(&self) -> (height: usize) { Self::height_link(&self.root) }
 
         fn insert(&mut self, value: T, priority: u64) {
             Self::insert_link(&mut self.root, value, priority);
@@ -375,7 +445,7 @@ pub mod BSTSizeStEph {
 
         fn find(&self, target: &T) -> Option<&T> { Self::find_link(&self.root, target) }
 
-        fn contains(&self, target: &T) -> B { self.find(target).is_some() }
+        fn contains(&self, target: &T) -> bool { self.find(target).is_some() }
 
         fn minimum(&self) -> Option<&T> { Self::min_link(&self.root) }
 
@@ -387,9 +457,9 @@ pub mod BSTSizeStEph {
             ArraySeqStPerS::from_vec(out)
         }
 
-        fn rank(&self, key: &T) -> N { Self::rank_link(&self.root, key) }
+        fn rank(&self, key: &T) -> usize { Self::rank_link(&self.root, key) }
 
-        fn select(&self, rank: N) -> Option<&T> {
+        fn select(&self, rank: usize) -> Option<&T> {
             if rank == 0 || rank > self.size() {
                 None
             } else {
@@ -397,7 +467,7 @@ pub mod BSTSizeStEph {
             }
         }
 
-        fn split_rank(&self, rank: N) -> (BSTSizeStEph<T>, BSTSizeStEph<T>) {
+        fn split_rank(&self, rank: usize) -> (BSTSizeStEph<T>, BSTSizeStEph<T>) {
             if rank == 0 {
                 (Self::new(), self.clone())
             } else if rank >= self.size() {
@@ -417,7 +487,7 @@ pub mod BSTSizeStEph {
 
         // Internal associated functions.
 
-        fn size_link(link: &Link<T>) -> (count: N) {
+        fn size_link(link: &Link<T>) -> (count: usize) {
             match link {
                 None => 0,
                 Some(n) => n.size,
@@ -595,7 +665,7 @@ pub mod BSTSizeStEph {
             }
         }
 
-        fn height_link(link: &Link<T>) -> (h: N)
+        fn height_link(link: &Link<T>) -> (h: usize)
             decreases *link,
         {
             match link {
@@ -689,7 +759,7 @@ pub mod BSTSizeStEph {
             filtered
         }
 
-        fn rank_link(link: &Link<T>, key: &T) -> (rank: N)
+        fn rank_link(link: &Link<T>, key: &T) -> (rank: usize)
             decreases *link,
         {
             match link {
@@ -709,7 +779,7 @@ pub mod BSTSizeStEph {
             }
         }
 
-        fn select_link(link: &Link<T>, rank: N) -> Option<&T>
+        fn select_link(link: &Link<T>, rank: usize) -> Option<&T>
             decreases *link,
         {
             match link {
@@ -753,6 +823,13 @@ pub mod BSTSizeStEph {
         }
     }
 
+    impl<T: StT + Ord> Default for BSTreeSize<T> {
+        fn default() -> (default_val: Self)
+            ensures default_val.spec_size() == 0, default_val.spec_wf(), default_val@ == Set::<T>::empty(),
+        { Self::new() }
+    }
+
+
     impl<T: StT + Ord> Clone for Node<T> {
         fn clone(&self) -> (cloned: Self) {
             Node {
@@ -776,10 +853,22 @@ pub mod BSTSizeStEph {
         }
     }
 
-    impl<T: StT + Ord> Default for BSTreeSize<T> {
-        fn default() -> (default_val: Self)
-            ensures default_val.spec_size() == 0, default_val.spec_wf(), default_val@ == Set::<T>::empty(),
-        { Self::new() }
+    #[cfg(verus_keep_ghost)]
+    impl<T: StT + Ord> PartialEqSpecImpl for BSTSizeStEph<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<T: StT + Ord> Eq for BSTSizeStEph<T> {}
+
+    impl<T: StT + Ord> PartialEq for BSTSizeStEph<T> {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            let equal = compare_links(&self.root, &other.root);
+            proof { assume(equal == (self@ == other@)); }
+            equal
+        }
     }
 
     } // verus!
@@ -821,6 +910,21 @@ pub mod BSTSizeStEph {
     impl<T: StT + Ord + fmt::Debug> fmt::Debug for BSTSizeStEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             f.debug_struct("BSTSizeStEph").field("root", &self.root).finish()
+        }
+    }
+
+    impl<T: StT + Ord + fmt::Display> fmt::Display for Node<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "({})", self.key)
+        }
+    }
+
+    impl<T: StT + Ord + fmt::Display> fmt::Display for BSTSizeStEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match &self.root {
+                None => write!(f, "BSTSizeStEph(empty)"),
+                Some(_) => write!(f, "BSTSizeStEph(non-empty)"),
+            }
         }
     }
 }
