@@ -23,11 +23,11 @@
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
 | 1 | Chap41 | AVLTreeSetMtEph | 12 | 13 | 0 | 1 | 14 | 0 | 0 | 13 | 1 |
-| 2 | Chap41 | AVLTreeSetMtPer | 12 | 16 | 0 | 0 | 16 | 0 | 0 | 13 | 3 |
-| 3 | Chap41 | AVLTreeSetStEph | 12 | 14 | 0 | 0 | 14 | 0 | 0 | 13 | 1 |
+| 2 | Chap41 | AVLTreeSetMtPer | 12 | 16 | 0 | 0 | 16 | 0 | 3 | 10 | 3 |
+| 3 | Chap41 | AVLTreeSetStEph | 12 | 14 | 0 | 0 | 14 | 0 | 1 | 12 | 1 |
 | 4 | Chap41 | AVLTreeSetStPer | 12 | 14 | 0 | 0 | 14 | 0 | 4 | 9 | 1 |
 | 5 | Chap41 | ArraySetEnumMtEph | 13 | 14 | 0 | 0 | 14 | 0 | 0 | 14 | 0 |
-| 6 | Chap41 | ArraySetStEph | 12 | 14 | 0 | 3 | 17 | 0 | 7 | 9 | 1 |
+| 6 | Chap41 | ArraySetStEph | 12 | 14 | 0 | 7 | 21 | 0 | 11 | 9 | 1 |
 | 7 | Chap41 | Example41_3 | 3 | 3 | 0 | 8 | 9 | 0 | 3 | 4 | 2 |
 
 ## Function-by-Function Detail
@@ -56,9 +56,9 @@
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 15 | `size` | Y | Y |  |  | Y |  |  | hole | 77&#8209;78 |
-| 16 | `to_seq` | Y | Y |  |  | Y |  |  | hole | 81&#8209;82 |
-| 17 | `empty` | Y | Y |  |  | Y |  |  | hole | 85&#8209;86 |
-| 18 | `singleton` | Y | Y |  |  | Y |  |  | hole | 89&#8209;90 |
+| 16 | `to_seq` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;82 |
+| 17 | `empty` | Y | Y |  |  | Y |  |  | unknown | 85&#8209;86 |
+| 18 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;90 |
 | 19 | `from_seq` | Y | Y |  |  | Y |  |  | hole | 92&#8209;93 |
 | 20 | `filter` | Y | Y |  |  | Y |  |  | hole | 96&#8209;97 |
 | 21 | `intersection` | Y | Y |  |  | Y |  |  | hole | 100&#8209;101 |
@@ -67,29 +67,29 @@
 | 24 | `find` | Y | Y |  |  | Y |  |  | hole | 112&#8209;113 |
 | 25 | `delete` | Y | Y |  |  | Y |  |  | hole | 116&#8209;117 |
 | 26 | `insert` | Y | Y |  |  | Y |  |  | hole | 120&#8209;121 |
-| 27 | `default` |  | Y |  |  | Y |  | Y |  | 457 |
-| 28 | `eq` |  | Y |  |  | Y |  |  | hole | 469&#8209;470 |
-| 29 | `partial_cmp` |  | Y |  |  | Y |  | Y |  | 498 |
-| 30 | `cmp` |  | Y |  |  | Y |  | Y |  | 505 |
+| 27 | `default` |  | Y |  |  | Y |  | Y |  | 473 |
+| 28 | `eq` |  | Y |  |  | Y |  |  | hole | 485&#8209;486 |
+| 29 | `partial_cmp` |  | Y |  |  | Y |  | Y |  | 514 |
+| 30 | `cmp` |  | Y |  |  | Y |  | Y |  | 521 |
 
 ### Chap41/AVLTreeSetStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 31 | `size` | Y | Y |  |  | Y |  |  | hole | 68&#8209;69 |
-| 32 | `to_seq` | Y | Y |  |  | Y |  |  | hole | 72&#8209;73 |
-| 33 | `empty` | Y | Y |  |  | Y |  |  | hole | 76&#8209;77 |
-| 34 | `singleton` | Y | Y |  |  | Y |  |  | hole | 80&#8209;81 |
-| 35 | `from_seq` | Y | Y |  |  | Y |  |  | hole | 83&#8209;84 |
-| 36 | `filter` | Y | Y |  |  | Y |  |  | hole | 87&#8209;88 |
-| 37 | `intersection` | Y | Y |  |  | Y |  |  | hole | 91&#8209;92 |
-| 38 | `difference` | Y | Y |  |  | Y |  |  | hole | 95&#8209;96 |
-| 39 | `union` | Y | Y |  |  | Y |  |  | hole | 99&#8209;100 |
-| 40 | `find` | Y | Y |  |  | Y |  |  | hole | 103&#8209;104 |
-| 41 | `delete` | Y | Y |  |  | Y |  |  | hole | 107&#8209;108 |
-| 42 | `insert` | Y | Y |  |  | Y |  |  | hole | 111&#8209;112 |
-| 43 | `default` |  | Y |  |  | Y |  | Y |  | 430 |
-| 44 | `eq` |  | Y |  |  | Y |  |  | hole | 442&#8209;443 |
+| 31 | `size` | Y | Y |  |  | Y |  |  | hole | 70&#8209;71 |
+| 32 | `to_seq` | Y | Y |  |  | Y |  |  | hole | 74&#8209;75 |
+| 33 | `empty` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;79 |
+| 34 | `singleton` | Y | Y |  |  | Y |  |  | hole | 82&#8209;83 |
+| 35 | `from_seq` | Y | Y |  |  | Y |  |  | hole | 85&#8209;86 |
+| 36 | `filter` | Y | Y |  |  | Y |  |  | hole | 89&#8209;90 |
+| 37 | `intersection` | Y | Y |  |  | Y |  |  | hole | 93&#8209;94 |
+| 38 | `difference` | Y | Y |  |  | Y |  |  | hole | 97&#8209;98 |
+| 39 | `union` | Y | Y |  |  | Y |  |  | hole | 101&#8209;102 |
+| 40 | `find` | Y | Y |  |  | Y |  |  | hole | 105&#8209;106 |
+| 41 | `delete` | Y | Y |  |  | Y |  |  | hole | 109&#8209;110 |
+| 42 | `insert` | Y | Y |  |  | Y |  |  | hole | 113&#8209;114 |
+| 43 | `default` |  | Y |  |  | Y |  | Y |  | 441 |
+| 44 | `eq` |  | Y |  |  | Y |  |  | hole | 453&#8209;454 |
 
 ### Chap41/AVLTreeSetStPer.rs
 
@@ -133,37 +133,41 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 73 | `lemma_filter_remove` |  |  |  | Y | Y |  |  | unknown | 79&#8209;82 |
-| 74 | `lemma_push_preserves_no_dups` |  |  |  | Y | Y |  |  | unknown | 118&#8209;123 |
-| 75 | `lemma_subseq_no_dups_subset` |  |  |  | Y | Y |  |  | unknown | 144&#8209;150 |
-| 76 | `size` | Y | Y |  |  | Y |  |  | unknown | 168&#8209;170 |
-| 77 | `to_seq` | Y | Y |  |  | Y |  |  | hole | 172&#8209;177 |
-| 78 | `empty` | Y | Y |  |  | Y |  |  | unknown | 179&#8209;180 |
-| 79 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 182&#8209;183 |
-| 80 | `from_seq` | Y | Y |  |  | Y |  |  | unknown | 185&#8209;186 |
-| 81 | `filter` | Y | Y |  |  | Y |  |  | hole | 188&#8209;195 |
-| 82 | `intersection` | Y | Y |  |  | Y |  |  | hole | 197&#8209;206 |
-| 83 | `difference` | Y | Y |  |  | Y |  |  | hole | 208&#8209;217 |
-| 84 | `union` | Y | Y |  |  | Y |  |  | hole | 219&#8209;228 |
-| 85 | `find` | Y | Y |  |  | Y |  |  | hole | 230&#8209;232 |
-| 86 | `delete` | Y | Y |  |  | Y |  |  | hole | 234&#8209;241 |
-| 87 | `insert` | Y | Y |  |  | Y |  |  | hole | 243&#8209;250 |
-| 88 | `default` |  | Y |  |  | Y |  | Y |  | 568 |
-| 89 | `eq` |  | Y |  |  | Y |  |  | hole | 580&#8209;581 |
+| 73 | `lemma_filter_remove` |  |  |  | Y | Y |  |  | unknown | 80&#8209;83 |
+| 74 | `lemma_push_preserves_no_dups` |  |  |  | Y | Y |  |  | unknown | 119&#8209;124 |
+| 75 | `lemma_filter_in_original` |  |  |  | Y | Y |  |  | unknown | 144&#8209;146 |
+| 76 | `lemma_filter_preserves_no_dups` |  |  |  | Y | Y |  |  | unknown | 180&#8209;183 |
+| 77 | `lemma_filter_to_set_intersect` |  |  |  | Y | Y |  |  | unknown | 214&#8209;217 |
+| 78 | `lemma_filter_to_set_difference` |  |  |  | Y | Y |  |  | unknown | 249&#8209;252 |
+| 79 | `lemma_subseq_no_dups_subset` |  |  |  | Y | Y |  |  | unknown | 285&#8209;291 |
+| 80 | `size` | Y | Y |  |  | Y |  |  | unknown | 309&#8209;311 |
+| 81 | `to_seq` | Y | Y |  |  | Y |  |  | hole | 313&#8209;318 |
+| 82 | `empty` | Y | Y |  |  | Y |  |  | unknown | 320&#8209;321 |
+| 83 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 323&#8209;324 |
+| 84 | `from_seq` | Y | Y |  |  | Y |  |  | unknown | 326&#8209;327 |
+| 85 | `filter` | Y | Y |  |  | Y |  |  | hole | 329&#8209;336 |
+| 86 | `intersection` | Y | Y |  |  | Y |  |  | hole | 338&#8209;347 |
+| 87 | `difference` | Y | Y |  |  | Y |  |  | hole | 349&#8209;358 |
+| 88 | `union` | Y | Y |  |  | Y |  |  | hole | 360&#8209;369 |
+| 89 | `find` | Y | Y |  |  | Y |  |  | hole | 371&#8209;373 |
+| 90 | `delete` | Y | Y |  |  | Y |  |  | hole | 375&#8209;382 |
+| 91 | `insert` | Y | Y |  |  | Y |  |  | hole | 384&#8209;391 |
+| 92 | `default` |  | Y |  |  | Y |  | Y |  | 1086 |
+| 93 | `eq` |  | Y |  |  | Y |  |  | hole | 1098&#8209;1099 |
 
 ### Chap41/Example41_3.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 90 | `example_41_1_array_set` | Y | Y |  | Y | Y |  |  | unknown | 20&#8209;21 |
-| 91 | `example_41_1_avl_set` | Y | Y |  | Y | Y |  |  | unknown | 24&#8209;25 |
-| 92 | `demonstrate_set_operations` | Y | Y |  |  | Y |  |  | unknown | 28&#8209;29 |
-| 93 | `example_41_1_array_set_impl` |  |  |  | Y | Y |  |  | hole | 33&#8209;34 |
-| 94 | `example_41_1_avl_set_impl` |  |  |  | Y | Y |  |  | hole | 86&#8209;87 |
-| 95 | `example_41_3_from_seq_demonstration_impl` |  |  |  | Y | Y |  |  | hole | 139&#8209;140 |
-| 96 | `additional_set_operations_impl` |  |  |  | Y | Y |  |  | hole | 188&#8209;189 |
-| 97 | `example_41_3_from_seq_demonstration` |  |  |  | Y | Y |  | Y |  | 246 |
-| 98 | `additional_set_operations` |  |  |  | Y | Y |  | Y |  | 247 |
+| 94 | `example_41_1_array_set` | Y | Y |  | Y | Y |  |  | unknown | 20&#8209;21 |
+| 95 | `example_41_1_avl_set` | Y | Y |  | Y | Y |  |  | unknown | 24&#8209;25 |
+| 96 | `demonstrate_set_operations` | Y | Y |  |  | Y |  |  | unknown | 28&#8209;29 |
+| 97 | `example_41_1_array_set_impl` |  |  |  | Y | Y |  |  | hole | 33&#8209;34 |
+| 98 | `example_41_1_avl_set_impl` |  |  |  | Y | Y |  |  | hole | 86&#8209;87 |
+| 99 | `example_41_3_from_seq_demonstration_impl` |  |  |  | Y | Y |  |  | hole | 139&#8209;140 |
+| 100 | `additional_set_operations_impl` |  |  |  | Y | Y |  |  | hole | 188&#8209;189 |
+| 101 | `example_41_3_from_seq_demonstration` |  |  |  | Y | Y |  | Y |  | 246 |
+| 102 | `additional_set_operations` |  |  |  | Y | Y |  | Y |  | 247 |
 
 
 ### Legend

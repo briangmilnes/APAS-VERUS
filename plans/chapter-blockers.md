@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter Blocking Report
 
-Generated: 2026-03-05
+Generated: 2026-03-06
 
 | # | Chap | File | Verusified | Specs | Verified | Holes | Blocked By | Blocks |
 |---|------|------|------------|-------|----------|-------|------------|--------|
@@ -412,7 +412,7 @@ Generated: 2026-03-05
 | | | | | | | | 41/AVLTreeSetStEph | — |
 | 127 | 41 | AVLTreeSetMtPer | yes | med | yes | 2 | 37/AVLTreeSeqMtPer | 52/AdjTableGraphMtPer |
 | | | | | | | | — | 52/EdgeSetGraphMtPer |
-| 128 | 41 | Example41_3 | yes | low | yes | 0 | 19/ArraySeqStEph | — |
+| 128 | 41 | Example41_3 | yes | med | yes | 0 | 19/ArraySeqStEph | — |
 | | | | | | | | 37/AVLTreeSeqStEph | — |
 | | | | | | | | 41/ArraySetStEph | — |
 | | | | | | | | 41/AVLTreeSetStEph | — |
@@ -470,12 +470,12 @@ Generated: 2026-03-05
 | | | | | | | | 43/OrderedSetStPer | — |
 | 144 | 44 | DocumentIndex | no | — | no | — | — | — |
 | 145 | 44 | Example44_1 | no | — | no | — | — | — |
-| 146 | 45 | UnsortedListPQ | yes | med | yes | 2 | 19/ArraySeqStPer | 45/HeapsortExample |
-| 147 | 45 | SortedListPQ | yes | med | yes | 2 | 19/ArraySeqStPer | 45/HeapsortExample |
-| 148 | 45 | BinaryHeapPQ | yes | med | yes | 4 | 19/ArraySeqStPer | 45/HeapsortExample |
+| 146 | 45 | UnsortedListPQ | yes | med | yes | 20 | 19/ArraySeqStPer | 45/HeapsortExample |
+| 147 | 45 | SortedListPQ | yes | med | yes | 18 | 19/ArraySeqStPer | 45/HeapsortExample |
+| 148 | 45 | BinaryHeapPQ | yes | med | yes | 20 | 19/ArraySeqStPer | 45/HeapsortExample |
 | | | | | | | | — | 65/PrimStEph |
 | 149 | 45 | BalancedTreePQ | yes | low | yes | 2 | 37/AVLTreeSeqStPer | 45/HeapsortExample |
-| 150 | 45 | LeftistHeapPQ | yes | med | yes | 8 | 19/ArraySeqStPer | 45/HeapsortExample |
+| 150 | 45 | LeftistHeapPQ | yes | med | yes | 22 | 19/ArraySeqStPer | 45/HeapsortExample |
 | 151 | 45 | HeapsortExample | yes | low | yes | 4 | 19/ArraySeqStPer | 45/Example45_2 |
 | | | | | | | | 37/AVLTreeSeqStPer | — |
 | | | | | | | | 45/BalancedTreePQ | — |

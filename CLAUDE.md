@@ -110,6 +110,26 @@ minor). You bring:
 - After commits on main, run `scripts/rebase-agents.sh` to rebase all agents onto main
   and force-push. See `.cursor/rules/git/rebase-agents.mdc`.
 
+### Merge & Rebase Scripts
+
+| Script | Purpose |
+|---|---|
+| `scripts/merge-agent.sh <branch>` | Merge one agent branch into main; runs `validate-check-rtt-ptt.sh` after |
+| `scripts/validate-check-rtt-ptt.sh` | Full pipeline: validate + RTT + PTT. Stops on first failure |
+| `scripts/resolve-analysis-merge.sh [dir]` | Resolves analysis-only merge conflicts (`--theirs`) |
+| `scripts/resolve-analysis-rebase.sh [dir]` | Loops through rebase steps, resolves analysis-only conflicts (`--ours`) |
+| `scripts/resolve-settings-merge.sh [dir]` | Unions `.claude/settings.local.json` allow lists from both conflict sides |
+| `scripts/rebase-agents.sh` | Rebase all agent worktrees onto `origin/main` and force-push. Requires main pushed first |
+| `scripts/reset-agent-to-main.sh` | Reset an agent branch to match main (for starting fresh) |
+| `scripts/survey-agents.sh` | Show commit summary for all agent branches |
+
+**Merge workflow** (run from main worktree):
+1. `scripts/merge-agent.sh agent1/ready` — merge + validate
+2. On conflict: resolve with `scripts/resolve-analysis-merge.sh`, commit, run `scripts/validate-check-rtt-ptt.sh`
+3. Repeat for each agent branch
+4. After all merges: regenerate analyses (`scripts/all-holes-by-chap.sh`, etc.)
+5. Commit, push, then `scripts/rebase-agents.sh`
+
 ### Output Formatting
 
 - **Show full command output** in response text (especially verus and cargo test). The user

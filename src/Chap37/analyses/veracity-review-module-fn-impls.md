@@ -22,24 +22,24 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap37 | AVLTreeSeq | 20 | 23 | 0 | 13 | 35 | 1 | 32 | 3 | 1 |
-| 2 | Chap37 | AVLTreeSeqMtPer | 11 | 14 | 0 | 13 | 25 | 2 | 11 | 12 | 4 |
-| 3 | Chap37 | AVLTreeSeqStEph | 18 | 21 | 0 | 12 | 30 | 3 | 23 | 7 | 3 |
-| 4 | Chap37 | AVLTreeSeqStPer | 13 | 16 | 0 | 14 | 27 | 3 | 14 | 11 | 5 |
+| 1 | Chap37 | AVLTreeSeq | 20 | 23 | 0 | 13 | 36 | 0 | 32 | 3 | 1 |
+| 2 | Chap37 | AVLTreeSeqMtPer | 11 | 14 | 0 | 13 | 27 | 0 | 12 | 13 | 2 |
+| 3 | Chap37 | AVLTreeSeqStEph | 18 | 21 | 0 | 12 | 33 | 0 | 24 | 8 | 1 |
+| 4 | Chap37 | AVLTreeSeqStPer | 13 | 16 | 0 | 14 | 30 | 0 | 15 | 13 | 2 |
 | 5 | Chap37 | BSTAVLMtEph | 6 | 6 | 0 | 8 | 14 | 0 | 12 | 0 | 2 |
 | 6 | Chap37 | BSTAVLStEph | 7 | 7 | 0 | 10 | 17 | 0 | 17 | 0 | 0 |
 | 7 | Chap37 | BSTBBAlphaMtEph | 6 | 6 | 0 | 5 | 11 | 0 | 9 | 0 | 2 |
 | 8 | Chap37 | BSTBBAlphaStEph | 10 | 10 | 0 | 7 | 17 | 0 | 17 | 0 | 0 |
 | 9 | Chap37 | BSTPlainMtEph | 6 | 6 | 0 | 5 | 11 | 0 | 9 | 0 | 2 |
 | 10 | Chap37 | BSTPlainStEph | 10 | 10 | 0 | 7 | 17 | 0 | 17 | 0 | 0 |
-| 11 | Chap37 | BSTRBMtEph | 14 | 16 | 0 | 20 | 34 | 2 | 14 | 1 | 21 |
+| 11 | Chap37 | BSTRBMtEph | 14 | 15 | 0 | 21 | 36 | 0 | 14 | 1 | 21 |
 | 12 | Chap37 | BSTRBStEph | 7 | 7 | 0 | 8 | 15 | 0 | 15 | 0 | 0 |
-| 13 | Chap37 | BSTSetAVLMtEph | 20 | 20 | 0 | 3 | 23 | 0 | 20 | 0 | 3 |
-| 14 | Chap37 | BSTSetBBAlphaMtEph | 20 | 20 | 0 | 3 | 23 | 0 | 20 | 0 | 3 |
-| 15 | Chap37 | BSTSetPlainMtEph | 20 | 20 | 0 | 3 | 23 | 0 | 20 | 0 | 3 |
-| 16 | Chap37 | BSTSetRBMtEph | 20 | 20 | 0 | 2 | 22 | 0 | 20 | 0 | 2 |
-| 17 | Chap37 | BSTSetSplayMtEph | 20 | 20 | 0 | 2 | 22 | 0 | 20 | 0 | 2 |
-| 18 | Chap37 | BSTSplayMtEph | 14 | 16 | 0 | 17 | 31 | 2 | 14 | 1 | 18 |
+| 13 | Chap37 | BSTSetAVLMtEph | 21 | 22 | 0 | 3 | 25 | 0 | 21 | 1 | 3 |
+| 14 | Chap37 | BSTSetBBAlphaMtEph | 21 | 22 | 0 | 3 | 25 | 0 | 21 | 1 | 3 |
+| 15 | Chap37 | BSTSetPlainMtEph | 21 | 22 | 0 | 3 | 25 | 0 | 21 | 1 | 3 |
+| 16 | Chap37 | BSTSetRBMtEph | 21 | 22 | 0 | 2 | 24 | 0 | 21 | 1 | 2 |
+| 17 | Chap37 | BSTSetSplayMtEph | 21 | 22 | 0 | 2 | 24 | 0 | 21 | 1 | 2 |
+| 18 | Chap37 | BSTSplayMtEph | 14 | 15 | 0 | 18 | 33 | 0 | 14 | 1 | 18 |
 | 19 | Chap37 | BSTSplayStEph | 11 | 12 | 0 | 12 | 24 | 0 | 18 | 0 | 6 |
 
 ## Function-by-Function Detail
@@ -48,112 +48,112 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `lemma_size_eq_inorder_len` |  |  |  | Y | Y |  |  | unknown | 146&#8209;149 |
-| 2 | `lemma_inorder_values_maps_to_inorder` |  |  |  | Y | Y |  |  | unknown | 160&#8209;162 |
-| 3 | `empty` | Y | Y |  |  | Y |  |  | unknown | 182&#8209;183 |
-| 4 | `new` | Y | Y |  |  | Y |  |  | unknown | 185&#8209;186 |
-| 5 | `length` | Y | Y |  |  | Y |  |  | unknown | 188&#8209;190 |
-| 6 | `nth` | Y | Y |  |  | Y |  |  | unknown | 192&#8209;194 |
-| 7 | `set` | Y | Y |  |  | Y |  |  | unknown | 196&#8209;201 |
-| 8 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 203&#8209;207 |
-| 9 | `isEmpty` | Y | Y |  |  | Y |  |  | unknown | 209&#8209;211 |
-| 10 | `isSingleton` | Y | Y |  |  | Y |  |  | unknown | 213&#8209;215 |
-| 11 | `subseq_copy` | Y | Y |  |  | Y |  |  | unknown | 217&#8209;220 |
-| 12 | `new_root` | Y | Y |  |  | Y |  |  | unknown | 222&#8209;223 |
-| 13 | `update` | Y | Y |  |  | Y |  |  | unknown | 225&#8209;231 |
-| 14 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 233&#8209;239 |
-| 15 | `to_arrayseq` | Y | Y |  |  | Y |  |  | unknown | 241&#8209;246 |
-| 16 | `iter` | Y | Y |  |  | Y |  |  | unknown | 248&#8209;253 |
-| 17 | `push_back` | Y | Y |  |  | Y |  |  | unknown | 255&#8209;257 |
-| 18 | `contains_value` | Y | Y |  |  | Y |  |  | unknown | 259&#8209;262 |
-| 19 | `insert_value` | Y | Y |  |  | Y |  |  | unknown | 264&#8209;266 |
-| 20 | `delete_value` | Y | Y |  |  | Y |  |  | unknown | 268&#8209;279 |
-| 21 | `is_tree_empty` | Y | Y |  |  | Y |  |  | unknown | 281&#8209;283 |
-| 22 | `values_in_order` | Y | Y |  |  | Y |  |  | unknown | 285&#8209;287 |
-| 23 | `cached_height` |  |  |  | Y | Y |  |  | unknown | 295&#8209;296 |
-| 24 | `cached_size` |  |  |  | Y | Y |  |  | unknown | 304&#8209;306 |
-| 25 | `update_size_height` |  |  |  | Y | Y |  |  | unknown | 316&#8209;337 |
-| 26 | `rotate_right` |  |  |  | Y | Y |  |  | unknown | 346&#8209;356 |
-| 27 | `rotate_left` |  |  |  | Y | Y |  |  | unknown | 405&#8209;415 |
-| 28 | `rebalance` |  |  |  | Y | Y |  |  | unknown | 457&#8209;472 |
-| 29 | `insert_at_link` |  |  |  | Y | Y |  |  | hole | 511&#8209;522 |
-| 30 | `nth_link` |  |  |  | Y | Y |  |  | unknown | 591&#8209;594 |
-| 31 | `set_link` |  |  |  | Y | Y |  |  | unknown | 609&#8209;619 |
-| 32 | `push_inorder` |  |  |  | Y | Y |  |  | unknown | 636&#8209;641 |
-| 33 | `compare_trees` |  |  |  | Y | Y |  |  | unknown | 671&#8209;676 |
-| 34 | `next` |  | Y |  |  | Y |  |  | hole | 1099&#8209;1115 |
-| 35 | `eq` |  | Y |  |  | Y |  |  | hole | 1204&#8209;1205 |
-| 36 | `default` |  | Y |  |  |  | Y | Y |  | 1242 |
+| 1 | `lemma_size_eq_inorder_len` |  |  |  | Y | Y |  |  | unknown | 167&#8209;170 |
+| 2 | `lemma_inorder_values_maps_to_inorder` |  |  |  | Y | Y |  |  | unknown | 181&#8209;183 |
+| 3 | `empty` | Y | Y |  |  | Y |  |  | unknown | 201&#8209;202 |
+| 4 | `new` | Y | Y |  |  | Y |  |  | unknown | 204&#8209;205 |
+| 5 | `length` | Y | Y |  |  | Y |  |  | unknown | 207&#8209;209 |
+| 6 | `nth` | Y | Y |  |  | Y |  |  | unknown | 211&#8209;213 |
+| 7 | `set` | Y | Y |  |  | Y |  |  | unknown | 215&#8209;220 |
+| 8 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 222&#8209;226 |
+| 9 | `isEmpty` | Y | Y |  |  | Y |  |  | unknown | 228&#8209;230 |
+| 10 | `isSingleton` | Y | Y |  |  | Y |  |  | unknown | 232&#8209;234 |
+| 11 | `subseq_copy` | Y | Y |  |  | Y |  |  | unknown | 236&#8209;239 |
+| 12 | `new_root` | Y | Y |  |  | Y |  |  | unknown | 241&#8209;242 |
+| 13 | `update` | Y | Y |  |  | Y |  |  | unknown | 244&#8209;250 |
+| 14 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 252&#8209;258 |
+| 15 | `to_arrayseq` | Y | Y |  |  | Y |  |  | unknown | 260&#8209;265 |
+| 16 | `iter` | Y | Y |  |  | Y |  |  | unknown | 267&#8209;272 |
+| 17 | `push_back` | Y | Y |  |  | Y |  |  | unknown | 274&#8209;276 |
+| 18 | `contains_value` | Y | Y |  |  | Y |  |  | unknown | 278&#8209;281 |
+| 19 | `insert_value` | Y | Y |  |  | Y |  |  | unknown | 283&#8209;285 |
+| 20 | `delete_value` | Y | Y |  |  | Y |  |  | unknown | 287&#8209;298 |
+| 21 | `is_tree_empty` | Y | Y |  |  | Y |  |  | unknown | 300&#8209;302 |
+| 22 | `values_in_order` | Y | Y |  |  | Y |  |  | unknown | 304&#8209;306 |
+| 23 | `cached_height` |  |  |  | Y | Y |  |  | unknown | 314&#8209;315 |
+| 24 | `cached_size` |  |  |  | Y | Y |  |  | unknown | 323&#8209;325 |
+| 25 | `update_size_height` |  |  |  | Y | Y |  |  | unknown | 335&#8209;356 |
+| 26 | `rotate_right` |  |  |  | Y | Y |  |  | unknown | 365&#8209;375 |
+| 27 | `rotate_left` |  |  |  | Y | Y |  |  | unknown | 424&#8209;434 |
+| 28 | `rebalance` |  |  |  | Y | Y |  |  | unknown | 476&#8209;491 |
+| 29 | `insert_at_link` |  |  |  | Y | Y |  |  | hole | 530&#8209;541 |
+| 30 | `nth_link` |  |  |  | Y | Y |  |  | unknown | 610&#8209;613 |
+| 31 | `set_link` |  |  |  | Y | Y |  |  | unknown | 628&#8209;638 |
+| 32 | `push_inorder` |  |  |  | Y | Y |  |  | unknown | 655&#8209;660 |
+| 33 | `compare_trees` |  |  |  | Y | Y |  |  | unknown | 690&#8209;695 |
+| 34 | `next` |  | Y |  |  | Y |  |  | hole | 1098&#8209;1114 |
+| 35 | `default` |  | Y |  |  | Y |  | Y |  | 1169 |
+| 36 | `eq` |  | Y |  |  | Y |  |  | hole | 1192&#8209;1193 |
 
 ### Chap37/AVLTreeSeqMtPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 37 | `lemma_size_eq_inorder_len` |  |  |  | Y | Y |  |  | unknown | 160&#8209;163 |
-| 38 | `empty` | Y | Y |  |  | Y |  |  | unknown | 183&#8209;184 |
-| 39 | `new` | Y | Y |  |  | Y |  |  | unknown | 186&#8209;187 |
-| 40 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 189&#8209;190 |
-| 41 | `length` | Y | Y |  |  | Y |  |  | unknown | 192&#8209;194 |
-| 42 | `nth` | Y | Y |  |  | Y |  |  | unknown | 196&#8209;198 |
-| 43 | `isEmpty` | Y | Y |  |  | Y |  |  | unknown | 200&#8209;202 |
-| 44 | `isSingleton` | Y | Y |  |  | Y |  |  | unknown | 204&#8209;206 |
-| 45 | `set` | Y | Y |  |  | Y |  |  | unknown | 208&#8209;209 |
-| 46 | `subseq_copy` | Y | Y |  |  | Y |  |  | hole | 211&#8209;212 |
-| 47 | `from_vec` | Y | Y |  |  | Y |  | Y |  | 214 |
-| 48 | `values_in_order` | Y | Y |  |  | Y |  |  | hole | 216 |
-| 49 | `height_fn` |  |  |  | Y | Y |  |  | unknown | 224&#8209;225 |
-| 50 | `size_fn` |  |  |  | Y | Y |  |  | unknown | 233&#8209;234 |
-| 51 | `mk` |  |  |  | Y | Y |  |  | hole | 243&#8209;252 |
-| 52 | `rotate_right` |  |  |  | Y | Y |  |  | hole | 262&#8209;266 |
-| 53 | `rotate_left` |  |  |  | Y | Y |  |  | hole | 275&#8209;279 |
-| 54 | `rebalance` |  |  |  | Y | Y |  |  | hole | 288&#8209;292 |
-| 55 | `nth_ref` |  |  |  | Y | Y |  |  | hole | 316&#8209;318 |
-| 56 | `set_rec` |  |  |  | Y | Y |  |  | hole | 337&#8209;339 |
-| 57 | `inorder_collect` |  |  |  | Y | Y |  |  | hole | 365 |
-| 58 | `build_balanced_from_slice` |  |  |  | Y | Y |  |  | hole | 374&#8209;375 |
-| 59 | `rec` |  |  |  | Y | Y |  | Y |  | 377 |
-| 60 | `compare_trees` |  |  |  | Y | Y |  |  | hole | 392 |
-| 61 | `eq` |  | Y |  |  | Y |  |  | hole | 522&#8209;523 |
-| 62 | `default` |  | Y |  |  |  | Y | Y |  | 547 |
-| 63 | `next` |  | Y |  |  |  | Y | Y |  | 611&#8209;619 |
+| 37 | `lemma_size_eq_inorder_len` |  |  |  | Y | Y |  |  | unknown | 166&#8209;169 |
+| 38 | `empty` | Y | Y |  |  | Y |  |  | unknown | 189&#8209;190 |
+| 39 | `new` | Y | Y |  |  | Y |  |  | unknown | 192&#8209;193 |
+| 40 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 195&#8209;196 |
+| 41 | `length` | Y | Y |  |  | Y |  |  | unknown | 198&#8209;200 |
+| 42 | `nth` | Y | Y |  |  | Y |  |  | unknown | 202&#8209;204 |
+| 43 | `isEmpty` | Y | Y |  |  | Y |  |  | unknown | 206&#8209;208 |
+| 44 | `isSingleton` | Y | Y |  |  | Y |  |  | unknown | 210&#8209;212 |
+| 45 | `set` | Y | Y |  |  | Y |  |  | unknown | 214&#8209;215 |
+| 46 | `subseq_copy` | Y | Y |  |  | Y |  |  | hole | 217&#8209;218 |
+| 47 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 220&#8209;221 |
+| 48 | `values_in_order` | Y | Y |  |  | Y |  |  | hole | 223&#8209;224 |
+| 49 | `height_fn` |  |  |  | Y | Y |  |  | unknown | 232&#8209;233 |
+| 50 | `size_fn` |  |  |  | Y | Y |  |  | unknown | 241&#8209;242 |
+| 51 | `mk` |  |  |  | Y | Y |  |  | hole | 251&#8209;260 |
+| 52 | `rotate_right` |  |  |  | Y | Y |  |  | hole | 270&#8209;274 |
+| 53 | `rotate_left` |  |  |  | Y | Y |  |  | hole | 283&#8209;287 |
+| 54 | `rebalance` |  |  |  | Y | Y |  |  | hole | 296&#8209;300 |
+| 55 | `nth_ref` |  |  |  | Y | Y |  |  | hole | 324&#8209;326 |
+| 56 | `set_rec` |  |  |  | Y | Y |  |  | hole | 345&#8209;347 |
+| 57 | `inorder_collect` |  |  |  | Y | Y |  |  | hole | 373 |
+| 58 | `build_balanced_from_slice` |  |  |  | Y | Y |  |  | hole | 382&#8209;383 |
+| 59 | `rec` |  |  |  | Y | Y |  | Y |  | 385 |
+| 60 | `compare_trees` |  |  |  | Y | Y |  |  | hole | 400 |
+| 61 | `default` |  | Y |  |  | Y |  | Y |  | 508 |
+| 62 | `next` |  | Y |  |  | Y |  |  | hole | 516&#8209;517 |
+| 63 | `eq` |  | Y |  |  | Y |  |  | hole | 553&#8209;554 |
 
 ### Chap37/AVLTreeSeqStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 64 | `lemma_size_eq_inorder_len` |  |  |  | Y | Y |  |  | unknown | 160&#8209;163 |
-| 65 | `empty` | Y | Y |  |  | Y |  |  | unknown | 183&#8209;184 |
-| 66 | `new` | Y | Y |  |  | Y |  |  | unknown | 186&#8209;187 |
-| 67 | `length` | Y | Y |  |  | Y |  |  | unknown | 189&#8209;191 |
-| 68 | `nth` | Y | Y |  |  | Y |  |  | unknown | 193&#8209;195 |
-| 69 | `set` | Y | Y |  |  | Y |  |  | unknown | 197&#8209;198 |
-| 70 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 200&#8209;201 |
-| 71 | `isEmpty` | Y | Y |  |  | Y |  |  | unknown | 203&#8209;205 |
-| 72 | `isSingleton` | Y | Y |  |  | Y |  |  | unknown | 207&#8209;209 |
-| 73 | `subseq_copy` | Y | Y |  |  | Y |  |  | unknown | 211&#8209;212 |
-| 74 | `new_root` | Y | Y |  |  | Y |  |  | unknown | 214&#8209;215 |
-| 75 | `update` | Y | Y |  |  | Y |  |  | unknown | 217&#8209;220 |
-| 76 | `from_vec` | Y | Y |  |  | Y |  |  | hole | 222 |
-| 77 | `to_arrayseq` | Y | Y |  |  | Y |  |  | unknown | 224&#8209;225 |
-| 78 | `iter` | Y | Y |  |  | Y |  |  | hole | 227 |
-| 79 | `push_back` | Y | Y |  |  | Y |  |  | hole | 229&#8209;230 |
-| 80 | `contains_value` | Y | Y |  |  | Y |  |  | unknown | 232&#8209;233 |
-| 81 | `insert_value` | Y | Y |  |  | Y |  |  | unknown | 235&#8209;236 |
-| 82 | `delete_value` | Y | Y |  |  | Y |  |  | unknown | 238&#8209;239 |
-| 83 | `h_fn` |  |  |  | Y | Y |  |  | unknown | 247&#8209;248 |
-| 84 | `size_link_fn` |  |  |  | Y | Y |  |  | hole | 256&#8209;257 |
-| 85 | `update_meta` |  |  |  | Y | Y |  |  | hole | 268&#8209;281 |
-| 86 | `rotate_right_fn` |  |  |  | Y | Y |  |  | unknown | 291&#8209;298 |
-| 87 | `rotate_left_fn` |  |  |  | Y | Y |  |  | unknown | 329&#8209;336 |
-| 88 | `rebalance_fn` |  |  |  | Y | Y |  |  | unknown | 367&#8209;375 |
-| 89 | `insert_at_link` |  |  |  | Y | Y |  |  | unknown | 424&#8209;434 |
-| 90 | `nth_link` |  |  |  | Y | Y |  |  | unknown | 476&#8209;479 |
-| 91 | `set_link` |  |  |  | Y | Y |  |  | unknown | 494&#8209;503 |
-| 92 | `compare_trees` |  |  |  | Y | Y |  |  | hole | 530 |
-| 93 | `eq` |  | Y |  |  | Y |  |  | hole | 801&#8209;802 |
-| 94 | `default` |  | Y |  |  |  | Y | Y |  | 827 |
-| 95 | `push_left_iter` |  |  |  | Y |  | Y | Y |  | 884&#8209;890 |
-| 96 | `next` |  | Y |  |  |  | Y | Y |  | 894&#8209;899 |
+| 64 | `lemma_size_eq_inorder_len` |  |  |  | Y | Y |  |  | unknown | 178&#8209;181 |
+| 65 | `empty` | Y | Y |  |  | Y |  |  | unknown | 201&#8209;202 |
+| 66 | `new` | Y | Y |  |  | Y |  |  | unknown | 204&#8209;205 |
+| 67 | `length` | Y | Y |  |  | Y |  |  | unknown | 207&#8209;209 |
+| 68 | `nth` | Y | Y |  |  | Y |  |  | unknown | 211&#8209;213 |
+| 69 | `set` | Y | Y |  |  | Y |  |  | unknown | 215&#8209;216 |
+| 70 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 218&#8209;219 |
+| 71 | `isEmpty` | Y | Y |  |  | Y |  |  | unknown | 221&#8209;223 |
+| 72 | `isSingleton` | Y | Y |  |  | Y |  |  | unknown | 225&#8209;227 |
+| 73 | `subseq_copy` | Y | Y |  |  | Y |  |  | unknown | 229&#8209;231 |
+| 74 | `new_root` | Y | Y |  |  | Y |  |  | unknown | 233&#8209;234 |
+| 75 | `update` | Y | Y |  |  | Y |  |  | unknown | 236&#8209;239 |
+| 76 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 241&#8209;247 |
+| 77 | `to_arrayseq` | Y | Y |  |  | Y |  |  | unknown | 249&#8209;254 |
+| 78 | `iter` | Y | Y |  |  | Y |  |  | hole | 256&#8209;257 |
+| 79 | `push_back` | Y | Y |  |  | Y |  |  | hole | 259&#8209;263 |
+| 80 | `contains_value` | Y | Y |  |  | Y |  |  | unknown | 265&#8209;268 |
+| 81 | `insert_value` | Y | Y |  |  | Y |  |  | unknown | 270&#8209;274 |
+| 82 | `delete_value` | Y | Y |  |  | Y |  |  | unknown | 276&#8209;287 |
+| 83 | `h_fn` |  |  |  | Y | Y |  |  | unknown | 295&#8209;296 |
+| 84 | `size_link_fn` |  |  |  | Y | Y |  |  | hole | 304&#8209;305 |
+| 85 | `update_meta` |  |  |  | Y | Y |  |  | hole | 316&#8209;329 |
+| 86 | `rotate_right_fn` |  |  |  | Y | Y |  |  | unknown | 339&#8209;346 |
+| 87 | `rotate_left_fn` |  |  |  | Y | Y |  |  | unknown | 377&#8209;384 |
+| 88 | `rebalance_fn` |  |  |  | Y | Y |  |  | unknown | 415&#8209;423 |
+| 89 | `insert_at_link` |  |  |  | Y | Y |  |  | unknown | 472&#8209;483 |
+| 90 | `nth_link` |  |  |  | Y | Y |  |  | unknown | 536&#8209;539 |
+| 91 | `set_link` |  |  |  | Y | Y |  |  | unknown | 554&#8209;563 |
+| 92 | `compare_trees` |  |  |  | Y | Y |  |  | hole | 590 |
+| 93 | `default` |  | Y |  |  | Y |  | Y |  | 932 |
+| 94 | `push_left_iter` |  |  |  | Y | Y |  |  | hole | 938 |
+| 95 | `next` |  | Y |  |  | Y |  |  | hole | 959&#8209;960 |
+| 96 | `eq` |  | Y |  |  | Y |  |  | hole | 989&#8209;990 |
 
 ### Chap37/AVLTreeSeqStPer.rs
 
@@ -169,26 +169,26 @@
 | 104 | `isSingleton` | Y | Y |  |  | Y |  |  | unknown | 171&#8209;173 |
 | 105 | `set` | Y | Y |  |  | Y |  |  | unknown | 175&#8209;176 |
 | 106 | `subseq_copy` | Y | Y |  |  | Y |  |  | unknown | 178&#8209;179 |
-| 107 | `from_vec` | Y | Y |  |  | Y |  | Y |  | 181 |
-| 108 | `values_in_order` | Y | Y |  |  | Y |  |  | unknown | 183&#8209;184 |
-| 109 | `to_arrayseq` | Y | Y |  |  | Y |  |  | unknown | 186&#8209;187 |
-| 110 | `iter` | Y | Y |  |  | Y |  |  | hole | 189 |
-| 111 | `height_fn` |  |  |  | Y | Y |  |  | unknown | 194&#8209;195 |
-| 112 | `size_fn` |  |  |  | Y | Y |  |  | unknown | 203&#8209;204 |
-| 113 | `mk` |  |  |  | Y | Y |  |  | hole | 213&#8209;222 |
-| 114 | `rotate_right` |  |  |  | Y | Y |  |  | hole | 232&#8209;236 |
-| 115 | `rotate_left` |  |  |  | Y | Y |  |  | hole | 245&#8209;249 |
-| 116 | `rebalance` |  |  |  | Y | Y |  |  | hole | 258&#8209;262 |
-| 117 | `nth_ref` |  |  |  | Y | Y |  |  | hole | 286&#8209;288 |
-| 118 | `set_rec` |  |  |  | Y | Y |  |  | hole | 307&#8209;309 |
-| 119 | `inorder_collect` |  |  |  | Y | Y |  |  | hole | 335 |
-| 120 | `build_balanced_from_slice` |  |  |  | Y | Y |  |  | hole | 344&#8209;345 |
-| 121 | `rec` |  |  |  | Y | Y |  | Y |  | 347 |
-| 122 | `compare_trees` |  |  |  | Y | Y |  |  | hole | 360 |
-| 123 | `eq` |  | Y |  |  | Y |  |  | hole | 483&#8209;484 |
-| 124 | `default` |  | Y |  |  |  | Y | Y |  | 508 |
-| 125 | `push_left_iter` |  |  |  | Y |  | Y | Y |  | 565&#8209;570 |
-| 126 | `next` |  | Y |  |  |  | Y | Y |  | 574&#8209;583 |
+| 107 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 181&#8209;182 |
+| 108 | `values_in_order` | Y | Y |  |  | Y |  |  | unknown | 184&#8209;185 |
+| 109 | `to_arrayseq` | Y | Y |  |  | Y |  |  | unknown | 187&#8209;188 |
+| 110 | `iter` | Y | Y |  |  | Y |  |  | hole | 190&#8209;191 |
+| 111 | `height_fn` |  |  |  | Y | Y |  |  | unknown | 196&#8209;197 |
+| 112 | `size_fn` |  |  |  | Y | Y |  |  | unknown | 205&#8209;206 |
+| 113 | `mk` |  |  |  | Y | Y |  |  | hole | 215&#8209;224 |
+| 114 | `rotate_right` |  |  |  | Y | Y |  |  | hole | 234&#8209;238 |
+| 115 | `rotate_left` |  |  |  | Y | Y |  |  | hole | 247&#8209;251 |
+| 116 | `rebalance` |  |  |  | Y | Y |  |  | hole | 260&#8209;264 |
+| 117 | `nth_ref` |  |  |  | Y | Y |  |  | hole | 288&#8209;290 |
+| 118 | `set_rec` |  |  |  | Y | Y |  |  | hole | 309&#8209;311 |
+| 119 | `inorder_collect` |  |  |  | Y | Y |  |  | hole | 337 |
+| 120 | `build_balanced_from_slice` |  |  |  | Y | Y |  |  | hole | 346&#8209;347 |
+| 121 | `rec` |  |  |  | Y | Y |  | Y |  | 349 |
+| 122 | `compare_trees` |  |  |  | Y | Y |  |  | hole | 362 |
+| 123 | `default` |  | Y |  |  | Y |  | Y |  | 475 |
+| 124 | `push_left_iter_stper` |  |  |  | Y | Y |  |  | hole | 489 |
+| 125 | `next` |  | Y |  |  | Y |  |  | hole | 509&#8209;510 |
+| 126 | `eq` |  | Y |  |  | Y |  |  | hole | 528&#8209;529 |
 
 ### Chap37/BSTAVLMtEph.rs
 
@@ -311,42 +311,42 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 214 | `new` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;70 |
-| 215 | `from_sorted_slice` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;72 |
-| 216 | `insert` | Y | Y |  |  | Y |  |  | unknown | 73&#8209;74 |
-| 217 | `find` | Y | Y |  |  | Y |  |  | unknown | 75&#8209;76 |
-| 218 | `contains` | Y | Y |  |  | Y |  |  | unknown | 77&#8209;78 |
-| 219 | `size` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;80 |
-| 220 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;82 |
-| 221 | `height` | Y | Y |  |  | Y |  |  | unknown | 83&#8209;84 |
-| 222 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 85&#8209;86 |
-| 223 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;88 |
-| 224 | `in_order` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;90 |
-| 225 | `pre_order` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;92 |
-| 226 | `filter` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;96 |
-| 227 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;100 |
-| 228 | `new_rb_link_lock` |  |  |  | Y | Y |  |  | hole | 113 |
-| 229 | `new_node` |  |  |  | Y | Y |  | Y |  | 117 |
-| 230 | `is_red` |  |  |  | Y | Y |  | Y |  | 127 |
-| 231 | `size_link` |  |  |  | Y | Y |  | Y |  | 134 |
-| 232 | `update` |  |  |  | Y | Y |  | Y |  | 141 |
-| 233 | `rotate_left` |  |  |  | Y | Y |  | Y |  | 149 |
-| 234 | `rotate_right` |  |  |  | Y | Y |  | Y |  | 168 |
-| 235 | `flip_colors` |  |  |  | Y | Y |  | Y |  | 187 |
-| 236 | `fix_up` |  |  |  | Y | Y |  | Y |  | 208 |
-| 237 | `insert_link` |  |  |  | Y | Y |  | Y |  | 244&#8209;245 |
-| 238 | `find_link` |  |  |  | Y | Y |  | Y |  | 262&#8209;263 |
-| 239 | `min_link` |  |  |  | Y | Y |  | Y |  | 279&#8209;280 |
-| 240 | `max_link` |  |  |  | Y | Y |  | Y |  | 291&#8209;292 |
-| 241 | `in_order_collect` |  |  |  | Y | Y |  | Y |  | 303&#8209;304 |
-| 242 | `pre_order_collect` |  |  |  | Y | Y |  | Y |  | 313&#8209;314 |
-| 243 | `in_order_parallel` |  |  |  | Y | Y |  | Y |  | 323&#8209;324 |
-| 244 | `pre_order_parallel` |  |  |  | Y | Y |  | Y |  | 342&#8209;343 |
-| 245 | `build_balanced` |  |  |  | Y | Y |  | Y |  | 361&#8209;362 |
-| 246 | `filter_parallel` |  |  |  | Y | Y |  | Y |  | 383&#8209;386 |
-| 247 | `reduce_parallel` |  |  |  | Y | Y |  | Y |  | 410&#8209;413 |
-| 248 | `height_rec` |  | Y |  |  |  | Y | Y |  | 530&#8209;535 |
-| 249 | `default` |  | Y |  |  |  | Y | Y |  | 600 |
+| 214 | `new` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;71 |
+| 215 | `from_sorted_slice` | Y | Y |  |  | Y |  |  | unknown | 72&#8209;73 |
+| 216 | `insert` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;75 |
+| 217 | `find` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;77 |
+| 218 | `contains` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;79 |
+| 219 | `size` | Y | Y |  |  | Y |  |  | unknown | 80&#8209;81 |
+| 220 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 82&#8209;83 |
+| 221 | `height` | Y | Y |  |  | Y |  |  | unknown | 84&#8209;85 |
+| 222 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;87 |
+| 223 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;89 |
+| 224 | `in_order` | Y | Y |  |  | Y |  |  | unknown | 90&#8209;91 |
+| 225 | `pre_order` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;93 |
+| 226 | `filter` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;97 |
+| 227 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;101 |
+| 228 | `new_rb_link_lock` |  |  |  | Y | Y |  |  | hole | 114 |
+| 229 | `new_node` |  |  |  | Y | Y |  | Y |  | 118 |
+| 230 | `is_red` |  |  |  | Y | Y |  | Y |  | 128 |
+| 231 | `size_link` |  |  |  | Y | Y |  | Y |  | 135 |
+| 232 | `update` |  |  |  | Y | Y |  | Y |  | 142 |
+| 233 | `rotate_left` |  |  |  | Y | Y |  | Y |  | 150 |
+| 234 | `rotate_right` |  |  |  | Y | Y |  | Y |  | 169 |
+| 235 | `flip_colors` |  |  |  | Y | Y |  | Y |  | 188 |
+| 236 | `fix_up` |  |  |  | Y | Y |  | Y |  | 209 |
+| 237 | `insert_link` |  |  |  | Y | Y |  | Y |  | 245&#8209;246 |
+| 238 | `find_link` |  |  |  | Y | Y |  | Y |  | 263&#8209;264 |
+| 239 | `min_link` |  |  |  | Y | Y |  | Y |  | 280&#8209;281 |
+| 240 | `max_link` |  |  |  | Y | Y |  | Y |  | 292&#8209;293 |
+| 241 | `in_order_collect` |  |  |  | Y | Y |  | Y |  | 304&#8209;305 |
+| 242 | `pre_order_collect` |  |  |  | Y | Y |  | Y |  | 314&#8209;315 |
+| 243 | `in_order_parallel` |  |  |  | Y | Y |  | Y |  | 324&#8209;325 |
+| 244 | `pre_order_parallel` |  |  |  | Y | Y |  | Y |  | 343&#8209;344 |
+| 245 | `build_balanced` |  |  |  | Y | Y |  | Y |  | 362&#8209;363 |
+| 246 | `filter_parallel` |  |  |  | Y | Y |  | Y |  | 384&#8209;387 |
+| 247 | `reduce_parallel` |  |  |  | Y | Y |  | Y |  | 411&#8209;414 |
+| 248 | `height_rec` |  |  |  | Y | Y |  | Y |  | 435&#8209;436 |
+| 249 | `default` |  | Y |  |  | Y |  | Y |  | 543 |
 
 ### Chap37/BSTRBStEph.rs
 
@@ -372,206 +372,216 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 265 | `empty` | Y | Y |  |  | Y |  |  | unknown | 42&#8209;43 |
-| 266 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 44&#8209;45 |
-| 267 | `size` | Y | Y |  |  | Y |  |  | unknown | 46&#8209;47 |
-| 268 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 48&#8209;49 |
-| 269 | `find` | Y | Y |  |  | Y |  |  | unknown | 50&#8209;51 |
-| 270 | `contains` | Y | Y |  |  | Y |  |  | unknown | 52&#8209;53 |
-| 271 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 54&#8209;55 |
-| 272 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 56&#8209;57 |
-| 273 | `insert` | Y | Y |  |  | Y |  |  | unknown | 58&#8209;59 |
-| 274 | `delete` | Y | Y |  |  | Y |  |  | unknown | 60&#8209;61 |
-| 275 | `union` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;63 |
-| 276 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 64&#8209;65 |
-| 277 | `difference` | Y | Y |  |  | Y |  |  | unknown | 66&#8209;67 |
-| 278 | `split` | Y | Y |  |  | Y |  |  | unknown | 68&#8209;69 |
-| 279 | `join_pair` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;71 |
-| 280 | `join_m` | Y | Y |  |  | Y |  |  | unknown | 72&#8209;73 |
-| 281 | `filter` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;75 |
-| 282 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;77 |
-| 283 | `iter_in_order` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;79 |
-| 284 | `as_tree` | Y | Y |  |  | Y |  |  | unknown | 80&#8209;81 |
-| 285 | `values_vec` |  |  |  | Y | Y |  | Y |  | 87 |
-| 286 | `rebuild_from_vec` |  |  |  | Y | Y |  | Y |  | 89 |
-| 287 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 97&#8209;99 |
+| 265 | `empty` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;77 |
+| 266 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;79 |
+| 267 | `size` | Y | Y |  |  | Y |  |  | unknown | 80&#8209;81 |
+| 268 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 82&#8209;83 |
+| 269 | `find` | Y | Y |  |  | Y |  |  | unknown | 84&#8209;85 |
+| 270 | `contains` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;87 |
+| 271 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;89 |
+| 272 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 90&#8209;91 |
+| 273 | `insert` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;93 |
+| 274 | `delete` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;95 |
+| 275 | `union` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;97 |
+| 276 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;99 |
+| 277 | `difference` | Y | Y |  |  | Y |  |  | unknown | 100&#8209;101 |
+| 278 | `split` | Y | Y |  |  | Y |  |  | unknown | 102&#8209;103 |
+| 279 | `join_pair` | Y | Y |  |  | Y |  |  | unknown | 104&#8209;105 |
+| 280 | `join_m` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;107 |
+| 281 | `filter` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;109 |
+| 282 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 110&#8209;111 |
+| 283 | `iter_in_order` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;113 |
+| 284 | `as_tree` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;115 |
+| 285 | `iter` | Y | Y |  |  | Y |  |  | unknown | 116&#8209;117 |
+| 286 | `values_vec` |  |  |  | Y | Y |  | Y |  | 123 |
+| 287 | `rebuild_from_vec` |  |  |  | Y | Y |  | Y |  | 125 |
+| 288 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 133&#8209;135 |
+| 289 | `next` |  | Y |  |  | Y |  |  | hole | 377&#8209;393 |
 
 ### Chap37/BSTSetBBAlphaMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 288 | `empty` | Y | Y |  |  | Y |  |  | unknown | 25&#8209;26 |
-| 289 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 27&#8209;28 |
-| 290 | `size` | Y | Y |  |  | Y |  |  | unknown | 29&#8209;30 |
-| 291 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 31&#8209;32 |
-| 292 | `find` | Y | Y |  |  | Y |  |  | unknown | 33&#8209;34 |
-| 293 | `contains` | Y | Y |  |  | Y |  |  | unknown | 35&#8209;36 |
-| 294 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 37&#8209;38 |
-| 295 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 39&#8209;40 |
-| 296 | `insert` | Y | Y |  |  | Y |  |  | unknown | 41&#8209;42 |
-| 297 | `delete` | Y | Y |  |  | Y |  |  | unknown | 43&#8209;44 |
-| 298 | `union` | Y | Y |  |  | Y |  |  | unknown | 45&#8209;46 |
-| 299 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 47&#8209;48 |
-| 300 | `difference` | Y | Y |  |  | Y |  |  | unknown | 49&#8209;50 |
-| 301 | `split` | Y | Y |  |  | Y |  |  | unknown | 51&#8209;52 |
-| 302 | `join_pair` | Y | Y |  |  | Y |  |  | unknown | 53&#8209;54 |
-| 303 | `join_m` | Y | Y |  |  | Y |  |  | unknown | 55&#8209;56 |
-| 304 | `filter` | Y | Y |  |  | Y |  |  | unknown | 57&#8209;58 |
-| 305 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 59&#8209;60 |
-| 306 | `iter_in_order` | Y | Y |  |  | Y |  |  | unknown | 61&#8209;62 |
-| 307 | `as_tree` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;64 |
-| 308 | `values_vec` |  |  |  | Y | Y |  | Y |  | 67 |
-| 309 | `rebuild_from_vec` |  |  |  | Y | Y |  | Y |  | 70 |
-| 310 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 75 |
+| 290 | `empty` | Y | Y |  |  | Y |  |  | unknown | 59&#8209;60 |
+| 291 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 61&#8209;62 |
+| 292 | `size` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;64 |
+| 293 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;66 |
+| 294 | `find` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
+| 295 | `contains` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;70 |
+| 296 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;72 |
+| 297 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 73&#8209;74 |
+| 298 | `insert` | Y | Y |  |  | Y |  |  | unknown | 75&#8209;76 |
+| 299 | `delete` | Y | Y |  |  | Y |  |  | unknown | 77&#8209;78 |
+| 300 | `union` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;80 |
+| 301 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;82 |
+| 302 | `difference` | Y | Y |  |  | Y |  |  | unknown | 83&#8209;84 |
+| 303 | `split` | Y | Y |  |  | Y |  |  | unknown | 85&#8209;86 |
+| 304 | `join_pair` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;88 |
+| 305 | `join_m` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;90 |
+| 306 | `filter` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;92 |
+| 307 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;94 |
+| 308 | `iter_in_order` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;96 |
+| 309 | `as_tree` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;98 |
+| 310 | `iter` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;100 |
+| 311 | `values_vec` |  |  |  | Y | Y |  | Y |  | 103 |
+| 312 | `rebuild_from_vec` |  |  |  | Y | Y |  | Y |  | 106 |
+| 313 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 111 |
+| 314 | `next` |  | Y |  |  | Y |  |  | hole | 263&#8209;279 |
 
 ### Chap37/BSTSetPlainMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 311 | `empty` | Y | Y |  |  | Y |  |  | unknown | 25&#8209;26 |
-| 312 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 27&#8209;28 |
-| 313 | `size` | Y | Y |  |  | Y |  |  | unknown | 29&#8209;30 |
-| 314 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 31&#8209;32 |
-| 315 | `find` | Y | Y |  |  | Y |  |  | unknown | 33&#8209;34 |
-| 316 | `contains` | Y | Y |  |  | Y |  |  | unknown | 35&#8209;36 |
-| 317 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 37&#8209;38 |
-| 318 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 39&#8209;40 |
-| 319 | `insert` | Y | Y |  |  | Y |  |  | unknown | 41&#8209;42 |
-| 320 | `delete` | Y | Y |  |  | Y |  |  | unknown | 43&#8209;44 |
-| 321 | `union` | Y | Y |  |  | Y |  |  | unknown | 45&#8209;46 |
-| 322 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 47&#8209;48 |
-| 323 | `difference` | Y | Y |  |  | Y |  |  | unknown | 49&#8209;50 |
-| 324 | `split` | Y | Y |  |  | Y |  |  | unknown | 51&#8209;52 |
-| 325 | `join_pair` | Y | Y |  |  | Y |  |  | unknown | 53&#8209;54 |
-| 326 | `join_m` | Y | Y |  |  | Y |  |  | unknown | 55&#8209;56 |
-| 327 | `filter` | Y | Y |  |  | Y |  |  | unknown | 57&#8209;58 |
-| 328 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 59&#8209;60 |
-| 329 | `iter_in_order` | Y | Y |  |  | Y |  |  | unknown | 61&#8209;62 |
-| 330 | `as_tree` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;64 |
-| 331 | `values_vec` |  |  |  | Y | Y |  | Y |  | 67 |
-| 332 | `rebuild_from_vec` |  |  |  | Y | Y |  | Y |  | 70 |
-| 333 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 75 |
+| 315 | `empty` | Y | Y |  |  | Y |  |  | unknown | 59&#8209;60 |
+| 316 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 61&#8209;62 |
+| 317 | `size` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;64 |
+| 318 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;66 |
+| 319 | `find` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
+| 320 | `contains` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;70 |
+| 321 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;72 |
+| 322 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 73&#8209;74 |
+| 323 | `insert` | Y | Y |  |  | Y |  |  | unknown | 75&#8209;76 |
+| 324 | `delete` | Y | Y |  |  | Y |  |  | unknown | 77&#8209;78 |
+| 325 | `union` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;80 |
+| 326 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;82 |
+| 327 | `difference` | Y | Y |  |  | Y |  |  | unknown | 83&#8209;84 |
+| 328 | `split` | Y | Y |  |  | Y |  |  | unknown | 85&#8209;86 |
+| 329 | `join_pair` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;88 |
+| 330 | `join_m` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;90 |
+| 331 | `filter` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;92 |
+| 332 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;94 |
+| 333 | `iter_in_order` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;96 |
+| 334 | `as_tree` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;98 |
+| 335 | `iter` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;100 |
+| 336 | `values_vec` |  |  |  | Y | Y |  | Y |  | 103 |
+| 337 | `rebuild_from_vec` |  |  |  | Y | Y |  | Y |  | 106 |
+| 338 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 111 |
+| 339 | `next` |  | Y |  |  | Y |  |  | hole | 319&#8209;335 |
 
 ### Chap37/BSTSetRBMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 334 | `empty` | Y | Y |  |  | Y |  |  | unknown | 25&#8209;26 |
-| 335 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 27&#8209;28 |
-| 336 | `size` | Y | Y |  |  | Y |  |  | unknown | 29&#8209;30 |
-| 337 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 31&#8209;32 |
-| 338 | `find` | Y | Y |  |  | Y |  |  | unknown | 33&#8209;34 |
-| 339 | `contains` | Y | Y |  |  | Y |  |  | unknown | 35&#8209;36 |
-| 340 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 37&#8209;38 |
-| 341 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 39&#8209;40 |
-| 342 | `insert` | Y | Y |  |  | Y |  |  | unknown | 41&#8209;42 |
-| 343 | `delete` | Y | Y |  |  | Y |  |  | unknown | 43&#8209;44 |
-| 344 | `union` | Y | Y |  |  | Y |  |  | unknown | 45&#8209;46 |
-| 345 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 47&#8209;48 |
-| 346 | `difference` | Y | Y |  |  | Y |  |  | unknown | 49&#8209;50 |
-| 347 | `split` | Y | Y |  |  | Y |  |  | unknown | 51&#8209;52 |
-| 348 | `join_pair` | Y | Y |  |  | Y |  |  | unknown | 53&#8209;54 |
-| 349 | `join_m` | Y | Y |  |  | Y |  |  | unknown | 55&#8209;56 |
-| 350 | `filter` | Y | Y |  |  | Y |  |  | unknown | 57&#8209;58 |
-| 351 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 59&#8209;60 |
-| 352 | `iter_in_order` | Y | Y |  |  | Y |  |  | unknown | 61&#8209;62 |
-| 353 | `as_tree` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;64 |
-| 354 | `values_vec` |  |  |  | Y | Y |  | Y |  | 67 |
-| 355 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 70 |
+| 340 | `empty` | Y | Y |  |  | Y |  |  | unknown | 59&#8209;60 |
+| 341 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 61&#8209;62 |
+| 342 | `size` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;64 |
+| 343 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;66 |
+| 344 | `find` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
+| 345 | `contains` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;70 |
+| 346 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;72 |
+| 347 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 73&#8209;74 |
+| 348 | `insert` | Y | Y |  |  | Y |  |  | unknown | 75&#8209;76 |
+| 349 | `delete` | Y | Y |  |  | Y |  |  | unknown | 77&#8209;78 |
+| 350 | `union` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;80 |
+| 351 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;82 |
+| 352 | `difference` | Y | Y |  |  | Y |  |  | unknown | 83&#8209;84 |
+| 353 | `split` | Y | Y |  |  | Y |  |  | unknown | 85&#8209;86 |
+| 354 | `join_pair` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;88 |
+| 355 | `join_m` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;90 |
+| 356 | `filter` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;92 |
+| 357 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;94 |
+| 358 | `iter_in_order` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;96 |
+| 359 | `as_tree` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;98 |
+| 360 | `iter` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;100 |
+| 361 | `values_vec` |  |  |  | Y | Y |  | Y |  | 103 |
+| 362 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 106 |
+| 363 | `next` |  | Y |  |  | Y |  |  | hole | 347&#8209;363 |
 
 ### Chap37/BSTSetSplayMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 356 | `empty` | Y | Y |  |  | Y |  |  | unknown | 25&#8209;26 |
-| 357 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 27&#8209;28 |
-| 358 | `size` | Y | Y |  |  | Y |  |  | unknown | 29&#8209;30 |
-| 359 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 31&#8209;32 |
-| 360 | `find` | Y | Y |  |  | Y |  |  | unknown | 33&#8209;34 |
-| 361 | `contains` | Y | Y |  |  | Y |  |  | unknown | 35&#8209;36 |
-| 362 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 37&#8209;38 |
-| 363 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 39&#8209;40 |
-| 364 | `insert` | Y | Y |  |  | Y |  |  | unknown | 41&#8209;42 |
-| 365 | `delete` | Y | Y |  |  | Y |  |  | unknown | 43&#8209;44 |
-| 366 | `union` | Y | Y |  |  | Y |  |  | unknown | 45&#8209;46 |
-| 367 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 47&#8209;48 |
-| 368 | `difference` | Y | Y |  |  | Y |  |  | unknown | 49&#8209;50 |
-| 369 | `split` | Y | Y |  |  | Y |  |  | unknown | 51&#8209;52 |
-| 370 | `join_pair` | Y | Y |  |  | Y |  |  | unknown | 53&#8209;54 |
-| 371 | `join_m` | Y | Y |  |  | Y |  |  | unknown | 55&#8209;56 |
-| 372 | `filter` | Y | Y |  |  | Y |  |  | unknown | 57&#8209;58 |
-| 373 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 59&#8209;60 |
-| 374 | `iter_in_order` | Y | Y |  |  | Y |  |  | unknown | 61&#8209;62 |
-| 375 | `as_tree` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;64 |
-| 376 | `values_vec` |  |  |  | Y | Y |  | Y |  | 67 |
-| 377 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 71 |
+| 364 | `empty` | Y | Y |  |  | Y |  |  | unknown | 59&#8209;60 |
+| 365 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 61&#8209;62 |
+| 366 | `size` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;64 |
+| 367 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;66 |
+| 368 | `find` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
+| 369 | `contains` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;70 |
+| 370 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;72 |
+| 371 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 73&#8209;74 |
+| 372 | `insert` | Y | Y |  |  | Y |  |  | unknown | 75&#8209;76 |
+| 373 | `delete` | Y | Y |  |  | Y |  |  | unknown | 77&#8209;78 |
+| 374 | `union` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;80 |
+| 375 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;82 |
+| 376 | `difference` | Y | Y |  |  | Y |  |  | unknown | 83&#8209;84 |
+| 377 | `split` | Y | Y |  |  | Y |  |  | unknown | 85&#8209;86 |
+| 378 | `join_pair` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;88 |
+| 379 | `join_m` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;90 |
+| 380 | `filter` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;92 |
+| 381 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;94 |
+| 382 | `iter_in_order` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;96 |
+| 383 | `as_tree` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;98 |
+| 384 | `iter` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;100 |
+| 385 | `values_vec` |  |  |  | Y | Y |  | Y |  | 103 |
+| 386 | `from_sorted_iter` |  |  |  | Y | Y |  | Y |  | 107 |
+| 387 | `next` |  | Y |  |  | Y |  |  | hole | 348&#8209;364 |
 
 ### Chap37/BSTSplayMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 378 | `new` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;63 |
-| 379 | `from_sorted_slice` | Y | Y |  |  | Y |  |  | unknown | 64&#8209;65 |
-| 380 | `insert` | Y | Y |  |  | Y |  |  | unknown | 66&#8209;67 |
-| 381 | `find` | Y | Y |  |  | Y |  |  | unknown | 68&#8209;69 |
-| 382 | `contains` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;71 |
-| 383 | `size` | Y | Y |  |  | Y |  |  | unknown | 72&#8209;73 |
-| 384 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;75 |
-| 385 | `height` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;77 |
-| 386 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;79 |
-| 387 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 80&#8209;81 |
-| 388 | `in_order` | Y | Y |  |  | Y |  |  | unknown | 82&#8209;83 |
-| 389 | `pre_order` | Y | Y |  |  | Y |  |  | unknown | 84&#8209;85 |
-| 390 | `filter` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;89 |
-| 391 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 90&#8209;93 |
-| 392 | `new_splay_link_lock` |  |  |  | Y | Y |  |  | hole | 106 |
-| 393 | `new_node` |  |  |  | Y | Y |  | Y |  | 110 |
-| 394 | `size_link` |  |  |  | Y | Y |  | Y |  | 119 |
-| 395 | `update` |  |  |  | Y | Y |  | Y |  | 126 |
-| 396 | `splay` |  |  |  | Y | Y |  | Y |  | 136&#8209;137 |
-| 397 | `bst_insert` |  |  |  | Y | Y |  | Y |  | 251&#8209;252 |
-| 398 | `insert_link` |  |  |  | Y | Y |  | Y |  | 273 |
-| 399 | `find_link` |  |  |  | Y | Y |  | Y |  | 284&#8209;285 |
-| 400 | `min_link` |  |  |  | Y | Y |  | Y |  | 301&#8209;302 |
-| 401 | `max_link` |  |  |  | Y | Y |  | Y |  | 313&#8209;314 |
-| 402 | `in_order_collect` |  |  |  | Y | Y |  | Y |  | 325&#8209;326 |
-| 403 | `pre_order_collect` |  |  |  | Y | Y |  | Y |  | 335&#8209;336 |
-| 404 | `in_order_parallel` |  |  |  | Y | Y |  | Y |  | 345&#8209;346 |
-| 405 | `pre_order_parallel` |  |  |  | Y | Y |  | Y |  | 364&#8209;365 |
-| 406 | `build_balanced` |  |  |  | Y | Y |  | Y |  | 383&#8209;384 |
-| 407 | `filter_parallel` |  |  |  | Y | Y |  | Y |  | 404&#8209;407 |
-| 408 | `reduce_parallel` |  |  |  | Y | Y |  | Y |  | 431&#8209;434 |
-| 409 | `height_rec` |  | Y |  |  |  | Y | Y |  | 532&#8209;537 |
-| 410 | `default` |  | Y |  |  |  | Y | Y |  | 602 |
+| 388 | `new` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;64 |
+| 389 | `from_sorted_slice` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;66 |
+| 390 | `insert` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
+| 391 | `find` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;70 |
+| 392 | `contains` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;72 |
+| 393 | `size` | Y | Y |  |  | Y |  |  | unknown | 73&#8209;74 |
+| 394 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 75&#8209;76 |
+| 395 | `height` | Y | Y |  |  | Y |  |  | unknown | 77&#8209;78 |
+| 396 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;80 |
+| 397 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;82 |
+| 398 | `in_order` | Y | Y |  |  | Y |  |  | unknown | 83&#8209;84 |
+| 399 | `pre_order` | Y | Y |  |  | Y |  |  | unknown | 85&#8209;86 |
+| 400 | `filter` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;90 |
+| 401 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;94 |
+| 402 | `new_splay_link_lock` |  |  |  | Y | Y |  |  | hole | 107 |
+| 403 | `new_node` |  |  |  | Y | Y |  | Y |  | 111 |
+| 404 | `size_link` |  |  |  | Y | Y |  | Y |  | 120 |
+| 405 | `update` |  |  |  | Y | Y |  | Y |  | 127 |
+| 406 | `splay` |  |  |  | Y | Y |  | Y |  | 137&#8209;138 |
+| 407 | `bst_insert` |  |  |  | Y | Y |  | Y |  | 252&#8209;253 |
+| 408 | `insert_link` |  |  |  | Y | Y |  | Y |  | 274 |
+| 409 | `find_link` |  |  |  | Y | Y |  | Y |  | 285&#8209;286 |
+| 410 | `min_link` |  |  |  | Y | Y |  | Y |  | 302&#8209;303 |
+| 411 | `max_link` |  |  |  | Y | Y |  | Y |  | 314&#8209;315 |
+| 412 | `in_order_collect` |  |  |  | Y | Y |  | Y |  | 326&#8209;327 |
+| 413 | `pre_order_collect` |  |  |  | Y | Y |  | Y |  | 336&#8209;337 |
+| 414 | `in_order_parallel` |  |  |  | Y | Y |  | Y |  | 346&#8209;347 |
+| 415 | `pre_order_parallel` |  |  |  | Y | Y |  | Y |  | 365&#8209;366 |
+| 416 | `build_balanced` |  |  |  | Y | Y |  | Y |  | 384&#8209;385 |
+| 417 | `filter_parallel` |  |  |  | Y | Y |  | Y |  | 405&#8209;408 |
+| 418 | `reduce_parallel` |  |  |  | Y | Y |  | Y |  | 432&#8209;435 |
+| 419 | `height_rec` |  |  |  | Y | Y |  | Y |  | 456&#8209;457 |
+| 420 | `default` |  | Y |  |  | Y |  | Y |  | 561 |
 
 ### Chap37/BSTSplayStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 411 | `new` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;100 |
-| 412 | `size` | Y | Y |  |  | Y |  |  | unknown | 101&#8209;102 |
-| 413 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;104 |
-| 414 | `height` | Y | Y |  |  | Y |  |  | unknown | 105&#8209;107 |
-| 415 | `insert` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;109 |
-| 416 | `find` | Y | Y |  |  | Y |  |  | unknown | 110&#8209;111 |
-| 417 | `contains` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;113 |
-| 418 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;117 |
-| 419 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 118&#8209;121 |
-| 420 | `in_order` | Y | Y |  |  | Y |  |  | unknown | 122&#8209;123 |
-| 421 | `pre_order` | Y | Y |  |  | Y |  |  | unknown | 124&#8209;125 |
-| 422 | `new_node` |  |  |  | Y | Y |  |  | unknown | 131&#8209;136 |
-| 423 | `size_link` |  |  |  | Y | Y |  |  | unknown | 146&#8209;147 |
-| 424 | `height_link` |  |  |  | Y | Y |  |  | unknown | 156&#8209;159 |
-| 425 | `update` |  |  |  | Y | Y |  |  | unknown | 173&#8209;177 |
-| 426 | `splay` |  |  |  | Y | Y |  | Y |  | 189&#8209;190 |
-| 427 | `bst_insert` |  |  |  | Y | Y |  | Y |  | 310&#8209;311 |
-| 428 | `insert_link` |  |  |  | Y | Y |  | Y |  | 332 |
-| 429 | `find_link` |  |  |  | Y | Y |  |  | unknown | 343&#8209;346 |
-| 430 | `min_link` |  |  |  | Y | Y |  |  | unknown | 360&#8209;364 |
-| 431 | `max_link` |  |  |  | Y | Y |  |  | unknown | 375&#8209;379 |
-| 432 | `in_order_collect` |  |  |  | Y | Y |  | Y |  | 390&#8209;391 |
-| 433 | `pre_order_collect` |  |  |  | Y | Y |  | Y |  | 400&#8209;401 |
-| 434 | `default` |  | Y |  |  | Y |  | Y |  | 449 |
+| 421 | `new` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;100 |
+| 422 | `size` | Y | Y |  |  | Y |  |  | unknown | 101&#8209;102 |
+| 423 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;104 |
+| 424 | `height` | Y | Y |  |  | Y |  |  | unknown | 105&#8209;107 |
+| 425 | `insert` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;109 |
+| 426 | `find` | Y | Y |  |  | Y |  |  | unknown | 110&#8209;111 |
+| 427 | `contains` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;113 |
+| 428 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;117 |
+| 429 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 118&#8209;121 |
+| 430 | `in_order` | Y | Y |  |  | Y |  |  | unknown | 122&#8209;123 |
+| 431 | `pre_order` | Y | Y |  |  | Y |  |  | unknown | 124&#8209;125 |
+| 432 | `new_node` |  |  |  | Y | Y |  |  | unknown | 131&#8209;136 |
+| 433 | `size_link` |  |  |  | Y | Y |  |  | unknown | 146&#8209;147 |
+| 434 | `height_link` |  |  |  | Y | Y |  |  | unknown | 156&#8209;159 |
+| 435 | `update` |  |  |  | Y | Y |  |  | unknown | 173&#8209;177 |
+| 436 | `splay` |  |  |  | Y | Y |  | Y |  | 189&#8209;190 |
+| 437 | `bst_insert` |  |  |  | Y | Y |  | Y |  | 310&#8209;311 |
+| 438 | `insert_link` |  |  |  | Y | Y |  | Y |  | 332 |
+| 439 | `find_link` |  |  |  | Y | Y |  |  | unknown | 343&#8209;346 |
+| 440 | `min_link` |  |  |  | Y | Y |  |  | unknown | 360&#8209;364 |
+| 441 | `max_link` |  |  |  | Y | Y |  |  | unknown | 375&#8209;379 |
+| 442 | `in_order_collect` |  |  |  | Y | Y |  | Y |  | 390&#8209;391 |
+| 443 | `pre_order_collect` |  |  |  | Y | Y |  | Y |  | 400&#8209;401 |
+| 444 | `default` |  | Y |  |  | Y |  | Y |  | 449 |
 
 
 ### Legend
