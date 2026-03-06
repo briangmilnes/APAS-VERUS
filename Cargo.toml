@@ -386,6 +386,7 @@ unused_imports = "allow"
 unused_variables = "allow"
 dead_code = "allow"
 unused_parens = "allow"
+non_shorthand_field_patterns = "allow"
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(verus_keep_ghost)', 'cfg(verus_keep_ghost_body)'] }
 
 [lints.clippy]

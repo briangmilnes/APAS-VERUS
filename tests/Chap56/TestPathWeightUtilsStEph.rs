@@ -19,7 +19,7 @@ fn test_path_weight_int_simple() {
         ArraySeqStEphS::from_vec(vec![i64::MAX, i64::MAX, 0]),
     ]);
     let path = ArraySeqStPerS::from_vec(vec![0, 1, 2]);
-    assert_eq!(PathWeightUtilsStEphS::PathWeightUtilsStEphS::path_weight_int(&path, &weights), Some(3));
+    assert_eq!(PathWeightUtilsStEphS::path_weight_int(&path, &weights), Some(3));
 }
 
 #[test]
