@@ -42,6 +42,10 @@ pub mod AVLTreeSeqStEph {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{lemma_cloned_view_eq, obeys_feq_full};
+    use crate::vstdplus::feq::feq::feq;
 
     verus! {
 
@@ -87,6 +91,12 @@ pub mod AVLTreeSeqStEph {
         pub next_key: N,
     }
 
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSeqIterStEph<'a, T: StT> {
+        pub stack: Vec<&'a AVLTreeNode<T>>,
+        pub current: Option<&'a AVLTreeNode<T>>,
+    }
+
 
     //		5. view impls
 
@@ -130,6 +140,14 @@ pub mod AVLTreeSeqStEph {
 
     pub open spec fn spec_nat_max(a: nat, b: nat) -> nat {
         if a >= b { a } else { b }
+    }
+
+    pub open spec fn spec_subseq<V>(seq: Seq<V>, start: nat, length: nat) -> Seq<V> {
+        let n = seq.len();
+        let s = if start < n { start } else { n };
+        let e_raw = start + length;
+        let e = if e_raw < n { e_raw } else { n };
+        if e <= s { Seq::<V>::empty() } else { seq.subrange(s as int, e as int) }
     }
 
     /// Well-formedness: cached height and sizes match the actual tree structure.
@@ -209,7 +227,8 @@ pub mod AVLTreeSeqStEph {
             ensures single == (self.spec_seq().len() == 1);
 
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self)
-            requires self.spec_well_formed();
+            requires self.spec_well_formed(), obeys_feq_full::<T>(), self.spec_seq().len() < usize::MAX,
+            ensures sub.spec_seq() =~= spec_subseq(self.spec_seq(), start as nat, length as nat);
 
         fn new_root() -> (tree: Self)
             ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_well_formed();
@@ -219,24 +238,53 @@ pub mod AVLTreeSeqStEph {
                 old(self).spec_well_formed(),
                 (index as int) < old(self).spec_seq().len();
 
-        fn from_vec(values: Vec<T>) -> (tree: AVLTreeSeqStEphS<T>);
+        fn from_vec(values: Vec<T>) -> (tree: AVLTreeSeqStEphS<T>)
+            requires
+                obeys_feq_full::<T>(),
+                values@.len() < usize::MAX,
+            ensures
+                spec_avltreeseqsteph_wf(tree.root),
+                spec_inorder(tree.root) =~= values@.map_values(|t: T| t@);
 
         fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>)
-            requires self.spec_well_formed();
+            requires self.spec_well_formed(), obeys_feq_full::<T>(),
+            ensures
+                seq.spec_len() == self.spec_seq().len(),
+                forall|i: int| #![trigger seq.spec_index(i)]
+                    0 <= i < seq.spec_len() ==> seq.spec_index(i)@ == self.spec_seq()[i];
 
-        fn iter<'a>(&'a self) -> (it: AVLTreeSeqIterStEph<'a, T>);
+        fn iter<'a>(&'a self) -> (it: AVLTreeSeqIterStEph<'a, T>)
+            ensures true;
 
         fn push_back(&mut self, value: T)
-            requires old(self).spec_well_formed();
+            requires
+                old(self).spec_well_formed(),
+                old(self).spec_seq().len() + 1 < usize::MAX,
+            ensures self.spec_seq() =~= old(self).spec_seq().push(value@);
 
         fn contains_value(&self, target: &T) -> (found: B)
-            requires self.spec_well_formed();
+            requires self.spec_well_formed(), obeys_feq_full::<T>(),
+            ensures found == exists|j: int| 0 <= j < self.spec_seq().len()
+                && self.spec_seq()[j] == target@;
 
         fn insert_value(&mut self, value: T)
-            requires old(self).spec_well_formed();
+            requires
+                old(self).spec_well_formed(),
+                old(self).spec_seq().len() + 1 < usize::MAX,
+            ensures self.spec_seq() =~= old(self).spec_seq().push(value@);
 
         fn delete_value(&mut self, target: &T) -> (deleted: bool)
-            requires old(self).spec_well_formed();
+            requires old(self).spec_well_formed(), obeys_feq_full::<T>(),
+            ensures
+                !deleted ==> self.spec_seq() =~= old(self).spec_seq(),
+                deleted ==> exists|idx: int|
+                    #![trigger old(self).spec_seq()[idx]]
+                    0 <= idx < old(self).spec_seq().len()
+                    && old(self).spec_seq()[idx] == target@
+                    && self.spec_seq() =~=
+                        old(self).spec_seq().subrange(0, idx)
+                        + old(self).spec_seq().subrange(idx + 1,
+                            old(self).spec_seq().len() as int);
     }
 
 
@@ -429,6 +477,7 @@ pub mod AVLTreeSeqStEph {
             spec_cached_size(&node) + 1 < usize::MAX,
         ensures
             spec_avltreeseqsteph_wf(inserted),
+            spec_inorder(inserted) =~= spec_inorder(node).insert(index as int, value@),
             spec_cached_size(&inserted) == spec_cached_size(&node) + 1,
             *next_key == *old(next_key) + 1,
         decreases node,
@@ -448,24 +497,35 @@ pub mod AVLTreeSeqStEph {
                 }))
             }
             Some(mut n) => {
+                let ghost old_n = *n;
                 proof {
                     lemma_size_eq_inorder_len::<T>(&n.left);
                     lemma_size_eq_inorder_len::<T>(&n.right);
                 }
                 let left_size = n.left_size;
+                let ghost old_left_size = spec_cached_size(&old_n.left);
                 if index <= left_size {
+                    let ghost old_right = n.right;
                     n.left = insert_at_link(n.left.take(), index, value, next_key);
                     proof {
                         assert(spec_avltreeseqsteph_wf(n.left));
+                        assert(n.right == old_right);
                         assert(spec_avltreeseqsteph_wf(n.right));
+                        assert(spec_inorder(n.left)
+                            =~= spec_inorder(old_n.left).insert(index as int, value@));
                     }
                 } else {
+                    let ghost old_left = n.left;
                     n.right = insert_at_link(
                         n.right.take(), index - left_size - 1, value, next_key,
                     );
                     proof {
-                        assert(spec_avltreeseqsteph_wf(n.left));
                         assert(spec_avltreeseqsteph_wf(n.right));
+                        assert(n.left == old_left);
+                        assert(spec_avltreeseqsteph_wf(n.left));
+                        assert(spec_inorder(n.right)
+                            =~= spec_inorder(old_n.right).insert(
+                                (index - left_size - 1) as int, value@));
                     }
                 }
                 Some(rebalance_fn(n))
@@ -589,6 +649,7 @@ pub mod AVLTreeSeqStEph {
 
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
             assert(self.spec_well_formed());
+            assert(obeys_feq_full::<T>());
             let n = self.length();
             let s = if start < n { start } else { n };
             let sum = start.wrapping_add(length);
@@ -602,14 +663,32 @@ pub mod AVLTreeSeqStEph {
             while i < e
                 invariant
                     self.spec_well_formed(),
+                    obeys_feq_full::<T>(),
                     n as int == self.spec_seq().len(),
+                    n < usize::MAX,
                     s <= i, i <= e, e <= n,
+                    vals@.len() == (i - s) as nat,
+                    forall|j: int| 0 <= j < (i - s) as int ==> (#[trigger] vals@[j])@ == self.spec_seq()[s as int + j],
                 decreases e - i,
             {
-                vals.push(self.nth(i).clone());
+                let elem = self.nth(i);
+                let val = elem.clone_plus();
+                proof {
+                    assert(cloned(*elem, val));
+                    lemma_cloned_view_eq::<T>(*elem, val);
+                }
+                vals.push(val);
                 i += 1;
             }
-            AVLTreeSeqStEphS::from_vec(vals)
+            let tree = AVLTreeSeqStEphS::from_vec(vals);
+            proof {
+                let expected = spec_subseq(self.spec_seq(), start as nat, length as nat);
+                assert(expected =~= self.spec_seq().subrange(s as int, e as int));
+                assert(tree.spec_seq().len() == (e - s) as nat);
+                assert(expected.len() == (e - s) as nat);
+                assert(tree.spec_seq() =~= expected);
+            }
+            tree
         }
 
         fn new_root() -> (tree: Self) {
@@ -623,23 +702,41 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn from_vec(values: Vec<T>) -> (tree: AVLTreeSeqStEphS<T>) {
+            broadcast use Seq::<_>::lemma_push_map_commute;
             let length = values.len();
             let mut t = AVLTreeSeqStEphS { root: None, next_key: 0 };
             let mut i: usize = 0;
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             while i < length
                 invariant
+                    obeys_feq_full::<T>(),
                     i <= length,
                     length == values@.len(),
+                    length < usize::MAX,
                     spec_avltreeseqsteph_wf(t.root),
+                    spec_inorder(t.root) =~= values@.take(i as int).map_values(|v: T| v@),
                     spec_cached_size(&t.root) == i as nat,
                     t.next_key == i,
                 decreases length - i,
             {
+                let ghost old_seq = spec_inorder(t.root);
                 proof { lemma_size_eq_inorder_len::<T>(&t.root); }
-                assume(i + 1 < usize::MAX);
-                t.root = insert_at_link(t.root.take(), i, values[i].clone(), &mut t.next_key);
+                let cloned_val: T = values[i].clone_plus();
+                proof {
+                    assert(cloned(values@[i as int], cloned_val));
+                    lemma_cloned_view_eq::<T>(values@[i as int], cloned_val);
+                }
+                t.root = insert_at_link(t.root.take(), i, cloned_val, &mut t.next_key);
+                proof {
+                    assert(old_seq.len() == i as int);
+                    assert(values@.take(i as int + 1) =~= values@.take(i as int).push(values@[i as int]));
+                    assert(values@.take(i as int + 1).map_values(|v: T| v@) =~=
+                        values@.take(i as int).map_values(|v: T| v@).push(values@[i as int]@));
+                }
                 i += 1;
+            }
+            proof {
+                assert(values@.take(length as int) =~= values@);
             }
             t
         }
@@ -652,11 +749,20 @@ pub mod AVLTreeSeqStEph {
             while i < n
                 invariant
                     self.spec_well_formed(),
+                    obeys_feq_full::<T>(),
                     n as int == self.spec_seq().len(),
                     i <= n,
+                    vals@.len() == i as nat,
+                    forall|j: int| 0 <= j < i as int ==> (#[trigger] vals@[j])@ == self.spec_seq()[j],
                 decreases n - i,
             {
-                vals.push(self.nth(i).clone());
+                let elem = self.nth(i);
+                let val = elem.clone_plus();
+                proof {
+                    assert(cloned(*elem, val));
+                    lemma_cloned_view_eq::<T>(*elem, val);
+                }
+                vals.push(val);
                 i += 1;
             }
             ArraySeqStEphS::from_vec(vals)
@@ -674,25 +780,38 @@ pub mod AVLTreeSeqStEph {
 
         fn push_back(&mut self, value: T) {
             assert(self.spec_well_formed());
+            proof { lemma_size_eq_inorder_len::<T>(&self.root); }
+            let ghost old_inorder = spec_inorder(self.root);
             let len = self.length();
             assume(self.next_key < usize::MAX);
-            assume(spec_cached_size(&self.root) + 1 < usize::MAX);
             let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
             self.root = node;
+            proof {
+                assert(spec_inorder(self.root) =~= old_inorder.insert(len as int, value@));
+                assert(old_inorder.insert(old_inorder.len() as int, value@) =~= old_inorder.push(value@));
+            }
         }
 
         fn contains_value(&self, target: &T) -> (found: B) {
             assert(self.spec_well_formed());
+            assert(obeys_feq_full::<T>());
             let n = self.length();
+            let ghost seq = self.spec_seq();
             let mut i: usize = 0;
             while i < n
                 invariant
                     self.spec_well_formed(),
-                    n as int == self.spec_seq().len(),
+                    obeys_feq_full::<T>(),
+                    n as int == seq.len(),
+                    seq == self.spec_seq(),
                     i <= n,
+                    forall|j: int| 0 <= j < i as int ==> seq[j] != target@,
                 decreases n - i,
             {
-                if *self.nth(i) == *target {
+                let elem = self.nth(i);
+                let eq = feq(elem, target);
+                if eq {
+                    assert(seq[i as int] == target@);
                     return true;
                 }
                 i += 1;
@@ -707,50 +826,94 @@ pub mod AVLTreeSeqStEph {
 
         fn delete_value(&mut self, target: &T) -> (deleted: bool) {
             assert(self.spec_well_formed());
+            assert(obeys_feq_full::<T>());
             let len = self.length();
-            let mut found_index: Option<N> = None;
+            let ghost old_seq = self.spec_seq();
+            let mut found_index: usize = len;
             let mut i: usize = 0;
             while i < len
                 invariant
                     self.spec_well_formed(),
-                    len as int == self.spec_seq().len(),
+                    obeys_feq_full::<T>(),
+                    len as int == old_seq.len(),
+                    old_seq == self.spec_seq(),
                     i <= len,
-                    forall|k: N| found_index == Some(k) ==> (k as int) < len as int,
+                    found_index <= len,
+                    found_index < len ==> old_seq[found_index as int] == target@,
+                    found_index == len ==> forall|j: int| 0 <= j < i as int ==> old_seq[j] != target@,
                 decreases len - i,
             {
-                if *self.nth(i) == *target {
-                    found_index = Some(i);
-                    assert((i as int) < len as int);
-                    break;
+                if found_index == len {
+                    let elem = self.nth(i);
+                    let eq = feq(elem, target);
+                    if eq {
+                        found_index = i;
+                    }
                 }
                 i += 1;
             }
-            if let Some(idx) = found_index {
-                assert(idx < len);
+            if found_index < len {
+                let idx = found_index;
                 let mut out_vec: Vec<T> = Vec::new();
                 let mut j: usize = 0;
                 while j < idx
                     invariant
                         self.spec_well_formed(),
-                        len as int == self.spec_seq().len(),
+                        obeys_feq_full::<T>(),
+                        len as int == old_seq.len(),
+                        old_seq == self.spec_seq(),
                         j <= idx, idx < len,
+                        out_vec@.len() == j as nat,
+                        forall|m: int| 0 <= m < j as int ==> (#[trigger] out_vec@[m])@ == old_seq[m],
                     decreases idx - j,
                 {
-                    out_vec.push(self.nth(j).clone());
+                    let elem = self.nth(j);
+                    let val = elem.clone_plus();
+                    proof {
+                        assert(cloned(*elem, val));
+                        lemma_cloned_view_eq::<T>(*elem, val);
+                    }
+                    out_vec.push(val);
                     j += 1;
                 }
                 let mut k: usize = idx + 1;
                 while k < len
                     invariant
                         self.spec_well_formed(),
-                        len as int == self.spec_seq().len(),
-                        k <= len, idx < len,
+                        obeys_feq_full::<T>(),
+                        len as int == old_seq.len(),
+                        old_seq == self.spec_seq(),
+                        idx + 1 <= k, k <= len, idx < len,
+                        out_vec@.len() == (k - 1) as nat,
+                        forall|m: int| 0 <= m < idx as int ==> (#[trigger] out_vec@[m])@ == old_seq[m],
+                        forall|m: int| idx as int <= m < (k - 1) as int ==> (#[trigger] out_vec@[m])@ == old_seq[m + 1],
                     decreases len - k,
                 {
-                    out_vec.push(self.nth(k).clone());
+                    let elem = self.nth(k);
+                    let val = elem.clone_plus();
+                    proof {
+                        assert(cloned(*elem, val));
+                        lemma_cloned_view_eq::<T>(*elem, val);
+                    }
+                    out_vec.push(val);
                     k += 1;
                 }
                 *self = AVLTreeSeqStEphS::from_vec(out_vec);
+                proof {
+                    assert(self.spec_seq().len() == (len - 1) as nat);
+                    let expected = old_seq.subrange(0, idx as int) + old_seq.subrange(idx as int + 1, len as int);
+                    assert(expected.len() == (len - 1) as nat);
+                    assert forall|m: int| #![auto] 0 <= m < expected.len() implies self.spec_seq()[m] == expected[m] by {
+                        if m < idx as int {
+                            assert(expected[m] == old_seq[m]);
+                            assert(out_vec@[m]@ == old_seq[m]);
+                        } else {
+                            assert(expected[m] == old_seq[m + 1]);
+                            assert(out_vec@[m]@ == old_seq[m + 1]);
+                        }
+                    }
+                    assert(self.spec_seq() =~= expected);
+                }
                 true
             } else {
                 false
@@ -765,18 +928,43 @@ pub mod AVLTreeSeqStEph {
     }
 
 
-    //		10. iterators
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct AVLTreeSeqIterStEph<'a, T: StT> {
-        pub stack: Vec<&'a AVLTreeNode<T>>,
-        pub current: Option<&'a AVLTreeNode<T>>,
+    impl<T: StT> Default for AVLTreeSeqStEphS<T> {
+        fn default() -> Self { Self::new() }
     }
 
+    // 10. iterators
 
-    //		11. derive impls in verus!
+    #[verifier::external_body]
+    fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqIterStEph<'a, T>, link: &'a Link<T>) {
+        let mut cursor = link;
+        while let Some(node) = cursor.as_ref() {
+            it.stack.push(node);
+            cursor = &node.left;
+        }
+    }
 
-    // 10. iterators (structs inside verus!, impl outside)
+    impl<'a, T: StT> IntoIterator for &'a AVLTreeSeqStEphS<T> {
+        type Item = &'a T;
+        type IntoIter = AVLTreeSeqIterStEph<'a, T>;
+        fn into_iter(self) -> (it: AVLTreeSeqIterStEph<'a, T>)
+            ensures true,
+        {
+            self.iter()
+        }
+    }
+
+    impl<'a, T: StT> Iterator for AVLTreeSeqIterStEph<'a, T> {
+        type Item = &'a T;
+        #[verifier::external_body]
+        fn next(&mut self) -> (next: Option<Self::Item>)
+            ensures true,
+        {
+            let node = self.stack.pop()?;
+            let value_ref: &T = &node.value;
+            push_left_iter(self, &node.right);
+            Some(value_ref)
+        }
+    }
 
     // 11. derive impls in verus!
 
@@ -822,13 +1010,6 @@ pub mod AVLTreeSeqStEph {
     } // verus!
 
     // 13. derive impls outside verus!
-
-    impl<T: StT> Default for AVLTreeSeqStEphS<T> {
-        fn default() -> Self { Self::new() }
-    }
-
-
-    //		13. derive impls outside verus!
 
     impl<T: StT> Debug for AVLTreeNode<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -878,27 +1059,6 @@ pub mod AVLTreeSeqStEph {
             write!(f, "AVLTreeSeqIterStEph")
         }
     }
-
-    // Iterator (outside verus! — stack-based traversal not verified)
-
-    fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqIterStEph<'a, T>, link: &'a Link<T>) {
-        let mut cursor = link;
-        while let Some(node) = cursor.as_ref() {
-            it.stack.push(node);
-            cursor = &node.left;
-        }
-    }
-
-    impl<'a, T: StT> Iterator for AVLTreeSeqIterStEph<'a, T> {
-        type Item = &'a T;
-        fn next(&mut self) -> Option<Self::Item> {
-            let node = self.stack.pop()?;
-            let value_ref: &T = &node.value;
-            push_left_iter(self, &node.right);
-            Some(value_ref)
-        }
-    }
-
 
     //		12. macros
 

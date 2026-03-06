@@ -1,8 +1,8 @@
-Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: acquire_read.*thread\|thread.*acquire_read
+Pattern: fn.*insert.*len\|lemma_insert_at_end\|insert.*push
 Searching: /home/milnes/projects/verus/source/vstd
 Files: 102, Functions: 2475, Matches: 0
 

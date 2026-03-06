@@ -178,7 +178,8 @@ pub mod AVLTreeSeqStPer {
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self)
             requires self.spec_well_formed();
 
-        fn from_vec(values: Vec<T>) -> (tree: Self);
+        fn from_vec(values: Vec<T>) -> (tree: Self)
+            ensures true;
 
         fn values_in_order(&self) -> (values: Vec<T>)
             requires self.spec_well_formed();
@@ -186,7 +187,8 @@ pub mod AVLTreeSeqStPer {
         fn to_arrayseq(&self) -> (seq: ArraySeqStPerS<T>)
             requires self.spec_well_formed();
 
-        fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>);
+        fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>)
+            ensures true;
     }
 
     // 9. impls
@@ -469,6 +471,10 @@ pub mod AVLTreeSeqStPer {
         }
     }
 
+    impl<T: StT> Default for AVLTreeSeqStPerS<T> {
+        fn default() -> Self { Self::empty() }
+    }
+
     // 11. derive impls in verus!
 
     #[cfg(verus_keep_ghost)]
@@ -476,6 +482,45 @@ pub mod AVLTreeSeqStPer {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
+
+    // 10. iterators
+
+    #[verifier::external_body]
+    fn push_left_iter_stper<'a, T: StT>(it: &mut AVLTreeSeqStPerIter<'a, T>, mut cur: Option<&'a Node<T>>) {
+        while let Some(n) = cur {
+            it.stack.push(n);
+            cur = n.left.as_deref();
+        }
+    }
+
+    impl<'a, T: StT> IntoIterator for &'a AVLTreeSeqStPerS<T> {
+        type Item = &'a T;
+        type IntoIter = AVLTreeSeqStPerIter<'a, T>;
+        fn into_iter(self) -> (it: AVLTreeSeqStPerIter<'a, T>)
+            ensures true,
+        {
+            self.iter()
+        }
+    }
+
+    impl<'a, T: StT> Iterator for AVLTreeSeqStPerIter<'a, T> {
+        type Item = &'a T;
+        #[verifier::external_body]
+        fn next(&mut self) -> (next: Option<Self::Item>)
+            ensures true,
+        {
+            if self.current.is_some() {
+                let cur = self.current.take();
+                push_left_iter_stper(self, cur);
+            }
+            let node = self.stack.pop()?;
+            let value_ref: &T = &node.value;
+            push_left_iter_stper(self, node.right.as_deref());
+            Some(value_ref)
+        }
+    }
+
+    // 11. derive impls in verus!
 
     impl<T: StT> Eq for AVLTreeSeqStPerS<T> {}
 
@@ -503,10 +548,6 @@ pub mod AVLTreeSeqStPer {
     } // verus!
 
     // 13. derive impls outside verus!
-
-    impl<T: StT> Default for AVLTreeSeqStPerS<T> {
-        fn default() -> Self { Self::empty() }
-    }
 
     impl<T: StT> Debug for Node<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -560,28 +601,6 @@ pub mod AVLTreeSeqStPer {
         }
     }
 
-    // Iterator (outside verus! — stack-based traversal not verified)
-
-    fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqStPerIter<'a, T>, mut cur: Option<&'a Node<T>>) {
-        while let Some(n) = cur {
-            it.stack.push(n);
-            cur = n.left.as_deref();
-        }
-    }
-
-    impl<'a, T: StT> Iterator for AVLTreeSeqStPerIter<'a, T> {
-        type Item = &'a T;
-        fn next(&mut self) -> Option<Self::Item> {
-            if self.current.is_some() {
-                let cur = self.current.take();
-                push_left_iter(self, cur);
-            }
-            let node = self.stack.pop()?;
-            let value_ref: &T = &node.value;
-            push_left_iter(self, node.right.as_deref());
-            Some(value_ref)
-        }
-    }
 }
 
 #[macro_export]

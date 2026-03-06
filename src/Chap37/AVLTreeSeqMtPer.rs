@@ -87,6 +87,12 @@ pub mod AVLTreeSeqMtPer {
         pub root: Link<T>,
     }
 
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSeqMtPerIter<T: StTInMtT> {
+        pub values: Vec<T>,
+        pub index: usize,
+    }
+
 
     //		5. view impls
 
@@ -211,9 +217,11 @@ pub mod AVLTreeSeqMtPer {
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self)
             requires self.spec_well_formed();
 
-        fn from_vec(values: Vec<T>) -> (tree: Self);
+        fn from_vec(values: Vec<T>) -> (tree: Self)
+            ensures true;
 
-        fn values_in_order(&self) -> (values: Vec<T>);
+        fn values_in_order(&self) -> (values: Vec<T>)
+            ensures true;
     }
 
 
@@ -496,6 +504,41 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
+    impl<T: StTInMtT> Default for AVLTreeSeqMtPerS<T> {
+        fn default() -> Self { Self::empty() }
+    }
+
+    // 10. iterators
+
+    impl<T: StTInMtT> Iterator for AVLTreeSeqMtPerIter<T> {
+        type Item = T;
+        #[verifier::external_body]
+        fn next(&mut self) -> (next: Option<Self::Item>)
+            ensures true,
+        {
+            if self.index < self.values.len() {
+                let val = self.values[self.index].clone();
+                self.index += 1;
+                Some(val)
+            } else {
+                None
+            }
+        }
+    }
+
+    impl<T: StTInMtT> IntoIterator for AVLTreeSeqMtPerS<T> {
+        type Item = T;
+        type IntoIter = AVLTreeSeqMtPerIter<T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures true,
+        {
+            AVLTreeSeqMtPerIter {
+                values: self.values_in_order(),
+                index: 0,
+            }
+        }
+    }
+
     // 11. derive impls in verus!
 
     #[cfg(verus_keep_ghost)]
@@ -503,18 +546,6 @@ pub mod AVLTreeSeqMtPer {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
-
-
-    //		10. iterators
-
-    // 10. iterators (struct inside verus!; Iterator impl outside)
-    pub struct AVLTreeSeqMtPerIter<T: StTInMtT> {
-        pub values: Vec<T>,
-        pub index: usize,
-    }
-
-
-    //		11. derive impls in verus!
 
     impl<T: StTInMtT> Eq for AVLTreeSeqMtPerS<T> {}
 
@@ -542,13 +573,6 @@ pub mod AVLTreeSeqMtPer {
     } // verus!
 
     // 13. derive impls outside verus!
-
-    impl<T: StTInMtT> Default for AVLTreeSeqMtPerS<T> {
-        fn default() -> Self { Self::empty() }
-    }
-
-
-    //		13. derive impls outside verus!
 
     impl<T: StTInMtT> Debug for Node<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -604,31 +628,6 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
-    // Iterator (impl outside verus! — Verus doesn't support std::iter::Iterator)
-
-    impl<T: StTInMtT> Iterator for AVLTreeSeqMtPerIter<T> {
-        type Item = T;
-        fn next(&mut self) -> Option<Self::Item> {
-            if self.index < self.values.len() {
-                let val = self.values[self.index].clone();
-                self.index += 1;
-                Some(val)
-            } else {
-                None
-            }
-        }
-    }
-
-    impl<T: StTInMtT> IntoIterator for AVLTreeSeqMtPerS<T> {
-        type Item = T;
-        type IntoIter = AVLTreeSeqMtPerIter<T>;
-        fn into_iter(self) -> Self::IntoIter {
-            AVLTreeSeqMtPerIter {
-                values: self.values_in_order(),
-                index: 0,
-            }
-        }
-    }
 }
 
 //		12. macros
