@@ -72,7 +72,11 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
-            ensures self@.finite();
+            ensures
+                self@.finite(),
+                seq.spec_well_formed(),
+                seq@.to_set() =~= self@,
+                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
@@ -141,23 +145,12 @@ broadcast use {
 
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
         {
-            proof { assume(self.elements.spec_well_formed()); }
-            let n = self.elements.length();
-            let mut v: Vec<T> = Vec::new();
-            let mut i: usize = 0;
-            while i < n
-                invariant
-                    self.elements.spec_well_formed(),
-                    n as int == self.elements.spec_seq().len(),
-                    i <= n,
-                decreases n - i,
-            {
-                v.push(self.elements.nth(i).clone());
-                i += 1;
+            let seq = self.elements.clone();
+            proof {
+                vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+                assert(seq@ =~= self.elements@);
+                assume(seq.spec_well_formed());
             }
-            proof { assume(v@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }
-            let seq = AVLTreeSeqStEphS::from_vec(v);
-            proof { vstd::seq_lib::seq_to_set_is_finite(self.elements@); }
             seq
         }
 

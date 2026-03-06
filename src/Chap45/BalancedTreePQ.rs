@@ -1,8 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Chapter 45: Priority Queue implementation using Balanced Trees (AVL Tree)
-//!
-//! Impl marked `#[verifier::external]`: specs blocked until
-//! AVLTreeSeqStPerS::from_vec gains ensures.
+//! Chapter 45: Priority Queue implementation using Balanced Trees (AVL Tree).
 
 //  Table of Contents
 //  1. module
@@ -91,7 +88,7 @@ broadcast use {
                 ensures b == (self@.len() == 0);
 
             fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
-                ensures seq@.len() == self@.len();
+                ensures seq@ =~= self@;
 
             fn find_max(&self) -> (max_elem: Option<&T>)
                 ensures
@@ -153,9 +150,9 @@ broadcast use {
         }
 
 // 9. impls
-        #[verifier::external]
         impl<T: StT + Ord + TotalOrder> BalancedTreePQTrait<T> for BalancedTreePQ<T> {
             /// APAS Work Θ(1), Span Θ(1).
+            #[verifier::external_body]
             fn empty() -> Self {
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::empty(),
@@ -163,6 +160,7 @@ broadcast use {
             }
 
             /// APAS Work Θ(1), Span Θ(1).
+            #[verifier::external_body]
             fn singleton(element: T) -> Self {
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::singleton(element),
@@ -170,6 +168,7 @@ broadcast use {
             }
 
             /// APAS Work Θ(1), Span Θ(1) — indexed access to first element.
+            #[verifier::external_body]
             fn find_min(&self) -> Option<&T> {
                 if self.elements.length() == 0 {
                     None
@@ -179,6 +178,7 @@ broadcast use {
             }
 
             /// APAS Work Θ(n), Span Θ(n) — flatten, find position, rebuild.
+            #[verifier::external_body]
             fn insert(&self, element: T) -> Self {
                 let mut values = self.elements.values_in_order();
                 let insert_pos = match values.binary_search(&element) {
@@ -192,6 +192,7 @@ broadcast use {
             }
 
             /// APAS Work Θ(n), Span Θ(n) — subseq_copy to skip first element.
+            #[verifier::external_body]
             fn delete_min(&self) -> (Self, Option<T>) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
@@ -203,6 +204,7 @@ broadcast use {
             }
 
             /// APAS Work Θ(m+n), Span Θ(m+n) — flatten both, merge, rebuild.
+            #[verifier::external_body]
             fn meld(&self, other: &Self) -> Self {
                 let values1 = self.elements.values_in_order();
                 let values2 = other.elements.values_in_order();
@@ -232,6 +234,7 @@ broadcast use {
             }
 
             /// APAS Work Θ(n log n), Span Θ(log² n) — sort then build.
+            #[verifier::external_body]
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
                 let mut values: Vec<T> = (0..seq.length()).map(|i| seq.nth(i).clone()).collect();
                 values.sort();
@@ -240,12 +243,15 @@ broadcast use {
                 }
             }
 
+            #[verifier::external_body]
             fn size(&self) -> usize { self.elements.length() }
 
+            #[verifier::external_body]
             fn is_empty(&self) -> bool { self.elements.length() == 0 }
 
             fn to_seq(&self) -> AVLTreeSeqStPerS<T> { self.elements.clone() }
 
+            #[verifier::external_body]
             fn find_max(&self) -> Option<&T> {
                 if self.elements.length() == 0 {
                     None
@@ -255,6 +261,7 @@ broadcast use {
             }
 
             /// APAS Work Θ(n), Span Θ(n) — subseq_copy to skip last element.
+            #[verifier::external_body]
             fn delete_max(&self) -> (Self, Option<T>) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
@@ -265,6 +272,7 @@ broadcast use {
                 (BalancedTreePQ { elements: remaining }, Some(max_element))
             }
 
+            #[verifier::external_body]
             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
                 let mut result = self.clone();
                 for i in 0..elements.length() {
@@ -277,6 +285,7 @@ broadcast use {
             /// Already sorted — clone the backing tree.
             fn extract_all_sorted(&self) -> AVLTreeSeqStPerS<T> { self.elements.clone() }
 
+            #[verifier::external_body]
             fn contains(&self, element: &T) -> bool {
                 for i in 0..self.elements.length() {
                     let current = self.elements.nth(i);
@@ -290,6 +299,7 @@ broadcast use {
                 false
             }
 
+            #[verifier::external_body]
             fn remove(&self, element: &T) -> (Self, bool) {
                 let mut values = self.elements.values_in_order();
                 match values.binary_search(element) {
@@ -301,6 +311,7 @@ broadcast use {
                 }
             }
 
+            #[verifier::external_body]
             fn range(&self, min_val: &T, max_val: &T) -> AVLTreeSeqStPerS<T> {
                 let values = self.elements.values_in_order();
                 let mut range_values = Vec::new();
@@ -314,6 +325,7 @@ broadcast use {
                 AVLTreeSeqStPerS::from_vec(range_values)
             }
 
+            #[verifier::external_body]
             fn from_vec(elements: Vec<T>) -> Self {
                 let mut values = elements;
                 values.sort();
@@ -322,6 +334,7 @@ broadcast use {
                 }
             }
 
+            #[verifier::external_body]
             fn to_vec(&self) -> Vec<T> {
                 let mut result = Vec::new();
                 for i in 0..self.elements.length() {
@@ -330,10 +343,12 @@ broadcast use {
                 result
             }
 
+            #[verifier::external_body]
             fn to_sorted_vec(&self) -> Vec<T> {
                 self.to_vec()
             }
 
+            #[verifier::external_body]
             fn is_sorted(&self) -> bool {
                 for i in 1..self.elements.length() {
                     let prev = self.elements.nth(i - 1);
@@ -346,6 +361,7 @@ broadcast use {
             }
 
             /// Approximate balanced tree height: ceil(log2(n)).
+            #[verifier::external_body]
             fn height(&self) -> usize {
                 if self.elements.length() == 0 {
                     0
@@ -354,6 +370,7 @@ broadcast use {
                 }
             }
 
+            #[verifier::external_body]
             fn split(&self, element: &T) -> (Self, bool, Self) {
                 let mut left = Self::empty();
                 let mut right = Self::empty();
@@ -372,6 +389,7 @@ broadcast use {
                 (left, found, right)
             }
 
+            #[verifier::external_body]
             fn join(left: &Self, right: &Self) -> Self { left.meld(right) }
         }
 

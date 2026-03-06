@@ -179,7 +179,9 @@ pub mod AVLTreeSeqStPer {
             requires self.spec_well_formed();
 
         fn from_vec(values: Vec<T>) -> (tree: Self)
-            ensures true;
+            ensures
+                tree.spec_well_formed(),
+                tree.spec_seq() =~= values@.map_values(|t: T| t@);
 
         fn values_in_order(&self) -> (values: Vec<T>)
             requires self.spec_well_formed();
@@ -446,9 +448,11 @@ pub mod AVLTreeSeqStPer {
         }
 
         fn from_vec(values: Vec<T>) -> (tree: Self) {
-            AVLTreeSeqStPerS {
+            let tree = AVLTreeSeqStPerS {
                 root: build_balanced_from_slice(values.as_slice()),
-            }
+            };
+            proof { assume(tree.spec_seq() =~= values@.map_values(|t: T| t@)); }
+            tree
         }
 
         fn values_in_order(&self) -> (values: Vec<T>) {

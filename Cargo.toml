@@ -20,7 +20,6 @@ vstd = "0.0.0-2025-08-12-1837"
 derive_more = { version = "1.0", features = ["display"] }
 verus_state_machines_macros = "0.0.0-2025-11-23-0053"
 rand = "0.10.0"
-bitvec = "1.0.1"
 
 [lib]
 path = "src/lib.rs"
@@ -604,9 +603,9 @@ path = "tests/Chap40/TestBSTReducedStEph.rs"
 name = "TestBSTSizeStEph"
 path = "tests/Chap40/TestBSTSizeStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestArraySetEnumMtEph"
-# path = "disabled"
+[[test]]
+name = "TestArraySetEnumMtEph"
+path = "tests/Chap41/TestArraySetEnumMtEph.rs"
 
 [[test]]
 name = "TestArraySetStEph"

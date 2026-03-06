@@ -28,39 +28,43 @@ pub mod GraphSearchMtPer {
 
     // 8. traits
     pub trait SelectionStrategy<V: StTInMtT + Ord + 'static> {
-        fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (AVLTreeSetMtPer<V>, B);
+        fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B))
+            ensures selected.0@.subset_of(frontier@);
     }
 
     pub trait GraphSearchMtPerTrait<V: StTInMtT + Ord + 'static> {
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds; BFS rounds parallelizable)
         /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — neighbor loop is sequential despite parallel set ops.
-        fn graph_search<G, S>(graph: &G, source: V, strategy: &S)                         -> SearchResult<V>
+        fn graph_search<G, S>(graph: &G, source: V, strategy: &S)                         -> (search: SearchResult<V>)
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
-            S: SelectionStrategy<V>;
+            S: SelectionStrategy<V>,
+            ensures search.visited@.contains(source@);
 
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
         /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — neighbor loop is sequential despite parallel set ops.
-        fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetMtPer<V>, strategy: &S) -> SearchResult<V>
+        fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetMtPer<V>, strategy: &S) -> (search: SearchResult<V>)
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
-            S: SelectionStrategy<V>;
+            S: SelectionStrategy<V>,
+            ensures sources@.subset_of(search.visited@);
 
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
         /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential control flow; uses SelectAll (BFS).
-        fn reachable<G>(graph: &G, source: V)                                             -> AVLTreeSetMtPer<V>
+        fn reachable<G>(graph: &G, source: V)                                             -> (reachable_set: AVLTreeSetMtPer<V>)
         where
-            G: Fn(&V) -> AVLTreeSetMtPer<V>;
+            G: Fn(&V) -> AVLTreeSetMtPer<V>,
+            ensures reachable_set@.contains(source@);
     }
 
     // 9. impls
     impl<V: StTInMtT + Ord + 'static> SelectionStrategy<V> for SelectAll {
-        fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (AVLTreeSetMtPer<V>, B) { (frontier.clone(), false) }
+        fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B)) { (frontier.clone(), false) }
     }
 
     impl<V: StTInMtT + Ord + 'static> SelectionStrategy<V> for SelectOne {
         #[verifier::external_body]
-        fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (AVLTreeSetMtPer<V>, B) {
+        fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B)) {
             if frontier.size() == 0 {
                 (AVLTreeSetMtPer::empty(), false)
             } else {
@@ -71,10 +75,11 @@ pub mod GraphSearchMtPer {
         }
     }
 
-    pub fn graph_search<V: StTInMtT + Ord + 'static, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
+    pub fn graph_search<V: StTInMtT + Ord + 'static, G, S>(graph: &G, source: V, strategy: &S) -> (search: SearchResult<V>)
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,
         S: SelectionStrategy<V>,
+        ensures search.visited@.contains(source@),
     {
         let sources = AVLTreeSetMtPer::singleton(source);
         graph_search_multi(graph, sources, strategy)
@@ -87,7 +92,8 @@ pub mod GraphSearchMtPer {
         strategy: &S,
         visited: AVLTreeSetMtPer<V>,
         frontier: AVLTreeSetMtPer<V>,
-    ) -> AVLTreeSetMtPer<V>
+    ) -> (visited_all: AVLTreeSetMtPer<V>)
+        ensures visited@.subset_of(visited_all@), frontier@.subset_of(visited_all@),
     {
         if frontier.size() == 0 {
             return visited;
@@ -116,21 +122,37 @@ pub mod GraphSearchMtPer {
         graph: &G,
         sources: AVLTreeSetMtPer<V>,
         strategy: &S,
-    ) -> SearchResult<V>
+    ) -> (search: SearchResult<V>)
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,
         S: SelectionStrategy<V>,
+        ensures sources@.subset_of(search.visited@),
     {
         let visited = graph_search_explore(graph, strategy, AVLTreeSetMtPer::empty(), sources);
         SearchResult { visited, parent: None }
     }
 
+    impl<V: StTInMtT + Ord + 'static> GraphSearchMtPerTrait<V> for SearchResult<V> {
+        fn graph_search<G, S>(graph: &G, source: V, strategy: &S) -> (search: SearchResult<V>)
+        where G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>,
+        { graph_search(graph, source, strategy) }
+
+        fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetMtPer<V>, strategy: &S) -> (search: SearchResult<V>)
+        where G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>,
+        { graph_search_multi(graph, sources, strategy) }
+
+        fn reachable<G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetMtPer<V>)
+        where G: Fn(&V) -> AVLTreeSetMtPer<V>,
+        { reachable(graph, source) }
+    }
+
     /// Find all vertices reachable from source (Problem 53.2) using SelectAll (BFS).
     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
-    pub fn reachable<V: StTInMtT + Ord + 'static, G>(graph: &G, source: V) -> AVLTreeSetMtPer<V>
+    pub fn reachable<V: StTInMtT + Ord + 'static, G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetMtPer<V>)
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,
+        ensures reachable_set@.contains(source@),
     {
         let result = graph_search(graph, source, &SelectAll);
         result.visited
