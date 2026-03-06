@@ -189,9 +189,9 @@ pub mod BSTTreapMtEph {
 
     /// Treap trait for multi-threaded ephemeral access.
     ///
-    /// The RwLock invariant (`BSTTreapMtEphInv`) enforces `spec_size_wf_link` and
-    /// `spec_size_link < usize::MAX` on every acquire, so callers need no
-    /// explicit size preconditions.
+    /// The RwLock invariant (`BSTTreapMtEphInv`) enforces `spec_bsttreapmteph_wf`
+    /// (size well-formedness, size < MAX, and BST ordering) on every acquire/release.
+    /// Methods with `ensures true` verify through the lock without external_body.
     pub trait BSTTreapMtEphTrait<T: StTInMtT + Ord + IsLtTransitive>: Sized + View<V = Set<T::V>> {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -200,10 +200,12 @@ pub mod BSTTreapMtEph {
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn insert(&self, value: T, priority: u64)
+            requires T::obeys_partial_cmp_spec(),
             ensures true;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn delete(&self, target: &T)
+            requires T::obeys_partial_cmp_spec(),
             ensures true;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
@@ -945,7 +947,6 @@ pub mod BSTTreapMtEph {
             }
         }
 
-        #[verifier::external_body]
         fn insert(&self, value: T, priority: u64) {
             let (mut current, write_handle) = self.root.acquire_write();
             let sz = size_link(&current);
@@ -955,7 +956,6 @@ pub mod BSTTreapMtEph {
             write_handle.release_write(current);
         }
 
-        #[verifier::external_body]
         fn delete(&self, target: &T) {
             let (mut current, write_handle) = self.root.acquire_write();
             delete_link(&mut current, target);
@@ -997,7 +997,6 @@ pub mod BSTTreapMtEph {
             self.size() == 0
         }
 
-        #[verifier::external_body]
         fn height(&self) -> (h: usize) {
             let handle = self.root.acquire_read();
             let link: &Link<T> = handle.borrow();
