@@ -4173,47 +4173,26 @@ Holes Found: 764 total
 Errors: 53 total (6 not verusified, 2 bare impl(s), 42 assume in eq/clone (Verus workaround), 3 dummy RwLockPredicate)
 
 Info: 140 total
-   Chap02/HFSchedulerMtEph.rs:74: info: external_type_specification_accept_hole - external_type_specification with accept hole comment
-   Chap02/HFSchedulerMtEph.rs:75: info: external_body_accept_hole - external_body with accept hole comment
-   Chap02/HFSchedulerMtEph.rs:86: info: external_body_accept_hole - external_body with accept hole comment
-   Chap02/HFSchedulerMtEph.rs:96: info: external_body_accept_hole - external_body with accept hole comment
-   Chap02/HFSchedulerMtEph.rs:123: info: external_body_accept_hole - external_body with accept hole comment
-   Chap02/HFSchedulerMtEph.rs:142: info: accept() - accept hole
-   Chap02/HFSchedulerMtEph.rs:154: info: external_body_accept_hole - external_body with accept hole comment
-   Chap02/HFSchedulerMtEph.rs:176: info: external_body_accept_hole - external_body with accept hole comment
-   Chap02/HFSchedulerMtEph.rs:18: info: struct_outside_verus_accept_hole - struct PoolState — outside verus! with accept hole comment
-   Chap02/HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole - enum TaskState — outside verus! with accept hole comment
-   Chap64/SpanTreeMtEph.rs:35: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap64/SpanTreeMtEph.rs:46: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap30/Probability.rs:49: info: external_body_accept_hole - external_body with accept hole comment
-   Chap30/Probability.rs:63: info: external_body_accept_hole - external_body with accept hole comment
-   Chap30/Probability.rs:72: info: external_body_accept_hole - external_body with accept hole comment
-   Chap30/Probability.rs:80: info: external_body_accept_hole - external_body with accept hole comment
-   Chap30/Probability.rs:103: info: external_body_accept_hole - external_body with accept hole comment
-   Chap30/Probability.rs:110: info: external_body_accept_hole - external_body with accept hole comment
-   Chap30/Probability.rs:117: info: external_body_accept_hole - external_body with accept hole comment
-   Chap30/Probability.rs:124: info: external_body_accept_hole - external_body with accept hole comment
-   Chap30/Probability.rs:130: info: external_body_accept_hole - external_body with accept hole comment
-   Chap30/Probability.rs:138: info: external_body_accept_hole - external_body with accept hole comment
-   Chap30/Probability.rs:145: info: external_body_accept_hole - external_body with accept hole comment
-   Chap38/BSTParaMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap38/BSTParaMtEph.rs:294: info: accept() - accept hole
-   Chap38/BSTParaMtEph.rs:309: info: accept() - accept hole
+   Chap18/LinkedListStEph.rs:867: info: accept() - accept hole
+   Chap18/LinkedListStEph.rs:881: info: accept() - accept hole
+   Chap50/MatrixChainMtPer.rs:79: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap50/MatrixChainMtPer.rs:350: info: accept() - accept hole
+   Chap49/MinEditDistMtEph.rs:153: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap49/MinEditDistMtEph.rs:163: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Chap18/ArraySeq.rs:1463: info: external_accept_hole - external with accept hole comment
    Chap18/ArraySeq.rs:1595: info: external_accept_hole - external with accept hole comment
    Chap18/ArraySeq.rs:1622: info: accept() - accept hole
-   Chap50/MatrixChainMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap50/MatrixChainMtEph.rs:84: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap51/BottomUpDPMtPer.rs:96: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap49/SubsetSumMtPer.rs:117: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap49/SubsetSumMtPer.rs:127: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap38/BSTParaStEph.rs:858: info: accept() - accept hole
-   Chap38/BSTParaStEph.rs:873: info: accept() - accept hole
-   Chap50/MatrixChainStEph.rs:370: info: accept() - accept hole
-   Chap39/BSTTreapMtEph.rs:312: info: accept() - accept hole
-   Chap39/BSTTreapMtEph.rs:325: info: accept() - accept hole
-   Chap39/BSTTreapMtEph.rs:337: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap39/BSTTreapMtEph.rs:1076: info: accept() - accept hole
+   experiments/accept.rs:42: info: accept() - accept hole
+   experiments/accept.rs:105: info: accept() - accept hole
+   experiments/accept.rs:116: info: accept() - accept hole
+   Chap37/BSTSplayMtEph.rs:105: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap18/LinkedListStPer.rs:850: info: accept() - accept hole
+   Chap18/LinkedListStPer.rs:864: info: accept() - accept hole
+   Chap40/BSTReducedStEph.rs:448: info: external_body_accept_hole - external_body with accept hole comment
+   Chap40/BSTReducedStEph.rs:450: info: external_body_accept_hole - external_body with accept hole comment
+   Chap40/BSTReducedStEph.rs:461: info: external_body_accept_hole - external_body with accept hole comment
+   Chap50/MatrixChainStPer.rs:339: info: accept() - accept hole
+   Chap51/BottomUpDPMtEph.rs:108: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Chap12/Exercise12_5.rs:30: info: external_accept_hole - external with accept hole comment
    Chap12/Exercise12_5.rs:38: info: external_body_accept_hole - external_body with accept hole comment
    Chap12/Exercise12_5.rs:96: info: external_body_accept_hole - external_body with accept hole comment
@@ -4226,90 +4205,111 @@ Info: 140 total
    Chap12/Exercise12_5.rs:124: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
    Chap12/Exercise12_5.rs:126: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
    Chap12/Exercise12_5.rs:161: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
-   Chap23/BalBinTreeStEph.rs:773: info: accept() - accept hole
-   Chap23/BalBinTreeStEph.rs:788: info: accept() - accept hole
-   Chap23/BalBinTreeStEph.rs:806: info: accept() - accept hole
-   Chap23/BalBinTreeStEph.rs:827: info: accept() - accept hole
-   Chap39/BSTParaTreapMtEph.rs:83: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap49/MinEditDistMtPer.rs:126: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap49/MinEditDistMtPer.rs:136: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap66/BoruvkaStEph.rs:71: info: accept() - accept hole
+   Chap45/SortedListPQ.rs:439: info: accept() - accept hole
+   Chap45/BalancedTreePQ.rs:433: info: accept() - accept hole
+   Chap05/SetStEph.rs:880: info: accept() - accept hole
+   Chap49/SubsetSumMtPer.rs:117: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap49/SubsetSumMtPer.rs:127: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap41/AVLTreeSetMtEph.rs:149: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Chap17/MathSeq.rs:716: info: accept() - accept hole
    Chap17/MathSeq.rs:728: info: accept() - accept hole
-   Chap37/BSTRBMtEph.rs:112: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   standards/tsm_standard.rs:169: info: accept() - accept hole
-   standards/tsm_standard.rs:176: info: accept() - accept hole
-   Chap11/FibonacciMtEph2Threads.rs:156: info: accept() - accept hole
-   Chap11/FibonacciMtEph2Threads.rs:164: info: accept() - accept hole
-   Chap50/MatrixChainMtPer.rs:79: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap50/MatrixChainMtPer.rs:350: info: accept() - accept hole
-   Chap66/BoruvkaStEph.rs:71: info: accept() - accept hole
-   Chap41/AVLTreeSetMtEph.rs:149: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap05/SetMtEph.rs:968: info: accept() - accept hole
+   Chap43/OrderedTableStPer.rs:710: info: accept() - accept hole
+   Chap51/TopDownDPMtEph.rs:117: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Chap23/PrimTreeSeqStPer.rs:856: info: accept() - accept hole
    Chap23/PrimTreeSeqStPer.rs:866: info: accept() - accept hole
    Chap23/PrimTreeSeqStPer.rs:882: info: accept() - accept hole
    Chap23/PrimTreeSeqStPer.rs:898: info: accept() - accept hole
    Chap23/PrimTreeSeqStPer.rs:903: info: accept() - accept hole
-   Chap45/BinaryHeapPQ.rs:729: info: accept() - accept hole
-   Chap45/BinaryHeapPQ.rs:744: info: accept() - accept hole
-   Chap50/OptBinSearchTreeMtEph.rs:43: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap50/OptBinSearchTreeMtEph.rs:56: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap18/ArraySeqStPer.rs:1008: info: accept() - accept hole
+   Chap11/FibonacciMtEph2Threads.rs:156: info: accept() - accept hole
+   Chap11/FibonacciMtEph2Threads.rs:164: info: accept() - accept hole
    Chap45/LeftistHeapPQ.rs:522: info: accept() - accept hole
    Chap45/LeftistHeapPQ.rs:542: info: accept() - accept hole
    Chap45/LeftistHeapPQ.rs:554: info: accept() - accept hole
    Chap45/LeftistHeapPQ.rs:564: info: accept() - accept hole
-   Chap49/MinEditDistMtPer.rs:126: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap49/MinEditDistMtPer.rs:136: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap18/LinkedListStEph.rs:867: info: accept() - accept hole
-   Chap18/LinkedListStEph.rs:881: info: accept() - accept hole
-   Chap45/UnsortedListPQ.rs:340: info: accept() - accept hole
-   Chap18/LinkedListStPer.rs:850: info: accept() - accept hole
-   Chap18/LinkedListStPer.rs:864: info: accept() - accept hole
-   Chap66/BoruvkaMtEph.rs:46: info: accept() - accept hole
-   Chap05/MappingStEph.rs:580: info: accept() - accept hole
-   Chap18/ArraySeqMtPer.rs:1179: info: accept() - accept hole
-   Chap51/TopDownDPMtEph.rs:117: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap50/MatrixChainStEph.rs:370: info: accept() - accept hole
+   Chap50/OptBinSearchTreeMtPer.rs:45: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Chap11/FibonacciMtPerTSM.rs:146: info: accept() - accept hole
    Chap11/FibonacciMtPerTSM.rs:154: info: accept() - accept hole
-   vstdplus/arc_rwlock.rs:21: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   vstdplus/arc_rwlock.rs:33: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap19/ArraySeqStPer.rs:1129: info: accept() - accept hole
-   Chap51/BottomUpDPMtEph.rs:108: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap41/AVLTreeSetStPer.rs:537: info: accept() - accept hole
-   experiments/external_body_accept_hole.rs:35: info: external_body_accept_hole - external_body with accept hole comment
-   Chap45/BalancedTreePQ.rs:433: info: accept() - accept hole
-   Chap19/ArraySeqStEph.rs:1128: info: accept() - accept hole
-   Chap51/TopDownDPMtPer.rs:95: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap05/SetStEph.rs:880: info: accept() - accept hole
-   Chap50/OptBinSearchTreeMtPer.rs:45: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap49/SubsetSumMtEph.rs:130: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap49/SubsetSumMtEph.rs:140: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap18/ArraySeqStEph.rs:1046: info: accept() - accept hole
-   experiments/accept.rs:42: info: accept() - accept hole
-   experiments/accept.rs:105: info: accept() - accept hole
-   experiments/accept.rs:116: info: accept() - accept hole
-   Chap41/AVLTreeSetStEph.rs:448: info: accept() - accept hole
-   Chap47/ChainedHashTable.rs:146: info: accept() - accept hole
-   Chap40/BSTReducedStEph.rs:448: info: external_body_accept_hole - external_body with accept hole comment
-   Chap40/BSTReducedStEph.rs:450: info: external_body_accept_hole - external_body with accept hole comment
-   Chap40/BSTReducedStEph.rs:461: info: external_body_accept_hole - external_body with accept hole comment
    Chap11/FibonacciMtEphRecomputes.rs:152: info: accept() - accept hole
    Chap11/FibonacciMtEphRecomputes.rs:160: info: accept() - accept hole
-   Chap41/AVLTreeSetMtPer.rs:482: info: accept() - accept hole
-   Chap45/HeapsortExample.rs:96: info: accept() - accept hole
-   Chap45/HeapsortExample.rs:111: info: accept() - accept hole
-   Chap37/BSTSplayMtEph.rs:105: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap45/SortedListPQ.rs:439: info: accept() - accept hole
-   Chap43/OrderedTableStPer.rs:710: info: accept() - accept hole
+   Chap18/ArraySeqStEph.rs:1046: info: accept() - accept hole
+   Chap39/BSTParaTreapMtEph.rs:83: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap51/TopDownDPMtPer.rs:95: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap19/ArraySeqStEph.rs:1128: info: accept() - accept hole
+   Chap47/ChainedHashTable.rs:146: info: accept() - accept hole
+   Chap41/AVLTreeSetStEph.rs:448: info: accept() - accept hole
+   Chap50/OptBinSearchTreeMtEph.rs:43: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap50/OptBinSearchTreeMtEph.rs:56: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap05/SetMtEph.rs:968: info: accept() - accept hole
+   Chap18/ArraySeqStPer.rs:1008: info: accept() - accept hole
+   standards/tsm_standard.rs:169: info: accept() - accept hole
+   standards/tsm_standard.rs:176: info: accept() - accept hole
+   Chap64/SpanTreeMtEph.rs:35: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap64/SpanTreeMtEph.rs:46: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap18/ArraySeqMtPer.rs:1179: info: accept() - accept hole
+   Chap23/BalBinTreeStEph.rs:773: info: accept() - accept hole
+   Chap23/BalBinTreeStEph.rs:788: info: accept() - accept hole
+   Chap23/BalBinTreeStEph.rs:806: info: accept() - accept hole
+   Chap23/BalBinTreeStEph.rs:827: info: accept() - accept hole
+   Chap45/BinaryHeapPQ.rs:729: info: accept() - accept hole
+   Chap45/BinaryHeapPQ.rs:744: info: accept() - accept hole
+   Chap47/StructChainedHashTable.rs:304: info: accept() - accept hole
+   Chap47/StructChainedHashTable.rs:321: info: accept() - accept hole
+   Chap47/StructChainedHashTable.rs:338: info: accept() - accept hole
+   Chap47/StructChainedHashTable.rs:352: info: accept() - accept hole
+   Chap38/BSTParaMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap38/BSTParaMtEph.rs:294: info: accept() - accept hole
+   Chap38/BSTParaMtEph.rs:309: info: accept() - accept hole
+   Chap19/ArraySeqStPer.rs:1129: info: accept() - accept hole
+   Chap30/Probability.rs:49: info: external_body_accept_hole - external_body with accept hole comment
+   Chap30/Probability.rs:63: info: external_body_accept_hole - external_body with accept hole comment
+   Chap30/Probability.rs:72: info: external_body_accept_hole - external_body with accept hole comment
+   Chap30/Probability.rs:80: info: external_body_accept_hole - external_body with accept hole comment
+   Chap30/Probability.rs:103: info: external_body_accept_hole - external_body with accept hole comment
+   Chap30/Probability.rs:110: info: external_body_accept_hole - external_body with accept hole comment
+   Chap30/Probability.rs:117: info: external_body_accept_hole - external_body with accept hole comment
+   Chap30/Probability.rs:124: info: external_body_accept_hole - external_body with accept hole comment
+   Chap30/Probability.rs:130: info: external_body_accept_hole - external_body with accept hole comment
+   Chap30/Probability.rs:138: info: external_body_accept_hole - external_body with accept hole comment
+   Chap30/Probability.rs:145: info: external_body_accept_hole - external_body with accept hole comment
+   Chap02/HFSchedulerMtEph.rs:74: info: external_type_specification_accept_hole - external_type_specification with accept hole comment
+   Chap02/HFSchedulerMtEph.rs:75: info: external_body_accept_hole - external_body with accept hole comment
+   Chap02/HFSchedulerMtEph.rs:86: info: external_body_accept_hole - external_body with accept hole comment
+   Chap02/HFSchedulerMtEph.rs:96: info: external_body_accept_hole - external_body with accept hole comment
+   Chap02/HFSchedulerMtEph.rs:123: info: external_body_accept_hole - external_body with accept hole comment
+   Chap02/HFSchedulerMtEph.rs:142: info: accept() - accept hole
+   Chap02/HFSchedulerMtEph.rs:154: info: external_body_accept_hole - external_body with accept hole comment
+   Chap02/HFSchedulerMtEph.rs:176: info: external_body_accept_hole - external_body with accept hole comment
+   Chap02/HFSchedulerMtEph.rs:18: info: struct_outside_verus_accept_hole - struct PoolState — outside verus! with accept hole comment
+   Chap02/HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole - enum TaskState — outside verus! with accept hole comment
+   Chap51/BottomUpDPMtPer.rs:96: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Chap12/Exercise12_1.rs:19: info: external_body_accept_hole - external_body with accept hole comment
    Chap12/Exercise12_1.rs:59: info: external_body_accept_hole - external_body with accept hole comment
    Chap12/Exercise12_1.rs:67: info: external_body_accept_hole - external_body with accept hole comment
    Chap12/Exercise12_1.rs:75: info: external_body_accept_hole - external_body with accept hole comment
    Chap12/Exercise12_1.rs:80: info: external_body_accept_hole - external_body with accept hole comment
    Chap12/Exercise12_1.rs:92: info: external_body_accept_hole - external_body with accept hole comment
-   Chap47/StructChainedHashTable.rs:304: info: accept() - accept hole
-   Chap47/StructChainedHashTable.rs:321: info: accept() - accept hole
-   Chap47/StructChainedHashTable.rs:338: info: accept() - accept hole
-   Chap47/StructChainedHashTable.rs:352: info: accept() - accept hole
-   Chap49/MinEditDistMtEph.rs:153: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap49/MinEditDistMtEph.rs:163: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Chap50/MatrixChainStPer.rs:339: info: accept() - accept hole
+   Chap41/AVLTreeSetStPer.rs:537: info: accept() - accept hole
+   vstdplus/arc_rwlock.rs:21: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   vstdplus/arc_rwlock.rs:33: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap37/BSTRBMtEph.rs:112: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   experiments/external_body_accept_hole.rs:35: info: external_body_accept_hole - external_body with accept hole comment
+   Chap50/MatrixChainMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap50/MatrixChainMtEph.rs:84: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap49/SubsetSumMtEph.rs:130: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap49/SubsetSumMtEph.rs:140: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap39/BSTTreapMtEph.rs:312: info: accept() - accept hole
+   Chap39/BSTTreapMtEph.rs:325: info: accept() - accept hole
+   Chap39/BSTTreapMtEph.rs:337: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Chap39/BSTTreapMtEph.rs:1076: info: accept() - accept hole
+   Chap05/MappingStEph.rs:580: info: accept() - accept hole
+   Chap66/BoruvkaMtEph.rs:46: info: accept() - accept hole
+   Chap38/BSTParaStEph.rs:858: info: accept() - accept hole
+   Chap38/BSTParaStEph.rs:873: info: accept() - accept hole
+   Chap41/AVLTreeSetMtPer.rs:482: info: accept() - accept hole
+   Chap45/HeapsortExample.rs:96: info: accept() - accept hole
+   Chap45/HeapsortExample.rs:111: info: accept() - accept hole
+   Chap45/UnsortedListPQ.rs:340: info: accept() - accept hole
