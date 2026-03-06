@@ -28,6 +28,7 @@ pub mod AVLTreeSetStEph {
 
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
     use crate::Types::Types::*;
@@ -38,6 +39,7 @@ pub mod AVLTreeSetStEph {
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
     vstd::set::group_set_axioms,
     vstd::set_lib::group_set_lib_default,
 };
@@ -166,9 +168,18 @@ broadcast use {
         fn singleton(x: T) -> (tree: Self)
         {
             let ghost x_view = x@;
-            let tree = AVLTreeSetStEph { elements: AVLTreeSeqStEphS::singleton(x) };
+            proof { assume(obeys_feq_full::<T>()); }
+            let mut v: Vec<T> = Vec::new();
+            v.push(x);
+            let ghost v_view = v@;
+            let tree = AVLTreeSetStEph { elements: AVLTreeSeqStEphS::from_vec(v) };
             proof {
-                assume(tree@ == Set::<<T as View>::V>::empty().insert(x_view));
+                assert(tree.elements@ =~= v_view.map_values(|t: T| t@));
+                assert(v_view.len() == 1);
+                assert(v_view[0]@ == x_view);
+                assert(tree.elements@.len() == 1);
+                assert(tree.elements@[0] == x_view);
+                assert(tree.elements@.to_set() =~= Set::<<T as View>::V>::empty().insert(x_view));
                 vstd::seq_lib::seq_to_set_is_finite(tree.elements@);
             }
             tree
@@ -315,21 +326,26 @@ broadcast use {
 
         fn find(&self, x: &T) -> (found: B)
         {
-            proof { assume(self.elements.spec_well_formed()); }
+            proof {
+                assume(self.elements.spec_well_formed());
+                assume(obeys_feq_full::<T>());
+            }
             let n = self.elements.length();
             let mut lo: usize = 0;
             let mut hi: usize = n;
             while lo < hi
                 invariant
                     self.elements.spec_well_formed(),
+                    obeys_feq_full::<T>(),
                     n as int == self.elements.spec_seq().len(),
                     lo <= hi, hi <= n,
                 decreases hi - lo,
             {
                 let mid = lo + (hi - lo) / 2;
                 let elem = self.elements.nth(mid);
-                if *elem == *x {
-                    proof { assume(self@.contains(x@)); }
+                if feq(elem, x) {
+                    assert(self.elements@[mid as int] == x@);
+                    assert(self.elements@.contains(x@));
                     return true;
                 }
                 if *elem < *x {
