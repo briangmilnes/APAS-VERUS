@@ -62,7 +62,9 @@
       "Write(~/projects/APAS-VERUS*/**)",
       "Write(/tmp/**)",
       "WebFetch(domain:www.parallel-algorithms-book.com)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(do:*)",
+      "Bash(find:*)"
     ]
   }
 }

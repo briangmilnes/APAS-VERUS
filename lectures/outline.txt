@@ -1,0 +1,41 @@
+
+Slide count: 50 at most.
+
+. Subject of the talk
+. Who am I?
+. Outline of the talk
+. LLMs
+. The dangers of LLMs
+. The opportunity of LLMs
+. Verification's Great Success: SeL4
+. Verification's downside: Costs.
+. LLMs + Proven Code
+. Rust Upsides
+. Rust Downsides
+. APAS
+. APAS-AI work and talk
+. APAS-VERUS work and talk
+. Verus Overview
+. Verus Pracitcality
+. Verus Problems
+. The Agents
+. The Great Things about LLM agents for programming and proving
+. The Awful Things about LLM agents for programming and proving
+. The Interfaces
+. The Properties We Want in An Interface
+. Cursor
+. Claude
+. Antigravity
+. VSCode
+. APAS-VERUS novel contributions
+. Not the first proven algorithms textbook
+. What should we all be doing now?
+  .. We are all going to have to use LLM agents.
+  .. We are all going to be generating 10x code.
+  .. We are all going to be a much higher level software engineer
+  .. We are all going to experience severe computer security problems
+  .. The only answer I see that works in the long run is proven code.
+. What is going to happen in computer security
+. What is going to happen in PL
+. What is going to happen in formal verification
+. Futures for my work
