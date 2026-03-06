@@ -6,21 +6,6 @@
 //! - `AVLTreeS<T>` stores a balanced binary tree; in-order traversal defines the sequence order.
 //! - `AVLTreeNode<T>` stores `value`, `height`, `left_size`, `right_size`, and children.
 
-//  Table of Contents
-//	1. module
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	13. derive impls outside verus!
-
-//		1. module
-
-
 // Table of Contents
 // 1. module
 // 2. imports
@@ -39,6 +24,8 @@
 
 pub mod AVLTreeSeq {
 
+    // 2. imports
+
     use std::fmt::{Debug, Display, Formatter};
 
     use vstd::prelude::*;
@@ -52,10 +39,7 @@ pub mod AVLTreeSeq {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::{PartialEqSpec, PartialEqSpecImpl};
 
-
     verus! {
-
-    //		4. type definitions
 
     // 4. type definitions
     pub type Link<T> = Option<Box<AVLTreeNode<T>>>;
@@ -76,7 +60,7 @@ pub mod AVLTreeSeq {
     }
 
 
-    //		5. view impls
+    // 5. view impls
 
     // 5. view impls
 
@@ -88,7 +72,7 @@ pub mod AVLTreeSeq {
     }
 
 
-    //		6. spec fns
+    // 6. spec fns
 
     // 6. spec fns
 
@@ -155,7 +139,7 @@ pub mod AVLTreeSeq {
     }
 
 
-    //		7. proof fns/broadcast groups
+    // 7. proof fns
 
     // 7. proof fns
 
@@ -187,7 +171,7 @@ pub mod AVLTreeSeq {
     }
 
 
-    //		8. traits
+    // 8. traits
 
     // 8. traits
 
@@ -304,7 +288,7 @@ pub mod AVLTreeSeq {
     }
 
 
-    //		9. impls
+    // 9. impls
 
     // 9. impls
 
@@ -1086,7 +1070,7 @@ pub mod AVLTreeSeq {
     }
 
 
-    //		10. iterators
+    // 10. iterators
 
     #[verifier::reject_recursive_types(T)]
     pub struct AVLTreeSeqIter<'a, T: StT> {
@@ -1195,7 +1179,7 @@ pub mod AVLTreeSeq {
     }
 
 
-    //		11. derive impls in verus!
+    // 11. derive impls in verus!
 
     // 11. derive impls in verus!
 
@@ -1259,7 +1243,7 @@ pub mod AVLTreeSeq {
     }
 
 
-    //		13. derive impls outside verus!
+    // 13. derive impls outside verus!
 
     impl<T: StT> Debug for AVLTreeNode<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {

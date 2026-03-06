@@ -1,121 +1,121 @@
 ❌ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:74: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:74: external_body - #[verifier::external_body]
         75 |         pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:159: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:159: external_body - #[verifier::external_body]
        160 |         fn new() -> (empty: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:164: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:164: external_body - #[verifier::external_body]
        165 |         fn singleton(key: T) -> (tree: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:173: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:173: external_body - #[verifier::external_body]
        174 |         fn expose(&self) -> (exposed: Exposed<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:178: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:178: external_body - #[verifier::external_body]
        179 |         fn join_mid(exposed: Exposed<T>) -> (joined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:183: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:183: external_body - #[verifier::external_body]
        184 |         fn size(&self) -> (count: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:193: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:193: external_body - #[verifier::external_body]
        194 |         fn is_empty(&self) -> (empty: B)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:198: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:198: external_body - #[verifier::external_body]
        199 |         fn insert(&self, key: T) {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:209: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:209: external_body - #[verifier::external_body]
        210 |         fn delete(&self, key: &T) {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:220: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:220: external_body - #[verifier::external_body]
        221 |         fn find(&self, key: &T) -> (found: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:234: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:234: external_body - #[verifier::external_body]
        235 |         fn split(&self, key: &T) -> (parts: (Self, B, Self))
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:242: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:242: external_body - #[verifier::external_body]
        243 |         fn join_pair(&self, other: Self) -> (joined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:247: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:247: external_body - #[verifier::external_body]
        248 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:252: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:252: external_body - #[verifier::external_body]
        253 |         fn intersect(&self, other: &Self) -> (common: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:257: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:257: external_body - #[verifier::external_body]
        258 |         fn difference(&self, other: &Self) -> (remaining: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:262: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:262: external_body - #[verifier::external_body]
        263 |         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(&self, predicate: F) -> (filtered: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:269: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:269: external_body - #[verifier::external_body]
        270 |         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:274: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:274: external_body - #[verifier::external_body]
        275 |         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:315: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:315: external_body - #[verifier::external_body]
        316 |         fn clone(&self) -> (cloned: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:294: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:309: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:294: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:309: info: accept() - accept hole
    Holes: 19 total
       19 × external_body
    Info: 3 total
 ❌ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:79: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:79: external_body - #[verifier::external_body]
         80 |     fn new_param_bst<T: StT + Ord>(
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:163: assume() - assume(a.cmp_spec(&c) != Equal);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:163: assume() - assume(a.cmp_spec(&c) != Equal);
        151 |     proof fn lemma_cmp_eq_subst<T: StT + Ord>(a: T, b: T, c: T)
             ...
        161 |         // Greater case: solver derives contradiction (Less+Less transitivity).
        162 |         // Equal case: needs Less+Equal→Less, not in vstd axioms.
        164 |     }
        165 | 
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:177: assume() - assume(a.cmp_spec(&c) == b.cmp_spec(&c));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:177: assume() - assume(a.cmp_spec(&c) == b.cmp_spec(&c));
        168 |     proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)
             ...
        175 |         reveal(vstd::laws_cmp::obeys_cmp_ord);
        176 |         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
        178 |     }
        179 | 
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:191: assume() - assume(a.cmp_spec(&b) == a.cmp_spec(&c));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:191: assume() - assume(a.cmp_spec(&b) == a.cmp_spec(&c));
        182 |     proof fn lemma_cmp_equal_congruent_right<T: StT + Ord>(a: T, b: T, c: T)
             ...
        189 |         reveal(vstd::laws_cmp::obeys_cmp_ord);
        190 |         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
        192 |     }
        193 | 
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:336: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:336: external_body - #[verifier::external_body]
        337 |         fn expose(&self) -> (exposed: Exposed<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:412: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:412: external_body - #[verifier::external_body]
        413 |         fn insert(&self, key: T) {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:423: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:423: external_body - #[verifier::external_body]
        424 |         fn delete(&self, key: &T) {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:518: assume() - assume(forall|t: T| #![auto] rebuilt@.contains(t@) ==>
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:518: assume() - assume(forall|t: T| #![auto] rebuilt@.contains(t@) ==>
        457 |         fn split(&self, key: &T) -> (parts: (Self, B, Self))
             ...
        516 |                                 // TODO: prove via antisymmetry+transitivity+congruence
        517 |                                 // (blocked on &T/T ghost bridging in proof context).
        519 |                                     t.cmp_spec(&key) == Greater);
        520 |                             }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:558: assume() - assume(forall|t: T| #![auto] rebuilt@.contains(t@) ==>
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:558: assume() - assume(forall|t: T| #![auto] rebuilt@.contains(t@) ==>
        457 |         fn split(&self, key: &T) -> (parts: (Self, B, Self))
             ...
        556 |                                 // TODO: prove via transitivity+congruence
        557 |                                 // (blocked on &T/T ghost bridging in proof context).
        559 |                                     t.cmp_spec(&key) == Less);
        560 |                             }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:568: assume() - assume(forall|t: T| #![auto] left@.contains(t@) ==>
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:568: assume() - assume(forall|t: T| #![auto] left@.contains(t@) ==>
        457 |         fn split(&self, key: &T) -> (parts: (Self, B, Self))
             ...
        566 |                                 // TODO: prove via congruence
        567 |                                 // (blocked on &T/T ghost bridging in proof context).
        569 |                                     t.cmp_spec(&key) == Less);
        570 |                                 assume(forall|t: T| #![auto] right@.contains(t@) ==>
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:570: assume() - assume(forall|t: T| #![auto] right@.contains(t@) ==>
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:570: assume() - assume(forall|t: T| #![auto] right@.contains(t@) ==>
        457 |         fn split(&self, key: &T) -> (parts: (Self, B, Self))
             ...
        568 |                                 assume(forall|t: T| #![auto] left@.contains(t@) ==>
        569 |                                     t.cmp_spec(&key) == Less);
        571 |                                     t.cmp_spec(&key) == Greater);
        572 |                             }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:682: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:682: external_body - #[verifier::external_body]
        683 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:699: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:699: external_body - #[verifier::external_body]
        700 |         fn intersect(&self, other: &Self) -> (common: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:719: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:719: external_body - #[verifier::external_body]
        720 |         fn difference(&self, other: &Self) -> (remaining: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:883: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:883: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        879 |         fn clone(&self) -> (cloned: Self)
             ...
        881 |         {
        882 |             let cloned = ParamBST { root: Arc::clone(&self.root) };
        884 |             cloned
        885 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:858: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:873: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:858: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:873: info: accept() - accept hole
    Holes: 14 total
       7 × assume()
       7 × external_body

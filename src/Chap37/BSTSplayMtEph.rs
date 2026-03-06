@@ -2,17 +2,17 @@
 
 //! Ephemeral splay-style (simple BST) structure with interior locking for multi-threaded access.
 
-//  Table of Contents
-//	1. module
-//	4. type definitions
-//	6. spec fns
-//	8. traits
-//	9. impls
-//	12. macros
-//	13. derive impls outside verus!
+// Table of Contents
+// 1. module
+// 2. imports
+// 4. type definitions
+// 6. spec fns
+// 8. traits
+// 9. impls
+// 12. macros
+// 13. derive impls outside verus!
 
-//		1. module
-
+// 1. module
 
 pub mod BSTSplayMtEph {
 
@@ -26,7 +26,7 @@ pub mod BSTSplayMtEph {
 
     verus! {
 
-    //		4. type definitions
+    // 2. imports
 
     // 4. type definitions
 
@@ -41,8 +41,6 @@ pub mod BSTSplayMtEph {
 
     type Link<T> = Option<Box<Node<T>>>;
 
-    // 8. traits
-
     pub struct BSTSplayMtEphInv;
 
     #[verifier::reject_recursive_types(T)]
@@ -52,39 +50,51 @@ pub mod BSTSplayMtEph {
     }
 
 
-    //		6. spec fns
-
     // 6. spec fns
 
     /// Uninterpreted well-formedness for splay tree links.
     pub open spec fn link_wf<T: StTInMtT + Ord>(link: Link<T>) -> bool;
 
 
-    //		8. traits
+    // 8. traits
 
     pub trait BSTSplayMtEphTrait<T: StTInMtT + Ord>: Sized {
-        fn new() -> Self;
-        fn from_sorted_slice(values: &[T]) -> Self;
-        fn insert(&self, value: T);
-        fn find(&self, target: &T) -> Option<T>;
-        fn contains(&self, target: &T) -> B;
-        fn size(&self) -> N;
-        fn is_empty(&self) -> B;
-        fn height(&self) -> N;
-        fn minimum(&self) -> Option<T>;
-        fn maximum(&self) -> Option<T>;
-        fn in_order(&self) -> ArraySeqStPerS<T>;
-        fn pre_order(&self) -> ArraySeqStPerS<T>;
-        fn filter<F>(&self, predicate: F) -> ArraySeqStPerS<T>
+        fn new() -> (tree: Self)
+            ensures true;
+        fn from_sorted_slice(values: &[T]) -> (tree: Self)
+            ensures true;
+        fn insert(&self, value: T)
+            ensures true;
+        fn find(&self, target: &T) -> (found: Option<T>)
+            ensures true;
+        fn contains(&self, target: &T) -> (found: B)
+            ensures true;
+        fn size(&self) -> (n: N)
+            ensures true;
+        fn is_empty(&self) -> (b: B)
+            ensures true;
+        fn height(&self) -> (h: N)
+            ensures true;
+        fn minimum(&self) -> (min: Option<T>)
+            ensures true;
+        fn maximum(&self) -> (max: Option<T>)
+            ensures true;
+        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
+            ensures true;
+        fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
+            ensures true;
+        fn filter<F>(&self, predicate: F) -> (seq: ArraySeqStPerS<T>)
         where
-            F: Fn(&T) -> bool + Send + Sync;
-        fn reduce<F>(&self, op: F, identity: T) -> T
+            F: Fn(&T) -> bool + Send + Sync
+            ensures true;
+        fn reduce<F>(&self, op: F, identity: T) -> (result: T)
         where
-            F: Fn(T, T) -> T + Send + Sync;
+            F: Fn(T, T) -> T + Send + Sync
+            ensures true;
     }
 
 
-    //		9. impls
+    // 9. impls
 
     impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTSplayMtEphInv {
         open spec fn inv(self, v: Link<T>) -> bool {
@@ -96,8 +106,6 @@ pub mod BSTSplayMtEph {
     fn new_splay_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, BSTSplayMtEphInv>) {
         RwLock::new(val, Ghost(BSTSplayMtEphInv))
     }
-
-    // 9. impls
 
     fn new_node<T: StTInMtT + Ord>(key: T) -> Node<T> {
         Node {
@@ -118,8 +126,9 @@ pub mod BSTSplayMtEph {
     fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {
         let ls = size_link(&node.left);
         let rs = size_link(&node.right);
-        assume(ls as int + rs as int + 1 <= usize::MAX as int);
-        node.size = 1 + ls + rs;
+        if ls < usize::MAX && rs <= usize::MAX - 1 - ls {
+            node.size = 1 + ls + rs;
+        }
     }
 
     // Bottom-up splay: bring target (or nearest key) toward the root using
@@ -447,9 +456,6 @@ pub mod BSTSplayMtEph {
 
     // 13. derive impls outside verus!
 
-
-    //		13. derive impls outside verus!
-
     impl<T: StTInMtT + Ord> std::fmt::Debug for Node<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("Node")
@@ -597,7 +603,7 @@ pub mod BSTSplayMtEph {
     }
 
 
-    //		12. macros
+    // 12. macros
 
     #[macro_export]
     macro_rules! BSTSplayMtEphLit {
