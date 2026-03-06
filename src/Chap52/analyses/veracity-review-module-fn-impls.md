@@ -30,7 +30,7 @@
 | 6 | Chap52 | AdjSeqGraphMtPer | 6 | 6 | 0 | 2 | 8 | 0 | 8 | 0 | 0 |
 | 7 | Chap52 | AdjSeqGraphStEph | 9 | 9 | 0 | 2 | 11 | 0 | 11 | 0 | 0 |
 | 8 | Chap52 | AdjSeqGraphStPer | 9 | 9 | 0 | 2 | 11 | 0 | 11 | 0 | 0 |
-| 9 | Chap52 | AdjTableGraphMtPer | 10 | 11 | 0 | 0 | 11 | 0 | 6 | 1 | 4 |
+| 9 | Chap52 | AdjTableGraphMtPer | 10 | 11 | 0 | 0 | 11 | 0 | 7 | 0 | 4 |
 | 10 | Chap52 | AdjTableGraphStEph | 12 | 12 | 0 | 1 | 13 | 0 | 9 | 0 | 4 |
 | 11 | Chap52 | AdjTableGraphStPer | 12 | 12 | 0 | 0 | 12 | 0 | 8 | 0 | 4 |
 | 12 | Chap52 | EdgeSetGraphMtPer | 13 | 14 | 0 | 0 | 14 | 0 | 1 | 1 | 12 |
@@ -168,52 +168,52 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 86 | `empty` | Y | Y |  |  | Y |  | Y |  | 66 |
-| 87 | `num_vertices` | Y | Y |  |  | Y |  | Y |  | 68 |
-| 88 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;72 |
-| 89 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;75 |
-| 90 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 77&#8209;80 |
-| 91 | `out_degree` | Y | Y |  |  | Y |  | Y |  | 82 |
-| 92 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 84&#8209;85 |
-| 93 | `delete_vertex` | Y | Y |  |  | Y |  |  | hole | 87&#8209;88 |
-| 94 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 90&#8209;94 |
-| 95 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;99 |
-| 96 | `default` |  | Y |  |  | Y |  | Y |  | 279 |
+| 86 | `empty` | Y | Y |  |  | Y |  | Y |  | 77 |
+| 87 | `num_vertices` | Y | Y |  |  | Y |  | Y |  | 79 |
+| 88 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;83 |
+| 89 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 85&#8209;86 |
+| 90 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;91 |
+| 91 | `out_degree` | Y | Y |  |  | Y |  | Y |  | 93 |
+| 92 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;96 |
+| 93 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;99 |
+| 94 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 101&#8209;105 |
+| 95 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 107&#8209;110 |
+| 96 | `default` |  | Y |  |  | Y |  | Y |  | 243 |
 
 ### Chap52/AdjTableGraphStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 97 | `lemma_sum_adj_sizes_monotone` |  |  |  | Y | Y |  |  | unknown | 75&#8209;77 |
-| 98 | `empty` | Y | Y |  |  | Y |  | Y |  | 88 |
-| 99 | `from_table` | Y | Y |  |  | Y |  | Y |  | 90 |
-| 100 | `num_vertices` | Y | Y |  |  | Y |  | Y |  | 92 |
-| 101 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;96 |
-| 102 | `vertices` | Y | Y |  |  | Y |  |  | unknown | 98 |
-| 103 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 100 |
-| 104 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 102 |
-| 105 | `out_degree` | Y | Y |  |  | Y |  | Y |  | 104 |
-| 106 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 106 |
-| 107 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 108 |
-| 108 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 110 |
-| 109 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 112 |
+| 97 | `lemma_sum_adj_sizes_monotone` |  |  |  | Y | Y |  |  | unknown | 76&#8209;78 |
+| 98 | `empty` | Y | Y |  |  | Y |  | Y |  | 89 |
+| 99 | `from_table` | Y | Y |  |  | Y |  | Y |  | 91 |
+| 100 | `num_vertices` | Y | Y |  |  | Y |  | Y |  | 93 |
+| 101 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;97 |
+| 102 | `vertices` | Y | Y |  |  | Y |  |  | unknown | 99 |
+| 103 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 101 |
+| 104 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 103 |
+| 105 | `out_degree` | Y | Y |  |  | Y |  | Y |  | 105 |
+| 106 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 107 |
+| 107 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 109 |
+| 108 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 111 |
+| 109 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 113 |
 
 ### Chap52/AdjTableGraphStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 110 | `empty` | Y | Y |  |  | Y |  | Y |  | 56 |
-| 111 | `from_table` | Y | Y |  |  | Y |  | Y |  | 58 |
-| 112 | `num_vertices` | Y | Y |  |  | Y |  | Y |  | 60 |
-| 113 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;64 |
-| 114 | `vertices` | Y | Y |  |  | Y |  |  | unknown | 66&#8209;67 |
-| 115 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;70 |
-| 116 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 72&#8209;75 |
-| 117 | `out_degree` | Y | Y |  |  | Y |  | Y |  | 77 |
-| 118 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;80 |
-| 119 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 82&#8209;83 |
-| 120 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 85&#8209;89 |
-| 121 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;94 |
+| 110 | `empty` | Y | Y |  |  | Y |  | Y |  | 57 |
+| 111 | `from_table` | Y | Y |  |  | Y |  | Y |  | 59 |
+| 112 | `num_vertices` | Y | Y |  |  | Y |  | Y |  | 61 |
+| 113 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;65 |
+| 114 | `vertices` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
+| 115 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;71 |
+| 116 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 73&#8209;76 |
+| 117 | `out_degree` | Y | Y |  |  | Y |  | Y |  | 78 |
+| 118 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 80&#8209;81 |
+| 119 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 83&#8209;84 |
+| 120 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;90 |
+| 121 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;95 |
 
 ### Chap52/EdgeSetGraphMtPer.rs
 
@@ -232,7 +232,7 @@
 | 132 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;71 |
 | 133 | `insert_edge` | Y | Y |  |  | Y |  | Y |  | 73 |
 | 134 | `delete_edge` | Y | Y |  |  | Y |  | Y |  | 75 |
-| 135 | `default` |  | Y |  |  | Y |  | Y |  | 187 |
+| 135 | `default` |  | Y |  |  | Y |  | Y |  | 190 |
 
 ### Chap52/EdgeSetGraphStEph.rs
 

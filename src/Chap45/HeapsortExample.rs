@@ -1,6 +1,18 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 45: Heapsort Example - Algorithm 45.2 using all Priority Queue implementations
 
+//  Table of Contents
+//  1. module
+//  2. imports
+//  3. broadcast use
+//  4. type definitions
+//  5. view impls
+//  7. proof fns/broadcast groups
+//  8. traits
+//  9. impls
+//  11. derive impls in verus!
+//  13. derive impls outside verus!
+
 pub mod HeapsortExample {
 
     use std::fmt;
@@ -8,6 +20,7 @@ pub mod HeapsortExample {
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
+    use crate::Types::Types::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ;
@@ -18,7 +31,6 @@ pub mod HeapsortExample {
     use crate::Chap45::SortedListPQ::SortedListPQ::*;
     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ;
     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::*;
-    use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
 
     verus! {

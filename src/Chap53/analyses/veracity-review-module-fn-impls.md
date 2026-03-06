@@ -22,11 +22,11 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap53 | GraphSearchMtPer | 4 | 1 | 0 | 4 | 5 | 0 | 0 | 4 | 1 |
-| 2 | Chap53 | GraphSearchStEph | 4 | 1 | 0 | 4 | 5 | 0 | 0 | 0 | 5 |
-| 3 | Chap53 | GraphSearchStPer | 4 | 1 | 0 | 4 | 5 | 0 | 0 | 4 | 1 |
-| 4 | Chap53 | PQMinStEph | 4 | 0 | 2 | 4 | 6 | 0 | 0 | 1 | 5 |
-| 5 | Chap53 | PQMinStPer | 4 | 0 | 2 | 4 | 6 | 0 | 0 | 4 | 2 |
+| 1 | Chap53 | GraphSearchMtPer | 4 | 1 | 0 | 4 | 5 | 0 | 0 | 2 | 3 |
+| 2 | Chap53 | GraphSearchStEph | 4 | 1 | 0 | 4 | 5 | 0 | 0 | 2 | 3 |
+| 3 | Chap53 | GraphSearchStPer | 4 | 1 | 0 | 4 | 5 | 0 | 0 | 2 | 3 |
+| 4 | Chap53 | PQMinStEph | 2 | 0 | 0 | 4 | 4 | 0 | 0 | 3 | 1 |
+| 5 | Chap53 | PQMinStPer | 2 | 0 | 0 | 4 | 4 | 0 | 0 | 3 | 1 |
 
 ## Function-by-Function Detail
 
@@ -34,53 +34,49 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `select` x2 | Y | Y |  |  | Y |  |  | hole | 30 |
-| 2 | `graph_search` | Y |  |  | Y | Y |  |  | hole | 36&#8209;39 |
-| 3 | `graph_search_multi` | Y |  |  | Y | Y |  |  | hole | 43&#8209;46 |
-| 4 | `reachable` | Y |  |  | Y | Y |  |  | hole | 50&#8209;52 |
-| 5 | `explore` |  |  |  | Y | Y |  | Y |  | 99&#8209;108 |
+| 1 | `select` x2 | Y | Y |  |  | Y |  |  | hole | 31 |
+| 2 | `graph_search` | Y |  |  | Y | Y |  | Y |  | 37&#8209;40 |
+| 3 | `graph_search_multi` | Y |  |  | Y | Y |  | Y |  | 44&#8209;47 |
+| 4 | `reachable` | Y |  |  | Y | Y |  | Y |  | 51&#8209;53 |
+| 5 | `graph_search_explore` |  |  |  | Y | Y |  |  | hole | 85&#8209;90 |
 
 ### Chap53/GraphSearchStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 6 | `select` x2 | Y | Y |  |  | Y |  | Y |  | 25 |
+| 6 | `select` x2 | Y | Y |  |  | Y |  |  | hole | 25 |
 | 7 | `graph_search` | Y |  |  | Y | Y |  | Y |  | 31&#8209;34 |
 | 8 | `graph_search_multi` | Y |  |  | Y | Y |  | Y |  | 38&#8209;41 |
 | 9 | `reachable` | Y |  |  | Y | Y |  | Y |  | 45&#8209;47 |
-| 10 | `graph_search_explore` |  |  |  | Y | Y |  | Y |  | 77&#8209;82 |
+| 10 | `graph_search_explore` |  |  |  | Y | Y |  |  | hole | 79&#8209;84 |
 
 ### Chap53/GraphSearchStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 11 | `select` x2 | Y | Y |  |  | Y |  |  | hole | 33 |
-| 12 | `graph_search` | Y |  |  | Y | Y |  |  | hole | 39&#8209;42 |
-| 13 | `graph_search_multi` | Y |  |  | Y | Y |  |  | hole | 46&#8209;49 |
-| 14 | `reachable` | Y |  |  | Y | Y |  |  | hole | 53&#8209;55 |
-| 15 | `explore` |  |  |  | Y | Y |  | Y |  | 103&#8209;112 |
+| 11 | `select` x2 | Y | Y |  |  | Y |  |  | hole | 34 |
+| 12 | `graph_search` | Y |  |  | Y | Y |  | Y |  | 40&#8209;43 |
+| 13 | `graph_search_multi` | Y |  |  | Y | Y |  | Y |  | 47&#8209;50 |
+| 14 | `reachable` | Y |  |  | Y | Y |  | Y |  | 54&#8209;56 |
+| 15 | `graph_search_explore` |  |  |  | Y | Y |  |  | hole | 88&#8209;93 |
 
 ### Chap53/PQMinStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 16 | `priority` | Y |  | Y |  | Y |  |  | hole | 30 |
-| 17 | `pq_min` | Y |  |  | Y | Y |  | Y |  | 36&#8209;39 |
-| 18 | `pq_min_multi` | Y |  |  | Y | Y |  | Y |  | 43&#8209;46 |
-| 19 | `new` | Y |  | Y |  | Y |  | Y |  | 50 |
-| 20 | `pq_find_min_priority` |  |  |  | Y | Y |  | Y |  | 80&#8209;82 |
-| 21 | `pq_explore` |  |  |  | Y | Y |  | Y |  | 91&#8209;96 |
+| 16 | `pq_min` | Y |  |  | Y | Y |  | Y |  | 25&#8209;28 |
+| 17 | `pq_min_multi` | Y |  |  | Y | Y |  |  | hole | 32&#8209;35 |
+| 18 | `pq_find_min_priority` |  |  |  | Y | Y |  |  | hole | 53&#8209;55 |
+| 19 | `pq_explore` |  |  |  | Y | Y |  |  | hole | 65&#8209;70 |
 
 ### Chap53/PQMinStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 22 | `priority` | Y |  | Y |  | Y |  |  | hole | 29 |
-| 23 | `pq_min` | Y |  |  | Y | Y |  |  | hole | 42&#8209;45 |
-| 24 | `pq_min_multi` | Y |  |  | Y | Y |  |  | hole | 49&#8209;52 |
-| 25 | `new` | Y |  | Y |  | Y |  |  | hole | 56 |
-| 26 | `find_min_priority` |  |  |  | Y | Y |  | Y |  | 101 |
-| 27 | `explore` |  |  |  | Y | Y |  | Y |  | 112&#8209;122 |
+| 20 | `pq_min` | Y |  |  | Y | Y |  | Y |  | 30&#8209;33 |
+| 21 | `pq_min_multi` | Y |  |  | Y | Y |  |  | hole | 37&#8209;40 |
+| 22 | `pq_find_min_priority` |  |  |  | Y | Y |  |  | hole | 58&#8209;60 |
+| 23 | `pq_explore` |  |  |  | Y | Y |  |  | hole | 70&#8209;75 |
 
 
 ### Legend

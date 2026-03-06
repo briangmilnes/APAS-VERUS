@@ -1,229 +1,229 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS/src/Chap28/
-Codebase: /home/milnes/projects/APAS-VERUS
+Path: /home/milnes/projects/APAS-VERUS-agent3/src/Chap28/
+Codebase: /home/milnes/projects/APAS-VERUS-agent3
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS/src/Chap28/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent3/src/Chap28/analyses/veracity-review-verus-style.log
 
 Checking 11 files...
 
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [12] no traits (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [13] no non-derive trait impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [20] no traits defined
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:38: warning: [22] free spec fn spec_range_sum should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:52: warning: [22] free spec fn is_mcss_of should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:68: warning: [22] free spec fn spec_mcss should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:77: warning: [22] free spec fn sums_fit_i32 should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:85: warning: [22] free spec fn spec_prefix_sum should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:90: warning: [22] free spec fn spec_min_prefix_sum should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:106: warning: [22] free spec fn is_max_suffix_sum should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap28/MCSSSpec.rs:123: warning: [22] free spec fn is_max_prefix_sum should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [12] no traits (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [20] no traits defined
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:38: warning: [22] free spec fn spec_range_sum should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:52: warning: [22] free spec fn is_mcss_of should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:68: warning: [22] free spec fn spec_mcss should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:77: warning: [22] free spec fn sums_fit_i32 should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:85: warning: [22] free spec fn spec_prefix_sum should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:90: warning: [22] free spec fn spec_min_prefix_sum should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:106: warning: [22] free spec fn is_max_suffix_sum should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MCSSSpec.rs:123: warning: [22] free spec fn is_max_prefix_sum should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumBruteStEph.rs:35: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:35: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConMtEph.rs:31: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:31: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:37: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:37: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConOptStEph.rs:53: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:53: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumDivConStEph.rs:46: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:46: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:44: warning: [22] free spec fn spec_max_ending_at should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumIterStEph.rs:58: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:44: warning: [22] free spec fn spec_max_ending_at should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:58: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
 
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumOptStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
 
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:35: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:35: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap28/MaxContigSubSumReducedStEph.rs:32: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:32: warning: [22] free spec fn spec_max_opt_i32 should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
 Summary: 178 passed, 17 warnings in 9 files (checked 11 files)

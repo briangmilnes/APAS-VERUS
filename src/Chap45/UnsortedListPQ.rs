@@ -1,6 +1,20 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 45: Priority Queue implementation using Unsorted List
 
+//  Table of Contents
+//  1. module
+//  2. imports
+//  3. broadcast use
+//  4. type definitions
+//  5. view impls
+//  6. spec fns
+//  7. proof fns/broadcast groups
+//  8. traits
+//  9. impls
+//  11. derive impls in verus!
+//  12. macros
+//  13. derive impls outside verus!
+
 pub mod UnsortedListPQ {
 
     use std::fmt::{Debug, Display, Formatter, Result};
@@ -8,9 +22,9 @@ pub mod UnsortedListPQ {
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
+    use crate::Types::Types::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::vstdplus::accept::accept;
-    use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
@@ -91,10 +105,11 @@ broadcast use {
                 requires obeys_feq_clone::<T>(),
                 ensures seq@.len() == self@.len();
 
-            fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self
+            fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
-                    self@.len() + elements@.len() <= usize::MAX as int;
+                    self@.len() + elements@.len() <= usize::MAX as int,
+                ensures pq@.len() == self@.len() + elements@.len();
 
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>)
                 requires
@@ -102,16 +117,19 @@ broadcast use {
                     self@.len() <= usize::MAX as int,
                 ensures sorted@.len() == self@.len();
 
-            fn from_vec(vec: Vec<T>) -> Self
-                requires obeys_feq_clone::<T>();
+            fn from_vec(vec: Vec<T>) -> (pq: Self)
+                requires obeys_feq_clone::<T>(),
+                ensures pq@.len() == vec@.len();
 
-            fn to_vec(&self) -> Vec<T>
-                requires obeys_feq_clone::<T>();
+            fn to_vec(&self) -> (v: Vec<T>)
+                requires obeys_feq_clone::<T>(),
+                ensures v@.len() == self@.len();
 
-            fn to_sorted_vec(&self) -> Vec<T>
+            fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires
                     obeys_feq_clone::<T>(),
-                    self@.len() <= usize::MAX as int;
+                    self@.len() <= usize::MAX as int,
+                ensures v@.len() == self@.len();
         }
 
 // 9. impls
@@ -327,6 +345,21 @@ broadcast use {
         impl<T: StT + Ord> core::cmp::Eq for UnsortedListPQ<T> {}
     }
 
+// 12. macros
+    #[macro_export]
+    macro_rules! UnsortedListPQLit {
+        () => {
+            $crate::Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ::empty()
+        };
+        ($($x:expr),* $(,)?) => {{
+            let mut pq = $crate::Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ::empty();
+            $(
+                pq = pq.insert($x);
+            )*
+            pq
+        }};
+    }
+
 // 13. derive impls outside verus!
     impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for UnsortedListPQ<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -345,20 +378,5 @@ broadcast use {
             }
             write!(f, "]")
         }
-    }
-
-// 12. macros
-    #[macro_export]
-    macro_rules! UnsortedListPQLit {
-        () => {
-            $crate::Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ::empty()
-        };
-        ($($x:expr),* $(,)?) => {{
-            let mut pq = $crate::Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ::empty();
-            $(
-                pq = pq.insert($x);
-            )*
-            pq
-        }};
     }
 }
