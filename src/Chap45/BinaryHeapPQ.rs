@@ -8,7 +8,6 @@
 //  3. broadcast use
 //  4. type definitions
 //  5. view impls
-//  6. spec fns
 //  7. proof fns/broadcast groups
 //  8. traits
 //  9. impls
@@ -24,6 +23,7 @@ pub mod BinaryHeapPQ {
     use std::fmt::{Debug, Display, Formatter, Result};
 
     use vstd::prelude::*;
+    use vstd::multiset::Multiset;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     #[cfg(verus_keep_ghost)]
@@ -38,6 +38,7 @@ pub mod BinaryHeapPQ {
         use crate::Types::Types::*;
         use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
         use crate::vstdplus::accept::accept;
+        use crate::vstdplus::total_order::total_order::TotalOrder;
         #[cfg(verus_keep_ghost)]
         use crate::vstdplus::feq::feq::*;
 
@@ -56,34 +57,25 @@ pub mod BinaryHeapPQ {
 //  4. type definitions
 
         #[verifier::reject_recursive_types(T)]
-        pub struct BinaryHeapPQ<T: StT + Ord> {
+        pub struct BinaryHeapPQ<T: StT + Ord + TotalOrder> {
             pub elements: ArraySeqStPerS<T>,
         }
 
 
 //  5. view impls
 
-        impl<T: StT + Ord> View for BinaryHeapPQ<T> {
+        impl<T: StT + Ord + TotalOrder> View for BinaryHeapPQ<T> {
             type V = Seq<T::V>;
             open spec fn view(&self) -> Seq<T::V> { self.elements@ }
         }
 
 
+
 //  6. spec fns
-
-        spec fn parent_spec(i: int) -> int {
-            if i == 0 { 0 } else { (i - 1) / 2 }
+        pub open spec fn spec_sorted<T: TotalOrder>(s: Seq<T>) -> bool {
+            forall|i: int, j: int| 0 <= i < j < s.len() ==>
+                #[trigger] TotalOrder::le(s[i], s[j])
         }
-
-        spec fn left_child_spec(i: int) -> int {
-            2 * i + 1
-        }
-
-        spec fn right_child_spec(i: int) -> int {
-            2 * i + 2
-        }
-
-
 
 //  7. proof fns/broadcast groups
 
@@ -111,18 +103,26 @@ pub mod BinaryHeapPQ {
 //  8. traits
 
         /// Trait defining the Meldable Priority Queue ADT operations (Data Type 45.1)
-        pub trait BinaryHeapPQTrait<T: StT + Ord>: Sized + View<V = Seq<T::V>> {
+        pub trait BinaryHeapPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Seq<T::V>> {
             spec fn spec_size(self) -> nat;
+            spec fn spec_seq(&self) -> Seq<T>;
             spec fn spec_heap_inv_at(seq: Seq<T::V>, i: int) -> bool;
             spec fn spec_leq_view(a: T::V, b: T::V) -> bool;
             spec fn spec_is_heap(seq: Seq<T::V>) -> bool;
+            spec fn parent_spec(i: int) -> int;
+            spec fn left_child_spec(i: int) -> int;
+            spec fn right_child_spec(i: int) -> int;
 
             fn empty() -> (pq: Self)
-                ensures pq@.len() == 0;
+                ensures
+                    pq@.len() == 0,
+                    pq@.to_multiset() =~= Multiset::empty();
 
             fn singleton(element: T) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
-                ensures pq@.len() == 1;
+                ensures
+                    pq@.len() == 1,
+                    pq@.to_multiset() =~= Multiset::empty().insert(element@);
 
             fn find_min(&self) -> (min_elem: Option<&T>)
                 ensures
@@ -134,7 +134,8 @@ pub mod BinaryHeapPQ {
                     obeys_feq_clone::<T>(),
                     self@.len() + 1 <= usize::MAX as int,
                 ensures
-                    pq@.len() == self@.len() + 1;
+                    pq@.len() == self@.len() + 1,
+                    pq@.to_multiset() =~= self@.to_multiset().insert(element@);
 
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires
@@ -144,7 +145,9 @@ pub mod BinaryHeapPQ {
                     self@.len() > 0 ==> min_and_rest.1.is_some(),
                     self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,
                     self@.len() == 0 ==> min_and_rest.1.is_none(),
-                    self@.len() == 0 ==> min_and_rest.0@.len() == 0;
+                    self@.len() == 0 ==> min_and_rest.0@.len() == 0,
+                    self@.len() > 0 ==> self@.to_multiset() =~=
+                        min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@);
 
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
@@ -152,7 +155,8 @@ pub mod BinaryHeapPQ {
                     self@.len() + other@.len() <= usize::MAX as int,
                     (self@.len() + other@.len()) * 2 <= usize::MAX as int,
                 ensures
-                    pq@.len() == self@.len() + other@.len();
+                    pq@.len() == self@.len() + other@.len(),
+                    pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset());
 
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires
@@ -182,7 +186,9 @@ pub mod BinaryHeapPQ {
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() * 2 <= usize::MAX as int,
-                ensures sorted@.len() == self@.len();
+                ensures
+                    sorted@.len() == self@.len(),
+                    spec_sorted(sorted.seq@);
 
             fn is_valid_heap(&self) -> (valid: bool)
                 requires self@.len() * 2 <= usize::MAX as int;
@@ -211,39 +217,41 @@ pub mod BinaryHeapPQ {
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() * 2 <= usize::MAX as int,
-                ensures v@.len() == self@.len();
+                ensures
+                    v@.len() == self@.len(),
+                    spec_sorted(v@);
         }
 
 
 //  9. impls
 
         #[cfg(verus_keep_ghost)]
-        impl<T: StT + Ord> PartialEqSpecImpl for BinaryHeapPQ<T> {
+        impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for BinaryHeapPQ<T> {
             open spec fn obeys_eq_spec() -> bool { true }
             open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
         }
 
         fn left_child(i: usize) -> (child_idx: usize)
             requires i <= usize::MAX / 2 - 1,
-            ensures child_idx as int == left_child_spec(i as int),
+            ensures child_idx as int == 2 * (i as int) + 1,
         {
             2 * i + 1
         }
 
         fn right_child(i: usize) -> (child_idx: usize)
             requires i <= usize::MAX / 2 - 1,
-            ensures child_idx as int == right_child_spec(i as int),
+            ensures child_idx as int == 2 * (i as int) + 2,
         {
             2 * i + 2
         }
 
         fn parent(i: usize) -> (parent_idx: usize)
-            ensures parent_idx as int == parent_spec(i as int),
+            ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
         {
             if i == 0 { 0 } else { (i - 1) / 2 }
         }
 
-        fn swap_elements<T: StT + Ord>(seq: &ArraySeqStPerS<T>, i: usize, j: usize) -> (swapped: ArraySeqStPerS<T>)
+        fn swap_elements<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>, i: usize, j: usize) -> (swapped: ArraySeqStPerS<T>)
             requires
                 obeys_feq_clone::<T>(),
                 (i as int) < seq.view().len(),
@@ -277,7 +285,7 @@ pub mod BinaryHeapPQ {
             result
         }
 
-        fn bubble_up<T: StT + Ord>(seq: &ArraySeqStPerS<T>, mut i: usize) -> (heaped: ArraySeqStPerS<T>)
+        fn bubble_up<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>, mut i: usize) -> (heaped: ArraySeqStPerS<T>)
             requires
                 obeys_feq_clone::<T>(),
                 (i as int) < seq.view().len(),
@@ -292,7 +300,7 @@ pub mod BinaryHeapPQ {
                     result@.len() == seq@.len(),
                     result@.len() <= usize::MAX as int,
                     (i as int) < seq.view().len(),
-                    parent_spec(i as int) < seq.view().len(),
+                    BinaryHeapPQ::<T>::parent_spec(i as int) < seq.view().len(),
                 decreases i,
             {
                 let parent_idx = parent(i);
@@ -317,7 +325,7 @@ pub mod BinaryHeapPQ {
             result
         }
 
-        fn bubble_down<T: StT + Ord>(heap: &ArraySeqStPerS<T>, i: usize) -> (heaped: ArraySeqStPerS<T>)
+        fn bubble_down<T: StT + Ord + TotalOrder>(heap: &ArraySeqStPerS<T>, i: usize) -> (heaped: ArraySeqStPerS<T>)
             requires
                 obeys_feq_clone::<T>(),
                 (i as int) < heap.view().len(),
@@ -368,7 +376,7 @@ pub mod BinaryHeapPQ {
             result
         }
 
-        fn heapify<T: StT + Ord>(seq: &ArraySeqStPerS<T>) -> (heap: ArraySeqStPerS<T>)
+        fn heapify<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>) -> (heap: ArraySeqStPerS<T>)
             requires
                 obeys_feq_clone::<T>(),
                 seq@.len() <= usize::MAX as int,
@@ -399,7 +407,7 @@ pub mod BinaryHeapPQ {
             result
         }
 
-        fn is_heap<T: StT + Ord>(elements: &ArraySeqStPerS<T>) -> (valid: bool)
+        fn is_heap<T: StT + Ord + TotalOrder>(elements: &ArraySeqStPerS<T>) -> (valid: bool)
             requires elements@.len() * 2 <= usize::MAX as int,
         {
             let n = elements.length();
@@ -474,9 +482,13 @@ pub mod BinaryHeapPQ {
             }
         }
 
-        impl<T: StT + Ord> BinaryHeapPQTrait<T> for BinaryHeapPQ<T> {
+        impl<T: StT + Ord + TotalOrder> BinaryHeapPQTrait<T> for BinaryHeapPQ<T> {
             open spec fn spec_size(self) -> nat {
                 self@.len()
+            }
+
+            open spec fn spec_seq(&self) -> Seq<T> {
+                self.elements.seq@
             }
 
             open spec fn spec_heap_inv_at(seq: Seq<T::V>, i: int) -> bool {
@@ -492,16 +504,34 @@ pub mod BinaryHeapPQ {
                 forall|i: int| 0 <= i < seq.len() ==> Self::spec_heap_inv_at(seq, i)
             }
 
+            open spec fn parent_spec(i: int) -> int {
+                if i == 0 { 0 } else { (i - 1) / 2 }
+            }
+
+            open spec fn left_child_spec(i: int) -> int {
+                2 * i + 1
+            }
+
+            open spec fn right_child_spec(i: int) -> int {
+                2 * i + 2
+            }
+
             fn empty() -> (pq: Self) {
-                BinaryHeapPQ {
+                let pq = BinaryHeapPQ {
                     elements: ArraySeqStPerS::empty(),
-                }
+                };
+                // accept hole: Empty seq@ maps to empty multiset.
+                proof { accept(pq@.to_multiset() =~= Multiset::empty()); }
+                pq
             }
 
             fn singleton(element: T) -> (pq: Self) {
-                BinaryHeapPQ {
+                let pq = BinaryHeapPQ {
                     elements: ArraySeqStPerS::singleton(element),
-                }
+                };
+                // accept hole: Single-element seq@ maps to singleton multiset.
+                proof { accept(pq@.to_multiset() =~= Multiset::empty().insert(element@)); }
+                pq
             }
 
             fn find_min(&self) -> (min_elem: Option<&T>) {
@@ -519,7 +549,10 @@ pub mod BinaryHeapPQ {
                 let last_index = new_elements.length() - 1;
                 let heapified = bubble_up(&new_elements, last_index);
 
-                BinaryHeapPQ { elements: heapified }
+                let pq = BinaryHeapPQ { elements: heapified };
+                // accept hole: bubble_up is a permutation; multiset preserved.
+                proof { accept(pq@.to_multiset() =~= self@.to_multiset().insert(element@)); }
+                pq
             }
 
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
@@ -529,7 +562,13 @@ pub mod BinaryHeapPQ {
 
                 if self.elements.length() == 1 {
                     let min_element = self.elements.nth(0).clone();
-                    return (Self::empty(), Some(min_element));
+                    let empty_pq = Self::empty();
+                    // accept hole: Single-element removal yields empty multiset + element.
+                    proof {
+                        accept(self@.to_multiset() =~=
+                            empty_pq@.to_multiset().insert(min_element@));
+                    }
+                    return (empty_pq, Some(min_element));
                 }
 
                 let min_element = self.elements.nth(0).clone();
@@ -554,7 +593,11 @@ pub mod BinaryHeapPQ {
                 let heapified = bubble_down(&new_elements, 0);
 
                 let new_pq = BinaryHeapPQ { elements: heapified };
-
+                // accept hole: Rebuild removes min and bubble_down is a permutation.
+                proof {
+                    accept(self@.to_multiset() =~=
+                        new_pq@.to_multiset().insert(min_element@));
+                }
                 (new_pq, Some(min_element))
             }
 
@@ -562,7 +605,10 @@ pub mod BinaryHeapPQ {
                 let merged = ArraySeqStPerS::append(&self.elements, &other.elements);
                 let heapified = heapify(&merged);
 
-                BinaryHeapPQ { elements: heapified }
+                let pq = BinaryHeapPQ { elements: heapified };
+                // accept hole: heapify is a permutation of the concatenation.
+                proof { accept(pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset())); }
+                pq
             }
 
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
@@ -607,6 +653,8 @@ pub mod BinaryHeapPQ {
                     current_heap = new_heap;
                 }
 
+                // accept hole: Proving sortedness requires heap property invariant (task #8).
+                proof { accept(spec_sorted(result.seq@)); }
                 result
             }
 
@@ -707,11 +755,13 @@ pub mod BinaryHeapPQ {
                     proof { axiom_cloned_implies_eq_owned(sorted_seq.spec_index(i as int), elem); }
                     result.push(elem);
                 }
+                // accept hole: Vec elements are clones of sorted ArraySeqStPerS elements.
+                proof { accept(spec_sorted(result@)); }
                 result
             }
         }
 
-        impl<T: StT + Ord> Default for BinaryHeapPQ<T> {
+        impl<T: StT + Ord + TotalOrder> Default for BinaryHeapPQ<T> {
             fn default() -> Self {
                 Self::empty()
             }
@@ -720,7 +770,7 @@ pub mod BinaryHeapPQ {
 
 //  11. derive impls in verus!
 
-        impl<T: StT + Ord> Clone for BinaryHeapPQ<T> {
+        impl<T: StT + Ord + TotalOrder> Clone for BinaryHeapPQ<T> {
             fn clone(&self) -> (cloned: Self)
                 ensures cloned@ == self@
             {
@@ -736,7 +786,7 @@ pub mod BinaryHeapPQ {
             }
         }
 
-        impl<T: StT + Ord> core::cmp::PartialEq for BinaryHeapPQ<T> {
+        impl<T: StT + Ord + TotalOrder> core::cmp::PartialEq for BinaryHeapPQ<T> {
             fn eq(&self, other: &Self) -> (equal: bool)
                 ensures equal == (self@ == other@)
             {
@@ -746,20 +796,20 @@ pub mod BinaryHeapPQ {
             }
         }
 
-        impl<T: StT + Ord> core::cmp::Eq for BinaryHeapPQ<T> {}
+        impl<T: StT + Ord + TotalOrder> core::cmp::Eq for BinaryHeapPQ<T> {}
 
     }
 
 
 //  13. derive impls outside verus!
 
-    impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for BinaryHeapPQ<T> {
+    impl<T: StT + Ord + TotalOrder + std::fmt::Debug> std::fmt::Debug for BinaryHeapPQ<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BinaryHeapPQ").field("elements", &self.elements).finish()
         }
     }
 
-    impl<T: StT + Ord> Display for BinaryHeapPQ<T> {
+    impl<T: StT + Ord + TotalOrder> Display for BinaryHeapPQ<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(f, "BinaryHeapPQ[")?;
             for i in 0..self.elements.length() {

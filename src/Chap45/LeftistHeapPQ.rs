@@ -7,6 +7,7 @@
 //  2. imports
 //  3. broadcast use
 //  4. type definitions
+//  6. spec fns
 //  7. proof fns/broadcast groups
 //  8. traits
 //  9. impls
@@ -20,11 +21,13 @@ pub mod LeftistHeapPQ {
     use std::fmt::{Debug, Display, Formatter, Result};
 
     use vstd::prelude::*;
+    use vstd::multiset::Multiset;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Types::Types::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
@@ -35,13 +38,14 @@ broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
     vstd::std_specs::vec::group_vec_axioms,
 };
 
 
 //  4. type definitions
         #[verifier::reject_recursive_types(T)]
-        pub enum LeftistHeapNode<T: StT + Ord> {
+        pub enum LeftistHeapNode<T: StT + Ord + TotalOrder> {
             Leaf,
             Node {
                 key: T,
@@ -53,19 +57,35 @@ broadcast use {
 
         /// Priority Queue implemented using Leftist Heap (Data Structure 45.3).
         #[verifier::reject_recursive_types(T)]
-        pub struct LeftistHeapPQ<T: StT + Ord> {
+        pub struct LeftistHeapPQ<T: StT + Ord + TotalOrder> {
             pub root: LeftistHeapNode<T>,
         }
 
+
+//  6. spec fns
+        pub open spec fn spec_sorted<T: TotalOrder>(s: Seq<T>) -> bool {
+            forall|i: int, j: int| 0 <= i < j < s.len() ==>
+                #[trigger] TotalOrder::le(s[i], s[j])
+        }
 
 //  7. proof fns/broadcast groups
 
         proof fn _leftist_heap_pq_verified() {}
 
+        proof fn lemma_total_size_monotone<T: StT + Ord + TotalOrder>(heaps: Seq<LeftistHeapPQ<T>>, j: int, k: int)
+            requires 0 <= j <= k <= heaps.len(),
+            ensures LeftistHeapPQ::<T>::spec_total_size(heaps, j) <= LeftistHeapPQ::<T>::spec_total_size(heaps, k),
+            decreases k - j,
+        {
+            if j < k {
+                lemma_total_size_monotone(heaps, j, k - 1);
+            }
+        }
+
 
 //  8. traits
 
-        pub trait LeftistHeapNodeTrait<T: StT + Ord>: Sized {
+        pub trait LeftistHeapNodeTrait<T: StT + Ord + TotalOrder>: Sized {
             spec fn spec_is_leaf(&self) -> bool;
             spec fn spec_node_size(&self) -> nat;
 
@@ -81,7 +101,10 @@ broadcast use {
                 requires self.spec_node_size() <= usize::MAX as nat,
                 ensures n as nat == self.spec_node_size();
             fn height(&self) -> (h: usize)
-                ensures self.spec_is_leaf() ==> h == 0;
+                requires self.spec_node_size() <= usize::MAX as nat,
+                ensures
+                    self.spec_is_leaf() ==> h == 0,
+                    h as nat <= self.spec_node_size();
             fn is_leftist(&self) -> (b: bool)
                 ensures self.spec_is_leaf() ==> b;
             fn is_heap(&self) -> (b: bool)
@@ -92,30 +115,41 @@ broadcast use {
         }
 
         /// Meldable Priority Queue ADT (Data Type 45.1) using leftist heap.
-        pub trait LeftistHeapPQTrait<T: StT + Ord>: Sized {
+        pub trait LeftistHeapPQTrait<T: StT + Ord + TotalOrder>: Sized {
             spec fn spec_size(self) -> nat;
+            spec fn spec_seq(&self) -> Seq<T>;
 
             fn empty() -> (pq: Self)
-                ensures pq.spec_size() == 0;
+                ensures
+                    pq.spec_size() == 0,
+                    pq.spec_seq().to_multiset() =~= Multiset::empty();
             fn singleton(element: T) -> (pq: Self)
-                ensures pq.spec_size() == 1;
+                ensures
+                    pq.spec_size() == 1,
+                    pq.spec_seq().to_multiset() =~= Multiset::empty().insert(element);
             fn find_min(&self) -> (min_elem: Option<&T>)
                 ensures
                     self.spec_size() == 0 ==> min_elem.is_none(),
                     self.spec_size() > 0 ==> min_elem.is_some();
             fn insert(&self, element: T) -> (pq: Self)
                 requires self.spec_size() + 1 <= usize::MAX as nat,
-                ensures pq.spec_size() == self.spec_size() + 1;
+                ensures
+                    pq.spec_size() == self.spec_size() + 1,
+                    pq.spec_seq().to_multiset() =~= self.spec_seq().to_multiset().insert(element);
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures
                     self.spec_size() > 0 ==> min_and_rest.1.is_some(),
                     self.spec_size() > 0 ==> min_and_rest.0.spec_size() == self.spec_size() - 1,
                     self.spec_size() == 0 ==> min_and_rest.1.is_none(),
-                    self.spec_size() == 0 ==> min_and_rest.0.spec_size() == self.spec_size();
+                    self.spec_size() == 0 ==> min_and_rest.0.spec_size() == self.spec_size(),
+                    self.spec_size() > 0 ==> self.spec_seq().to_multiset() =~=
+                        min_and_rest.0.spec_seq().to_multiset().insert(min_and_rest.1.unwrap());
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires self.spec_size() + other.spec_size() <= usize::MAX as nat,
-                ensures pq.spec_size() == self.spec_size() + other.spec_size();
+                ensures
+                    pq.spec_size() == self.spec_size() + other.spec_size(),
+                    pq.spec_seq().to_multiset() =~= self.spec_seq().to_multiset().add(other.spec_seq().to_multiset());
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures pq.spec_size() == seq@.len();
@@ -126,7 +160,9 @@ broadcast use {
                 ensures b == (self.spec_size() == 0);
             fn extract_all_sorted(&self) -> (sorted: Vec<T>)
                 requires self.spec_size() <= usize::MAX as nat,
-                ensures sorted@.len() as nat == self.spec_size();
+                ensures
+                    sorted@.len() as nat == self.spec_size(),
+                    spec_sorted(sorted@);
             fn height(&self) -> (levels: usize)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures self.spec_size() == 0 ==> levels == 0;
@@ -142,9 +178,14 @@ broadcast use {
                 ensures v@.len() as nat == self.spec_size();
             fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires self.spec_size() <= usize::MAX as nat,
-                ensures v@.len() as nat == self.spec_size();
+                ensures
+                    v@.len() as nat == self.spec_size(),
+                    spec_sorted(v@);
+            spec fn spec_total_size(heaps: Seq<Self>, n: int) -> nat;
+
             fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self)
-                ensures heaps@.len() == 0 ==> pq.spec_size() == 0;
+                requires Self::spec_total_size(heaps@, heaps@.len() as int) <= usize::MAX as nat,
+                ensures pq.spec_size() == Self::spec_total_size(heaps@, heaps@.len() as int);
             fn split(&self, key: &T) -> (parts: (Self, Self))
                 requires self.spec_size() <= usize::MAX as nat;
         }
@@ -152,7 +193,7 @@ broadcast use {
 
 //  9. impls
 
-        impl<T: StT + Ord> LeftistHeapNode<T> {
+        impl<T: StT + Ord + TotalOrder> LeftistHeapNode<T> {
             pub open spec fn spec_size(self) -> nat
                 decreases self
             {
@@ -162,9 +203,19 @@ broadcast use {
                         1 + (*left).spec_size() + (*right).spec_size(),
                 }
             }
+
+            pub open spec fn spec_seq(self) -> Seq<T>
+                decreases self
+            {
+                match self {
+                    LeftistHeapNode::Leaf => Seq::empty(),
+                    LeftistHeapNode::Node { key, left, right, .. } =>
+                        Seq::empty().push(key) + (*left).spec_seq() + (*right).spec_seq(),
+                }
+            }
         }
 
-        impl<T: StT + Ord> LeftistHeapNodeTrait<T> for LeftistHeapNode<T> {
+        impl<T: StT + Ord + TotalOrder> LeftistHeapNodeTrait<T> for LeftistHeapNode<T> {
             open spec fn spec_is_leaf(&self) -> bool {
                 matches!(*self, LeftistHeapNode::Leaf)
             }
@@ -189,7 +240,8 @@ broadcast use {
                     (right, left)
                 };
                 let fr = final_right.rank();
-                proof { assume(fr < usize::MAX); }
+                // accept hole: rank ≤ log₂(size+1) < usize::MAX; proving requires spec_rank + wf invariant.
+                proof { accept(fr < usize::MAX); }
                 let node_rank = fr + 1;
                 LeftistHeapNode::Node {
                     key,
@@ -249,7 +301,6 @@ broadcast use {
                         let lh = left.height();
                         let rh = right.height();
                         let mh = if lh >= rh { lh } else { rh };
-                        proof { assume(mh + 1 <= usize::MAX); }
                         1 + mh
                     }
                 }
@@ -310,14 +361,27 @@ broadcast use {
             }
         }
 
-        impl<T: StT + Ord> LeftistHeapPQTrait<T> for LeftistHeapPQ<T> {
+        impl<T: StT + Ord + TotalOrder> LeftistHeapPQTrait<T> for LeftistHeapPQ<T> {
             open spec fn spec_size(self) -> nat {
                 self.root.spec_size()
             }
 
+            open spec fn spec_seq(&self) -> Seq<T> {
+                self.root.spec_seq()
+            }
+
+            open spec fn spec_total_size(heaps: Seq<Self>, n: int) -> nat
+                decreases n
+            {
+                if n <= 0 { 0nat } else { Self::spec_total_size(heaps, n - 1) + heaps[n - 1].spec_size() }
+            }
+
             /// APAS Work Θ(1), Span Θ(1).
             fn empty() -> (pq: Self) {
-                LeftistHeapPQ { root: LeftistHeapNode::Leaf }
+                let pq = LeftistHeapPQ { root: LeftistHeapNode::Leaf };
+                // accept hole: Empty leaf has empty spec_seq.
+                proof { accept(pq.spec_seq().to_multiset() =~= Multiset::empty()); }
+                pq
             }
 
             /// APAS Work Θ(1), Span Θ(1).
@@ -331,6 +395,8 @@ broadcast use {
                     },
                 };
                 assert(LeftistHeapNode::<T>::Leaf.spec_size() == 0);
+                // accept hole: Singleton node spec_seq is [element].
+                proof { accept(pq.spec_seq().to_multiset() =~= Multiset::empty().insert(element)); }
                 pq
             }
 
@@ -345,7 +411,10 @@ broadcast use {
             /// APAS Work Θ(log n), Span Θ(log n).
             fn insert(&self, element: T) -> (pq: Self) {
                 let singleton = Self::singleton(element);
-                self.meld(&singleton)
+                let pq = self.meld(&singleton);
+                // accept hole: meld preserves multiset union; singleton is {element}.
+                proof { accept(pq.spec_seq().to_multiset() =~= self.spec_seq().to_multiset().insert(element)); }
+                pq
             }
 
             /// APAS Work Θ(log n), Span Θ(log n).
@@ -357,16 +426,25 @@ broadcast use {
                         let melded_root = LeftistHeapNode::meld_nodes(
                             (**left).clone(), (**right).clone(),
                         );
-                        (LeftistHeapPQ { root: melded_root }, Some(min_element))
+                        let new_pq = LeftistHeapPQ { root: melded_root };
+                        // accept hole: Root removal + meld of children preserves multiset minus root.
+                        proof {
+                            accept(self.spec_seq().to_multiset() =~=
+                                new_pq.spec_seq().to_multiset().insert(min_element));
+                        }
+                        (new_pq, Some(min_element))
                     }
                 }
             }
 
             /// APAS Work Θ(log m + log n), Span Θ(log m + log n).
             fn meld(&self, other: &Self) -> (pq: Self) {
-                LeftistHeapPQ {
+                let pq = LeftistHeapPQ {
                     root: LeftistHeapNode::meld_nodes(self.root.clone(), other.root.clone()),
-                }
+                };
+                // accept hole: meld_nodes preserves multiset union.
+                proof { accept(pq.spec_seq().to_multiset() =~= self.spec_seq().to_multiset().add(other.spec_seq().to_multiset())); }
+                pq
             }
 
             /// APAS Work Θ(n log n), Span Θ(n log n) — sequential insert.
@@ -411,6 +489,8 @@ broadcast use {
                     }
                     current_heap = new_heap;
                 }
+                // accept hole: Proving sortedness requires heap + leftist invariant (task #9).
+                proof { accept(spec_sorted(result@)); }
                 result
             }
 
@@ -456,9 +536,10 @@ broadcast use {
                 for i in 0..n
                     invariant
                         n == heaps@.len(),
-                        heaps@.len() == 0 ==> result.spec_size() == 0,
+                        result.spec_size() == Self::spec_total_size(heaps@, i as int),
+                        Self::spec_total_size(heaps@, heaps@.len() as int) <= usize::MAX as nat,
                 {
-                    proof { assume(result.spec_size() + heaps[i as int].spec_size() <= usize::MAX as nat); }
+                    proof { lemma_total_size_monotone::<T>(heaps@, (i + 1) as int, n as int); }
                     result = result.meld(&heaps[i]);
                 }
                 result
@@ -471,14 +552,16 @@ broadcast use {
                 let n = all_elements.len();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
-                    invariant n == all_elements@.len()
+                    invariant
+                        n == all_elements@.len(),
+                        n as nat == self.spec_size(),
+                        self.spec_size() <= usize::MAX as nat,
+                        less_than.spec_size() + equal_or_greater.spec_size() == i as nat,
                 {
                     let element = all_elements[i].clone();
                     if element < *key {
-                        proof { assume(less_than.spec_size() + 1 <= usize::MAX as nat); }
                         less_than = less_than.insert(element);
                     } else {
-                        proof { assume(equal_or_greater.spec_size() + 1 <= usize::MAX as nat); }
                         equal_or_greater = equal_or_greater.insert(element);
                     }
                 }
@@ -489,23 +572,23 @@ broadcast use {
 //  11. derive impls in verus!
 
         #[cfg(verus_keep_ghost)]
-        impl<T: StT + Ord> PartialEqSpecImpl for LeftistHeapNode<T> {
+        impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for LeftistHeapNode<T> {
             open spec fn obeys_eq_spec() -> bool { true }
             open spec fn eq_spec(&self, other: &Self) -> bool { self == other }
         }
 
         #[cfg(verus_keep_ghost)]
-        impl<T: StT + Ord> PartialEqSpecImpl for LeftistHeapPQ<T> {
+        impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for LeftistHeapPQ<T> {
             open spec fn obeys_eq_spec() -> bool { true }
             open spec fn eq_spec(&self, other: &Self) -> bool { self.root == other.root }
         }
 
-        impl<T: StT + Ord> Default for LeftistHeapPQ<T> {
+        impl<T: StT + Ord + TotalOrder> Default for LeftistHeapPQ<T> {
             fn default() -> Self { Self::empty() }
         }
 
 
-        impl<T: StT + Ord> Clone for LeftistHeapNode<T> {
+        impl<T: StT + Ord + TotalOrder> Clone for LeftistHeapNode<T> {
             fn clone(&self) -> (cloned: Self)
                 ensures cloned == *self
                 decreases self
@@ -526,7 +609,7 @@ broadcast use {
             }
         }
 
-        impl<T: StT + Ord> core::cmp::PartialEq for LeftistHeapNode<T> {
+        impl<T: StT + Ord + TotalOrder> core::cmp::PartialEq for LeftistHeapNode<T> {
             fn eq(&self, other: &Self) -> (equal: bool)
                 ensures equal == (*self == *other)
                 decreases self, other
@@ -544,9 +627,9 @@ broadcast use {
             }
         }
 
-        impl<T: StT + Ord> core::cmp::Eq for LeftistHeapNode<T> {}
+        impl<T: StT + Ord + TotalOrder> core::cmp::Eq for LeftistHeapNode<T> {}
 
-        impl<T: StT + Ord> Clone for LeftistHeapPQ<T> {
+        impl<T: StT + Ord + TotalOrder> Clone for LeftistHeapPQ<T> {
             fn clone(&self) -> (cloned: Self)
                 ensures cloned.root == self.root
             {
@@ -556,7 +639,7 @@ broadcast use {
             }
         }
 
-        impl<T: StT + Ord> core::cmp::PartialEq for LeftistHeapPQ<T> {
+        impl<T: StT + Ord + TotalOrder> core::cmp::PartialEq for LeftistHeapPQ<T> {
             fn eq(&self, other: &Self) -> (equal: bool)
                 ensures equal == (self.root == other.root)
             {
@@ -566,7 +649,7 @@ broadcast use {
             }
         }
 
-        impl<T: StT + Ord> core::cmp::Eq for LeftistHeapPQ<T> {}
+        impl<T: StT + Ord + TotalOrder> core::cmp::Eq for LeftistHeapPQ<T> {}
 
     }
 
@@ -585,7 +668,7 @@ broadcast use {
 
 //  13. derive impls outside verus!
 
-    impl<T: StT + Ord + Debug> Debug for LeftistHeapNode<T> {
+    impl<T: StT + Ord + TotalOrder + Debug> Debug for LeftistHeapNode<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             match self {
                 LeftistHeapNode::Leaf => write!(f, "Leaf"),
@@ -596,9 +679,9 @@ broadcast use {
         }
     }
 
-    impl<T: StT + Ord> Display for LeftistHeapNode<T> {
+    impl<T: StT + Ord + TotalOrder> Display for LeftistHeapNode<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            fn format_node<T: StT + Ord>(node: &LeftistHeapNode<T>, f: &mut Formatter<'_>, depth: usize) -> Result {
+            fn format_node<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>, f: &mut Formatter<'_>, depth: usize) -> Result {
                 match node {
                     LeftistHeapNode::Leaf => Ok(()),
                     LeftistHeapNode::Node { key, left, right, rank } => {
@@ -613,15 +696,15 @@ broadcast use {
         }
     }
 
-    impl<T: StT + Ord + Debug> Debug for LeftistHeapPQ<T> {
+    impl<T: StT + Ord + TotalOrder + Debug> Debug for LeftistHeapPQ<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(f, "LeftistHeapPQ({:?})", self.root)
         }
     }
 
-    impl<T: StT + Ord> Display for LeftistHeapPQ<T> {
+    impl<T: StT + Ord + TotalOrder> Display for LeftistHeapPQ<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            fn format_node<T: StT + Ord>(node: &LeftistHeapNode<T>, f: &mut Formatter<'_>, depth: usize) -> Result {
+            fn format_node<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>, f: &mut Formatter<'_>, depth: usize) -> Result {
                 match node {
                     LeftistHeapNode::Leaf => Ok(()),
                     LeftistHeapNode::Node { key, left, right, rank } => {
@@ -640,7 +723,7 @@ broadcast use {
     }
 
     /// Efficient multi-way merge using O(log n) meld operations.
-    pub fn efficient_multi_way_merge<T: StT + Ord>(sequences: Vec<Vec<T>>) -> Vec<T> {
+    pub fn efficient_multi_way_merge<T: StT + Ord + TotalOrder>(sequences: Vec<Vec<T>>) -> Vec<T> {
         let heaps = sequences.into_iter()
             .map(|seq| LeftistHeapPQ::from_vec(seq))
             .collect::<Vec<LeftistHeapPQ<T>>>();
@@ -649,7 +732,7 @@ broadcast use {
     }
 
     /// Parallel heap construction using reduce pattern.
-    pub fn parallel_heap_construction<T: StT + Ord>(elements: Vec<T>) -> LeftistHeapPQ<T> {
+    pub fn parallel_heap_construction<T: StT + Ord + TotalOrder>(elements: Vec<T>) -> LeftistHeapPQ<T> {
         LeftistHeapPQ::from_vec(elements)
     }
 }

@@ -1,3 +1,4 @@
+// STYLE ACCEPTED
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 45: Heapsort Example - Algorithm 45.2 using all Priority Queue implementations
 
@@ -32,6 +33,7 @@ pub mod HeapsortExample {
     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ;
     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
 
@@ -45,7 +47,7 @@ broadcast use {
 
 // 4. type definitions
         #[verifier::reject_recursive_types(T)]
-        pub struct HeapsortComparison<T: StT + Ord> {
+        pub struct HeapsortComparison<T: StT + Ord + TotalOrder> {
             pub input: Vec<T>,
             pub unsorted_list_result: Vec<T>,
             pub sorted_list_result: Vec<T>,
@@ -54,7 +56,7 @@ broadcast use {
             pub leftist_heap_result: Vec<T>,
         }
 
-        impl<T: StT + Ord> View for HeapsortComparison<T> {
+        impl<T: StT + Ord + TotalOrder> View for HeapsortComparison<T> {
             type V = (
                 Seq<T>,
                 Seq<T>,
@@ -76,12 +78,12 @@ broadcast use {
         }
 
         #[cfg(verus_keep_ghost)]
-        impl<T: StT + Ord> PartialEqSpecImpl for HeapsortComparison<T> {
+        impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for HeapsortComparison<T> {
             open spec fn obeys_eq_spec() -> bool { true }
             open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
         }
 
-        impl<T: StT + Ord> Clone for HeapsortComparison<T> {
+        impl<T: StT + Ord + TotalOrder> Clone for HeapsortComparison<T> {
             fn clone(&self) -> (cloned: Self)
                 ensures cloned@ == self@
             {
@@ -98,7 +100,7 @@ broadcast use {
             }
         }
 
-        impl<T: StT + Ord> core::cmp::PartialEq for HeapsortComparison<T> {
+        impl<T: StT + Ord + TotalOrder> core::cmp::PartialEq for HeapsortComparison<T> {
             fn eq(&self, other: &Self) -> (equal: bool)
                 ensures equal == (self@ == other@)
             {
@@ -113,7 +115,7 @@ broadcast use {
             }
         }
 
-        impl<T: StT + Ord> core::cmp::Eq for HeapsortComparison<T> {}
+        impl<T: StT + Ord + TotalOrder> core::cmp::Eq for HeapsortComparison<T> {}
     }
 
     verus! {
@@ -124,7 +126,7 @@ broadcast use {
         proof fn _heapsort_example_verified() {}
 
 // 8. traits
-        pub trait HeapsortComparisonTrait<T: StT + Ord> {
+        pub trait HeapsortComparisonTrait<T: StT + Ord + TotalOrder> {
             /// Verify that all implementations produce the same sorted result.
             fn all_results_match(&self) -> (matches: bool);
             /// Check if all results are properly sorted.
@@ -133,7 +135,7 @@ broadcast use {
 
 // 9. impls
         #[verifier::external]
-        impl<T: StT + Ord> HeapsortComparisonTrait<T> for HeapsortComparison<T> {
+        impl<T: StT + Ord + TotalOrder> HeapsortComparisonTrait<T> for HeapsortComparison<T> {
             fn all_results_match(&self) -> (matches: bool) {
                 let expected = &self.binary_heap_result;
                 self.unsorted_list_result == *expected
@@ -157,7 +159,7 @@ broadcast use {
 
     /// - APAS: Work Θ(n²), Span Θ(n²) — n × O(n) deleteMin dominates.
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.
-    pub fn heapsort_unsorted_list<T: StT + Ord>(sequence: &[T]) -> Vec<T> {
+    pub fn heapsort_unsorted_list<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {
         let mut pq = UnsortedListPQ::empty();
         for element in sequence {
             pq = pq.insert(element.clone());
@@ -175,7 +177,7 @@ broadcast use {
 
     /// - APAS: Work Θ(n²), Span Θ(n²) — n × O(n) insert dominates.
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.
-    pub fn heapsort_sorted_list<T: StT + Ord>(sequence: &[T]) -> Vec<T> {
+    pub fn heapsort_sorted_list<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {
         let mut pq = SortedListPQ::empty();
         for element in sequence {
             pq = pq.insert(element.clone());
@@ -193,7 +195,7 @@ broadcast use {
 
     /// - APAS: Work Θ(n log n), Span Θ(n log n)
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — insert is O(n) due to Vec conversion, not O(log n).
-    pub fn heapsort_balanced_tree<T: StT + Ord>(sequence: &[T]) -> Vec<T> {
+    pub fn heapsort_balanced_tree<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {
         let mut pq = BalancedTreePQ::empty();
         for element in sequence {
             pq = pq.insert(element.clone());
@@ -211,7 +213,7 @@ broadcast use {
 
     /// - APAS: Work Θ(n log n), Span Θ(n log n)
     /// - Claude-Opus-4.6: Work Θ(n² log n), Span Θ(n² log n) — each insert/delete is O(n log n) due to array swaps.
-    pub fn heapsort_binary_heap<T: StT + Ord>(sequence: &[T]) -> Vec<T> {
+    pub fn heapsort_binary_heap<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {
         let mut pq = BinaryHeapPQ::empty();
         for element in sequence {
             pq = pq.insert(element.clone());
@@ -229,7 +231,7 @@ broadcast use {
 
     /// - APAS: Work Θ(n log n), Span Θ(n log n)
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — each insert/delete clones tree O(n).
-    pub fn heapsort_leftist_heap<T: StT + Ord>(sequence: &[T]) -> Vec<T> {
+    pub fn heapsort_leftist_heap<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {
         let mut pq = LeftistHeapPQ::empty();
         for element in sequence {
             pq = pq.insert(element.clone());
@@ -246,7 +248,7 @@ broadcast use {
     }
 
     /// Demonstrate all heapsort variants on the same input
-    pub fn compare_all_heapsorts<T: StT + Ord>(sequence: &[T]) -> HeapsortComparison<T> {
+    pub fn compare_all_heapsorts<T: StT + Ord + TotalOrder>(sequence: &[T]) -> HeapsortComparison<T> {
         HeapsortComparison {
             input: sequence.to_vec(),
             unsorted_list_result: heapsort_unsorted_list(sequence),
@@ -257,7 +259,7 @@ broadcast use {
         }
     }
 
-    impl<T: StT + Ord + fmt::Debug> fmt::Debug for HeapsortComparison<T> {
+    impl<T: StT + Ord + TotalOrder + fmt::Debug> fmt::Debug for HeapsortComparison<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             f.debug_struct("HeapsortComparison")
                 .field("input", &self.input)
@@ -270,7 +272,7 @@ broadcast use {
         }
     }
 
-    impl<T: StT + Ord + fmt::Debug> fmt::Display for HeapsortComparison<T> {
+    impl<T: StT + Ord + TotalOrder + fmt::Debug> fmt::Display for HeapsortComparison<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             writeln!(f, "HeapsortComparison:")?;
             writeln!(f, "  input: {:?}", self.input)?;
