@@ -7,6 +7,8 @@ pub mod AdjSeqGraphStPer {
     use std::fmt::{Debug, Formatter};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
@@ -30,7 +32,6 @@ broadcast use {
 
     // 4. type definitions
 
-    #[derive(Clone, PartialEq, Eq)]
     pub struct AdjSeqGraphStPer {
         pub adj: ArraySeqStPerS<ArraySeqStPerS<N>>,
     }
@@ -456,6 +457,32 @@ broadcast use {
             AdjSeqGraphStPer { adj: result_adj }
         }
     }
+
+    // 11. derive impls in verus!
+
+    impl Clone for AdjSeqGraphStPer {
+        fn clone(&self) -> (out: Self) {
+            AdjSeqGraphStPer { adj: self.adj.clone() }
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl PartialEqSpecImpl for AdjSeqGraphStPer {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl PartialEq for AdjSeqGraphStPer {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            let equal = self.adj == other.adj;
+            proof { assume(equal == (self@ == other@)); }
+            equal
+        }
+    }
+
+    impl Eq for AdjSeqGraphStPer {}
 
     } // verus!
 

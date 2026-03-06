@@ -13,7 +13,6 @@ pub mod GraphSearchStPer {
     verus! {
 
     // 4. type definitions
-    #[derive(Clone)]
     #[verifier::reject_recursive_types(V)]
     pub struct SearchResult<V: StT + Ord> {
         pub visited: AVLTreeSetStPer<V>,
@@ -137,6 +136,17 @@ pub mod GraphSearchStPer {
     {
         let result = graph_search(graph, source, &SelectAll);
         result.visited
+    }
+
+    // 11. derive impls in verus!
+
+    impl<V: StT + Ord> Clone for SearchResult<V> {
+        fn clone(&self) -> (out: Self) {
+            SearchResult {
+                visited: self.visited.clone(),
+                parent: self.parent.clone(),
+            }
+        }
     }
 
     } // verus!

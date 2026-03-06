@@ -1,9 +1,24 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Single-threaded ephemeral set implementation using AVLTreeSeqStEph as backing store.
 //!
 //! Limitation: AVLTreeSeqStEph is index-ordered, not a BST by value. find uses binary search
 //! on the sorted logical sequence (O(log n) via nth). insert/delete use filter-and-rebuild
 //! since the backing tree has no O(log n) value-based insert/delete.
+
+//  Table of Contents
+//	1. module
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod AVLTreeSetStEph {
 
@@ -28,12 +43,17 @@ pub mod AVLTreeSetStEph {
 
     verus! {
 
+//		3. broadcast use
+
 // Veracity: added broadcast group
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::set::group_set_axioms,
     vstd::set_lib::group_set_lib_default,
 };
+
+
+//		4. type definitions
 
     // 4. type definitions
 
@@ -43,18 +63,16 @@ broadcast use {
 
     pub type AVLTreeSetS<T> = AVLTreeSetStEph<T>;
 
-    // 5. view impls
 
-    impl<T: StT + Ord> AVLTreeSetStEph<T> {
-        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-            self.elements@.to_set()
-        }
-    }
+//		5. view impls
 
     impl<T: StT + Ord> View for AVLTreeSetStEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
     }
+
+
+//		8. traits
 
     // 8. traits
 
@@ -106,6 +124,17 @@ broadcast use {
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&mut self, x: T)
             ensures self@ == old(self)@.insert(x@), self@.finite();
+    }
+
+
+//		9. impls
+
+    // 5. view impls
+
+    impl<T: StT + Ord> AVLTreeSetStEph<T> {
+        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
+            self.elements@.to_set()
+        }
     }
 
     // 9. impls
@@ -406,6 +435,9 @@ broadcast use {
         }
     }
 
+
+//		11. derive impls in verus!
+
     // 11. derive impls in verus!
 
     impl<T: StT + Ord> Clone for AVLTreeSetStEph<T> {
@@ -421,6 +453,9 @@ broadcast use {
     } // verus!
 
     // 12. macros
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! AVLTreeSetStEphLit {
@@ -439,6 +474,9 @@ broadcast use {
     impl<T: StT + Ord> Default for AVLTreeSetStEph<T> {
         fn default() -> Self { Self::empty() }
     }
+
+
+    //		13. derive impls outside verus!
 
     impl<T: StT + Ord> PartialEq for AVLTreeSetStEph<T> {
         fn eq(&self, other: &Self) -> bool {

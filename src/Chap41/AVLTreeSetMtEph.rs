@@ -1,10 +1,25 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Multi-threaded ephemeral set implementation using AVLTreeSetStEph as backing store.
 //!
 //! Work/Span Analysis (with extract-parallelize-rebuild pattern):
 //! - union: Work Θ(n+m), Span Θ(log(n+m)) via PARALLEL divide-and-conquer
 //! - intersection: Work Θ(n+m), Span Θ(log(n+m)) via PARALLEL divide-and-conquer
 //! - filter: Work Θ(n), Span Θ(log n) via PARALLEL map-reduce
+
+//  Table of Contents
+//	1. module
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod AVLTreeSetMtEph {
 
@@ -41,6 +56,8 @@ pub mod AVLTreeSetMtEph {
 
     verus! {
 
+//		3. broadcast use
+
 // Veracity: added broadcast group
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -48,36 +65,27 @@ broadcast use {
     vstd::set_lib::group_set_lib_default,
 };
 
+
+//		4. type definitions
+
     // 4. type definitions
 
     pub struct AVLTreeSetMtEphInv;
-
-    impl<T: StTInMtT + Ord + 'static> RwLockPredicate<AVLTreeSetStEph<T>> for AVLTreeSetMtEphInv {
-        open spec fn inv(self, v: AVLTreeSetStEph<T>) -> bool { true }
-    }
-
-    #[verifier::external_body]
-    fn new_set_mt_lock<T: StTInMtT + Ord + 'static>(val: AVLTreeSetStEph<T>) -> (lock: RwLock<AVLTreeSetStEph<T>, AVLTreeSetMtEphInv>) {
-        RwLock::new(val, Ghost(AVLTreeSetMtEphInv))
-    }
 
     pub struct AVLTreeSetMtEph<T: StTInMtT + Ord + 'static> {
         pub inner: Arc<RwLock<AVLTreeSetStEph<T>, AVLTreeSetMtEphInv>>,
     }
 
-    // 5. view impls
 
-    impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEph<T> {
-        #[verifier::external_body]
-        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-            Set::empty()
-        }
-    }
+//		5. view impls
 
     impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
     }
+
+
+//		8. traits
 
     // 8. traits
 
@@ -129,6 +137,27 @@ broadcast use {
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&mut self, x: T)
             ensures self@ == old(self)@.insert(x@), self@.finite();
+    }
+
+
+//		9. impls
+
+    impl<T: StTInMtT + Ord + 'static> RwLockPredicate<AVLTreeSetStEph<T>> for AVLTreeSetMtEphInv {
+        open spec fn inv(self, v: AVLTreeSetStEph<T>) -> bool { true }
+    }
+
+    #[verifier::external_body]
+    fn new_set_mt_lock<T: StTInMtT + Ord + 'static>(val: AVLTreeSetStEph<T>) -> (lock: RwLock<AVLTreeSetStEph<T>, AVLTreeSetMtEphInv>) {
+        RwLock::new(val, Ghost(AVLTreeSetMtEphInv))
+    }
+
+    // 5. view impls
+
+    impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEph<T> {
+        #[verifier::external_body]
+        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
+            Set::empty()
+        }
     }
 
     // 9. impls
@@ -370,6 +399,9 @@ broadcast use {
         }
     }
 
+
+//		11. derive impls in verus!
+
     // 11. derive impls in verus!
 
     impl<T: StTInMtT + Ord + 'static> Clone for AVLTreeSetMtEph<T> {
@@ -390,6 +422,9 @@ broadcast use {
 
     // 12. macros
 
+
+    //		12. macros
+
     #[macro_export]
     macro_rules! AVLTreeSetMtEphLit {
         () => {
@@ -407,6 +442,9 @@ broadcast use {
     impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtEph<T> {
         fn default() -> Self { Self::empty() }
     }
+
+
+    //		13. derive impls outside verus!
 
     impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Single-threaded ephemeral set implementation using ArraySeqStEph as backing store.
 //!
 //! View: elements@.to_set()
@@ -7,6 +8,21 @@
 //! All membership tests use linear scan. This keeps proofs clean: to_set()
 //! correctness follows directly from vstd seq/set lemmas without needing
 //! spec-level ordering (TotalOrder). The backing ArraySeq is unordered.
+
+//  Table of Contents
+//	1. module
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod ArraySetStEph {
 
@@ -36,6 +52,8 @@ pub mod ArraySetStEph {
 
     verus! {
 
+    //		3. broadcast use
+
     // 3. broadcast use
 
     broadcast use {
@@ -50,6 +68,9 @@ pub mod ArraySetStEph {
         vstd::set_lib::group_set_lib_default,
     };
 
+
+    //		4. type definitions
+
     // 4. type definitions
 
     #[verifier::reject_recursive_types(T)]
@@ -58,6 +79,9 @@ pub mod ArraySetStEph {
     }
 
     pub type ArraySetS<T> = ArraySetStEph<T>;
+
+
+    //		5. view impls
 
     // 5. view impls
 
@@ -68,13 +92,8 @@ pub mod ArraySetStEph {
         }
     }
 
-    // 6. spec fns
 
-    impl<T: StT + Ord> ArraySetStEph<T> {
-        pub open spec fn spec_wf(&self) -> bool {
-            self.elements@.no_duplicates()
-        }
-    }
+    //		7. proof fns/broadcast groups
 
     // 7. proof fns
 
@@ -161,6 +180,9 @@ pub mod ArraySetStEph {
             }
         }
     }
+
+
+    //		8. traits
 
     // 8. traits
 
@@ -250,6 +272,17 @@ pub mod ArraySetStEph {
                 self@ == old(self)@.insert(x@),
                 self@.finite(),
                 self.spec_wf();
+    }
+
+
+    //		9. impls
+
+    // 6. spec fns
+
+    impl<T: StT + Ord> ArraySetStEph<T> {
+        pub open spec fn spec_wf(&self) -> bool {
+            self.elements@.no_duplicates()
+        }
     }
 
     // 9. impls
@@ -554,6 +587,9 @@ pub mod ArraySetStEph {
         }
     }
 
+
+    //		11. derive impls in verus!
+
     // 11. derive impls in verus!
 
     impl<T: StT + Ord> Clone for ArraySetStEph<T> {
@@ -574,6 +610,9 @@ pub mod ArraySetStEph {
 
     // 12. macros
 
+
+    //		12. macros
+
     #[macro_export]
     macro_rules! ArraySetStEphLit {
         () => {
@@ -591,6 +630,9 @@ pub mod ArraySetStEph {
     impl<T: StT + Ord> Default for ArraySetStEph<T> {
         fn default() -> Self { Self::empty() }
     }
+
+
+    //		13. derive impls outside verus!
 
     impl<T: StT + Ord> PartialEq for ArraySetStEph<T> {
         fn eq(&self, other: &Self) -> bool {

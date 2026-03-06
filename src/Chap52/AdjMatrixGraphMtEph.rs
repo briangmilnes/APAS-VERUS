@@ -27,7 +27,6 @@ broadcast use {
 
     // 4. type definitions
 
-    #[derive(Clone)]
     pub struct AdjMatrixGraphMtEph {
         pub matrix: ArraySeqMtEphS<ArraySeqMtEphS<bool>>,
         pub n: N,
@@ -452,6 +451,14 @@ broadcast use {
                 n,
             );
             AdjMatrixGraphMtEph { matrix, n }
+        }
+    }
+
+    // 11. derive impls in verus!
+
+    impl Clone for AdjMatrixGraphMtEph {
+        fn clone(&self) -> (out: Self) {
+            AdjMatrixGraphMtEph { matrix: self.matrix.clone(), n: self.n }
         }
     }
 

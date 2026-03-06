@@ -11,7 +11,6 @@ pub mod PQMinStEph {
     verus! {
 
     // 4. type definitions
-    #[derive(Clone)]
     pub struct PQMinResult<V: StT + Ord, P: StT + Ord> {
         pub visited: AVLTreeSetStEph<V>,
         pub priorities: AVLTreeSetStEph<Pair<V, P>>,
@@ -137,6 +136,18 @@ pub mod PQMinStEph {
             visited,
             priorities,
             parent: None,
+        }
+    }
+
+    // 11. derive impls in verus!
+
+    impl<V: StT + Ord, P: StT + Ord> Clone for PQMinResult<V, P> {
+        fn clone(&self) -> (out: Self) {
+            PQMinResult {
+                visited: self.visited.clone(),
+                priorities: self.priorities.clone(),
+                parent: self.parent.clone(),
+            }
         }
     }
 

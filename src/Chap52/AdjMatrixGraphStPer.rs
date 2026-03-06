@@ -5,6 +5,8 @@
 pub mod AdjMatrixGraphStPer {
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
@@ -30,7 +32,6 @@ broadcast use {
 
     // 4. type definitions
 
-    #[derive(Clone, PartialEq, Eq)]
     pub struct AdjMatrixGraphStPer {
         pub matrix: ArraySeqStPerS<ArraySeqStPerS<bool>>,
         pub n: N,
@@ -453,6 +454,32 @@ broadcast use {
             AdjMatrixGraphStPer { matrix, n }
         }
     }
+
+    // 11. derive impls in verus!
+
+    impl Clone for AdjMatrixGraphStPer {
+        fn clone(&self) -> (out: Self) {
+            AdjMatrixGraphStPer { matrix: self.matrix.clone(), n: self.n }
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl PartialEqSpecImpl for AdjMatrixGraphStPer {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl PartialEq for AdjMatrixGraphStPer {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            let equal = self.matrix == other.matrix && self.n == other.n;
+            proof { assume(equal == (self@ == other@)); }
+            equal
+        }
+    }
+
+    impl Eq for AdjMatrixGraphStPer {}
 
     } // verus!
 
