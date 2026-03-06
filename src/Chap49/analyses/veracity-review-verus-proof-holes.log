@@ -1,34 +1,34 @@
 ❌ MinEditDistMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtEph.rs:172: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:172: external_body - #[verifier::external_body]
        173 |     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtEph.rs:153: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtEph.rs:163: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:153: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:163: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Holes: 1 total
       1 × external_body
    Info: 2 total
 ❌ MinEditDistMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtPer.rs:145: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:145: external_body - #[verifier::external_body]
        146 |     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtPer.rs:126: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtPer.rs:136: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:126: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:136: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Holes: 1 total
       1 × external_body
    Info: 2 total
 ✓ MinEditDistStEph.rs
 ✓ MinEditDistStPer.rs
 ❌ SubsetSumMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtEph.rs:149: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:149: external_body - #[verifier::external_body]
        150 |     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtEph.rs:130: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtEph.rs:140: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:130: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:140: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Holes: 1 total
       1 × external_body
    Info: 2 total
 ❌ SubsetSumMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtPer.rs:136: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:136: external_body - #[verifier::external_body]
        137 |     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtPer.rs:117: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtPer.rs:127: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:117: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:127: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Holes: 1 total
       1 × external_body
    Info: 2 total
@@ -55,11 +55,11 @@ Holes Found: 4 total
 Info: 8 total
    SubsetSumMtPer.rs:117: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    SubsetSumMtPer.rs:127: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   MinEditDistMtEph.rs:153: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   MinEditDistMtEph.rs:163: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    MinEditDistMtPer.rs:126: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    MinEditDistMtPer.rs:136: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    SubsetSumMtEph.rs:130: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    SubsetSumMtEph.rs:140: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-Lock new requires an external body at this point.
-   SubsetSumMtEph.rs:140: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MinEditDistMtEph.rs:153: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MinEditDistMtEph.rs:163: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+ck new requires an external body at this point.
+   MinEditDistMtEph.rs:163: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.

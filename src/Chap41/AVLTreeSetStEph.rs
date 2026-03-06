@@ -6,25 +6,12 @@
 //! on the sorted logical sequence (O(log n) via nth). insert/delete use filter-and-rebuild
 //! since the backing tree has no O(log n) value-based insert/delete.
 
-//  Table of Contents
-//	1. module
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	8. traits
-//	9. impls
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
-
-//		1. module
-
-
 pub mod AVLTreeSetStEph {
 
     // Table of Contents
     // 1. module
     // 2. imports
+    // 3. broadcast use
     // 4. type definitions
     // 5. view impls
     // 8. traits
@@ -36,6 +23,8 @@ pub mod AVLTreeSetStEph {
     use std::fmt;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
     use crate::vstdplus::accept::accept;
@@ -45,17 +34,14 @@ pub mod AVLTreeSetStEph {
 
     verus! {
 
-//		3. broadcast use
+// 3. broadcast use
 
-// Veracity: added broadcast group
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::set::group_set_axioms,
     vstd::set_lib::group_set_lib_default,
 };
 
-
-//		4. type definitions
 
     // 4. type definitions
 
@@ -66,7 +52,7 @@ broadcast use {
     pub type AVLTreeSetS<T> = AVLTreeSetStEph<T>;
 
 
-//		5. view impls
+    // 5. view impls
 
     impl<T: StT + Ord> View for AVLTreeSetStEph<T> {
         type V = Set<<T as View>::V>;
@@ -74,7 +60,7 @@ broadcast use {
     }
 
 
-//		8. traits
+    // 8. traits
 
     // 8. traits
 
@@ -129,7 +115,7 @@ broadcast use {
     }
 
 
-//		9. impls
+    // 9. impls
 
     // 5. view impls
 
@@ -146,7 +132,10 @@ broadcast use {
         {
             proof { assume(self.elements.spec_well_formed()); }
             let r = self.elements.length();
-            proof { assume(r == self@.len()); assume(self@.finite()); }
+            proof {
+                assume(r == self@.len());
+                vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+            }
             r
         }
 
@@ -168,14 +157,16 @@ broadcast use {
             }
             proof { assume(v@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }
             let seq = AVLTreeSeqStEphS::from_vec(v);
-            proof { assume(self@.finite()); }
+            proof { vstd::seq_lib::seq_to_set_is_finite(self.elements@); }
             seq
         }
 
         fn empty() -> (empty: Self)
         {
             let empty = AVLTreeSetStEph { elements: AVLTreeSeqStEphS::empty() };
-            proof { assume(empty@ == Set::<<T as View>::V>::empty()); }
+            proof {
+                assert(empty.elements@ =~= Seq::<<T as View>::V>::empty());
+            }
             empty
         }
 
@@ -185,7 +176,7 @@ broadcast use {
             let tree = AVLTreeSetStEph { elements: AVLTreeSeqStEphS::singleton(x) };
             proof {
                 assume(tree@ == Set::<<T as View>::V>::empty().insert(x_view));
-                assume(tree@.finite());
+                vstd::seq_lib::seq_to_set_is_finite(tree.elements@);
             }
             tree
         }
@@ -201,13 +192,13 @@ broadcast use {
                     seq.spec_well_formed(),
                     n as int == seq.spec_seq().len(),
                     i <= n,
+                    constructed@.finite(),
                 decreases n - i,
             {
                 let elem = seq.nth(i).clone();
                 constructed.insert(elem);
                 i += 1;
             }
-            proof { assume(constructed@.finite()); }
             constructed
         }
 
@@ -222,6 +213,7 @@ broadcast use {
                     self.elements.spec_well_formed(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
+                    filtered@.finite(),
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
@@ -232,7 +224,6 @@ broadcast use {
                 i += 1;
             }
             proof {
-                assume(filtered@.finite());
                 assume(filtered@.subset_of(self@));
             }
             filtered
@@ -249,6 +240,7 @@ broadcast use {
                     self.elements.spec_well_formed(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
+                    common@.finite(),
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
@@ -259,7 +251,6 @@ broadcast use {
             }
             proof {
                 assume(common@ == self@.intersect(other@));
-                assume(common@.finite());
             }
             common
         }
@@ -275,6 +266,7 @@ broadcast use {
                     self.elements.spec_well_formed(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
+                    remaining@.finite(),
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
@@ -285,7 +277,6 @@ broadcast use {
             }
             proof {
                 assume(remaining@ == self@.difference(other@));
-                assume(remaining@.finite());
             }
             remaining
         }
@@ -304,6 +295,7 @@ broadcast use {
                     self.elements.spec_well_formed(),
                     self_len as int == self.elements.spec_seq().len(),
                     i <= self_len,
+                    combined@.finite(),
                 decreases self_len - i,
             {
                 combined.insert(self.elements.nth(i).clone());
@@ -316,6 +308,7 @@ broadcast use {
                     other.elements.spec_well_formed(),
                     other_len as int == other.elements.spec_seq().len(),
                     j <= other_len,
+                    combined@.finite(),
                 decreases other_len - j,
             {
                 combined.insert(other.elements.nth(j).clone());
@@ -323,7 +316,6 @@ broadcast use {
             }
             proof {
                 assume(combined@ == self@.union(other@));
-                assume(combined@.finite());
             }
             combined
         }
@@ -380,7 +372,7 @@ broadcast use {
             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
             proof {
                 assume(self@ == old(self)@.remove(x@));
-                assume(self@.finite());
+                vstd::seq_lib::seq_to_set_is_finite(self.elements@);
             }
         }
 
@@ -435,15 +427,60 @@ broadcast use {
             }
             proof {
                 assume(self@ == old(self)@.insert(x_view));
-                assume(self@.finite());
+                vstd::seq_lib::seq_to_set_is_finite(self.elements@);
             }
         }
     }
 
 
-//		11. derive impls in verus!
+    // 11. derive impls in verus!
 
     // 11. derive impls in verus!
+
+    impl<T: StT + Ord> Default for AVLTreeSetStEph<T> {
+        fn default() -> Self { Self::empty() }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: StT + Ord> PartialEqSpecImpl for AVLTreeSetStEph<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<T: StT + Ord> Eq for AVLTreeSetStEph<T> {}
+
+    impl<T: StT + Ord> PartialEq for AVLTreeSetStEph<T> {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            proof {
+                assume(self.elements.spec_well_formed());
+                assume(other.elements.spec_well_formed());
+            }
+            let equal = self.size() == other.size() && {
+                let n = self.elements.length();
+                let mut i: usize = 0;
+                let mut all_found = true;
+                while i < n
+                    invariant
+                        self.elements.spec_well_formed(),
+                        other.elements.spec_well_formed(),
+                        n == self.elements.spec_seq().len(),
+                        i <= n,
+                    decreases n - i,
+                {
+                    if !other.find(self.elements.nth(i)) {
+                        all_found = false;
+                        break;
+                    }
+                    i += 1;
+                }
+                all_found
+            };
+            proof { assume(equal == (self@ == other@)); }
+            equal
+        }
+    }
 
     impl<T: StT + Ord> Clone for AVLTreeSetStEph<T> {
         fn clone(&self) -> (cloned: Self)
@@ -459,9 +496,6 @@ broadcast use {
 
     // 12. macros
 
-
-    //		12. macros
-
     #[macro_export]
     macro_rules! AVLTreeSetStEphLit {
         () => {
@@ -475,28 +509,6 @@ broadcast use {
     }
 
     // 13. derive impls outside verus!
-
-    impl<T: StT + Ord> Default for AVLTreeSetStEph<T> {
-        fn default() -> Self { Self::empty() }
-    }
-
-
-    //		13. derive impls outside verus!
-
-    impl<T: StT + Ord> PartialEq for AVLTreeSetStEph<T> {
-        fn eq(&self, other: &Self) -> bool {
-            self.size() == other.size() && {
-                for i in 0..self.elements.length() {
-                    if !other.find(self.elements.nth(i)) {
-                        return false;
-                    }
-                }
-                true
-            }
-        }
-    }
-
-    impl<T: StT + Ord> Eq for AVLTreeSetStEph<T> {}
 
     impl<T: StT + Ord> fmt::Debug for AVLTreeSetStEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

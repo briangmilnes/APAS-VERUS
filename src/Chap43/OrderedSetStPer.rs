@@ -163,7 +163,7 @@ broadcast use {
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         {
-            proof { assume(spec_avltreesetstper_wf(&self.base_set)); }
+            proof { assume(self.base_set.spec_avltreesetstper_wf()); }
             self.base_set.size()
         }
 
@@ -186,14 +186,14 @@ broadcast use {
         fn find(&self, x: &T) -> (found: B)
             ensures found == self@.contains(x@)
         {
-            proof { assume(spec_avltreesetstper_wf(&self.base_set)); }
+            proof { assume(self.base_set.spec_avltreesetstper_wf()); }
             self.base_set.find(x)
         }
 
         fn insert(&self, x: T) -> (updated: Self)
             ensures updated@ == self@.insert(x@), updated@.finite()
         {
-            proof { assume(spec_avltreesetstper_wf(&self.base_set)); }
+            proof { assume(self.base_set.spec_avltreesetstper_wf()); }
             OrderedSetStPer {
                 base_set: self.base_set.insert(x),
             }
@@ -202,7 +202,7 @@ broadcast use {
         fn delete(&self, x: &T) -> (updated: Self)
             ensures updated@ == self@.remove(x@), updated@.finite()
         {
-            proof { assume(spec_avltreesetstper_wf(&self.base_set)); }
+            proof { assume(self.base_set.spec_avltreesetstper_wf()); }
             OrderedSetStPer {
                 base_set: self.base_set.delete(x),
             }
@@ -211,7 +211,7 @@ broadcast use {
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
             ensures filtered@.finite(), filtered@.subset_of(self@)
         {
-            proof { assume(spec_avltreesetstper_wf(&self.base_set)); }
+            proof { assume(self.base_set.spec_avltreesetstper_wf()); }
             OrderedSetStPer {
                 base_set: self.base_set.filter(f),
             }
@@ -221,8 +221,8 @@ broadcast use {
             ensures common@ == self@.intersect(other@), common@.finite()
         {
             proof {
-                assume(spec_avltreesetstper_wf(&self.base_set));
-                assume(spec_avltreesetstper_wf(&other.base_set));
+                assume(self.base_set.spec_avltreesetstper_wf());
+                assume(other.base_set.spec_avltreesetstper_wf());
             }
             OrderedSetStPer {
                 base_set: self.base_set.intersection(&other.base_set),
@@ -233,8 +233,8 @@ broadcast use {
             ensures combined@ == self@.union(other@), combined@.finite()
         {
             proof {
-                assume(spec_avltreesetstper_wf(&self.base_set));
-                assume(spec_avltreesetstper_wf(&other.base_set));
+                assume(self.base_set.spec_avltreesetstper_wf());
+                assume(other.base_set.spec_avltreesetstper_wf());
             }
             OrderedSetStPer {
                 base_set: self.base_set.union(&other.base_set),
@@ -245,8 +245,8 @@ broadcast use {
             ensures remaining@ == self@.difference(other@), remaining@.finite()
         {
             proof {
-                assume(spec_avltreesetstper_wf(&self.base_set));
-                assume(spec_avltreesetstper_wf(&other.base_set));
+                assume(self.base_set.spec_avltreesetstper_wf());
+                assume(other.base_set.spec_avltreesetstper_wf());
             }
             OrderedSetStPer {
                 base_set: self.base_set.difference(&other.base_set),
@@ -256,7 +256,7 @@ broadcast use {
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
             ensures self@.finite()
         {
-            proof { assume(spec_avltreesetstper_wf(&self.base_set)); }
+            proof { assume(self.base_set.spec_avltreesetstper_wf()); }
             self.base_set.to_seq()
         }
 

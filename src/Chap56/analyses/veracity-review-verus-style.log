@@ -1,253 +1,253 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent3/src/Chap56/
-Codebase: /home/milnes/projects/APAS-VERUS-agent3
+Path: /home/milnes/projects/APAS-VERUS-agent4/src/Chap56/
+Codebase: /home/milnes/projects/APAS-VERUS-agent4
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent3/src/Chap56/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent4/src/Chap56/analyses/veracity-review-verus-style.log
 
 Checking 12 files...
 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:41: warning: [12] trait AllPairsResultStEphF64Trait fn get_distance should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:47: warning: [12] trait AllPairsResultStEphF64Trait fn get_predecessor should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:53: warning: [12] trait AllPairsResultStEphF64Trait fn is_reachable should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphF64.rs:55: warning: [12] trait AllPairsResultStEphF64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:41: warning: [12] trait AllPairsResultStEphF64Trait fn get_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:47: warning: [12] trait AllPairsResultStEphF64Trait fn get_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:53: warning: [12] trait AllPairsResultStEphF64Trait fn is_reachable should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphF64.rs:55: warning: [12] trait AllPairsResultStEphF64Trait fn extract_path should have requires/ensures
 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:64: warning: [12] trait AllPairsResultStEphI64Trait fn is_reachable should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStEphI64.rs:66: warning: [12] trait AllPairsResultStEphI64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:64: warning: [12] trait AllPairsResultStEphI64Trait fn is_reachable should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStEphI64.rs:66: warning: [12] trait AllPairsResultStEphI64Trait fn extract_path should have requires/ensures
 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:40: warning: [12] trait AllPairsResultStPerF64Trait fn get_distance should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:45: warning: [12] trait AllPairsResultStPerF64Trait fn get_predecessor should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:50: warning: [12] trait AllPairsResultStPerF64Trait fn is_reachable should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerF64.rs:52: warning: [12] trait AllPairsResultStPerF64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:40: warning: [12] trait AllPairsResultStPerF64Trait fn get_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:45: warning: [12] trait AllPairsResultStPerF64Trait fn get_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:50: warning: [12] trait AllPairsResultStPerF64Trait fn is_reachable should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerF64.rs:52: warning: [12] trait AllPairsResultStPerF64Trait fn extract_path should have requires/ensures
 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:70: warning: [12] trait AllPairsResultStPerI64Trait fn is_reachable should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/AllPairsResultStPerI64.rs:72: warning: [12] trait AllPairsResultStPerI64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:70: warning: [12] trait AllPairsResultStPerI64Trait fn is_reachable should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/AllPairsResultStPerI64.rs:72: warning: [12] trait AllPairsResultStPerI64Trait fn extract_path should have requires/ensures
 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:32: warning: [12] trait Example56_1Trait fn example_path_weight_int should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:35: warning: [12] trait Example56_1Trait fn example_path_weight_float should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:38: warning: [12] trait Example56_1Trait fn example_negative_weights should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:32: warning: [12] trait Example56_1Trait fn example_path_weight_int should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:35: warning: [12] trait Example56_1Trait fn example_path_weight_float should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:38: warning: [12] trait Example56_1Trait fn example_negative_weights should have requires/ensures
 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:32: warning: [12] trait Example56_3Trait fn example_negative_cycle should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:35: warning: [12] trait Example56_3Trait fn example_undefined_shortest_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:32: warning: [12] trait Example56_3Trait fn example_negative_cycle should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:35: warning: [12] trait Example56_3Trait fn example_undefined_shortest_path should have requires/ensures
 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:50: warning: [12] trait PathWeightUtilsStEphTrait fn path_weight_float should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStEph.rs:69: warning: [12] trait PathWeightUtilsStEphTrait fn validate_subpath_property_float should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:50: warning: [12] trait PathWeightUtilsStEphTrait fn path_weight_float should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStEph.rs:69: warning: [12] trait PathWeightUtilsStEphTrait fn validate_subpath_property_float should have requires/ensures
 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:54: warning: [12] trait PathWeightUtilsStPerTrait fn path_weight_float should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/PathWeightUtilsStPer.rs:66: warning: [12] trait PathWeightUtilsStPerTrait fn validate_subpath_property_float should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:54: warning: [12] trait PathWeightUtilsStPerTrait fn path_weight_float should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/PathWeightUtilsStPer.rs:66: warning: [12] trait PathWeightUtilsStPerTrait fn validate_subpath_property_float should have requires/ensures
 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:82: warning: [12] trait SSSPResultStEphF64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphF64.rs:82: warning: [12] trait SSSPResultStEphF64Trait fn extract_path should have requires/ensures
 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphI64.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStEphI64.rs:1: info: [22] spec fns: all in traits as abstract signatures
 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:98: warning: [12] trait SSSPResultStPerF64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerF64.rs:98: warning: [12] trait SSSPResultStPerF64Trait fn extract_path should have requires/ensures
 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerI64.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/SSSPResultStPerI64.rs:1: info: [22] spec fns: all in traits as abstract signatures
 
 ════════════════════════════════════════════════════════════════
 Summary: 194 passed, 23 warnings in 10 files (checked 12 files)

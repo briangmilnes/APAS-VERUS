@@ -7,25 +7,12 @@
 //! - intersection: Work Θ(n+m), Span Θ(log(n+m)) via PARALLEL divide-and-conquer
 //! - filter: Work Θ(n), Span Θ(log n) via PARALLEL map-reduce
 
-//  Table of Contents
-//	1. module
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	8. traits
-//	9. impls
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
-
-//		1. module
-
-
 pub mod AVLTreeSetMtPer {
 
     // Table of Contents
     // 1. module
     // 2. imports
+    // 3. broadcast use
     // 4. type definitions
     // 5. view impls
     // 8. traits
@@ -38,6 +25,8 @@ pub mod AVLTreeSetMtPer {
     use std::fmt;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::*;
     use crate::vstdplus::accept::accept;
@@ -54,17 +43,13 @@ pub mod AVLTreeSetMtPer {
 
     verus! {
 
-//		3. broadcast use
+// 3. broadcast use
 
-// Veracity: added broadcast group
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::set::group_set_axioms,
     vstd::set_lib::group_set_lib_default,
 };
-
-
-//		4. type definitions
 
     // 4. type definitions
 
@@ -76,15 +61,13 @@ broadcast use {
     pub const SEQUENTIAL_CUTOFF: usize = 1;
 
 
-//		5. view impls
+    // 5. view impls
 
     impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtPer<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
     }
 
-
-//		8. traits
 
     // 8. traits
 
@@ -139,9 +122,7 @@ broadcast use {
     }
 
 
-//		9. impls
-
-    // 5. view impls
+    // 9. impls
 
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPer<T> {
         pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
@@ -163,14 +144,15 @@ broadcast use {
         fn to_seq(&self) -> (seq: AVLTreeSeqMtPerS<T>)
         {
             let seq = self.elements.clone();
-            proof { assume(self@.finite()); }
+            proof { vstd::seq_lib::seq_to_set_is_finite(self.elements@); }
             seq
         }
 
         fn empty() -> (empty: Self)
         {
             let empty = AVLTreeSetMtPer { elements: AVLTreeSeqMtPerS::empty() };
-            proof { assume(empty@ == Set::<<T as View>::V>::empty()); }
+            assert(empty.elements@ =~= Seq::<<T as View>::V>::empty());
+            assert(empty@ =~= Set::<<T as View>::V>::empty());
             empty
         }
 
@@ -179,8 +161,23 @@ broadcast use {
             let ghost x_view = x@;
             let tree = AVLTreeSetMtPer { elements: AVLTreeSeqMtPerS::singleton(x) };
             proof {
-                assume(tree@ == Set::<<T as View>::V>::empty().insert(x_view));
-                assume(tree@.finite());
+                assert(tree.elements@ =~= seq![x_view]);
+                let s = tree.elements@;
+                assert forall |v| #[trigger] s.to_set().contains(v) <==> Set::<<T as View>::V>::empty().insert(x_view).contains(v) by {
+                    if Set::<<T as View>::V>::empty().insert(x_view).contains(v) {
+                        assert(v == x_view);
+                        assert(s[0] == x_view);
+                        assert(s.contains(v));
+                    }
+                    if s.to_set().contains(v) {
+                        assert(s.contains(v));
+                        let i = choose |i: int| 0 <= i < s.len() && s[i] == v;
+                        assert(i == 0);
+                        assert(v == x_view);
+                    }
+                }
+                assert(tree@ =~= Set::<<T as View>::V>::empty().insert(x_view));
+                vstd::seq_lib::seq_to_set_is_finite(tree.elements@);
             }
             tree
         }
@@ -470,9 +467,85 @@ broadcast use {
     }
 
 
-//		11. derive impls in verus!
-
     // 11. derive impls in verus!
+
+    impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtPer<T> {
+        fn default() -> Self { Self::empty() }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: StTInMtT + Ord + 'static> PartialEqSpecImpl for AVLTreeSetMtPer<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<T: StTInMtT + Ord + 'static> Eq for AVLTreeSetMtPer<T> {}
+
+    impl<T: StTInMtT + Ord + 'static> PartialEq for AVLTreeSetMtPer<T> {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            let equal = self.size() == other.size() && {
+                let n = self.size();
+                let mut i: usize = 0;
+                let mut all_found = true;
+                while i < n
+                    invariant
+                        self.elements.spec_well_formed(),
+                        other.elements.spec_well_formed(),
+                        n == self.elements.spec_seq().len(),
+                        i <= n,
+                    decreases n - i,
+                {
+                    if !other.find(self.elements.nth(i)) {
+                        all_found = false;
+                        break;
+                    }
+                    i += 1;
+                }
+                all_found
+            };
+            proof { assume(equal == (self@ == other@)); }
+            equal
+        }
+    }
+
+    impl<T: StTInMtT + Ord + 'static> PartialOrd for AVLTreeSetMtPer<T> {
+        fn partial_cmp(&self, other: &Self) -> (ord: Option<Ordering>) {
+            let ord = Some(self.cmp(other));
+            ord
+        }
+    }
+
+    impl<T: StTInMtT + Ord + 'static> Ord for AVLTreeSetMtPer<T> {
+        fn cmp(&self, other: &Self) -> (ord: Ordering) {
+            // Lexicographic ordering: compare element by element.
+            let n_self = self.size();
+            let n_other = other.size();
+            let min_n = if n_self < n_other { n_self } else { n_other };
+            let mut i: usize = 0;
+            while i < min_n
+                invariant
+                    self.elements.spec_well_formed(),
+                    other.elements.spec_well_formed(),
+                    i <= min_n,
+                    min_n <= n_self,
+                    min_n <= n_other,
+                    n_self == self.elements.spec_seq().len(),
+                    n_other == other.elements.spec_seq().len(),
+                decreases min_n - i,
+            {
+                let a = self.elements.nth(i);
+                let b = other.elements.nth(i);
+                let c = a.cmp(b);
+                if c != Equal {
+                    return c;
+                }
+                i += 1;
+            }
+            n_self.cmp(&n_other)
+        }
+    }
 
     impl<T: StTInMtT + Ord + 'static> Clone for AVLTreeSetMtPer<T> {
         fn clone(&self) -> (cloned: Self)
@@ -488,9 +561,6 @@ broadcast use {
 
     // 12. macros
 
-
-    //		12. macros
-
     #[macro_export]
     macro_rules! AVLTreeSetMtPerLit {
         () => {
@@ -504,56 +574,6 @@ broadcast use {
     }
 
     // 13. derive impls outside verus!
-
-    impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtPer<T> {
-        fn default() -> Self { Self::empty() }
-    }
-
-
-    //		13. derive impls outside verus!
-
-    impl<T: StTInMtT + Ord + 'static> PartialEq for AVLTreeSetMtPer<T> {
-        fn eq(&self, other: &Self) -> bool {
-            self.size() == other.size() && {
-                for i in 0..self.size() {
-                    if !other.find(self.elements.nth(i)) {
-                        return false;
-                    }
-                }
-                true
-            }
-        }
-    }
-
-    impl<T: StTInMtT + Ord + 'static> Eq for AVLTreeSetMtPer<T> {}
-
-    impl<T: StTInMtT + Ord + 'static> PartialOrd for AVLTreeSetMtPer<T> {
-        fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-            Some(self.cmp(other))
-        }
-    }
-
-    impl<T: StTInMtT + Ord + 'static> Ord for AVLTreeSetMtPer<T> {
-        fn cmp(&self, other: &Self) -> Ordering {
-            // Lexicographic ordering: compare element by element (no cloning)
-            let n_self = self.size();
-            let n_other = other.size();
-            let min_n = n_self.min(n_other);
-
-            // Compare common prefix
-            for i in 0..min_n {
-                let a = self.elements.nth(i);
-                let b = other.elements.nth(i);
-                match a.cmp(b) {
-                    Equal => continue,
-                    non_equal => return non_equal,
-                }
-            }
-
-            // If all compared elements are equal, compare by size
-            n_self.cmp(&n_other)
-        }
-    }
 
     impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtPer<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

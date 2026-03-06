@@ -17,9 +17,13 @@ pub mod ArraySetEnumMtEph {
     // 12. macros
     // 13. derive impls outside verus!
 
+    use std::fmt;
+
     use bitvec::prelude::*;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Concurrency::Concurrency::*;
     use crate::Types::Types::*;
@@ -265,6 +269,23 @@ broadcast use {
 
     // 11. derive impls in verus!
 
+    #[cfg(verus_keep_ghost)]
+    impl PartialEqSpecImpl for ArraySetEnumMtEph {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl Eq for ArraySetEnumMtEph {}
+
+    impl PartialEq for ArraySetEnumMtEph {
+        #[verifier::external_body]
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            self.universe_size == other.universe_size && self.bits == other.bits
+        }
+    }
+
     impl Clone for ArraySetEnumMtEph {
         #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
@@ -295,16 +316,24 @@ broadcast use {
 
     // 13. derive impls outside verus!
 
-    impl PartialEq for ArraySetEnumMtEph {
-        fn eq(&self, other: &Self) -> bool {
-            self.universe_size == other.universe_size && {
-                for i in 0..self.universe_size {
-                    if self.bits[i] != other.bits[i] {
-                        return false;
-                    }
+    impl fmt::Debug for ArraySetEnumMtEph {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "ArraySetEnumMtEph({}/{})", self.size(), self.universe_size)
+        }
+    }
+
+    impl fmt::Display for ArraySetEnumMtEph {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "{{")?;
+            let mut first = true;
+            for i in 0..self.universe_size {
+                if self.bits[i] {
+                    if !first { write!(f, ", ")?; }
+                    write!(f, "{}", i)?;
+                    first = false;
                 }
-                true
             }
+            write!(f, "}}")
         }
     }
 }

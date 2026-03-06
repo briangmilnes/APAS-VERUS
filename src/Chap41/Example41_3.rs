@@ -16,17 +16,17 @@ pub mod Example41_3 {
     verus! {
 
     pub trait Example41_3Trait {
-        /// Example 41.1 cases using ArraySetStEph
-        /// APAS: Work Θ(n log n), Span Θ(log n)
-        fn example_41_1_array_set();
+        /// Example 41.1 cases using ArraySetStEph.
+        fn example_41_1_array_set()
+            ensures true;
 
-        /// Example 41.1 cases using AVLTreeSetStEph
-        /// APAS: Work Θ(n log n), Span Θ(log n)
-        fn example_41_1_avl_set();
+        /// Example 41.1 cases using AVLTreeSetStEph.
+        fn example_41_1_avl_set()
+            ensures true;
 
-        /// Demonstrate set operations with different implementations
-        /// APAS: Work Θ(n log n), Span Θ(log n)
-        fn demonstrate_set_operations();
+        /// Demonstrate set operations with different implementations.
+        fn demonstrate_set_operations()
+            ensures true;
     }
 
     #[verifier::external_body]

@@ -11,7 +11,6 @@ pub mod AVLTreeSetStPer {
     // 2. imports
     // 4. type definitions
     // 5. view impls
-    // 6. spec fns
     // 8. traits
     // 9. impls
     // 11. derive impls in verus!
@@ -33,6 +32,7 @@ pub mod AVLTreeSetStPer {
 // Veracity: added broadcast group
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
     vstd::set::group_set_axioms,
     vstd::set_lib::group_set_lib_default,
 };
@@ -51,12 +51,6 @@ broadcast use {
     impl<T: StT + Ord> View for AVLTreeSetStPer<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.elements@.to_set() }
-    }
-
-    // 6. spec fns
-
-    pub open spec fn spec_avltreesetstper_wf<T: StT + Ord>(s: &AVLTreeSetStPer<T>) -> bool {
-        s.elements.spec_well_formed()
     }
 
     // 8. traits
@@ -158,7 +152,7 @@ broadcast use {
 
     impl<T: StT + Ord> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
         open spec fn spec_avltreesetstper_wf(&self) -> bool {
-            spec_avltreesetstper_wf(self)
+            self.elements.spec_well_formed()
         }
 
         fn size(&self) -> (count: usize)
@@ -499,8 +493,8 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             proof {
-                assume(spec_avltreesetstper_wf(self));
-                assume(spec_avltreesetstper_wf(other));
+                assume(self.spec_avltreesetstper_wf());
+                assume(other.spec_avltreesetstper_wf());
             }
             let equal = self.size() == other.size() && {
                 let n = self.elements.length();
@@ -509,7 +503,7 @@ broadcast use {
                 while i < n
                     invariant
                         self.elements.spec_well_formed(),
-                        spec_avltreesetstper_wf(other),
+                        other.spec_avltreesetstper_wf(),
                         n == self.elements.spec_seq().len(),
                         i <= n,
                     decreases n - i,
