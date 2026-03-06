@@ -18,7 +18,7 @@ fn test_path_weight_int_simple() {
         ArraySeqStPerS::from_vec(vec![i64::MAX, i64::MAX, 0]),
     ]);
     let path = ArraySeqStPerS::from_vec(vec![0, 1, 2]);
-    assert_eq!(path_weight_int(&path, &weights), Some(3));
+    assert_eq!(PathWeightUtilsStPerS::PathWeightUtilsStPerS::path_weight_int(&path, &weights), Some(3));
 }
 
 #[test]
@@ -29,7 +29,7 @@ fn test_path_weight_int_negative() {
         ArraySeqStPerS::from_vec(vec![i64::MAX, i64::MAX, 0]),
     ]);
     let path = ArraySeqStPerS::from_vec(vec![0, 1, 2]);
-    assert_eq!(path_weight_int(&path, &weights), Some(2));
+    assert_eq!(PathWeightUtilsStPerS::path_weight_int(&path, &weights), Some(2));
 }
 
 #[test]
@@ -40,7 +40,7 @@ fn test_path_weight_float_simple() {
         ArraySeqStPerS::from_vec(vec![dist(f64::INFINITY), dist(f64::INFINITY), dist(0.0)]),
     ]);
     let path = ArraySeqStPerS::from_vec(vec![0, 1, 2]);
-    assert_eq!(path_weight_float(&path, &weights), Some(dist(4.0)));
+    assert_eq!(PathWeightUtilsStPerS::path_weight_float(&path, &weights), Some(dist(4.0)));
 }
 
 #[test]
@@ -52,7 +52,7 @@ fn test_validate_subpath_int() {
     ]);
     let distances = ArraySeqStPerS::from_vec(vec![0, 1, 3]);
     let path = ArraySeqStPerS::from_vec(vec![0, 1, 2]);
-    assert!(validate_subpath_property_int(&path, &distances, &weights));
+    assert!(PathWeightUtilsStPerS::validate_subpath_property_int(&path, &distances, &weights));
 }
 
 #[test]
@@ -64,5 +64,5 @@ fn test_validate_subpath_float() {
     ]);
     let distances = ArraySeqStPerS::from_vec(vec![dist(0.0), dist(1.5), dist(4.0)]);
     let path = ArraySeqStPerS::from_vec(vec![0, 1, 2]);
-    assert!(validate_subpath_property_float(&path, &distances, &weights));
+    assert!(PathWeightUtilsStPerS::validate_subpath_property_float(&path, &distances, &weights));
 }
