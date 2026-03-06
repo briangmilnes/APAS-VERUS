@@ -11,6 +11,13 @@ pub mod AllPairsResultStEphI64 {
 
     verus! {
 
+    // Table of Contents
+    // 4. type definitions
+    // 8. traits
+    // 9. impls
+
+    // 4. type definitions
+
     pub const UNREACHABLE: i64 = i64::MAX;
     pub const NO_PREDECESSOR: usize = usize::MAX;
 
@@ -23,6 +30,8 @@ pub mod AllPairsResultStEphI64 {
     // 8. traits
 
     pub trait AllPairsResultStEphI64Trait: Sized {
+        spec fn spec_allpairsresultstephi64_wf(s: &AllPairsResultStEphI64) -> bool;
+
         spec fn spec_n(&self) -> usize;
 
         spec fn spec_distances_len(&self) -> nat;
@@ -38,7 +47,20 @@ pub mod AllPairsResultStEphI64 {
         spec fn spec_predecessor_at(&self, u: int, v: int) -> usize;
 
         fn new(n: usize) -> (empty: Self)
-            ensures empty.spec_n() == n;
+            ensures
+                empty.spec_n() == n,
+                empty.spec_distances_len() == n as nat,
+                empty.spec_predecessors_len() == n as nat,
+                forall|r: int| #![trigger empty.spec_distances_row_len(r)]
+                    0 <= r < n ==> empty.spec_distances_row_len(r) == n as nat,
+                forall|r: int| #![trigger empty.spec_predecessors_row_len(r)]
+                    0 <= r < n ==> empty.spec_predecessors_row_len(r) == n as nat,
+                forall|r: int, c: int| #![trigger empty.spec_distance_at(r, c)]
+                    0 <= r < n && 0 <= c < n ==>
+                    empty.spec_distance_at(r, c) == (if c == r { 0i64 } else { UNREACHABLE }),
+                forall|r: int, c: int| #![trigger empty.spec_predecessor_at(r, c)]
+                    0 <= r < n && 0 <= c < n ==>
+                    empty.spec_predecessor_at(r, c) == NO_PREDECESSOR;
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64)
             ensures
@@ -48,7 +70,27 @@ pub mod AllPairsResultStEphI64 {
 
         fn set_distance(&mut self, u: usize, v: usize, dist: i64)
             ensures
-                self.spec_n() == old(self).spec_n();
+                self.spec_n() == old(self).spec_n(),
+                self.spec_distances_len() == old(self).spec_distances_len(),
+                self.spec_predecessors_len() == old(self).spec_predecessors_len(),
+                forall|r: int| #![trigger self.spec_distances_row_len(r)]
+                    0 <= r < old(self).spec_distances_len()
+                    ==> self.spec_distances_row_len(r) == old(self).spec_distances_row_len(r),
+                forall|r: int| #![trigger self.spec_predecessors_row_len(r)]
+                    0 <= r < old(self).spec_predecessors_len()
+                    ==> self.spec_predecessors_row_len(r) == old(self).spec_predecessors_row_len(r),
+                (u as int) < old(self).spec_distances_len()
+                    && (v as int) < old(self).spec_distances_row_len(u as int)
+                    ==> self.spec_distance_at(u as int, v as int) == dist,
+                forall|r: int, c: int| #![trigger self.spec_distance_at(r, c)]
+                    0 <= r < old(self).spec_distances_len()
+                    && 0 <= c < old(self).spec_distances_row_len(r)
+                    && (r != u as int || c != v as int)
+                    ==> self.spec_distance_at(r, c) == old(self).spec_distance_at(r, c),
+                forall|r: int, c: int| #![trigger self.spec_predecessor_at(r, c)]
+                    0 <= r < old(self).spec_predecessors_len()
+                    && 0 <= c < old(self).spec_predecessors_row_len(r)
+                    ==> self.spec_predecessor_at(r, c) == old(self).spec_predecessor_at(r, c);
 
         fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>)
             ensures
@@ -59,16 +101,64 @@ pub mod AllPairsResultStEphI64 {
 
         fn set_predecessor(&mut self, u: usize, v: usize, pred: usize)
             ensures
-                self.spec_n() == old(self).spec_n();
+                self.spec_n() == old(self).spec_n(),
+                self.spec_predecessors_len() == old(self).spec_predecessors_len(),
+                self.spec_distances_len() == old(self).spec_distances_len(),
+                forall|r: int| #![trigger self.spec_predecessors_row_len(r)]
+                    0 <= r < old(self).spec_predecessors_len()
+                    ==> self.spec_predecessors_row_len(r) == old(self).spec_predecessors_row_len(r),
+                forall|r: int| #![trigger self.spec_distances_row_len(r)]
+                    0 <= r < old(self).spec_distances_len()
+                    ==> self.spec_distances_row_len(r) == old(self).spec_distances_row_len(r),
+                (u as int) < old(self).spec_predecessors_len()
+                    && (v as int) < old(self).spec_predecessors_row_len(u as int)
+                    ==> self.spec_predecessor_at(u as int, v as int) == pred,
+                forall|r: int, c: int| #![trigger self.spec_predecessor_at(r, c)]
+                    0 <= r < old(self).spec_predecessors_len()
+                    && 0 <= c < old(self).spec_predecessors_row_len(r)
+                    && (r != u as int || c != v as int)
+                    ==> self.spec_predecessor_at(r, c) == old(self).spec_predecessor_at(r, c),
+                forall|r: int, c: int| #![trigger self.spec_distance_at(r, c)]
+                    0 <= r < old(self).spec_distances_len()
+                    && 0 <= c < old(self).spec_distances_row_len(r)
+                    ==> self.spec_distance_at(r, c) == old(self).spec_distance_at(r, c);
 
-        fn is_reachable(&self, u: usize, v: usize) -> (b: bool);
+        fn is_reachable(&self, u: usize, v: usize) -> (b: bool)
+            ensures
+                (u as int) >= self.spec_distances_len() ==> !b,
+                (u as int) < self.spec_distances_len() && (v as int) >= self.spec_distances_row_len(u as int) ==> !b,
+                (u as int) < self.spec_distances_len() && (v as int) < self.spec_distances_row_len(u as int) ==>
+                    b == (self.spec_distance_at(u as int, v as int) != UNREACHABLE);
 
-        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);
+        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
+            ensures
+                (u as int) >= self.spec_predecessors_len() ==> path is None,
+                (v as int) >= self.spec_predecessors_len() ==> path is None,
+                u != v && (u as int) < self.spec_distances_len()
+                    && (v as int) < self.spec_distances_row_len(u as int)
+                    && self.spec_distance_at(u as int, v as int) == UNREACHABLE
+                    ==> path is None,
+                path is Some ==> path->Some_0.spec_len() >= 1,
+                path is Some ==> path->Some_0.spec_index(0) == u,
+                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v,
+                path is Some && u != v ==>
+                    forall|j: int| #![trigger path->Some_0.spec_index(j)]
+                        0 <= j < path->Some_0.spec_len()
+                        ==> (path->Some_0.spec_index(j) as int) < self.spec_predecessors_row_len(u as int);
     }
 
     // 9. impls
 
     impl AllPairsResultStEphI64Trait for AllPairsResultStEphI64 {
+        open spec fn spec_allpairsresultstephi64_wf(s: &AllPairsResultStEphI64) -> bool {
+            s.distances.spec_len() == s.n as nat
+            && s.predecessors.spec_len() == s.n as nat
+            && forall|r: int| #![trigger s.distances.spec_index(r)]
+                0 <= r < s.n ==> s.distances.spec_index(r).spec_len() == s.n as nat
+            && forall|r: int| #![trigger s.predecessors.spec_index(r)]
+                0 <= r < s.n ==> s.predecessors.spec_index(r).spec_len() == s.n as nat
+        }
+
         open spec fn spec_n(&self) -> usize { self.n }
 
         open spec fn spec_distances_len(&self) -> nat { self.distances.spec_len() }
@@ -84,6 +174,8 @@ pub mod AllPairsResultStEphI64 {
         open spec fn spec_predecessor_at(&self, u: int, v: int) -> usize { self.predecessors.spec_index(u).spec_index(v) }
 
         fn new(n: usize) -> (empty: Self)
+            ensures
+                Self::spec_allpairsresultstephi64_wf(&empty),
         {
             let mut dist_rows: Vec<ArraySeqStEphS<i64>> = Vec::new();
             let mut i: usize = 0;
@@ -91,6 +183,11 @@ pub mod AllPairsResultStEphI64 {
                 invariant
                     i <= n,
                     dist_rows@.len() == i as int,
+                    forall|r: int| #![trigger dist_rows@[r]]
+                        0 <= r < i ==> dist_rows@[r].spec_len() == n as nat,
+                    forall|r: int, c: int| #![trigger dist_rows@[r].spec_index(c)]
+                        0 <= r < i && 0 <= c < n ==>
+                        dist_rows@[r].spec_index(c) == (if c == r { 0i64 } else { UNREACHABLE }),
                 decreases n - i,
             {
                 let mut row: Vec<i64> = Vec::new();
@@ -99,6 +196,8 @@ pub mod AllPairsResultStEphI64 {
                     invariant
                         j <= n,
                         row@.len() == j as int,
+                        forall|c: int| #![trigger row@[c]]
+                            0 <= c < j ==> row@[c] == (if c == i as int { 0i64 } else { UNREACHABLE }),
                     decreases n - j,
                 {
                     if j == i { row.push(0i64); } else { row.push(UNREACHABLE); }
@@ -113,6 +212,11 @@ pub mod AllPairsResultStEphI64 {
                 invariant
                     k <= n,
                     pred_rows@.len() == k as int,
+                    forall|r: int| #![trigger pred_rows@[r]]
+                        0 <= r < k ==> pred_rows@[r].spec_len() == n as nat,
+                    forall|r: int, c: int| #![trigger pred_rows@[r].spec_index(c)]
+                        0 <= r < k && 0 <= c < n ==>
+                        pred_rows@[r].spec_index(c) == NO_PREDECESSOR,
                 decreases n - k,
             {
                 let mut prow: Vec<usize> = Vec::new();
@@ -121,6 +225,8 @@ pub mod AllPairsResultStEphI64 {
                     invariant
                         m <= n,
                         prow@.len() == m as int,
+                        forall|c: int| #![trigger prow@[c]]
+                            0 <= c < m ==> prow@[c] == NO_PREDECESSOR,
                     decreases n - m,
                 {
                     prow.push(NO_PREDECESSOR);
@@ -150,12 +256,11 @@ pub mod AllPairsResultStEphI64 {
 
         fn set_distance(&mut self, u: usize, v: usize, dist: i64)
         {
-            if u < self.distances.length() {
-                let row_ref = self.distances.nth(u);
-                if v < row_ref.length() {
-                    let mut row = row_ref.clone();
-                    let _ = row.set(v, dist);
-                    let _ = self.distances.set(u, row);
+            if u < self.distances.seq.len() {
+                let mut row = self.distances.seq[u].clone();
+                if v < row.seq.len() {
+                    row.seq.set(v, dist);
+                    self.distances.seq.set(u, row);
                 }
             }
         }
@@ -175,12 +280,11 @@ pub mod AllPairsResultStEphI64 {
 
         fn set_predecessor(&mut self, u: usize, v: usize, pred: usize)
         {
-            if u < self.predecessors.length() {
-                let row_ref = self.predecessors.nth(u);
-                if v < row_ref.length() {
-                    let mut row = row_ref.clone();
-                    let _ = row.set(v, pred);
-                    let _ = self.predecessors.set(u, row);
+            if u < self.predecessors.seq.len() {
+                let mut row = self.predecessors.seq[u].clone();
+                if v < row.seq.len() {
+                    row.seq.set(v, pred);
+                    self.predecessors.seq.set(u, row);
                 }
             }
         }
@@ -214,6 +318,10 @@ pub mod AllPairsResultStEphI64 {
                     current < row_len,
                     row_len as int == pred_row.spec_len(),
                     path@.len() > 0,
+                    path@[0] == v,
+                    path@[path@.len() - 1] == current,
+                    forall|j: int| #![trigger path@[j]]
+                        0 <= j < path@.len() ==> path@[j] < row_len,
                 decreases row_len - steps,
             {
                 if current >= row_len {
@@ -238,6 +346,13 @@ pub mod AllPairsResultStEphI64 {
                     k <= path_len,
                     path_len == path@.len(),
                     reversed@.len() == (path_len - k) as int,
+                    path@[0] == v,
+                    path@[path@.len() - 1] == u,
+                    forall|j: int| #![trigger reversed@[j]]
+                        0 <= j < reversed@.len() ==> reversed@[j] == path@[path_len - 1 - j],
+                    forall|j: int| #![trigger path@[j]]
+                        0 <= j < path@.len() ==> path@[j] < row_len,
+                    row_len as int == pred_row.spec_len(),
                 decreases k,
             {
                 k = k - 1;

@@ -10,15 +10,15 @@ pub mod SSSPResultStPerI64 {
 
     verus! {
 
-    pub const UNREACHABLE: i64 = i64::MAX;
-    pub const NO_PREDECESSOR: usize = usize::MAX;
-
     // Table of Contents
     // 4. type definitions
     // 8. traits
     // 9. impls
 
     // 4. type definitions
+
+    pub const UNREACHABLE: i64 = i64::MAX;
+    pub const NO_PREDECESSOR: usize = usize::MAX;
 
     pub struct SSSPResultStPerI64 {
         pub distances: ArraySeqStPerS<i64>,
@@ -85,7 +85,11 @@ pub mod SSSPResultStPerI64 {
                 v >= self.spec_predecessors().len() ==> path is None,
                 path is Some ==> path->Some_0.spec_len() >= 1,
                 path is Some ==> path->Some_0.spec_index(0) == self.spec_source(),
-                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v;
+                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v,
+                path is Some ==>
+                    forall|j: int| #![trigger path->Some_0.spec_index(j)]
+                        0 <= j < path->Some_0.spec_len()
+                        ==> (path->Some_0.spec_index(j) as int) < self.spec_predecessors().len();
     }
 
     // 9. impls
@@ -213,6 +217,7 @@ pub mod SSSPResultStPerI64 {
                         0 <= j < reversed@.len() ==> reversed@[j] == path@[path_len - 1 - j],
                     forall|j: int| #![trigger path@[j]]
                         0 <= j < path@.len() ==> path@[j] < n,
+                    n as int == self.predecessors.spec_len(),
                 decreases k,
             {
                 k = k - 1;

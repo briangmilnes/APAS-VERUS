@@ -59,15 +59,15 @@
     "id": 8,
     "function": "new",
     "file": "Chap56/AllPairsResultStEphI64.rs",
-    "lines": "40-41",
+    "lines": "49-63",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: usize) -> (empty: Self)\n            ensures empty.spec_n() == n;"
+    "snippet": "        fn new(n: usize) -> (empty: Self)\n            ensures\n                empty.spec_n() == n,\n                empty.spec_distances_len() == n as nat,\n                empty.spec_predecessors_len() == n as nat,\n                forall|r: int| #![trigger empty.spec_distances_row_len(r)]\n                    0 <= r < n ==> empty.spec_distances_row_len(r) == n as nat,\n                forall|r: int| #![trigger empty.spec_predecessors_row_len(r)]\n                    0 <= r < n ==> empty.spec_predecessors_row_len(r) == n as nat,\n                forall|r: int, c: int| #![trigger empty.spec_distance_at(r, c)]\n                    0 <= r < n && 0 <= c < n ==>\n                    empty.spec_distance_at(r, c) == (if c == r { 0i64 } else { UNREACHABLE }),\n                forall|r: int, c: int| #![trigger empty.spec_predecessor_at(r, c)]\n                    0 <= r < n && 0 <= c < n ==>\n                    empty.spec_predecessor_at(r, c) == NO_PREDECESSOR;"
   },
   {
     "id": 9,
     "function": "get_distance",
     "file": "Chap56/AllPairsResultStEphI64.rs",
-    "lines": "43-47",
+    "lines": "65-69",
     "spec_strength": "unknown",
     "snippet": "        fn get_distance(&self, u: usize, v: usize) -> (dist: i64)\n            ensures\n                (u as int) >= self.spec_distances_len() ==> dist == UNREACHABLE,\n                (u as int) < self.spec_distances_len() && (v as int) >= self.spec_distances_row_len(u as int) ==> dist == UNREACHABLE,\n                (u as int) < self.spec_distances_len() && (v as int) < self.spec_distances_row_len(u as int) ==> dist == self.spec_distance_at(u as int, v as int);"
   },
@@ -75,15 +75,15 @@
     "id": 10,
     "function": "set_distance",
     "file": "Chap56/AllPairsResultStEphI64.rs",
-    "lines": "49-51",
+    "lines": "71-93",
     "spec_strength": "unknown",
-    "snippet": "        fn set_distance(&mut self, u: usize, v: usize, dist: i64)\n            ensures\n                self.spec_n() == old(self).spec_n();"
+    "snippet": "        fn set_distance(&mut self, u: usize, v: usize, dist: i64)\n            ensures\n                self.spec_n() == old(self).spec_n(),\n                self.spec_distances_len() == old(self).spec_distances_len(),\n                self.spec_predecessors_len() == old(self).spec_predecessors_len(),\n                forall|r: int| #![trigger self.spec_distances_row_len(r)]\n                    0 <= r < old(self).spec_distances_len()\n                    ==> self.spec_distances_row_len(r) == old(self).spec_distances_row_len(r),\n                forall|r: int| #![trigger self.spec_predecessors_row_len(r)]\n                    0 <= r < old(self).spec_predecessors_len()\n                    ==> self.spec_predecessors_row_len(r) == old(self).spec_predecessors_row_len(r),\n                (u as int) < old(self).spec_distances_len()\n                    && (v as int) < old(self).spec_distances_row_len(u as int)\n                    ==> self.spec_distance_at(u as int, v as int) == dist,\n                forall|r: int, c: int| #![trigger self.spec_distance_at(r, c)]\n                    0 <= r < old(self).spec_distances_len()\n                    && 0 <= c < old(self).spec_distances_row_len(r)\n                    && (r != u as int || c != v as int)\n                    ==> self.spec_distance_at(r, c) == old(self).spec_distance_at(r, c),\n                forall|r: int, c: int| #![trigger self.spec_predecessor_at(r, c)]\n                    0 <= r < old(self).spec_predecessors_len()\n                    && 0 <= c < old(self).spec_predecessors_row_len(r)\n                    ==> self.spec_predecessor_at(r, c) == old(self).spec_predecessor_at(r, c);"
   },
   {
     "id": 11,
     "function": "get_predecessor",
     "file": "Chap56/AllPairsResultStEphI64.rs",
-    "lines": "53-58",
+    "lines": "95-100",
     "spec_strength": "unknown",
     "snippet": "        fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>)\n            ensures\n                (u as int) >= self.spec_predecessors_len() ==> pred is None,\n                (u as int) < self.spec_predecessors_len() && (v as int) >= self.spec_predecessors_row_len(u as int) ==> pred is None,\n                (u as int) < self.spec_predecessors_len() && (v as int) < self.spec_predecessors_row_len(u as int) && self.spec_predecessor_at(u as int, v as int) == NO_PREDECESSOR ==> pred is None,\n                (u as int) < self.spec_predecessors_len() && (v as int) < self.spec_predecessors_row_len(u as int) && self.spec_predecessor_at(u as int, v as int) != NO_PREDECESSOR ==> pred == Some(self.spec_predecessor_at(u as int, v as int));"
   },
@@ -91,25 +91,25 @@
     "id": 12,
     "function": "set_predecessor",
     "file": "Chap56/AllPairsResultStEphI64.rs",
-    "lines": "60-62",
+    "lines": "102-124",
     "spec_strength": "unknown",
-    "snippet": "        fn set_predecessor(&mut self, u: usize, v: usize, pred: usize)\n            ensures\n                self.spec_n() == old(self).spec_n();"
+    "snippet": "        fn set_predecessor(&mut self, u: usize, v: usize, pred: usize)\n            ensures\n                self.spec_n() == old(self).spec_n(),\n                self.spec_predecessors_len() == old(self).spec_predecessors_len(),\n                self.spec_distances_len() == old(self).spec_distances_len(),\n                forall|r: int| #![trigger self.spec_predecessors_row_len(r)]\n                    0 <= r < old(self).spec_predecessors_len()\n                    ==> self.spec_predecessors_row_len(r) == old(self).spec_predecessors_row_len(r),\n                forall|r: int| #![trigger self.spec_distances_row_len(r)]\n                    0 <= r < old(self).spec_distances_len()\n                    ==> self.spec_distances_row_len(r) == old(self).spec_distances_row_len(r),\n                (u as int) < old(self).spec_predecessors_len()\n                    && (v as int) < old(self).spec_predecessors_row_len(u as int)\n                    ==> self.spec_predecessor_at(u as int, v as int) == pred,\n                forall|r: int, c: int| #![trigger self.spec_predecessor_at(r, c)]\n                    0 <= r < old(self).spec_predecessors_len()\n                    && 0 <= c < old(self).spec_predecessors_row_len(r)\n                    && (r != u as int || c != v as int)\n                    ==> self.spec_predecessor_at(r, c) == old(self).spec_predecessor_at(r, c),\n                forall|r: int, c: int| #![trigger self.spec_distance_at(r, c)]\n                    0 <= r < old(self).spec_distances_len()\n                    && 0 <= c < old(self).spec_distances_row_len(r)\n                    ==> self.spec_distance_at(r, c) == old(self).spec_distance_at(r, c);"
   },
   {
     "id": 13,
     "function": "is_reachable",
     "file": "Chap56/AllPairsResultStEphI64.rs",
-    "lines": "64",
-    "spec_strength": "",
-    "snippet": "        fn is_reachable(&self, u: usize, v: usize) -> (b: bool);"
+    "lines": "126-131",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_reachable(&self, u: usize, v: usize) -> (b: bool)\n            ensures\n                (u as int) >= self.spec_distances_len() ==> !b,\n                (u as int) < self.spec_distances_len() && (v as int) >= self.spec_distances_row_len(u as int) ==> !b,\n                (u as int) < self.spec_distances_len() && (v as int) < self.spec_distances_row_len(u as int) ==>\n                    b == (self.spec_distance_at(u as int, v as int) != UNREACHABLE);"
   },
   {
     "id": 14,
     "function": "extract_path",
     "file": "Chap56/AllPairsResultStEphI64.rs",
-    "lines": "66",
-    "spec_strength": "",
-    "snippet": "        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);"
+    "lines": "133-147",
+    "spec_strength": "unknown",
+    "snippet": "        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)\n            ensures\n                (u as int) >= self.spec_predecessors_len() ==> path is None,\n                (v as int) >= self.spec_predecessors_len() ==> path is None,\n                u != v && (u as int) < self.spec_distances_len()\n                    && (v as int) < self.spec_distances_row_len(u as int)\n                    && self.spec_distance_at(u as int, v as int) == UNREACHABLE\n                    ==> path is None,\n                path is Some ==> path->Some_0.spec_len() >= 1,\n                path is Some ==> path->Some_0.spec_index(0) == u,\n                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v,\n                path is Some && u != v ==>\n                    forall|j: int| #![trigger path->Some_0.spec_index(j)]\n                        0 <= j < path->Some_0.spec_len()\n                        ==> (path->Some_0.spec_index(j) as int) < self.spec_predecessors_row_len(u as int);"
   },
   {
     "id": 15,
@@ -171,15 +171,15 @@
     "id": 22,
     "function": "new",
     "file": "Chap56/AllPairsResultStPerI64.rs",
-    "lines": "48-49",
+    "lines": "48-62",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: usize) -> (empty: Self)\n            ensures empty.spec_n() == n;"
+    "snippet": "        fn new(n: usize) -> (empty: Self)\n            ensures\n                empty.spec_n() == n,\n                empty.spec_distances_len() == n as nat,\n                empty.spec_predecessors_len() == n as nat,\n                forall|r: int| #![trigger empty.spec_distances_row_len(r)]\n                    0 <= r < n ==> empty.spec_distances_row_len(r) == n as nat,\n                forall|r: int| #![trigger empty.spec_predecessors_row_len(r)]\n                    0 <= r < n ==> empty.spec_predecessors_row_len(r) == n as nat,\n                forall|r: int, c: int| #![trigger empty.spec_distance_at(r, c)]\n                    0 <= r < n && 0 <= c < n ==>\n                    empty.spec_distance_at(r, c) == (if c == r { 0i64 } else { UNREACHABLE }),\n                forall|r: int, c: int| #![trigger empty.spec_predecessor_at(r, c)]\n                    0 <= r < n && 0 <= c < n ==>\n                    empty.spec_predecessor_at(r, c) == NO_PREDECESSOR;"
   },
   {
     "id": 23,
     "function": "get_distance",
     "file": "Chap56/AllPairsResultStPerI64.rs",
-    "lines": "51-55",
+    "lines": "64-68",
     "spec_strength": "unknown",
     "snippet": "        fn get_distance(&self, u: usize, v: usize) -> (dist: i64)\n            ensures\n                (u as int) >= self.spec_distances_len() ==> dist == UNREACHABLE,\n                (u as int) < self.spec_distances_len() && (v as int) >= self.spec_distances_row_len(u as int) ==> dist == UNREACHABLE,\n                (u as int) < self.spec_distances_len() && (v as int) < self.spec_distances_row_len(u as int) ==> dist == self.spec_distance_at(u as int, v as int);"
   },
@@ -187,15 +187,15 @@
     "id": 24,
     "function": "set_distance",
     "file": "Chap56/AllPairsResultStPerI64.rs",
-    "lines": "57-58",
+    "lines": "70-92",
     "spec_strength": "unknown",
-    "snippet": "        fn set_distance(self, u: usize, v: usize, dist: i64) -> (updated: Self)\n            ensures updated.spec_n() == self.spec_n();"
+    "snippet": "        fn set_distance(self, u: usize, v: usize, dist: i64) -> (updated: Self)\n            ensures\n                updated.spec_n() == self.spec_n(),\n                updated.spec_distances_len() == self.spec_distances_len(),\n                updated.spec_predecessors_len() == self.spec_predecessors_len(),\n                forall|r: int| #![trigger updated.spec_distances_row_len(r)]\n                    0 <= r < self.spec_distances_len()\n                    ==> updated.spec_distances_row_len(r) == self.spec_distances_row_len(r),\n                forall|r: int| #![trigger updated.spec_predecessors_row_len(r)]\n                    0 <= r < self.spec_predecessors_len()\n                    ==> updated.spec_predecessors_row_len(r) == self.spec_predecessors_row_len(r),\n                (u as int) < self.spec_distances_len()\n                    && (v as int) < self.spec_distances_row_len(u as int)\n                    ==> updated.spec_distance_at(u as int, v as int) == dist,\n                forall|r: int, c: int| #![trigger updated.spec_distance_at(r, c)]\n                    0 <= r < self.spec_distances_len()\n                    && 0 <= c < self.spec_distances_row_len(r)\n                    && (r != u as int || c != v as int)\n                    ==> updated.spec_distance_at(r, c) == self.spec_distance_at(r, c),\n                forall|r: int, c: int| #![trigger updated.spec_predecessor_at(r, c)]\n                    0 <= r < self.spec_predecessors_len()\n                    && 0 <= c < self.spec_predecessors_row_len(r)\n                    ==> updated.spec_predecessor_at(r, c) == self.spec_predecessor_at(r, c);"
   },
   {
     "id": 25,
     "function": "get_predecessor",
     "file": "Chap56/AllPairsResultStPerI64.rs",
-    "lines": "60-65",
+    "lines": "94-99",
     "spec_strength": "unknown",
     "snippet": "        fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>)\n            ensures\n                (u as int) >= self.spec_predecessors_len() ==> pred is None,\n                (u as int) < self.spec_predecessors_len() && (v as int) >= self.spec_predecessors_row_len(u as int) ==> pred is None,\n                (u as int) < self.spec_predecessors_len() && (v as int) < self.spec_predecessors_row_len(u as int) && self.spec_predecessor_at(u as int, v as int) == NO_PREDECESSOR ==> pred is None,\n                (u as int) < self.spec_predecessors_len() && (v as int) < self.spec_predecessors_row_len(u as int) && self.spec_predecessor_at(u as int, v as int) != NO_PREDECESSOR ==> pred == Some(self.spec_predecessor_at(u as int, v as int));"
   },
@@ -203,25 +203,25 @@
     "id": 26,
     "function": "set_predecessor",
     "file": "Chap56/AllPairsResultStPerI64.rs",
-    "lines": "67-68",
+    "lines": "101-123",
     "spec_strength": "unknown",
-    "snippet": "        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self)\n            ensures updated.spec_n() == self.spec_n();"
+    "snippet": "        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self)\n            ensures\n                updated.spec_n() == self.spec_n(),\n                updated.spec_predecessors_len() == self.spec_predecessors_len(),\n                updated.spec_distances_len() == self.spec_distances_len(),\n                forall|r: int| #![trigger updated.spec_predecessors_row_len(r)]\n                    0 <= r < self.spec_predecessors_len()\n                    ==> updated.spec_predecessors_row_len(r) == self.spec_predecessors_row_len(r),\n                forall|r: int| #![trigger updated.spec_distances_row_len(r)]\n                    0 <= r < self.spec_distances_len()\n                    ==> updated.spec_distances_row_len(r) == self.spec_distances_row_len(r),\n                (u as int) < self.spec_predecessors_len()\n                    && (v as int) < self.spec_predecessors_row_len(u as int)\n                    ==> updated.spec_predecessor_at(u as int, v as int) == pred,\n                forall|r: int, c: int| #![trigger updated.spec_predecessor_at(r, c)]\n                    0 <= r < self.spec_predecessors_len()\n                    && 0 <= c < self.spec_predecessors_row_len(r)\n                    && (r != u as int || c != v as int)\n                    ==> updated.spec_predecessor_at(r, c) == self.spec_predecessor_at(r, c),\n                forall|r: int, c: int| #![trigger updated.spec_distance_at(r, c)]\n                    0 <= r < self.spec_distances_len()\n                    && 0 <= c < self.spec_distances_row_len(r)\n                    ==> updated.spec_distance_at(r, c) == self.spec_distance_at(r, c);"
   },
   {
     "id": 27,
     "function": "is_reachable",
     "file": "Chap56/AllPairsResultStPerI64.rs",
-    "lines": "70",
+    "lines": "125-130",
     "spec_strength": "unknown",
-    "snippet": "        fn is_reachable(&self, u: usize, v: usize) -> (b: bool);"
+    "snippet": "        fn is_reachable(&self, u: usize, v: usize) -> (b: bool)\n            ensures\n                (u as int) >= self.spec_distances_len() ==> !b,\n                (u as int) < self.spec_distances_len() && (v as int) >= self.spec_distances_row_len(u as int) ==> !b,\n                (u as int) < self.spec_distances_len() && (v as int) < self.spec_distances_row_len(u as int) ==>\n                    b == (self.spec_distance_at(u as int, v as int) != UNREACHABLE);"
   },
   {
     "id": 28,
     "function": "extract_path",
     "file": "Chap56/AllPairsResultStPerI64.rs",
-    "lines": "72",
+    "lines": "132-146",
     "spec_strength": "unknown",
-    "snippet": "        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);"
+    "snippet": "        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)\n            ensures\n                (u as int) >= self.spec_predecessors_len() ==> path is None,\n                (v as int) >= self.spec_predecessors_len() ==> path is None,\n                u != v && (u as int) < self.spec_distances_len()\n                    && (v as int) < self.spec_distances_row_len(u as int)\n                    && self.spec_distance_at(u as int, v as int) == UNREACHABLE\n                    ==> path is None,\n                path is Some ==> path->Some_0.spec_len() >= 1,\n                path is Some ==> path->Some_0.spec_index(0) == u,\n                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v,\n                path is Some && u != v ==>\n                    forall|j: int| #![trigger path->Some_0.spec_index(j)]\n                        0 <= j < path->Some_0.spec_len()\n                        ==> (path->Some_0.spec_index(j) as int) < self.spec_predecessors_row_len(u as int);"
   },
   {
     "id": 29,
@@ -387,15 +387,15 @@
     "id": 49,
     "function": "new",
     "file": "Chap56/SSSPResultStEphI64.rs",
-    "lines": "32-37",
+    "lines": "41-50",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: usize, source: usize) -> (empty: Self)\n            requires source < n,\n            ensures\n                empty.spec_distances().len() == n,\n                empty.spec_predecessors().len() == n,\n                empty.spec_source() == source;"
+    "snippet": "        fn new(n: usize, source: usize) -> (empty: Self)\n            requires source < n,\n            ensures\n                empty.spec_distances().len() == n,\n                empty.spec_predecessors().len() == n,\n                empty.spec_source() == source,\n                forall|i: int| #![trigger empty.spec_distances()[i]] 0 <= i < n ==>\n                    empty.spec_distances()[i] == (if i == source as int { 0i64 } else { UNREACHABLE }),\n                forall|i: int| #![trigger empty.spec_predecessors()[i]] 0 <= i < n ==>\n                    empty.spec_predecessors()[i] == NO_PREDECESSOR;"
   },
   {
     "id": 50,
     "function": "get_distance",
     "file": "Chap56/SSSPResultStEphI64.rs",
-    "lines": "39-42",
+    "lines": "52-55",
     "spec_strength": "unknown",
     "snippet": "        fn get_distance(&self, v: usize) -> (dist: i64)\n            ensures\n                v >= self.spec_distances().len() ==> dist == UNREACHABLE,\n                v < self.spec_distances().len() ==> dist == self.spec_distances()[v as int];"
   },
@@ -403,7 +403,7 @@
     "id": 51,
     "function": "set_distance",
     "file": "Chap56/SSSPResultStEphI64.rs",
-    "lines": "44-50",
+    "lines": "57-63",
     "spec_strength": "unknown",
     "snippet": "        fn set_distance(&mut self, v: usize, dist: i64)\n            ensures\n                self.spec_distances().len() == old(self).spec_distances().len(),\n                v < old(self).spec_distances().len() ==> self.spec_distances() =~= old(self).spec_distances().update(v as int, dist),\n                v >= old(self).spec_distances().len() ==> self.spec_distances() =~= old(self).spec_distances(),\n                self.spec_predecessors() == old(self).spec_predecessors(),\n                self.spec_source() == old(self).spec_source();"
   },
@@ -411,7 +411,7 @@
     "id": 52,
     "function": "get_predecessor",
     "file": "Chap56/SSSPResultStEphI64.rs",
-    "lines": "52-56",
+    "lines": "65-69",
     "spec_strength": "unknown",
     "snippet": "        fn get_predecessor(&self, v: usize) -> (pred: Option<usize>)\n            ensures\n                v >= self.spec_predecessors().len() ==> pred is None,\n                v < self.spec_predecessors().len() && self.spec_predecessors()[v as int] == NO_PREDECESSOR ==> pred is None,\n                v < self.spec_predecessors().len() && self.spec_predecessors()[v as int] != NO_PREDECESSOR ==> pred == Some(self.spec_predecessors()[v as int]);"
   },
@@ -419,7 +419,7 @@
     "id": 53,
     "function": "set_predecessor",
     "file": "Chap56/SSSPResultStEphI64.rs",
-    "lines": "58-64",
+    "lines": "71-77",
     "spec_strength": "unknown",
     "snippet": "        fn set_predecessor(&mut self, v: usize, pred: usize)\n            ensures\n                self.spec_predecessors().len() == old(self).spec_predecessors().len(),\n                v < old(self).spec_predecessors().len() ==> self.spec_predecessors() =~= old(self).spec_predecessors().update(v as int, pred),\n                v >= old(self).spec_predecessors().len() ==> self.spec_predecessors() =~= old(self).spec_predecessors(),\n                self.spec_distances() == old(self).spec_distances(),\n                self.spec_source() == old(self).spec_source();"
   },
@@ -427,7 +427,7 @@
     "id": 54,
     "function": "is_reachable",
     "file": "Chap56/SSSPResultStEphI64.rs",
-    "lines": "66-69",
+    "lines": "79-82",
     "spec_strength": "unknown",
     "snippet": "        fn is_reachable(&self, v: usize) -> (b: bool)\n            ensures\n                v >= self.spec_distances().len() ==> !b,\n                v < self.spec_distances().len() ==> b == (self.spec_distances()[v as int] != UNREACHABLE);"
   },
@@ -435,9 +435,9 @@
     "id": 55,
     "function": "extract_path",
     "file": "Chap56/SSSPResultStEphI64.rs",
-    "lines": "71-75",
+    "lines": "84-95",
     "spec_strength": "unknown",
-    "snippet": "        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)\n            ensures\n                path is Some ==> path->Some_0.spec_len() >= 1,\n                path is Some ==> path->Some_0.spec_index(0) == self.spec_source(),\n                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v;"
+    "snippet": "        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)\n            ensures\n                v >= self.spec_distances().len() ==> path is None,\n                v < self.spec_distances().len() && self.spec_distances()[v as int] == UNREACHABLE ==> path is None,\n                v >= self.spec_predecessors().len() ==> path is None,\n                path is Some ==> path->Some_0.spec_len() >= 1,\n                path is Some ==> path->Some_0.spec_index(0) == self.spec_source(),\n                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v,\n                path is Some ==>\n                    forall|j: int| #![trigger path->Some_0.spec_index(j)]\n                        0 <= j < path->Some_0.spec_len()\n                        ==> (path->Some_0.spec_index(j) as int) < self.spec_predecessors().len();"
   },
   {
     "id": 56,
@@ -547,8 +547,8 @@
     "id": 69,
     "function": "extract_path",
     "file": "Chap56/SSSPResultStPerI64.rs",
-    "lines": "81-88",
+    "lines": "81-92",
     "spec_strength": "unknown",
-    "snippet": "        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)\n            ensures\n                v >= self.spec_distances().len() ==> path is None,\n                v < self.spec_distances().len() && self.spec_distances()[v as int] == UNREACHABLE ==> path is None,\n                v >= self.spec_predecessors().len() ==> path is None,\n                path is Some ==> path->Some_0.spec_len() >= 1,\n                path is Some ==> path->Some_0.spec_index(0) == self.spec_source(),\n                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v;"
+    "snippet": "        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)\n            ensures\n                v >= self.spec_distances().len() ==> path is None,\n                v < self.spec_distances().len() && self.spec_distances()[v as int] == UNREACHABLE ==> path is None,\n                v >= self.spec_predecessors().len() ==> path is None,\n                path is Some ==> path->Some_0.spec_len() >= 1,\n                path is Some ==> path->Some_0.spec_index(0) == self.spec_source(),\n                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v,\n                path is Some ==>\n                    forall|j: int| #![trigger path->Some_0.spec_index(j)]\n                        0 <= j < path->Some_0.spec_len()\n                        ==> (path->Some_0.spec_index(j) as int) < self.spec_predecessors().len();"
   }
 ]
