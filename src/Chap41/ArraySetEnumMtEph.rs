@@ -111,28 +111,28 @@ broadcast use {
             index < 64,
         ensures
             get_bit64!(bv_new, index) == bit,
-            forall|loc2: u64| (loc2 < 64 && loc2 != index) ==>
+            forall|loc2: u64| #![auto] (loc2 < 64 && loc2 != index) ==>
                 (get_bit64!(bv_new, loc2) == get_bit64!(bv_old, loc2)),
     {}
 
     #[verifier::bit_vector]
     proof fn bit_or_64_proof(bv1: u64, bv2: u64, bv_new: u64)
         requires bv_new == bv1 | bv2,
-        ensures forall|i: u64| (i < 64) ==>
+        ensures forall|i: u64| #![auto] (i < 64) ==>
             get_bit64!(bv_new, i) == (get_bit64!(bv1, i) || get_bit64!(bv2, i)),
     {}
 
     #[verifier::bit_vector]
     proof fn bit_and_64_proof(bv1: u64, bv2: u64, bv_new: u64)
         requires bv_new == bv1 & bv2,
-        ensures forall|i: u64| (i < 64) ==>
+        ensures forall|i: u64| #![auto] (i < 64) ==>
             get_bit64!(bv_new, i) == (get_bit64!(bv1, i) && get_bit64!(bv2, i)),
     {}
 
     #[verifier::bit_vector]
     proof fn bit_andnot_64_proof(bv1: u64, bv2: u64, bv_new: u64)
         requires bv_new == bv1 & !bv2,
-        ensures forall|i: u64| (i < 64) ==>
+        ensures forall|i: u64| #![auto] (i < 64) ==>
             get_bit64!(bv_new, i) == (get_bit64!(bv1, i) && !get_bit64!(bv2, i)),
     {}
 
@@ -453,7 +453,7 @@ broadcast use {
             let common = ArraySetEnumMtEph { bits: result_bits, universe_size: self.universe_size };
             proof {
                 assert forall|elem: usize|
-                    common@.contains(elem) == self@.intersect(other@).contains(elem) by
+                    #[trigger] common@.contains(elem) == self@.intersect(other@).contains(elem) by
                 {
                     if (elem as int) < self.universe_size as int {
                         let k = elem as int / 64;
@@ -504,7 +504,7 @@ broadcast use {
             let remaining = ArraySetEnumMtEph { bits: result_bits, universe_size: self.universe_size };
             proof {
                 assert forall|elem: usize|
-                    remaining@.contains(elem) == self@.difference(other@).contains(elem) by
+                    #[trigger] remaining@.contains(elem) == self@.difference(other@).contains(elem) by
                 {
                     if (elem as int) < self.universe_size as int {
                         let k = elem as int / 64;
@@ -555,7 +555,7 @@ broadcast use {
             let combined = ArraySetEnumMtEph { bits: result_bits, universe_size: self.universe_size };
             proof {
                 assert forall|elem: usize|
-                    combined@.contains(elem) == self@.union(other@).contains(elem) by
+                    #[trigger] combined@.contains(elem) == self@.union(other@).contains(elem) by
                 {
                     if (elem as int) < self.universe_size as int {
                         let k = elem as int / 64;
@@ -603,7 +603,7 @@ broadcast use {
                 self.bits.set(word_idx, new_word);
                 proof {
                     assert forall|elem: usize|
-                        self@.contains(elem) == old(self)@.remove(x).contains(elem) by
+                        #[trigger] self@.contains(elem) == old(self)@.remove(x).contains(elem) by
                     {
                         if (elem as int) < self.universe_size as int {
                             let ek = elem as int / 64;
@@ -652,7 +652,7 @@ broadcast use {
                 self.bits.set(word_idx, new_word);
                 proof {
                     assert forall|elem: usize|
-                        self@.contains(elem) == old(self)@.insert(x).contains(elem) by
+                        #[trigger] self@.contains(elem) == old(self)@.insert(x).contains(elem) by
                     {
                         if elem == x {
                             // Inserted bit: set_bit64_proof ensures it's true

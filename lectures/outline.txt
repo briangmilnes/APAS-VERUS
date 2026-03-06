@@ -1,5 +1,4 @@
-
-Slide count: 50 at most.
+Slide count: 60 at most.
 
 . Subject of the talk
 . Who am I?
@@ -7,13 +6,17 @@ Slide count: 50 at most.
 . LLMs
 . The dangers of LLMs
 . The opportunity of LLMs
+ .. This is a cell phone moment.
 . Verification's Great Success: SeL4
 . Verification's downside: Costs.
 . LLMs + Proven Code
+ .. This is the iphone moment. 
 . Rust Upsides
 . Rust Downsides
 . APAS
+ .. Quantitatives
 . APAS-AI work and talk
+ .. Quantitatives
 . APAS-VERUS work and talk
 . Verus Overview
 . Verus Pracitcality
@@ -21,21 +24,42 @@ Slide count: 50 at most.
 . The Agents
 . The Great Things about LLM agents for programming and proving
 . The Awful Things about LLM agents for programming and proving
+ .. It's closed. 
+ .. How the heck are these things planning?
+ .. You're programming in English
+ .. Every silly thing in the world's codebase
 . The Interfaces
 . The Properties We Want in An Interface
 . Cursor
 . Claude
 . Antigravity
 . VSCode
+. Head To Head on Fine Grained Locking Trees?
+ .. Kung and Lehman 1980.
+. My rules
+ .. Don't over think.
+ .. Discuss
+ .. Plan
+ .. Roles
 . APAS-VERUS novel contributions
+. Experiments vs Standards
 . Not the first proven algorithms textbook
+. Integrating programmatic software engineering with LLMs
+. Proust: Proven Rust Objects Universally Secured & Trusted
+  .. Ah no people think Proust is hard to read.
+  .. Never name your search engine after a spider.
+  .. PSTD. 
+. How big is the Rust STD library?
+. How hard is it to prove?
 . What should we all be doing now?
   .. We are all going to have to use LLM agents.
   .. We are all going to be generating 10x code.
   .. We are all going to be a much higher level software engineer
   .. We are all going to experience severe computer security problems
   .. The only answer I see that works in the long run is proven code.
+  .. And we are all going to be proving programs at 10x, but it's still 10x coding.
 . What is going to happen in computer security
 . What is going to happen in PL
 . What is going to happen in formal verification
 . Futures for my work
+. Questions

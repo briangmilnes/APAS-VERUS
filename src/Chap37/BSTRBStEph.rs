@@ -171,7 +171,7 @@ pub mod BSTRBStEph {
                             lemma_bst_deep::<T>(tree_ghost);
 
                             assert forall|z: T| old_lr.tree_contains(z) implies
-                                T::le(z, y_val) && z != y_val
+                                #[trigger] T::le(z, y_val) && z != y_val
                             by {
                                 assert(old_left.tree_contains(z));
                             };
@@ -182,7 +182,7 @@ pub mod BSTRBStEph {
                             assert(right_sub.tree_is_bst());
 
                             assert forall|z: T| right_sub.tree_contains(z) implies
-                                T::le(x_val, z) && z != x_val
+                                #[trigger] T::le(x_val, z) && z != x_val
                             by {
                                 if old_lr.tree_contains(z) {
                                 } else if z == y_val {
@@ -269,7 +269,7 @@ pub mod BSTRBStEph {
                             lemma_bst_deep::<T>(tree_ghost);
 
                             assert forall|z: T| old_rl.tree_contains(z) implies
-                                T::le(x_val, z) && z != x_val
+                                #[trigger] T::le(x_val, z) && z != x_val
                             by {
                                 assert(old_right.tree_contains(z));
                             };
@@ -280,7 +280,7 @@ pub mod BSTRBStEph {
                             assert(left_sub.tree_is_bst());
 
                             assert forall|z: T| left_sub.tree_contains(z) implies
-                                T::le(z, y_val) && z != y_val
+                                #[trigger] T::le(z, y_val) && z != y_val
                             by {
                                 if old_l.tree_contains(z) {
                                     T::transitive(z, x_val, y_val);
@@ -364,7 +364,7 @@ pub mod BSTRBStEph {
                             assert(old_right.tree_is_bst());
 
                             assert forall|x: T| new_left.tree_contains(x) implies
-                                T::le(x, node_val) && x != node_val
+                                #[trigger] T::le(x, node_val) && x != node_val
                             by {
                                 if old_left.tree_contains(x) {
                                 } else {
@@ -373,7 +373,7 @@ pub mod BSTRBStEph {
                             };
 
                             assert forall|x: T| old_right.tree_contains(x) implies
-                                T::le(node_val, x) && x != node_val
+                                #[trigger] T::le(node_val, x) && x != node_val
                             by {};
 
                             assert forall|x: T| r.tree_contains(x) ==
@@ -403,11 +403,11 @@ pub mod BSTRBStEph {
                             assert(new_right.tree_is_bst());
 
                             assert forall|x: T| old_left.tree_contains(x) implies
-                                T::le(x, node_val) && x != node_val
+                                #[trigger] T::le(x, node_val) && x != node_val
                             by {};
 
                             assert forall|x: T| new_right.tree_contains(x) implies
-                                T::le(node_val, x) && x != node_val
+                                #[trigger] T::le(node_val, x) && x != node_val
                             by {
                                 if old_right.tree_contains(x) {
                                 } else {

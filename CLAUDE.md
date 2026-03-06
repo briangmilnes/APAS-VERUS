@@ -300,6 +300,7 @@ Only proof-mode calls (lemma invocations, `reveal`, `let ghost`) need `proof { }
 
 **Triggers**: Use `#![auto]` during development, then replace with explicit `#[trigger]`
 from Verus's proposals. Do not leave `#![auto]` or trigger warnings in final code.
+Clean up all trigger warnings as they occur — do not defer them.
 
 **Nested functions**: Do not use. Keep helpers at module level (Verus proof limitation).
 

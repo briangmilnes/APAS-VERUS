@@ -142,7 +142,7 @@ pub mod ArraySetStEph {
 
     /// Elements of a filtered seq are elements of the original.
     proof fn lemma_filter_in_original<V>(s: Seq<V>, pred: spec_fn(V) -> bool)
-        ensures forall|v: V| s.filter(pred).contains(v) ==> s.contains(v)
+        ensures forall|v: V| s.filter(pred).contains(v) ==> #[trigger] s.contains(v)
         decreases s.len()
     {
         reveal(Seq::filter);
@@ -150,7 +150,7 @@ pub mod ArraySetStEph {
             lemma_filter_in_original(s.drop_last(), pred);
             let sub = s.drop_last().filter(pred);
             if pred(s.last()) {
-                assert forall|v: V| s.filter(pred).contains(v) implies s.contains(v) by {
+                assert forall|v: V| s.filter(pred).contains(v) implies #[trigger] s.contains(v) by {
                     if s.filter(pred).contains(v) {
                         let j = choose|j: int| 0 <= j < s.filter(pred).len() && s.filter(pred)[j] == v;
                         if j < sub.len() {
@@ -165,7 +165,7 @@ pub mod ArraySetStEph {
                     }
                 }
             } else {
-                assert forall|v: V| s.filter(pred).contains(v) implies s.contains(v) by {
+                assert forall|v: V| s.filter(pred).contains(v) implies #[trigger] s.contains(v) by {
                     if sub.contains(v) {
                         assert(s.drop_last().contains(v));
                         let k = choose|k: int| 0 <= k < s.drop_last().len() && s.drop_last()[k] == v;
