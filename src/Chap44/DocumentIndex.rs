@@ -76,7 +76,11 @@ pub mod DocumentIndex {
 
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential iteration over AVL tree sequence
-        fn to_seq(docs: &DocumentSet)                                -> ArraySeqStPerS<DocumentId>;
+        fn to_seq(docs: &DocumentSet)                                -> (seq: ArraySeqStPerS<DocumentId>)
+            ensures
+                docs@.finite(),
+                seq@.to_set() =~= docs@,
+                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] docs@.contains(seq@[i]);
 
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)

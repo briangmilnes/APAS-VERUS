@@ -482,7 +482,7 @@ pub mod Chap40 {
 #[cfg(not(feature = "experiments_only"))]
 pub mod Chap41 {
     pub mod ArraySetStEph;
-    // pub mod ArraySetEnumMtEph;  // uses bitvec (Verus can't link)
+    pub mod ArraySetEnumMtEph;
     pub mod AVLTreeSetStEph;
     pub mod AVLTreeSetStPer;
     pub mod AVLTreeSetMtEph;

@@ -79,7 +79,10 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqMtPerS<T>)
-            ensures self@.finite();
+            ensures
+                self@.finite(),
+                seq@.to_set() =~= self@,
+                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
@@ -144,7 +147,10 @@ broadcast use {
         fn to_seq(&self) -> (seq: AVLTreeSeqMtPerS<T>)
         {
             let seq = self.elements.clone();
-            proof { vstd::seq_lib::seq_to_set_is_finite(self.elements@); }
+            proof {
+                vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+                assert(seq@ =~= self.elements@);
+            }
             seq
         }
 

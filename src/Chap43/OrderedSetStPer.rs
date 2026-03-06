@@ -87,7 +87,10 @@ broadcast use {
             ensures remaining@ == self@.difference(other@), remaining@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
-            ensures self@.finite();
+            ensures
+                self@.finite(),
+                seq@.to_set() =~= self@,
+                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             ensures constructed@.finite();
@@ -254,9 +257,7 @@ broadcast use {
         }
 
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
-            ensures self@.finite()
         {
-            proof { assume(self.base_set.spec_avltreesetstper_wf()); }
             self.base_set.to_seq()
         }
 

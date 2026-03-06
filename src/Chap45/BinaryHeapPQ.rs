@@ -173,7 +173,7 @@ pub mod BinaryHeapPQ {
 
             fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)
                 requires obeys_feq_clone::<T>(),
-                ensures seq@.len() == self@.len();
+                ensures seq@ =~= self@;
 
             fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires

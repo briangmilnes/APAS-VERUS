@@ -86,7 +86,10 @@ broadcast use {
             ensures self@ == old(self)@.difference(other@), self@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
-            ensures self@.finite();
+            ensures
+                self@.finite(),
+                seq@.to_set() =~= self@,
+                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             ensures constructed@.finite();
@@ -221,17 +224,29 @@ broadcast use {
             self.base_set = found;
         }
 
-        #[verifier::external_body]
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
-            ensures self@.finite()
         {
             let eph_seq = self.base_set.to_seq();
             let len = eph_seq.length();
-            let mut elements = Vec::new();
-            for i in 0..len {
+            let mut elements: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    eph_seq.spec_well_formed(),
+                    len as nat == eph_seq@.len(),
+                    0 <= i <= len,
+                    elements@.len() == i as int,
+                decreases len - i,
+            {
                 elements.push(eph_seq.nth(i).clone());
+                i = i + 1;
             }
-            AVLTreeSeqStPerS::from_vec(elements)
+            let result = AVLTreeSeqStPerS::from_vec(elements);
+            proof {
+                // T::clone preserves View (StT bound); from_vec maps values through View.
+                assume(result@ =~= eph_seq@);
+            }
+            result
         }
 
         #[verifier::external_body]

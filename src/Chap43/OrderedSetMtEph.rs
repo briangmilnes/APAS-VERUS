@@ -82,7 +82,10 @@ broadcast use {
             ensures self@ == old(self)@.difference(other@), self@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)
-            ensures self@.finite();
+            ensures
+                self@.finite(),
+                seq@.to_set() =~= self@,
+                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// claude-4-sonet: Work Θ(n lg n), Span Θ(lg n), Parallelism Θ(1)
         fn from_seq(seq: ArraySeqStPerS<T>) -> (constructed: Self)
             ensures constructed@.finite();
@@ -193,7 +196,6 @@ broadcast use {
 
         #[verifier::external_body]
         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)
-            ensures self@.finite()
         {
             self.tree.in_order()
         }

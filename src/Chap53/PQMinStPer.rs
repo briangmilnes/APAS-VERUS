@@ -26,28 +26,41 @@ pub mod PQMinStPer {
     pub trait PQMinStPerTrait<V: StT + Ord, P: StT + Ord> {
         /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
         /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
-        fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF)                         -> PQMinResult<V, P>
+        fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF)                         -> (search: PQMinResult<V, P>)
         where
             G: Fn(&V) -> AVLTreeSetStPer<V>,
-            PF: Fn(&V) -> P;
+            PF: Fn(&V) -> P,
+            ensures search.visited@.contains(source@);
 
         /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
         /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
-        fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStPer<V>, priority_fn: &PF) -> PQMinResult<V, P>
+        fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStPer<V>, priority_fn: &PF) -> (search: PQMinResult<V, P>)
         where
             G: Fn(&V) -> AVLTreeSetStPer<V>,
-            PF: Fn(&V) -> P;
+            PF: Fn(&V) -> P,
+            ensures sources@.subset_of(search.visited@);
     }
 
     // 9. impls
 
+    impl<V: StT + Ord, P: StT + Ord> PQMinStPerTrait<V, P> for PQMinResult<V, P> {
+        fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF) -> (search: PQMinResult<V, P>)
+        where G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P,
+        { pq_min(graph, source, priority_fn) }
+
+        fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStPer<V>, priority_fn: &PF) -> (search: PQMinResult<V, P>)
+        where G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P,
+        { pq_min_multi(graph, sources, priority_fn) }
+    }
+
     /// Priority-first search from single source (Section 53.4).
     /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
     /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — delegates to pq_min_multi.
-    pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF) -> PQMinResult<V, P>
+    pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF) -> (search: PQMinResult<V, P>)
     where
         G: Fn(&V) -> AVLTreeSetStPer<V>,
         PF: Fn(&V) -> P,
+        ensures search.visited@.contains(source@),
     {
         let sources = AVLTreeSetStPer::singleton(source);
         pq_min_multi(graph, sources, priority_fn)
@@ -118,10 +131,11 @@ pub mod PQMinStPer {
         graph: &G,
         sources: AVLTreeSetStPer<V>,
         priority_fn: &PF,
-    ) -> PQMinResult<V, P>
+    ) -> (search: PQMinResult<V, P>)
     where
         G: Fn(&V) -> AVLTreeSetStPer<V>,
         PF: Fn(&V) -> P,
+        ensures sources@.subset_of(search.visited@),
     {
         let mut initial_frontier = AVLTreeSetStPer::empty();
         let sources_seq = sources.to_seq();

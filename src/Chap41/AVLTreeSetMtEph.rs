@@ -79,7 +79,10 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(n), Span Θ(n)
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
-            ensures self@.finite();
+            ensures
+                self@.finite(),
+                seq@.to_set() =~= self@,
+                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
@@ -122,6 +125,15 @@ broadcast use {
     }
 
 
+    // 5. view impls
+
+    impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEph<T> {
+        #[verifier::external_body]
+        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
+            Set::empty()
+        }
+    }
+
     // 9. impls
 
     impl<T: StTInMtT + Ord + 'static> RwLockPredicate<AVLTreeSetStEph<T>> for AVLTreeSetMtEphInv {
@@ -133,15 +145,6 @@ broadcast use {
     #[verifier::external_body]
     fn new_set_mt_lock<T: StTInMtT + Ord + 'static>(val: AVLTreeSetStEph<T>) -> (lock: RwLock<AVLTreeSetStEph<T>, AVLTreeSetMtEphInv>) {
         RwLock::new(val, Ghost(AVLTreeSetMtEphInv))
-    }
-
-    // 5. view impls
-
-    impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEph<T> {
-        #[verifier::external_body]
-        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-            Set::empty()
-        }
     }
 
     // 9. impls
@@ -159,7 +162,6 @@ broadcast use {
 
         #[verifier::external_body]
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
-            ensures self@.finite()
         {
             let handle = self.inner.acquire_read();
             let seq = handle.borrow().to_seq();
