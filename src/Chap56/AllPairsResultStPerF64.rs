@@ -32,15 +32,20 @@ pub mod AllPairsResultStPerF64 {
     // 8. traits
 
     pub trait AllPairsResultStPerF64Trait: Sized {
-        fn new(n: usize) -> (empty: Self);
+        spec fn spec_n(&self) -> usize;
+
+        fn new(n: usize) -> (empty: Self)
+            ensures empty.spec_n() == n;
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64);
 
-        fn set_distance(self, u: usize, v: usize, dist: WrappedF64) -> (updated: Self);
+        fn set_distance(self, u: usize, v: usize, dist: WrappedF64) -> (updated: Self)
+            ensures updated.spec_n() == self.spec_n();
 
         fn get_predecessor(&self, u: usize, v: usize) -> (predecessor: Option<usize>);
 
-        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self);
+        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self)
+            ensures updated.spec_n() == self.spec_n();
 
         fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool);
 
@@ -50,8 +55,9 @@ pub mod AllPairsResultStPerF64 {
     // 9. impls
 
     impl AllPairsResultStPerF64Trait for AllPairsResultStPerF64 {
+        open spec fn spec_n(&self) -> usize { self.n }
+
         fn new(n: usize) -> (empty: Self)
-            ensures empty.n == n,
         {
             let unreach = unreachable_dist();
             let zero = zero_dist();
@@ -110,9 +116,6 @@ pub mod AllPairsResultStPerF64 {
         }
 
         fn set_distance(self, u: usize, v: usize, dist: WrappedF64) -> (updated: Self)
-            ensures
-                updated.n == self.n,
-                updated.predecessors == self.predecessors,
         {
             if u >= self.distances.seq.len() || v >= self.n { return self; }
             let mut row_vec = self.distances.seq[u].seq.clone();
@@ -142,9 +145,6 @@ pub mod AllPairsResultStPerF64 {
         }
 
         fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self)
-            ensures
-                updated.n == self.n,
-                updated.distances == self.distances,
         {
             if u >= self.predecessors.seq.len() || v >= self.n { return self; }
             let mut row_vec = self.predecessors.seq[u].seq.clone();
@@ -216,4 +216,18 @@ pub mod AllPairsResultStPerF64 {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for AllPairsResultStPerF64 {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AllPairsResultStPerF64(n={})", self.n)
+        }
+    }
+
+    impl std::fmt::Display for AllPairsResultStPerF64 {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AllPairsResult(n={})", self.n)
+        }
+    }
 }

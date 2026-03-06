@@ -12,34 +12,38 @@ pub mod Example56_3 {
 
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
-    use crate::Chap56::PathWeightUtilsStEph::PathWeightUtilsStEph::path_weight_int;
+    use crate::Chap56::PathWeightUtilsStEph::PathWeightUtilsStEph::*;
 
     verus! {
 
     // Table of Contents
+    // 4. type definitions
     // 8. traits
     // 9. impls
 
+    // 4. type definitions
+
+    pub struct Example56_3S;
+
     // 8. traits
 
-    pub trait Example56_3Trait {
-        /// Example demonstrating a negative weight cycle
-        /// APAS: Work O(|V| + |E|), Span O(1)
+    pub trait Example56_3Trait: Sized {
+        /// Example demonstrating a negative weight cycle.
         fn example_negative_cycle();
 
-        /// Example showing that shortest paths are undefined in presence of negative cycles
-        /// APAS: Work O(|E|), Span O(1)
+        /// Example showing shortest paths are undefined with negative cycles.
         fn example_undefined_shortest_path();
     }
 
     // 9. impls
 
+    impl Example56_3Trait for Example56_3S {
     /// Example demonstrating a negative weight cycle.
     /// Graph: 0 -> 1 -> 2 -> 1 (cycle with negative total weight).
     /// - APAS: N/A — demonstration code.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
     #[verifier::external_body]
-    pub fn example_negative_cycle() {
+    fn example_negative_cycle() {
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 1, i64::MAX]),
             ArraySeqStEphS::from_vec(vec![i64::MAX, 0, 2]),
@@ -49,19 +53,19 @@ pub mod Example56_3 {
         println!("Graph with negative cycle 1->2->1 (weight = 2 + (-4) = -2):");
 
         let simple_path = ArraySeqStPerS::from_vec(vec![0, 1]);
-        match path_weight_int(&simple_path, &weights) {
+        match PathWeightUtilsStEphS::path_weight_int(&simple_path, &weights) {
             | Some(w) => println!("  Path 0→1: {w}"),
             | None => println!("  Invalid path"),
         }
 
         let one_cycle = ArraySeqStPerS::from_vec(vec![0, 1, 2, 1]);
-        match path_weight_int(&one_cycle, &weights) {
+        match PathWeightUtilsStEphS::path_weight_int(&one_cycle, &weights) {
             | Some(w) => println!("  Path 0→1→2→1 (one cycle): {w}"),
             | None => println!("  Invalid path"),
         }
 
         let two_cycles = ArraySeqStPerS::from_vec(vec![0, 1, 2, 1, 2, 1]);
-        match path_weight_int(&two_cycles, &weights) {
+        match PathWeightUtilsStEphS::path_weight_int(&two_cycles, &weights) {
             | Some(w) => println!("  Path 0→1→2→1→2→1 (two cycles): {w}"),
             | None => println!("  Invalid path"),
         }
@@ -73,7 +77,7 @@ pub mod Example56_3 {
     /// - APAS: N/A — demonstration code.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
     #[verifier::external_body]
-    pub fn example_undefined_shortest_path() {
+    fn example_undefined_shortest_path() {
         let _weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 1, i64::MAX, i64::MAX]),
             ArraySeqStEphS::from_vec(vec![i64::MAX, 0, 1, 1]),
@@ -85,6 +89,21 @@ pub mod Example56_3 {
         println!("  Shortest path from 0 to 1 is undefined (can traverse cycle repeatedly)");
         println!("  Shortest path from 0 to 3 through 1 is also undefined");
     }
+    } // impl Example56_3Trait for Example56_3S
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for Example56_3S {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "Example56_3S")
+        }
+    }
+
+    impl std::fmt::Display for Example56_3S {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "Example56_3")
+        }
+    }
 }

@@ -22,18 +22,63 @@ pub mod PathWeightUtilsStPer {
     verus! {
 
     // Table of Contents
-    // 6. spec fns
+    // 4. type definitions
+    // 8. traits
     // 9. impls
 
-    // 6. spec fns
+    // 4. type definitions
 
-    pub open spec fn spec_path_weight_int(
+    pub struct PathWeightUtilsStPerS;
+
+    // 8. traits
+
+    pub trait PathWeightUtilsStPerTrait: Sized {
+        spec fn spec_path_weight_int(
+            path: &ArraySeqStPerS<usize>,
+            weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>,
+            i: int,
+            total: int,
+        ) -> Option<i64>
+            recommends 0 <= i, i64::MIN as int <= total <= i64::MAX as int;
+
+        spec fn spec_validate_subpath_int(
+            path: &ArraySeqStPerS<usize>,
+            distances: &ArraySeqStPerS<i64>,
+            weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>,
+            i: int,
+        ) -> bool;
+
+        fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>) -> (weight: Option<i64>)
+            ensures weight == Self::spec_path_weight_int(path, weights, 0, 0);
+
+        fn path_weight_float(
+            path: &ArraySeqStPerS<usize>,
+            weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,
+        ) -> (weight: Option<WrappedF64>);
+
+        fn validate_subpath_property_int(
+            path: &ArraySeqStPerS<usize>,
+            distances: &ArraySeqStPerS<i64>,
+            weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>,
+        ) -> (valid: bool)
+            ensures valid == Self::spec_validate_subpath_int(path, distances, weights, 0);
+
+        fn validate_subpath_property_float(
+            path: &ArraySeqStPerS<usize>,
+            distances: &ArraySeqStPerS<WrappedF64>,
+            weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,
+        ) -> (valid: bool);
+    }
+
+    // 9. impls
+
+    impl PathWeightUtilsStPerTrait for PathWeightUtilsStPerS {
+    open spec fn spec_path_weight_int(
         path: &ArraySeqStPerS<usize>,
         weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>,
         i: int,
         total: int,
     ) -> Option<i64>
-        recommends 0 <= i, i64::MIN as int <= total <= i64::MAX as int,
         decreases path.spec_len() - i,
     {
         if i < 0 || path.spec_len() < 2 || i >= path.spec_len() - 1 {
@@ -49,13 +94,13 @@ pub mod PathWeightUtilsStPer {
                 if !(i64::MIN as int <= new_total <= i64::MAX as int) {
                     None
                 } else {
-                    spec_path_weight_int(path, weights, i + 1, new_total)
+                    Self::spec_path_weight_int(path, weights, i + 1, new_total)
                 }
             }
         }
     }
 
-    pub open spec fn spec_validate_subpath_int(
+    open spec fn spec_validate_subpath_int(
         path: &ArraySeqStPerS<usize>,
         distances: &ArraySeqStPerS<i64>,
         weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>,
@@ -84,20 +129,18 @@ pub mod PathWeightUtilsStPer {
                         } else if dist_v != sum as i64 {
                             false
                         } else {
-                            spec_validate_subpath_int(path, distances, weights, i + 1)
+                            Self::spec_validate_subpath_int(path, distances, weights, i + 1)
                         }
                     } else {
-                        spec_validate_subpath_int(path, distances, weights, i + 1)
+                        Self::spec_validate_subpath_int(path, distances, weights, i + 1)
                     }
                 }
             }
         }
     }
 
-    // 9. impls
-
-    pub fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>) -> (result: Option<i64>)
-        ensures result == spec_path_weight_int(path, weights, 0, 0),
+    fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>) -> (weight: Option<i64>)
+        ensures weight == Self::spec_path_weight_int(path, weights, 0, 0),
     {
         let k = path.length();
         if k < 2 {
@@ -113,7 +156,7 @@ pub mod PathWeightUtilsStPer {
                 k == path.spec_len(),
                 end < k,
                 k >= 2,
-                spec_path_weight_int(path, weights, 0, 0) == spec_path_weight_int(path, weights, i as int, total as int),
+                Self::spec_path_weight_int(path, weights, 0, 0) == Self::spec_path_weight_int(path, weights, i as int, total as int),
             decreases end - i,
         {
             let u = *path.nth(i);
@@ -131,10 +174,10 @@ pub mod PathWeightUtilsStPer {
         Some(total)
     }
 
-    pub fn path_weight_float(
+    fn path_weight_float(
         path: &ArraySeqStPerS<usize>,
         weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,
-    ) -> Option<WrappedF64> {
+    ) -> (weight: Option<WrappedF64>) {
         let k = path.length();
         if k < 2 {
             return Some(zero_dist());
@@ -162,12 +205,12 @@ pub mod PathWeightUtilsStPer {
         Some(total)
     }
 
-    pub fn validate_subpath_property_int(
+    fn validate_subpath_property_int(
         path: &ArraySeqStPerS<usize>,
         distances: &ArraySeqStPerS<i64>,
         weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>,
-    ) -> (result: bool)
-        ensures result == spec_validate_subpath_int(path, distances, weights, 0),
+    ) -> (valid: bool)
+        ensures valid == Self::spec_validate_subpath_int(path, distances, weights, 0),
     {
         let k = path.length();
         if k < 2 {
@@ -182,7 +225,7 @@ pub mod PathWeightUtilsStPer {
                 k == path.spec_len(),
                 end < k,
                 k >= 2,
-                spec_validate_subpath_int(path, distances, weights, 0) == spec_validate_subpath_int(path, distances, weights, i as int),
+                Self::spec_validate_subpath_int(path, distances, weights, 0) == Self::spec_validate_subpath_int(path, distances, weights, i as int),
             decreases end - i,
         {
             let u = *path.nth(i);
@@ -207,11 +250,11 @@ pub mod PathWeightUtilsStPer {
         true
     }
 
-    pub fn validate_subpath_property_float(
+    fn validate_subpath_property_float(
         path: &ArraySeqStPerS<usize>,
         distances: &ArraySeqStPerS<WrappedF64>,
         weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,
-    ) -> bool {
+    ) -> (valid: bool) {
         let k = path.length();
         if k < 2 {
             return true;
@@ -252,6 +295,21 @@ pub mod PathWeightUtilsStPer {
         }
         true
     }
+    } // impl PathWeightUtilsStPerTrait for PathWeightUtilsStPerS
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for PathWeightUtilsStPerS {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "PathWeightUtilsStPerS")
+        }
+    }
+
+    impl std::fmt::Display for PathWeightUtilsStPerS {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "PathWeightUtilsStPer")
+        }
+    }
 }

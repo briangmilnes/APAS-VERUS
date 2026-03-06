@@ -23,15 +23,43 @@ pub mod AllPairsResultStEphI64 {
     // 8. traits
 
     pub trait AllPairsResultStEphI64Trait: Sized {
-        fn new(n: usize) -> (empty: Self);
+        spec fn spec_n(&self) -> usize;
 
-        fn get_distance(&self, u: usize, v: usize) -> (dist: i64);
+        spec fn spec_distances_len(&self) -> nat;
 
-        fn set_distance(&mut self, u: usize, v: usize, dist: i64);
+        spec fn spec_distances_row_len(&self, u: int) -> nat;
 
-        fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>);
+        spec fn spec_distance_at(&self, u: int, v: int) -> i64;
 
-        fn set_predecessor(&mut self, u: usize, v: usize, pred: usize);
+        spec fn spec_predecessors_len(&self) -> nat;
+
+        spec fn spec_predecessors_row_len(&self, u: int) -> nat;
+
+        spec fn spec_predecessor_at(&self, u: int, v: int) -> usize;
+
+        fn new(n: usize) -> (empty: Self)
+            ensures empty.spec_n() == n;
+
+        fn get_distance(&self, u: usize, v: usize) -> (dist: i64)
+            ensures
+                (u as int) >= self.spec_distances_len() ==> dist == UNREACHABLE,
+                (u as int) < self.spec_distances_len() && (v as int) >= self.spec_distances_row_len(u as int) ==> dist == UNREACHABLE,
+                (u as int) < self.spec_distances_len() && (v as int) < self.spec_distances_row_len(u as int) ==> dist == self.spec_distance_at(u as int, v as int);
+
+        fn set_distance(&mut self, u: usize, v: usize, dist: i64)
+            ensures
+                self.spec_n() == old(self).spec_n();
+
+        fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>)
+            ensures
+                (u as int) >= self.spec_predecessors_len() ==> pred is None,
+                (u as int) < self.spec_predecessors_len() && (v as int) >= self.spec_predecessors_row_len(u as int) ==> pred is None,
+                (u as int) < self.spec_predecessors_len() && (v as int) < self.spec_predecessors_row_len(u as int) && self.spec_predecessor_at(u as int, v as int) == NO_PREDECESSOR ==> pred is None,
+                (u as int) < self.spec_predecessors_len() && (v as int) < self.spec_predecessors_row_len(u as int) && self.spec_predecessor_at(u as int, v as int) != NO_PREDECESSOR ==> pred == Some(self.spec_predecessor_at(u as int, v as int));
+
+        fn set_predecessor(&mut self, u: usize, v: usize, pred: usize)
+            ensures
+                self.spec_n() == old(self).spec_n();
 
         fn is_reachable(&self, u: usize, v: usize) -> (b: bool);
 
@@ -41,8 +69,21 @@ pub mod AllPairsResultStEphI64 {
     // 9. impls
 
     impl AllPairsResultStEphI64Trait for AllPairsResultStEphI64 {
+        open spec fn spec_n(&self) -> usize { self.n }
+
+        open spec fn spec_distances_len(&self) -> nat { self.distances.spec_len() }
+
+        open spec fn spec_distances_row_len(&self, u: int) -> nat { self.distances.spec_index(u).spec_len() }
+
+        open spec fn spec_distance_at(&self, u: int, v: int) -> i64 { self.distances.spec_index(u).spec_index(v) }
+
+        open spec fn spec_predecessors_len(&self) -> nat { self.predecessors.spec_len() }
+
+        open spec fn spec_predecessors_row_len(&self, u: int) -> nat { self.predecessors.spec_index(u).spec_len() }
+
+        open spec fn spec_predecessor_at(&self, u: int, v: int) -> usize { self.predecessors.spec_index(u).spec_index(v) }
+
         fn new(n: usize) -> (empty: Self)
-            ensures empty.n == n,
         {
             let mut dist_rows: Vec<ArraySeqStEphS<i64>> = Vec::new();
             let mut i: usize = 0;
@@ -96,10 +137,6 @@ pub mod AllPairsResultStEphI64 {
         }
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64)
-            ensures
-                u >= self.distances.spec_len() ==> dist == UNREACHABLE,
-                u < self.distances.spec_len() && v >= self.distances.spec_index(u as int).spec_len() ==> dist == UNREACHABLE,
-                u < self.distances.spec_len() && v < self.distances.spec_index(u as int).spec_len() ==> dist == self.distances.spec_index(u as int).spec_index(v as int),
         {
             if u >= self.distances.length() {
                 return UNREACHABLE;
@@ -112,9 +149,6 @@ pub mod AllPairsResultStEphI64 {
         }
 
         fn set_distance(&mut self, u: usize, v: usize, dist: i64)
-            ensures
-                self.n == old(self).n,
-                self.predecessors == old(self).predecessors,
         {
             if u < self.distances.length() {
                 let row_ref = self.distances.nth(u);
@@ -127,11 +161,6 @@ pub mod AllPairsResultStEphI64 {
         }
 
         fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>)
-            ensures
-                u >= self.predecessors.spec_len() ==> pred is None,
-                u < self.predecessors.spec_len() && v >= self.predecessors.spec_index(u as int).spec_len() ==> pred is None,
-                u < self.predecessors.spec_len() && v < self.predecessors.spec_index(u as int).spec_len() && self.predecessors.spec_index(u as int).spec_index(v as int) == NO_PREDECESSOR ==> pred is None,
-                u < self.predecessors.spec_len() && v < self.predecessors.spec_index(u as int).spec_len() && self.predecessors.spec_index(u as int).spec_index(v as int) != NO_PREDECESSOR ==> pred == Some(self.predecessors.spec_index(u as int).spec_index(v as int)),
         {
             if u >= self.predecessors.length() {
                 return None;
@@ -145,9 +174,6 @@ pub mod AllPairsResultStEphI64 {
         }
 
         fn set_predecessor(&mut self, u: usize, v: usize, pred: usize)
-            ensures
-                self.n == old(self).n,
-                self.distances == old(self).distances,
         {
             if u < self.predecessors.length() {
                 let row_ref = self.predecessors.nth(u);
@@ -222,4 +248,18 @@ pub mod AllPairsResultStEphI64 {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for AllPairsResultStEphI64 {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AllPairsResultStEphI64(n={})", self.n)
+        }
+    }
+
+    impl std::fmt::Display for AllPairsResultStEphI64 {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AllPairsResult(n={})", self.n)
+        }
+    }
 }

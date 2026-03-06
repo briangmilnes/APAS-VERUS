@@ -17,32 +17,35 @@ pub mod Example56_1 {
     verus! {
 
     // Table of Contents
+    // 4. type definitions
     // 8. traits
     // 9. impls
 
+    // 4. type definitions
+
+    pub struct Example56_1S;
+
     // 8. traits
 
-    pub trait Example56_1Trait {
-        /// Claude Work: O(1), Span: O(1)
+    pub trait Example56_1Trait: Sized {
         /// Example demonstrating path weight computation with integer weights.
         fn example_path_weight_int();
 
-        /// Claude Work: O(1), Span: O(1)
         /// Example demonstrating path weight computation with floating-point weights.
         fn example_path_weight_float();
 
-        /// Claude Work: O(1), Span: O(1)
         /// Example with negative edge weights.
         fn example_negative_weights();
     }
 
     // 9. impls
 
+    impl Example56_1Trait for Example56_1S {
     /// Example demonstrating path weight computation with integer weights.
     /// - APAS: N/A — demonstration code.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
     #[verifier::external_body]
-    pub fn example_path_weight_int() {
+    fn example_path_weight_int() {
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 5, 10, i64::MAX]),
             ArraySeqStEphS::from_vec(vec![i64::MAX, 0, 3, i64::MAX]),
@@ -51,7 +54,7 @@ pub mod Example56_1 {
         ]);
 
         let path = ArraySeqStPerS::from_vec(vec![0, 1, 2, 3]);
-        match path_weight_int(&path, &weights) {
+        match PathWeightUtilsStEphS::path_weight_int(&path, &weights) {
             | Some(w) => println!("Path 0→1→2→3 has weight: {w}"),
             | None => println!("Invalid path"),
         }
@@ -61,7 +64,7 @@ pub mod Example56_1 {
     /// - APAS: N/A — demonstration code.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
     #[verifier::external_body]
-    pub fn example_path_weight_float() {
+    fn example_path_weight_float() {
         let inf = unreachable_dist();
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![
@@ -79,7 +82,7 @@ pub mod Example56_1 {
         ]);
 
         let path = ArraySeqStPerS::from_vec(vec![0, 1, 2, 3]);
-        match path_weight_float(&path, &weights) {
+        match PathWeightUtilsStEphS::path_weight_float(&path, &weights) {
             | Some(w) => println!("Path 0→1→2→3 has weight: {:.1}", w.val),
             | None => println!("Invalid path"),
         }
@@ -89,7 +92,7 @@ pub mod Example56_1 {
     /// - APAS: N/A — demonstration code.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
     #[verifier::external_body]
-    pub fn example_negative_weights() {
+    fn example_negative_weights() {
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 10, i64::MAX]),
             ArraySeqStEphS::from_vec(vec![i64::MAX, 0, -5]),
@@ -97,11 +100,26 @@ pub mod Example56_1 {
         ]);
 
         let path = ArraySeqStPerS::from_vec(vec![0, 1, 2]);
-        match path_weight_int(&path, &weights) {
+        match PathWeightUtilsStEphS::path_weight_int(&path, &weights) {
             | Some(w) => println!("Path 0→1→2 with negative weight has total: {w}"),
             | None => println!("Invalid path"),
         }
     }
+    } // impl Example56_1Trait for Example56_1S
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for Example56_1S {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "Example56_1S")
+        }
+    }
+
+    impl std::fmt::Display for Example56_1S {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "Example56_1")
+        }
+    }
 }

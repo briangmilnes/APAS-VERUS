@@ -14,9 +14,11 @@ pub mod SSSPResultStPerI64 {
     pub const NO_PREDECESSOR: usize = usize::MAX;
 
     // Table of Contents
-    // 6. spec fns
+    // 4. type definitions
     // 8. traits
     // 9. impls
+
+    // 4. type definitions
 
     pub struct SSSPResultStPerI64 {
         pub distances: ArraySeqStPerS<i64>,
@@ -24,45 +26,83 @@ pub mod SSSPResultStPerI64 {
         pub source: usize,
     }
 
-    // 6. spec fns
-
-    pub open spec fn spec_ssspresultstperi64_wf(s: &SSSPResultStPerI64) -> bool {
-        s.distances@.len() == s.predecessors@.len()
-        && s.source < s.distances@.len()
-    }
-
     // 8. traits
 
     pub trait SSSPResultStPerI64Trait: Sized {
+        spec fn spec_ssspresultstperi64_wf(s: &SSSPResultStPerI64) -> bool;
+
+        spec fn spec_distances(&self) -> Seq<i64>;
+
+        spec fn spec_predecessors(&self) -> Seq<usize>;
+
+        spec fn spec_source(&self) -> usize;
+
         fn new(n: usize, source: usize) -> (empty: Self)
-            requires source < n;
+            requires source < n,
+            ensures
+                empty.spec_distances().len() == n,
+                empty.spec_predecessors().len() == n,
+                empty.spec_source() == source,
+                forall|i: int| #![trigger empty.spec_distances()[i]] 0 <= i < n ==>
+                    empty.spec_distances()[i] == (if i == source as int { 0i64 } else { UNREACHABLE }),
+                forall|i: int| #![trigger empty.spec_predecessors()[i]] 0 <= i < n ==>
+                    empty.spec_predecessors()[i] == NO_PREDECESSOR;
 
-        fn get_distance(&self, v: usize) -> (dist: i64);
+        fn get_distance(&self, v: usize) -> (dist: i64)
+            ensures
+                v >= self.spec_distances().len() ==> dist == UNREACHABLE,
+                v < self.spec_distances().len() ==> dist == self.spec_distances()[v as int];
 
-        fn set_distance(self, v: usize, dist: i64) -> (updated: Self);
+        fn set_distance(self, v: usize, dist: i64) -> (updated: Self)
+            ensures
+                v < self.spec_distances().len() ==> updated.spec_distances() =~= self.spec_distances().update(v as int, dist),
+                v >= self.spec_distances().len() ==> updated.spec_distances() =~= self.spec_distances(),
+                updated.spec_predecessors() =~= self.spec_predecessors(),
+                updated.spec_source() == self.spec_source();
 
-        fn get_predecessor(&self, v: usize) -> (pred: Option<usize>);
+        fn get_predecessor(&self, v: usize) -> (pred: Option<usize>)
+            ensures
+                v >= self.spec_predecessors().len() ==> pred is None,
+                v < self.spec_predecessors().len() && self.spec_predecessors()[v as int] == NO_PREDECESSOR ==> pred is None,
+                v < self.spec_predecessors().len() && self.spec_predecessors()[v as int] != NO_PREDECESSOR ==> pred == Some(self.spec_predecessors()[v as int]);
 
-        fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self);
+        fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self)
+            ensures
+                v < self.spec_predecessors().len() ==> updated.spec_predecessors() =~= self.spec_predecessors().update(v as int, pred),
+                v >= self.spec_predecessors().len() ==> updated.spec_predecessors() =~= self.spec_predecessors(),
+                updated.spec_distances() =~= self.spec_distances(),
+                updated.spec_source() == self.spec_source();
 
-        fn is_reachable(&self, v: usize) -> (b: bool);
+        fn is_reachable(&self, v: usize) -> (b: bool)
+            ensures
+                v >= self.spec_distances().len() ==> !b,
+                v < self.spec_distances().len() ==> b == (self.spec_distances()[v as int] != UNREACHABLE);
 
-        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);
+        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
+            ensures
+                v >= self.spec_distances().len() ==> path is None,
+                v < self.spec_distances().len() && self.spec_distances()[v as int] == UNREACHABLE ==> path is None,
+                v >= self.spec_predecessors().len() ==> path is None,
+                path is Some ==> path->Some_0.spec_len() >= 1,
+                path is Some ==> path->Some_0.spec_index(0) == self.spec_source(),
+                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v;
     }
 
     // 9. impls
 
     impl SSSPResultStPerI64Trait for SSSPResultStPerI64 {
+        open spec fn spec_ssspresultstperi64_wf(s: &SSSPResultStPerI64) -> bool {
+            s.distances@.len() == s.predecessors@.len()
+            && s.source < s.distances@.len()
+        }
+
+        open spec fn spec_distances(&self) -> Seq<i64> { self.distances.seq@ }
+
+        open spec fn spec_predecessors(&self) -> Seq<usize> { self.predecessors.seq@ }
+
+        open spec fn spec_source(&self) -> usize { self.source }
+
         fn new(n: usize, source: usize) -> (empty: Self)
-            ensures
-                empty.distances@.len() == n as int,
-                empty.predecessors@.len() == n as int,
-                empty.source == source,
-                forall|i: int| #![trigger empty.distances@[i]] 0 <= i < n ==>
-                    empty.distances@[i] == (if i == source as int { 0i64 } else { UNREACHABLE }),
-                forall|i: int| #![trigger empty.predecessors@[i]] 0 <= i < n ==>
-                    empty.predecessors@[i] == NO_PREDECESSOR,
-                spec_ssspresultstperi64_wf(&empty),
         {
             let distances = ArraySeqStPerS::tabulate(
                 &(|i: usize| -> (r: i64)
@@ -85,9 +125,6 @@ pub mod SSSPResultStPerI64 {
         }
 
         fn get_distance(&self, v: usize) -> (dist: i64)
-            ensures
-                v >= self.distances@.len() ==> dist == UNREACHABLE,
-                v < self.distances@.len() ==> dist == self.distances@[v as int],
         {
             if v >= self.distances.length() {
                 return UNREACHABLE;
@@ -96,12 +133,6 @@ pub mod SSSPResultStPerI64 {
         }
 
         fn set_distance(self, v: usize, dist: i64) -> (updated: Self)
-            ensures
-                v < self.distances@.len() ==> updated.distances@ == self.distances@.update(v as int, dist),
-                v >= self.distances@.len() ==> updated.distances@ == self.distances@,
-                updated.predecessors@ == self.predecessors@,
-                updated.source == self.source,
-                spec_ssspresultstperi64_wf(&self) ==> spec_ssspresultstperi64_wf(&updated),
         {
             if v >= self.distances.seq.len() { return self; }
             let mut dist_vec = self.distances.seq;
@@ -114,10 +145,6 @@ pub mod SSSPResultStPerI64 {
         }
 
         fn get_predecessor(&self, v: usize) -> (pred: Option<usize>)
-            ensures
-                v >= self.predecessors@.len() ==> pred is None,
-                v < self.predecessors@.len() && self.predecessors@[v as int] == NO_PREDECESSOR ==> pred is None,
-                v < self.predecessors@.len() && self.predecessors@[v as int] != NO_PREDECESSOR ==> pred == Some(self.predecessors@[v as int]),
         {
             if v >= self.predecessors.length() {
                 return None;
@@ -127,12 +154,6 @@ pub mod SSSPResultStPerI64 {
         }
 
         fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self)
-            ensures
-                v < self.predecessors@.len() ==> updated.predecessors@ == self.predecessors@.update(v as int, pred),
-                v >= self.predecessors@.len() ==> updated.predecessors@ == self.predecessors@,
-                updated.distances@ == self.distances@,
-                updated.source == self.source,
-                spec_ssspresultstperi64_wf(&self) ==> spec_ssspresultstperi64_wf(&updated),
         {
             if v >= self.predecessors.seq.len() { return self; }
             let mut pred_vec = self.predecessors.seq;
@@ -145,24 +166,11 @@ pub mod SSSPResultStPerI64 {
         }
 
         fn is_reachable(&self, v: usize) -> (b: bool)
-            ensures
-                v >= self.distances@.len() ==> !b,
-                v < self.distances@.len() ==> b == (self.distances@[v as int] != UNREACHABLE),
         {
             self.get_distance(v) != UNREACHABLE
         }
 
         fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
-            ensures
-                v >= self.distances@.len() ==> path is None,
-                v < self.distances@.len() && self.distances@[v as int] == UNREACHABLE ==> path is None,
-                v >= self.predecessors@.len() ==> path is None,
-                path is Some ==> path->Some_0.spec_len() >= 1,
-                path is Some ==> path->Some_0.spec_index(0) == self.source,
-                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v,
-                path is Some ==> forall|j: int| #![trigger path->Some_0.spec_index(j)]
-                    0 <= j < path->Some_0.spec_len()
-                    ==> path->Some_0.spec_index(j) < self.predecessors.spec_len(),
         {
             if !self.is_reachable(v) { return None; }
             let n = self.predecessors.length();
@@ -215,4 +223,18 @@ pub mod SSSPResultStPerI64 {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for SSSPResultStPerI64 {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SSSPResultStPerI64(source={}, n={})", self.source, self.distances.length())
+        }
+    }
+
+    impl std::fmt::Display for SSSPResultStPerI64 {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SSSPResult(source={}, n={})", self.source, self.distances.length())
+        }
+    }
 }

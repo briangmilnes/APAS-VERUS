@@ -50,18 +50,50 @@ broadcast use {
     // 8. traits
 
     pub trait SSSPResultStPerF64Trait: Sized {
+        spec fn spec_distances(&self) -> Seq<WrappedF64>;
+
+        spec fn spec_predecessors(&self) -> Seq<usize>;
+
+        spec fn spec_source(&self) -> usize;
+
         fn new(n: usize, source: usize) -> (empty: Self)
-            requires source < n;
+            requires source < n,
+            ensures
+                empty.spec_distances().len() == n,
+                empty.spec_predecessors().len() == n,
+                empty.spec_source() == source;
 
-        fn get_distance(&self, v: usize) -> (dist: WrappedF64);
+        fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+            ensures
+                v >= self.spec_distances().len() ==> dist@ == UNREACHABLE_SPEC(),
+                v < self.spec_distances().len() ==> dist == self.spec_distances()[v as int];
 
-        fn set_distance(self, v: usize, dist: WrappedF64) -> (updated: Self);
+        fn set_distance(self, v: usize, dist: WrappedF64) -> (updated: Self)
+            ensures
+                updated.spec_distances().len() == self.spec_distances().len(),
+                v < self.spec_distances().len() ==> updated.spec_distances() =~= self.spec_distances().update(v as int, dist),
+                v >= self.spec_distances().len() ==> updated.spec_distances() =~= self.spec_distances(),
+                updated.spec_predecessors() == self.spec_predecessors(),
+                updated.spec_source() == self.spec_source();
 
-        fn get_predecessor(&self, v: usize) -> (predecessor: Option<usize>);
+        fn get_predecessor(&self, v: usize) -> (predecessor: Option<usize>)
+            ensures
+                v >= self.spec_predecessors().len() ==> predecessor is None,
+                v < self.spec_predecessors().len() && self.spec_predecessors()[v as int] == NO_PREDECESSOR ==> predecessor is None,
+                v < self.spec_predecessors().len() && self.spec_predecessors()[v as int] != NO_PREDECESSOR ==> predecessor == Some(self.spec_predecessors()[v as int]);
 
-        fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self);
+        fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self)
+            ensures
+                updated.spec_predecessors().len() == self.spec_predecessors().len(),
+                v < self.spec_predecessors().len() ==> updated.spec_predecessors() =~= self.spec_predecessors().update(v as int, pred),
+                v >= self.spec_predecessors().len() ==> updated.spec_predecessors() =~= self.spec_predecessors(),
+                updated.spec_distances() == self.spec_distances(),
+                updated.spec_source() == self.spec_source();
 
-        fn is_reachable(&self, v: usize) -> (reachable: bool);
+        fn is_reachable(&self, v: usize) -> (reachable: bool)
+            ensures
+                v >= self.spec_distances().len() ==> !reachable,
+                v < self.spec_distances().len() ==> reachable == self.spec_distances()[v as int].spec_is_finite();
 
         fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);
     }
@@ -69,11 +101,13 @@ broadcast use {
     // 9. impls
 
     impl SSSPResultStPerF64Trait for SSSPResultStPerF64 {
+        open spec fn spec_distances(&self) -> Seq<WrappedF64> { self.distances.seq@ }
+
+        open spec fn spec_predecessors(&self) -> Seq<usize> { self.predecessors.seq@ }
+
+        open spec fn spec_source(&self) -> usize { self.source }
+
         fn new(n: usize, source: usize) -> (empty: Self)
-            ensures
-                empty.distances@.len() == n,
-                empty.predecessors@.len() == n,
-                empty.source == source,
         {
             let unreach = unreachable_dist();
             let zero = zero_dist();
@@ -106,9 +140,6 @@ broadcast use {
         }
 
         fn set_distance(self, v: usize, dist: WrappedF64) -> (updated: Self)
-            ensures
-                updated.predecessors@ == self.predecessors@,
-                updated.source == self.source,
         {
             if v >= self.distances.seq.len() { return self; }
             let mut dist_vec = self.distances.seq;
@@ -129,9 +160,6 @@ broadcast use {
         }
 
         fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self)
-            ensures
-                updated.distances@ == self.distances@,
-                updated.source == self.source,
         {
             if v >= self.predecessors.seq.len() { return self; }
             let mut pred_vec = self.predecessors.seq;
@@ -143,6 +171,7 @@ broadcast use {
             }
         }
 
+        #[verifier::external_body]
         fn is_reachable(&self, v: usize) -> (reachable: bool) {
             self.get_distance(v).is_finite()
         }
@@ -189,4 +218,18 @@ broadcast use {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for SSSPResultStPerF64 {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SSSPResultStPerF64(source={}, n={})", self.source, self.distances.length())
+        }
+    }
+
+    impl std::fmt::Display for SSSPResultStPerF64 {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SSSPResult(source={}, n={})", self.source, self.distances.length())
+        }
+    }
 }

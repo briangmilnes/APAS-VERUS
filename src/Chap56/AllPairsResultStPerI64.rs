@@ -14,9 +14,11 @@ pub mod AllPairsResultStPerI64 {
     pub const NO_PREDECESSOR: usize = usize::MAX;
 
     // Table of Contents
-    // 6. spec fns
+    // 4. type definitions
     // 8. traits
     // 9. impls
+
+    // 4. type definitions
 
     pub struct AllPairsResultStPerI64 {
         pub distances: ArraySeqStPerS<ArraySeqStPerS<i64>>,
@@ -24,29 +26,46 @@ pub mod AllPairsResultStPerI64 {
         pub n: usize,
     }
 
-    // 6. spec fns
-
-    pub open spec fn spec_allpairsresultstperi64_wf(s: &AllPairsResultStPerI64) -> bool {
-        s.distances.spec_len() == s.n as nat
-        && s.predecessors.spec_len() == s.n as nat
-        && forall|r: int| #![trigger s.distances.spec_index(r)]
-            0 <= r < s.n ==> s.distances.spec_index(r).spec_len() == s.n as nat
-        && forall|r: int| #![trigger s.predecessors.spec_index(r)]
-            0 <= r < s.n ==> s.predecessors.spec_index(r).spec_len() == s.n as nat
-    }
-
     // 8. traits
 
     pub trait AllPairsResultStPerI64Trait: Sized {
-        fn new(n: usize) -> (empty: Self);
+        spec fn spec_allpairsresultstperi64_wf(s: &AllPairsResultStPerI64) -> bool;
 
-        fn get_distance(&self, u: usize, v: usize) -> (dist: i64);
+        spec fn spec_n(&self) -> usize;
 
-        fn set_distance(self, u: usize, v: usize, dist: i64) -> (updated: Self);
+        spec fn spec_distances_len(&self) -> nat;
 
-        fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>);
+        spec fn spec_distances_row_len(&self, u: int) -> nat;
 
-        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self);
+        spec fn spec_distance_at(&self, u: int, v: int) -> i64;
+
+        spec fn spec_predecessors_len(&self) -> nat;
+
+        spec fn spec_predecessors_row_len(&self, u: int) -> nat;
+
+        spec fn spec_predecessor_at(&self, u: int, v: int) -> usize;
+
+        fn new(n: usize) -> (empty: Self)
+            ensures empty.spec_n() == n;
+
+        fn get_distance(&self, u: usize, v: usize) -> (dist: i64)
+            ensures
+                (u as int) >= self.spec_distances_len() ==> dist == UNREACHABLE,
+                (u as int) < self.spec_distances_len() && (v as int) >= self.spec_distances_row_len(u as int) ==> dist == UNREACHABLE,
+                (u as int) < self.spec_distances_len() && (v as int) < self.spec_distances_row_len(u as int) ==> dist == self.spec_distance_at(u as int, v as int);
+
+        fn set_distance(self, u: usize, v: usize, dist: i64) -> (updated: Self)
+            ensures updated.spec_n() == self.spec_n();
+
+        fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>)
+            ensures
+                (u as int) >= self.spec_predecessors_len() ==> pred is None,
+                (u as int) < self.spec_predecessors_len() && (v as int) >= self.spec_predecessors_row_len(u as int) ==> pred is None,
+                (u as int) < self.spec_predecessors_len() && (v as int) < self.spec_predecessors_row_len(u as int) && self.spec_predecessor_at(u as int, v as int) == NO_PREDECESSOR ==> pred is None,
+                (u as int) < self.spec_predecessors_len() && (v as int) < self.spec_predecessors_row_len(u as int) && self.spec_predecessor_at(u as int, v as int) != NO_PREDECESSOR ==> pred == Some(self.spec_predecessor_at(u as int, v as int));
+
+        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self)
+            ensures updated.spec_n() == self.spec_n();
 
         fn is_reachable(&self, u: usize, v: usize) -> (b: bool);
 
@@ -56,9 +75,31 @@ pub mod AllPairsResultStPerI64 {
     // 9. impls
 
     impl AllPairsResultStPerI64Trait for AllPairsResultStPerI64 {
+        open spec fn spec_allpairsresultstperi64_wf(s: &AllPairsResultStPerI64) -> bool {
+            s.distances.spec_len() == s.n as nat
+            && s.predecessors.spec_len() == s.n as nat
+            && forall|r: int| #![trigger s.distances.spec_index(r)]
+                0 <= r < s.n ==> s.distances.spec_index(r).spec_len() == s.n as nat
+            && forall|r: int| #![trigger s.predecessors.spec_index(r)]
+                0 <= r < s.n ==> s.predecessors.spec_index(r).spec_len() == s.n as nat
+        }
+
+        open spec fn spec_n(&self) -> usize { self.n }
+
+        open spec fn spec_distances_len(&self) -> nat { self.distances.spec_len() }
+
+        open spec fn spec_distances_row_len(&self, u: int) -> nat { self.distances.spec_index(u).spec_len() }
+
+        open spec fn spec_distance_at(&self, u: int, v: int) -> i64 { self.distances.spec_index(u).spec_index(v) }
+
+        open spec fn spec_predecessors_len(&self) -> nat { self.predecessors.spec_len() }
+
+        open spec fn spec_predecessors_row_len(&self, u: int) -> nat { self.predecessors.spec_index(u).spec_len() }
+
+        open spec fn spec_predecessor_at(&self, u: int, v: int) -> usize { self.predecessors.spec_index(u).spec_index(v) }
+
         fn new(n: usize) -> (empty: Self)
             ensures
-                empty.n == n,
                 empty.distances.spec_len() == n as nat,
                 empty.predecessors.spec_len() == n as nat,
                 forall|r: int| #![trigger empty.distances.spec_index(r)]
@@ -71,7 +112,7 @@ pub mod AllPairsResultStPerI64 {
                 forall|r: int, c: int| #![trigger empty.predecessors.spec_index(r).spec_index(c)]
                     0 <= r < n && 0 <= c < n ==>
                     empty.predecessors.spec_index(r).spec_index(c) == NO_PREDECESSOR,
-                spec_allpairsresultstperi64_wf(&empty),
+                Self::spec_allpairsresultstperi64_wf(&empty),
         {
             let mut dist_rows: Vec<ArraySeqStPerS<i64>> = Vec::new();
             let mut i: usize = 0;
@@ -139,10 +180,6 @@ pub mod AllPairsResultStPerI64 {
         }
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64)
-            ensures
-                u >= self.distances.spec_len() ==> dist == UNREACHABLE,
-                u < self.distances.spec_len() && v >= self.distances.spec_index(u as int).spec_len() ==> dist == UNREACHABLE,
-                u < self.distances.spec_len() && v < self.distances.spec_index(u as int).spec_len() ==> dist == self.distances.spec_index(u as int).spec_index(v as int),
         {
             if u >= self.distances.length() {
                 return UNREACHABLE;
@@ -186,11 +223,6 @@ pub mod AllPairsResultStPerI64 {
         }
 
         fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>)
-            ensures
-                u >= self.predecessors.spec_len() ==> pred is None,
-                u < self.predecessors.spec_len() && v >= self.predecessors.spec_index(u as int).spec_len() ==> pred is None,
-                u < self.predecessors.spec_len() && v < self.predecessors.spec_index(u as int).spec_len() && self.predecessors.spec_index(u as int).spec_index(v as int) == NO_PREDECESSOR ==> pred is None,
-                u < self.predecessors.spec_len() && v < self.predecessors.spec_index(u as int).spec_len() && self.predecessors.spec_index(u as int).spec_index(v as int) != NO_PREDECESSOR ==> pred == Some(self.predecessors.spec_index(u as int).spec_index(v as int)),
         {
             if u >= self.predecessors.length() {
                 return None;
@@ -321,4 +353,18 @@ pub mod AllPairsResultStPerI64 {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for AllPairsResultStPerI64 {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AllPairsResultStPerI64(n={})", self.n)
+        }
+    }
+
+    impl std::fmt::Display for AllPairsResultStPerI64 {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AllPairsResult(n={})", self.n)
+        }
+    }
 }

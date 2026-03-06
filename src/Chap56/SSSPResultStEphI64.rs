@@ -5,7 +5,6 @@
 pub mod SSSPResultStEphI64 {
 
     use vstd::prelude::*;
-    use vstd::assert_seqs_equal;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
@@ -24,30 +23,68 @@ pub mod SSSPResultStEphI64 {
     // 8. traits
 
     pub trait SSSPResultStEphI64Trait: Sized {
+        spec fn spec_distances(&self) -> Seq<i64>;
+
+        spec fn spec_predecessors(&self) -> Seq<usize>;
+
+        spec fn spec_source(&self) -> usize;
+
         fn new(n: usize, source: usize) -> (empty: Self)
-            requires source < n;
+            requires source < n,
+            ensures
+                empty.spec_distances().len() == n,
+                empty.spec_predecessors().len() == n,
+                empty.spec_source() == source;
 
-        fn get_distance(&self, v: usize) -> (dist: i64);
+        fn get_distance(&self, v: usize) -> (dist: i64)
+            ensures
+                v >= self.spec_distances().len() ==> dist == UNREACHABLE,
+                v < self.spec_distances().len() ==> dist == self.spec_distances()[v as int];
 
-        fn set_distance(&mut self, v: usize, dist: i64);
+        fn set_distance(&mut self, v: usize, dist: i64)
+            ensures
+                self.spec_distances().len() == old(self).spec_distances().len(),
+                v < old(self).spec_distances().len() ==> self.spec_distances() =~= old(self).spec_distances().update(v as int, dist),
+                v >= old(self).spec_distances().len() ==> self.spec_distances() =~= old(self).spec_distances(),
+                self.spec_predecessors() == old(self).spec_predecessors(),
+                self.spec_source() == old(self).spec_source();
 
-        fn get_predecessor(&self, v: usize) -> (pred: Option<usize>);
+        fn get_predecessor(&self, v: usize) -> (pred: Option<usize>)
+            ensures
+                v >= self.spec_predecessors().len() ==> pred is None,
+                v < self.spec_predecessors().len() && self.spec_predecessors()[v as int] == NO_PREDECESSOR ==> pred is None,
+                v < self.spec_predecessors().len() && self.spec_predecessors()[v as int] != NO_PREDECESSOR ==> pred == Some(self.spec_predecessors()[v as int]);
 
-        fn set_predecessor(&mut self, v: usize, pred: usize);
+        fn set_predecessor(&mut self, v: usize, pred: usize)
+            ensures
+                self.spec_predecessors().len() == old(self).spec_predecessors().len(),
+                v < old(self).spec_predecessors().len() ==> self.spec_predecessors() =~= old(self).spec_predecessors().update(v as int, pred),
+                v >= old(self).spec_predecessors().len() ==> self.spec_predecessors() =~= old(self).spec_predecessors(),
+                self.spec_distances() == old(self).spec_distances(),
+                self.spec_source() == old(self).spec_source();
 
-        fn is_reachable(&self, v: usize) -> (b: bool);
+        fn is_reachable(&self, v: usize) -> (b: bool)
+            ensures
+                v >= self.spec_distances().len() ==> !b,
+                v < self.spec_distances().len() ==> b == (self.spec_distances()[v as int] != UNREACHABLE);
 
-        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);
+        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
+            ensures
+                path is Some ==> path->Some_0.spec_len() >= 1,
+                path is Some ==> path->Some_0.spec_index(0) == self.spec_source(),
+                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v;
     }
 
     // 9. impls
 
     impl SSSPResultStEphI64Trait for SSSPResultStEphI64 {
+        open spec fn spec_distances(&self) -> Seq<i64> { self.distances.seq@ }
+
+        open spec fn spec_predecessors(&self) -> Seq<usize> { self.predecessors.seq@ }
+
+        open spec fn spec_source(&self) -> usize { self.source }
+
         fn new(n: usize, source: usize) -> (empty: Self)
-            ensures
-                empty.distances.spec_len() == n,
-                empty.predecessors.spec_len() == n,
-                empty.source == source,
         {
             let mut dist_seq = ArraySeqStEphS::<i64>::new(n, UNREACHABLE);
             let ok = dist_seq.set(source, 0i64);
@@ -68,19 +105,9 @@ pub mod SSSPResultStEphI64 {
         }
 
         fn set_distance(&mut self, v: usize, dist: i64)
-            ensures
-                self.distances.spec_len() == old(self).distances.spec_len(),
-                v < old(self).distances.spec_len() ==> self.distances.spec_index(v as int) == dist,
-                v < old(self).distances.spec_len() ==> forall|i: int|
-                    #![trigger self.distances.spec_index(i)]
-                    0 <= i < old(self).distances.spec_len() && i != v as int
-                    ==> self.distances.spec_index(i) == old(self).distances.spec_index(i),
-                self.predecessors == old(self).predecessors,
-                self.source == old(self).source,
         {
             if v < self.distances.length() {
-                let ok = self.distances.set(v, dist);
-                assert(ok.is_ok());
+                self.distances.seq.set(v, dist);
             }
         }
 
@@ -93,19 +120,9 @@ pub mod SSSPResultStEphI64 {
         }
 
         fn set_predecessor(&mut self, v: usize, pred: usize)
-            ensures
-                self.predecessors.spec_len() == old(self).predecessors.spec_len(),
-                v < old(self).predecessors.spec_len() ==> self.predecessors.spec_index(v as int) == pred,
-                v < old(self).predecessors.spec_len() ==> forall|i: int|
-                    #![trigger self.predecessors.spec_index(i)]
-                    0 <= i < old(self).predecessors.spec_len() && i != v as int
-                    ==> self.predecessors.spec_index(i) == old(self).predecessors.spec_index(i),
-                self.distances == old(self).distances,
-                self.source == old(self).source,
         {
             if v < self.predecessors.length() {
-                let ok = self.predecessors.set(v, pred);
-                assert(ok.is_ok());
+                self.predecessors.seq.set(v, pred);
             }
         }
 
@@ -127,6 +144,8 @@ pub mod SSSPResultStEphI64 {
                     steps <= n,
                     n == self.predecessors.spec_len(),
                     path@.len() > 0,
+                    path@[0] == v,
+                    path@[path@.len() - 1] == current,
                 decreases n - steps
             {
                 if current >= n {
@@ -149,6 +168,10 @@ pub mod SSSPResultStEphI64 {
                     k <= path_len,
                     path_len == path@.len(),
                     reversed@.len() == (path_len - k) as int,
+                    path@[0] == v,
+                    path@[path@.len() - 1] == self.source,
+                    forall|j: int| #![trigger reversed@[j]]
+                        0 <= j < reversed@.len() ==> reversed@[j] == path@[path_len - 1 - j],
                 decreases k
             {
                 k = k - 1;
@@ -159,4 +182,18 @@ pub mod SSSPResultStEphI64 {
     }
 
     } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for SSSPResultStEphI64 {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SSSPResultStEphI64(source={}, n={})", self.source, self.distances.length())
+        }
+    }
+
+    impl std::fmt::Display for SSSPResultStEphI64 {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SSSPResult(source={}, n={})", self.source, self.distances.length())
+        }
+    }
 }
