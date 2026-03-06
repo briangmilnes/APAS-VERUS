@@ -27,7 +27,6 @@ broadcast use {
 
     // 4. type definitions
 
-    #[derive(Clone)]
     pub struct AdjSeqGraphMtPer {
         pub adj: ArraySeqMtPerS<ArraySeqMtPerS<N>>,
     }
@@ -213,6 +212,14 @@ broadcast use {
 
         fn out_degree(&self, u: N) -> (d: N) {
             self.adj.nth(u).length()
+        }
+    }
+
+    // 11. derive impls in verus!
+
+    impl Clone for AdjSeqGraphMtPer {
+        fn clone(&self) -> (out: Self) {
+            AdjSeqGraphMtPer { adj: self.adj.clone() }
         }
     }
 

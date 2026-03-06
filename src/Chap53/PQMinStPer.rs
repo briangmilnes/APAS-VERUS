@@ -14,7 +14,6 @@ pub mod PQMinStPer {
     verus! {
 
     // 4. type definitions
-    #[derive(Clone)]
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(P)]
     pub struct PQMinResult<V: StT + Ord, P: StT + Ord> {
@@ -142,6 +141,18 @@ pub mod PQMinStPer {
             visited,
             priorities,
             parent: None,
+        }
+    }
+
+    // 11. derive impls in verus!
+
+    impl<V: StT + Ord, P: StT + Ord> Clone for PQMinResult<V, P> {
+        fn clone(&self) -> (out: Self) {
+            PQMinResult {
+                visited: self.visited.clone(),
+                priorities: self.priorities.clone(),
+                parent: self.parent.clone(),
+            }
         }
     }
 

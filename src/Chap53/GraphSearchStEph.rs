@@ -11,7 +11,6 @@ pub mod GraphSearchStEph {
     verus! {
 
     // 4. type definitions
-    #[derive(Clone)]
     pub struct SearchResult<V: StT + Ord> {
         pub visited: AVLTreeSetStEph<V>,
         pub parent: Option<AVLTreeSetStEph<Pair<V, V>>>,
@@ -132,6 +131,17 @@ pub mod GraphSearchStEph {
     {
         let result = graph_search(graph, source, &SelectAll);
         result.visited
+    }
+
+    // 11. derive impls in verus!
+
+    impl<V: StT + Ord> Clone for SearchResult<V> {
+        fn clone(&self) -> (out: Self) {
+            SearchResult {
+                visited: self.visited.clone(),
+                parent: self.parent.clone(),
+            }
+        }
     }
 
     } // verus!

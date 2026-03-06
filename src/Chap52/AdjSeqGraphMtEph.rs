@@ -31,7 +31,6 @@ broadcast use {
 
     // 4. type definitions
 
-    #[derive(Clone)]
     pub struct AdjSeqGraphMtEph {
         pub adj: ArraySeqMtEphS<ArraySeqMtEphS<N>>,
     }
@@ -322,6 +321,14 @@ broadcast use {
                 let new_neighbors = ArraySeqMtEphS::from_vec(new_vec);
                 let _ = self.adj.set(u, new_neighbors);
             }
+        }
+    }
+
+    // 11. derive impls in verus!
+
+    impl Clone for AdjSeqGraphMtEph {
+        fn clone(&self) -> (out: Self) {
+            AdjSeqGraphMtEph { adj: self.adj.clone() }
         }
     }
 

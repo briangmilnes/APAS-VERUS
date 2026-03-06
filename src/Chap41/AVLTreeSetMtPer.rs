@@ -1,10 +1,25 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Multi-threaded persistent set implementation using AVLTreeSeqMtPer (Arc-based).
 //!
 //! Work/Span Analysis:
 //! - union: Work Θ(n+m), Span Θ(log(n+m)) via PARALLEL divide-and-conquer
 //! - intersection: Work Θ(n+m), Span Θ(log(n+m)) via PARALLEL divide-and-conquer
 //! - filter: Work Θ(n), Span Θ(log n) via PARALLEL map-reduce
+
+//  Table of Contents
+//	1. module
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod AVLTreeSetMtPer {
 
@@ -39,12 +54,17 @@ pub mod AVLTreeSetMtPer {
 
     verus! {
 
+//		3. broadcast use
+
 // Veracity: added broadcast group
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::set::group_set_axioms,
     vstd::set_lib::group_set_lib_default,
 };
+
+
+//		4. type definitions
 
     // 4. type definitions
 
@@ -55,18 +75,16 @@ broadcast use {
     /// Sequential cutoff to prevent thread explosion from recursive ParaPair! calls.
     pub const SEQUENTIAL_CUTOFF: usize = 1;
 
-    // 5. view impls
 
-    impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPer<T> {
-        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-            self.elements@.to_set()
-        }
-    }
+//		5. view impls
 
     impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtPer<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
     }
+
+
+//		8. traits
 
     // 8. traits
 
@@ -118,6 +136,17 @@ broadcast use {
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&self, x: T) -> (updated: Self)
             ensures updated@ == self@.insert(x@), updated@.finite();
+    }
+
+
+//		9. impls
+
+    // 5. view impls
+
+    impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPer<T> {
+        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
+            self.elements@.to_set()
+        }
     }
 
     // 9. impls
@@ -440,6 +469,9 @@ broadcast use {
         }
     }
 
+
+//		11. derive impls in verus!
+
     // 11. derive impls in verus!
 
     impl<T: StTInMtT + Ord + 'static> Clone for AVLTreeSetMtPer<T> {
@@ -455,6 +487,9 @@ broadcast use {
     } // verus!
 
     // 12. macros
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! AVLTreeSetMtPerLit {
@@ -473,6 +508,9 @@ broadcast use {
     impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtPer<T> {
         fn default() -> Self { Self::empty() }
     }
+
+
+    //		13. derive impls outside verus!
 
     impl<T: StTInMtT + Ord + 'static> PartialEq for AVLTreeSetMtPer<T> {
         fn eq(&self, other: &Self) -> bool {
