@@ -21,6 +21,40 @@ pub mod BSTSetBBAlphaMtEph {
 
     pub type BSTSetBBAlphaMt<T> = BSTSetBBAlphaMtEph<T>;
 
+    // 4. type definitions
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSetBBAlphaMtEphIter<T: StTInMtT + Ord> {
+        pub snapshot: Vec<T>,
+        pub pos: usize,
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSetBBAlphaMtEphGhostIter<T: StTInMtT + Ord> {
+        pub pos: int,
+        pub elements: Seq<T>,
+    }
+
+    // 5. view impls
+
+    impl<T: StTInMtT + Ord> View for BSTSetBBAlphaMtEphIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) {
+            (self.pos as int, self.snapshot@)
+        }
+    }
+
+    impl<T: StTInMtT + Ord> View for BSTSetBBAlphaMtEphGhostIter<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
+    // 6. spec fns
+
+    pub open spec fn bstsetbbalphamteph_iter_invariant<T: StTInMtT + Ord>(it: &BSTSetBBAlphaMtEphIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
     pub trait BSTSetBBAlphaMtEphTrait<T: StTInMtT + Ord>: Sized {
         fn empty() -> (set: Self)
             ensures true;
@@ -62,6 +96,8 @@ pub mod BSTSetBBAlphaMtEph {
             ensures true;
         fn as_tree(&self) -> (tree: &BSTBBAlphaMtEph<T>)
             ensures true;
+        fn iter(&self) -> (it: BSTSetBBAlphaMtEphIter<T>)
+            ensures it@.0 == 0, bstsetbbalphamteph_iter_invariant(&it);
     }
 
     fn values_vec<T: StTInMtT + Ord>(tree: &BSTBBAlphaMtEph<T>) -> Vec<T> {
@@ -211,9 +247,111 @@ pub mod BSTSetBBAlphaMtEph {
         fn iter_in_order(&self) -> ArraySeqStPerS<T> { self.tree.in_order() }
 
         fn as_tree(&self) -> &BSTBBAlphaMtEph<T> { &self.tree }
+
+        fn iter(&self) -> BSTSetBBAlphaMtEphIter<T> {
+            let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+            BSTSetBBAlphaMtEphIter { snapshot: values, pos: 0 }
+        }
     }
 
+    // 10. iterators
+
+    impl<T: StTInMtT + Ord> std::iter::Iterator for BSTSetBBAlphaMtEphIter<T> {
+        type Item = T;
+
+        #[verifier::external_body]
+        fn next(&mut self) -> (next: Option<T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            if self.pos >= self.snapshot.len() {
+                None
+            } else {
+                let item = self.snapshot[self.pos].clone();
+                self.pos += 1;
+                Some(item)
+            }
+        }
     }
+
+    impl<T: StTInMtT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for BSTSetBBAlphaMtEphIter<T> {
+        type GhostIter = BSTSetBBAlphaMtEphGhostIter<T>;
+        open spec fn ghost_iter(&self) -> BSTSetBBAlphaMtEphGhostIter<T> {
+            BSTSetBBAlphaMtEphGhostIter { pos: self@.0, elements: self@.1 }
+        }
+    }
+
+    impl<T: StTInMtT + Ord> vstd::pervasive::ForLoopGhostIterator for BSTSetBBAlphaMtEphGhostIter<T> {
+        type ExecIter = BSTSetBBAlphaMtEphIter<T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &BSTSetBBAlphaMtEphIter<T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &BSTSetBBAlphaMtEphIter<T>) -> BSTSetBBAlphaMtEphGhostIter<T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: StTInMtT + Ord> std::iter::IntoIterator for &'a BSTSetBBAlphaMtEph<T> {
+        type Item = T;
+        type IntoIter = BSTSetBBAlphaMtEphIter<T>;
+        fn into_iter(self) -> (it: BSTSetBBAlphaMtEphIter<T>)
+            ensures it@.0 == 0, bstsetbbalphamteph_iter_invariant(&it),
+        {
+            self.iter()
+        }
+    }
+
+    impl<T: StTInMtT + Ord> IntoIterator for BSTSetBBAlphaMtEph<T> {
+        type Item = T;
+        type IntoIter = std::vec::IntoIter<T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures true,
+        {
+            let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+            values.into_iter()
+        }
+    }
+
+    } // verus!
 
     impl<T: StTInMtT + Ord + fmt::Debug> fmt::Debug for BSTSetBBAlphaMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -224,6 +362,30 @@ pub mod BSTSetBBAlphaMtEph {
     impl<T: StTInMtT + Ord> fmt::Display for BSTSetBBAlphaMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "BSTSetBBAlphaMtEph(size={})", self.size())
+        }
+    }
+
+    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTSetBBAlphaMtEphIter<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTSetBBAlphaMtEphIter").field("pos", &self.pos).finish()
+        }
+    }
+
+    impl<T: StTInMtT + Ord> std::fmt::Display for BSTSetBBAlphaMtEphIter<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTSetBBAlphaMtEphIter(pos={})", self.pos)
+        }
+    }
+
+    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTSetBBAlphaMtEphGhostIter<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTSetBBAlphaMtEphGhostIter").finish()
+        }
+    }
+
+    impl<T: StTInMtT + Ord> std::fmt::Display for BSTSetBBAlphaMtEphGhostIter<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTSetBBAlphaMtEphGhostIter")
         }
     }
 

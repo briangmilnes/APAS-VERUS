@@ -59,8 +59,19 @@ pub mod AVLTreeSeq {
         pub next_key: N,
     }
 
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSeqIter<'a, T: StT> {
+        pub tree: &'a AVLTreeS<T>,
+        pub pos: usize,
+        pub len: usize,
+    }
 
-    // 5. view impls
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSeqGhostIterator<'a, T: StT> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
 
     // 5. view impls
 
@@ -71,8 +82,17 @@ pub mod AVLTreeSeq {
         }
     }
 
+    impl<'a, T: StT> View for AVLTreeSeqIter<'a, T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) {
+            (self.pos as int, spec_avltreeseq_inorder_values(self.tree.root))
+        }
+    }
 
-    // 6. spec fns
+    impl<'a, T: StT> View for AVLTreeSeqGhostIterator<'a, T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
 
     // 6. spec fns
 
@@ -138,8 +158,9 @@ pub mod AVLTreeSeq {
         if e <= s { Seq::<V>::empty() } else { seq.subrange(s as int, e as int) }
     }
 
-
-    // 7. proof fns
+    pub open spec fn iter_invariant<'a, T: StT>(it: &AVLTreeSeqIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
 
     // 7. proof fns
 
@@ -170,8 +191,6 @@ pub mod AVLTreeSeq {
         }
     }
 
-
-    // 8. traits
 
     // 8. traits
 
@@ -1072,26 +1091,6 @@ pub mod AVLTreeSeq {
 
     // 10. iterators
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct AVLTreeSeqIter<'a, T: StT> {
-        pub tree: &'a AVLTreeS<T>,
-        pub pos: usize,
-        pub len: usize,
-    }
-
-    impl<'a, T: StT> View for AVLTreeSeqIter<'a, T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) {
-            (self.pos as int, spec_avltreeseq_inorder_values(self.tree.root))
-        }
-    }
-
-    pub open spec fn iter_invariant<'a, T: StT>(it: &AVLTreeSeqIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    // 10. iterators
-
     impl<'a, T: StT> std::iter::Iterator for AVLTreeSeqIter<'a, T> {
         type Item = &'a T;
 
@@ -1122,18 +1121,6 @@ pub mod AVLTreeSeq {
                 Some(result)
             }
         }
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct AVLTreeSeqGhostIterator<'a, T: StT> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-    impl<'a, T: StT> View for AVLTreeSeqGhostIterator<'a, T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
     }
 
     impl<'a, T: StT> vstd::pervasive::ForLoopGhostIteratorNew for AVLTreeSeqIter<'a, T> {
@@ -1178,8 +1165,9 @@ pub mod AVLTreeSeq {
         }
     }
 
-
-    // 11. derive impls in verus!
+    impl<T: StT> Default for AVLTreeS<T> {
+        fn default() -> Self { Self::new() }
+    }
 
     // 11. derive impls in verus!
 
@@ -1235,13 +1223,6 @@ pub mod AVLTreeSeq {
     }
 
     } // verus!
-
-    // 13. derive impls outside verus!
-
-    impl<T: StT> Default for AVLTreeS<T> {
-        fn default() -> Self { Self::new() }
-    }
-
 
     // 13. derive impls outside verus!
 

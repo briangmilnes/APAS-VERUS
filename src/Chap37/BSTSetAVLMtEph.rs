@@ -5,8 +5,11 @@
 //  Table of Contents
 //	1. module
 //	4. type definitions
+//	5. view impls
+//	6. spec fns
 //	8. traits
 //	9. impls
+//	10. iterators
 //	12. macros
 //	13. derive impls outside verus!
 
@@ -35,6 +38,37 @@ pub mod BSTSetAVLMtEph {
 
     pub type BSTSetAVLMt<T> = BSTSetAVLMtEph<T>;
 
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSetAVLMtEphIter<T: StTInMtT + Ord> {
+        pub snapshot: Vec<T>,
+        pub pos: usize,
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSetAVLMtEphGhostIter<T: StTInMtT + Ord> {
+        pub pos: int,
+        pub elements: Seq<T>,
+    }
+
+    // 5. view impls
+
+    impl<T: StTInMtT + Ord> View for BSTSetAVLMtEphIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) {
+            (self.pos as int, self.snapshot@)
+        }
+    }
+
+    impl<T: StTInMtT + Ord> View for BSTSetAVLMtEphGhostIter<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
+    // 6. spec fns
+
+    pub open spec fn bstsetavlmteph_iter_invariant<T: StTInMtT + Ord>(it: &BSTSetAVLMtEphIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
 
     //		8. traits
 
@@ -79,6 +113,8 @@ pub mod BSTSetAVLMtEph {
             ensures true;
         fn as_tree(&self) -> (tree: &BSTAVLMtEph<T>)
             ensures true;
+        fn iter(&self) -> (it: BSTSetAVLMtEphIter<T>)
+            ensures it@.0 == 0, bstsetavlmteph_iter_invariant(&it);
     }
 
 
@@ -325,9 +361,111 @@ pub mod BSTSetAVLMtEph {
         fn iter_in_order(&self) -> ArraySeqStPerS<T> { self.tree.in_order() }
 
         fn as_tree(&self) -> &BSTAVLMtEph<T> { &self.tree }
+
+        fn iter(&self) -> BSTSetAVLMtEphIter<T> {
+            let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+            BSTSetAVLMtEphIter { snapshot: values, pos: 0 }
+        }
     }
 
+    // 10. iterators
+
+    impl<T: StTInMtT + Ord> std::iter::Iterator for BSTSetAVLMtEphIter<T> {
+        type Item = T;
+
+        #[verifier::external_body]
+        fn next(&mut self) -> (next: Option<T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            if self.pos >= self.snapshot.len() {
+                None
+            } else {
+                let item = self.snapshot[self.pos].clone();
+                self.pos += 1;
+                Some(item)
+            }
+        }
     }
+
+    impl<T: StTInMtT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for BSTSetAVLMtEphIter<T> {
+        type GhostIter = BSTSetAVLMtEphGhostIter<T>;
+        open spec fn ghost_iter(&self) -> BSTSetAVLMtEphGhostIter<T> {
+            BSTSetAVLMtEphGhostIter { pos: self@.0, elements: self@.1 }
+        }
+    }
+
+    impl<T: StTInMtT + Ord> vstd::pervasive::ForLoopGhostIterator for BSTSetAVLMtEphGhostIter<T> {
+        type ExecIter = BSTSetAVLMtEphIter<T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &BSTSetAVLMtEphIter<T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &BSTSetAVLMtEphIter<T>) -> BSTSetAVLMtEphGhostIter<T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: StTInMtT + Ord> std::iter::IntoIterator for &'a BSTSetAVLMtEph<T> {
+        type Item = T;
+        type IntoIter = BSTSetAVLMtEphIter<T>;
+        fn into_iter(self) -> (it: BSTSetAVLMtEphIter<T>)
+            ensures it@.0 == 0, bstsetavlmteph_iter_invariant(&it),
+        {
+            self.iter()
+        }
+    }
+
+    impl<T: StTInMtT + Ord> IntoIterator for BSTSetAVLMtEph<T> {
+        type Item = T;
+        type IntoIter = std::vec::IntoIter<T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures true,
+        {
+            let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+            values.into_iter()
+        }
+    }
+
+    } // verus!
 
 
     //		13. derive impls outside verus!
@@ -344,8 +482,29 @@ pub mod BSTSetAVLMtEph {
         }
     }
 
+    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTSetAVLMtEphIter<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTSetAVLMtEphIter").field("pos", &self.pos).finish()
+        }
+    }
 
-    //		12. macros
+    impl<T: StTInMtT + Ord> std::fmt::Display for BSTSetAVLMtEphIter<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTSetAVLMtEphIter(pos={})", self.pos)
+        }
+    }
+
+    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTSetAVLMtEphGhostIter<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTSetAVLMtEphGhostIter").finish()
+        }
+    }
+
+    impl<T: StTInMtT + Ord> std::fmt::Display for BSTSetAVLMtEphGhostIter<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTSetAVLMtEphGhostIter")
+        }
+    }
 
     #[macro_export]
     macro_rules! BSTSetAVLMtEphLit {

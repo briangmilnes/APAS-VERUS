@@ -49,6 +49,7 @@ pub mod BSTSplayMtEph {
         root: Arc<RwLock<Link<T>, BSTSplayMtEphInv>>,
     }
 
+    pub type BSTreeSplay<T> = BSTSplayMtEph<T>;
 
     // 6. spec fns
 
@@ -87,7 +88,7 @@ pub mod BSTSplayMtEph {
         where
             F: Fn(&T) -> bool + Send + Sync
             ensures true;
-        fn reduce<F>(&self, op: F, identity: T) -> (result: T)
+        fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
         where
             F: Fn(T, T) -> T + Send + Sync
             ensures true;
@@ -452,6 +453,114 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    fn height_rec<T: StTInMtT + Ord>(link: &Link<T>) -> (h: N)
+        decreases *link,
+    {
+        match link {
+            | None => 0,
+            | Some(node) => 1 + height_rec(&node.left).max(height_rec(&node.right)),
+        }
+    }
+
+    impl<T: StTInMtT + Ord> BSTSplayMtEphTrait<T> for BSTSplayMtEph<T> {
+        fn new() -> Self {
+            BSTSplayMtEph {
+                root: Arc::new(new_splay_link_lock(None)),
+            }
+        }
+
+        fn insert(&self, value: T) {
+            let (mut current, write_handle) = self.root.acquire_write();
+            insert_link(&mut current, value);
+            write_handle.release_write(current);
+        }
+
+        fn find(&self, target: &T) -> Option<T> {
+            let handle = self.root.acquire_read();
+            let found = find_link(handle.borrow(), target).cloned();
+            handle.release_read();
+            found
+        }
+
+        fn contains(&self, target: &T) -> B { self.find(target).is_some() }
+
+        fn size(&self) -> N {
+            let handle = self.root.acquire_read();
+            let n = size_link(handle.borrow());
+            handle.release_read();
+            n
+        }
+
+        fn is_empty(&self) -> B { self.size() == 0 }
+
+        fn height(&self) -> N {
+            let handle = self.root.acquire_read();
+            let h = height_rec(handle.borrow());
+            handle.release_read();
+            h
+        }
+
+        fn minimum(&self) -> Option<T> {
+            let handle = self.root.acquire_read();
+            let min = min_link(handle.borrow()).cloned();
+            handle.release_read();
+            min
+        }
+
+        fn maximum(&self) -> Option<T> {
+            let handle = self.root.acquire_read();
+            let max = max_link(handle.borrow()).cloned();
+            handle.release_read();
+            max
+        }
+
+        fn in_order(&self) -> ArraySeqStPerS<T> {
+            let handle = self.root.acquire_read();
+            let out = in_order_parallel(handle.borrow());
+            handle.release_read();
+            ArraySeqStPerS::from_vec(out)
+        }
+
+        fn pre_order(&self) -> ArraySeqStPerS<T> {
+            let handle = self.root.acquire_read();
+            let out = pre_order_parallel(handle.borrow());
+            handle.release_read();
+            ArraySeqStPerS::from_vec(out)
+        }
+
+        fn from_sorted_slice(values: &[T]) -> Self {
+            BSTSplayMtEph {
+                root: Arc::new(new_splay_link_lock(build_balanced(values))),
+            }
+        }
+
+        fn filter<F>(&self, predicate: F) -> ArraySeqStPerS<T>
+        where
+            F: Fn(&T) -> bool + Send + Sync,
+        {
+            let handle = self.root.acquire_read();
+            let predicate = Arc::new(predicate);
+            let out = filter_parallel(handle.borrow(), &predicate);
+            handle.release_read();
+            ArraySeqStPerS::from_vec(out)
+        }
+
+        fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
+        where
+            F: Fn(T, T) -> T + Send + Sync,
+        {
+            let handle = self.root.acquire_read();
+            let op = Arc::new(op);
+            let accumulated = reduce_parallel(handle.borrow(), &op, identity);
+            handle.release_read();
+            accumulated
+        }
+    }
+
+    impl<T: StTInMtT + Ord> Default for BSTSplayMtEph<T> {
+        fn default() -> Self { Self::new() }
+    }
+
     } // verus!
 
     // 13. derive impls outside verus!
@@ -494,114 +603,6 @@ pub mod BSTSplayMtEph {
             write!(f, "BSTSplayMtEph(size={})", self.size())
         }
     }
-
-    pub type BSTreeSplay<T> = BSTSplayMtEph<T>;
-
-    impl<T: StTInMtT + Ord> BSTSplayMtEphTrait<T> for BSTSplayMtEph<T> {
-        fn new() -> Self {
-            BSTSplayMtEph {
-                root: Arc::new(new_splay_link_lock(None)),
-            }
-        }
-
-        fn insert(&self, value: T) {
-            let (mut current, write_handle) = self.root.acquire_write();
-            insert_link(&mut current, value);
-            write_handle.release_write(current);
-        }
-
-        fn find(&self, target: &T) -> Option<T> {
-            let handle = self.root.acquire_read();
-            let result = find_link(handle.borrow(), target).cloned();
-            handle.release_read();
-            result
-        }
-
-        fn contains(&self, target: &T) -> B { self.find(target).is_some() }
-
-        fn size(&self) -> N {
-            let handle = self.root.acquire_read();
-            let result = size_link(handle.borrow());
-            handle.release_read();
-            result
-        }
-
-        fn is_empty(&self) -> B { self.size() == 0 }
-
-        fn height(&self) -> N {
-            fn height_rec<T: StTInMtT + Ord>(link: &Link<T>) -> N {
-                match link {
-                    | None => 0,
-                    | Some(node) => 1 + height_rec(&node.left).max(height_rec(&node.right)),
-                }
-            }
-            let handle = self.root.acquire_read();
-            let result = height_rec(handle.borrow());
-            handle.release_read();
-            result
-        }
-
-        fn minimum(&self) -> Option<T> {
-            let handle = self.root.acquire_read();
-            let result = min_link(handle.borrow()).cloned();
-            handle.release_read();
-            result
-        }
-
-        fn maximum(&self) -> Option<T> {
-            let handle = self.root.acquire_read();
-            let result = max_link(handle.borrow()).cloned();
-            handle.release_read();
-            result
-        }
-
-        fn in_order(&self) -> ArraySeqStPerS<T> {
-            let handle = self.root.acquire_read();
-            let out = in_order_parallel(handle.borrow());
-            handle.release_read();
-            ArraySeqStPerS::from_vec(out)
-        }
-
-        fn pre_order(&self) -> ArraySeqStPerS<T> {
-            let handle = self.root.acquire_read();
-            let out = pre_order_parallel(handle.borrow());
-            handle.release_read();
-            ArraySeqStPerS::from_vec(out)
-        }
-
-        fn from_sorted_slice(values: &[T]) -> Self {
-            BSTSplayMtEph {
-                root: Arc::new(new_splay_link_lock(build_balanced(values))),
-            }
-        }
-
-        fn filter<F>(&self, predicate: F) -> ArraySeqStPerS<T>
-        where
-            F: Fn(&T) -> bool + Send + Sync,
-        {
-            let handle = self.root.acquire_read();
-            let predicate = Arc::new(predicate);
-            let out = filter_parallel(handle.borrow(), &predicate);
-            handle.release_read();
-            ArraySeqStPerS::from_vec(out)
-        }
-
-        fn reduce<F>(&self, op: F, identity: T) -> T
-        where
-            F: Fn(T, T) -> T + Send + Sync,
-        {
-            let handle = self.root.acquire_read();
-            let op = Arc::new(op);
-            let result = reduce_parallel(handle.borrow(), &op, identity);
-            handle.release_read();
-            result
-        }
-    }
-
-    impl<T: StTInMtT + Ord> Default for BSTSplayMtEph<T> {
-        fn default() -> Self { Self::new() }
-    }
-
 
     // 12. macros
 

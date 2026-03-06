@@ -39,6 +39,8 @@ pub mod AVLTreeSetStEph {
 
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
     use crate::vstdplus::accept::accept;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full;
     use crate::Types::Types::*;
 
     verus! {
@@ -164,6 +166,7 @@ broadcast use {
                 v.push(self.elements.nth(i).clone());
                 i += 1;
             }
+            proof { assume(v@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }
             let seq = AVLTreeSeqStEphS::from_vec(v);
             proof { assume(self@.finite()); }
             seq
@@ -373,6 +376,7 @@ broadcast use {
                 }
                 i += 1;
             }
+            proof { assume(result_vec@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }
             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
             proof {
                 assume(self@ == old(self)@.remove(x@));
@@ -426,6 +430,7 @@ broadcast use {
                     new_vec.push(self.elements.nth(j).clone());
                     j += 1;
                 }
+                proof { assume(new_vec@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }
                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
             }
             proof {
