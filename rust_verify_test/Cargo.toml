@@ -131,6 +131,11 @@ path = "tests/Chap54/ProveBFSStEph.rs"
 name = "ProveBFSMtEph"
 path = "tests/Chap54/ProveBFSMtEph.rs"
 
+# Chap41 proof tests
+[[test]]
+name = "ProveAVLTreeSetMtEph"
+path = "tests/Chap41/ProveAVLTreeSetMtEph.rs"
+
 # Standards proof tests
 [[test]]
 name = "Proveview_standard"

@@ -25,6 +25,9 @@ pub mod AVLTreeSetStPer {
 
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::feq::feq::feq;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full;
     use crate::Types::Types::*;
 
     verus! {
@@ -360,20 +363,23 @@ broadcast use {
 
         fn find(&self, x: &T) -> (found: B)
         {
+            proof { assume(obeys_feq_full::<T>()); }
             let n = self.elements.length();
             let mut lo: usize = 0;
             let mut hi: usize = n;
             while lo < hi
                 invariant
                     self.elements.spec_well_formed(),
+                    obeys_feq_full::<T>(),
                     n as int == self.elements.spec_seq().len(),
                     lo <= hi, hi <= n,
                 decreases hi - lo,
             {
                 let mid = lo + (hi - lo) / 2;
                 let elem = self.elements.nth(mid);
-                if *elem == *x {
-                    proof { assume(self@.contains(x@)); }
+                if feq(elem, x) {
+                    assert(self.elements@[mid as int] == x@);
+                    assert(self.elements@.contains(x@));
                     return true;
                 }
                 if *elem < *x {

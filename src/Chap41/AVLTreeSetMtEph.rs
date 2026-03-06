@@ -15,8 +15,10 @@ pub mod AVLTreeSetMtEph {
     // 3. broadcast use
     // 4. type definitions
     // 5. view impls
+    // 6. spec fns
     // 8. traits
     // 9. impls
+    // 10. iterators
     // 11. derive impls in verus!
     // 12. macros
     // 13. derive impls outside verus!
@@ -31,6 +33,7 @@ pub mod AVLTreeSetMtEph {
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::ParaPair;
     use crate::Types::Types::*;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     // NOTE: This type does NOT implement Ord (unlike AVLTreeSetMtPer) because no caller requires it.
     // AVLTreeSetMtEph is not used as a value type in OrderedTableMtPer. It's only used for:
@@ -47,6 +50,7 @@ pub mod AVLTreeSetMtEph {
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
     vstd::set::group_set_axioms,
     vstd::set_lib::group_set_lib_default,
 };
@@ -60,6 +64,18 @@ broadcast use {
         pub inner: Arc<RwLock<AVLTreeSetStEph<T>, AVLTreeSetMtEphInv>>,
     }
 
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSetMtEphIter<T: StTInMtT + Ord + 'static> {
+        pub snapshot: Vec<T>,
+        pub pos: usize,
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSetMtEphGhostIter<T: StTInMtT + Ord + 'static> {
+        pub pos: int,
+        pub elements: Seq<T>,
+    }
+
 
     // 5. view impls
 
@@ -68,57 +84,115 @@ broadcast use {
         open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
     }
 
+    impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEphIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) {
+            (self.pos as int, self.snapshot@)
+        }
+    }
+
+    impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEphGhostIter<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
+    // 6. spec fns
+
+    pub open spec fn avltreesetmteph_iter_invariant<T: StTInMtT + Ord + 'static>(it: &AVLTreeSetMtEphIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
 
     // 8. traits
 
     pub trait AVLTreeSetMtEphTrait<T: StTInMtT + Ord + 'static>: Sized + View<V = Set<<T as View>::V>> {
+        /// Well-formedness: exec fields consistent with lock predicate's ghost fields.
+        spec fn spec_avltreesetmteph_wf(&self) -> bool;
+
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
+            requires self.spec_avltreesetmteph_wf(),
             ensures count == self@.len(), self@.finite();
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(n), Span Θ(n)
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
+            requires self.spec_avltreesetmteph_wf(),
             ensures self@.finite();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty();
+            ensures
+                empty@ == Set::<<T as View>::V>::empty(),
+                empty.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite();
+            ensures
+                tree@ == Set::<<T as View>::V>::empty().insert(x@),
+                tree@.finite(),
+                tree.spec_avltreesetmteph_wf();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
-            ensures constructed@.finite();
+            ensures
+                constructed@.finite(),
+                constructed.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
-            ensures filtered@.finite(), filtered@.subset_of(self@);
+            requires self.spec_avltreesetmteph_wf(),
+            ensures
+                filtered@.finite(),
+                filtered@.subset_of(self@),
+                filtered.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn intersection(&self, other: &Self) -> (common: Self)
-            ensures common@ == self@.intersect(other@), common@.finite();
+            requires self.spec_avltreesetmteph_wf(), other.spec_avltreesetmteph_wf(),
+            ensures
+                common@ == self@.intersect(other@),
+                common@.finite(),
+                common.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn difference(&self, other: &Self) -> (remaining: Self)
-            ensures remaining@ == self@.difference(other@), remaining@.finite();
+            requires self.spec_avltreesetmteph_wf(), other.spec_avltreesetmteph_wf(),
+            ensures
+                remaining@ == self@.difference(other@),
+                remaining@.finite(),
+                remaining.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn union(&self, other: &Self) -> (combined: Self)
-            ensures combined@ == self@.union(other@), combined@.finite();
+            requires self.spec_avltreesetmteph_wf(), other.spec_avltreesetmteph_wf(),
+            ensures
+                combined@ == self@.union(other@),
+                combined@.finite(),
+                combined.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (found: B)
+            requires self.spec_avltreesetmteph_wf(),
             ensures found == self@.contains(x@);
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn delete(&mut self, x: &T)
-            ensures self@ == old(self)@.remove(x@), self@.finite();
+            requires old(self).spec_avltreesetmteph_wf(),
+            ensures
+                self@ == old(self)@.remove(x@),
+                self@.finite(),
+                self.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&mut self, x: T)
-            ensures self@ == old(self)@.insert(x@), self@.finite();
+            requires old(self).spec_avltreesetmteph_wf(),
+            ensures
+                self@ == old(self)@.insert(x@),
+                self@.finite(),
+                self.spec_avltreesetmteph_wf();
+        fn iter(&self) -> (it: AVLTreeSetMtEphIter<T>)
+            requires self.spec_avltreesetmteph_wf(),
+            ensures it@.0 == 0, avltreesetmteph_iter_invariant(&it);
     }
 
 
@@ -128,11 +202,6 @@ broadcast use {
         open spec fn inv(self, v: AVLTreeSetStEph<T>) -> bool {
             v.elements.spec_well_formed()
         }
-    }
-
-    #[verifier::external_body]
-    fn new_set_mt_lock<T: StTInMtT + Ord + 'static>(val: AVLTreeSetStEph<T>) -> (lock: RwLock<AVLTreeSetStEph<T>, AVLTreeSetMtEphInv>) {
-        RwLock::new(val, Ghost(AVLTreeSetMtEphInv))
     }
 
     // 5. view impls
@@ -147,9 +216,13 @@ broadcast use {
     // 9. impls
 
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
+        // Unit Inv: no ghost↔exec fields to link. Trivially well-formed.
+        open spec fn spec_avltreesetmteph_wf(&self) -> bool {
+            true
+        }
+
         #[verifier::external_body]
         fn size(&self) -> (count: usize)
-            ensures count == self@.len(), self@.finite()
         {
             let handle = self.inner.acquire_read();
             let count = handle.borrow().size();
@@ -159,7 +232,6 @@ broadcast use {
 
         #[verifier::external_body]
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
-            ensures self@.finite()
         {
             let handle = self.inner.acquire_read();
             let seq = handle.borrow().to_seq();
@@ -169,28 +241,25 @@ broadcast use {
 
         #[verifier::external_body]
         fn empty() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty()
         {
             AVLTreeSetMtEph {
-                inner: Arc::new(new_set_mt_lock(AVLTreeSetStEph::empty())),
+                inner: new_arc_rwlock(AVLTreeSetStEph::empty(), Ghost(AVLTreeSetMtEphInv)),
             }
         }
 
         #[verifier::external_body]
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite()
         {
             AVLTreeSetMtEph {
-                inner: Arc::new(new_set_mt_lock(AVLTreeSetStEph::singleton(x))),
+                inner: new_arc_rwlock(AVLTreeSetStEph::singleton(x), Ghost(AVLTreeSetMtEphInv)),
             }
         }
 
         #[verifier::external_body]
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
-            ensures constructed@.finite()
         {
             AVLTreeSetMtEph {
-                inner: Arc::new(new_set_mt_lock(AVLTreeSetStEph::from_seq(seq))),
+                inner: new_arc_rwlock(AVLTreeSetStEph::from_seq(seq), Ghost(AVLTreeSetMtEphInv)),
             }
         }
 
@@ -198,7 +267,6 @@ broadcast use {
         // Work: Θ(n), Span: Θ(log n)
         #[verifier::external_body]
         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
-            ensures filtered@.finite(), filtered@.subset_of(self@)
         {
             let vals = {
                 let handle = self.inner.acquire_read();
@@ -246,7 +314,6 @@ broadcast use {
         // Work: Θ(n+m), Span: Θ(log(n+m))
         #[verifier::external_body]
         fn intersection(&self, other: &Self) -> (common: Self)
-            ensures common@ == self@.intersect(other@), common@.finite()
         {
             let (self_vals, other_vals) = {
                 let self_handle = self.inner.acquire_read();
@@ -310,7 +377,6 @@ broadcast use {
         // PARALLEL: difference using filter
         #[verifier::external_body]
         fn difference(&self, other: &Self) -> (remaining: Self)
-            ensures remaining@ == self@.difference(other@), remaining@.finite()
         {
             let other_clone = other.clone();
             self.filter(move |x| !other_clone.find(x))
@@ -321,7 +387,6 @@ broadcast use {
         // Note: Union uses a simple merge strategy to avoid thread explosion.
         #[verifier::external_body]
         fn union(&self, other: &Self) -> (combined: Self)
-            ensures combined@ == self@.union(other@), combined@.finite()
         {
             let (self_vals, other_vals) = {
                 let self_handle = self.inner.acquire_read();
@@ -356,7 +421,6 @@ broadcast use {
 
         #[verifier::external_body]
         fn find(&self, x: &T) -> (found: B)
-            ensures found == self@.contains(x@)
         {
             let handle = self.inner.acquire_read();
             let found = handle.borrow().find(x);
@@ -366,7 +430,6 @@ broadcast use {
 
         #[verifier::external_body]
         fn delete(&mut self, x: &T)
-            ensures self@ == old(self)@.remove(x@), self@.finite()
         {
             let (mut current, write_handle) = self.inner.acquire_write();
             current.delete(x);
@@ -375,31 +438,125 @@ broadcast use {
 
         #[verifier::external_body]
         fn insert(&mut self, x: T)
-            ensures self@ == old(self)@.insert(x@), self@.finite()
         {
             let (mut current, write_handle) = self.inner.acquire_write();
             current.insert(x);
             write_handle.release_write(current);
         }
+
+        #[verifier::external_body]
+        fn iter(&self) -> (it: AVLTreeSetMtEphIter<T>)
+        {
+            let handle = self.inner.acquire_read();
+            let seq = handle.borrow().to_seq();
+            let mut vals = Vec::with_capacity(seq.length());
+            for i in 0..seq.length() {
+                vals.push(seq.nth(i).clone());
+            }
+            handle.release_read();
+            AVLTreeSetMtEphIter { snapshot: vals, pos: 0 }
+        }
     }
-
-
-    // 11. derive impls in verus!
 
     impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtEph<T> {
         fn default() -> Self { Self::empty() }
     }
+
+    // 10. iterators
+
+    impl<T: StTInMtT + Ord + 'static> std::iter::Iterator for AVLTreeSetMtEphIter<T> {
+        type Item = T;
+
+        #[verifier::external_body]
+        fn next(&mut self) -> (next: Option<T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            if self.pos >= self.snapshot.len() {
+                None
+            } else {
+                let item = self.snapshot[self.pos].clone();
+                self.pos += 1;
+                Some(item)
+            }
+        }
+    }
+
+    impl<T: StTInMtT + Ord + 'static> vstd::pervasive::ForLoopGhostIteratorNew for AVLTreeSetMtEphIter<T> {
+        type GhostIter = AVLTreeSetMtEphGhostIter<T>;
+        open spec fn ghost_iter(&self) -> AVLTreeSetMtEphGhostIter<T> {
+            AVLTreeSetMtEphGhostIter { pos: self@.0, elements: self@.1 }
+        }
+    }
+
+    impl<T: StTInMtT + Ord + 'static> vstd::pervasive::ForLoopGhostIterator for AVLTreeSetMtEphGhostIter<T> {
+        type ExecIter = AVLTreeSetMtEphIter<T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &AVLTreeSetMtEphIter<T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &AVLTreeSetMtEphIter<T>) -> AVLTreeSetMtEphGhostIter<T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: StTInMtT + Ord + 'static> std::iter::IntoIterator for &'a AVLTreeSetMtEph<T> {
+        type Item = T;
+        type IntoIter = AVLTreeSetMtEphIter<T>;
+        fn into_iter(self) -> (it: AVLTreeSetMtEphIter<T>)
+            ensures it@.0 == 0, avltreesetmteph_iter_invariant(&it),
+        {
+            self.iter()
+        }
+    }
+
+    // 11. derive impls in verus!
 
     impl<T: StTInMtT + Ord + 'static> Clone for AVLTreeSetMtEph<T> {
         #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
-            let handle = self.inner.acquire_read();
-            let cloned_inner = (*handle.borrow()).clone();
-            handle.release_read();
             AVLTreeSetMtEph {
-                inner: Arc::new(new_set_mt_lock(cloned_inner)),
+                inner: clone_arc_rwlock(&self.inner),
             }
         }
     }
@@ -431,6 +588,30 @@ broadcast use {
     impl fmt::Display for AVLTreeSetMtEphInv {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "AVLTreeSetMtEphInv")
+        }
+    }
+
+    impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtEphIter<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "AVLTreeSetMtEphIter(pos={})", self.pos)
+        }
+    }
+
+    impl<T: StTInMtT + Ord + 'static> fmt::Display for AVLTreeSetMtEphIter<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "AVLTreeSetMtEphIter")
+        }
+    }
+
+    impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtEphGhostIter<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "AVLTreeSetMtEphGhostIter")
+        }
+    }
+
+    impl<T: StTInMtT + Ord + 'static> fmt::Display for AVLTreeSetMtEphGhostIter<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "AVLTreeSetMtEphGhostIter")
         }
     }
 
