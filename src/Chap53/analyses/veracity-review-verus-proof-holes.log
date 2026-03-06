@@ -1,48 +1,60 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap53/
-
 ❌ GraphSearchMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchMtPer.rs:66: external_body - #[verifier::external_body]
-        67 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (result: (AVLTreeSetMtPer<V>, B)) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchMtPer.rs:89: external_body - #[verifier::external_body]
-        90 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/GraphSearchMtPer.rs:62: external_body - #[verifier::external_body]
+        63 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (AVLTreeSetMtPer<V>, B) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/GraphSearchMtPer.rs:84: external_body - #[verifier::external_body]
+        85 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
    Holes: 2 total
       2 × external_body
 ❌ GraphSearchStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchStEph.rs:59: external_body - #[verifier::external_body]
-        60 |         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (result: (AVLTreeSetStEph<V>, B)) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchStEph.rs:82: external_body - #[verifier::external_body]
-        83 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/GraphSearchStEph.rs:55: external_body - #[verifier::external_body]
+        56 |         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (AVLTreeSetStEph<V>, B) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/GraphSearchStEph.rs:77: external_body - #[verifier::external_body]
+        78 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
    Holes: 2 total
       2 × external_body
 ❌ GraphSearchStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchStPer.rs:68: external_body - #[verifier::external_body]
-        69 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (result: (AVLTreeSetStPer<V>, B)) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchStPer.rs:91: external_body - #[verifier::external_body]
-        92 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/GraphSearchStPer.rs:64: external_body - #[verifier::external_body]
+        65 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (AVLTreeSetStPer<V>, B) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/GraphSearchStPer.rs:86: external_body - #[verifier::external_body]
+        87 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>>(
    Holes: 2 total
       2 × external_body
 ❌ PQMinStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStEph.rs:64: external_body - #[verifier::external_body]
-        65 |     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStEph.rs:76: external_body - #[verifier::external_body]
-        77 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStEph.rs:124: external_body - #[verifier::external_body]
-       125 |     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStEph.rs:51: external_body - #[verifier::external_body]
+        52 |     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStEph.rs:63: external_body - #[verifier::external_body]
+        64 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStEph.rs:111: external_body - #[verifier::external_body]
+       112 |     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
    Holes: 3 total
       3 × external_body
 ❌ PQMinStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStPer.rs:69: external_body - #[verifier::external_body]
-        70 |     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStPer.rs:81: external_body - #[verifier::external_body]
-        82 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStPer.rs:129: external_body - #[verifier::external_body]
-       130 |     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStPer.rs:56: external_body - #[verifier::external_body]
+        57 |     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStPer.rs:68: external_body - #[verifier::external_body]
+        69 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStPer.rs:116: external_body - #[verifier::external_body]
+       117 |     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
    Holes: 3 total
       3 × external_body
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   5 holed (contains holes)
+   5 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 12 total
+   12 × external_body
+═══════
 
 Modules:
    0 clean (no holes)
