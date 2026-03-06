@@ -7,25 +7,12 @@
 //! - intersection: Work Θ(n+m), Span Θ(log(n+m)) via PARALLEL divide-and-conquer
 //! - filter: Work Θ(n), Span Θ(log n) via PARALLEL map-reduce
 
-//  Table of Contents
-//	1. module
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	8. traits
-//	9. impls
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
-
-//		1. module
-
-
 pub mod AVLTreeSetMtEph {
 
     // Table of Contents
     // 1. module
     // 2. imports
+    // 3. broadcast use
     // 4. type definitions
     // 5. view impls
     // 8. traits
@@ -56,17 +43,14 @@ pub mod AVLTreeSetMtEph {
 
     verus! {
 
-//		3. broadcast use
+// 3. broadcast use
 
-// Veracity: added broadcast group
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::set::group_set_axioms,
     vstd::set_lib::group_set_lib_default,
 };
 
-
-//		4. type definitions
 
     // 4. type definitions
 
@@ -77,15 +61,13 @@ broadcast use {
     }
 
 
-//		5. view impls
+    // 5. view impls
 
     impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
     }
 
-
-//		8. traits
 
     // 8. traits
 
@@ -140,10 +122,12 @@ broadcast use {
     }
 
 
-//		9. impls
+    // 9. impls
 
     impl<T: StTInMtT + Ord + 'static> RwLockPredicate<AVLTreeSetStEph<T>> for AVLTreeSetMtEphInv {
-        open spec fn inv(self, v: AVLTreeSetStEph<T>) -> bool { true }
+        open spec fn inv(self, v: AVLTreeSetStEph<T>) -> bool {
+            v.elements.spec_well_formed()
+        }
     }
 
     #[verifier::external_body]
@@ -400,9 +384,11 @@ broadcast use {
     }
 
 
-//		11. derive impls in verus!
-
     // 11. derive impls in verus!
+
+    impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtEph<T> {
+        fn default() -> Self { Self::empty() }
+    }
 
     impl<T: StTInMtT + Ord + 'static> Clone for AVLTreeSetMtEph<T> {
         #[verifier::external_body]
@@ -422,9 +408,6 @@ broadcast use {
 
     // 12. macros
 
-
-    //		12. macros
-
     #[macro_export]
     macro_rules! AVLTreeSetMtEphLit {
         () => {
@@ -439,12 +422,17 @@ broadcast use {
 
     // 13. derive impls outside verus!
 
-    impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtEph<T> {
-        fn default() -> Self { Self::empty() }
+    impl fmt::Debug for AVLTreeSetMtEphInv {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "AVLTreeSetMtEphInv")
+        }
     }
 
-
-    //		13. derive impls outside verus!
+    impl fmt::Display for AVLTreeSetMtEphInv {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "AVLTreeSetMtEphInv")
+        }
+    }
 
     impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
