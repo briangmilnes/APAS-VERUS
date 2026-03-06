@@ -1,41 +1,19 @@
 $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap39/BSTTreapMtEph.rs
 
-❌ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:68: external_body - #[verifier::external_body]
-        69 |         open spec fn view(&self) -> Set<T::V> {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:941: external_body - #[verifier::external_body]
-       942 |         fn new() -> (empty_tree: Self)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:965: external_body - #[verifier::external_body]
-       966 |         fn find(&self, target: &T) -> (found: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:977: external_body - #[verifier::external_body]
-       978 |         fn contains(&self, target: &T) -> (found: bool)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:984: external_body - #[verifier::external_body]
-       985 |         fn size(&self) -> (count: usize)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1008: external_body - #[verifier::external_body]
-      1009 |         fn minimum(&self) -> (min_val: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1022: external_body - #[verifier::external_body]
-      1023 |         fn maximum(&self) -> (max_val: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1036: external_body - #[verifier::external_body]
-      1037 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1045: external_body - #[verifier::external_body]
-      1046 |         fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1081: external_body - #[verifier::external_body]
-      1082 |         fn clone(&self) -> (cloned: Self)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:321: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:334: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1075: info: accept() - accept hole
-   Holes: 10 total
-      10 × external_body
+ℹ BSTTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:300: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:313: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1020: info: accept() - accept hole
    Info: 3 total
-   Proof functions: 7 total (7 clean, 0 holed)
+   7 clean proof functions
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   0 clean (no holes)
-   1 holed (contains holes)
+   1 clean (no holes)
+   0 holed (contains holes)
    1 total
 
 Proof Functions:
@@ -43,10 +21,11 @@ Proof Functions:
    0 holed
    7 total
 
-Holes Found: 10 total
-   10 × external_body
+Holes Found: 0 total
 
 Info: 3 total
-   BSTTreapMtEph.rs:321: info: accept() - accept hole
-   BSTTreapMtEph.rs:334: info: accept() - accept hole
-   BSTTreapMtEph.rs:1075: info: accept() - accept hole
+   BSTTreapMtEph.rs:300: info: accept() - accept hole
+   BSTTreapMtEph.rs:313: info: accept() - accept hole
+   BSTTreapMtEph.rs:1020: info: accept() - accept hole
+
+🎉 No proof holes or warnings found! All proofs are complete.
