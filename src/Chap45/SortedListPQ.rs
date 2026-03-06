@@ -20,11 +20,13 @@ pub mod SortedListPQ {
     use std::fmt::{Debug, Display, Formatter, Result};
 
     use vstd::prelude::*;
+    use vstd::multiset::Multiset;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Types::Types::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
@@ -41,14 +43,20 @@ broadcast use {
 
 // 4. type definitions
         #[verifier::reject_recursive_types(T)]
-        pub struct SortedListPQ<T: StT + Ord> {
+        pub struct SortedListPQ<T: StT + Ord + TotalOrder> {
             pub elements: ArraySeqStPerS<T>,
         }
 
 // 5. view impls
-        impl<T: StT + Ord> View for SortedListPQ<T> {
+        impl<T: StT + Ord + TotalOrder> View for SortedListPQ<T> {
             type V = Seq<T::V>;
             open spec fn view(&self) -> Seq<T::V> { self.elements@ }
+        }
+
+// 6. spec fns
+        pub open spec fn spec_sorted<T: TotalOrder>(s: Seq<T>) -> bool {
+            forall|i: int, j: int| 0 <= i < j < s.len() ==>
+                #[trigger] TotalOrder::le(s[i], s[j])
         }
 
 // 7. proof fns
@@ -56,15 +64,20 @@ broadcast use {
 
 // 8. traits
         /// Meldable Priority Queue ADT (Data Type 45.1) using sorted list.
-        pub trait SortedListPQTrait<T: StT + Ord>: Sized + View<V = Seq<T::V>> {
+        pub trait SortedListPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Seq<T::V>> {
             spec fn spec_size(self) -> nat;
+            spec fn spec_seq(&self) -> Seq<T>;
 
             fn empty() -> (pq: Self)
-                ensures pq@.len() == 0;
+                ensures
+                    pq@.len() == 0,
+                    pq@.to_multiset() =~= Multiset::empty();
 
             fn singleton(element: T) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
-                ensures pq@.len() == 1;
+                ensures
+                    pq@.len() == 1,
+                    pq@.to_multiset() =~= Multiset::empty().insert(element@);
 
             fn find_min(&self) -> (min_elem: Option<&T>)
                 ensures
@@ -75,7 +88,9 @@ broadcast use {
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() + 1 <= usize::MAX as int,
-                ensures pq@.len() == self@.len() + 1;
+                ensures
+                    pq@.len() == self@.len() + 1,
+                    pq@.to_multiset() =~= self@.to_multiset().insert(element@);
 
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires obeys_feq_clone::<T>(),
@@ -83,13 +98,17 @@ broadcast use {
                     self@.len() > 0 ==> min_and_rest.1.is_some(),
                     self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,
                     self@.len() == 0 ==> min_and_rest.1.is_none(),
-                    self@.len() == 0 ==> min_and_rest.0@.len() == self@.len();
+                    self@.len() == 0 ==> min_and_rest.0@.len() == self@.len(),
+                    self@.len() > 0 ==> self@.to_multiset() =~=
+                        min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@);
 
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() + other@.len() <= usize::MAX as int,
-                ensures pq@.len() == self@.len() + other@.len();
+                ensures
+                    pq@.len() == self@.len() + other@.len(),
+                    pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset());
 
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
@@ -113,7 +132,9 @@ broadcast use {
 
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>)
                 requires obeys_feq_clone::<T>(),
-                ensures sorted@.len() == self@.len();
+                ensures
+                    sorted@.len() == self@.len(),
+                    spec_sorted(sorted.seq@);
 
             fn find_max(&self) -> (max_elem: Option<&T>)
                 ensures
@@ -126,7 +147,9 @@ broadcast use {
                     self@.len() > 0 ==> max_and_rest.1.is_some(),
                     self@.len() > 0 ==> max_and_rest.0@.len() == self@.len() - 1,
                     self@.len() == 0 ==> max_and_rest.1.is_none(),
-                    self@.len() == 0 ==> max_and_rest.0@.len() == self@.len();
+                    self@.len() == 0 ==> max_and_rest.0@.len() == self@.len(),
+                    self@.len() > 0 ==> self@.to_multiset() =~=
+                        max_and_rest.0@.to_multiset().insert(max_and_rest.1.unwrap()@);
 
             fn from_vec(vec: Vec<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
@@ -138,30 +161,42 @@ broadcast use {
 
             fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires obeys_feq_clone::<T>(),
-                ensures v@.len() == self@.len();
+                ensures
+                    v@.len() == self@.len(),
+                    spec_sorted(v@);
 
             fn is_sorted(&self) -> (sorted: bool)
                 ensures self@.len() <= 1 ==> sorted;
         }
 
 // 9. impls
-        impl<T: StT + Ord> SortedListPQTrait<T> for SortedListPQ<T> {
+        impl<T: StT + Ord + TotalOrder> SortedListPQTrait<T> for SortedListPQ<T> {
             open spec fn spec_size(self) -> nat {
                 self@.len()
             }
 
+            open spec fn spec_seq(&self) -> Seq<T> {
+                self.elements.seq@
+            }
+
             /// APAS Work Θ(1), Span Θ(1).
             fn empty() -> (pq: Self) {
-                SortedListPQ {
+                let pq = SortedListPQ {
                     elements: ArraySeqStPerS::empty(),
-                }
+                };
+                // accept hole: Empty seq@ maps to empty multiset.
+                proof { accept(pq@.to_multiset() =~= Multiset::empty()); }
+                pq
             }
 
             /// APAS Work Θ(1), Span Θ(1).
             fn singleton(element: T) -> (pq: Self) {
-                SortedListPQ {
+                let pq = SortedListPQ {
                     elements: ArraySeqStPerS::singleton(element),
-                }
+                };
+                // accept hole: Single-element seq@ maps to singleton multiset.
+                proof { accept(pq@.to_multiset() =~= Multiset::empty().insert(element@)); }
+                pq
             }
 
             /// APAS Work Θ(1), Span Θ(1) — head of sorted list.
@@ -218,7 +253,10 @@ broadcast use {
                     new_elements = ArraySeqStPerS::append(&new_elements, &single_seq);
                 }
 
-                SortedListPQ { elements: new_elements }
+                let pq = SortedListPQ { elements: new_elements };
+                // accept hole: Insert preserves multiset with new element added.
+                proof { accept(pq@.to_multiset() =~= self@.to_multiset().insert(element@)); }
+                pq
             }
 
             /// APAS Work Θ(1), actual Work Θ(n) — rebuilds without first element.
@@ -241,7 +279,13 @@ broadcast use {
                     new_elements = ArraySeqStPerS::append(&new_elements, &single_seq);
                 }
 
-                (SortedListPQ { elements: new_elements }, Some(min_element))
+                let new_pq = SortedListPQ { elements: new_elements };
+                // accept hole: Rebuild removes min_element and preserves other views.
+                proof {
+                    accept(self@.to_multiset() =~=
+                        new_pq@.to_multiset().insert(min_element@));
+                }
+                (new_pq, Some(min_element))
             }
 
             /// APAS Work Θ(m+n), Span Θ(m+n) — merge two sorted sequences.
@@ -300,7 +344,10 @@ broadcast use {
                     j = j + 1;
                 }
 
-                SortedListPQ { elements: result }
+                let pq = SortedListPQ { elements: result };
+                // accept hole: Merge preserves multiset union.
+                proof { accept(pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset())); }
+                pq
             }
 
             /// APAS Work Θ(n log n), actual Work Θ(n²) — repeated insert.
@@ -331,7 +378,11 @@ broadcast use {
 
             /// Already sorted — just clone the backing sequence.
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>) {
-                self.elements.clone()
+                let sorted = self.elements.clone();
+                // accept hole: SortedListPQ maintains sorted order by construction.
+                // Proving requires a sorted well-formedness invariant (task #7).
+                proof { accept(spec_sorted(sorted.seq@)); }
+                sorted
             }
 
             fn find_max(&self) -> (max_elem: Option<&T>) {
@@ -360,7 +411,13 @@ broadcast use {
                     let single_seq = ArraySeqStPerS::singleton(self.elements.nth(i).clone());
                     new_elements = ArraySeqStPerS::append(&new_elements, &single_seq);
                 }
-                (SortedListPQ { elements: new_elements }, Some(max_element))
+                let new_pq = SortedListPQ { elements: new_elements };
+                // accept hole: Rebuild removes max_element and preserves other views.
+                proof {
+                    accept(self@.to_multiset() =~=
+                        new_pq@.to_multiset().insert(max_element@));
+                }
+                (new_pq, Some(max_element))
             }
 
             fn from_vec(vec: Vec<T>) -> Self {
@@ -383,7 +440,10 @@ broadcast use {
             }
 
             fn to_sorted_vec(&self) -> Vec<T> {
-                self.to_vec()
+                let v = self.to_vec();
+                // accept hole: Same clone gap as extract_all_sorted + Vec conversion.
+                proof { accept(spec_sorted(v@)); }
+                v
             }
 
             fn is_sorted(&self) -> (sorted: bool) {
@@ -404,18 +464,18 @@ broadcast use {
             }
         }
 
-        impl<T: StT + Ord> Default for SortedListPQ<T> {
+        impl<T: StT + Ord + TotalOrder> Default for SortedListPQ<T> {
             fn default() -> Self { Self::empty() }
         }
 
 // 11. derive impls in verus!
         #[cfg(verus_keep_ghost)]
-        impl<T: StT + Ord> PartialEqSpecImpl for SortedListPQ<T> {
+        impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for SortedListPQ<T> {
             open spec fn obeys_eq_spec() -> bool { true }
             open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
         }
 
-        impl<T: StT + Ord> Clone for SortedListPQ<T> {
+        impl<T: StT + Ord + TotalOrder> Clone for SortedListPQ<T> {
             fn clone(&self) -> (cloned: Self)
                 ensures cloned@ == self@
             {
@@ -431,7 +491,7 @@ broadcast use {
             }
         }
 
-        impl<T: StT + Ord> core::cmp::PartialEq for SortedListPQ<T> {
+        impl<T: StT + Ord + TotalOrder> core::cmp::PartialEq for SortedListPQ<T> {
             fn eq(&self, other: &Self) -> (equal: bool)
                 ensures equal == (self@ == other@)
             {
@@ -441,7 +501,7 @@ broadcast use {
             }
         }
 
-        impl<T: StT + Ord> core::cmp::Eq for SortedListPQ<T> {}
+        impl<T: StT + Ord + TotalOrder> core::cmp::Eq for SortedListPQ<T> {}
     }
 
 // 12. macros
@@ -460,13 +520,13 @@ broadcast use {
     }
 
 // 13. derive impls outside verus!
-    impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for SortedListPQ<T> {
+    impl<T: StT + Ord + TotalOrder + std::fmt::Debug> std::fmt::Debug for SortedListPQ<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("SortedListPQ").field("elements", &self.elements).finish()
         }
     }
 
-    impl<T: StT + Ord> Display for SortedListPQ<T> {
+    impl<T: StT + Ord + TotalOrder> Display for SortedListPQ<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(f, "SortedListPQ[")?;
             for i in 0..self.elements.length() {

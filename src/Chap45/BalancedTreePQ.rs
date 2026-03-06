@@ -27,6 +27,7 @@ pub mod BalancedTreePQ {
     use crate::Types::Types::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
 
@@ -40,12 +41,12 @@ broadcast use {
 
 // 4. type definitions
         #[verifier::reject_recursive_types(T)]
-        pub struct BalancedTreePQ<T: StT + Ord> {
+        pub struct BalancedTreePQ<T: StT + Ord + TotalOrder> {
             pub elements: AVLTreeSeqStPerS<T>,
         }
 
 // 5. view impls
-        impl<T: StT + Ord> View for BalancedTreePQ<T> {
+        impl<T: StT + Ord + TotalOrder> View for BalancedTreePQ<T> {
             type V = Seq<T::V>;
             open spec fn view(&self) -> Seq<T::V> { self.elements@ }
         }
@@ -55,7 +56,7 @@ broadcast use {
 
 // 8. traits
         /// Meldable Priority Queue ADT (Data Type 45.1) using balanced tree (AVL).
-        pub trait BalancedTreePQTrait<T: StT + Ord>: Sized + View<V = Seq<T::V>> {
+        pub trait BalancedTreePQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Seq<T::V>> {
             fn empty() -> (pq: Self)
                 ensures pq@.len() == 0;
 
@@ -144,16 +145,16 @@ broadcast use {
         }
 
         /// Extended operations requiring closure parameters.
-        pub trait BalancedTreePQExtTrait<T: StT + Ord>: Sized {
+        pub trait BalancedTreePQExtTrait<T: StT + Ord + TotalOrder>: Sized {
             fn filter<F>(&self, predicate: F) -> (filtered: Self) where F: Fn(&T) -> bool
                 ensures true;
-            fn map<U, G>(&self, f: G) -> (mapped: BalancedTreePQ<U>) where U: StT + Ord, G: Fn(&T) -> U
+            fn map<U, G>(&self, f: G) -> (mapped: BalancedTreePQ<U>) where U: StT + Ord + TotalOrder, G: Fn(&T) -> U
                 ensures true;
         }
 
 // 9. impls
         #[verifier::external]
-        impl<T: StT + Ord> BalancedTreePQTrait<T> for BalancedTreePQ<T> {
+        impl<T: StT + Ord + TotalOrder> BalancedTreePQTrait<T> for BalancedTreePQ<T> {
             /// APAS Work Θ(1), Span Θ(1).
             fn empty() -> Self {
                 BalancedTreePQ {
@@ -375,12 +376,12 @@ broadcast use {
         }
 
         #[verifier::external]
-        impl<T: StT + Ord> Default for BalancedTreePQ<T> {
+        impl<T: StT + Ord + TotalOrder> Default for BalancedTreePQ<T> {
             fn default() -> Self { Self::empty() }
         }
 
         #[verifier::external]
-        impl<T: StT + Ord> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
+        impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
             fn filter<F>(&self, predicate: F) -> (filtered: Self)
             where
                 F: Fn(&T) -> bool,
@@ -397,7 +398,7 @@ broadcast use {
 
             fn map<U, G>(&self, f: G) -> (mapped: BalancedTreePQ<U>)
             where
-                U: StT + Ord,
+                U: StT + Ord + TotalOrder,
                 G: Fn(&T) -> U,
             {
                 let mut result = BalancedTreePQ::<U>::empty();
@@ -412,12 +413,12 @@ broadcast use {
 
 // 11. derive impls in verus!
         #[cfg(verus_keep_ghost)]
-        impl<T: StT + Ord> PartialEqSpecImpl for BalancedTreePQ<T> {
+        impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for BalancedTreePQ<T> {
             open spec fn obeys_eq_spec() -> bool { true }
             open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
         }
 
-        impl<T: StT + Ord> Clone for BalancedTreePQ<T> {
+        impl<T: StT + Ord + TotalOrder> Clone for BalancedTreePQ<T> {
             fn clone(&self) -> (cloned: Self)
                 ensures cloned@ == self@
             {
@@ -425,7 +426,7 @@ broadcast use {
             }
         }
 
-        impl<T: StT + Ord> core::cmp::PartialEq for BalancedTreePQ<T> {
+        impl<T: StT + Ord + TotalOrder> core::cmp::PartialEq for BalancedTreePQ<T> {
             fn eq(&self, other: &Self) -> (equal: bool)
                 ensures equal == (self@ == other@)
             {
@@ -435,7 +436,7 @@ broadcast use {
             }
         }
 
-        impl<T: StT + Ord> core::cmp::Eq for BalancedTreePQ<T> {}
+        impl<T: StT + Ord + TotalOrder> core::cmp::Eq for BalancedTreePQ<T> {}
 
     }
 
@@ -455,13 +456,13 @@ broadcast use {
     }
 
 // 13. derive impls outside verus!
-    impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for BalancedTreePQ<T> {
+    impl<T: StT + Ord + TotalOrder + std::fmt::Debug> std::fmt::Debug for BalancedTreePQ<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BalancedTreePQ").field("elements", &self.elements).finish()
         }
     }
 
-    impl<T: StT + Ord> Display for BalancedTreePQ<T> {
+    impl<T: StT + Ord + TotalOrder> Display for BalancedTreePQ<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(f, "BalancedTreePQ[")?;
             for i in 0..self.elements.length() {

@@ -1,204 +1,204 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent2/src/Chap26/
-Codebase: /home/milnes/projects/APAS-VERUS-agent2
+Path: /home/milnes/projects/APAS-VERUS-agent3/src/Chap26/
+Codebase: /home/milnes/projects/APAS-VERUS-agent3
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent2/src/Chap26/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent3/src/Chap26/analyses/veracity-review-verus-style.log
 
 Checking 8 files...
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:55: warning: [22] free spec fn spec_wrapping_add should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:64: warning: [22] free spec fn spec_wrapping_mul should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:68: warning: [22] free spec fn spec_sum_fn should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:70: warning: [22] free spec fn spec_product_fn should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:72: warning: [22] free spec fn spec_or_fn should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:74: warning: [22] free spec fn spec_and_fn should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceMtPer.rs:76: warning: [22] free spec fn spec_max_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:55: warning: [22] free spec fn spec_wrapping_add should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:64: warning: [22] free spec fn spec_wrapping_mul should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:68: warning: [22] free spec fn spec_sum_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:70: warning: [22] free spec fn spec_product_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:72: warning: [22] free spec fn spec_or_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:74: warning: [22] free spec fn spec_and_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceMtPer.rs:76: warning: [22] free spec fn spec_max_fn should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:37: warning: [22] free spec fn spec_wrapping_add should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:46: warning: [22] free spec fn spec_wrapping_mul should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:50: warning: [22] free spec fn spec_sum_fn should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:51: warning: [22] free spec fn spec_product_fn should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:52: warning: [22] free spec fn spec_or_fn should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:53: warning: [22] free spec fn spec_and_fn should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/DivConReduceStPer.rs:54: warning: [22] free spec fn spec_max_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:37: warning: [22] free spec fn spec_wrapping_add should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:46: warning: [22] free spec fn spec_wrapping_mul should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:50: warning: [22] free spec fn spec_sum_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:51: warning: [22] free spec fn spec_product_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:52: warning: [22] free spec fn spec_or_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:53: warning: [22] free spec fn spec_and_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/DivConReduceStPer.rs:54: warning: [22] free spec fn spec_max_fn should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:560: warning: [13] impl ETSPPointTrait for Point should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:61: warning: [14] struct Point should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:61: warning: [14] struct Point should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:67: warning: [14] struct Edge should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:67: warning: [14] struct Edge should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:78: warning: [22] free spec fn spec_point_eq should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:83: warning: [22] free spec fn spec_point_in_seq should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:88: warning: [22] free spec fn spec_sources_valid should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:94: warning: [22] free spec fn spec_targets_valid should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:101: warning: [22] free spec fn spec_etsp should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:109: warning: [22] free spec fn spec_edges_valid should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:116: warning: [22] free spec fn spec_edges_form_cycle should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:560: warning: [13] impl ETSPPointTrait for Point should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:61: warning: [14] struct Point should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:61: warning: [14] struct Point should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:67: warning: [14] struct Edge should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:67: warning: [14] struct Edge should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:78: warning: [22] free spec fn spec_point_eq should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:83: warning: [22] free spec fn spec_point_in_seq should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:88: warning: [22] free spec fn spec_sources_valid should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:94: warning: [22] free spec fn spec_targets_valid should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:101: warning: [22] free spec fn spec_etsp should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:109: warning: [22] free spec fn spec_edges_valid should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:116: warning: [22] free spec fn spec_edges_form_cycle should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:534: warning: [13] impl ETSPPointTrait for Point should be inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:54: warning: [14] struct Point should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:54: warning: [14] struct Point should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:60: warning: [14] struct Edge should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:60: warning: [14] struct Edge should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:71: warning: [22] free spec fn spec_point_eq should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:76: warning: [22] free spec fn spec_point_in_seq should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:81: warning: [22] free spec fn spec_sources_valid should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:87: warning: [22] free spec fn spec_targets_valid should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:94: warning: [22] free spec fn spec_etsp should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:102: warning: [22] free spec fn spec_edges_valid should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:109: warning: [22] free spec fn spec_edges_form_cycle should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:534: warning: [13] impl ETSPPointTrait for Point should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:54: warning: [14] struct Point should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:54: warning: [14] struct Point should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:60: warning: [14] struct Edge should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:60: warning: [14] struct Edge should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:71: warning: [22] free spec fn spec_point_eq should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:76: warning: [22] free spec fn spec_point_in_seq should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:81: warning: [22] free spec fn spec_sources_valid should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:87: warning: [22] free spec fn spec_targets_valid should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:94: warning: [22] free spec fn spec_etsp should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:102: warning: [22] free spec fn spec_edges_valid should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:109: warning: [22] free spec fn spec_edges_form_cycle should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:60: warning: [22] free spec fn spec_sorted should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:65: warning: [22] free spec fn spec_is_permutation should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:70: warning: [22] free spec fn spec_merge_post should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortMtPer.rs:77: warning: [22] free spec fn spec_sort_post should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:60: warning: [22] free spec fn spec_sorted should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:65: warning: [22] free spec fn spec_is_permutation should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:70: warning: [22] free spec fn spec_merge_post should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortMtPer.rs:77: warning: [22] free spec fn spec_sort_post should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:56: warning: [22] free spec fn spec_sorted should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:61: warning: [22] free spec fn spec_is_permutation should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:66: warning: [22] free spec fn spec_merge_post should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/MergeSortStPer.rs:73: warning: [22] free spec fn spec_sort_post should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:56: warning: [22] free spec fn spec_sorted should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:61: warning: [22] free spec fn spec_is_permutation should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:66: warning: [22] free spec fn spec_merge_post should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/MergeSortStPer.rs:73: warning: [22] free spec fn spec_sort_post should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:44: warning: [22] free spec fn spec_wrapping_add should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:52: warning: [22] free spec fn spec_sum_fn should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:55: warning: [22] free spec fn spec_scan_at should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCMtPer.rs:62: warning: [22] free spec fn spec_scan_post should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:44: warning: [22] free spec fn spec_wrapping_add should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:52: warning: [22] free spec fn spec_sum_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:55: warning: [22] free spec fn spec_scan_at should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCMtPer.rs:62: warning: [22] free spec fn spec_scan_post should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:56: warning: [22] free spec fn spec_scan_at should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ScanDCStPer.rs:63: warning: [22] free spec fn spec_scan_post should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:56: warning: [22] free spec fn spec_scan_at should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ScanDCStPer.rs:63: warning: [22] free spec fn spec_scan_post should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
 Summary: 124 passed, 52 warnings in 8 files (checked 8 files)
