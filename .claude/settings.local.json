@@ -60,7 +60,9 @@
       "WebFetch(domain:verus-lang.github.io)",
       "Write(~/.claude/**)",
       "Write(~/projects/APAS-VERUS*/**)",
-      "Write(/tmp/**)"
+      "Write(/tmp/**)",
+      "WebFetch(domain:www.parallel-algorithms-book.com)",
+      "WebSearch"
     ]
   }
 }

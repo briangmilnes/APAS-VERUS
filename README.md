@@ -10,7 +10,7 @@ develop two software engineering tools to clean things up:
 - [veracity](https://github.com/briangmilnes/veracity) - Verus code analysis tools (proof hole detection, spec strength review, function search).
 - [rusticate](https://github.com/briangmilnes/rusticate) - Rust code style and structure review tools.
 
-**39 chapters verified, 17 with zero proof holes**
+**~90% of chapters verified (40 of 44 attempted), 17 with zero proof holes**
 
 **3525 verified, 0 errors | 2595 runtime tests | 144 proof time tests | 280 proof holes**
 
