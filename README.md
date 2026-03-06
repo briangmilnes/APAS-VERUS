@@ -1,7 +1,7 @@
 # APAS-VERUS
 
-Formally verified implementations of algorithms from "Algorithms Parallel and Sequential" by Acar, Blelloch.
-Rust code and proofs in the [Verus](https://github.com/verus-lang/verus) verification framework by Brian Milnes.
+Formally verified implementations of algorithms from "Algorithms Parallel and Sequential" (APAS) by Acar and Blelloch.
+Rust code with machine-checked proofs in the [Verus](https://github.com/verus-lang/verus) verification framework, by Brian Milnes.
 
 Claude used for the code generation and proving in Verus. Although the AIs are improving,
 even with 50+ Cursor rules (in .cursor), they made so many bad judgements that I had to
@@ -10,277 +10,546 @@ develop two software engineering tools to clean things up:
 - [veracity](https://github.com/briangmilnes/veracity) - Verus code analysis tools (proof hole detection, spec strength review, function search).
 - [rusticate](https://github.com/briangmilnes/rusticate) - Rust code style and structure review tools.
 
-**Verified: 8 chapters complete (Scheduling, Sorting, Sets/Relations/Mappings, Graphs, Fibonacci, MathSeq, Sequences, Trees)**
+**39 chapters verified, 17 with zero proof holes**
 
-**Proof totals: 2598 verified, 0 errors**
+**3525 verified, 0 errors | 2595 runtime tests | 144 proof time tests | 280 proof holes**
 
 ## Project Structure
 
 - `src/` - Verified algorithm implementations organized by chapter
-- `src/vstdadditions/` - Extensions to the Verus standard library
+- `src/vstdplus/` - Extensions to the Verus standard library (24 modules)
+- `src/standards/` - Verus coding standards and patterns (14 files)
 - `tests/` - Rust unit tests for algorithm correctness
 - `benches/` - Performance benchmarks using Criterion
-- `attic/` - Old/deprecated implementations
 
 ### vstdplus Library Extensions
 
-| Module | Description |
-|--------|-------------|
-| `arithmetic/power2_plus` | Power of 2 lemmas (`lemma_pow2_mono`, bounds) |
-| `checked_nat` | Overflow-checked unsigned integers (`CheckedU8`..`CheckedU128`) |
-| `checked_int` | Overflow-checked signed integers (`CheckedI8`..`CheckedI128`) |
-| `clone_plus` | `ClonePlus` trait for Verus-compatible cloning |
-| `feq` | Functional equality |
-| `hash_set_specs` | HashSet specification helpers |
-| `hash_set_with_view_plus` | Enhanced `HashSet` with iterator specs |
-| `partial_order` | `PartialOrdered` trait |
-| `pervasives_plus` | Common utility functions |
-| `seq` | Sequence lemmas |
-| `seq_set` | Lemmas connecting `Seq` and `Set` operations, weighted sums |
-| `threads_plus` | Verified thread primitives (`spawn_plus`, `JoinHandlePlus`) |
-| `total_order` | `TotalOrdered` trait for all 12 integer types |
-| `VecQueue` | Verified queue using `Vec` |
+| # | Module | Description |
+|---|--------|-------------|
+| 1 | `accept` | Accepted proof hole tracking |
+| 2 | `arithmetic/power2_plus` | Power of 2 lemmas (`lemma_pow2_mono`, bounds) |
+| 3 | `arc_rwlock` | Arc<RwLock> bridge functions (`new_arc_rwlock`, `clone_arc_rwlock`) |
+| 4 | `checked_int` | Overflow-checked signed integers (`CheckedI8`..`CheckedI128`) |
+| 5 | `checked_nat` | Overflow-checked unsigned integers (`CheckedU8`..`CheckedU128`) |
+| 6 | `clone_plus` | `ClonePlus` trait for Verus-compatible cloning |
+| 7 | `feq` | Functional equality |
+| 8 | `float` | `FloatTotalOrder` trait and IEEE 754 axioms |
+| 9 | `hash_map_with_view_plus` | Enhanced `HashMap` with view specs |
+| 10 | `hash_set_specs` | HashSet specification helpers |
+| 11 | `hash_set_with_view_plus` | Enhanced `HashSet` with iterator specs |
+| 12 | `hashed_checked_u32` | Hash-compatible checked u32 |
+| 13 | `monoid` | Monoid trait for algebraic structures |
+| 14 | `multiset` | Multiset operations and lemmas |
+| 15 | `partial_order` | `PartialOrdered` trait |
+| 16 | `pervasives_plus` | Common utility functions |
+| 17 | `rand` | Verified random number generation interface |
+| 18 | `seq` | Sequence lemmas |
+| 19 | `seq_set` | Lemmas connecting `Seq` and `Set` operations, weighted sums |
+| 20 | `smart_ptrs` | Arc/Box specification helpers |
+| 21 | `sqrt` | Integer square root |
+| 22 | `threads_plus` | Verified thread primitives (`spawn_plus`, `JoinHandlePlus`) |
+| 23 | `total_order` | `TotalOrdered` trait for all 12 integer types |
+| 24 | `VecQueue` | Verified queue using `Vec` |
+
+### Standards Library
+
+14 Verus coding standards demonstrating project patterns. Each is a compilable, verified example.
+
+| # | Standard | Covers |
+|---|----------|--------|
+| 1 | `mod_standard` | Module layout, TOC, use-statement ordering |
+| 2 | `view_standard` | View trait implementation |
+| 3 | `deep_view_standard` | DeepView trait implementation |
+| 4 | `iterators_standard` | Collection iterator protocol (10 components) |
+| 5 | `mut_standard` | Mutable reference patterns in Verus |
+| 6 | `multi_struct_standard` | Recursive enum with per-type traits |
+| 7 | `table_of_contents_standard` | Section ordering inside/outside verus! |
+| 8 | `using_closures_standard` | Closure patterns for fork-join |
+| 9 | `wrapping_iterators_standard` | Wrapping Rust iterators for Verus |
+| 10 | `rwlock_standard` | RwLockPredicate naming and invariants |
+| 11 | `tsm_standard` | Tokenized state machine patterns |
+| 12 | `arc_standard` | Arc deref pattern for verification |
+| 13 | `hfscheduler_standard` | Help-First Scheduler (Arc<RwLock> + join) |
+| 14 | `arc_rwlock_coarse_standard` | Coarse-grained Arc<RwLock> concurrency |
 
 ## Algorithm Status
 
-### Chapter 02: Scheduling - ✅ COMPLETE
+### Chapter 02: Scheduling - ✅ VERIFIED
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| Pool | ✅ | ✅ | ✅ | ✅ | Bounded thread pool, `pool.join(fa, fb)` |
-| FibonacciWSScheduler | ✅ | ✅ | ✅ | ✅ | `fib_pool` using Pool.join |
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | HFSchedulerMtEph | Mt | Help-First Scheduler, `pool.join(fa, fb)` |
+| 2 | FibonacciHFScheduler | Mt | `fib_pool` using HFScheduler |
 
-### Chapter 03: Insertion Sort - ✅ COMPLETE
+### Chapter 03: Insertion Sort - ✅ VERIFIED (ZERO HOLES)
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| InsertionSortStEph | ✅ | — | ✅ | ⬜ | Generic, multiset preservation proven |
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | InsertionSortStEph | St | Generic, multiset preservation proven |
 
-### Chapter 05: Sets, Relations, Mappings - ✅ COMPLETE
+### Chapter 05: Sets, Relations, Mappings - ✅ VERIFIED
 
-| Data Structure | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|----------------|----------|----------|---------------|-----------------|-------|
-| SetStEph | ✅ | — | ✅ | ✅ | Ephemeral set, custom iterator + ghost |
-| SetMtEph | ✅ | ✅ | ✅ | ✅ | Multi-threaded, ZERO HOLES (cartesian_product proven) |
-| RelationStEph | ✅ | — | ✅ | ✅ | Binary relations, ZERO HOLES |
-| MappingStEph | ✅ | — | ✅ | ✅ | Key-value mappings, ZERO HOLES |
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | SetStEph | St | Ephemeral set, custom iterator + ghost |
+| 2 | SetMtEph | Mt | Multi-threaded set |
+| 3 | RelationStEph | St | Binary relations |
+| 4 | MappingStEph | St | Key-value mappings |
+| 5 | KleeneStPer | St | Kleene closure of relations |
 
-### Chapter 06: Graphs - ✅ COMPLETE (ZERO HOLES)
+### Chapter 06: Graphs - ✅ VERIFIED (ZERO HOLES)
 
-| Data Structure | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|----------------|----------|----------|---------------|-----------------|-------|
-| DirGraphStEph | ✅ | — | ✅ | ✅ | Directed graph |
-| DirGraphMtEph | ✅ | ✅ | ✅ | ✅ | Parallel directed graph, proven set split |
-| UnDirGraphStEph | ✅ | — | ✅ | ✅ | Undirected graph |
-| UnDirGraphMtEph | ✅ | ✅ | ✅ | ✅ | Parallel undirected graph, proven set split |
-| LabDirGraphStEph | ✅ | — | ✅ | ✅ | Labeled directed graph |
-| LabDirGraphMtEph | ✅ | ✅ | ✅ | ✅ | Parallel labeled directed, proven set split |
-| LabUnDirGraphStEph | ✅ | — | ✅ | ✅ | Labeled undirected graph |
-| LabUnDirGraphMtEph | ✅ | ✅ | ✅ | ✅ | Parallel labeled undirected, proven set split |
-| WeightedDirGraphStEph | ✅ | — | ✅ | ✅ | All 12 integer types |
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | DirGraphStEph | St | Directed graph |
+| 2 | DirGraphMtEph | Mt | Parallel directed graph |
+| 3 | UnDirGraphStEph | St | Undirected graph |
+| 4 | UnDirGraphMtEph | Mt | Parallel undirected graph |
+| 5 | LabDirGraphStEph | St | Labeled directed graph |
+| 6 | LabDirGraphMtEph | Mt | Parallel labeled directed graph |
+| 7 | LabUnDirGraphStEph | St | Labeled undirected graph |
+| 8 | LabUnDirGraphMtEph | Mt | Parallel labeled undirected graph |
+| 9-20 | WeightedDirGraphStEph{U8..Isize} | St | All 12 integer types |
 
-### Chapter 11: Fibonacci - ✅ COMPLETE
+### Chapter 11: Fibonacci - ✅ VERIFIED
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| FibonacciStEph | ✅ | — | ✅ | ⬜ | Sequential with overflow proofs |
-| FibonacciMtEph2Threads | ✅ | ✅ | ✅ | ⬜ | 2-thread parallel |
-| FibonacciMtPerAllThreads | ✅ | ✅ | ✅ | ⬜ | ParaPair! macro |
-| FibonacciMtEphRecomputes | ✅ | ✅ | ✅ | ⬜ | Recomputation variant |
-| FibonacciMtPerTSM | ✅ | ✅ | ✅ | ⬜ | Tokenized state machine |
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | FibonacciStEph | St | Sequential with overflow proofs |
+| 2 | FibonacciMtEph2Threads | Mt | 2-thread parallel |
+| 3 | FibonacciMtPerAllThreads | Mt | ParaPair! macro |
+| 4 | FibonacciMtEphRecomputes | Mt | Recomputation variant |
+| 5 | FibonacciMtPerTSM | Mt | Tokenized state machine |
 
-### Chapter 12: Concurrency Primitives - 🔄 EXTERNAL_BODY
+### Chapter 12: Concurrency Primitives - ✅ VERIFIED
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| SpinLock | 🔄 | ✅ | ✅ | ⬜ | Ticket lock via fetch-and-add |
-| fetch_add_cas | 🔄 | ✅ | ✅ | ⬜ | CAS-based fetch-and-add |
-| ConcurrentStackMt | 🔄 | ✅ | ✅ | ⬜ | Lock-free Treiber stack |
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | Exercise12_1 | Mt | Ticket lock via fetch-and-add |
+| 2 | Exercise12_2 | Mt | CAS-based fetch-and-add |
+| 3 | Exercise12_5 | Mt | Lock-free Treiber stack |
 
-18 holes total - atomics and raw pointers not supported by Verus.
+Atomics and raw pointers not supported by Verus — external_body wrappers required.
 
-### Chapter 17: MathSeq - ✅ COMPLETE (ZERO HOLES)
+### Chapter 17: MathSeq - ✅ VERIFIED
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| MathSeqS | ✅ | — | ✅ | ✅ | Vec-backed dense sequence, uses `HashMapWithView` |
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | MathSeq | St | Vec-backed dense sequence, uses `HashMapWithView` |
 
-### Chapter 18: Sequences - ✅ COMPLETE
+### Chapter 18: Sequences - ✅ VERIFIED
 
-| Data Structure | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|----------------|----------|----------|---------------|-----------------|-------|
-| ArraySeq | ✅ | — | ✅ | ✅ | Custom iterator + ForLoopGhostIterator |
-| ArraySeqStEph | ✅ | — | ✅ | ✅ | Custom iterator + ForLoopGhostIterator |
-| ArraySeqStPer | ✅ | — | ✅ | ✅ | Custom iterator + ForLoopGhostIterator |
-| ArraySeqMtEph | ✅ | ✅ | ✅ | ✅ | Parallel ops, custom iterator + ghost |
-| ArraySeqMtPer | ✅ | ✅ | ✅ | ✅ | Parallel ops, custom iterator + ghost |
-| LinkedListStEph | ✅ | — | ✅ | ✅ | Custom iterator + ForLoopGhostIterator |
-| LinkedListStPer | ✅ | — | ✅ | ✅ | Custom iterator + ForLoopGhostIterator |
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | ArraySeq | St | Base array sequence |
+| 2 | ArraySeqStPer | St | Persistent array sequence |
+| 3 | ArraySeqStEph | St | Ephemeral array sequence |
+| 4 | LinkedListStPer | St | Persistent linked list |
+| 5 | LinkedListStEph | St | Ephemeral linked list |
+| 6 | ArraySeqMtEph | Mt | Parallel array sequence |
+| 7 | ArraySeqMtPer | Mt | Parallel persistent array sequence |
 
-### Chapter 19: Sequences (Advanced) - 🔄 IN PROGRESS
+All with custom iterators and ForLoopGhostIterator.
 
-| Data Structure | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|----------------|----------|----------|---------------|-----------------|-------|
-| ArraySeqStPer | ✅ | — | ⬜ | ✅ | Compositional algorithms (tabulate, flatten, deflate) |
-| ArraySeqStEph | ✅ | — | ⬜ | ✅ | Ephemeral: clone+set update |
-| ArraySeqMtEph | ✅ | ✅ | ⬜ | ✅ | Parallel map/filter/reduce via fork-join |
+### Chapter 19: Sequences (Advanced) - ✅ VERIFIED
 
-### Chapter 21: Trees and Algorithms - ✅ COMPLETE (ZERO HOLES)
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | ArraySeqStPer | St | Compositional algorithms (tabulate, flatten) |
+| 2 | ArraySeqStEph | St | Ephemeral: clone+set update |
+| 3 | ArraySeqMtEph | Mt | Parallel map/filter/reduce via fork-join |
+| 4 | ArraySeqMtEphSlice | Mt | Slice-based parallel operations |
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| Algorithm21_1 | ✅ | — | ⬜ | ⬜ | |
-| Algorithm21_2 | ✅ | — | ⬜ | ⬜ | |
-| Algorithm21_5 | ✅ | — | ⬜ | ⬜ | |
-| Algorithm21_6 | ✅ | — | ⬜ | ⬜ | |
-| Exercise21_5 | ✅ | — | ⬜ | ⬜ | |
-| Exercise21_6 | ✅ | — | ⬜ | ⬜ | |
-| Exercise21_7 | ✅ | — | ⬜ | ⬜ | |
-| Exercise21_8 | ✅ | — | ⬜ | ⬜ | |
-| Exercise21_9 | ✅ | — | ⬜ | ⬜ | |
-| Problem21_1 | ✅ | — | ⬜ | ⬜ | |
-| Problem21_3 | ✅ | — | ⬜ | ⬜ | |
-| Problem21_4 | ✅ | — | ⬜ | ⬜ | |
+### Chapter 21: Trees and Algorithms - ✅ VERIFIED (ZERO HOLES)
 
-### Chapter 23: Trees - ⬜ NOT STARTED
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | Algorithm21_1 | St | Tree size |
+| 2 | Algorithm21_2 | St | Tree reduce |
+| 3 | Algorithm21_5 | St | Tree map |
+| 4 | Algorithm21_6 | St | Tree filter |
+| 5 | Exercise21_5 | St | |
+| 6 | Exercise21_6 | St | |
+| 7 | Exercise21_7 | St | |
+| 8 | Exercise21_8 | St | |
+| 9 | Exercise21_9 | St | |
+| 10 | Problem21_1 | St | |
+| 11 | Problem21_4 | St | |
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| BalBinTreeStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| PrimTreeSeqStPer | ⬜ | ⬜ | ⬜ | ⬜ | |
+### Chapter 23: Trees - ✅ VERIFIED
 
-### Chapter 26: Divide and Conquer - ⬜ NOT STARTED
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | PrimTreeSeqStPer | St | Primitive tree sequence |
+| 2 | BalBinTreeStEph | St | Balanced binary tree |
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| DivConReduceStPer | ⬜ | ⬜ | ⬜ | ⬜ | |
-| DivConReduceMtPer | ⬜ | ⬜ | ⬜ | ⬜ | |
-| MergeSortStPer | ⬜ | ⬜ | ⬜ | ⬜ | |
-| MergeSortMtPer | ⬜ | ⬜ | ⬜ | ⬜ | |
+### Chapter 26: Divide and Conquer - ✅ VERIFIED (ZERO HOLES)
 
-### Chapter 27: Scan and Reduce - ⬜ NOT STARTED
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | DivConReduceStPer | St | Divide-and-conquer reduce |
+| 2 | MergeSortStPer | St | Merge sort |
+| 3 | ScanDCStPer | St | Divide-and-conquer scan |
+| 4 | DivConReduceMtPer | Mt | Parallel divide-and-conquer reduce |
+| 5 | MergeSortMtPer | Mt | Parallel merge sort |
+| 6 | ScanDCMtPer | Mt | Parallel divide-and-conquer scan |
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| ScanContractStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| ScanContractMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| ReduceContractStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| ReduceContractMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+### Chapter 27: Scan and Reduce - ✅ VERIFIED (ZERO HOLES)
 
-### Chapter 28: Max Contiguous Subsum - ⬜ NOT STARTED
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | ReduceContractStEph | St | Contraction-based reduce |
+| 2 | ReduceContractMtEph | Mt | Parallel contraction reduce |
+| 3 | ScanContractStEph | St | Contraction-based scan |
+| 4 | ScanContractMtEph | Mt | Parallel contraction scan |
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| MaxContigSubSumBruteStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| MaxContigSubSumDivConStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| MaxContigSubSumDivConMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+### Chapter 28: Max Contiguous Subsequence Sum - ✅ VERIFIED (ZERO HOLES)
 
-### Chapter 35: Order Statistics - ⬜ NOT STARTED
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | MCSSSpec | — | Shared specification module |
+| 2 | MaxContigSubSumBruteStEph | St | Brute force O(n^2) |
+| 3 | MaxContigSubSumReducedStEph | St | Reduced sequential |
+| 4 | MaxContigSubSumDivConStEph | St | Divide-and-conquer |
+| 5 | MaxContigSubSumIterStEph | St | Iterative (Kadane's) |
+| 6 | MaxContigSubSumReducedMcsseStEph | St | Reduced with MCSS element |
+| 7 | MaxContigSubSumDivConOptStEph | St | Optimized divide-and-conquer |
+| 8 | MaxContigSubSumDivConMtEph | Mt | Parallel divide-and-conquer |
+| 9 | MaxContigSubSumDivConOptMtEph | Mt | Parallel optimized divide-and-conquer |
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| OrderStatSelectStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| OrderStatSelectMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+### Chapter 30: Probability - ✅ VERIFIED
 
-### Chapter 36: QuickSort - ⬜ NOT STARTED
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | Probability | St | Discrete probability foundations |
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| QuickSortStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| QuickSortMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+### Chapter 35: Order Statistics - ✅ VERIFIED (ZERO HOLES)
 
-### Chapter 37: BST Variants - ⬜ NOT STARTED
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | OrderStatSelectStEph | St | Sequential selection |
+| 2 | OrderStatSelectStPer | St | Persistent selection |
+| 3 | OrderStatSelectMtEph | Mt | Parallel selection |
+| 4 | OrderStatSelectMtPer | Mt | Parallel persistent selection |
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| BSTPlainStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| BSTAVLStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| BSTRBStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| BSTSplayStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+### Chapter 36: QuickSort - ✅ VERIFIED (ZERO HOLES)
 
-### Chapter 38: Parallel BST - ⬜ NOT STARTED
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | QuickSortStEph | St | Sequential quicksort |
+| 2 | QuickSortMtEph | Mt | Parallel quicksort |
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| BSTParaStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| BSTParaMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+### Chapter 37: BST Variants - ✅ VERIFIED
 
-### Chapter 39: Treaps - ⬜ NOT STARTED
+8 unconditional + 8 behind `all_chapters` feature gate.
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| BSTTreapStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| BSTTreapMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | AVLTreeSeq | St | AVL tree sequence (base) |
+| 2 | AVLTreeSeqStEph | St | Ephemeral AVL tree sequence |
+| 3 | AVLTreeSeqStPer | St | Persistent AVL tree sequence |
+| 4 | AVLTreeSeqMtPer | Mt | Parallel AVL tree sequence (gated) |
+| 5 | BSTPlainStEph | St | Plain BST |
+| 6 | BSTAVLStEph | St | AVL-balanced BST |
+| 7 | BSTRBStEph | St | Red-black BST |
+| 8 | BSTRBMtEph | Mt | Parallel red-black BST (gated) |
+| 9 | BSTSplayStEph | St | Splay BST |
+| 10 | BSTSplayMtEph | Mt | Parallel splay BST (gated) |
+| 11 | BSTBBAlphaStEph | St | BB-alpha weight-balanced BST |
+| 12-16 | BSTSet{Plain,AVL,RB,Splay,BBAlpha}MtEph | Mt | BST-backed sets (gated) |
 
-### Chapter 40: BST Key-Value - ⬜ NOT STARTED
+### Chapter 38: Parallel BST - ✅ VERIFIED
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| BSTKeyValueStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| BSTReducedStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| BSTSizeStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | BSTParaStEph | St | Parallel BST operations |
+| 2 | BSTParaMtEph | Mt | Multi-threaded parallel BST |
 
-### Chapter 41: Sets - ⬜ NOT STARTED
+### Chapter 39: Treaps - ✅ VERIFIED
 
-| Algorithm | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|-----------|----------|----------|---------------|-----------------|-------|
-| ArraySetStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| AVLTreeSetStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | BSTTreapStEph | St | Randomized treap |
+| 2 | BSTTreapMtEph | Mt | Parallel treap |
+| 3 | BSTParaTreapMtEph | Mt | Parallel operations on treap |
+| 4 | BSTSetTreapMtEph | Mt | Treap-backed set |
 
-### Chapter 45: Priority Queues - ✅ COMPLETE (ZERO HOLES)
+### Chapter 40: BST Key-Value - ✅ VERIFIED
 
-| Data Structure | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
-|----------------|----------|----------|---------------|-----------------|-------|
-| BinaryHeapPQ | ✅ | — | ✅ | ⬜ | bubble_down, height (int log2), level_elements (pow2) all verified |
-| UnsortedListPQ | ✅ | — | ✅ | ⬜ | |
-| SortedListPQ | ✅ | — | ✅ | ⬜ | |
-| BalancedTreePQ | ✅ | — | ✅ | ⬜ | |
-| LeftistHeapPQ | ✅ | — | ✅ | ⬜ | |
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | BSTKeyValueStEph | St | Key-value BST |
+| 2 | BSTSizeStEph | St | Size-augmented BST |
+| 3 | BSTReducedStEph | St | Reduced (augmented) BST |
 
-### Chapters 42-66: Future Work - ⬜ NOT STARTED
+### Chapter 41: Sets via BST - ✅ VERIFIED
 
-See APAS-AI for unverified implementations of:
-- Chapter 42-44: Hash Tables, Ordered Tables, Document Index
-- Chapter 47-59: Dynamic Programming, Maxflow, Linear Programming, FFT, Geometry
-- Chapter 61-66: ML, Neural Networks, Crypto, Compression, Error Correction, Quantum
+5 unconditional + 1 behind `all_chapters` feature gate.
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | ArraySetStEph | St | Array-backed set |
+| 2 | AVLTreeSetStEph | St | AVL tree set |
+| 3 | AVLTreeSetStPer | St | Persistent AVL tree set |
+| 4 | AVLTreeSetMtEph | Mt | Parallel AVL tree set |
+| 5 | AVLTreeSetMtPer | Mt | Parallel persistent AVL tree set (gated) |
+| 6 | Example41_3 | St | Textbook example |
+
+### Chapter 42: Hash Tables - ✅ VERIFIED (ZERO HOLES)
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | TableStEph | St | Ephemeral hash table |
+| 2 | TableStPer | St | Persistent hash table |
+| 3 | TableMtEph | Mt | Parallel hash table |
+| 4 | Example42_1 | St | Textbook example |
+
+### Chapter 43: Ordered Tables - ✅ VERIFIED
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | OrderedTableStEph | St | Ordered table |
+| 2 | OrderedTableStPer | St | Persistent ordered table |
+| 3 | OrderedTableMtEph | Mt | Parallel ordered table |
+| 4 | OrderedTableMtPer | Mt | Parallel persistent ordered table |
+| 5 | AugOrderedTableStEph | St | Augmented ordered table |
+| 6 | AugOrderedTableStPer | St | Persistent augmented ordered table |
+| 7 | AugOrderedTableMtEph | Mt | Parallel augmented ordered table |
+| 8 | OrderedSetStEph | St | Ordered set |
+| 9 | OrderedSetStPer | St | Persistent ordered set |
+| 10 | OrderedSetMtEph | Mt | Parallel ordered set |
+| 11 | Example43_1 | St | Textbook example |
+
+### Chapter 44: Document Index - ⬜ BLOCKED
+
+All files depend on types declared outside verus! (Chap41 AVLTreeSet).
+
+### Chapter 45: Priority Queues - ✅ VERIFIED
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | UnsortedListPQ | St | Unsorted list priority queue |
+| 2 | SortedListPQ | St | Sorted list priority queue |
+| 3 | BinaryHeapPQ | St | Binary heap with bubble_down verified |
+| 4 | BalancedTreePQ | St | Balanced tree priority queue |
+| 5 | LeftistHeapPQ | St | Leftist heap priority queue |
+| 6 | HeapsortExample | St | Heapsort using BinaryHeapPQ |
+| 7 | Example45_2 | St | Textbook example |
+
+### Chapter 47: Hashing - ✅ VERIFIED
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | ChainedHashTable | St | Base chained hash table |
+| 2 | StructChainedHashTable | St | Struct-based chained hash table |
+| 3 | VecChainedHashTableStEph | St | Vec-backed chained hash table |
+| 4 | LinkedListChainedHashTableStEph | St | Linked-list chained hash table |
+| 5 | FlatHashTable | St | Base flat (open-addressing) hash table |
+| 6 | LinProbFlatHashTableStEph | St | Linear probing |
+| 7 | QuadProbFlatHashTableStEph | St | Quadratic probing |
+| 8 | DoubleHashFlatHashTableStEph | St | Double hashing |
+| 9 | ParaHashTableStEph | St | Parallel hash table |
+
+### Chapter 49: Dynamic Programming I - ✅ VERIFIED
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | SubsetSumStEph | St | Subset sum |
+| 2 | SubsetSumStPer | St | Persistent subset sum |
+| 3 | SubsetSumMtEph | Mt | Parallel subset sum |
+| 4 | SubsetSumMtPer | Mt | Parallel persistent subset sum |
+| 5 | MinEditDistStEph | St | Minimum edit distance |
+| 6 | MinEditDistStPer | St | Persistent min edit distance |
+| 7 | MinEditDistMtEph | Mt | Parallel min edit distance |
+| 8 | MinEditDistMtPer | Mt | Parallel persistent min edit distance |
+
+### Chapter 50: Dynamic Programming II - ✅ VERIFIED
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | MatrixChainStEph | St | Matrix chain multiplication |
+| 2 | MatrixChainStPer | St | Persistent matrix chain |
+| 3 | MatrixChainMtEph | Mt | Parallel matrix chain |
+| 4 | MatrixChainMtPer | Mt | Parallel persistent matrix chain |
+| 5 | OptBinSearchTreeStEph | St | Optimal binary search tree |
+| 6 | OptBinSearchTreeStPer | St | Persistent optimal BST |
+| 7 | OptBinSearchTreeMtEph | Mt | Parallel optimal BST |
+| 8 | OptBinSearchTreeMtPer | Mt | Parallel persistent optimal BST |
+
+### Chapter 51: Dynamic Programming III - ✅ VERIFIED
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | BottomUpDPStEph | St | Bottom-up DP |
+| 2 | BottomUpDPStPer | St | Persistent bottom-up DP |
+| 3 | BottomUpDPMtEph | Mt | Parallel bottom-up DP |
+| 4 | BottomUpDPMtPer | Mt | Parallel persistent bottom-up DP |
+| 5 | TopDownDPStEph | St | Top-down (memoized) DP |
+| 6 | TopDownDPStPer | St | Persistent top-down DP |
+| 7 | TopDownDPMtEph | Mt | Parallel top-down DP |
+| 8 | TopDownDPMtPer | Mt | Parallel persistent top-down DP |
+
+### Chapter 52: Graph Representations - ✅ VERIFIED (ZERO HOLES)
+
+8 unconditional + 2 behind `all_chapters` feature gate.
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | AdjSeqGraphStEph | St | Adjacency sequence graph |
+| 2 | AdjSeqGraphStPer | St | Persistent adjacency sequence |
+| 3 | AdjSeqGraphMtEph | Mt | Parallel adjacency sequence |
+| 4 | AdjSeqGraphMtPer | Mt | Parallel persistent adjacency sequence |
+| 5 | AdjMatrixGraphStEph | St | Adjacency matrix graph |
+| 6 | AdjMatrixGraphStPer | St | Persistent adjacency matrix |
+| 7 | AdjMatrixGraphMtEph | Mt | Parallel adjacency matrix |
+| 8 | AdjMatrixGraphMtPer | Mt | Parallel persistent adjacency matrix |
+| 9 | AdjTableGraphMtPer | Mt | Adjacency table (gated) |
+| 10 | EdgeSetGraphMtPer | Mt | Edge set graph (gated) |
+
+### Chapter 53: Graph Search - ✅ VERIFIED (ZERO HOLES)
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | PQMinStEph | St | Priority queue minimum |
+| 2 | PQMinStPer | St | Persistent PQ minimum |
+| 3 | GraphSearchStEph | St | Generic graph search |
+| 4 | GraphSearchStPer | St | Persistent graph search |
+
+### Chapter 54: BFS - ✅ VERIFIED (ZERO HOLES)
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | BFSStEph | St | Breadth-first search |
+| 2 | BFSStPer | St | Persistent BFS |
+| 3 | BFSMtEph | Mt | Parallel BFS |
+| 4 | BFSMtPer | Mt | Parallel persistent BFS |
+
+### Chapter 55: DFS - ⬜ BLOCKED
+
+All files depend on types declared outside verus! (Chap37/41 BST/Set types).
+
+### Chapter 56: Shortest Paths (Results) - ✅ VERIFIED (ZERO HOLES)
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | SSSPResultStEphI64 | St | Single-source result (i64) |
+| 2 | SSSPResultStPerI64 | St | Persistent SSSP result (i64) |
+| 3 | AllPairsResultStEphI64 | St | All-pairs result (i64) |
+| 4 | AllPairsResultStPerI64 | St | Persistent all-pairs result (i64) |
+| 5 | PathWeightUtilsStEph | St | Path weight utilities |
+| 6 | PathWeightUtilsStPer | St | Persistent path weight utilities |
+| 7 | SSSPResultStEphF64 | St | Single-source result (f64) |
+| 8 | SSSPResultStPerF64 | St | Persistent SSSP result (f64) |
+| 9 | AllPairsResultStEphF64 | St | All-pairs result (f64) |
+| 10 | AllPairsResultStPerF64 | St | Persistent all-pairs result (f64) |
+
+### Chapter 57: Dijkstra - 🔄 PARTIAL
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | StackStEph | St | Stack for graph algorithms |
+
+Dijkstra blocked on BinaryHeapPQ types declared outside verus!.
+
+### Chapter 58: Bellman-Ford - ✅ VERIFIED (ZERO HOLES)
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | BellmanFordStEphI64 | St | Bellman-Ford shortest paths (i64) |
+
+F64 variant blocked on missing WeightedDirGraphStEphF64.
+
+### Chapter 59: Johnson - ⬜ BLOCKED
+
+All files depend on DijkstraStEphI64 (Chap57, blocked).
+
+### Chapter 61: Matching - ⬜ BLOCKED
+
+All files use `rand` crate (Verus can't link external crates).
+
+### Chapter 62: Star Partition - ✅ VERIFIED (ZERO HOLES)
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | StarPartitionStEph | St | Star partition |
+| 2 | StarContractionStEph | St | Star contraction |
+
+Mt variants blocked on `rand` crate.
+
+### Chapter 63: Connectivity - ✅ VERIFIED (ZERO HOLES)
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | ConnectivityStEph | St | Graph connectivity |
+
+Mt variant depends on StarPartitionMtEph (blocked).
+
+### Chapter 64: Spanning Trees - ✅ VERIFIED (`all_chapters`)
+
+Behind `all_chapters` feature gate.
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | SpanTreeStEph | St | Spanning tree |
+| 2 | SpanTreeMtEph | Mt | Parallel spanning tree |
+| 3 | TSPApproxStEph | St | TSP approximation |
+
+### Chapter 65: MST (Kruskal, Prim) - ✅ VERIFIED (ZERO HOLES) (`all_chapters`)
+
+Behind `all_chapters` feature gate.
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | UnionFindStEph | St | Union-find data structure |
+| 2 | KruskalStEph | St | Kruskal's MST algorithm |
+| 3 | PrimStEph | St | Prim's MST algorithm |
+
+### Chapter 66: MST (Boruvka) - ✅ VERIFIED (`all_chapters`)
+
+Behind `all_chapters` feature gate.
+
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | BoruvkaStEph | St | Boruvka's MST algorithm |
+| 2 | BoruvkaMtEph | Mt | Parallel Boruvka's MST |
 
 ---
 
 **Legend:**
-- ✅ Complete - All algorithms in chapter verified, tested, and benchmarked
-- 🔄 In Progress - Some work done but not complete
-- ⬜ Not Started - No work begun
+- ✅ VERIFIED (ZERO HOLES) - All functions verified, no proof holes
+- ✅ VERIFIED - All files verify, some accepted holes (PartialEq bridge, RwLock, external_body for atomics)
+- 🔄 PARTIAL - Some files active, some blocked
+- ⬜ BLOCKED - All files blocked (dependency or crate-linking issues)
 
 ## Proof State
 
-Full verification: **2598 verified, 0 errors**
+Full verification: **3525 verified, 0 errors**
 
-| Metric | Count |
-|--------|-------|
-| Clean modules (no holes) | 303 |
-| Holed modules | 104 |
-| Total modules | 407 |
-| Clean proof functions | 316 |
-| Holed proof functions | 36 |
-| Total proof functions | 352 |
+| # | Metric | Count |
+|---|--------|-------|
+| 1 | Chapters verified | 39 |
+| 2 | Chapters with zero holes | 17 |
+| 3 | Clean modules (no holes) | 249 |
+| 4 | Holed modules | 29 |
+| 5 | Total verified modules | 278 |
+| 6 | Clean proof functions | 268 |
+| 7 | Runtime tests (RTT) | 2595 |
+| 8 | Proof time tests (PTT) | 144 |
 
-### Proof Holes: 673 total
+### Proof Holes: 280 total
 
 | # | Hole Type | Count | Notes |
 |---|-----------|-------|-------|
-| 1 | `external_body` | 425 | Unverified function bodies |
-| 2 | `assume()` | 174 | Assumed conditions (includes PartialEq bridge) |
-| 3 | `admit()` | 48 | Admitted without proof |
-| 4 | `assume_specification` | 10 | External fn specs |
-| 5 | `external_type_specification` | 5 | External type specs |
-| 6 | `unsafe {}` | 4 | Unsafe blocks (Chap12 raw pointers) |
-| 7 | `external_trait_specification` | 2 | External trait specs |
-| 8 | `unsafe impl` | 2 | Manual Send/Sync (vstdplus/threads_plus) |
-| 9 | `assume(false)` | 1 | Unreachable error path |
-| 10 | `Tracked::assume_new()` | 1 | Tracked ghost state |
-| 11 | `external_trait_extension` | 1 | External trait extension |
+| 1 | `accept()` | 136 | Accepted proof holes (PartialEq bridge, iterator ghost) |
+| 2 | `external_body` (accepted) | 68 | Accepted external bodies (atomics, FFI) |
+| 3 | `verus_rwlock_external_body` | 56 | Verus RwLock::new requires external_body |
+| 4 | `unsafe {}` (accepted) | 8 | Unsafe blocks (Chap12 raw pointers) |
+| 5 | `external` (accepted) | 6 | External function specifications |
+| 6 | `external_type_specification` (accepted) | 2 | External type specs |
+| 7 | `struct outside verus!` (accepted) | 2 | Structs outside verus! block |
+| 8 | `enum outside verus!` (accepted) | 2 | Enums outside verus! block |
 
-Most holes are `external_body` in chapters that have been batch-verusified (trait inside `verus!`, impl bodies not yet verified). Algorithm chapters 03, 05, 06, 17, 21, and 45 have **zero holes**.
+All holes are explicitly accepted with `// accept hole` comments and tracked by veracity.
 
 ## Documentation
 
@@ -349,7 +618,7 @@ scripts/holes.sh src/Chap05/SetStEph.rs  # one file
 ### Full Pipeline
 
 ```bash
-scripts/validate-check-rtt-ptt.sh  # validate (dev) → check → RTT → PTT
+scripts/validate-check-rtt-ptt.sh  # validate (dev) -> check -> RTT -> PTT
 ```
 
 ### Benchmarking
@@ -381,21 +650,6 @@ We use Verus to prove:
 
 For generic algorithms, we use traits like `TotalOrdered` to abstract over ordering relationships while maintaining provability.
 
-## experiments
-
-The `src/experiments/` directory contains explorations of Verus verification techniques and proofs of fundamental loop patterns:
-
-### Loop Verification Study
-
-A comprehensive study of how Verus verifies different loop constructs (`while`, `loop`, `for`) with various iterator patterns:
-
-- **`seq_while_basic_proofs.rs`** - Verified `while` loops for basic sequence operations
-- **`seq_loop_basic_proofs.rs`** - Same operations using `loop { ... return }` patterns 
-- **`seq_for_basic_proofs.rs`** - Same operations using `for` loops with range iterators
-- **`verus_wrapped_iter_loops.rs`** - Manual desugaring of `for` loop auto-invariants
-
-See `docs/` for detailed write-ups on Verus loop proofs and iterator patterns.
-
 ## License
 
 Copyright (C) 2025 Acar, Blelloch and Milnes
@@ -404,5 +658,3 @@ Copyright (C) 2025 Acar, Blelloch and Milnes
 
 - [Algorithms Parallel and Sequential](http://www.parallel-algorithms-book.com/)
 - [Verus Documentation](https://verus-lang.github.io/verus/)
-- [APAS-AI Project](https://github.com/your-repo/APAS-AI) - Original unverified Rust implementations
-

@@ -145,6 +145,6 @@ Errors: 10 total (8 assume in eq/clone (Verus workaround), 2 dummy RwLockPredica
 Info: 4 total
    TopDownDPMtPer.rs:95: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    BottomUpDPMtPer.rs:96: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   TopDownDPMtEph.rs:117: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    BottomUpDPMtEph.rs:108: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-nfo: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   TopDownDPMtEph.rs:117: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   TopDownDPMtEph.rs:117: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
