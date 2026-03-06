@@ -228,6 +228,7 @@ pub mod standards {
     pub mod tsm_standard;
     pub mod arc_standard;
     pub mod hfscheduler_standard;
+    pub mod arc_rwlock_coarse_standard;
 }
 
 pub mod vstdplus {

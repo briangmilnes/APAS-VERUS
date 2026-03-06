@@ -1,40 +1,34 @@
 Verus Style Review
 ==================
 
-Path: src/standards/arc_standard.rs
-Codebase: src/standards
+Path: /home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs
+Codebase: /home/milnes/projects/APAS-VERUS
 Mode: basic
-Logging to: src/standards/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS/src/standards/analyses/veracity-review-verus-style.log
 
 Checking 1 files...
 
-src/standards/arc_standard.rs:
-src/standards/arc_standard.rs:1: info: [1] has mod declarations
-src/standards/arc_standard.rs:1: info: [2] vstd::prelude::* before verus!
-src/standards/arc_standard.rs:1: info: [3] has verus! macro
-src/standards/arc_standard.rs:1: info: [4] std imports grouped with trailing blank
-src/standards/arc_standard.rs:1: info: [5] no vstd imports (ok)
-src/standards/arc_standard.rs:1: info: [11] Set/Seq usage has broadcast groups
-src/standards/arc_standard.rs:1: info: [12] all trait fns have specs
-src/standards/arc_standard.rs:1: info: [13] trait impls inside verus!
-src/standards/arc_standard.rs:1: info: [14] Debug, Display outside verus!
-src/standards/arc_standard.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-src/standards/arc_standard.rs:1: info: [16] no Lit macro definitions (ok)
-src/standards/arc_standard.rs:1: info: [19] no generic return names
-src/standards/arc_standard.rs:1: info: [20] all traits have impls
-src/standards/arc_standard.rs:1: info: [21] no broadcast use entries
-src/standards/arc_standard.rs:1: info: [22] spec fns: all in traits as abstract signatures
-src/standards/arc_standard.rs:1: warning: [17] collection CollectionS should have an Iterator impl
-src/standards/arc_standard.rs:1: warning: [17] collection CollectionS should have an IntoIterator impl
-src/standards/arc_standard.rs:92: warning: [18] trait ViewArcTrait should come before impls (expected traits before impls)
-src/standards/arc_standard.rs:107: warning: [18] trait DeepViewArcTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:70: warning: [22] free spec fn tree_size should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:82: warning: [22] free spec fn tree_contains should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/standards/arc_rwlock_coarse_standard.rs:98: warning: [22] free spec fn spec_tree_wf should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 15 passed, 4 warnings in 1 files (checked 1 files)
+Summary: 16 passed, 3 warnings in 1 files (checked 1 files)
 ════════════════════════════════════════════════════════════════
-
-Reordering files with Rule 18 violations...
-
-src/standards/arc_standard.rs:1: info: reordered
-
-Reorder complete: 1 files reordered

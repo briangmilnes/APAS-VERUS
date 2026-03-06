@@ -4,18 +4,9 @@ Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are working in Chap55 and only chapter 55. 
+You are working in Chap41 and only chapter 41.
 
 Read src/standards/* and apply them in your proposed work.
+Your CLAUDE.md should cause you to read them in all planning and hopefully bug fixing.
 Fix trigger warnings as they occur using the rules.
-Check verusification state, the hole checker log and style logs are up to date.
-Does the chapter say these are multithreaded?
-The specs are NOT good yet. 
-Propose work. 
-
-
-
-
-
-
-
+Check the holes and style and Propose work in a table. 

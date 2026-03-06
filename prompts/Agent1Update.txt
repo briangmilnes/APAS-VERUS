@@ -4,12 +4,9 @@ Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are working only in src/Chap40.
+You are working only in src/Chap37. 
 
 Read src/standards/* and apply them in your proposed work.
+Your CLAUDE.md should cause you to read them in all planning and hopefully bug fixing.
 Fix trigger warnings as they occur using the rules.
-
-It does not seem to have a trait/impl type for trait, for each type in multiple files. 
-Propose work.
-
-
+Check the holes and style and Propose work in a table. 
