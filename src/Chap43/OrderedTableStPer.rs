@@ -91,7 +91,7 @@ pub mod OrderedTableStPer {
             requires obeys_feq_clone::<K>()
             ensures self@.dom().finite();
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (table: Self)
-            requires keys.spec_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),
+            requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),
             ensures table@.dom().finite();
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),

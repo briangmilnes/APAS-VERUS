@@ -61,7 +61,7 @@ broadcast use {
     }
 
     /// A well-formed adjacency matrix: square n x n.
-    pub open spec fn spec_wf(g: AdjMatrixGraphMtEph) -> bool {
+    pub open spec fn spec_adjmatrixgraphmteph_wf(g: AdjMatrixGraphMtEph) -> bool {
         g.matrix.spec_len() == g.n
         && forall|i: int| 0 <= i < g.n ==>
             #[trigger] g.matrix.spec_index(i).spec_len() == g.n
@@ -102,7 +102,7 @@ broadcast use {
     // 8. traits
 
     pub trait AdjMatrixGraphMtEphTrait: Sized {
-        spec fn spec_wf(&self) -> bool;
+        spec fn spec_adjmatrixgraphmteph_wf(&self) -> bool;
         spec fn spec_n(&self) -> nat;
         spec fn spec_edge(&self, u: int, v: int) -> bool
             recommends 0 <= u < self.spec_n(), 0 <= v < self.spec_n();
@@ -110,7 +110,7 @@ broadcast use {
         /// Work Theta(n^2), Span Theta(n^2)
         fn new(n: N) -> (empty: Self)
             ensures
-                empty.spec_wf(),
+                empty.spec_adjmatrixgraphmteph_wf(),
                 empty.spec_n() == n,
                 forall|u: int, v: int|
                     0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);
@@ -121,7 +121,7 @@ broadcast use {
                 forall|i: int| 0 <= i < matrix.spec_len() ==>
                     #[trigger] matrix.spec_index(i).spec_len() == matrix.spec_len()
             ensures
-                constructed.spec_wf(),
+                constructed.spec_adjmatrixgraphmteph_wf(),
                 constructed.spec_n() == matrix.spec_len(),
                 forall|u: int, v: int|
                     0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()
@@ -129,13 +129,13 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: N)
-            requires self.spec_wf()
+            requires self.spec_adjmatrixgraphmteph_wf()
             ensures n as nat == self.spec_n();
 
         /// Work Theta(n^2), Span Theta(n^2)
         fn num_edges(&self) -> (m: N)
             requires
-                self.spec_wf(),
+                self.spec_adjmatrixgraphmteph_wf(),
                 spec_sum_of(
                     self.spec_n() as int,
                     |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
@@ -148,12 +148,12 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         fn has_edge(&self, u: N, v: N) -> (found: B)
-            requires self.spec_wf(), u < self.spec_n(), v < self.spec_n()
+            requires self.spec_adjmatrixgraphmteph_wf(), u < self.spec_n(), v < self.spec_n()
             ensures found == self.spec_edge(u as int, v as int);
 
         /// Work Theta(n), Span Theta(n)
         fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtEphS<N>)
-            requires self.spec_wf(), u < self.spec_n()
+            requires self.spec_adjmatrixgraphmteph_wf(), u < self.spec_n()
             ensures
                 forall|k: int| 0 <= k < neighbors.spec_len()
                     ==> #[trigger] neighbors.spec_index(k) < self.spec_n()
@@ -164,7 +164,7 @@ broadcast use {
 
         /// Work Theta(n), Span Theta(n)
         fn out_degree(&self, u: N) -> (d: N)
-            requires self.spec_wf(), u < self.spec_n()
+            requires self.spec_adjmatrixgraphmteph_wf(), u < self.spec_n()
             ensures d as nat == spec_count_true(
                 |v: int| self.spec_edge(u as int, v),
                 self.spec_n() as int,
@@ -173,11 +173,11 @@ broadcast use {
         /// Work Theta(1), Span Theta(1)
         fn set_edge(&mut self, u: N, v: N, exists: B)
             requires
-                old(self).spec_wf(),
+                old(self).spec_adjmatrixgraphmteph_wf(),
                 u < old(self).spec_n(),
                 v < old(self).spec_n(),
             ensures
-                self.spec_wf(),
+                self.spec_adjmatrixgraphmteph_wf(),
                 self.spec_n() == old(self).spec_n(),
                 self.spec_edge(u as int, v as int) == exists,
                 forall|i: int, j: int|
@@ -187,9 +187,9 @@ broadcast use {
 
         /// Work Theta(n^2), Span Theta(n^2)
         fn complement(&self) -> (complemented: Self)
-            requires self.spec_wf()
+            requires self.spec_adjmatrixgraphmteph_wf()
             ensures
-                complemented.spec_wf(),
+                complemented.spec_adjmatrixgraphmteph_wf(),
                 complemented.spec_n() == self.spec_n(),
                 forall|i: int, j: int|
                     0 <= i < self.spec_n() && 0 <= j < self.spec_n()
@@ -200,7 +200,7 @@ broadcast use {
 
     impl AdjMatrixGraphMtEphTrait for AdjMatrixGraphMtEph {
 
-        open spec fn spec_wf(&self) -> bool {
+        open spec fn spec_adjmatrixgraphmteph_wf(&self) -> bool {
             self.matrix.spec_len() == self.n
             && forall|i: int| 0 <= i < self.n ==>
                 #[trigger] self.matrix.spec_index(i).spec_len() == self.n
@@ -248,7 +248,7 @@ broadcast use {
             while u < n
                 invariant
                     u <= n,
-                    self.spec_wf(),
+                    self.spec_adjmatrixgraphmteph_wf(),
                     n as nat == self.spec_n(),
                     total as nat == spec_sum_of(u as int, row_count),
                     row_count == (|u: int| spec_count_true(|v: int| self.spec_edge(u, v), n as int)),
@@ -263,7 +263,7 @@ broadcast use {
                 while v < n
                     invariant
                         v <= n,
-                        self.spec_wf(),
+                        self.spec_adjmatrixgraphmteph_wf(),
                         n as nat == self.spec_n(),
                         u < n,
                         row.spec_len() == n,
@@ -297,7 +297,7 @@ broadcast use {
             while v < n
                 invariant
                     v <= n,
-                    self.spec_wf(),
+                    self.spec_adjmatrixgraphmteph_wf(),
                     n as nat == self.spec_n(),
                     u < self.spec_n(),
                     row.spec_len() == n,
@@ -357,7 +357,7 @@ broadcast use {
             while v < n
                 invariant
                     v <= n,
-                    self.spec_wf(),
+                    self.spec_adjmatrixgraphmteph_wf(),
                     n as nat == self.spec_n(),
                     row.spec_len() == n,
                     forall|vi: int| 0 <= vi < n ==> #[trigger] row.spec_index(vi) == self.spec_edge(u as int, vi),

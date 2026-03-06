@@ -9,7 +9,7 @@ pub mod DFSStPer {
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false};
-    use crate::Chap55::TopoSortStPer::TopoSortStPer::{spec_wf_adj_list_per, spec_reachable_per};
+    use crate::Chap55::TopoSortStPer::TopoSortStPer::{spec_toposortstper_wf, spec_reachable_per};
     use crate::Types::Types::*;
 
     verus! {
@@ -34,7 +34,7 @@ pub mod DFSStPer {
         fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> (reachable: AVLTreeSetStPer<N>)
             requires
                 source < graph@.len(),
-                spec_wf_adj_list_per(graph),
+                spec_toposortstper_wf(graph),
             ensures
                 reachable@.contains(source),
                 forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),
@@ -56,7 +56,7 @@ pub mod DFSStPer {
         requires
             vertex < old(visited_bool)@.len(),
             old(visited_bool)@.len() == graph@.len(),
-            spec_wf_adj_list_per(graph),
+            spec_toposortstper_wf(graph),
         ensures
             visited_bool@.len() == old(visited_bool)@.len(),
             forall|j: int| #![auto]
@@ -84,7 +84,7 @@ pub mod DFSStPer {
                 i <= neighbors_len,
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited_bool@.len() == graph@.len(),
-                spec_wf_adj_list_per(graph),
+                spec_toposortstper_wf(graph),
                 forall|j: int| #![auto]
                     0 <= j < visited_bool@.len() && old(visited_bool)@[j]
                     ==> visited_bool@[j],

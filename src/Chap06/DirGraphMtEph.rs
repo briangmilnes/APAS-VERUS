@@ -98,7 +98,7 @@ pub mod DirGraphMtEph {
         fn empty() -> (g: Self)
             requires valid_key_type_for_graph::<V>()
             ensures 
-                wf_graph_view(g@),
+                spec_graphview_wf(g@),
                 g@.V == Set::<<V as View>::V>::empty(), 
                 g@.A == Set::<(<V as View>::V, <V as View>::V)>::empty();
 
@@ -112,7 +112,7 @@ pub mod DirGraphMtEph {
                 forall |u: V::V, w: V::V| 
                     #[trigger] A@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),
             ensures 
-                wf_graph_view(g@),
+                spec_graphview_wf(g@),
                 g@.V == V@, 
                 g@.A == A@;
 
@@ -140,7 +140,7 @@ pub mod DirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: B)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(u@),
                 self@.V.contains(v@),
@@ -153,14 +153,14 @@ pub mod DirGraphMtEph {
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
         open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V> 
-            recommends wf_graph_view(self@), self@.V.contains(v)
+            recommends spec_graphview_wf(self@), self@.V.contains(v)
         { 
             Set::new(|w: V::V| self@.A.contains((v, w)))
         }
 
         open spec fn spec_n_plus_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V)>) -> Set<V::V> 
             recommends 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 subarcs <= self@.A,
         {
             Set::new(|w: V::V| subarcs.contains((v, w)))
@@ -170,7 +170,7 @@ pub mod DirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — ParaPair! split arcs
         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures 
@@ -181,20 +181,20 @@ pub mod DirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — calls n_plus
         fn out_degree(&self, v: &V) -> (n: N)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures n == self.spec_n_plus(v@).len();
 
         open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V> 
-            recommends wf_graph_view(self@), self@.V.contains(v)
+            recommends spec_graphview_wf(self@), self@.V.contains(v)
         { 
             Set::new(|u: V::V| self@.A.contains((u, v))) 
         }
 
         open spec fn spec_n_minus_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V)>) -> Set<V::V> 
             recommends 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 subarcs <= self@.A,
         {
             Set::new(|u: V::V| subarcs.contains((u, v)))
@@ -204,7 +204,7 @@ pub mod DirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — ParaPair! split arcs
         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures 
@@ -215,13 +215,13 @@ pub mod DirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — calls n_minus
         fn in_degree(&self, v: &V) -> (n: N)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures n == self.spec_n_minus(v@).len();
 
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V> 
-            recommends wf_graph_view(self@), self@.V.contains(v)
+            recommends spec_graphview_wf(self@), self@.V.contains(v)
         { 
             self.spec_n_plus(v).union(self.spec_n_minus(v)) 
         }
@@ -230,7 +230,7 @@ pub mod DirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — n_plus + n_minus
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures 
@@ -238,7 +238,7 @@ pub mod DirGraphMtEph {
                 neighbors@ <= self@.V;
 
         open spec fn spec_degree(&self, v: V::V) -> nat 
-            recommends wf_graph_view(self@), self@.V.contains(v)
+            recommends spec_graphview_wf(self@), self@.V.contains(v)
         { 
             self.spec_ng(v).len() 
         }
@@ -247,19 +247,19 @@ pub mod DirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — calls ng
         fn degree(&self, v: &V) -> (n: N)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures n == self.spec_degree(v@);
 
         open spec fn spec_n_plus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
-            recommends wf_graph_view(self@), vertices <= self@.V
+            recommends spec_graphview_wf(self@), vertices <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_plus(u).contains(w))
         }
 
         open spec fn spec_n_plus_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
-            recommends wf_graph_view(self@), subverts <= self@.V
+            recommends spec_graphview_wf(self@), subverts <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_n_plus(u).contains(w))
         }
@@ -268,7 +268,7 @@ pub mod DirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) — ParaPair! split vertices
         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 u_set@ <= self@.V,
             ensures 
@@ -276,13 +276,13 @@ pub mod DirGraphMtEph {
                 out_neighbors@ <= self@.V;
 
         open spec fn spec_n_minus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
-            recommends wf_graph_view(self@), vertices <= self@.V
+            recommends spec_graphview_wf(self@), vertices <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_minus(u).contains(w))
         }
 
         open spec fn spec_n_minus_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
-            recommends wf_graph_view(self@), subverts <= self@.V
+            recommends spec_graphview_wf(self@), subverts <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_n_minus(u).contains(w))
         }
@@ -291,7 +291,7 @@ pub mod DirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) — ParaPair! split vertices
         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 u_set@ <= self@.V,
             ensures 
@@ -299,13 +299,13 @@ pub mod DirGraphMtEph {
                 in_neighbors@ <= self@.V;
 
         open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
-            recommends wf_graph_view(self@), vertices <= self@.V
+            recommends spec_graphview_wf(self@), vertices <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
 
         open spec fn spec_ng_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
-            recommends wf_graph_view(self@), subverts <= self@.V
+            recommends spec_graphview_wf(self@), subverts <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_ng(u).contains(w))
         }
@@ -314,7 +314,7 @@ pub mod DirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) — ParaPair! split vertices
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 u_set@ <= self@.V,
             ensures 
@@ -331,7 +331,7 @@ pub mod DirGraphMtEph {
         requires
             valid_key_type::<V>(),
             valid_key_type::<Edge<V>>(),
-            wf_graph_view(g@),
+            spec_graphview_wf(g@),
             arcs@ <= g@.A,
         ensures 
             out_neighbors@ == g.spec_n_plus_from_set(v@, arcs@),
@@ -378,7 +378,7 @@ pub mod DirGraphMtEph {
         requires
             valid_key_type::<V>(),
             valid_key_type::<Edge<V>>(),
-            wf_graph_view(g@),
+            spec_graphview_wf(g@),
             arcs@ <= g@.A,
         ensures 
             in_neighbors@ == g.spec_n_minus_from_set(v@, arcs@),
@@ -427,7 +427,7 @@ pub mod DirGraphMtEph {
         requires 
             valid_key_type::<V>(),
             valid_key_type::<Edge<V>>(),
-            wf_graph_view(g@),
+            spec_graphview_wf(g@),
             verts@ <= g@.V,
         ensures 
             out_neighbors@ == g.spec_n_plus_of_vertices_from_set(verts@),
@@ -494,7 +494,7 @@ pub mod DirGraphMtEph {
         requires 
             valid_key_type::<V>(),
             valid_key_type::<Edge<V>>(),
-            wf_graph_view(g@),
+            spec_graphview_wf(g@),
             verts@ <= g@.V,
         ensures 
             in_neighbors@ == g.spec_n_minus_of_vertices_from_set(verts@),
@@ -561,7 +561,7 @@ pub mod DirGraphMtEph {
         requires 
             valid_key_type::<V>(),
             valid_key_type::<Edge<V>>(),
-            wf_graph_view(g@),
+            spec_graphview_wf(g@),
             verts@ <= g@.V,
         ensures 
             neighbors@ == g.spec_ng_of_vertices_from_set(verts@),

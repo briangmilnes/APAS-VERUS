@@ -8,7 +8,7 @@ pub mod DFSStEph {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
-    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, spec_wf_adj_list, spec_reachable, lemma_set_true_decreases_num_false};
+    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, spec_toposortsteph_wf, spec_reachable, lemma_set_true_decreases_num_false};
     use crate::Types::Types::*;
 
     verus! {
@@ -33,7 +33,7 @@ pub mod DFSStEph {
         fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (reachable: AVLTreeSetStEph<N>)
             requires
                 source < graph@.len(),
-                spec_wf_adj_list(graph),
+                spec_toposortsteph_wf(graph),
             ensures
                 reachable@.contains(source),
                 forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),
@@ -54,7 +54,7 @@ pub mod DFSStEph {
         requires
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
-            spec_wf_adj_list(graph),
+            spec_toposortsteph_wf(graph),
         ensures
             visited@.len() == old(visited)@.len(),
             forall|j: int| #![auto]
@@ -81,7 +81,7 @@ pub mod DFSStEph {
                 i <= neighbors_len,
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited@.len() == graph@.len(),
-                spec_wf_adj_list(graph),
+                spec_toposortsteph_wf(graph),
                 forall|j: int| #![auto]
                     0 <= j < visited@.len() && old(visited)@[j]
                     ==> visited@[j],

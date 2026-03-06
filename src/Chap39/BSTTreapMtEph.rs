@@ -62,7 +62,7 @@ pub mod BSTTreapMtEph {
     //		6. spec fns
 
     pub open spec fn spec_bsttreapmteph_wf<T: StTInMtT + Ord + IsLtTransitive>(link: &Link<T>) -> bool {
-        Lnk::spec_size_wf_link(link)
+        Lnk::spec_link_size_wf(link)
         && Lnk::spec_size_link(link) < usize::MAX as nat
         && Lnk::spec_bst_link(link)
     }
@@ -117,7 +117,7 @@ pub mod BSTTreapMtEph {
 
     proof fn lemma_height_le_size<T: StTInMtT + Ord>(link: &Link<T>)
         requires
-            Lnk::spec_size_wf_link(link),
+            Lnk::spec_link_size_wf(link),
             Lnk::spec_size_link(link) < usize::MAX as nat,
         ensures Lnk::spec_height_link(link) <= Lnk::spec_size_link(link),
         decreases *link,
@@ -134,7 +134,7 @@ pub mod BSTTreapMtEph {
 
     proof fn lemma_size_wf_child_bounded<T: StTInMtT + Ord>(link: &Link<T>)
         requires
-            Lnk::spec_size_wf_link(link),
+            Lnk::spec_link_size_wf(link),
             Lnk::spec_size_link(link) > 0,
             Lnk::spec_size_link(link) < usize::MAX as nat,
         ensures
@@ -159,9 +159,9 @@ pub mod BSTTreapMtEph {
     proof fn lemma_wf_assemble_node<T: StTInMtT + Ord>(node: &Node<T>)
         requires
             node.size as nat == 1 + Lnk::spec_size_link(&node.left) + Lnk::spec_size_link(&node.right),
-            Lnk::spec_size_wf_link(&node.left),
-            Lnk::spec_size_wf_link(&node.right),
-        ensures Lnk::spec_size_wf_link(&Some(Box::new(*node))),
+            Lnk::spec_link_size_wf(&node.left),
+            Lnk::spec_link_size_wf(&node.right),
+        ensures Lnk::spec_link_size_wf(&Some(Box::new(*node))),
     {
     }
 
@@ -170,7 +170,7 @@ pub mod BSTTreapMtEph {
 
     pub trait LinkTrait<T: StTInMtT + Ord>: Sized {
         spec fn spec_size_link(link: &Link<T>) -> nat;
-        spec fn spec_size_wf_link(link: &Link<T>) -> bool;
+        spec fn spec_link_size_wf(link: &Link<T>) -> bool;
         spec fn spec_height_link(link: &Link<T>) -> nat;
         spec fn spec_bst_link(link: &Link<T>) -> bool;
     }
@@ -246,15 +246,15 @@ pub mod BSTTreapMtEph {
             }
         }
 
-        open spec fn spec_size_wf_link(link: &Link<T>) -> bool
+        open spec fn spec_link_size_wf(link: &Link<T>) -> bool
             decreases *link,
         {
             match link {
                 None => true,
                 Some(node) => {
                     node.size as nat == 1 + Self::spec_size_link(&node.left) + Self::spec_size_link(&node.right)
-                        && Self::spec_size_wf_link(&node.left)
-                        && Self::spec_size_wf_link(&node.right)
+                        && Self::spec_link_size_wf(&node.left)
+                        && Self::spec_link_size_wf(&node.right)
                 }
             }
         }
@@ -290,7 +290,7 @@ pub mod BSTTreapMtEph {
     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
         ensures
             Lnk::spec_size_link(&c) == Lnk::spec_size_link(link),
-            Lnk::spec_size_wf_link(link) ==> Lnk::spec_size_wf_link(&c),
+            Lnk::spec_link_size_wf(link) ==> Lnk::spec_link_size_wf(&c),
         decreases link,
     {
         match link {
@@ -348,10 +348,10 @@ pub mod BSTTreapMtEph {
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn rotate_left<T: StTInMtT + Ord + IsLtTransitive>(link: &mut Link<T>)
         requires
-            Lnk::spec_size_wf_link(old(link)),
+            Lnk::spec_link_size_wf(old(link)),
             Lnk::spec_size_link(old(link)) <= usize::MAX as nat,
         ensures
-            Lnk::spec_size_wf_link(link),
+            Lnk::spec_link_size_wf(link),
             Lnk::spec_size_link(link) == Lnk::spec_size_link(old(link)),
             forall|k: T| spec_contains_link(link, k) <==> spec_contains_link(old(link), k),
             Lnk::spec_bst_link(old(link)) ==> Lnk::spec_bst_link(link),
@@ -360,14 +360,14 @@ pub mod BSTTreapMtEph {
             let ghost bst_input = Lnk::spec_bst_link(&Some(x));
             let ghost xk = x.key;
             let ghost orig_right = x.right;
-            assert(Lnk::spec_size_wf_link(&x.left));
-            assert(Lnk::spec_size_wf_link(&x.right));
+            assert(Lnk::spec_link_size_wf(&x.left));
+            assert(Lnk::spec_link_size_wf(&x.right));
             if let Some(mut y) = x.right.take() {
                 let ghost yk = y.key;
                 let ghost b  = y.left;
                 let ghost a  = y.right;
-                assert(Lnk::spec_size_wf_link(&y.left));
-                assert(Lnk::spec_size_wf_link(&y.right));
+                assert(Lnk::spec_link_size_wf(&y.left));
+                assert(Lnk::spec_link_size_wf(&y.right));
                 let ghost x_left_sz = Lnk::spec_size_link(&x.left);
                 let ghost y_left_sz = Lnk::spec_size_link(&y.left);
                 let ghost y_right_sz = Lnk::spec_size_link(&y.right);
@@ -422,10 +422,10 @@ pub mod BSTTreapMtEph {
 
     fn rotate_right<T: StTInMtT + Ord + IsLtTransitive>(link: &mut Link<T>)
         requires
-            Lnk::spec_size_wf_link(old(link)),
+            Lnk::spec_link_size_wf(old(link)),
             Lnk::spec_size_link(old(link)) <= usize::MAX as nat,
         ensures
-            Lnk::spec_size_wf_link(link),
+            Lnk::spec_link_size_wf(link),
             Lnk::spec_size_link(link) == Lnk::spec_size_link(old(link)),
             forall|k: T| spec_contains_link(link, k) <==> spec_contains_link(old(link), k),
             Lnk::spec_bst_link(old(link)) ==> Lnk::spec_bst_link(link),
@@ -434,14 +434,14 @@ pub mod BSTTreapMtEph {
             let ghost bst_input = Lnk::spec_bst_link(&Some(x));
             let ghost xk = x.key;
             let ghost orig_left = x.left;
-            assert(Lnk::spec_size_wf_link(&x.left));
-            assert(Lnk::spec_size_wf_link(&x.right));
+            assert(Lnk::spec_link_size_wf(&x.left));
+            assert(Lnk::spec_link_size_wf(&x.right));
             if let Some(mut y) = x.left.take() {
                 let ghost yk = y.key;
                 let ghost b  = y.right;
                 let ghost a  = y.left;
-                assert(Lnk::spec_size_wf_link(&y.left));
-                assert(Lnk::spec_size_wf_link(&y.right));
+                assert(Lnk::spec_link_size_wf(&y.left));
+                assert(Lnk::spec_link_size_wf(&y.right));
                 let ghost x_right_sz = Lnk::spec_size_link(&x.right);
                 let ghost y_left_sz = Lnk::spec_size_link(&y.left);
                 let ghost y_right_sz = Lnk::spec_size_link(&y.right);
@@ -499,10 +499,10 @@ pub mod BSTTreapMtEph {
     fn insert_link<T: StTInMtT + Ord + IsLtTransitive>(link: &mut Link<T>, value: T, priority: u64)
         requires
             Lnk::spec_size_link(old(link)) + 1 <= usize::MAX as nat,
-            Lnk::spec_size_wf_link(old(link)),
+            Lnk::spec_link_size_wf(old(link)),
             T::obeys_partial_cmp_spec(),
         ensures
-            Lnk::spec_size_wf_link(link),
+            Lnk::spec_link_size_wf(link),
             Lnk::spec_size_link(link) <= Lnk::spec_size_link(old(link)) + 1,
             Lnk::spec_size_link(link) >= Lnk::spec_size_link(old(link)),
             forall|k: T| spec_contains_link(old(link), k) ==> spec_contains_link(link, k),
@@ -521,8 +521,8 @@ pub mod BSTTreapMtEph {
                     (node.key == k || spec_contains_link(&node.left, k) || spec_contains_link(&node.right, k))
                     by {};
             }
-            assert(Lnk::spec_size_wf_link(&node.left));
-            assert(Lnk::spec_size_wf_link(&node.right));
+            assert(Lnk::spec_link_size_wf(&node.left));
+            assert(Lnk::spec_link_size_wf(&node.right));
             if value < node.key {
                 insert_link(&mut node.left, value, priority);
                 update(&mut node);
@@ -603,11 +603,11 @@ pub mod BSTTreapMtEph {
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
     fn delete_link<T: StTInMtT + Ord + IsLtTransitive>(link: &mut Link<T>, target: &T)
         requires
-            Lnk::spec_size_wf_link(old(link)),
+            Lnk::spec_link_size_wf(old(link)),
             Lnk::spec_size_link(old(link)) < usize::MAX as nat,
             T::obeys_partial_cmp_spec(),
         ensures
-            Lnk::spec_size_wf_link(link),
+            Lnk::spec_link_size_wf(link),
             Lnk::spec_size_link(link) <= Lnk::spec_size_link(old(link)),
             forall|k: T| spec_contains_link(link, k) ==> spec_contains_link(old(link), k),
             Lnk::spec_bst_link(old(link)) ==> Lnk::spec_bst_link(link),
@@ -624,8 +624,8 @@ pub mod BSTTreapMtEph {
                     (node.key == k || spec_contains_link(&node.left, k) || spec_contains_link(&node.right, k))
                     by {};
             }
-            assert(Lnk::spec_size_wf_link(&node.left));
-            assert(Lnk::spec_size_wf_link(&node.right));
+            assert(Lnk::spec_link_size_wf(&node.left));
+            assert(Lnk::spec_link_size_wf(&node.right));
             if *target < node.key {
                 delete_link(&mut node.left, target);
                 update(&mut node);
@@ -863,7 +863,7 @@ pub mod BSTTreapMtEph {
     fn height_link<T: StTInMtT + Ord>(link: &Link<T>) -> (h: usize)
         requires
             Lnk::spec_size_link(link) < usize::MAX as nat,
-            Lnk::spec_size_wf_link(link),
+            Lnk::spec_link_size_wf(link),
         ensures h as nat == Lnk::spec_height_link(link),
         decreases *link,
     {
@@ -890,7 +890,7 @@ pub mod BSTTreapMtEph {
     /// - APAS: Work Θ(n), Span Θ(n)
     /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
     fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
-        requires Lnk::spec_size_wf_link(link),
+        requires Lnk::spec_link_size_wf(link),
         ensures out@.len() == old(out)@.len() + Lnk::spec_size_link(link) as int,
         decreases *link,
     {
@@ -904,7 +904,7 @@ pub mod BSTTreapMtEph {
     /// - APAS: Work Θ(n), Span Θ(n)
     /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
     fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
-        requires Lnk::spec_size_wf_link(link),
+        requires Lnk::spec_link_size_wf(link),
         ensures out@.len() == old(out)@.len() + Lnk::spec_size_link(link) as int,
         decreases *link,
     {

@@ -28,7 +28,7 @@ pub mod CycleDetectStPer {
     // 6. spec fns
 
     /// Well-formed adjacency list for persistent graph representation.
-    pub open spec fn spec_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> bool {
+    pub open spec fn spec_cycledetectstper_wf(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> bool {
         forall|v: int, i: int| #![auto]
             0 <= v < graph@.len() && 0 <= i < graph@[v]@.len()
             ==> graph@[v]@[i] < graph@.len()
@@ -41,7 +41,7 @@ pub mod CycleDetectStPer {
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (has_cycle: B)
             requires
-                spec_wf_adj_list_per(graph),
+                spec_cycledetectstper_wf(graph),
             ensures
                 has_cycle == !spec_is_dag_per(graph),
             ;
@@ -61,7 +61,7 @@ pub mod CycleDetectStPer {
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
             old(ancestors)@.len() == graph@.len(),
-            spec_wf_adj_list_per(graph),
+            spec_cycledetectstper_wf(graph),
         ensures
             visited@.len() == old(visited)@.len(),
             ancestors@.len() == old(ancestors)@.len(),
@@ -94,7 +94,7 @@ pub mod CycleDetectStPer {
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited@.len() == graph@.len(),
                 ancestors@.len() == graph@.len(),
-                spec_wf_adj_list_per(graph),
+                spec_cycledetectstper_wf(graph),
                 forall|j: int| #![auto]
                     0 <= j < visited@.len() && old(visited)@[j]
                     ==> visited@[j],
@@ -142,7 +142,7 @@ pub mod CycleDetectStPer {
                     n == graph@.len(),
                     visited@.len() == n,
                     ancestors@.len() == n,
-                    spec_wf_adj_list_per(graph),
+                    spec_cycledetectstper_wf(graph),
                 decreases n - start,
             {
                 if !visited[start] {

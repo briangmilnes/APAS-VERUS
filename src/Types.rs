@@ -42,7 +42,7 @@ broadcast use {
     }
 
     /// Well-formedness for unlabeled graph views: finite sets and arc endpoints in V.
-    pub open spec fn wf_graph_view<V>(gv: GraphView<V>) -> bool {
+    pub open spec fn spec_graphview_wf<V>(gv: GraphView<V>) -> bool {
         &&& gv.V.finite()
         &&& gv.A.finite()
         &&& forall |u: V, w: V| 
@@ -50,12 +50,12 @@ broadcast use {
                     gv.V.contains(u) && gv.V.contains(w)
     }
     /// Well-formedness is preserved when taking a subset of arcs.
-    pub proof fn lemma_wf_graph_view_subset_arcs<V>(gv: GraphView<V>, arcs_subset: Set<(V, V)>)
+    pub proof fn lemma_spec_graphview_wf_subset_arcs<V>(gv: GraphView<V>, arcs_subset: Set<(V, V)>)
         requires
-            wf_graph_view(gv),
+            spec_graphview_wf(gv),
             arcs_subset <= gv.A,
         ensures
-            wf_graph_view(GraphView { V: gv.V, A: arcs_subset }),
+            spec_graphview_wf(GraphView { V: gv.V, A: arcs_subset }),
     {
     }
 
@@ -68,7 +68,7 @@ broadcast use {
     }
 
     /// Well-formedness for labeled graph views: finite sets and arc endpoints in V.
-    pub open spec fn wf_lab_graph_view<V, L>(gv: LabGraphView<V, L>) -> bool {
+    pub open spec fn spec_labgraphview_wf<V, L>(gv: LabGraphView<V, L>) -> bool {
         &&& gv.V.finite()
         &&& gv.A.finite()
         &&& forall |u: V, w: V, l: L| 
@@ -77,12 +77,12 @@ broadcast use {
     }
 
     /// Well-formedness is preserved when taking a subset of arcs.
-    pub proof fn lemma_wf_lab_graph_view_subset_arcs<V,L>(gv: LabGraphView<V,L>, arcs_subset: Set<(V, V, L)>)
+    pub proof fn lemma_spec_labgraphview_wf_subset_arcs<V,L>(gv: LabGraphView<V,L>, arcs_subset: Set<(V, V, L)>)
         requires
-            wf_lab_graph_view(gv),
+            spec_labgraphview_wf(gv),
             arcs_subset <= gv.A,
         ensures
-            wf_lab_graph_view(LabGraphView { V: gv.V, A: arcs_subset }),
+            spec_labgraphview_wf(LabGraphView { V: gv.V, A: arcs_subset }),
     {
     }
 

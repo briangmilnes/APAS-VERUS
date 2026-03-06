@@ -114,7 +114,7 @@ broadcast use {
     where
         F: Fn(&V, &V) -> V + Clone,
     {
-        spec fn spec_wf(&self) -> bool;
+        spec fn spec_augorderedtablesteph_wf(&self) -> bool;
 
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite();
@@ -151,7 +151,7 @@ broadcast use {
             requires obeys_feq_clone::<K>()
             ensures self@.dom().finite();
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
-            requires keys.spec_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>()
+            requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>()
             ensures tabulated@.dom().finite();
         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (mapped: Self)
             ensures mapped@.dom().finite();
@@ -173,13 +173,13 @@ broadcast use {
                 obeys_view_eq::<K>(),
             ensures self@.dom().finite();
         fn difference(&mut self, other: &Self)
-            requires old(self).spec_wf(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
+            requires old(self).spec_augorderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
             ensures self@.dom().finite();
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            requires old(self).spec_wf(), obeys_feq_full::<Pair<K, V>>()
+            requires old(self).spec_augorderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>()
             ensures self@.dom().finite();
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            requires old(self).spec_wf(), obeys_feq_full::<Pair<K, V>>()
+            requires old(self).spec_augorderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>()
             ensures self@.dom().finite();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite();
@@ -218,8 +218,8 @@ broadcast use {
     where
         F: Fn(&V, &V) -> V + Clone,
     {
-        open spec fn spec_wf(&self) -> bool {
-            self.base_table.spec_wf()
+        open spec fn spec_augorderedtablesteph_wf(&self) -> bool {
+            self.base_table.spec_orderedtablesteph_wf()
         }
 
         fn size(&self) -> (count: usize)

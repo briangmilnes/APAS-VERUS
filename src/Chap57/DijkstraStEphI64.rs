@@ -98,7 +98,7 @@ pub mod DijkstraStEphI64 {
     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64
         requires
             source < graph.vertices().size(),
-            wf_lab_graph_view(graph@),
+            spec_labgraphview_wf(graph@),
             valid_key_type_WeightedEdge::<usize, i128>(),
         ensures
             sssp.distances.spec_len() == graph.vertices().size(),

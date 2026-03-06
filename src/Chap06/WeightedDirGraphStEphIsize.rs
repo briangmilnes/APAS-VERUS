@@ -45,7 +45,7 @@ verus! {
                 forall |u: V::V, w: V::V, weight: isize| 
                     #[trigger] edges@.contains((u, w, weight)) ==> 
                         vertices@.contains(u) && vertices@.contains(w),
-            ensures wf_lab_graph_view(g@), g@.V =~= vertices@;
+            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn add_weighed_edge(&mut self, from: V, to: V, weight: isize)
@@ -56,44 +56,44 @@ verus! {
 
         /// APAS: Work Θ(|A|), Span Θ(1)
         fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<isize>)
-            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, isize>()
+            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()
             ensures 
                 weight.is_some() == (exists |w: isize| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),
                 weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));
 
         /// APAS: Work Θ(|A|), Span Θ(1)
         fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, isize>>)
-            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, isize>()
+            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()
             ensures 
                 forall |t: (V::V, V::V, isize)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);
 
         /// APAS: Work Θ(|A|), Span Θ(1)
         fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, isize>>)
-            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, isize>()
+            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()
             ensures 
                 forall |p: (V::V, isize)| out_neighbors@.contains(p) == 
                     (exists |w: isize| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);
 
         /// APAS: Work Θ(|A|), Span Θ(1)
         fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, isize>>)
-            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, isize>()
+            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()
             ensures 
                 forall |p: (V::V, isize)| in_neighbors@.contains(p) == 
                     (exists |w: isize| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);
 
         /// APAS: Work Θ(|A|), Span Θ(1)
         fn total_weight(&self) -> (total_weight: CheckedIsize)
-            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, isize>()
+            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()
             ensures total_weight@ == self.spec_total_weight();
 
         fn edges_above_weight(&self, threshold: isize) -> (edges_above: SetStEph<WeightedEdge<V, isize>>)
-            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, isize>()
+            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()
             ensures 
                 forall |t: (V::V, V::V, isize)| #[trigger] edges_above@.contains(t) == 
                     (self@.A.contains(t) && t.2 > threshold);
 
         fn edges_below_weight(&self, threshold: isize) -> (edges_below: SetStEph<WeightedEdge<V, isize>>)
-            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, isize>()
+            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()
             ensures 
                 forall |t: (V::V, V::V, isize)| #[trigger] edges_below@.contains(t) == 
                     (self@.A.contains(t) && t.2 < threshold);

@@ -71,7 +71,7 @@ pub mod BSTTreapStEph {
     pub trait BSTTreapStEphTrait<T: StT + Ord + IsLtTransitive> {
         spec fn spec_size_link(link: &Link<T>) -> nat;
         spec fn spec_bst_link(link: &Link<T>) -> bool;
-        spec fn spec_size_wf_link(link: &Link<T>) -> bool;
+        spec fn spec_link_size_wf(link: &Link<T>) -> bool;
         spec fn spec_in_order_link(link: &Link<T>) -> Seq<T>;
         spec fn spec_pre_order_link(link: &Link<T>) -> Seq<T>;
         spec fn spec_min_link(link: &Link<T>) -> Option<T>;
@@ -79,7 +79,7 @@ pub mod BSTTreapStEph {
         spec fn spec_height_link(link: &Link<T>) -> nat;
 
         spec fn spec_size(self) -> nat;
-        spec fn spec_wf(self) -> bool;
+        spec fn spec_bsttreapsteph_wf(self) -> bool;
         spec fn spec_bst(self) -> bool;
         spec fn spec_height(self) -> nat;
         spec fn spec_contains(self, target: T) -> bool;
@@ -90,13 +90,13 @@ pub mod BSTTreapStEph {
 
         proof fn lemma_height_le_size(link: &Link<T>)
             requires
-                Self::spec_size_wf_link(link),
+                Self::spec_link_size_wf(link),
                 Self::spec_size_link(link) < usize::MAX as nat,
             ensures Self::spec_height_link(link) <= Self::spec_size_link(link);
 
         proof fn lemma_size_wf_child_bounded(link: &Link<T>)
             requires
-                Self::spec_size_wf_link(link),
+                Self::spec_link_size_wf(link),
                 Self::spec_size_link(link) > 0,
                 Self::spec_size_link(link) < usize::MAX as nat,
             ensures
@@ -109,22 +109,22 @@ pub mod BSTTreapStEph {
                 };
 
         proof fn lemma_wf_decompose(link: &Link<T>)
-            requires Self::spec_size_wf_link(link),
+            requires Self::spec_link_size_wf(link),
             ensures match link {
                 None => true,
                 Some(node) => {
                     node.size as nat == 1 + Self::spec_size_link(&node.left) + Self::spec_size_link(&node.right)
-                    && Self::spec_size_wf_link(&node.left)
-                    && Self::spec_size_wf_link(&node.right)
+                    && Self::spec_link_size_wf(&node.left)
+                    && Self::spec_link_size_wf(&node.right)
                 },
             };
 
         proof fn lemma_wf_assemble_node(node: &Box<Node<T>>)
             requires
                 node.size as nat == 1 + Self::spec_size_link(&node.left) + Self::spec_size_link(&node.right),
-                Self::spec_size_wf_link(&node.left),
-                Self::spec_size_wf_link(&node.right),
-            ensures Self::spec_size_wf_link(&Some(*node));
+                Self::spec_link_size_wf(&node.left),
+                Self::spec_link_size_wf(&node.right),
+            ensures Self::spec_link_size_wf(&Some(*node));
 
         proof fn lemma_contains_left(node: &Box<Node<T>>, k: T)
             requires spec_contains_link(&node.left, k),
@@ -156,7 +156,7 @@ pub mod BSTTreapStEph {
             Self: Sized,
             ensures
                 empty_tree.spec_size() == 0,
-                empty_tree.spec_wf(),
+                empty_tree.spec_bsttreapsteph_wf(),
                 empty_tree.spec_bst();
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -171,17 +171,17 @@ pub mod BSTTreapStEph {
         fn height(&self)               -> (h: usize)
             requires
                 self.spec_size() < usize::MAX as nat,
-                self.spec_wf(),
+                self.spec_bsttreapsteph_wf(),
             ensures h as nat == self.spec_height();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn insert(&mut self, value: T, priority: u64)
             requires
                 old(self).spec_size() + 1 <= usize::MAX as nat,
-                old(self).spec_wf(),
+                old(self).spec_bsttreapsteph_wf(),
                 T::obeys_partial_cmp_spec(),
             ensures
-                self.spec_wf(),
+                self.spec_bsttreapsteph_wf(),
                 self.spec_size() <= old(self).spec_size() + 1,
                 self.spec_size() >= old(self).spec_size(),
                 forall|k: T| old(self).spec_contains(k) ==> self.spec_contains(k),
@@ -190,10 +190,10 @@ pub mod BSTTreapStEph {
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn delete(&mut self, target: &T)
             requires
-                old(self).spec_wf(),
+                old(self).spec_bsttreapsteph_wf(),
                 T::obeys_partial_cmp_spec(),
             ensures
-                self.spec_wf(),
+                self.spec_bsttreapsteph_wf(),
                 self.spec_size() <= old(self).spec_size(),
                 forall|k: T| self.spec_contains(k) ==> old(self).spec_contains(k),
                 old(self).spec_bst() ==> self.spec_bst();
@@ -233,7 +233,7 @@ pub mod BSTTreapStEph {
         /// - APAS: Work Θ(1), Span Θ(1)
         fn new_node(key: T, priority: u64) -> (n: Node<T>)
             ensures
-                Self::spec_size_wf_link(&Some(Box::new(n))),
+                Self::spec_link_size_wf(&Some(Box::new(n))),
                 n.size == 1;
 
         /// - APAS: Work Θ(1), Span Θ(1)
@@ -251,20 +251,20 @@ pub mod BSTTreapStEph {
 
         fn rotate_left(x: Box<Node<T>>) -> (rotated: Box<Node<T>>)
             requires
-                Self::spec_size_wf_link(&Some(x)),
+                Self::spec_link_size_wf(&Some(x)),
                 Self::spec_size_link(&Some(x)) <= usize::MAX as nat,
             ensures
-                Self::spec_size_wf_link(&Some(rotated)),
+                Self::spec_link_size_wf(&Some(rotated)),
                 Self::spec_size_link(&Some(rotated)) == Self::spec_size_link(&Some(x)),
                 Self::spec_bst_link(&Some(x)) ==> Self::spec_bst_link(&Some(rotated)),
                 forall|k: T| spec_contains_link(&Some(rotated), k) <==> spec_contains_link(&Some(x), k);
 
         fn rotate_right(x: Box<Node<T>>) -> (rotated: Box<Node<T>>)
             requires
-                Self::spec_size_wf_link(&Some(x)),
+                Self::spec_link_size_wf(&Some(x)),
                 Self::spec_size_link(&Some(x)) <= usize::MAX as nat,
             ensures
-                Self::spec_size_wf_link(&Some(rotated)),
+                Self::spec_link_size_wf(&Some(rotated)),
                 Self::spec_size_link(&Some(rotated)) == Self::spec_size_link(&Some(x)),
                 Self::spec_bst_link(&Some(x)) ==> Self::spec_bst_link(&Some(rotated)),
                 forall|k: T| spec_contains_link(&Some(rotated), k) <==> spec_contains_link(&Some(x), k);
@@ -272,21 +272,21 @@ pub mod BSTTreapStEph {
         fn clone_link(link: &Link<T>) -> (c: Link<T>)
             ensures
                 Self::spec_size_link(&c) == Self::spec_size_link(link),
-                Self::spec_size_wf_link(link) ==> Self::spec_size_wf_link(&c);
+                Self::spec_link_size_wf(link) ==> Self::spec_link_size_wf(&c);
 
         fn height_link(link: &Link<T>) -> (h: usize)
             requires
                 Self::spec_size_link(link) < usize::MAX as nat,
-                Self::spec_size_wf_link(link),
+                Self::spec_link_size_wf(link),
             ensures h as nat == Self::spec_height_link(link);
 
         fn insert_link(link: Link<T>, value: T, priority: u64) -> (inserted: Link<T>)
             requires
                 Self::spec_size_link(&link) + 1 <= usize::MAX as nat,
-                Self::spec_size_wf_link(&link),
+                Self::spec_link_size_wf(&link),
                 T::obeys_partial_cmp_spec(),
             ensures
-                Self::spec_size_wf_link(&inserted),
+                Self::spec_link_size_wf(&inserted),
                 Self::spec_size_link(&inserted) <= Self::spec_size_link(&link) + 1,
                 Self::spec_size_link(&inserted) >= Self::spec_size_link(&link),
                 forall|k: T| spec_contains_link(&link, k) ==> spec_contains_link(&inserted, k),
@@ -295,10 +295,10 @@ pub mod BSTTreapStEph {
 
         fn delete_link(link: Link<T>, target: &T) -> (deleted: Link<T>)
             requires
-                Self::spec_size_wf_link(&link),
+                Self::spec_link_size_wf(&link),
                 T::obeys_partial_cmp_spec(),
             ensures
-                Self::spec_size_wf_link(&deleted),
+                Self::spec_link_size_wf(&deleted),
                 Self::spec_size_link(&deleted) <= Self::spec_size_link(&link),
                 forall|k: T| spec_contains_link(&deleted, k) ==> spec_contains_link(&link, k),
                 Self::spec_bst_link(&link) ==> Self::spec_bst_link(&deleted);
@@ -355,15 +355,15 @@ pub mod BSTTreapStEph {
             }
         }
 
-        open spec fn spec_size_wf_link(link: &Link<T>) -> bool
+        open spec fn spec_link_size_wf(link: &Link<T>) -> bool
             decreases *link,
         {
             match link {
                 None => true,
                 Some(node) => {
                     node.size as nat == 1 + Self::spec_size_link(&node.left) + Self::spec_size_link(&node.right)
-                        && Self::spec_size_wf_link(&node.left)
-                        && Self::spec_size_wf_link(&node.right)
+                        && Self::spec_link_size_wf(&node.left)
+                        && Self::spec_link_size_wf(&node.right)
                 }
             }
         }
@@ -433,7 +433,7 @@ pub mod BSTTreapStEph {
         }
 
         open spec fn spec_size(self) -> nat { Self::spec_size_link(&self.root) }
-        open spec fn spec_wf(self) -> bool { Self::spec_size_wf_link(&self.root) }
+        open spec fn spec_bsttreapsteph_wf(self) -> bool { Self::spec_link_size_wf(&self.root) }
         open spec fn spec_bst(self) -> bool { Self::spec_bst_link(&self.root) }
         open spec fn spec_height(self) -> nat { Self::spec_height_link(&self.root) }
         open spec fn spec_contains(self, target: T) -> bool { spec_contains_link(&self.root, target) }
@@ -535,8 +535,8 @@ pub mod BSTTreapStEph {
                 left: None,
                 right: None,
             };
-            assert(Self::spec_size_wf_link(&n.left));
-            assert(Self::spec_size_wf_link(&n.right));
+            assert(Self::spec_link_size_wf(&n.left));
+            assert(Self::spec_link_size_wf(&n.right));
             n
         }
 
@@ -559,15 +559,15 @@ pub mod BSTTreapStEph {
             let ghost bst_input = Self::spec_bst_link(&Some(x));
             let ghost xk = x.key;
             let ghost orig_right = x.right;
-            assert(Self::spec_size_wf_link(&x.left));
-            assert(Self::spec_size_wf_link(&x.right));
+            assert(Self::spec_link_size_wf(&x.left));
+            assert(Self::spec_link_size_wf(&x.right));
             if let Some(mut y) = x.right.take() {
                 let ghost yk = y.key;
                 let ghost b  = y.left;
                 let ghost c  = y.right;
 
-                assert(Self::spec_size_wf_link(&y.left));
-                assert(Self::spec_size_wf_link(&y.right));
+                assert(Self::spec_link_size_wf(&y.left));
+                assert(Self::spec_link_size_wf(&y.right));
                 let ghost x_left_sz = Self::spec_size_link(&x.left);
                 let ghost y_left_sz = Self::spec_size_link(&y.left);
                 let ghost y_right_sz = Self::spec_size_link(&y.right);
@@ -628,15 +628,15 @@ pub mod BSTTreapStEph {
             let ghost bst_input = Self::spec_bst_link(&Some(x));
             let ghost xk = x.key;
             let ghost orig_left = x.left;
-            assert(Self::spec_size_wf_link(&x.left));
-            assert(Self::spec_size_wf_link(&x.right));
+            assert(Self::spec_link_size_wf(&x.left));
+            assert(Self::spec_link_size_wf(&x.right));
             if let Some(mut y) = x.left.take() {
                 let ghost yk = y.key;
                 let ghost b  = y.right;
                 let ghost a  = y.left;
 
-                assert(Self::spec_size_wf_link(&y.left));
-                assert(Self::spec_size_wf_link(&y.right));
+                assert(Self::spec_link_size_wf(&y.left));
+                assert(Self::spec_link_size_wf(&y.right));
                 let ghost x_right_sz = Self::spec_size_link(&x.right);
                 let ghost y_left_sz = Self::spec_size_link(&y.left);
                 let ghost y_right_sz = Self::spec_size_link(&y.right);
@@ -754,8 +754,8 @@ pub mod BSTTreapStEph {
                             (node.key == k || spec_contains_link(&node.left, k) || spec_contains_link(&node.right, k))
                             by {};
                     }
-                    assert(Self::spec_size_wf_link(&node.left));
-                    assert(Self::spec_size_wf_link(&node.right));
+                    assert(Self::spec_link_size_wf(&node.left));
+                    assert(Self::spec_link_size_wf(&node.right));
                     if value < node.key {
                         node.left = Self::insert_link(node.left.take(), value, priority);
                         Self::update_size(&mut node);
@@ -839,8 +839,8 @@ pub mod BSTTreapStEph {
                             (node.key == k || spec_contains_link(&node.left, k) || spec_contains_link(&node.right, k))
                             by {};
                     }
-                    assert(Self::spec_size_wf_link(&node.left));
-                    assert(Self::spec_size_wf_link(&node.right));
+                    assert(Self::spec_link_size_wf(&node.left));
+                    assert(Self::spec_link_size_wf(&node.right));
                     if *target < node.key {
                         // Target in left subtree.
                         node.left = Self::delete_link(node.left.take(), target);
@@ -928,8 +928,8 @@ pub mod BSTTreapStEph {
                                             implies rot_key.is_lt(&k) by {};
                                     }
                                 }
-                                assert(Self::spec_size_wf_link(&Some(rotated)));
-                                assert(Self::spec_size_wf_link(&rotated.right));
+                                assert(Self::spec_link_size_wf(&Some(rotated)));
+                                assert(Self::spec_link_size_wf(&rotated.right));
                                 assert(Self::spec_size_link(&rotated.right) < Self::spec_size_link(&link));
                                 rotated.right = Self::delete_link(rotated.right.take(), target);
                                 Self::update_size(&mut rotated);
@@ -973,8 +973,8 @@ pub mod BSTTreapStEph {
                                             implies rot_key.is_lt(&k) by {};
                                     }
                                 }
-                                assert(Self::spec_size_wf_link(&Some(rotated)));
-                                assert(Self::spec_size_wf_link(&rotated.left));
+                                assert(Self::spec_link_size_wf(&Some(rotated)));
+                                assert(Self::spec_link_size_wf(&rotated.left));
                                 assert(Self::spec_size_link(&rotated.left) < Self::spec_size_link(&link));
                                 rotated.left = Self::delete_link(rotated.left.take(), target);
                                 Self::update_size(&mut rotated);
@@ -1090,7 +1090,7 @@ pub mod BSTTreapStEph {
 
     impl<T: StT + Ord + IsLtTransitive> Default for BSTreeTreap<T> {
         fn default() -> (d: Self)
-            ensures d.spec_size() == 0, d.spec_wf(), d.spec_bst(),
+            ensures d.spec_size() == 0, d.spec_bsttreapsteph_wf(), d.spec_bst(),
         { Self::new() }
     }
 
@@ -1101,7 +1101,7 @@ pub mod BSTTreapStEph {
         fn clone(&self) -> (cloned: Self)
             ensures
                 BSTTreapStEph::<T>::spec_size_link(&Some(Box::new(cloned))) == BSTTreapStEph::<T>::spec_size_link(&Some(Box::new(*self))),
-                BSTTreapStEph::<T>::spec_size_wf_link(&Some(Box::new(*self))) ==> BSTTreapStEph::<T>::spec_size_wf_link(&Some(Box::new(cloned))),
+                BSTTreapStEph::<T>::spec_link_size_wf(&Some(Box::new(*self))) ==> BSTTreapStEph::<T>::spec_link_size_wf(&Some(Box::new(cloned))),
         {
             Node {
                 key: self.key.clone(),
@@ -1117,7 +1117,7 @@ pub mod BSTTreapStEph {
         fn clone(&self) -> (cloned: Self)
             ensures
                 cloned.spec_size() == self.spec_size(),
-                self.spec_wf() ==> cloned.spec_wf(),
+                self.spec_bsttreapsteph_wf() ==> cloned.spec_bsttreapsteph_wf(),
         {
             BSTTreapStEph { root: BSTTreapStEph::<T>::clone_link(&self.root) }
         }

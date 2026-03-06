@@ -94,14 +94,14 @@ pub mod UnDirGraphMtEph {
 
         open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V)>) -> Set<V::V> 
             recommends 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 subedges <= self@.A,
         {
             Set::new(|w: V::V| subedges.contains((v, w)) || subedges.contains((w, v)))
         }
 
         open spec fn spec_ng_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
-            recommends wf_graph_view(self@), subverts <= self@.V
+            recommends spec_graphview_wf(self@), subverts <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_ng(u).contains(w))
         }
@@ -110,7 +110,7 @@ pub mod UnDirGraphMtEph {
         fn empty() -> (g: Self)
             requires valid_key_type_for_graph::<V>()
             ensures 
-                wf_graph_view(g@),
+                spec_graphview_wf(g@),
                 g@.V == Set::<<V as View>::V>::empty(), 
                 g@.A == Set::<(<V as View>::V, <V as View>::V)>::empty();
 
@@ -124,7 +124,7 @@ pub mod UnDirGraphMtEph {
                 forall |u: V::V, w: V::V| 
                     #[trigger] E@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),
             ensures 
-                wf_graph_view(g@),
+                spec_graphview_wf(g@),
                 g@.V == V@, 
                 g@.A == E@;
 
@@ -152,14 +152,14 @@ pub mod UnDirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: B)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(u@),
                 self@.V.contains(v@),
             ensures b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)));
 
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V> 
-            recommends wf_graph_view(self@), self@.V.contains(v)
+            recommends spec_graphview_wf(self@), self@.V.contains(v)
         { 
             Set::new(|w: V::V| self@.A.contains((v, w)) || self@.A.contains((w, v)))
         }
@@ -168,7 +168,7 @@ pub mod UnDirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(log |E|) — ParaPair! split edges
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures 
@@ -176,7 +176,7 @@ pub mod UnDirGraphMtEph {
                 neighbors@ <= self@.V;
 
         open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
-            recommends wf_graph_view(self@), vertices <= self@.V
+            recommends spec_graphview_wf(self@), vertices <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
@@ -185,7 +185,7 @@ pub mod UnDirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|u_set| × |E|), Span Θ(log |u_set| + log |E|) — ParaPair! split vertices
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 u_set@ <= self@.V,
             ensures 
@@ -202,7 +202,7 @@ pub mod UnDirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(log |E|) — calls ng
         fn degree(&self, v: &V) -> (n: N)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures n == self.spec_ng(v@).len();
@@ -217,7 +217,7 @@ pub mod UnDirGraphMtEph {
         requires
             valid_key_type::<V>(),
             valid_key_type::<Edge<V>>(),
-            wf_graph_view(g@),
+            spec_graphview_wf(g@),
             edges@ <= g@.A,
         ensures 
             neighbors@ == g.spec_ng_from_set(v@, edges@),
@@ -316,7 +316,7 @@ pub mod UnDirGraphMtEph {
         requires 
             valid_key_type::<V>(),
             valid_key_type::<Edge<V>>(),
-            wf_graph_view(g@),
+            spec_graphview_wf(g@),
             verts@ <= g@.V,
         ensures 
             neighbors@ == g.spec_ng_of_vertices_from_set(verts@),

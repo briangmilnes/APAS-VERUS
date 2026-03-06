@@ -10,7 +10,7 @@ pub mod SCCStEph {
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::{AVLTreeSeqStEphS, AVLTreeSeqStEphTrait};
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{
-        spec_wf_adj_list, spec_num_false, lemma_set_true_decreases_num_false,
+        spec_toposortsteph_wf, spec_num_false, lemma_set_true_decreases_num_false,
         dfs_finish_order,
     };
     use crate::Types::Types::*;
@@ -36,7 +36,7 @@ pub mod SCCStEph {
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (components: AVLTreeSeqStEphS<AVLTreeSetStEph<N>>)
             requires
-                spec_wf_adj_list(graph),
+                spec_toposortsteph_wf(graph),
             ensures
                 components@.len() >= 1 || graph@.len() == 0,
             ;
@@ -46,7 +46,7 @@ pub mod SCCStEph {
 
     /// Computes the finish order for SCC (decreasing finish times).
     fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N>
-        requires spec_wf_adj_list(graph),
+        requires spec_toposortsteph_wf(graph),
     {
         let n = graph.length();
         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
@@ -58,7 +58,7 @@ pub mod SCCStEph {
                 start <= n,
                 n == graph@.len(),
                 visited@.len() == n,
-                spec_wf_adj_list(graph),
+                spec_toposortsteph_wf(graph),
             decreases n - start,
         {
             if !*visited.nth(start) {
@@ -83,7 +83,7 @@ pub mod SCCStEph {
 
     /// Transposes a directed graph (reverses all edges).
     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<N>>)
-        requires spec_wf_adj_list(graph),
+        requires spec_toposortsteph_wf(graph),
         ensures transposed@.len() == graph@.len(),
     {
         let n = graph.length();
@@ -105,7 +105,7 @@ pub mod SCCStEph {
                 u <= n,
                 n == graph@.len(),
                 adj_vecs@.len() == n,
-                spec_wf_adj_list(graph),
+                spec_toposortsteph_wf(graph),
             decreases n - u,
         {
             let neighbors = graph.nth(u);
@@ -117,7 +117,7 @@ pub mod SCCStEph {
                     neighbors_len == graph@[u as int]@.len(),
                     adj_vecs@.len() == n,
                     n == graph@.len(),
-                    spec_wf_adj_list(graph),
+                    spec_toposortsteph_wf(graph),
                 decreases neighbors_len - i,
             {
                 let v = *neighbors.nth(i);
@@ -145,7 +145,7 @@ pub mod SCCStEph {
 
     /// Runtime check that all neighbor indices are valid vertex indices.
     fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (valid: bool)
-        ensures valid ==> spec_wf_adj_list(graph),
+        ensures valid ==> spec_toposortsteph_wf(graph),
     {
         let n = graph.length();
         let mut u: usize = 0;
@@ -208,7 +208,7 @@ pub mod SCCStEph {
                     i <= finish_len,
                     visited@.len() == n,
                     n == transposed@.len(),
-                    spec_wf_adj_list(&transposed),
+                    spec_toposortsteph_wf(&transposed),
                 decreases finish_len - i,
             {
                 let vertex = *finish_order.nth(i);
@@ -234,7 +234,7 @@ pub mod SCCStEph {
         requires
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
-            spec_wf_adj_list(graph),
+            spec_toposortsteph_wf(graph),
         ensures
             visited@.len() == old(visited)@.len(),
             forall|j: int| #![auto]
@@ -263,7 +263,7 @@ pub mod SCCStEph {
                 i <= neighbors_len,
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited@.len() == graph@.len(),
-                spec_wf_adj_list(graph),
+                spec_toposortsteph_wf(graph),
                 forall|j: int| #![auto]
                     0 <= j < visited@.len() && old(visited)@[j]
                     ==> visited@[j],

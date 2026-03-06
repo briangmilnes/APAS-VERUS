@@ -74,19 +74,19 @@ verus! {
     View<V = GraphView<<V as View>::V>> + Sized {
 
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V> 
-            recommends wf_graph_view(self@), self@.V.contains(v)
+            recommends spec_graphview_wf(self@), self@.V.contains(v)
         { 
             Set::new(|w: V::V| self@.A.contains((v, w)) || self@.A.contains((w, v)))
         }
 
         open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
-            recommends wf_graph_view(self@), vertices <= self@.V
+            recommends spec_graphview_wf(self@), vertices <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
 
         open spec fn spec_degree(&self, v: V::V) -> nat 
-            recommends wf_graph_view(self@), self@.V.contains(v)
+            recommends spec_graphview_wf(self@), self@.V.contains(v)
         {
             self.spec_ng(v).len()
         }
@@ -95,7 +95,7 @@ verus! {
         fn empty() -> (g: UnDirGraphStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures
-                wf_graph_view(g@),
+                spec_graphview_wf(g@),
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
 
@@ -105,7 +105,7 @@ verus! {
                 forall |u: V::V, w: V::V| 
                     #[trigger] edges@.contains((u, w)) ==> vertices@.contains(u) && vertices@.contains(w),
             ensures
-                wf_graph_view(g@),
+                spec_graphview_wf(g@),
                 g@.V =~= vertices@,
                 g@.A =~= edges@;
 
@@ -134,7 +134,7 @@ verus! {
         /// APAS: Work Θ(1), Span Θ(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: B)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_Edge::<V>(),
                 self@.V.contains(u@),
                 self@.V.contains(v@),
@@ -143,7 +143,7 @@ verus! {
         /// APAS: Work Θ(|E|), Span Θ(1)
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_Edge::<V>(),
                 self@.V.contains(v@),
             ensures 
@@ -153,7 +153,7 @@ verus! {
         /// APAS: Work Θ(|u_set| × |E|), Span Θ(1)
         fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_Edge::<V>(),
                 vertices@ <= self@.V,
             ensures 
@@ -168,7 +168,7 @@ verus! {
         /// APAS: Work Θ(|E|), Span Θ(1)
         fn degree(&self, v: &V) -> (n: N)
             requires 
-                wf_graph_view(self@),
+                spec_graphview_wf(self@),
                 valid_key_type_Edge::<V>(),
                 self@.V.contains(v@),
             ensures n == self.spec_degree(v@);

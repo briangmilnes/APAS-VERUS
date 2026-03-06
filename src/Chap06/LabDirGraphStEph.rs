@@ -50,13 +50,13 @@ verus! {
         }
 
         open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V> 
-            recommends wf_lab_graph_view(self@), self@.V.contains(v)
+            recommends spec_labgraphview_wf(self@), self@.V.contains(v)
         { 
             Set::new(|w: V::V| exists |l: L::V| #![trigger self@.A.contains((v, w, l))] self@.A.contains((v, w, l)))
         }
 
         open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V> 
-            recommends wf_lab_graph_view(self@), self@.V.contains(v)
+            recommends spec_labgraphview_wf(self@), self@.V.contains(v)
         { 
             Set::new(|u: V::V| exists |l: L::V| #![trigger self@.A.contains((u, v, l))] self@.A.contains((u, v, l)))
         }
@@ -70,7 +70,7 @@ verus! {
         fn empty() -> (g: LabDirGraphStEph<V, L>)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
-                wf_lab_graph_view(g@),
+                spec_labgraphview_wf(g@),
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
@@ -82,7 +82,7 @@ verus! {
                     #[trigger] labeled_arcs@.contains((u, w, l)) ==> 
                         vertices@.contains(u) && vertices@.contains(w),
             ensures
-                wf_lab_graph_view(g@),
+                spec_labgraphview_wf(g@),
                 g@.V =~= vertices@,
                 g@.A =~= labeled_arcs@;
 
@@ -119,7 +119,7 @@ verus! {
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential search
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>)
-            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
+            requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures 
                 label.is_some() == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l))),
                 label.is_some() ==> self@.A.contains((from@, to@, label.unwrap()@));
@@ -127,21 +127,21 @@ verus! {
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential search
         fn has_arc(&self, from: &V, to: &V) -> (b: bool)
-            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
+            requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures b == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l)));
 
         /// out-neighbors
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential filter
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)
-            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
+            requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures n_plus@.finite(), n_plus@ == self.spec_n_plus(v@);
 
         /// in-neighbors
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential filter
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)
-            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
+            requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures n_minus@.finite(), n_minus@ == self.spec_n_minus(v@);
     }
 

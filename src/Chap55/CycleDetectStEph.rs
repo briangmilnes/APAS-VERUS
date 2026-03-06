@@ -7,7 +7,7 @@ pub mod CycleDetectStEph {
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
-    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, spec_wf_adj_list, spec_is_dag, lemma_set_true_decreases_num_false};
+    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, spec_toposortsteph_wf, spec_is_dag, lemma_set_true_decreases_num_false};
     use crate::Types::Types::*;
 
     verus! {
@@ -31,7 +31,7 @@ pub mod CycleDetectStEph {
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (has_cycle: B)
             requires
-                spec_wf_adj_list(graph),
+                spec_toposortsteph_wf(graph),
             ensures
                 has_cycle == !spec_is_dag(graph),
             ;
@@ -51,7 +51,7 @@ pub mod CycleDetectStEph {
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
             old(ancestors)@.len() == graph@.len(),
-            spec_wf_adj_list(graph),
+            spec_toposortsteph_wf(graph),
         ensures
             visited@.len() == old(visited)@.len(),
             ancestors@.len() == old(ancestors)@.len(),
@@ -86,7 +86,7 @@ pub mod CycleDetectStEph {
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited@.len() == graph@.len(),
                 ancestors@.len() == graph@.len(),
-                spec_wf_adj_list(graph),
+                spec_toposortsteph_wf(graph),
                 forall|j: int| #![auto]
                     0 <= j < visited@.len() && old(visited)@[j]
                     ==> visited@[j],
@@ -124,7 +124,7 @@ pub mod CycleDetectStEph {
                     n == graph@.len(),
                     visited@.len() == n,
                     ancestors@.len() == n,
-                    spec_wf_adj_list(graph),
+                    spec_toposortsteph_wf(graph),
                 decreases n - start,
             {
                 if !*visited.nth(start) {

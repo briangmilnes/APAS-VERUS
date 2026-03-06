@@ -51,7 +51,7 @@ verus! {
         }
 
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V> 
-            recommends wf_lab_graph_view(self@), self@.V.contains(v)
+            recommends spec_labgraphview_wf(self@), self@.V.contains(v)
         { 
             Set::new(|w: V::V| exists |l: L::V| 
                 self@.A.contains((v, w, l)) || self@.A.contains((w, v, l)))
@@ -66,7 +66,7 @@ verus! {
         fn empty() -> (g: LabUnDirGraphStEph<V, L>)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
-                wf_lab_graph_view(g@),
+                spec_labgraphview_wf(g@),
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
@@ -78,7 +78,7 @@ verus! {
                     #[trigger] labeled_edges@.contains((u, w, l)) ==> 
                         vertices@.contains(u) && vertices@.contains(w),
             ensures
-                wf_lab_graph_view(g@),
+                spec_labgraphview_wf(g@),
                 g@.V =~= vertices@,
                 g@.A =~= labeled_edges@;
 
@@ -117,7 +117,7 @@ verus! {
         /// - APAS: Work Θ(|E|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential search
         fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>)
-            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
+            requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures 
                 label.is_some() == (exists |l: L::V| 
                     self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l))),
@@ -127,14 +127,14 @@ verus! {
         /// - APAS: Work Θ(|E|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential search
         fn has_edge(&self, v1: &V, v2: &V) -> (b: bool)
-            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
+            requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures b == (exists |l: L::V| 
                 self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l)));
 
         /// - APAS: Work Θ(|E|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential filter
         fn ng(&self, v: &V) -> (ng: SetStEph<V>)
-            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
+            requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures ng@ == self.spec_ng(v@);
     }
 

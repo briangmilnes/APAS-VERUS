@@ -29,7 +29,7 @@ pub mod TopoSortStPer {
     // 6. spec fns
 
     /// Well-formed adjacency list for persistent graph representation.
-    pub open spec fn spec_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> bool {
+    pub open spec fn spec_toposortstper_wf(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> bool {
         forall|v: int, i: int| #![auto]
             0 <= v < graph@.len() && 0 <= i < graph@[v]@.len()
             ==> graph@[v]@[i] < graph@.len()
@@ -102,7 +102,7 @@ pub mod TopoSortStPer {
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (order: AVLTreeSeqStPerS<N>)
             requires
-                spec_wf_adj_list_per(graph),
+                spec_toposortstper_wf(graph),
             ensures
                 order@.len() == graph@.len(),
                 spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),
@@ -121,7 +121,7 @@ pub mod TopoSortStPer {
         requires
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
-            spec_wf_adj_list_per(graph),
+            spec_toposortstper_wf(graph),
         ensures
             visited@.len() == old(visited)@.len(),
             forall|j: int| #![auto]
@@ -147,7 +147,7 @@ pub mod TopoSortStPer {
                 i <= neighbors_len,
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited@.len() == graph@.len(),
-                spec_wf_adj_list_per(graph),
+                spec_toposortstper_wf(graph),
                 forall|j: int| #![auto]
                     0 <= j < visited@.len() && old(visited)@[j]
                     ==> visited@[j],
@@ -175,7 +175,7 @@ pub mod TopoSortStPer {
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
             old(rec_stack)@.len() == graph@.len(),
-            spec_wf_adj_list_per(graph),
+            spec_toposortstper_wf(graph),
         ensures
             visited@.len() == old(visited)@.len(),
             rec_stack@.len() == old(rec_stack)@.len(),
@@ -208,7 +208,7 @@ pub mod TopoSortStPer {
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited@.len() == graph@.len(),
                 rec_stack@.len() == graph@.len(),
-                spec_wf_adj_list_per(graph),
+                spec_toposortstper_wf(graph),
                 forall|j: int| #![auto]
                     0 <= j < visited@.len() && old(visited)@[j]
                     ==> visited@[j],
@@ -230,7 +230,7 @@ pub mod TopoSortStPer {
 
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (topo_order: Option<AVLTreeSeqStPerS<N>>)
-        requires spec_wf_adj_list_per(graph),
+        requires spec_toposortstper_wf(graph),
         ensures
             topo_order.is_some() <==> spec_is_dag_per(graph),
             topo_order.is_some() ==> spec_is_topo_order_per(graph, topo_order.unwrap()@),
@@ -259,7 +259,7 @@ pub mod TopoSortStPer {
                 n == graph@.len(),
                 visited@.len() == n,
                 rec_stack@.len() == n,
-                spec_wf_adj_list_per(graph),
+                spec_toposortstper_wf(graph),
             decreases n - start,
         {
             if !visited[start] {
@@ -308,7 +308,7 @@ pub mod TopoSortStPer {
                     start <= n,
                     n == graph@.len(),
                     visited@.len() == n,
-                    spec_wf_adj_list_per(graph),
+                    spec_toposortstper_wf(graph),
                 decreases n - start,
             {
                 if !visited[start] {

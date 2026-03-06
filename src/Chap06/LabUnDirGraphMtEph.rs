@@ -94,7 +94,7 @@ pub mod LabUnDirGraphMtEph {
 
         open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
             recommends 
-                wf_lab_graph_view(self@),
+                spec_labgraphview_wf(self@),
                 subedges <= self@.A,
         {
             Set::new(|w: V::V| exists |l: L::V| subedges.contains((v, w, l)) || subedges.contains((w, v, l)))
@@ -105,7 +105,7 @@ pub mod LabUnDirGraphMtEph {
         fn empty() -> (g: Self)
             requires valid_key_type_for_lab_graph::<V, L>()
             ensures
-                wf_lab_graph_view(g@),
+                spec_labgraphview_wf(g@),
                 g@.V == Set::<<V as View>::V>::empty(),
                 g@.A == Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
@@ -119,7 +119,7 @@ pub mod LabUnDirGraphMtEph {
                 forall |u: V::V, w: V::V, l: L::V|
                     #[trigger] labeled_edges@.contains((u, w, l)) ==> vertices@.contains(u) && vertices@.contains(w),
             ensures
-                wf_lab_graph_view(g@),
+                spec_labgraphview_wf(g@),
                 g@.V == vertices@,
                 g@.A == labeled_edges@;
 
@@ -136,26 +136,26 @@ pub mod LabUnDirGraphMtEph {
         /// - APAS: Work Θ(|E|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential map
         fn edges(&self) -> (edges: SetStEph<Edge<V>>)
-            requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>(), valid_key_type_Edge::<V>()
+            requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>(), valid_key_type_Edge::<V>()
             ensures forall |u: V::V, w: V::V| edges@.contains((u, w)) ==
                 (exists |l: L::V| #![trigger self@.A.contains((u, w, l))] self@.A.contains((u, w, l)));
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn add_vertex(&mut self, v: V)
-            requires wf_lab_graph_view(old(self)@), valid_key_type_for_lab_graph::<V, L>()
-            ensures wf_lab_graph_view(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
+            requires spec_labgraphview_wf(old(self)@), valid_key_type_for_lab_graph::<V, L>()
+            ensures spec_labgraphview_wf(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L)
-            requires wf_lab_graph_view(old(self)@), valid_key_type_for_lab_graph::<V, L>()
-            ensures wf_lab_graph_view(self@);
+            requires spec_labgraphview_wf(old(self)@), valid_key_type_for_lab_graph::<V, L>()
+            ensures spec_labgraphview_wf(self@);
 
         /// - APAS: Work Θ(|E|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential search
         fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>)
-            requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>()
+            requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>()
             ensures match label {
                 Some(l) => self@.A.contains((v1@, v2@, l@)) || self@.A.contains((v2@, v1@, l@)),
                 None => forall |l: L::V| !self@.A.contains((v1@, v2@, l)) && !self@.A.contains((v2@, v1@, l)),
@@ -164,14 +164,14 @@ pub mod LabUnDirGraphMtEph {
         /// - APAS: Work Θ(|E|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential search
         fn has_edge(&self, v1: &V, v2: &V) -> (b: bool)
-            requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>()
+            requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>()
             ensures b == (exists |l: L::V| 
                 #![trigger self@.A.contains((v1@, v2@, l))] 
                 #![trigger self@.A.contains((v2@, v1@, l))]
                 self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l)));
 
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V>
-            recommends wf_lab_graph_view(self@), self@.V.contains(v)
+            recommends spec_labgraphview_wf(self@), self@.V.contains(v)
         {
             Set::new(|w: V::V| exists |l: L::V| self@.A.contains((v, w, l)) || self@.A.contains((w, v, l)))
         }
@@ -180,7 +180,7 @@ pub mod LabUnDirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(log |E|) — ParaPair! split edges
         fn ng(&self, v: &V) -> (ng: SetStEph<V>)
             requires
-                wf_lab_graph_view(self@),
+                spec_labgraphview_wf(self@),
                 valid_key_type_for_lab_graph::<V, L>(),
                 self@.V.contains(v@),
             ensures
@@ -200,7 +200,7 @@ pub mod LabUnDirGraphMtEph {
         requires
             valid_key_type::<V>(),
             valid_key_type_LabEdge::<V, L>(),
-            wf_lab_graph_view(g@),
+            spec_labgraphview_wf(g@),
             edges@ <= g@.A,
         ensures 
             neighbors@ == g.spec_ng_from_set(v@, edges@),

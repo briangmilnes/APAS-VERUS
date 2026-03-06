@@ -356,7 +356,7 @@ pub mod TableStPer {
 
         /// APAS: Work Θ(|s| * W(f)), Span Θ(lg |s| + S(f))
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            requires keys.spec_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),
+            requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),
             ensures tabulated@.dom() =~= keys@, tabulated.spec_tablestper_wf();
 
         /// APAS: Work Θ(|a| * W(f)), Span Θ(lg |a| + S(f))
@@ -520,7 +520,7 @@ pub mod TableStPer {
             while i < self.entries.length()
                 invariant
                     i <= self.entries.spec_len(),
-                    keys.spec_wf(),
+                    keys.spec_arraysetsteph_wf(),
                     keys@.finite(),
                     forall|j: int| #![auto] 0 <= j < i as int
                         ==> keys@.contains(self.entries@[j].0),

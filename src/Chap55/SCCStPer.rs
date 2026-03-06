@@ -10,7 +10,7 @@ pub mod SCCStPer {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::{AVLTreeSeqStPerS, AVLTreeSeqStPerTrait};
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false};
-    use crate::Chap55::TopoSortStPer::TopoSortStPer::spec_wf_adj_list_per;
+    use crate::Chap55::TopoSortStPer::TopoSortStPer::spec_toposortstper_wf;
     use crate::Types::Types::*;
 
     verus! {
@@ -34,7 +34,7 @@ pub mod SCCStPer {
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (components: AVLTreeSeqStPerS<AVLTreeSetStPer<N>>)
             requires
-                spec_wf_adj_list_per(graph),
+                spec_toposortstper_wf(graph),
             ensures
                 components@.len() >= 1 || graph@.len() == 0,
             ;
@@ -52,7 +52,7 @@ pub mod SCCStPer {
         requires
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
-            spec_wf_adj_list_per(graph),
+            spec_toposortstper_wf(graph),
         ensures
             visited@.len() == old(visited)@.len(),
             forall|j: int| #![auto]
@@ -78,7 +78,7 @@ pub mod SCCStPer {
                 i <= neighbors_len,
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited@.len() == graph@.len(),
-                spec_wf_adj_list_per(graph),
+                spec_toposortstper_wf(graph),
                 forall|j: int| #![auto]
                     0 <= j < visited@.len() && old(visited)@[j]
                     ==> visited@[j],
@@ -95,7 +95,7 @@ pub mod SCCStPer {
 
     /// Computes the finish order for SCC (decreasing finish times).
     fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N>
-        requires spec_wf_adj_list_per(graph),
+        requires spec_toposortstper_wf(graph),
     {
         let n = graph.length();
         let mut visited: Vec<bool> = Vec::new();
@@ -115,7 +115,7 @@ pub mod SCCStPer {
                 start <= n,
                 n == graph@.len(),
                 visited@.len() == n,
-                spec_wf_adj_list_per(graph),
+                spec_toposortstper_wf(graph),
             decreases n - start,
         {
             if !visited[start] {
@@ -140,7 +140,7 @@ pub mod SCCStPer {
 
     /// Transposes a directed graph (reverses all edges).
     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<N>>)
-        requires spec_wf_adj_list_per(graph),
+        requires spec_toposortstper_wf(graph),
         ensures transposed@.len() == graph@.len(),
     {
         let n = graph.length();
@@ -160,7 +160,7 @@ pub mod SCCStPer {
                 u <= n,
                 n == graph@.len(),
                 adj_vecs@.len() == n,
-                spec_wf_adj_list_per(graph),
+                spec_toposortstper_wf(graph),
             decreases n - u,
         {
             let neighbors = graph.nth(u);
@@ -172,7 +172,7 @@ pub mod SCCStPer {
                     neighbors_len == graph@[u as int]@.len(),
                     adj_vecs@.len() == n,
                     n == graph@.len(),
-                    spec_wf_adj_list_per(graph),
+                    spec_toposortstper_wf(graph),
                 decreases neighbors_len - i,
             {
                 let v = *neighbors.nth(i);
@@ -200,7 +200,7 @@ pub mod SCCStPer {
 
     /// Runtime check that all neighbor indices are valid vertex indices.
     fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (valid: bool)
-        ensures valid ==> spec_wf_adj_list_per(graph),
+        ensures valid ==> spec_toposortstper_wf(graph),
     {
         let n = graph.length();
         let mut u: usize = 0;
@@ -252,7 +252,7 @@ pub mod SCCStPer {
         requires
             vertex < old(visited_bool)@.len(),
             old(visited_bool)@.len() == graph@.len(),
-            spec_wf_adj_list_per(graph),
+            spec_toposortstper_wf(graph),
         ensures
             visited_bool@.len() == old(visited_bool)@.len(),
             forall|j: int| #![auto]
@@ -279,7 +279,7 @@ pub mod SCCStPer {
                 i <= neighbors_len,
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited_bool@.len() == graph@.len(),
-                spec_wf_adj_list_per(graph),
+                spec_toposortstper_wf(graph),
                 forall|j: int| #![auto]
                     0 <= j < visited_bool@.len() && old(visited_bool)@[j]
                     ==> visited_bool@[j],
@@ -324,7 +324,7 @@ pub mod SCCStPer {
                     i <= finish_len,
                     visited_bool@.len() == n,
                     n == transposed@.len(),
-                    spec_wf_adj_list_per(&transposed),
+                    spec_toposortstper_wf(&transposed),
                 decreases finish_len - i,
             {
                 let vertex = *finish_order.nth(i);

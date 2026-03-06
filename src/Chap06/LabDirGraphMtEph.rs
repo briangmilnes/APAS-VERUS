@@ -97,7 +97,7 @@ pub mod LabDirGraphMtEph {
         fn empty() -> (g: Self)
             requires valid_key_type_for_lab_graph::<V, L>()
             ensures
-                wf_lab_graph_view(g@),
+                spec_labgraphview_wf(g@),
                 g@.V == Set::<<V as View>::V>::empty(),
                 g@.A == Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
@@ -111,7 +111,7 @@ pub mod LabDirGraphMtEph {
                 forall |u: V::V, w: V::V, l: L::V|
                     #[trigger] labeled_arcs@.contains((u, w, l)) ==> vertices@.contains(u) && vertices@.contains(w),
             ensures
-                wf_lab_graph_view(g@),
+                spec_labgraphview_wf(g@),
                 g@.V == vertices@,
                 g@.A == labeled_arcs@;
 
@@ -128,29 +128,29 @@ pub mod LabDirGraphMtEph {
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential map
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>)
-            requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>(), valid_key_type_Edge::<V>()
+            requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>(), valid_key_type_Edge::<V>()
             ensures forall |u: V::V, w: V::V| arcs@.contains((u, w)) == 
                 (exists |l: L::V| #![trigger self@.A.contains((u, w, l))] self@.A.contains((u, w, l)));
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn add_vertex(&mut self, v: V)
-            requires wf_lab_graph_view(old(self)@), valid_key_type_for_lab_graph::<V, L>()
-            ensures wf_lab_graph_view(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
+            requires spec_labgraphview_wf(old(self)@), valid_key_type_for_lab_graph::<V, L>()
+            ensures spec_labgraphview_wf(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn add_labeled_arc(&mut self, from: V, to: V, label: L)
-            requires wf_lab_graph_view(old(self)@), valid_key_type_for_lab_graph::<V, L>()
+            requires spec_labgraphview_wf(old(self)@), valid_key_type_for_lab_graph::<V, L>()
             ensures 
-                wf_lab_graph_view(self@),
+                spec_labgraphview_wf(self@),
                 self@.V == old(self)@.V.insert(from@).insert(to@),
                 self@.A == old(self)@.A.insert((from@, to@, label@));
 
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential search
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>)
-            requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>()
+            requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>()
             ensures match label {
                 Some(l) => self@.A.contains((from@, to@, l@)),
                 None => forall |l: L::V| !self@.A.contains((from@, to@, l)),
@@ -159,32 +159,32 @@ pub mod LabDirGraphMtEph {
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential search
         fn has_arc(&self, from: &V, to: &V) -> (b: bool)
-            requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>()
+            requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>()
             ensures b == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l)));
 
         open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V>
-            recommends wf_lab_graph_view(self@), self@.V.contains(v)
+            recommends spec_labgraphview_wf(self@), self@.V.contains(v)
         {
             Set::new(|w: V::V| exists |l: L::V| self@.A.contains((v, w, l)))
         }
 
         open spec fn spec_n_plus_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
             recommends 
-                wf_lab_graph_view(self@),
+                spec_labgraphview_wf(self@),
                 subarcs <= self@.A,
         {
             Set::new(|w: V::V| exists |l: L::V| subarcs.contains((v, w, l)))
         }
 
         open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V>
-            recommends wf_lab_graph_view(self@), self@.V.contains(v)
+            recommends spec_labgraphview_wf(self@), self@.V.contains(v)
         {
             Set::new(|u: V::V| exists |l: L::V| self@.A.contains((u, v, l)))
         }
 
         open spec fn spec_n_minus_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
             recommends 
-                wf_lab_graph_view(self@),
+                spec_labgraphview_wf(self@),
                 subarcs <= self@.A,
         {
             Set::new(|u: V::V| exists |l: L::V| subarcs.contains((u, v, l)))
@@ -195,7 +195,7 @@ pub mod LabDirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — ParaPair! split arcs
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)
             requires 
-                wf_lab_graph_view(self@), 
+                spec_labgraphview_wf(self@), 
                 valid_key_type_for_lab_graph::<V, L>(),
                 self@.V.contains(v@),
             ensures 
@@ -207,7 +207,7 @@ pub mod LabDirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — ParaPair! split arcs
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)
             requires 
-                wf_lab_graph_view(self@), 
+                spec_labgraphview_wf(self@), 
                 valid_key_type_for_lab_graph::<V, L>(),
                 self@.V.contains(v@),
             ensures 
@@ -227,7 +227,7 @@ pub mod LabDirGraphMtEph {
         requires
             valid_key_type::<V>(),
             valid_key_type_LabEdge::<V, L>(),
-            wf_lab_graph_view(g@),
+            spec_labgraphview_wf(g@),
             arcs@ <= g@.A,
         ensures 
             n_plus@ == g.spec_n_plus_from_set(v@, arcs@),
@@ -342,7 +342,7 @@ pub mod LabDirGraphMtEph {
         requires
             valid_key_type::<V>(),
             valid_key_type_LabEdge::<V, L>(),
-            wf_lab_graph_view(g@),
+            spec_labgraphview_wf(g@),
             arcs@ <= g@.A,
         ensures 
             n_minus@ == g.spec_n_minus_from_set(v@, arcs@),

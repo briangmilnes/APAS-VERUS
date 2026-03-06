@@ -83,15 +83,15 @@ pub mod BSTReducedStEph {
         }
     }
 
-    pub open spec fn spec_size_wf_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> bool
+    pub open spec fn spec_link_size_wf<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> bool
         decreases *link,
     {
         match link {
             None => true,
             Some(n) => {
                 n.size as nat == 1 + spec_size_link(&n.left) + spec_size_link(&n.right)
-                && spec_size_wf_link(&n.left)
-                && spec_size_wf_link(&n.right)
+                && spec_link_size_wf(&n.left)
+                && spec_link_size_wf(&n.right)
             }
         }
     }
@@ -129,11 +129,11 @@ pub mod BSTReducedStEph {
             None => true,
             Some(n) => {
                 n.size as nat == 1 + spec_size_link(&n.left) + spec_size_link(&n.right)
-                && spec_size_wf_link(&n.left)
-                && spec_size_wf_link(&n.right)
+                && spec_link_size_wf(&n.left)
+                && spec_link_size_wf(&n.right)
             }
         },
-        ensures spec_size_wf_link(link),
+        ensures spec_link_size_wf(link),
     {}
 
 
@@ -142,7 +142,7 @@ pub mod BSTReducedStEph {
     pub trait NodeTrait<K: StT + Ord, V: StT, R: StT>: Sized {
         spec fn spec_size(&self) -> nat;
 
-        spec fn spec_size_wf(&self) -> bool;
+        spec fn spec_bstreducedsteph_size_wf(&self) -> bool;
 
         spec fn spec_height(&self) -> nat;
 
@@ -167,14 +167,14 @@ pub mod BSTReducedStEph {
 
     pub trait BSTReducedStEphTrait<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>: Sized + View<V = Map<K, V>> {
         spec fn spec_size(&self) -> nat;
-        spec fn spec_wf(&self) -> bool;
+        spec fn spec_bstreducedsteph_wf(&self) -> bool;
         spec fn spec_height(&self) -> nat;
 
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn new() -> (empty: Self)
             ensures
                 empty.spec_size() == 0,
-                empty.spec_wf(),
+                empty.spec_bstreducedsteph_wf(),
                 empty@ == Map::<K, V>::empty();
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
@@ -190,60 +190,60 @@ pub mod BSTReducedStEph {
         fn insert(&mut self, key: K, value: V, priority: u64)
             requires
                 old(self).spec_size() + 1 <= usize::MAX as nat,
-                old(self).spec_wf(),
+                old(self).spec_bstreducedsteph_wf(),
             ensures
-                self.spec_wf(),
+                self.spec_bstreducedsteph_wf(),
                 self.spec_size() <= old(self).spec_size() + 1,
                 self.spec_size() >= old(self).spec_size();
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — filter + rebuild
         fn delete(&mut self, key: &K)
-            requires old(self).spec_wf(),
+            requires old(self).spec_bstreducedsteph_wf(),
             ensures
-                self.spec_wf(),
+                self.spec_bstreducedsteph_wf(),
                 self.spec_size() <= old(self).spec_size();
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn find(&self, key: &K) -> (found: Option<&V>)
-            requires self.spec_wf(),
+            requires self.spec_bstreducedsteph_wf(),
             ensures self.spec_size() == 0 ==> found is None;
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn contains(&self, key: &K) -> (contains: bool)
-            requires self.spec_wf(),
+            requires self.spec_bstreducedsteph_wf(),
             ensures self.spec_size() == 0 ==> !contains;
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn get(&self, key: &K) -> (value: Option<&V>)
-            requires self.spec_wf(),
+            requires self.spec_bstreducedsteph_wf(),
             ensures self.spec_size() == 0 ==> value is None;
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn keys(&self) -> (keys: ArraySeqStPerS<K>)
-            requires self.spec_wf(),
+            requires self.spec_bstreducedsteph_wf(),
             ensures keys.spec_len() == self.spec_size();
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn values(&self) -> (values: ArraySeqStPerS<V>)
-            requires self.spec_wf(),
+            requires self.spec_bstreducedsteph_wf(),
             ensures values.spec_len() == self.spec_size();
         /// - APAS: Work Θ(log n) expected, Span Θ(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn minimum_key(&self) -> (minimum: Option<&K>)
-            requires self.spec_wf(),
+            requires self.spec_bstreducedsteph_wf(),
             ensures
                 self.spec_size() == 0 ==> minimum is None,
                 self.spec_size() > 0 ==> minimum is Some;
         /// - APAS: Work Θ(log n) expected, Span Θ(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn maximum_key(&self) -> (maximum: Option<&K>)
-            requires self.spec_wf(),
+            requires self.spec_bstreducedsteph_wf(),
             ensures
                 self.spec_size() == 0 ==> maximum is None,
                 self.spec_size() > 0 ==> maximum is Some;
         /// - APAS: Work Θ(1), Span Θ(1) — reads augmented field at root.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn reduced_value(&self) -> (reduced: R)
-            requires self.spec_wf(),
+            requires self.spec_bstreducedsteph_wf(),
             ensures self.spec_size() == 0 ==> reduced == Op::spec_identity();
         /// - APAS: Work Θ(log n), Span Θ(log n) — range query on augmented BST.
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn range_reduce(&self, low: &K, high: &K) -> (reduced: R)
-            requires self.spec_wf(),
+            requires self.spec_bstreducedsteph_wf(),
             ensures self.spec_size() == 0 ==> reduced == Op::spec_identity();
 
         // Internal associated functions.
@@ -259,12 +259,12 @@ pub mod BSTReducedStEph {
         fn update_node(node: &mut Node<K, V, R>)
             requires
                 1 + spec_size_link(&old(node).left) + spec_size_link(&old(node).right) <= usize::MAX as nat,
-                spec_size_wf_link(&old(node).left),
-                spec_size_wf_link(&old(node).right),
+                spec_link_size_wf(&old(node).left),
+                spec_link_size_wf(&old(node).right),
             ensures
                 node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),
-                spec_size_wf_link(&node.left),
-                spec_size_wf_link(&node.right),
+                spec_link_size_wf(&node.left),
+                spec_link_size_wf(&node.right),
                 node.key == old(node).key,
                 node.left == old(node).left,
                 node.right == old(node).right;
@@ -276,34 +276,34 @@ pub mod BSTReducedStEph {
         ) -> (reduced: Link<K, V, R>)
             requires
                 1 + spec_size_link(&left) + spec_size_link(&right) <= usize::MAX as nat,
-                spec_size_wf_link(&left),
-                spec_size_wf_link(&right),
+                spec_link_size_wf(&left),
+                spec_link_size_wf(&right),
             ensures
                 spec_size_link(&reduced) == 1 + spec_size_link(&left) + spec_size_link(&right),
-                spec_size_wf_link(&reduced);
+                spec_link_size_wf(&reduced);
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn rotate_left(link: &mut Link<K, V, R>)
             requires
                 spec_size_link(old(link)) <= usize::MAX as nat,
-                spec_size_wf_link(old(link)),
+                spec_link_size_wf(old(link)),
             ensures
                 spec_size_link(link) == spec_size_link(old(link)),
-                spec_size_wf_link(link);
+                spec_link_size_wf(link);
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn rotate_right(link: &mut Link<K, V, R>)
             requires
                 spec_size_link(old(link)) <= usize::MAX as nat,
-                spec_size_wf_link(old(link)),
+                spec_link_size_wf(old(link)),
             ensures
                 spec_size_link(link) == spec_size_link(old(link)),
-                spec_size_wf_link(link);
+                spec_link_size_wf(link);
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn insert_link(link: &mut Link<K, V, R>, key: K, value: V, priority: u64)
             requires
                 spec_size_link(old(link)) + 1 <= usize::MAX as nat,
-                spec_size_wf_link(old(link)),
+                spec_link_size_wf(old(link)),
             ensures
-                spec_size_wf_link(link),
+                spec_link_size_wf(link),
                 spec_size_link(link) <= spec_size_link(old(link)) + 1,
                 spec_size_link(link) >= spec_size_link(old(link)),
             decreases old(link);
@@ -321,15 +321,15 @@ pub mod BSTReducedStEph {
                 link.is_some() ==> maximum.is_some(),
             decreases *link;
         fn collect_keys(link: &Link<K, V, R>, out: &mut Vec<K>)
-            requires spec_size_wf_link(link),
+            requires spec_link_size_wf(link),
             ensures out.len() == old(out).len() + spec_size_link(link),
             decreases *link;
         fn collect_values(link: &Link<K, V, R>, out: &mut Vec<V>)
-            requires spec_size_wf_link(link),
+            requires spec_link_size_wf(link),
             ensures out.len() == old(out).len() + spec_size_link(link),
             decreases *link;
         fn collect_in_order_kvp(link: &Link<K, V, R>, out: &mut Vec<(K, V, u64)>)
-            requires spec_size_wf_link(link),
+            requires spec_link_size_wf(link),
             ensures out.len() == old(out).len() + spec_size_link(link),
             decreases *link;
         fn height_link(link: &Link<K, V, R>) -> (height: usize)
@@ -350,7 +350,7 @@ pub mod BSTReducedStEph {
         ) -> (height: Link<K, V, R>)
             requires start <= end, end <= items.len(),
             ensures
-                spec_size_wf_link(&height),
+                spec_link_size_wf(&height),
                 spec_size_link(&height) == (end - start) as nat,
             decreases end - start;
         /// - APAS: Work Θ(log n), Span Θ(log n) — range query on augmented BST.
@@ -367,7 +367,7 @@ pub mod BSTReducedStEph {
         ensures
             spec_content_link(&cloned) == spec_content_link(link),
             spec_size_link(&cloned) == spec_size_link(link),
-            spec_size_wf_link(link) ==> spec_size_wf_link(&cloned),
+            spec_link_size_wf(link) ==> spec_link_size_wf(&cloned),
         decreases *link,
     {
         match link {
@@ -394,12 +394,12 @@ pub mod BSTReducedStEph {
             self.size as nat
         }
 
-        open spec fn spec_size_wf(&self) -> bool
+        open spec fn spec_bstreducedsteph_size_wf(&self) -> bool
             decreases *self,
         {
             self.size as nat == 1 + spec_size_link(&self.left) + spec_size_link(&self.right)
-            && spec_size_wf_link(&self.left)
-            && spec_size_wf_link(&self.right)
+            && spec_link_size_wf(&self.left)
+            && spec_link_size_wf(&self.right)
         }
 
         open spec fn spec_height(&self) -> nat
@@ -481,7 +481,7 @@ pub mod BSTReducedStEph {
         for BSTReducedStEph<K, V, R, Op>
     {
         open spec fn spec_size(&self) -> nat { spec_size_link(&self.root) }
-        open spec fn spec_wf(&self) -> bool { spec_size_wf_link(&self.root) }
+        open spec fn spec_bstreducedsteph_wf(&self) -> bool { spec_link_size_wf(&self.root) }
         open spec fn spec_height(&self) -> nat { spec_height_link(&self.root) }
 
         fn new() -> (empty: Self) {
@@ -578,17 +578,17 @@ pub mod BSTReducedStEph {
 
         fn rotate_left(link: &mut Link<K, V, R>) {
             if let Some(mut x) = link.take() {
-                assert(spec_size_wf_link(&x.left));
-                assert(spec_size_wf_link(&x.right));
+                assert(spec_link_size_wf(&x.left));
+                assert(spec_link_size_wf(&x.right));
                 if let Some(mut y) = x.right.take() {
-                    assert(spec_size_wf_link(&y.left));
-                    assert(spec_size_wf_link(&y.right));
+                    assert(spec_link_size_wf(&y.left));
+                    assert(spec_link_size_wf(&y.right));
                     let ghost x_left_sz = spec_size_link(&x.left);
                     let ghost y_left_sz = spec_size_link(&y.left);
                     let ghost y_right_sz = spec_size_link(&y.right);
                     x.right = y.left.take();
-                    assert(spec_size_wf_link(&x.left));
-                    assert(spec_size_wf_link(&x.right));
+                    assert(spec_link_size_wf(&x.left));
+                    assert(spec_link_size_wf(&x.right));
                     assert(1 + x_left_sz + y_left_sz + 1 + y_right_sz <= usize::MAX as nat);
                     Self::update_node(&mut x);
                     y.left = Some(x);
@@ -604,17 +604,17 @@ pub mod BSTReducedStEph {
 
         fn rotate_right(link: &mut Link<K, V, R>) {
             if let Some(mut x) = link.take() {
-                assert(spec_size_wf_link(&x.left));
-                assert(spec_size_wf_link(&x.right));
+                assert(spec_link_size_wf(&x.left));
+                assert(spec_link_size_wf(&x.right));
                 if let Some(mut y) = x.left.take() {
-                    assert(spec_size_wf_link(&y.left));
-                    assert(spec_size_wf_link(&y.right));
+                    assert(spec_link_size_wf(&y.left));
+                    assert(spec_link_size_wf(&y.right));
                     let ghost x_right_sz = spec_size_link(&x.right);
                     let ghost y_left_sz = spec_size_link(&y.left);
                     let ghost y_right_sz = spec_size_link(&y.right);
                     x.left = y.right.take();
-                    assert(spec_size_wf_link(&x.left));
-                    assert(spec_size_wf_link(&x.right));
+                    assert(spec_link_size_wf(&x.left));
+                    assert(spec_link_size_wf(&x.right));
                     assert(1 + y_right_sz + x_right_sz + 1 + y_left_sz <= usize::MAX as nat);
                     Self::update_node(&mut x);
                     y.right = Some(x);
@@ -632,8 +632,8 @@ pub mod BSTReducedStEph {
             decreases old(link),
         {
             if let Some(mut node) = link.take() {
-                assert(spec_size_wf_link(&node.left));
-                assert(spec_size_wf_link(&node.right));
+                assert(spec_link_size_wf(&node.left));
+                assert(spec_link_size_wf(&node.right));
                 if key < node.key {
                     Self::insert_link(&mut node.left, key, value, priority);
                     Self::update_node(&mut *node);
@@ -844,7 +844,7 @@ pub mod BSTReducedStEph {
 
     impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> Default for BSTreeReduced<K, V, R, Op> {
         fn default() -> (default_val: Self)
-            ensures default_val.spec_size() == 0, default_val.spec_wf(), default_val@ == Map::<K, V>::empty(),
+            ensures default_val.spec_size() == 0, default_val.spec_bstreducedsteph_wf(), default_val@ == Map::<K, V>::empty(),
         { Self::new() }
     }
 

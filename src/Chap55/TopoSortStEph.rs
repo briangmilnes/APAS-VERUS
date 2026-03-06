@@ -46,7 +46,7 @@ broadcast use {
     }
 
     /// Well-formed adjacency list: all neighbor indices are valid vertex indices.
-    pub open spec fn spec_wf_adj_list(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> bool {
+    pub open spec fn spec_toposortsteph_wf(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> bool {
         forall|v: int, i: int| #![auto]
             0 <= v < graph@.len() && 0 <= i < graph@[v]@.len()
             ==> graph@[v]@[i] < graph@.len()
@@ -139,7 +139,7 @@ broadcast use {
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (order: AVLTreeSeqStEphS<N>)
             requires
-                spec_wf_adj_list(graph),
+                spec_toposortsteph_wf(graph),
             ensures
                 order@.len() == graph@.len(),
                 spec_is_dag(graph) ==> spec_is_topo_order(graph, order@),
@@ -159,7 +159,7 @@ broadcast use {
         requires
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
-            spec_wf_adj_list(graph),
+            spec_toposortsteph_wf(graph),
         ensures
             visited@.len() == old(visited)@.len(),
             forall|j: int| #![auto]
@@ -186,7 +186,7 @@ broadcast use {
                 i <= neighbors_len,
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited@.len() == graph@.len(),
-                spec_wf_adj_list(graph),
+                spec_toposortsteph_wf(graph),
                 forall|j: int| #![auto]
                     0 <= j < visited@.len() && old(visited)@[j]
                     ==> visited@[j],
@@ -214,7 +214,7 @@ broadcast use {
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
             old(rec_stack)@.len() == graph@.len(),
-            spec_wf_adj_list(graph),
+            spec_toposortsteph_wf(graph),
         ensures
             visited@.len() == old(visited)@.len(),
             rec_stack@.len() == old(rec_stack)@.len(),
@@ -249,7 +249,7 @@ broadcast use {
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited@.len() == graph@.len(),
                 rec_stack@.len() == graph@.len(),
-                spec_wf_adj_list(graph),
+                spec_toposortsteph_wf(graph),
                 forall|j: int| #![auto]
                     0 <= j < visited@.len() && old(visited)@[j]
                     ==> visited@[j],
@@ -272,7 +272,7 @@ broadcast use {
 
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (topo_order: Option<AVLTreeSeqStEphS<N>>)
-        requires spec_wf_adj_list(graph),
+        requires spec_toposortsteph_wf(graph),
         ensures
             topo_order.is_some() <==> spec_is_dag(graph),
             topo_order.is_some() ==> spec_is_topo_order(graph, topo_order.unwrap()@),
@@ -289,7 +289,7 @@ broadcast use {
                 n == graph@.len(),
                 visited@.len() == n,
                 rec_stack@.len() == n,
-                spec_wf_adj_list(graph),
+                spec_toposortsteph_wf(graph),
             decreases n - start,
         {
             if !*visited.nth(start) {
@@ -328,7 +328,7 @@ broadcast use {
                     start <= n,
                     n == graph@.len(),
                     visited@.len() == n,
-                    spec_wf_adj_list(graph),
+                    spec_toposortsteph_wf(graph),
                 decreases n - start,
             {
                 if !*visited.nth(start) {

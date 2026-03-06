@@ -60,7 +60,7 @@ pub mod UnionFindStEph {
 
     impl<V: StT + Hash> UnionFindStEph<V> {
         /// Well-formedness invariant for the Union-Find structure.
-        pub open spec fn wf(&self) -> bool {
+        pub open spec fn spec_unionfindsteph_wf(&self) -> bool {
             // Key model requirements for hash collections.
             &&& obeys_key_model::<V>()
             &&& obeys_feq_full::<V>()
@@ -114,9 +114,9 @@ pub mod UnionFindStEph {
         /// APAS: Work Theta(1), Span Theta(1)
         fn insert(&mut self, v: V)
             requires
-                old(self).wf(),
+                old(self).spec_unionfindsteph_wf(),
             ensures
-                self.wf(),
+                self.spec_unionfindsteph_wf(),
                 old(self)@.parent.contains_key(v@) ==> self@ == old(self)@,
                 !old(self)@.parent.contains_key(v@) ==> {
                     &&& self@.parent =~= old(self)@.parent.insert(v@, v)
@@ -129,10 +129,10 @@ pub mod UnionFindStEph {
         /// APAS: Work O(alpha(n)), Span O(alpha(n)) amortized (inverse Ackermann)
         fn find(&mut self, v: &V) -> (root: V)
             requires
-                old(self).wf(),
+                old(self).spec_unionfindsteph_wf(),
                 old(self)@.parent.contains_key(v@),
             ensures
-                self.wf(),
+                self.spec_unionfindsteph_wf(),
                 // Result is the canonical root.
                 root@ == old(self)@.roots[v@],
                 // Path compression preserves the logical partition.
@@ -146,11 +146,11 @@ pub mod UnionFindStEph {
         /// APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
         fn union(&mut self, u: &V, v: &V)
             requires
-                old(self).wf(),
+                old(self).spec_unionfindsteph_wf(),
                 old(self)@.parent.contains_key(u@),
                 old(self)@.parent.contains_key(v@),
             ensures
-                self.wf(),
+                self.spec_unionfindsteph_wf(),
                 self@.parent.dom() =~= old(self)@.parent.dom(),
                 self@.elements =~= old(self)@.elements,
                 // Merged elements share a new root; others unchanged.
@@ -168,11 +168,11 @@ pub mod UnionFindStEph {
         /// APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
         fn equals(&mut self, u: &V, v: &V) -> (same: B)
             requires
-                old(self).wf(),
+                old(self).spec_unionfindsteph_wf(),
                 old(self)@.parent.contains_key(u@),
                 old(self)@.parent.contains_key(v@),
             ensures
-                self.wf(),
+                self.spec_unionfindsteph_wf(),
                 same == (old(self)@.roots[u@] == old(self)@.roots[v@]),
                 self@.roots =~= old(self)@.roots,
                 self@.parent.dom() =~= old(self)@.parent.dom();
@@ -181,9 +181,9 @@ pub mod UnionFindStEph {
         /// APAS: Work O(n alpha(n)), Span O(n alpha(n))
         fn num_sets(&mut self) -> (count: usize)
             requires
-                old(self).wf(),
+                old(self).spec_unionfindsteph_wf(),
             ensures
-                self.wf(),
+                self.spec_unionfindsteph_wf(),
                 self@.roots =~= old(self)@.roots,
                 self@.parent.dom() =~= old(self)@.parent.dom();
     }
@@ -210,7 +210,7 @@ pub mod UnionFindStEph {
                 proof {
                     self.roots = self.roots.insert(v@, v@);
                     // accept hole: wf maintenance for insert — elements uniqueness and domain coverage
-                    assume(self.wf());
+                    assume(self.spec_unionfindsteph_wf());
                 }
             }
         }
@@ -225,7 +225,7 @@ pub mod UnionFindStEph {
 
             loop
                 invariant
-                    self.wf(),
+                    self.spec_unionfindsteph_wf(),
                     self.parent@.contains_key(current@),
                     self.roots =~= old(self).roots,
                     self.parent@.dom() =~= old(self).parent@.dom(),
@@ -262,7 +262,7 @@ pub mod UnionFindStEph {
                     self.rank@ =~= old(self).rank@,
                     self.elements@ =~= old(self).elements@,
                     // accept hole: wf preserved through compression
-                    self.wf(),
+                    self.spec_unionfindsteph_wf(),
                     compress_steps <= elem_count,
                 decreases elem_count - compress_steps
             {
@@ -274,7 +274,7 @@ pub mod UnionFindStEph {
                     assume(compress_steps < elem_count);
                     compress_steps = compress_steps + 1;
                     // accept hole: wf is maintained after path compression
-                    assume(self.wf());
+                    assume(self.spec_unionfindsteph_wf());
                     // accept hole: compressed node is in domain
                     assume(self.parent@.contains_key(current@));
                 }
@@ -331,7 +331,7 @@ pub mod UnionFindStEph {
                         },
                     );
                     // accept hole: wf maintained after union
-                    assume(self.wf());
+                    assume(self.spec_unionfindsteph_wf());
                     // accept hole: ensures clause on merged roots
                     assume(
                         forall|x: <V as View>::V| #[trigger] self.roots.contains_key(x) ==> {
@@ -367,7 +367,7 @@ pub mod UnionFindStEph {
 
             while i < self.elements.len()
                 invariant
-                    self.wf(),
+                    self.spec_unionfindsteph_wf(),
                     self.roots =~= old(self).roots,
                     self.parent@.dom() =~= old(self).parent@.dom(),
                     self.elements@ =~= old(self).elements@,
@@ -380,7 +380,7 @@ pub mod UnionFindStEph {
                 i = i + 1;
                 proof {
                     // accept hole: wf preserved after find within iteration
-                    assume(self.wf());
+                    assume(self.spec_unionfindsteph_wf());
                 }
             }
             roots_set.len()

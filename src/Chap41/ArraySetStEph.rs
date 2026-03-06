@@ -304,69 +304,69 @@ pub mod ArraySetStEph {
     // 8. traits
 
     pub trait ArraySetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
-        spec fn spec_wf(&self) -> bool;
+        spec fn spec_arraysetsteph_wf(&self) -> bool;
 
         fn size(&self) -> (count: usize)
-            requires self.spec_wf()
+            requires self.spec_arraysetsteph_wf()
             ensures count == self@.len(), self@.finite();
 
         fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
-            requires self.spec_wf(),
+            requires self.spec_arraysetsteph_wf(),
             ensures
                 self@.finite(),
                 seq@.no_duplicates(),
                 seq@.to_set() =~= self@;
 
         fn empty() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_wf();
+            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_arraysetsteph_wf();
 
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_wf();
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_arraysetsteph_wf();
 
         fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)
-            ensures constructed@.finite(), constructed.spec_wf();
+            ensures constructed@.finite(), constructed.spec_arraysetsteph_wf();
 
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
             requires
-                self.spec_wf(),
+                self.spec_arraysetsteph_wf(),
                 self@.finite(),
             ensures
                 filtered@.finite(),
                 filtered@.subset_of(self@),
-                filtered.spec_wf();
+                filtered.spec_arraysetsteph_wf();
 
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
-                self.spec_wf(),
-                other.spec_wf(),
+                self.spec_arraysetsteph_wf(),
+                other.spec_arraysetsteph_wf(),
                 self@.finite(),
                 other@.finite(),
             ensures
                 common@ == self@.intersect(other@),
                 common@.finite(),
-                common.spec_wf();
+                common.spec_arraysetsteph_wf();
 
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
-                self.spec_wf(),
-                other.spec_wf(),
+                self.spec_arraysetsteph_wf(),
+                other.spec_arraysetsteph_wf(),
                 self@.finite(),
                 other@.finite(),
             ensures
                 remaining@ == self@.difference(other@),
                 remaining@.finite(),
-                remaining.spec_wf();
+                remaining.spec_arraysetsteph_wf();
 
         fn union(&self, other: &Self) -> (combined: Self)
             requires
-                self.spec_wf(),
-                other.spec_wf(),
+                self.spec_arraysetsteph_wf(),
+                other.spec_arraysetsteph_wf(),
                 self@.finite(),
                 other@.finite(),
             ensures
                 combined@ == self@.union(other@),
                 combined@.finite(),
-                combined.spec_wf();
+                combined.spec_arraysetsteph_wf();
 
         fn find(&self, x: &T) -> (found: B)
             requires self@.finite(),
@@ -374,28 +374,28 @@ pub mod ArraySetStEph {
 
         fn delete(&mut self, x: &T)
             requires
-                old(self).spec_wf(),
+                old(self).spec_arraysetsteph_wf(),
                 old(self)@.finite(),
             ensures
                 self@ == old(self)@.remove(x@),
                 self@.finite(),
-                self.spec_wf();
+                self.spec_arraysetsteph_wf();
 
         fn insert(&mut self, x: T)
             requires
-                old(self).spec_wf(),
+                old(self).spec_arraysetsteph_wf(),
                 old(self)@.finite(),
             ensures
                 self@ == old(self)@.insert(x@),
                 self@.finite(),
-                self.spec_wf();
+                self.spec_arraysetsteph_wf();
     }
 
 
     // 9. impls
 
     impl<T: StT + Ord> ArraySetStEph<T> {
-        pub open spec fn spec_wf(&self) -> bool {
+        pub open spec fn spec_arraysetsteph_wf(&self) -> bool {
             self.elements@.no_duplicates()
         }
     }
@@ -403,7 +403,7 @@ pub mod ArraySetStEph {
     // 9. impls
 
     impl<T: StT + Ord> ArraySetStEphTrait<T> for ArraySetStEph<T> {
-        open spec fn spec_wf(&self) -> bool {
+        open spec fn spec_arraysetsteph_wf(&self) -> bool {
             self.elements@.no_duplicates()
         }
 
@@ -468,7 +468,7 @@ pub mod ArraySetStEph {
             while i < seq.length()
                 invariant
                     constructed@.finite(),
-                    constructed.spec_wf(),
+                    constructed.spec_arraysetsteph_wf(),
                     i <= seq.spec_len(),
                 decreases seq.spec_len() - i,
             {
@@ -632,7 +632,7 @@ pub mod ArraySetStEph {
                     n as int == self.elements.spec_len(),
                     self.elements@ == old_view,
                     old_view.no_duplicates(),
-                    other.spec_wf(),
+                    other.spec_arraysetsteph_wf(),
                     other@.finite(),
                     other@ == other_set,
                     obeys_feq_full::<T>(),
@@ -712,7 +712,7 @@ pub mod ArraySetStEph {
                     n as int == self.elements.spec_len(),
                     self.elements@ == old_view,
                     old_view.no_duplicates(),
-                    other.spec_wf(),
+                    other.spec_arraysetsteph_wf(),
                     other@.finite(),
                     other@ == other_set,
                     obeys_feq_full::<T>(),
@@ -827,7 +827,7 @@ pub mod ArraySetStEph {
                     j <= other_len,
                     other_len as int == other.elements.spec_len(),
                     other.elements@ == other_view,
-                    self.spec_wf(),
+                    self.spec_arraysetsteph_wf(),
                     self@.finite(),
                     self@ == self_set,
                     obeys_feq_full::<T>(),
@@ -1074,7 +1074,7 @@ pub mod ArraySetStEph {
                     assert(self@ == old(self)@);
                 }
                 assert(self@.finite());
-                assert(self.spec_wf());
+                assert(self.spec_arraysetsteph_wf());
             }
         }
     }
@@ -1099,8 +1099,8 @@ pub mod ArraySetStEph {
             ensures equal == (self@ == other@)
         {
             proof {
-                assume(self.spec_wf());
-                assume(other.spec_wf());
+                assume(self.spec_arraysetsteph_wf());
+                assume(other.spec_arraysetsteph_wf());
             }
             let equal = self.size() == other.size() && {
                 let n = self.elements.length();
@@ -1108,8 +1108,8 @@ pub mod ArraySetStEph {
                 let mut all_found = true;
                 while i < n
                     invariant
-                        self.spec_wf(),
-                        other.spec_wf(),
+                        self.spec_arraysetsteph_wf(),
+                        other.spec_arraysetsteph_wf(),
                         n == self.elements@.len(),
                         i <= n,
                     decreases n - i,

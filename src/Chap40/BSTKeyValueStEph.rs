@@ -241,7 +241,7 @@ pub mod BSTKeyValueStEph {
     pub trait BSTKeyValueStEphTrait<K: StT + Ord + TotalOrder, V: StT>: Sized + View<V = Map<K, V>> {
         spec fn spec_size(&self) -> nat;
         spec fn spec_height(&self) -> nat;
-        spec fn spec_wf(&self) -> bool;
+        spec fn spec_bstkeyvaluesteph_wf(&self) -> bool;
         spec fn spec_min_key(&self) -> Option<K>;
         spec fn spec_max_key(&self) -> Option<K>;
 
@@ -269,38 +269,38 @@ pub mod BSTKeyValueStEph {
                 self.spec_size() <= old(self).spec_size() + 1;
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — filter + rebuild
         fn delete(&mut self, key: &K)
-            requires old(self).spec_wf(),
+            requires old(self).spec_bstkeyvaluesteph_wf(),
             ensures self.spec_size() <= old(self).spec_size();
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn find(&self, key: &K) -> (found: Option<&V>)
-            requires self.spec_wf(),
+            requires self.spec_bstkeyvaluesteph_wf(),
             ensures
                 self.spec_size() == 0 ==> found is None,
                 found.is_some() ==> self@.contains_key(*key);
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn contains(&self, key: &K) -> (contains: bool)
-            requires self.spec_wf(),
+            requires self.spec_bstkeyvaluesteph_wf(),
             ensures
                 self.spec_size() == 0 ==> !contains,
                 contains ==> self@.contains_key(*key);
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn get(&self, key: &K) -> (value: Option<&V>)
-            requires self.spec_wf(),
+            requires self.spec_bstkeyvaluesteph_wf(),
             ensures
                 self.spec_size() == 0 ==> value is None,
                 value.is_some() ==> self@.contains_key(*key);
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn keys(&self) -> (keys: ArraySeqStPerS<K>)
-            requires self.spec_wf(),
+            requires self.spec_bstkeyvaluesteph_wf(),
             ensures keys.spec_len() == self.spec_size();
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn values(&self) -> (values: ArraySeqStPerS<V>)
-            requires self.spec_wf(),
+            requires self.spec_bstkeyvaluesteph_wf(),
             ensures values.spec_len() == self.spec_size();
         /// - APAS: Work Θ(log n) expected, Span Θ(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn minimum_key(&self) -> (minimum: Option<&K>)
-            requires self.spec_wf(),
+            requires self.spec_bstkeyvaluesteph_wf(),
             ensures
                 self.spec_size() == 0 ==> minimum is None,
                 self.spec_size() > 0 ==> minimum is Some,
@@ -312,7 +312,7 @@ pub mod BSTKeyValueStEph {
         /// - APAS: Work Θ(log n) expected, Span Θ(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn maximum_key(&self) -> (maximum: Option<&K>)
-            requires self.spec_wf(),
+            requires self.spec_bstkeyvaluesteph_wf(),
             ensures
                 self.spec_size() == 0 ==> maximum is None,
                 self.spec_size() > 0 ==> maximum is Some,
@@ -491,7 +491,7 @@ pub mod BSTKeyValueStEph {
     impl<K: StT + Ord + TotalOrder, V: StT> BSTKeyValueStEphTrait<K, V> for BSTKeyValueStEph<K, V> {
         open spec fn spec_size(&self) -> nat { self.size as nat }
         open spec fn spec_height(&self) -> nat { spec_height_link(&self.root) }
-        open spec fn spec_wf(&self) -> bool {
+        open spec fn spec_bstkeyvaluesteph_wf(&self) -> bool {
             self.size as nat == spec_node_count_link(&self.root)
         }
         open spec fn spec_min_key(&self) -> Option<K> { spec_min_key_link(&self.root) }
