@@ -180,9 +180,11 @@ pub mod AVLTreeSeqStPer {
 
         fn from_vec(values: Vec<T>) -> (tree: Self);
 
-        fn values_in_order(&self) -> (values: Vec<T>);
+        fn values_in_order(&self) -> (values: Vec<T>)
+            requires self.spec_well_formed();
 
-        fn to_arrayseq(&self) -> (seq: ArraySeqStPerS<T>);
+        fn to_arrayseq(&self) -> (seq: ArraySeqStPerS<T>)
+            requires self.spec_well_formed();
 
         fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>);
     }
@@ -418,7 +420,6 @@ pub mod AVLTreeSeqStPer {
         }
 
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
-            proof { assume(self.spec_well_formed()); }
             let n = self.length();
             let s = if start < n { start } else { n };
             let sum = start.wrapping_add(length);
@@ -449,14 +450,12 @@ pub mod AVLTreeSeqStPer {
         }
 
         fn values_in_order(&self) -> (values: Vec<T>) {
-            proof { assume(self.spec_well_formed()); }
             let mut out: Vec<T> = Vec::new();
             inorder_collect(&self.root, &mut out);
             out
         }
 
         fn to_arrayseq(&self) -> (seq: ArraySeqStPerS<T>) {
-            proof { assume(self.spec_well_formed()); }
             let v = self.values_in_order();
             ArraySeqStPerS::from_vec(v)
         }

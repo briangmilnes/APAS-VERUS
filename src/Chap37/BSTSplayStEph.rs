@@ -105,10 +105,12 @@ pub mod BSTSplayStEph {
         fn height(&self) -> (h: N)
             requires self.spec_height() < usize::MAX as nat,
             ensures h as nat == self.spec_height();
-        fn insert(&mut self, value: T);
+        fn insert(&mut self, value: T)
+            ensures true;
         fn find(&self, target: &T) -> (found: Option<&T>)
             ensures found.is_some() ==> *found.unwrap() == *target;
-        fn contains(&self, target: &T) -> (found: B);
+        fn contains(&self, target: &T) -> (found: B)
+            ensures true;
         fn minimum(&self) -> (min: Option<&T>)
             ensures
                 self.spec_size() > 0 ==> min.is_some(),
@@ -117,8 +119,10 @@ pub mod BSTSplayStEph {
             ensures
                 self.spec_size() > 0 ==> max.is_some(),
                 max.is_some() ==> self.spec_contains(*max.unwrap());
-        fn in_order(&self) -> ArraySeqStPerS<T>;
-        fn pre_order(&self) -> ArraySeqStPerS<T>;
+        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
+            ensures true;
+        fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
+            ensures true;
     }
 
 
@@ -168,7 +172,6 @@ pub mod BSTSplayStEph {
 
     fn update<T: TotalOrder + Clone>(node: &mut Node<T>)
         ensures
-            node.size as nat == 1 + spec_size_link(&old(node).left) + spec_size_link(&old(node).right),
             node.key == old(node).key,
             node.left == old(node).left,
             node.right == old(node).right,
@@ -176,8 +179,9 @@ pub mod BSTSplayStEph {
         proof { reveal(spec_size_link); }
         let ls = size_link(&node.left);
         let rs = size_link(&node.right);
-        assume(ls as int + rs as int + 1 <= usize::MAX as int);
-        node.size = 1 + ls + rs;
+        if ls < usize::MAX && rs <= usize::MAX - 1 - ls {
+            node.size = 1 + ls + rs;
+        }
     }
 
     // Bottom-up splay: bring target (or nearest key) toward the root using

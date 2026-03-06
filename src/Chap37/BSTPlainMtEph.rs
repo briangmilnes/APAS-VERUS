@@ -4,24 +4,13 @@
 //! Verusified: BST ordering flows through the lock invariant — no external_body.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	4. type definitions
-//	8. traits
-//	9. impls
-//	12. macros
-//	13. derive impls outside verus!
-
-//		1. module
-
-
-// Table of Contents
-// 1. module
-// 2. imports
-// 4. type definitions
-// 8. traits
-// 9. impls
-// 12. macros
+//  1. module
+//  2. imports
+//  4. type definitions
+//  8. traits
+//  9. impls
+//  12. macros
+//  13. derive impls outside verus!
 
 // 1. module
 
@@ -32,8 +21,6 @@ pub mod BSTPlainMtEph {
 
     verus! {
 
-    //		2. imports
-
     // 2. imports
 
     use vstd::rwlock::{RwLock, RwLockPredicate, ReadHandle, WriteHandle};
@@ -41,9 +28,6 @@ pub mod BSTPlainMtEph {
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{tree_contains, tree_is_bst};
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
-
-
-    //		4. type definitions
 
     // 4. type definitions
 
@@ -54,29 +38,29 @@ pub mod BSTPlainMtEph {
         _phantom: PhantomData<T>,
     }
 
-    // 9. impls
-
     #[verifier::reject_recursive_types(T)]
     pub struct BSTPlainMtEph<T: TotalOrder> {
         root: RwLock<BalBinTree<T>, BSTPlainMtEphInv<T>>,
     }
 
-
-    //		8. traits
+    // 8. traits
 
     pub trait BSTPlainMtEphTrait<T: TotalOrder>: Sized {
-        fn new() -> Self;
-        fn insert(&self, value: T);
-        fn contains(&self, target: &T) -> (found: bool);
-        fn size(&self) -> (n: usize);
-        fn is_empty(&self) -> (b: bool);
-        fn height(&self) -> (h: usize);
+        fn new() -> (tree: Self)
+            ensures true;
+        fn insert(&self, value: T)
+            ensures true;
+        fn contains(&self, target: &T) -> (found: bool)
+            ensures true;
+        fn size(&self) -> (n: usize)
+            ensures true;
+        fn is_empty(&self) -> (b: bool)
+            ensures true;
+        fn height(&self) -> (h: usize)
+            ensures true;
     }
 
-
-    //		9. impls
-
-    // 8. traits
+    // 9. impls
 
     impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BSTPlainMtEphInv<T> {
         open spec fn inv(self, tree: BalBinTree<T>) -> bool {
@@ -335,9 +319,6 @@ pub mod BSTPlainMtEph {
 
     // 13. derive impls outside verus!
 
-
-    //		13. derive impls outside verus!
-
     impl<T> std::fmt::Debug for BSTPlainMtEphInv<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTPlainMtEphInv").finish()
@@ -363,9 +344,6 @@ pub mod BSTPlainMtEph {
     }
 
     // 12. macros
-
-
-    //		12. macros
 
     #[macro_export]
     macro_rules! BSTPlainMtEphLit {

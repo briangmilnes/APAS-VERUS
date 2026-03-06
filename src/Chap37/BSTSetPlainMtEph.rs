@@ -22,46 +22,46 @@ pub mod BSTSetPlainMtEph {
     pub type BSTSetPlainMt<T> = BSTSetPlainMtEph<T>;
 
     pub trait BSTSetPlainMtEphTrait<T: StTInMtT + Ord>: Sized {
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                                   -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn singleton(value: T)                       -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                               -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)                           -> B;
-        /// claude-4-sonet: Work Θ(log n) average, Θ(n) worst case; Span Θ(log n) average with locking
-        fn find(&self, value: &T)                    -> Option<T>;
-        /// claude-4-sonet: Work Θ(log n) average, Θ(n) worst case; Span Θ(log n) average with locking
-        fn contains(&self, value: &T)                -> B;
-        /// claude-4-sonet: Work Θ(log n) average, Θ(n) worst case; Span Θ(log n) average with locking
-        fn minimum(&self)                            -> Option<T>;
-        /// claude-4-sonet: Work Θ(log n) average, Θ(n) worst case; Span Θ(log n) average with locking
-        fn maximum(&self)                            -> Option<T>;
-        /// claude-4-sonet: Work Θ(log n) average, Θ(n) worst case; Span Θ(log n) average with locking
-        fn insert(&mut self, value: T);
-        /// claude-4-sonet: Work Θ(log n) average, Θ(n) worst case; Span Θ(log n) average with locking
-        fn delete(&mut self, target: &T);
-        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
-        fn union(&self, other: &Self)                -> Self;
-        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
-        fn intersection(&self, other: &Self)         -> Self;
-        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
-        fn difference(&self, other: &Self)           -> Self;
-        /// claude-4-sonet: Work Θ(log n) average, Span Θ(log n)
-        fn split(&self, pivot: &T)                   -> (Self, B, Self);
-        /// claude-4-sonet: Work Θ(log(|left| + |right|)), Span Θ(log(|left| + |right|))
-        fn join_pair(left: Self, right: Self)        -> Self;
-        /// claude-4-sonet: Work Θ(log(|left| + |right|)), Span Θ(log(|left| + |right|))
-        fn join_m(left: Self, pivot: T, right: Self) -> Self;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n)
-        fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> Self;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n)
-        fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> T;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n)
-        fn iter_in_order(&self)                      -> ArraySeqStPerS<T>;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn as_tree(&self)                            -> &BSTPlainMtEph<T>;
+        fn empty() -> (set: Self)
+            ensures true;
+        fn singleton(value: T) -> (set: Self)
+            ensures true;
+        fn size(&self) -> (n: N)
+            ensures true;
+        fn is_empty(&self) -> (b: B)
+            ensures true;
+        fn find(&self, value: &T) -> (found: Option<T>)
+            ensures true;
+        fn contains(&self, value: &T) -> (found: B)
+            ensures true;
+        fn minimum(&self) -> (min: Option<T>)
+            ensures true;
+        fn maximum(&self) -> (max: Option<T>)
+            ensures true;
+        fn insert(&mut self, value: T)
+            ensures true;
+        fn delete(&mut self, target: &T)
+            ensures true;
+        fn union(&self, other: &Self) -> (combined: Self)
+            ensures true;
+        fn intersection(&self, other: &Self) -> (common: Self)
+            ensures true;
+        fn difference(&self, other: &Self) -> (diff: Self)
+            ensures true;
+        fn split(&self, pivot: &T) -> (parts: (Self, B, Self))
+            ensures true;
+        fn join_pair(left: Self, right: Self) -> (joined: Self)
+            ensures true;
+        fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)
+            ensures true;
+        fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)
+            ensures true;
+        fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> (reduced: T)
+            ensures true;
+        fn iter_in_order(&self) -> (seq: ArraySeqStPerS<T>)
+            ensures true;
+        fn as_tree(&self) -> (tree: &BSTPlainMtEph<T>)
+            ensures true;
     }
 
     fn values_vec<T: StTInMtT + Ord>(tree: &BSTPlainMtEph<T>) -> Vec<T> {

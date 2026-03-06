@@ -19,7 +19,7 @@
    1 clean proof function
 ✓ AdjTableGraphStPer.rs
 ❌ EdgeSetGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:107: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphMtPer.rs:107: external_body - #[verifier::external_body]
        108 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
    Holes: 1 total
       1 × external_body
