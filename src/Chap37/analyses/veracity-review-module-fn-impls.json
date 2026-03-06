@@ -3,7 +3,7 @@
     "id": 1,
     "function": "lemma_size_eq_inorder_len",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "162-165",
+    "lines": "146-149",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)\n        requires spec_avltreeseq_wf(*link),\n        ensures spec_avltreeseq_cached_size(link) == spec_avltreeseq_inorder(*link).len(),\n        decreases *link,"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "function": "lemma_inorder_values_maps_to_inorder",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "176-178",
+    "lines": "160-162",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_inorder_values_maps_to_inorder<T: StT>(link: Link<T>)\n        ensures spec_avltreeseq_inorder_values(link).map_values(|t: T| t@) =~= spec_avltreeseq_inorder(link),\n        decreases link,"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "function": "empty",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "198-199",
+    "lines": "182-183",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (tree: Self)\n            ensures tree.spec_avltreeseq_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseq_wf();"
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "function": "new",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "201-202",
+    "lines": "185-186",
     "spec_strength": "unknown",
     "snippet": "        fn new() -> (tree: Self)\n            ensures tree.spec_avltreeseq_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseq_wf();"
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "function": "length",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "204-206",
+    "lines": "188-190",
     "spec_strength": "unknown",
     "snippet": "        fn length(&self) -> (len: N)\n            requires self.spec_avltreeseq_wf(),\n            ensures len as nat == self.spec_avltreeseq_seq().len();"
   },
@@ -43,7 +43,7 @@
     "id": 6,
     "function": "nth",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "208-210",
+    "lines": "192-194",
     "spec_strength": "unknown",
     "snippet": "        fn nth(&self, index: N) -> (elem: &T)\n            requires self.spec_avltreeseq_wf(), (index as int) < self.spec_avltreeseq_seq().len(),\n            ensures elem@ == self.spec_avltreeseq_seq()[index as int];"
   },
@@ -51,7 +51,7 @@
     "id": 7,
     "function": "set",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "212-217",
+    "lines": "196-201",
     "spec_strength": "unknown",
     "snippet": "        fn set(&mut self, index: N, item: T) -> (outcome: Result<(), &'static str>)\n            requires old(self).spec_avltreeseq_wf(), (index as int) < old(self).spec_avltreeseq_seq().len(),\n            ensures\n                self.spec_avltreeseq_wf(),\n                self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq().update(index as int, item@),\n                outcome is Ok;"
   },
@@ -59,7 +59,7 @@
     "id": 8,
     "function": "singleton",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "219-223",
+    "lines": "203-207",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(item: T) -> (tree: Self)\n            ensures\n                tree.spec_avltreeseq_seq() =~= seq![item@],\n                tree.spec_avltreeseq_seq().len() == 1,\n                tree.spec_avltreeseq_wf();"
   },
@@ -67,7 +67,7 @@
     "id": 9,
     "function": "isEmpty",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "225-227",
+    "lines": "209-211",
     "spec_strength": "unknown",
     "snippet": "        fn isEmpty(&self) -> (empty: B)\n            requires self.spec_avltreeseq_wf(),\n            ensures empty == (self.spec_avltreeseq_seq().len() == 0);"
   },
@@ -75,7 +75,7 @@
     "id": 10,
     "function": "isSingleton",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "229-231",
+    "lines": "213-215",
     "spec_strength": "unknown",
     "snippet": "        fn isSingleton(&self) -> (single: B)\n            requires self.spec_avltreeseq_wf(),\n            ensures single == (self.spec_avltreeseq_seq().len() == 1);"
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "function": "subseq_copy",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "233-236",
+    "lines": "217-220",
     "spec_strength": "unknown",
     "snippet": "        fn subseq_copy(&self, start: N, length: N) -> (sub: Self)\n            requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>(),\n            ensures sub.spec_avltreeseq_seq() =~=\n                spec_avltreeseq_subseq(self.spec_avltreeseq_seq(), start as nat, length as nat);"
   },
@@ -91,7 +91,7 @@
     "id": 12,
     "function": "new_root",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "238-239",
+    "lines": "222-223",
     "spec_strength": "unknown",
     "snippet": "        fn new_root() -> (tree: Self)\n            ensures tree.spec_avltreeseq_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseq_wf();"
   },
@@ -99,7 +99,7 @@
     "id": 13,
     "function": "update",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "241-247",
+    "lines": "225-231",
     "spec_strength": "unknown",
     "snippet": "        fn update(&mut self, index: N, item: T)\n            requires\n                old(self).spec_avltreeseq_wf(),\n                (index as int) < old(self).spec_avltreeseq_seq().len(),\n            ensures\n                self.spec_avltreeseq_wf(),\n                self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq().update(index as int, item@);"
   },
@@ -107,7 +107,7 @@
     "id": 14,
     "function": "from_vec",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "249-255",
+    "lines": "233-239",
     "spec_strength": "unknown",
     "snippet": "        fn from_vec(values: Vec<T>) -> (tree: AVLTreeS<T>)\n            requires\n                obeys_feq_full::<T>(),\n                values@.len() < usize::MAX,\n            ensures\n                spec_avltreeseq_wf(tree.root),\n                spec_avltreeseq_inorder(tree.root) =~= values@.map_values(|t: T| t@);"
   },
@@ -115,7 +115,7 @@
     "id": 15,
     "function": "to_arrayseq",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "257-262",
+    "lines": "241-246",
     "spec_strength": "unknown",
     "snippet": "        fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>)\n            requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>(),\n            ensures\n                seq.spec_len() == self.spec_avltreeseq_seq().len(),\n                forall|i: int| #![trigger seq.spec_index(i)]\n                    0 <= i < seq.spec_len() ==> seq.spec_index(i)@ == self.spec_avltreeseq_seq()[i];"
   },
@@ -123,7 +123,7 @@
     "id": 16,
     "function": "iter",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "264-269",
+    "lines": "248-253",
     "spec_strength": "unknown",
     "snippet": "        fn iter<'a>(&'a self) -> (it: AVLTreeSeqIter<'a, T>)\n            requires self.spec_avltreeseq_wf(),\n            ensures\n                it@.0 == 0int,\n                it@.1.map_values(|t: T| t@) =~= self.spec_avltreeseq_seq(),\n                iter_invariant(&it);"
   },
@@ -131,7 +131,7 @@
     "id": 17,
     "function": "push_back",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "271-273",
+    "lines": "255-257",
     "spec_strength": "unknown",
     "snippet": "        fn push_back(&mut self, value: T)\n            requires old(self).spec_avltreeseq_wf(),\n            ensures self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq().push(value@);"
   },
@@ -139,7 +139,7 @@
     "id": 18,
     "function": "contains_value",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "275-278",
+    "lines": "259-262",
     "spec_strength": "unknown",
     "snippet": "        fn contains_value(&self, target: &T) -> (found: B)\n            requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>(),\n            ensures found == exists|j: int| 0 <= j < self.spec_avltreeseq_seq().len()\n                && self.spec_avltreeseq_seq()[j] == target@;"
   },
@@ -147,7 +147,7 @@
     "id": 19,
     "function": "insert_value",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "280-282",
+    "lines": "264-266",
     "spec_strength": "unknown",
     "snippet": "        fn insert_value(&mut self, value: T)\n            requires old(self).spec_avltreeseq_wf(),\n            ensures self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq().push(value@);"
   },
@@ -155,7 +155,7 @@
     "id": 20,
     "function": "delete_value",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "284-295",
+    "lines": "268-279",
     "spec_strength": "unknown",
     "snippet": "        fn delete_value(&mut self, target: &T) -> (deleted: bool)\n            requires old(self).spec_avltreeseq_wf(), obeys_feq_full::<T>(),\n            ensures\n                !deleted ==> self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq(),\n                deleted ==> exists|idx: int|\n                    #![trigger old(self).spec_avltreeseq_seq()[idx]]\n                    0 <= idx < old(self).spec_avltreeseq_seq().len()\n                    && old(self).spec_avltreeseq_seq()[idx] == target@\n                    && self.spec_avltreeseq_seq() =~=\n                        old(self).spec_avltreeseq_seq().subrange(0, idx)\n                        + old(self).spec_avltreeseq_seq().subrange(idx + 1,\n                            old(self).spec_avltreeseq_seq().len() as int);"
   },
@@ -163,7 +163,7 @@
     "id": 21,
     "function": "is_tree_empty",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "297-299",
+    "lines": "281-283",
     "spec_strength": "unknown",
     "snippet": "        fn is_tree_empty(&self) -> (empty: bool)\n            requires self.spec_avltreeseq_wf(),\n            ensures empty == (self.spec_avltreeseq_seq().len() == 0);"
   },
@@ -171,7 +171,7 @@
     "id": 22,
     "function": "values_in_order",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "301-303",
+    "lines": "285-287",
     "spec_strength": "unknown",
     "snippet": "        fn values_in_order(&self) -> (values: Vec<T>)\n            requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>(),\n            ensures values@.map_values(|t: T| t@) =~= self.spec_avltreeseq_seq();"
   },
@@ -179,7 +179,7 @@
     "id": 23,
     "function": "cached_height",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "311-312",
+    "lines": "295-296",
     "spec_strength": "unknown",
     "snippet": "    fn cached_height<T: StT>(n: &Link<T>) -> (height: N)\n        ensures height as nat == spec_avltreeseq_cached_height(n),"
   },
@@ -187,7 +187,7 @@
     "id": 24,
     "function": "cached_size",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "320-322",
+    "lines": "304-306",
     "spec_strength": "unknown",
     "snippet": "    fn cached_size<T: StT>(n: &Link<T>) -> (size: N)\n        requires spec_avltreeseq_cached_size(n) < usize::MAX,\n        ensures size as nat == spec_avltreeseq_cached_size(n),"
   },
@@ -195,7 +195,7 @@
     "id": 25,
     "function": "update_size_height",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "332-353",
+    "lines": "316-337",
     "spec_strength": "unknown",
     "snippet": "    fn update_size_height<T: StT>(n: &mut Box<AVLTreeNode<T>>)\n        requires\n            spec_avltreeseq_wf(old(n).left),\n            spec_avltreeseq_wf(old(n).right),\n            spec_avltreeseq_nat_max(\n                spec_avltreeseq_cached_height(&old(n).left),\n                spec_avltreeseq_cached_height(&old(n).right),\n            ) < usize::MAX,\n            1 + spec_avltreeseq_cached_size(&old(n).left)\n              + spec_avltreeseq_cached_size(&old(n).right) < usize::MAX,\n        ensures\n            n.left_size as nat == spec_avltreeseq_cached_size(&n.left),\n            n.right_size as nat == spec_avltreeseq_cached_size(&n.right),\n            n.height as nat == 1 + spec_avltreeseq_nat_max(\n                spec_avltreeseq_cached_height(&n.left),\n                spec_avltreeseq_cached_height(&n.right),\n            ),\n            n.value == old(n).value,\n            n.left == old(n).left,\n            n.right == old(n).right,\n            n.index == old(n).index,\n            spec_avltreeseq_inorder(Some(*n)) =~= spec_avltreeseq_inorder(Some(*old(n))),"
   },
@@ -203,7 +203,7 @@
     "id": 26,
     "function": "rotate_right",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "362-372",
+    "lines": "346-356",
     "spec_strength": "unknown",
     "snippet": "    pub fn rotate_right<T: StT>(node: Box<AVLTreeNode<T>>) -> (rotated: Box<AVLTreeNode<T>>)\n        requires\n            spec_avltreeseq_wf(Some(node)),\n            node.left is Some,\n            spec_avltreeseq_cached_height(&Some(node)) < usize::MAX,\n            spec_avltreeseq_cached_size(&Some(node)) < usize::MAX,\n        ensures\n            spec_avltreeseq_wf(Some(rotated)),\n            spec_avltreeseq_inorder(Some(rotated)) =~= spec_avltreeseq_inorder(Some(node)),\n            spec_avltreeseq_cached_size(&Some(rotated)) == spec_avltreeseq_cached_size(&Some(node)),\n            spec_avltreeseq_cached_height(&Some(rotated)) <= spec_avltreeseq_cached_height(&Some(node)) + 1,"
   },
@@ -211,7 +211,7 @@
     "id": 27,
     "function": "rotate_left",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "421-431",
+    "lines": "405-415",
     "spec_strength": "unknown",
     "snippet": "    fn rotate_left<T: StT>(node: Box<AVLTreeNode<T>>) -> (rotated: Box<AVLTreeNode<T>>)\n        requires\n            spec_avltreeseq_wf(Some(node)),\n            node.right is Some,\n            spec_avltreeseq_cached_height(&Some(node)) < usize::MAX,\n            spec_avltreeseq_cached_size(&Some(node)) < usize::MAX,\n        ensures\n            spec_avltreeseq_inorder(Some(rotated)) =~= spec_avltreeseq_inorder(Some(node)),\n            spec_avltreeseq_wf(Some(rotated)),\n            spec_avltreeseq_cached_size(&Some(rotated)) == spec_avltreeseq_cached_size(&Some(node)),\n            spec_avltreeseq_cached_height(&Some(rotated)) <= spec_avltreeseq_cached_height(&Some(node)) + 1,"
   },
@@ -219,7 +219,7 @@
     "id": 28,
     "function": "rebalance",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "473-488",
+    "lines": "457-472",
     "spec_strength": "unknown",
     "snippet": "    fn rebalance<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (balanced: Box<AVLTreeNode<T>>)\n        requires\n            spec_avltreeseq_wf(n.left),\n            spec_avltreeseq_wf(n.right),\n            spec_avltreeseq_nat_max(\n                spec_avltreeseq_cached_height(&n.left),\n                spec_avltreeseq_cached_height(&n.right),\n            ) + 2 < usize::MAX,\n            1 + spec_avltreeseq_cached_size(&n.left)\n              + spec_avltreeseq_cached_size(&n.right) < usize::MAX,\n        ensures\n            spec_avltreeseq_inorder(Some(balanced)) =~= spec_avltreeseq_inorder(Some(n)),\n            spec_avltreeseq_wf(Some(balanced)),\n            spec_avltreeseq_cached_size(&Some(balanced))\n                == 1 + spec_avltreeseq_cached_size(&n.left)\n                     + spec_avltreeseq_cached_size(&n.right),"
   },
@@ -227,7 +227,7 @@
     "id": 29,
     "function": "insert_at_link",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "527-538",
+    "lines": "511-522",
     "spec_strength": "hole",
     "snippet": "    pub fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (inserted: Link<T>)\n        requires\n            spec_avltreeseq_wf(node),\n            0 <= index as int <= spec_avltreeseq_inorder(node).len(),\n            *old(next_key) < usize::MAX,\n            spec_avltreeseq_cached_size(&node) + 1 < usize::MAX,\n        ensures\n            spec_avltreeseq_wf(inserted),\n            spec_avltreeseq_inorder(inserted) =~= spec_avltreeseq_inorder(node).insert(index as int, value@),\n            *next_key == *old(next_key) + 1,\n            spec_avltreeseq_cached_size(&inserted) == spec_avltreeseq_cached_size(&node) + 1,\n        decreases node,"
   },
@@ -235,7 +235,7 @@
     "id": 30,
     "function": "nth_link",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "607-610",
+    "lines": "591-594",
     "spec_strength": "unknown",
     "snippet": "    fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (elem: &'a T)\n        requires spec_avltreeseq_wf(*node), (index as int) < spec_avltreeseq_inorder(*node).len(),\n        ensures elem@ == spec_avltreeseq_inorder(*node)[index as int],\n        decreases *node,"
   },
@@ -243,7 +243,7 @@
     "id": 31,
     "function": "set_link",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "625-635",
+    "lines": "609-619",
     "spec_strength": "unknown",
     "snippet": "    fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (outcome: Result<(), &'static str>)\n        requires\n            spec_avltreeseq_wf(*old(node)),\n            (index as int) < spec_avltreeseq_inorder(*old(node)).len(),\n        ensures\n            spec_avltreeseq_wf(*node),\n            spec_avltreeseq_inorder(*node) =~= spec_avltreeseq_inorder(*old(node)).update(index as int, value@),\n            spec_avltreeseq_cached_size(node) == spec_avltreeseq_cached_size(old(node)),\n            spec_avltreeseq_cached_height(node) == spec_avltreeseq_cached_height(old(node)),\n            outcome is Ok,\n        decreases *old(node),"
   },
@@ -251,7 +251,7 @@
     "id": 32,
     "function": "push_inorder",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "652-657",
+    "lines": "636-641",
     "spec_strength": "unknown",
     "snippet": "    fn push_inorder<T: StT>(link: &Link<T>, out: &mut Vec<T>)\n        requires spec_avltreeseq_wf(*link), obeys_feq_full::<T>(),\n        ensures\n            out@.map_values(|t: T| t@) =~=\n                old(out)@.map_values(|t: T| t@) + spec_avltreeseq_inorder(*link),\n        decreases *link,"
   },
@@ -259,7 +259,7 @@
     "id": 33,
     "function": "compare_trees",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "687-692",
+    "lines": "671-676",
     "spec_strength": "unknown",
     "snippet": "    fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool)\n        requires\n            spec_avltreeseq_wf(*a), spec_avltreeseq_wf(*b), obeys_feq_full::<T>(),\n            spec_avltreeseq_cached_size(a) < usize::MAX,\n            spec_avltreeseq_cached_size(b) < usize::MAX,\n        ensures equal == (spec_avltreeseq_inorder(*a) =~= spec_avltreeseq_inorder(*b)),"
   },
@@ -267,7 +267,7 @@
     "id": 34,
     "function": "next",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "1115-1131",
+    "lines": "1099-1115",
     "spec_strength": "hole",
     "snippet": "        fn next(&mut self) -> (next: Option<&'a T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
   },
@@ -275,7 +275,7 @@
     "id": 35,
     "function": "eq",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "1220-1221",
+    "lines": "1204-1205",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
@@ -283,7 +283,7 @@
     "id": 36,
     "function": "default",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "1258",
+    "lines": "1242",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::new() }"
   },
@@ -844,7 +844,7 @@
     "function": "subseq_copy",
     "file": "Chap37/AVLTreeSeqStPer.rs",
     "lines": "178-179",
-    "spec_strength": "hole",
+    "spec_strength": "unknown",
     "snippet": "        fn subseq_copy(&self, start: N, length: N) -> (sub: Self)\n            requires self.spec_well_formed();"
   },
   {
@@ -859,23 +859,23 @@
     "id": 108,
     "function": "values_in_order",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "183",
-    "spec_strength": "hole",
-    "snippet": "        fn values_in_order(&self) -> (values: Vec<T>);"
+    "lines": "183-184",
+    "spec_strength": "unknown",
+    "snippet": "        fn values_in_order(&self) -> (values: Vec<T>)\n            requires self.spec_well_formed();"
   },
   {
     "id": 109,
     "function": "to_arrayseq",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "185",
-    "spec_strength": "hole",
-    "snippet": "        fn to_arrayseq(&self) -> (seq: ArraySeqStPerS<T>);"
+    "lines": "186-187",
+    "spec_strength": "unknown",
+    "snippet": "        fn to_arrayseq(&self) -> (seq: ArraySeqStPerS<T>)\n            requires self.spec_well_formed();"
   },
   {
     "id": 110,
     "function": "iter",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "187",
+    "lines": "189",
     "spec_strength": "hole",
     "snippet": "        fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>);"
   },
@@ -883,7 +883,7 @@
     "id": 111,
     "function": "height_fn",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "192-193",
+    "lines": "194-195",
     "spec_strength": "unknown",
     "snippet": "    fn height_fn<T: StT>(n: &Link<T>) -> (h: N)\n        ensures h as nat == spec_cached_height(n),"
   },
@@ -891,7 +891,7 @@
     "id": 112,
     "function": "size_fn",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "201-202",
+    "lines": "203-204",
     "spec_strength": "unknown",
     "snippet": "    fn size_fn<T: StT>(n: &Link<T>) -> (sz: N)\n        ensures sz as nat == spec_cached_size(n),"
   },
@@ -899,7 +899,7 @@
     "id": 113,
     "function": "mk",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "211-220",
+    "lines": "213-222",
     "spec_strength": "hole",
     "snippet": "    fn mk<T: StT>(value: T, left: Link<T>, right: Link<T>) -> (node: Arc<Node<T>>)\n        requires\n            1 + spec_cached_size(&left) + spec_cached_size(&right) <= N::MAX as nat,\n            1 + spec_nat_max(spec_cached_height(&left), spec_cached_height(&right)) <= N::MAX as nat,\n        ensures\n            spec_inorder(Some(node)) =~= spec_inorder(left) + seq![value@] + spec_inorder(right),\n            node.size as nat == 1 + spec_cached_size(&left) + spec_cached_size(&right),\n            node.height as nat == 1 + spec_nat_max(\n                spec_cached_height(&left), spec_cached_height(&right)),\n            spec_avltreeseqstper_wf(left) && spec_avltreeseqstper_wf(right) ==> spec_avltreeseqstper_wf(Some(node)),"
   },
@@ -907,7 +907,7 @@
     "id": 114,
     "function": "rotate_right",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "230-234",
+    "lines": "232-236",
     "spec_strength": "hole",
     "snippet": "    fn rotate_right<T: StT>(y: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)\n        requires y.left.is_some(), spec_avltreeseqstper_wf(Some(y)),\n        ensures\n            spec_inorder(Some(rotated)) =~= spec_inorder(Some(y)),\n            spec_avltreeseqstper_wf(Some(rotated)),"
   },
@@ -915,7 +915,7 @@
     "id": 115,
     "function": "rotate_left",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "243-247",
+    "lines": "245-249",
     "spec_strength": "hole",
     "snippet": "    fn rotate_left<T: StT>(x: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)\n        requires x.right.is_some(), spec_avltreeseqstper_wf(Some(x)),\n        ensures\n            spec_inorder(Some(rotated)) =~= spec_inorder(Some(x)),\n            spec_avltreeseqstper_wf(Some(rotated)),"
   },
@@ -923,7 +923,7 @@
     "id": 116,
     "function": "rebalance",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "256-260",
+    "lines": "258-262",
     "spec_strength": "hole",
     "snippet": "    fn rebalance<T: StT>(n: Arc<Node<T>>) -> (balanced: Arc<Node<T>>)\n        requires spec_avltreeseqstper_wf(Some(n)),\n        ensures\n            spec_inorder(Some(balanced)) =~= spec_inorder(Some(n)),\n            spec_avltreeseqstper_wf(Some(balanced)),"
   },
@@ -931,7 +931,7 @@
     "id": 117,
     "function": "nth_ref",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "284-286",
+    "lines": "286-288",
     "spec_strength": "hole",
     "snippet": "    fn nth_ref<'a, T: StT>(cur: &'a Link<T>, index: N) -> (elem: &'a T)\n        requires spec_avltreeseqstper_wf(*cur), (index as int) < spec_inorder(*cur).len(),\n        ensures elem@ == spec_inorder(*cur)[index as int],"
   },
@@ -939,7 +939,7 @@
     "id": 118,
     "function": "set_rec",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "305-307",
+    "lines": "307-309",
     "spec_strength": "hole",
     "snippet": "    fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)\n        requires spec_avltreeseqstper_wf(*cur), (index as int) < spec_inorder(*cur).len(),\n        ensures outcome.is_ok(),"
   },
@@ -947,7 +947,7 @@
     "id": 119,
     "function": "inorder_collect",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "333",
+    "lines": "335",
     "spec_strength": "hole",
     "snippet": "    fn inorder_collect<T: StT>(cur: &Link<T>, out: &mut Vec<T>) {"
   },
@@ -955,7 +955,7 @@
     "id": 120,
     "function": "build_balanced_from_slice",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "342-343",
+    "lines": "344-345",
     "spec_strength": "hole",
     "snippet": "    fn build_balanced_from_slice<T: StT>(a: &[T]) -> (link: Link<T>)\n        ensures spec_avltreeseqstper_wf(link),"
   },
@@ -963,7 +963,7 @@
     "id": 121,
     "function": "rec",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "345",
+    "lines": "347",
     "spec_strength": "",
     "snippet": "        fn rec<T: StT>(a: &[T]) -> Link<T> {"
   },
@@ -971,7 +971,7 @@
     "id": 122,
     "function": "compare_trees",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "358",
+    "lines": "360",
     "spec_strength": "hole",
     "snippet": "    fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool) {"
   },
@@ -979,7 +979,7 @@
     "id": 123,
     "function": "eq",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "484-485",
+    "lines": "483-484",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
@@ -987,7 +987,7 @@
     "id": 124,
     "function": "default",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "509",
+    "lines": "508",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::empty() }"
   },
@@ -995,7 +995,7 @@
     "id": 125,
     "function": "push_left_iter",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "566-571",
+    "lines": "565-570",
     "spec_strength": "",
     "snippet": "    fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqStPerIter<'a, T>, mut cur: Option<&'a Node<T>>) {\n        while let Some(n) = cur {\n            it.stack.push(n);\n            cur = n.left.as_deref();\n        }\n    }"
   },
@@ -1003,7 +1003,7 @@
     "id": 126,
     "function": "next",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "575-584",
+    "lines": "574-583",
     "spec_strength": "",
     "snippet": "        fn next(&mut self) -> Option<Self::Item> {\n            if self.current.is_some() {\n                let cur = self.current.take();\n                push_left_iter(self, cur);\n            }\n            let node = self.stack.pop()?;\n            let value_ref: &T = &node.value;\n            push_left_iter(self, node.right.as_deref());\n            Some(value_ref)\n        }"
   },
@@ -1011,7 +1011,7 @@
     "id": 127,
     "function": "lemma_bst_deep",
     "file": "Chap37/BSTAVLMtEph.rs",
-    "lines": "72-104",
+    "lines": "49-81",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_bst_deep<T: TotalOrder>(tree: BalBinTree<T>)\n        requires tree_is_bst::<T>(tree),\n        ensures\n            match tree {\n                BalBinTree::Leaf => true,\n                BalBinTree::Node(node) =>\n                    tree_is_bst::<T>(node.left)\n                    && tree_is_bst::<T>(node.right)\n                    && (forall|x: T| #![auto] tree_contains(node.left, x) ==>\n                        T::le(x, node.value) && x != node.value)\n                    && (forall|x: T| #![auto] tree_contains(node.right, x) ==>\n                        T::le(node.value, x) && x != node.value)\n                    && match node.left {\n                        BalBinTree::Leaf => true,\n                        BalBinTree::Node(lnode) =>\n                            tree_is_bst::<T>(lnode.left)\n                            && tree_is_bst::<T>(lnode.right)\n                            && (forall|x: T| #![auto] tree_contains(lnode.left, x) ==>\n                                T::le(x, lnode.value) && x != lnode.value)\n                            && (forall|x: T| #![auto] tree_contains(lnode.right, x) ==>\n                                T::le(lnode.value, x) && x != lnode.value)\n                    }\n                    && match node.right {\n                        BalBinTree::Leaf => true,\n                        BalBinTree::Node(rnode) =>\n                            tree_is_bst::<T>(rnode.left)\n                            && tree_is_bst::<T>(rnode.right)\n                            && (forall|x: T| #![auto] tree_contains(rnode.left, x) ==>\n                                T::le(x, rnode.value) && x != rnode.value)\n                            && (forall|x: T| #![auto] tree_contains(rnode.right, x) ==>\n                                T::le(rnode.value, x) && x != rnode.value)\n                    }\n            }"
   },
@@ -1019,55 +1019,55 @@
     "id": 128,
     "function": "new",
     "file": "Chap37/BSTAVLMtEph.rs",
-    "lines": "114",
-    "spec_strength": "",
-    "snippet": "        fn new() -> Self;"
+    "lines": "91-92",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (tree: Self)\n            ensures true;"
   },
   {
     "id": 129,
     "function": "insert",
     "file": "Chap37/BSTAVLMtEph.rs",
-    "lines": "115",
-    "spec_strength": "",
-    "snippet": "        fn insert(&self, value: T);"
+    "lines": "93-94",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&self, value: T)\n            ensures true;"
   },
   {
     "id": 130,
     "function": "contains",
     "file": "Chap37/BSTAVLMtEph.rs",
-    "lines": "116",
-    "spec_strength": "",
-    "snippet": "        fn contains(&self, target: &T) -> (found: bool);"
+    "lines": "95-96",
+    "spec_strength": "unknown",
+    "snippet": "        fn contains(&self, target: &T) -> (found: bool)\n            ensures true;"
   },
   {
     "id": 131,
     "function": "size",
     "file": "Chap37/BSTAVLMtEph.rs",
-    "lines": "117",
-    "spec_strength": "",
-    "snippet": "        fn size(&self) -> (n: usize);"
+    "lines": "97-98",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (n: usize)\n            ensures true;"
   },
   {
     "id": 132,
     "function": "is_empty",
     "file": "Chap37/BSTAVLMtEph.rs",
-    "lines": "118",
-    "spec_strength": "",
-    "snippet": "        fn is_empty(&self) -> (b: bool);"
+    "lines": "99-100",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (b: bool)\n            ensures true;"
   },
   {
     "id": 133,
     "function": "height",
     "file": "Chap37/BSTAVLMtEph.rs",
-    "lines": "119",
-    "spec_strength": "",
-    "snippet": "        fn height(&self) -> (h: usize);"
+    "lines": "101-102",
+    "spec_strength": "unknown",
+    "snippet": "        fn height(&self) -> (h: usize)\n            ensures true;"
   },
   {
     "id": 134,
     "function": "rotate_right",
     "file": "Chap37/BSTAVLMtEph.rs",
-    "lines": "137-141",
+    "lines": "117-121",
     "spec_strength": "unknown",
     "snippet": "    fn rotate_right<T: TotalOrder>(tree: BalBinTree<T>) -> (rotated: BalBinTree<T>)\n        requires tree_is_bst::<T>(tree), !(tree is Leaf),\n        ensures\n            tree_is_bst::<T>(rotated),\n            forall|x: T| #![auto] tree_contains(rotated, x) == tree_contains(tree, x),"
   },
@@ -1075,7 +1075,7 @@
     "id": 135,
     "function": "rotate_left",
     "file": "Chap37/BSTAVLMtEph.rs",
-    "lines": "203-207",
+    "lines": "183-187",
     "spec_strength": "unknown",
     "snippet": "    fn rotate_left<T: TotalOrder>(tree: BalBinTree<T>) -> (rotated: BalBinTree<T>)\n        requires tree_is_bst::<T>(tree), !(tree is Leaf),\n        ensures\n            tree_is_bst::<T>(rotated),\n            forall|x: T| #![auto] tree_contains(rotated, x) == tree_contains(tree, x),"
   },
@@ -1083,7 +1083,7 @@
     "id": 136,
     "function": "insert_node",
     "file": "Chap37/BSTAVLMtEph.rs",
-    "lines": "270-279",
+    "lines": "250-259",
     "spec_strength": "unknown",
     "snippet": "    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)\n        requires tree_is_bst::<T>(node),\n        ensures\n            tree_is_bst::<T>(inserted),\n            tree_contains(inserted, value),\n            forall|x: T| #![auto] tree_contains(inserted, x) <==>\n                (tree_contains(node, x) || x == value),\n            inserted.spec_size() <= node.spec_size() + 1,\n            inserted.spec_height() <= node.spec_height() + 1,\n        decreases node.spec_size(),"
   },
@@ -1091,7 +1091,7 @@
     "id": 137,
     "function": "contains_node",
     "file": "Chap37/BSTAVLMtEph.rs",
-    "lines": "362-365",
+    "lines": "342-345",
     "spec_strength": "unknown",
     "snippet": "    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)\n        requires tree_is_bst::<T>(*node),\n        ensures found == tree_contains(*node, *target),\n        decreases node.spec_size(),"
   },
@@ -1099,7 +1099,7 @@
     "id": 138,
     "function": "find_node",
     "file": "Chap37/BSTAVLMtEph.rs",
-    "lines": "387-392",
+    "lines": "367-372",
     "spec_strength": "unknown",
     "snippet": "    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)\n        requires tree_is_bst::<T>(*node),\n        ensures\n            found.is_some() == tree_contains(*node, *target),\n            found.is_some() ==> *found.unwrap() == *target,\n        decreases node.spec_size(),"
   },
@@ -1107,7 +1107,7 @@
     "id": 139,
     "function": "min_node",
     "file": "Chap37/BSTAVLMtEph.rs",
-    "lines": "414-415",
+    "lines": "394-395",
     "spec_strength": "",
     "snippet": "    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)\n        decreases node.spec_size(),"
   },
@@ -1115,7 +1115,7 @@
     "id": 140,
     "function": "max_node",
     "file": "Chap37/BSTAVLMtEph.rs",
-    "lines": "426-427",
+    "lines": "406-407",
     "spec_strength": "",
     "snippet": "    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)\n        decreases node.spec_size(),"
   },
@@ -1259,55 +1259,55 @@
     "id": 158,
     "function": "new",
     "file": "Chap37/BSTBBAlphaMtEph.rs",
-    "lines": "73",
-    "spec_strength": "",
-    "snippet": "        fn new() -> Self;"
+    "lines": "49-50",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (tree: Self)\n            ensures true;"
   },
   {
     "id": 159,
     "function": "insert",
     "file": "Chap37/BSTBBAlphaMtEph.rs",
-    "lines": "74",
-    "spec_strength": "",
-    "snippet": "        fn insert(&self, value: T);"
+    "lines": "51-52",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&self, value: T)\n            ensures true;"
   },
   {
     "id": 160,
     "function": "contains",
     "file": "Chap37/BSTBBAlphaMtEph.rs",
-    "lines": "75",
-    "spec_strength": "",
-    "snippet": "        fn contains(&self, target: &T) -> (found: bool);"
+    "lines": "53-54",
+    "spec_strength": "unknown",
+    "snippet": "        fn contains(&self, target: &T) -> (found: bool)\n            ensures true;"
   },
   {
     "id": 161,
     "function": "size",
     "file": "Chap37/BSTBBAlphaMtEph.rs",
-    "lines": "76",
-    "spec_strength": "",
-    "snippet": "        fn size(&self) -> (n: usize);"
+    "lines": "55-56",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (n: usize)\n            ensures true;"
   },
   {
     "id": 162,
     "function": "is_empty",
     "file": "Chap37/BSTBBAlphaMtEph.rs",
-    "lines": "77",
-    "spec_strength": "",
-    "snippet": "        fn is_empty(&self) -> (b: bool);"
+    "lines": "57-58",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (b: bool)\n            ensures true;"
   },
   {
     "id": 163,
     "function": "height",
     "file": "Chap37/BSTBBAlphaMtEph.rs",
-    "lines": "78",
-    "spec_strength": "",
-    "snippet": "        fn height(&self) -> (h: usize);"
+    "lines": "59-60",
+    "spec_strength": "unknown",
+    "snippet": "        fn height(&self) -> (h: usize)\n            ensures true;"
   },
   {
     "id": 164,
     "function": "insert_node",
     "file": "Chap37/BSTBBAlphaMtEph.rs",
-    "lines": "96-105",
+    "lines": "75-84",
     "spec_strength": "unknown",
     "snippet": "    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)\n        requires tree_is_bst::<T>(node),\n        ensures\n            tree_is_bst::<T>(inserted),\n            tree_contains(inserted, value),\n            forall|x: T| #![auto] tree_contains(inserted, x) <==>\n                (tree_contains(node, x) || x == value),\n            inserted.spec_size() <= node.spec_size() + 1,\n            inserted.spec_height() <= node.spec_height() + 1,\n        decreases node.spec_size(),"
   },
@@ -1315,7 +1315,7 @@
     "id": 165,
     "function": "contains_node",
     "file": "Chap37/BSTBBAlphaMtEph.rs",
-    "lines": "188-191",
+    "lines": "167-170",
     "spec_strength": "unknown",
     "snippet": "    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)\n        requires tree_is_bst::<T>(*node),\n        ensures found == tree_contains(*node, *target),\n        decreases node.spec_size(),"
   },
@@ -1323,7 +1323,7 @@
     "id": 166,
     "function": "find_node",
     "file": "Chap37/BSTBBAlphaMtEph.rs",
-    "lines": "213-218",
+    "lines": "192-197",
     "spec_strength": "unknown",
     "snippet": "    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)\n        requires tree_is_bst::<T>(*node),\n        ensures\n            found.is_some() == tree_contains(*node, *target),\n            found.is_some() ==> *found.unwrap() == *target,\n        decreases node.spec_size(),"
   },
@@ -1331,7 +1331,7 @@
     "id": 167,
     "function": "min_node",
     "file": "Chap37/BSTBBAlphaMtEph.rs",
-    "lines": "240-241",
+    "lines": "219-220",
     "spec_strength": "",
     "snippet": "    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)\n        decreases node.spec_size(),"
   },
@@ -1339,7 +1339,7 @@
     "id": 168,
     "function": "max_node",
     "file": "Chap37/BSTBBAlphaMtEph.rs",
-    "lines": "252-253",
+    "lines": "231-232",
     "spec_strength": "",
     "snippet": "    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)\n        decreases node.spec_size(),"
   },
@@ -1483,55 +1483,55 @@
     "id": 186,
     "function": "new",
     "file": "Chap37/BSTPlainMtEph.rs",
-    "lines": "68",
-    "spec_strength": "",
-    "snippet": "        fn new() -> Self;"
+    "lines": "49-50",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (tree: Self)\n            ensures true;"
   },
   {
     "id": 187,
     "function": "insert",
     "file": "Chap37/BSTPlainMtEph.rs",
-    "lines": "69",
-    "spec_strength": "",
-    "snippet": "        fn insert(&self, value: T);"
+    "lines": "51-52",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&self, value: T)\n            ensures true;"
   },
   {
     "id": 188,
     "function": "contains",
     "file": "Chap37/BSTPlainMtEph.rs",
-    "lines": "70",
-    "spec_strength": "",
-    "snippet": "        fn contains(&self, target: &T) -> (found: bool);"
+    "lines": "53-54",
+    "spec_strength": "unknown",
+    "snippet": "        fn contains(&self, target: &T) -> (found: bool)\n            ensures true;"
   },
   {
     "id": 189,
     "function": "size",
     "file": "Chap37/BSTPlainMtEph.rs",
-    "lines": "71",
-    "spec_strength": "",
-    "snippet": "        fn size(&self) -> (n: usize);"
+    "lines": "55-56",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (n: usize)\n            ensures true;"
   },
   {
     "id": 190,
     "function": "is_empty",
     "file": "Chap37/BSTPlainMtEph.rs",
-    "lines": "72",
-    "spec_strength": "",
-    "snippet": "        fn is_empty(&self) -> (b: bool);"
+    "lines": "57-58",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (b: bool)\n            ensures true;"
   },
   {
     "id": 191,
     "function": "height",
     "file": "Chap37/BSTPlainMtEph.rs",
-    "lines": "73",
-    "spec_strength": "",
-    "snippet": "        fn height(&self) -> (h: usize);"
+    "lines": "59-60",
+    "spec_strength": "unknown",
+    "snippet": "        fn height(&self) -> (h: usize)\n            ensures true;"
   },
   {
     "id": 192,
     "function": "insert_node",
     "file": "Chap37/BSTPlainMtEph.rs",
-    "lines": "91-100",
+    "lines": "75-84",
     "spec_strength": "unknown",
     "snippet": "    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)\n        requires tree_is_bst::<T>(node),\n        ensures\n            tree_is_bst::<T>(inserted),\n            tree_contains(inserted, value),\n            forall|x: T| #![auto] tree_contains(inserted, x) <==>\n                (tree_contains(node, x) || x == value),\n            inserted.spec_size() <= node.spec_size() + 1,\n            inserted.spec_height() <= node.spec_height() + 1,\n        decreases node.spec_size(),"
   },
@@ -1539,7 +1539,7 @@
     "id": 193,
     "function": "contains_node",
     "file": "Chap37/BSTPlainMtEph.rs",
-    "lines": "183-186",
+    "lines": "167-170",
     "spec_strength": "unknown",
     "snippet": "    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)\n        requires tree_is_bst::<T>(*node),\n        ensures found == tree_contains(*node, *target),\n        decreases node.spec_size(),"
   },
@@ -1547,7 +1547,7 @@
     "id": 194,
     "function": "find_node",
     "file": "Chap37/BSTPlainMtEph.rs",
-    "lines": "208-213",
+    "lines": "192-197",
     "spec_strength": "unknown",
     "snippet": "    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)\n        requires tree_is_bst::<T>(*node),\n        ensures\n            found.is_some() == tree_contains(*node, *target),\n            found.is_some() ==> *found.unwrap() == *target,\n        decreases node.spec_size(),"
   },
@@ -1555,7 +1555,7 @@
     "id": 195,
     "function": "min_node",
     "file": "Chap37/BSTPlainMtEph.rs",
-    "lines": "235-236",
+    "lines": "219-220",
     "spec_strength": "",
     "snippet": "    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)\n        decreases node.spec_size(),"
   },
@@ -1563,7 +1563,7 @@
     "id": 196,
     "function": "max_node",
     "file": "Chap37/BSTPlainMtEph.rs",
-    "lines": "247-248",
+    "lines": "231-232",
     "spec_strength": "",
     "snippet": "    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)\n        decreases node.spec_size(),"
   },
@@ -1707,119 +1707,119 @@
     "id": 214,
     "function": "new",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "73",
-    "spec_strength": "",
-    "snippet": "        fn new() -> Self;"
+    "lines": "69-70",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (tree: Self)\n            ensures true;"
   },
   {
     "id": 215,
     "function": "from_sorted_slice",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "74",
-    "spec_strength": "",
-    "snippet": "        fn from_sorted_slice(values: &[T]) -> Self;"
+    "lines": "71-72",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_sorted_slice(values: &[T]) -> (tree: Self)\n            ensures true;"
   },
   {
     "id": 216,
     "function": "insert",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "75",
-    "spec_strength": "",
-    "snippet": "        fn insert(&self, value: T);"
+    "lines": "73-74",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&self, value: T)\n            ensures true;"
   },
   {
     "id": 217,
     "function": "find",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "76",
-    "spec_strength": "",
-    "snippet": "        fn find(&self, target: &T) -> Option<T>;"
+    "lines": "75-76",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, target: &T) -> (found: Option<T>)\n            ensures true;"
   },
   {
     "id": 218,
     "function": "contains",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "77",
-    "spec_strength": "",
-    "snippet": "        fn contains(&self, target: &T) -> B;"
+    "lines": "77-78",
+    "spec_strength": "unknown",
+    "snippet": "        fn contains(&self, target: &T) -> (found: B)\n            ensures true;"
   },
   {
     "id": 219,
     "function": "size",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "78",
-    "spec_strength": "",
-    "snippet": "        fn size(&self) -> N;"
+    "lines": "79-80",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (n: N)\n            ensures true;"
   },
   {
     "id": 220,
     "function": "is_empty",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "79",
-    "spec_strength": "",
-    "snippet": "        fn is_empty(&self) -> B;"
+    "lines": "81-82",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (b: B)\n            ensures true;"
   },
   {
     "id": 221,
     "function": "height",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "80",
-    "spec_strength": "",
-    "snippet": "        fn height(&self) -> N;"
+    "lines": "83-84",
+    "spec_strength": "unknown",
+    "snippet": "        fn height(&self) -> (h: N)\n            ensures true;"
   },
   {
     "id": 222,
     "function": "minimum",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "81",
-    "spec_strength": "",
-    "snippet": "        fn minimum(&self) -> Option<T>;"
+    "lines": "85-86",
+    "spec_strength": "unknown",
+    "snippet": "        fn minimum(&self) -> (min: Option<T>)\n            ensures true;"
   },
   {
     "id": 223,
     "function": "maximum",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "82",
-    "spec_strength": "",
-    "snippet": "        fn maximum(&self) -> Option<T>;"
+    "lines": "87-88",
+    "spec_strength": "unknown",
+    "snippet": "        fn maximum(&self) -> (max: Option<T>)\n            ensures true;"
   },
   {
     "id": 224,
     "function": "in_order",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "83",
-    "spec_strength": "",
-    "snippet": "        fn in_order(&self) -> ArraySeqStPerS<T>;"
+    "lines": "89-90",
+    "spec_strength": "unknown",
+    "snippet": "        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures true;"
   },
   {
     "id": 225,
     "function": "pre_order",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "84",
-    "spec_strength": "",
-    "snippet": "        fn pre_order(&self) -> ArraySeqStPerS<T>;"
+    "lines": "91-92",
+    "spec_strength": "unknown",
+    "snippet": "        fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures true;"
   },
   {
     "id": 226,
     "function": "filter",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "85-87",
-    "spec_strength": "",
-    "snippet": "        fn filter<F>(&self, predicate: F) -> ArraySeqStPerS<T>\n        where\n            F: Fn(&T) -> bool + Send + Sync;"
+    "lines": "93-96",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter<F>(&self, predicate: F) -> (seq: ArraySeqStPerS<T>)\n        where\n            F: Fn(&T) -> bool + Send + Sync\n            ensures true;"
   },
   {
     "id": 227,
     "function": "reduce",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "88-90",
-    "spec_strength": "",
-    "snippet": "        fn reduce<F>(&self, op: F, identity: T) -> T\n        where\n            F: Fn(T, T) -> T + Send + Sync;"
+    "lines": "97-100",
+    "spec_strength": "unknown",
+    "snippet": "        fn reduce<F>(&self, op: F, identity: T) -> (result: T)\n        where\n            F: Fn(T, T) -> T + Send + Sync\n            ensures true;"
   },
   {
     "id": 228,
     "function": "new_rb_link_lock",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "103",
+    "lines": "113",
     "spec_strength": "hole",
     "snippet": "    fn new_rb_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, BSTRBMtEphInv>) {"
   },
@@ -1827,7 +1827,7 @@
     "id": 229,
     "function": "new_node",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "109",
+    "lines": "117",
     "spec_strength": "",
     "snippet": "    fn new_node<T: StTInMtT + Ord>(key: T) -> Node<T> {"
   },
@@ -1835,7 +1835,7 @@
     "id": 230,
     "function": "is_red",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "119",
+    "lines": "127",
     "spec_strength": "",
     "snippet": "    fn is_red<T: StTInMtT + Ord>(link: &Link<T>) -> bool {"
   },
@@ -1843,7 +1843,7 @@
     "id": 231,
     "function": "size_link",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "126",
+    "lines": "134",
     "spec_strength": "",
     "snippet": "    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> N {"
   },
@@ -1851,15 +1851,15 @@
     "id": 232,
     "function": "update",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "133",
-    "spec_strength": "hole",
+    "lines": "141",
+    "spec_strength": "",
     "snippet": "    fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {"
   },
   {
     "id": 233,
     "function": "rotate_left",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "140",
+    "lines": "149",
     "spec_strength": "",
     "snippet": "    fn rotate_left<T: StTInMtT + Ord>(link: &mut Link<T>) {"
   },
@@ -1867,7 +1867,7 @@
     "id": 234,
     "function": "rotate_right",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "159",
+    "lines": "168",
     "spec_strength": "",
     "snippet": "    fn rotate_right<T: StTInMtT + Ord>(link: &mut Link<T>) {"
   },
@@ -1875,7 +1875,7 @@
     "id": 235,
     "function": "flip_colors",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "178",
+    "lines": "187",
     "spec_strength": "",
     "snippet": "    fn flip_colors<T: StTInMtT + Ord>(link: &mut Link<T>) {"
   },
@@ -1883,7 +1883,7 @@
     "id": 236,
     "function": "fix_up",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "199",
+    "lines": "208",
     "spec_strength": "",
     "snippet": "    fn fix_up<T: StTInMtT + Ord>(link: &mut Link<T>) {"
   },
@@ -1891,7 +1891,7 @@
     "id": 237,
     "function": "insert_link",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "235-236",
+    "lines": "244-245",
     "spec_strength": "",
     "snippet": "    fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T)\n        decreases old(link),"
   },
@@ -1899,7 +1899,7 @@
     "id": 238,
     "function": "find_link",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "253-254",
+    "lines": "262-263",
     "spec_strength": "",
     "snippet": "    fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T>\n        decreases *link,"
   },
@@ -1907,7 +1907,7 @@
     "id": 239,
     "function": "min_link",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "270-271",
+    "lines": "279-280",
     "spec_strength": "",
     "snippet": "    fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T>\n        decreases *link,"
   },
@@ -1915,7 +1915,7 @@
     "id": 240,
     "function": "max_link",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "282-283",
+    "lines": "291-292",
     "spec_strength": "",
     "snippet": "    fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T>\n        decreases *link,"
   },
@@ -1923,7 +1923,7 @@
     "id": 241,
     "function": "in_order_collect",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "294-295",
+    "lines": "303-304",
     "spec_strength": "",
     "snippet": "    fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)\n        decreases *link,"
   },
@@ -1931,7 +1931,7 @@
     "id": 242,
     "function": "pre_order_collect",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "304-305",
+    "lines": "313-314",
     "spec_strength": "",
     "snippet": "    fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)\n        decreases *link,"
   },
@@ -1939,7 +1939,7 @@
     "id": 243,
     "function": "in_order_parallel",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "314-315",
+    "lines": "323-324",
     "spec_strength": "",
     "snippet": "    fn in_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> Vec<T>\n        decreases *link,"
   },
@@ -1947,7 +1947,7 @@
     "id": 244,
     "function": "pre_order_parallel",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "333-334",
+    "lines": "342-343",
     "spec_strength": "",
     "snippet": "    fn pre_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> Vec<T>\n        decreases *link,"
   },
@@ -1955,7 +1955,7 @@
     "id": 245,
     "function": "build_balanced",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "352-353",
+    "lines": "361-362",
     "spec_strength": "",
     "snippet": "    fn build_balanced<T: StTInMtT + Ord>(values: &[T]) -> Link<T>\n        decreases values.len(),"
   },
@@ -1963,7 +1963,7 @@
     "id": 246,
     "function": "filter_parallel",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "374-377",
+    "lines": "383-386",
     "spec_strength": "",
     "snippet": "    fn filter_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, predicate: &Arc<F>) -> Vec<T>\n        where\n            F: Fn(&T) -> bool + Send + Sync,\n        decreases *link,"
   },
@@ -1971,7 +1971,7 @@
     "id": 247,
     "function": "reduce_parallel",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "401-404",
+    "lines": "410-413",
     "spec_strength": "",
     "snippet": "    fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> T\n        where\n            F: Fn(T, T) -> T + Send + Sync,\n        decreases *link,"
   },
@@ -1979,7 +1979,7 @@
     "id": 248,
     "function": "height_rec",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "524-529",
+    "lines": "530-535",
     "spec_strength": "",
     "snippet": "            fn height_rec<T: StTInMtT + Ord>(link: &Link<T>) -> N {\n                match link {\n                    | None => 0,\n                    | Some(node) => 1 + height_rec(&node.left).max(height_rec(&node.right)),\n                }\n            }"
   },
@@ -1987,7 +1987,7 @@
     "id": 249,
     "function": "default",
     "file": "Chap37/BSTRBMtEph.rs",
-    "lines": "594",
+    "lines": "600",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::new() }"
   },
@@ -2115,161 +2115,161 @@
     "id": 265,
     "function": "empty",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "43",
-    "spec_strength": "",
-    "snippet": "        fn empty()                                   -> Self;"
+    "lines": "42-43",
+    "spec_strength": "unknown",
+    "snippet": "        fn empty() -> (set: Self)\n            ensures true;"
   },
   {
     "id": 266,
     "function": "singleton",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "45",
-    "spec_strength": "",
-    "snippet": "        fn singleton(value: T)                       -> Self;"
+    "lines": "44-45",
+    "spec_strength": "unknown",
+    "snippet": "        fn singleton(value: T) -> (set: Self)\n            ensures true;"
   },
   {
     "id": 267,
     "function": "size",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "47",
-    "spec_strength": "",
-    "snippet": "        fn size(&self)                               -> N;"
+    "lines": "46-47",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (n: N)\n            ensures true;"
   },
   {
     "id": 268,
     "function": "is_empty",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "49",
-    "spec_strength": "",
-    "snippet": "        fn is_empty(&self)                           -> B;"
+    "lines": "48-49",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (b: B)\n            ensures true;"
   },
   {
     "id": 269,
     "function": "find",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "51",
-    "spec_strength": "",
-    "snippet": "        fn find(&self, value: &T)                    -> Option<T>;"
+    "lines": "50-51",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, value: &T) -> (found: Option<T>)\n            ensures true;"
   },
   {
     "id": 270,
     "function": "contains",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "53",
-    "spec_strength": "",
-    "snippet": "        fn contains(&self, value: &T)                -> B;"
+    "lines": "52-53",
+    "spec_strength": "unknown",
+    "snippet": "        fn contains(&self, value: &T) -> (found: B)\n            ensures true;"
   },
   {
     "id": 271,
     "function": "minimum",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "55",
-    "spec_strength": "",
-    "snippet": "        fn minimum(&self)                            -> Option<T>;"
+    "lines": "54-55",
+    "spec_strength": "unknown",
+    "snippet": "        fn minimum(&self) -> (min: Option<T>)\n            ensures true;"
   },
   {
     "id": 272,
     "function": "maximum",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "57",
-    "spec_strength": "",
-    "snippet": "        fn maximum(&self)                            -> Option<T>;"
+    "lines": "56-57",
+    "spec_strength": "unknown",
+    "snippet": "        fn maximum(&self) -> (max: Option<T>)\n            ensures true;"
   },
   {
     "id": 273,
     "function": "insert",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "59",
-    "spec_strength": "",
-    "snippet": "        fn insert(&mut self, value: T);"
+    "lines": "58-59",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, value: T)\n            ensures true;"
   },
   {
     "id": 274,
     "function": "delete",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "61",
-    "spec_strength": "",
-    "snippet": "        fn delete(&mut self, target: &T);"
+    "lines": "60-61",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&mut self, target: &T)\n            ensures true;"
   },
   {
     "id": 275,
     "function": "union",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "63",
-    "spec_strength": "",
-    "snippet": "        fn union(&self, other: &Self)                -> Self;"
+    "lines": "62-63",
+    "spec_strength": "unknown",
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            ensures true;"
   },
   {
     "id": 276,
     "function": "intersection",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "65",
-    "spec_strength": "",
-    "snippet": "        fn intersection(&self, other: &Self)         -> Self;"
+    "lines": "64-65",
+    "spec_strength": "unknown",
+    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            ensures true;"
   },
   {
     "id": 277,
     "function": "difference",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "67",
-    "spec_strength": "",
-    "snippet": "        fn difference(&self, other: &Self)           -> Self;"
+    "lines": "66-67",
+    "spec_strength": "unknown",
+    "snippet": "        fn difference(&self, other: &Self) -> (diff: Self)\n            ensures true;"
   },
   {
     "id": 278,
     "function": "split",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "69",
-    "spec_strength": "",
-    "snippet": "        fn split(&self, pivot: &T)                   -> (Self, B, Self);"
+    "lines": "68-69",
+    "spec_strength": "unknown",
+    "snippet": "        fn split(&self, pivot: &T) -> (parts: (Self, B, Self))\n            ensures true;"
   },
   {
     "id": 279,
     "function": "join_pair",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "71",
-    "spec_strength": "",
-    "snippet": "        fn join_pair(left: Self, right: Self)        -> Self;"
+    "lines": "70-71",
+    "spec_strength": "unknown",
+    "snippet": "        fn join_pair(left: Self, right: Self) -> (joined: Self)\n            ensures true;"
   },
   {
     "id": 280,
     "function": "join_m",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "73",
-    "spec_strength": "",
-    "snippet": "        fn join_m(left: Self, pivot: T, right: Self) -> Self;"
+    "lines": "72-73",
+    "spec_strength": "unknown",
+    "snippet": "        fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)\n            ensures true;"
   },
   {
     "id": 281,
     "function": "filter",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "75",
-    "spec_strength": "",
-    "snippet": "        fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> Self;"
+    "lines": "74-75",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)\n            ensures true;"
   },
   {
     "id": 282,
     "function": "reduce",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "77",
-    "spec_strength": "",
-    "snippet": "        fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> T;"
+    "lines": "76-77",
+    "spec_strength": "unknown",
+    "snippet": "        fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> (reduced: T)\n            ensures true;"
   },
   {
     "id": 283,
     "function": "iter_in_order",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "79",
-    "spec_strength": "",
-    "snippet": "        fn iter_in_order(&self)                      -> ArraySeqStPerS<T>;"
+    "lines": "78-79",
+    "spec_strength": "unknown",
+    "snippet": "        fn iter_in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures true;"
   },
   {
     "id": 284,
     "function": "as_tree",
     "file": "Chap37/BSTSetAVLMtEph.rs",
-    "lines": "81",
-    "spec_strength": "",
-    "snippet": "        fn as_tree(&self)                            -> &BSTAVLMtEph<T>;"
+    "lines": "80-81",
+    "spec_strength": "unknown",
+    "snippet": "        fn as_tree(&self) -> (tree: &BSTAVLMtEph<T>)\n            ensures true;"
   },
   {
     "id": 285,
@@ -2299,161 +2299,161 @@
     "id": 288,
     "function": "empty",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "26",
-    "spec_strength": "",
-    "snippet": "        fn empty()                                   -> Self;"
+    "lines": "25-26",
+    "spec_strength": "unknown",
+    "snippet": "        fn empty() -> (set: Self)\n            ensures true;"
   },
   {
     "id": 289,
     "function": "singleton",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "28",
-    "spec_strength": "",
-    "snippet": "        fn singleton(value: T)                       -> Self;"
+    "lines": "27-28",
+    "spec_strength": "unknown",
+    "snippet": "        fn singleton(value: T) -> (set: Self)\n            ensures true;"
   },
   {
     "id": 290,
     "function": "size",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "30",
-    "spec_strength": "",
-    "snippet": "        fn size(&self)                               -> N;"
+    "lines": "29-30",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (n: N)\n            ensures true;"
   },
   {
     "id": 291,
     "function": "is_empty",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "32",
-    "spec_strength": "",
-    "snippet": "        fn is_empty(&self)                           -> B;"
+    "lines": "31-32",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (b: B)\n            ensures true;"
   },
   {
     "id": 292,
     "function": "find",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "34",
-    "spec_strength": "",
-    "snippet": "        fn find(&self, value: &T)                    -> Option<T>;"
+    "lines": "33-34",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, value: &T) -> (found: Option<T>)\n            ensures true;"
   },
   {
     "id": 293,
     "function": "contains",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "36",
-    "spec_strength": "",
-    "snippet": "        fn contains(&self, value: &T)                -> B;"
+    "lines": "35-36",
+    "spec_strength": "unknown",
+    "snippet": "        fn contains(&self, value: &T) -> (found: B)\n            ensures true;"
   },
   {
     "id": 294,
     "function": "minimum",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "38",
-    "spec_strength": "",
-    "snippet": "        fn minimum(&self)                            -> Option<T>;"
+    "lines": "37-38",
+    "spec_strength": "unknown",
+    "snippet": "        fn minimum(&self) -> (min: Option<T>)\n            ensures true;"
   },
   {
     "id": 295,
     "function": "maximum",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "40",
-    "spec_strength": "",
-    "snippet": "        fn maximum(&self)                            -> Option<T>;"
+    "lines": "39-40",
+    "spec_strength": "unknown",
+    "snippet": "        fn maximum(&self) -> (max: Option<T>)\n            ensures true;"
   },
   {
     "id": 296,
     "function": "insert",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "42",
-    "spec_strength": "",
-    "snippet": "        fn insert(&mut self, value: T);"
+    "lines": "41-42",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, value: T)\n            ensures true;"
   },
   {
     "id": 297,
     "function": "delete",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "44",
-    "spec_strength": "",
-    "snippet": "        fn delete(&mut self, target: &T);"
+    "lines": "43-44",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&mut self, target: &T)\n            ensures true;"
   },
   {
     "id": 298,
     "function": "union",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "46",
-    "spec_strength": "",
-    "snippet": "        fn union(&self, other: &Self)                -> Self;"
+    "lines": "45-46",
+    "spec_strength": "unknown",
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            ensures true;"
   },
   {
     "id": 299,
     "function": "intersection",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "48",
-    "spec_strength": "",
-    "snippet": "        fn intersection(&self, other: &Self)         -> Self;"
+    "lines": "47-48",
+    "spec_strength": "unknown",
+    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            ensures true;"
   },
   {
     "id": 300,
     "function": "difference",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "50",
-    "spec_strength": "",
-    "snippet": "        fn difference(&self, other: &Self)           -> Self;"
+    "lines": "49-50",
+    "spec_strength": "unknown",
+    "snippet": "        fn difference(&self, other: &Self) -> (diff: Self)\n            ensures true;"
   },
   {
     "id": 301,
     "function": "split",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "52",
-    "spec_strength": "",
-    "snippet": "        fn split(&self, pivot: &T)                   -> (Self, B, Self);"
+    "lines": "51-52",
+    "spec_strength": "unknown",
+    "snippet": "        fn split(&self, pivot: &T) -> (parts: (Self, B, Self))\n            ensures true;"
   },
   {
     "id": 302,
     "function": "join_pair",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "54",
-    "spec_strength": "",
-    "snippet": "        fn join_pair(left: Self, right: Self)        -> Self;"
+    "lines": "53-54",
+    "spec_strength": "unknown",
+    "snippet": "        fn join_pair(left: Self, right: Self) -> (joined: Self)\n            ensures true;"
   },
   {
     "id": 303,
     "function": "join_m",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "56",
-    "spec_strength": "",
-    "snippet": "        fn join_m(left: Self, pivot: T, right: Self) -> Self;"
+    "lines": "55-56",
+    "spec_strength": "unknown",
+    "snippet": "        fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)\n            ensures true;"
   },
   {
     "id": 304,
     "function": "filter",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "58",
-    "spec_strength": "",
-    "snippet": "        fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> Self;"
+    "lines": "57-58",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)\n            ensures true;"
   },
   {
     "id": 305,
     "function": "reduce",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "60",
-    "spec_strength": "",
-    "snippet": "        fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> T;"
+    "lines": "59-60",
+    "spec_strength": "unknown",
+    "snippet": "        fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> (reduced: T)\n            ensures true;"
   },
   {
     "id": 306,
     "function": "iter_in_order",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "62",
-    "spec_strength": "",
-    "snippet": "        fn iter_in_order(&self)                      -> ArraySeqStPerS<T>;"
+    "lines": "61-62",
+    "spec_strength": "unknown",
+    "snippet": "        fn iter_in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures true;"
   },
   {
     "id": 307,
     "function": "as_tree",
     "file": "Chap37/BSTSetBBAlphaMtEph.rs",
-    "lines": "64",
-    "spec_strength": "",
-    "snippet": "        fn as_tree(&self)                            -> &BSTBBAlphaMtEph<T>;"
+    "lines": "63-64",
+    "spec_strength": "unknown",
+    "snippet": "        fn as_tree(&self) -> (tree: &BSTBBAlphaMtEph<T>)\n            ensures true;"
   },
   {
     "id": 308,
@@ -2483,161 +2483,161 @@
     "id": 311,
     "function": "empty",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "26",
-    "spec_strength": "",
-    "snippet": "        fn empty()                                   -> Self;"
+    "lines": "25-26",
+    "spec_strength": "unknown",
+    "snippet": "        fn empty() -> (set: Self)\n            ensures true;"
   },
   {
     "id": 312,
     "function": "singleton",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "28",
-    "spec_strength": "",
-    "snippet": "        fn singleton(value: T)                       -> Self;"
+    "lines": "27-28",
+    "spec_strength": "unknown",
+    "snippet": "        fn singleton(value: T) -> (set: Self)\n            ensures true;"
   },
   {
     "id": 313,
     "function": "size",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "30",
-    "spec_strength": "",
-    "snippet": "        fn size(&self)                               -> N;"
+    "lines": "29-30",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (n: N)\n            ensures true;"
   },
   {
     "id": 314,
     "function": "is_empty",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "32",
-    "spec_strength": "",
-    "snippet": "        fn is_empty(&self)                           -> B;"
+    "lines": "31-32",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (b: B)\n            ensures true;"
   },
   {
     "id": 315,
     "function": "find",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "34",
-    "spec_strength": "",
-    "snippet": "        fn find(&self, value: &T)                    -> Option<T>;"
+    "lines": "33-34",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, value: &T) -> (found: Option<T>)\n            ensures true;"
   },
   {
     "id": 316,
     "function": "contains",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "36",
-    "spec_strength": "",
-    "snippet": "        fn contains(&self, value: &T)                -> B;"
+    "lines": "35-36",
+    "spec_strength": "unknown",
+    "snippet": "        fn contains(&self, value: &T) -> (found: B)\n            ensures true;"
   },
   {
     "id": 317,
     "function": "minimum",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "38",
-    "spec_strength": "",
-    "snippet": "        fn minimum(&self)                            -> Option<T>;"
+    "lines": "37-38",
+    "spec_strength": "unknown",
+    "snippet": "        fn minimum(&self) -> (min: Option<T>)\n            ensures true;"
   },
   {
     "id": 318,
     "function": "maximum",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "40",
-    "spec_strength": "",
-    "snippet": "        fn maximum(&self)                            -> Option<T>;"
+    "lines": "39-40",
+    "spec_strength": "unknown",
+    "snippet": "        fn maximum(&self) -> (max: Option<T>)\n            ensures true;"
   },
   {
     "id": 319,
     "function": "insert",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "42",
-    "spec_strength": "",
-    "snippet": "        fn insert(&mut self, value: T);"
+    "lines": "41-42",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, value: T)\n            ensures true;"
   },
   {
     "id": 320,
     "function": "delete",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "44",
-    "spec_strength": "",
-    "snippet": "        fn delete(&mut self, target: &T);"
+    "lines": "43-44",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&mut self, target: &T)\n            ensures true;"
   },
   {
     "id": 321,
     "function": "union",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "46",
-    "spec_strength": "",
-    "snippet": "        fn union(&self, other: &Self)                -> Self;"
+    "lines": "45-46",
+    "spec_strength": "unknown",
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            ensures true;"
   },
   {
     "id": 322,
     "function": "intersection",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "48",
-    "spec_strength": "",
-    "snippet": "        fn intersection(&self, other: &Self)         -> Self;"
+    "lines": "47-48",
+    "spec_strength": "unknown",
+    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            ensures true;"
   },
   {
     "id": 323,
     "function": "difference",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "50",
-    "spec_strength": "",
-    "snippet": "        fn difference(&self, other: &Self)           -> Self;"
+    "lines": "49-50",
+    "spec_strength": "unknown",
+    "snippet": "        fn difference(&self, other: &Self) -> (diff: Self)\n            ensures true;"
   },
   {
     "id": 324,
     "function": "split",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "52",
-    "spec_strength": "",
-    "snippet": "        fn split(&self, pivot: &T)                   -> (Self, B, Self);"
+    "lines": "51-52",
+    "spec_strength": "unknown",
+    "snippet": "        fn split(&self, pivot: &T) -> (parts: (Self, B, Self))\n            ensures true;"
   },
   {
     "id": 325,
     "function": "join_pair",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "54",
-    "spec_strength": "",
-    "snippet": "        fn join_pair(left: Self, right: Self)        -> Self;"
+    "lines": "53-54",
+    "spec_strength": "unknown",
+    "snippet": "        fn join_pair(left: Self, right: Self) -> (joined: Self)\n            ensures true;"
   },
   {
     "id": 326,
     "function": "join_m",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "56",
-    "spec_strength": "",
-    "snippet": "        fn join_m(left: Self, pivot: T, right: Self) -> Self;"
+    "lines": "55-56",
+    "spec_strength": "unknown",
+    "snippet": "        fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)\n            ensures true;"
   },
   {
     "id": 327,
     "function": "filter",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "58",
-    "spec_strength": "",
-    "snippet": "        fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> Self;"
+    "lines": "57-58",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)\n            ensures true;"
   },
   {
     "id": 328,
     "function": "reduce",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "60",
-    "spec_strength": "",
-    "snippet": "        fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> T;"
+    "lines": "59-60",
+    "spec_strength": "unknown",
+    "snippet": "        fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> (reduced: T)\n            ensures true;"
   },
   {
     "id": 329,
     "function": "iter_in_order",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "62",
-    "spec_strength": "",
-    "snippet": "        fn iter_in_order(&self)                      -> ArraySeqStPerS<T>;"
+    "lines": "61-62",
+    "spec_strength": "unknown",
+    "snippet": "        fn iter_in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures true;"
   },
   {
     "id": 330,
     "function": "as_tree",
     "file": "Chap37/BSTSetPlainMtEph.rs",
-    "lines": "64",
-    "spec_strength": "",
-    "snippet": "        fn as_tree(&self)                            -> &BSTPlainMtEph<T>;"
+    "lines": "63-64",
+    "spec_strength": "unknown",
+    "snippet": "        fn as_tree(&self) -> (tree: &BSTPlainMtEph<T>)\n            ensures true;"
   },
   {
     "id": 331,
@@ -2667,161 +2667,161 @@
     "id": 334,
     "function": "empty",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "26",
-    "spec_strength": "",
-    "snippet": "        fn empty()                                   -> Self;"
+    "lines": "25-26",
+    "spec_strength": "unknown",
+    "snippet": "        fn empty() -> (set: Self)\n            ensures true;"
   },
   {
     "id": 335,
     "function": "singleton",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "28",
-    "spec_strength": "",
-    "snippet": "        fn singleton(value: T)                       -> Self;"
+    "lines": "27-28",
+    "spec_strength": "unknown",
+    "snippet": "        fn singleton(value: T) -> (set: Self)\n            ensures true;"
   },
   {
     "id": 336,
     "function": "size",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "30",
-    "spec_strength": "",
-    "snippet": "        fn size(&self)                               -> N;"
+    "lines": "29-30",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (n: N)\n            ensures true;"
   },
   {
     "id": 337,
     "function": "is_empty",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "32",
-    "spec_strength": "",
-    "snippet": "        fn is_empty(&self)                           -> B;"
+    "lines": "31-32",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (b: B)\n            ensures true;"
   },
   {
     "id": 338,
     "function": "find",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "34",
-    "spec_strength": "",
-    "snippet": "        fn find(&self, value: &T)                    -> Option<T>;"
+    "lines": "33-34",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, value: &T) -> (found: Option<T>)\n            ensures true;"
   },
   {
     "id": 339,
     "function": "contains",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "36",
-    "spec_strength": "",
-    "snippet": "        fn contains(&self, value: &T)                -> B;"
+    "lines": "35-36",
+    "spec_strength": "unknown",
+    "snippet": "        fn contains(&self, value: &T) -> (found: B)\n            ensures true;"
   },
   {
     "id": 340,
     "function": "minimum",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "38",
-    "spec_strength": "",
-    "snippet": "        fn minimum(&self)                            -> Option<T>;"
+    "lines": "37-38",
+    "spec_strength": "unknown",
+    "snippet": "        fn minimum(&self) -> (min: Option<T>)\n            ensures true;"
   },
   {
     "id": 341,
     "function": "maximum",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "40",
-    "spec_strength": "",
-    "snippet": "        fn maximum(&self)                            -> Option<T>;"
+    "lines": "39-40",
+    "spec_strength": "unknown",
+    "snippet": "        fn maximum(&self) -> (max: Option<T>)\n            ensures true;"
   },
   {
     "id": 342,
     "function": "insert",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "42",
-    "spec_strength": "",
-    "snippet": "        fn insert(&mut self, value: T);"
+    "lines": "41-42",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, value: T)\n            ensures true;"
   },
   {
     "id": 343,
     "function": "delete",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "44",
-    "spec_strength": "",
-    "snippet": "        fn delete(&mut self, target: &T);"
+    "lines": "43-44",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&mut self, target: &T)\n            ensures true;"
   },
   {
     "id": 344,
     "function": "union",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "46",
-    "spec_strength": "",
-    "snippet": "        fn union(&self, other: &Self)                -> Self;"
+    "lines": "45-46",
+    "spec_strength": "unknown",
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            ensures true;"
   },
   {
     "id": 345,
     "function": "intersection",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "48",
-    "spec_strength": "",
-    "snippet": "        fn intersection(&self, other: &Self)         -> Self;"
+    "lines": "47-48",
+    "spec_strength": "unknown",
+    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            ensures true;"
   },
   {
     "id": 346,
     "function": "difference",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "50",
-    "spec_strength": "",
-    "snippet": "        fn difference(&self, other: &Self)           -> Self;"
+    "lines": "49-50",
+    "spec_strength": "unknown",
+    "snippet": "        fn difference(&self, other: &Self) -> (diff: Self)\n            ensures true;"
   },
   {
     "id": 347,
     "function": "split",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "52",
-    "spec_strength": "",
-    "snippet": "        fn split(&self, pivot: &T)                   -> (Self, B, Self);"
+    "lines": "51-52",
+    "spec_strength": "unknown",
+    "snippet": "        fn split(&self, pivot: &T) -> (parts: (Self, B, Self))\n            ensures true;"
   },
   {
     "id": 348,
     "function": "join_pair",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "54",
-    "spec_strength": "",
-    "snippet": "        fn join_pair(left: Self, right: Self)        -> Self;"
+    "lines": "53-54",
+    "spec_strength": "unknown",
+    "snippet": "        fn join_pair(left: Self, right: Self) -> (joined: Self)\n            ensures true;"
   },
   {
     "id": 349,
     "function": "join_m",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "56",
-    "spec_strength": "",
-    "snippet": "        fn join_m(left: Self, pivot: T, right: Self) -> Self;"
+    "lines": "55-56",
+    "spec_strength": "unknown",
+    "snippet": "        fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)\n            ensures true;"
   },
   {
     "id": 350,
     "function": "filter",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "58",
-    "spec_strength": "",
-    "snippet": "        fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> Self;"
+    "lines": "57-58",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)\n            ensures true;"
   },
   {
     "id": 351,
     "function": "reduce",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "60",
-    "spec_strength": "",
-    "snippet": "        fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> T;"
+    "lines": "59-60",
+    "spec_strength": "unknown",
+    "snippet": "        fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> (reduced: T)\n            ensures true;"
   },
   {
     "id": 352,
     "function": "iter_in_order",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "62",
-    "spec_strength": "",
-    "snippet": "        fn iter_in_order(&self)                      -> ArraySeqStPerS<T>;"
+    "lines": "61-62",
+    "spec_strength": "unknown",
+    "snippet": "        fn iter_in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures true;"
   },
   {
     "id": 353,
     "function": "as_tree",
     "file": "Chap37/BSTSetRBMtEph.rs",
-    "lines": "64",
-    "spec_strength": "",
-    "snippet": "        fn as_tree(&self)                            -> &BSTRBMtEph<T>;"
+    "lines": "63-64",
+    "spec_strength": "unknown",
+    "snippet": "        fn as_tree(&self) -> (tree: &BSTRBMtEph<T>)\n            ensures true;"
   },
   {
     "id": 354,
@@ -2843,161 +2843,161 @@
     "id": 356,
     "function": "empty",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "26",
-    "spec_strength": "",
-    "snippet": "        fn empty()                                   -> Self;"
+    "lines": "25-26",
+    "spec_strength": "unknown",
+    "snippet": "        fn empty() -> (set: Self)\n            ensures true;"
   },
   {
     "id": 357,
     "function": "singleton",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "28",
-    "spec_strength": "",
-    "snippet": "        fn singleton(value: T)                       -> Self;"
+    "lines": "27-28",
+    "spec_strength": "unknown",
+    "snippet": "        fn singleton(value: T) -> (set: Self)\n            ensures true;"
   },
   {
     "id": 358,
     "function": "size",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "30",
-    "spec_strength": "",
-    "snippet": "        fn size(&self)                               -> N;"
+    "lines": "29-30",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (n: N)\n            ensures true;"
   },
   {
     "id": 359,
     "function": "is_empty",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "32",
-    "spec_strength": "",
-    "snippet": "        fn is_empty(&self)                           -> B;"
+    "lines": "31-32",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (b: B)\n            ensures true;"
   },
   {
     "id": 360,
     "function": "find",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "34",
-    "spec_strength": "",
-    "snippet": "        fn find(&self, value: &T)                    -> Option<T>;"
+    "lines": "33-34",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, value: &T) -> (found: Option<T>)\n            ensures true;"
   },
   {
     "id": 361,
     "function": "contains",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "36",
-    "spec_strength": "",
-    "snippet": "        fn contains(&self, value: &T)                -> B;"
+    "lines": "35-36",
+    "spec_strength": "unknown",
+    "snippet": "        fn contains(&self, value: &T) -> (found: B)\n            ensures true;"
   },
   {
     "id": 362,
     "function": "minimum",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "38",
-    "spec_strength": "",
-    "snippet": "        fn minimum(&self)                            -> Option<T>;"
+    "lines": "37-38",
+    "spec_strength": "unknown",
+    "snippet": "        fn minimum(&self) -> (min: Option<T>)\n            ensures true;"
   },
   {
     "id": 363,
     "function": "maximum",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "40",
-    "spec_strength": "",
-    "snippet": "        fn maximum(&self)                            -> Option<T>;"
+    "lines": "39-40",
+    "spec_strength": "unknown",
+    "snippet": "        fn maximum(&self) -> (max: Option<T>)\n            ensures true;"
   },
   {
     "id": 364,
     "function": "insert",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "42",
-    "spec_strength": "",
-    "snippet": "        fn insert(&mut self, value: T);"
+    "lines": "41-42",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, value: T)\n            ensures true;"
   },
   {
     "id": 365,
     "function": "delete",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "44",
-    "spec_strength": "",
-    "snippet": "        fn delete(&mut self, target: &T);"
+    "lines": "43-44",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&mut self, target: &T)\n            ensures true;"
   },
   {
     "id": 366,
     "function": "union",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "46",
-    "spec_strength": "",
-    "snippet": "        fn union(&self, other: &Self)                -> Self;"
+    "lines": "45-46",
+    "spec_strength": "unknown",
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            ensures true;"
   },
   {
     "id": 367,
     "function": "intersection",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "48",
-    "spec_strength": "",
-    "snippet": "        fn intersection(&self, other: &Self)         -> Self;"
+    "lines": "47-48",
+    "spec_strength": "unknown",
+    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            ensures true;"
   },
   {
     "id": 368,
     "function": "difference",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "50",
-    "spec_strength": "",
-    "snippet": "        fn difference(&self, other: &Self)           -> Self;"
+    "lines": "49-50",
+    "spec_strength": "unknown",
+    "snippet": "        fn difference(&self, other: &Self) -> (diff: Self)\n            ensures true;"
   },
   {
     "id": 369,
     "function": "split",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "52",
-    "spec_strength": "",
-    "snippet": "        fn split(&self, pivot: &T)                   -> (Self, B, Self);"
+    "lines": "51-52",
+    "spec_strength": "unknown",
+    "snippet": "        fn split(&self, pivot: &T) -> (parts: (Self, B, Self))\n            ensures true;"
   },
   {
     "id": 370,
     "function": "join_pair",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "54",
-    "spec_strength": "",
-    "snippet": "        fn join_pair(left: Self, right: Self)        -> Self;"
+    "lines": "53-54",
+    "spec_strength": "unknown",
+    "snippet": "        fn join_pair(left: Self, right: Self) -> (joined: Self)\n            ensures true;"
   },
   {
     "id": 371,
     "function": "join_m",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "56",
-    "spec_strength": "",
-    "snippet": "        fn join_m(left: Self, pivot: T, right: Self) -> Self;"
+    "lines": "55-56",
+    "spec_strength": "unknown",
+    "snippet": "        fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)\n            ensures true;"
   },
   {
     "id": 372,
     "function": "filter",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "58",
-    "spec_strength": "",
-    "snippet": "        fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> Self;"
+    "lines": "57-58",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)\n            ensures true;"
   },
   {
     "id": 373,
     "function": "reduce",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "60",
-    "spec_strength": "",
-    "snippet": "        fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> T;"
+    "lines": "59-60",
+    "spec_strength": "unknown",
+    "snippet": "        fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> (reduced: T)\n            ensures true;"
   },
   {
     "id": 374,
     "function": "iter_in_order",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "62",
-    "spec_strength": "",
-    "snippet": "        fn iter_in_order(&self)                      -> ArraySeqStPerS<T>;"
+    "lines": "61-62",
+    "spec_strength": "unknown",
+    "snippet": "        fn iter_in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures true;"
   },
   {
     "id": 375,
     "function": "as_tree",
     "file": "Chap37/BSTSetSplayMtEph.rs",
-    "lines": "64",
-    "spec_strength": "",
-    "snippet": "        fn as_tree(&self)                            -> &BSTSplayMtEph<T>;"
+    "lines": "63-64",
+    "spec_strength": "unknown",
+    "snippet": "        fn as_tree(&self) -> (tree: &BSTSplayMtEph<T>)\n            ensures true;"
   },
   {
     "id": 376,
@@ -3019,119 +3019,119 @@
     "id": 378,
     "function": "new",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "66",
-    "spec_strength": "",
-    "snippet": "        fn new() -> Self;"
+    "lines": "62-63",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (tree: Self)\n            ensures true;"
   },
   {
     "id": 379,
     "function": "from_sorted_slice",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "67",
-    "spec_strength": "",
-    "snippet": "        fn from_sorted_slice(values: &[T]) -> Self;"
+    "lines": "64-65",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_sorted_slice(values: &[T]) -> (tree: Self)\n            ensures true;"
   },
   {
     "id": 380,
     "function": "insert",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "68",
-    "spec_strength": "",
-    "snippet": "        fn insert(&self, value: T);"
+    "lines": "66-67",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&self, value: T)\n            ensures true;"
   },
   {
     "id": 381,
     "function": "find",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "69",
-    "spec_strength": "",
-    "snippet": "        fn find(&self, target: &T) -> Option<T>;"
+    "lines": "68-69",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, target: &T) -> (found: Option<T>)\n            ensures true;"
   },
   {
     "id": 382,
     "function": "contains",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "70",
-    "spec_strength": "",
-    "snippet": "        fn contains(&self, target: &T) -> B;"
+    "lines": "70-71",
+    "spec_strength": "unknown",
+    "snippet": "        fn contains(&self, target: &T) -> (found: B)\n            ensures true;"
   },
   {
     "id": 383,
     "function": "size",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "71",
-    "spec_strength": "",
-    "snippet": "        fn size(&self) -> N;"
+    "lines": "72-73",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (n: N)\n            ensures true;"
   },
   {
     "id": 384,
     "function": "is_empty",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "72",
-    "spec_strength": "",
-    "snippet": "        fn is_empty(&self) -> B;"
+    "lines": "74-75",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (b: B)\n            ensures true;"
   },
   {
     "id": 385,
     "function": "height",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "73",
-    "spec_strength": "",
-    "snippet": "        fn height(&self) -> N;"
+    "lines": "76-77",
+    "spec_strength": "unknown",
+    "snippet": "        fn height(&self) -> (h: N)\n            ensures true;"
   },
   {
     "id": 386,
     "function": "minimum",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "74",
-    "spec_strength": "",
-    "snippet": "        fn minimum(&self) -> Option<T>;"
+    "lines": "78-79",
+    "spec_strength": "unknown",
+    "snippet": "        fn minimum(&self) -> (min: Option<T>)\n            ensures true;"
   },
   {
     "id": 387,
     "function": "maximum",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "75",
-    "spec_strength": "",
-    "snippet": "        fn maximum(&self) -> Option<T>;"
+    "lines": "80-81",
+    "spec_strength": "unknown",
+    "snippet": "        fn maximum(&self) -> (max: Option<T>)\n            ensures true;"
   },
   {
     "id": 388,
     "function": "in_order",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "76",
-    "spec_strength": "",
-    "snippet": "        fn in_order(&self) -> ArraySeqStPerS<T>;"
+    "lines": "82-83",
+    "spec_strength": "unknown",
+    "snippet": "        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures true;"
   },
   {
     "id": 389,
     "function": "pre_order",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "77",
-    "spec_strength": "",
-    "snippet": "        fn pre_order(&self) -> ArraySeqStPerS<T>;"
+    "lines": "84-85",
+    "spec_strength": "unknown",
+    "snippet": "        fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures true;"
   },
   {
     "id": 390,
     "function": "filter",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "78-80",
-    "spec_strength": "",
-    "snippet": "        fn filter<F>(&self, predicate: F) -> ArraySeqStPerS<T>\n        where\n            F: Fn(&T) -> bool + Send + Sync;"
+    "lines": "86-89",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter<F>(&self, predicate: F) -> (seq: ArraySeqStPerS<T>)\n        where\n            F: Fn(&T) -> bool + Send + Sync\n            ensures true;"
   },
   {
     "id": 391,
     "function": "reduce",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "81-83",
-    "spec_strength": "",
-    "snippet": "        fn reduce<F>(&self, op: F, identity: T) -> T\n        where\n            F: Fn(T, T) -> T + Send + Sync;"
+    "lines": "90-93",
+    "spec_strength": "unknown",
+    "snippet": "        fn reduce<F>(&self, op: F, identity: T) -> (result: T)\n        where\n            F: Fn(T, T) -> T + Send + Sync\n            ensures true;"
   },
   {
     "id": 392,
     "function": "new_splay_link_lock",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "96",
+    "lines": "106",
     "spec_strength": "hole",
     "snippet": "    fn new_splay_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, BSTSplayMtEphInv>) {"
   },
@@ -3139,7 +3139,7 @@
     "id": 393,
     "function": "new_node",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "102",
+    "lines": "110",
     "spec_strength": "",
     "snippet": "    fn new_node<T: StTInMtT + Ord>(key: T) -> Node<T> {"
   },
@@ -3147,7 +3147,7 @@
     "id": 394,
     "function": "size_link",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "111",
+    "lines": "119",
     "spec_strength": "",
     "snippet": "    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> N {"
   },
@@ -3155,15 +3155,15 @@
     "id": 395,
     "function": "update",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "118",
-    "spec_strength": "hole",
+    "lines": "126",
+    "spec_strength": "",
     "snippet": "    fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {"
   },
   {
     "id": 396,
     "function": "splay",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "127-128",
+    "lines": "136-137",
     "spec_strength": "",
     "snippet": "    fn splay<T: StTInMtT + Ord>(root: Box<Node<T>>, target: &T) -> Box<Node<T>>\n        decreases root,"
   },
@@ -3171,7 +3171,7 @@
     "id": 397,
     "function": "bst_insert",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "242-243",
+    "lines": "251-252",
     "spec_strength": "",
     "snippet": "    fn bst_insert<T: StTInMtT + Ord>(link: &mut Link<T>, value: T) -> (inserted: bool)\n        decreases old(link),"
   },
@@ -3179,7 +3179,7 @@
     "id": 398,
     "function": "insert_link",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "264",
+    "lines": "273",
     "spec_strength": "",
     "snippet": "    fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T) -> (inserted: bool) {"
   },
@@ -3187,7 +3187,7 @@
     "id": 399,
     "function": "find_link",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "275-276",
+    "lines": "284-285",
     "spec_strength": "",
     "snippet": "    fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T>\n        decreases *link,"
   },
@@ -3195,7 +3195,7 @@
     "id": 400,
     "function": "min_link",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "292-293",
+    "lines": "301-302",
     "spec_strength": "",
     "snippet": "    fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T>\n        decreases *link,"
   },
@@ -3203,7 +3203,7 @@
     "id": 401,
     "function": "max_link",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "304-305",
+    "lines": "313-314",
     "spec_strength": "",
     "snippet": "    fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T>\n        decreases *link,"
   },
@@ -3211,7 +3211,7 @@
     "id": 402,
     "function": "in_order_collect",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "316-317",
+    "lines": "325-326",
     "spec_strength": "",
     "snippet": "    fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)\n        decreases *link,"
   },
@@ -3219,7 +3219,7 @@
     "id": 403,
     "function": "pre_order_collect",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "326-327",
+    "lines": "335-336",
     "spec_strength": "",
     "snippet": "    fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)\n        decreases *link,"
   },
@@ -3227,7 +3227,7 @@
     "id": 404,
     "function": "in_order_parallel",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "336-337",
+    "lines": "345-346",
     "spec_strength": "",
     "snippet": "    fn in_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> Vec<T>\n        decreases *link,"
   },
@@ -3235,7 +3235,7 @@
     "id": 405,
     "function": "pre_order_parallel",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "355-356",
+    "lines": "364-365",
     "spec_strength": "",
     "snippet": "    fn pre_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> Vec<T>\n        decreases *link,"
   },
@@ -3243,7 +3243,7 @@
     "id": 406,
     "function": "build_balanced",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "374-375",
+    "lines": "383-384",
     "spec_strength": "",
     "snippet": "    fn build_balanced<T: StTInMtT + Ord>(values: &[T]) -> Link<T>\n        decreases values.len(),"
   },
@@ -3251,7 +3251,7 @@
     "id": 407,
     "function": "filter_parallel",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "395-398",
+    "lines": "404-407",
     "spec_strength": "",
     "snippet": "    fn filter_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, predicate: &Arc<F>) -> Vec<T>\n        where\n            F: Fn(&T) -> bool + Send + Sync,\n        decreases *link,"
   },
@@ -3259,7 +3259,7 @@
     "id": 408,
     "function": "reduce_parallel",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "422-425",
+    "lines": "431-434",
     "spec_strength": "",
     "snippet": "    fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> T\n        where\n            F: Fn(T, T) -> T + Send + Sync,\n        decreases *link,"
   },
@@ -3267,7 +3267,7 @@
     "id": 409,
     "function": "height_rec",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "526-531",
+    "lines": "532-537",
     "spec_strength": "",
     "snippet": "            fn height_rec<T: StTInMtT + Ord>(link: &Link<T>) -> N {\n                match link {\n                    | None => 0,\n                    | Some(node) => 1 + height_rec(&node.left).max(height_rec(&node.right)),\n                }\n            }"
   },
@@ -3275,7 +3275,7 @@
     "id": 410,
     "function": "default",
     "file": "Chap37/BSTSplayMtEph.rs",
-    "lines": "596",
+    "lines": "602",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::new() }"
   },
@@ -3315,15 +3315,15 @@
     "id": 415,
     "function": "insert",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "108",
-    "spec_strength": "",
-    "snippet": "        fn insert(&mut self, value: T);"
+    "lines": "108-109",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, value: T)\n            ensures true;"
   },
   {
     "id": 416,
     "function": "find",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "109-110",
+    "lines": "110-111",
     "spec_strength": "unknown",
     "snippet": "        fn find(&self, target: &T) -> (found: Option<&T>)\n            ensures found.is_some() ==> *found.unwrap() == *target;"
   },
@@ -3331,15 +3331,15 @@
     "id": 417,
     "function": "contains",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "111",
-    "spec_strength": "",
-    "snippet": "        fn contains(&self, target: &T) -> (found: B);"
+    "lines": "112-113",
+    "spec_strength": "unknown",
+    "snippet": "        fn contains(&self, target: &T) -> (found: B)\n            ensures true;"
   },
   {
     "id": 418,
     "function": "minimum",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "112-115",
+    "lines": "114-117",
     "spec_strength": "unknown",
     "snippet": "        fn minimum(&self) -> (min: Option<&T>)\n            ensures\n                self.spec_size() > 0 ==> min.is_some(),\n                min.is_some() ==> self.spec_contains(*min.unwrap());"
   },
@@ -3347,7 +3347,7 @@
     "id": 419,
     "function": "maximum",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "116-119",
+    "lines": "118-121",
     "spec_strength": "unknown",
     "snippet": "        fn maximum(&self) -> (max: Option<&T>)\n            ensures\n                self.spec_size() > 0 ==> max.is_some(),\n                max.is_some() ==> self.spec_contains(*max.unwrap());"
   },
@@ -3355,23 +3355,23 @@
     "id": 420,
     "function": "in_order",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "120",
-    "spec_strength": "",
-    "snippet": "        fn in_order(&self) -> ArraySeqStPerS<T>;"
+    "lines": "122-123",
+    "spec_strength": "unknown",
+    "snippet": "        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures true;"
   },
   {
     "id": 421,
     "function": "pre_order",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "121",
-    "spec_strength": "",
-    "snippet": "        fn pre_order(&self) -> ArraySeqStPerS<T>;"
+    "lines": "124-125",
+    "spec_strength": "unknown",
+    "snippet": "        fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures true;"
   },
   {
     "id": 422,
     "function": "new_node",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "127-132",
+    "lines": "131-136",
     "spec_strength": "unknown",
     "snippet": "    fn new_node<T: TotalOrder + Clone>(key: T) -> (node: Node<T>)\n        ensures\n            node.key == key,\n            node.size == 1,\n            node.left is None,\n            node.right is None,"
   },
@@ -3379,7 +3379,7 @@
     "id": 423,
     "function": "size_link",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "142-143",
+    "lines": "146-147",
     "spec_strength": "unknown",
     "snippet": "    fn size_link<T: TotalOrder + Clone>(link: &Link<T>) -> (size: N)\n        ensures size as nat == spec_size_link(link),"
   },
@@ -3387,7 +3387,7 @@
     "id": 424,
     "function": "height_link",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "152-155",
+    "lines": "156-159",
     "spec_strength": "unknown",
     "snippet": "    fn height_link<T: TotalOrder + Clone>(link: &Link<T>) -> (height: N)\n        requires spec_height_link(link) < usize::MAX as nat,\n        ensures height as nat == spec_height_link(link),\n        decreases *link,"
   },
@@ -3395,15 +3395,15 @@
     "id": 425,
     "function": "update",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "169-174",
-    "spec_strength": "hole",
-    "snippet": "    fn update<T: TotalOrder + Clone>(node: &mut Node<T>)\n        ensures\n            node.size as nat == 1 + spec_size_link(&old(node).left) + spec_size_link(&old(node).right),\n            node.key == old(node).key,\n            node.left == old(node).left,\n            node.right == old(node).right,"
+    "lines": "173-177",
+    "spec_strength": "unknown",
+    "snippet": "    fn update<T: TotalOrder + Clone>(node: &mut Node<T>)\n        ensures\n            node.key == old(node).key,\n            node.left == old(node).left,\n            node.right == old(node).right,"
   },
   {
     "id": 426,
     "function": "splay",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "185-186",
+    "lines": "189-190",
     "spec_strength": "",
     "snippet": "    fn splay<T: TotalOrder + Clone>(root: Box<Node<T>>, target: &T) -> Box<Node<T>>\n        decreases root,"
   },
@@ -3411,7 +3411,7 @@
     "id": 427,
     "function": "bst_insert",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "306-307",
+    "lines": "310-311",
     "spec_strength": "",
     "snippet": "    fn bst_insert<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)\n        decreases old(link),"
   },
@@ -3419,7 +3419,7 @@
     "id": 428,
     "function": "insert_link",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "328",
+    "lines": "332",
     "spec_strength": "",
     "snippet": "    fn insert_link<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool) {"
   },
@@ -3427,7 +3427,7 @@
     "id": 429,
     "function": "find_link",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "339-342",
+    "lines": "343-346",
     "spec_strength": "unknown",
     "snippet": "    fn find_link<'a, T: TotalOrder + Clone>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)\n        ensures\n            found.is_some() ==> *found.unwrap() == *target,\n        decreases *link,"
   },
@@ -3435,7 +3435,7 @@
     "id": 430,
     "function": "min_link",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "356-360",
+    "lines": "360-364",
     "spec_strength": "unknown",
     "snippet": "    fn min_link<T: TotalOrder + Clone>(link: &Link<T>) -> (min: Option<&T>)\n        ensures\n            link.is_some() ==> min.is_some(),\n            min.is_some() ==> spec_contains_link(link, *min.unwrap()),\n        decreases *link,"
   },
@@ -3443,7 +3443,7 @@
     "id": 431,
     "function": "max_link",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "371-375",
+    "lines": "375-379",
     "spec_strength": "unknown",
     "snippet": "    fn max_link<T: TotalOrder + Clone>(link: &Link<T>) -> (max: Option<&T>)\n        ensures\n            link.is_some() ==> max.is_some(),\n            max.is_some() ==> spec_contains_link(link, *max.unwrap()),\n        decreases *link,"
   },
@@ -3451,7 +3451,7 @@
     "id": 432,
     "function": "in_order_collect",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "386-387",
+    "lines": "390-391",
     "spec_strength": "",
     "snippet": "    fn in_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)\n        decreases *link,"
   },
@@ -3459,7 +3459,7 @@
     "id": 433,
     "function": "pre_order_collect",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "396-397",
+    "lines": "400-401",
     "spec_strength": "",
     "snippet": "    fn pre_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)\n        decreases *link,"
   },
@@ -3467,7 +3467,7 @@
     "id": 434,
     "function": "default",
     "file": "Chap37/BSTSplayStEph.rs",
-    "lines": "445",
+    "lines": "449",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::new() }"
   }

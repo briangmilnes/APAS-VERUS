@@ -4,22 +4,38 @@
    3 clean proof functions
 ✓ AdjMatrixGraphStEph.rs
    3 clean proof functions
-✓ AdjMatrixGraphStPer.rs
-   3 clean proof functions
+❌ AdjMatrixGraphStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       473 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       475 |         {
+       476 |             let equal = self.matrix == other.matrix && self.n == other.n;
+       478 |             equal
+       479 |         }
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
+   Proof functions: 3 total (3 clean, 0 holed)
 ✓ AdjSeqGraphMtEph.rs
    2 clean proof functions
 ✓ AdjSeqGraphMtPer.rs
    2 clean proof functions
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
-✓ AdjSeqGraphStPer.rs
-   2 clean proof functions
+❌ AdjSeqGraphStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:480: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       476 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       478 |         {
+       479 |             let equal = self.adj == other.adj;
+       481 |             equal
+       482 |         }
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
+   Proof functions: 2 total (2 clean, 0 holed)
 ✓ AdjTableGraphMtPer.rs
 ✓ AdjTableGraphStEph.rs
    1 clean proof function
 ✓ AdjTableGraphStPer.rs
 ❌ EdgeSetGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/EdgeSetGraphMtPer.rs:107: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:107: external_body - #[verifier::external_body]
        108 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
    Holes: 1 total
       1 × external_body
@@ -42,17 +58,9 @@ Proof Functions:
 
 Holes Found: 1 total
    1 × external_body
-�══════
 
-Modules:
-   13 clean (no holes)
-   1 holed (contains holes)
-   14 total
-
-Proof Functions:
-   21 clean
-   0 holed
-   21 total
-
-Holes Found: 1 total
+Errors: 2 total (2 assume in eq/clone (Verus workaround))
+d: 1 total
    1 × external_body
+
+Errors: 2 total (2 assume in eq/clone (Verus workaround))

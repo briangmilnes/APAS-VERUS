@@ -1252,7 +1252,7 @@
     "function": "size",
     "file": "Chap43/OrderedSetStPer.rs",
     "lines": "59-60",
-    "spec_strength": "unknown",
+    "spec_strength": "hole",
     "snippet": "        fn size(&self) -> (count: usize)\n            ensures count == self@.len(), self@.finite();"
   },
   {
@@ -1276,7 +1276,7 @@
     "function": "find",
     "file": "Chap43/OrderedSetStPer.rs",
     "lines": "68-69",
-    "spec_strength": "unknown",
+    "spec_strength": "hole",
     "snippet": "        fn find(&self, x: &T) -> (found: B)\n            ensures found == self@.contains(x@);"
   },
   {
@@ -1284,7 +1284,7 @@
     "function": "insert",
     "file": "Chap43/OrderedSetStPer.rs",
     "lines": "71-72",
-    "spec_strength": "unknown",
+    "spec_strength": "hole",
     "snippet": "        fn insert(&self, x: T) -> (updated: Self)\n            ensures updated@ == self@.insert(x@), updated@.finite();"
   },
   {
@@ -1292,7 +1292,7 @@
     "function": "delete",
     "file": "Chap43/OrderedSetStPer.rs",
     "lines": "74-75",
-    "spec_strength": "unknown",
+    "spec_strength": "hole",
     "snippet": "        fn delete(&self, x: &T) -> (updated: Self)\n            ensures updated@ == self@.remove(x@), updated@.finite();"
   },
   {
@@ -1300,7 +1300,7 @@
     "function": "filter",
     "file": "Chap43/OrderedSetStPer.rs",
     "lines": "77-78",
-    "spec_strength": "unknown",
+    "spec_strength": "hole",
     "snippet": "        fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)\n            ensures filtered@.finite(), filtered@.subset_of(self@);"
   },
   {
@@ -1308,7 +1308,7 @@
     "function": "intersection",
     "file": "Chap43/OrderedSetStPer.rs",
     "lines": "80-81",
-    "spec_strength": "unknown",
+    "spec_strength": "hole",
     "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            ensures common@ == self@.intersect(other@), common@.finite();"
   },
   {
@@ -1316,7 +1316,7 @@
     "function": "union",
     "file": "Chap43/OrderedSetStPer.rs",
     "lines": "83-84",
-    "spec_strength": "unknown",
+    "spec_strength": "hole",
     "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            ensures combined@ == self@.union(other@), combined@.finite();"
   },
   {
@@ -1324,7 +1324,7 @@
     "function": "difference",
     "file": "Chap43/OrderedSetStPer.rs",
     "lines": "86-87",
-    "spec_strength": "unknown",
+    "spec_strength": "hole",
     "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            ensures remaining@ == self@.difference(other@), remaining@.finite();"
   },
   {
@@ -1332,7 +1332,7 @@
     "function": "to_seq",
     "file": "Chap43/OrderedSetStPer.rs",
     "lines": "89-90",
-    "spec_strength": "unknown",
+    "spec_strength": "hole",
     "snippet": "        fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)\n            ensures self@.finite();"
   },
   {
@@ -1340,7 +1340,7 @@
     "function": "from_seq",
     "file": "Chap43/OrderedSetStPer.rs",
     "lines": "92-93",
-    "spec_strength": "unknown",
+    "spec_strength": "hole",
     "snippet": "        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)\n            ensures constructed@.finite();"
   },
   {
@@ -1427,7 +1427,7 @@
     "id": 179,
     "function": "from_sorted_elements",
     "file": "Chap43/OrderedSetStPer.rs",
-    "lines": "438-439",
+    "lines": "463-464",
     "spec_strength": "hole",
     "snippet": "    pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStPer<T>)\n        ensures constructed@.finite()"
   },
@@ -1435,7 +1435,7 @@
     "id": 180,
     "function": "iter",
     "file": "Chap43/OrderedSetStPer.rs",
-    "lines": "450-454",
+    "lines": "475-479",
     "spec_strength": "hole",
     "snippet": "        pub fn iter(&self) -> (it: OrderedSetStPerIter<'_, T>)\n            ensures\n                it@.0 == 0,\n                it@.1 == self.base_set.elements@,\n                iter_invariant(&it),"
   },
@@ -1443,7 +1443,7 @@
     "id": 181,
     "function": "default",
     "file": "Chap43/OrderedSetStPer.rs",
-    "lines": "594-595",
+    "lines": "619-620",
     "spec_strength": "unknown",
     "snippet": "        fn default() -> (d: Self)\n            ensures d@.finite(), d@.len() == 0"
   },
@@ -1451,7 +1451,7 @@
     "id": 182,
     "function": "eq",
     "file": "Chap43/OrderedSetStPer.rs",
-    "lines": "627-629",
+    "lines": "652-654",
     "spec_strength": "",
     "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.base_set == other.base_set\n        }"
   },

@@ -43,7 +43,7 @@
     "id": 6,
     "function": "select`",
     "file": "Chap53/GraphSearchStEph.rs",
-    "lines": "25",
+    "lines": "24",
     "spec_strength": "hole",
     "snippet": "        fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (AVLTreeSetStEph<V>, B);"
   },
@@ -51,7 +51,7 @@
     "id": 7,
     "function": "graph_search",
     "file": "Chap53/GraphSearchStEph.rs",
-    "lines": "31-34",
+    "lines": "30-33",
     "spec_strength": "",
     "snippet": "        fn graph_search<G, S>(graph: &G, source: V, strategy: &S)                         -> SearchResult<V>\n        where\n            G: Fn(&V) -> AVLTreeSetStEph<V>,\n            S: SelectionStrategy<V>;"
   },
@@ -59,7 +59,7 @@
     "id": 8,
     "function": "graph_search_multi",
     "file": "Chap53/GraphSearchStEph.rs",
-    "lines": "38-41",
+    "lines": "37-40",
     "spec_strength": "",
     "snippet": "        fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStEph<V>, strategy: &S) -> SearchResult<V>\n        where\n            G: Fn(&V) -> AVLTreeSetStEph<V>,\n            S: SelectionStrategy<V>;"
   },
@@ -67,7 +67,7 @@
     "id": 9,
     "function": "reachable",
     "file": "Chap53/GraphSearchStEph.rs",
-    "lines": "45-47",
+    "lines": "44-46",
     "spec_strength": "",
     "snippet": "        fn reachable<G>(graph: &G, source: V)                                             -> AVLTreeSetStEph<V>\n        where\n            G: Fn(&V) -> AVLTreeSetStEph<V>;"
   },
@@ -75,7 +75,7 @@
     "id": 10,
     "function": "graph_search_explore",
     "file": "Chap53/GraphSearchStEph.rs",
-    "lines": "79-84",
+    "lines": "78-83",
     "spec_strength": "hole",
     "snippet": "    fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(\n        graph: &G,\n        strategy: &S,\n        visited: AVLTreeSetStEph<V>,\n        frontier: AVLTreeSetStEph<V>,\n    ) -> AVLTreeSetStEph<V>"
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "function": "select`",
     "file": "Chap53/GraphSearchStPer.rs",
-    "lines": "34",
+    "lines": "33",
     "spec_strength": "hole",
     "snippet": "        fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (AVLTreeSetStPer<V>, B);"
   },
@@ -91,7 +91,7 @@
     "id": 12,
     "function": "graph_search",
     "file": "Chap53/GraphSearchStPer.rs",
-    "lines": "40-43",
+    "lines": "39-42",
     "spec_strength": "",
     "snippet": "        fn graph_search<G, S>(graph: &G, source: V, strategy: &S)                         -> SearchResult<V>\n        where\n            G: Fn(&V) -> AVLTreeSetStPer<V>,\n            S: SelectionStrategy<V>;"
   },
@@ -99,7 +99,7 @@
     "id": 13,
     "function": "graph_search_multi",
     "file": "Chap53/GraphSearchStPer.rs",
-    "lines": "47-50",
+    "lines": "46-49",
     "spec_strength": "",
     "snippet": "        fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStPer<V>, strategy: &S) -> SearchResult<V>\n        where\n            G: Fn(&V) -> AVLTreeSetStPer<V>,\n            S: SelectionStrategy<V>;"
   },
@@ -107,7 +107,7 @@
     "id": 14,
     "function": "reachable",
     "file": "Chap53/GraphSearchStPer.rs",
-    "lines": "54-56",
+    "lines": "53-55",
     "spec_strength": "",
     "snippet": "        fn reachable<G>(graph: &G, source: V)                                             -> AVLTreeSetStPer<V>\n        where\n            G: Fn(&V) -> AVLTreeSetStPer<V>;"
   },
@@ -115,7 +115,7 @@
     "id": 15,
     "function": "graph_search_explore",
     "file": "Chap53/GraphSearchStPer.rs",
-    "lines": "88-93",
+    "lines": "87-92",
     "spec_strength": "hole",
     "snippet": "    fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>>(\n        graph: &G,\n        strategy: &S,\n        visited: AVLTreeSetStPer<V>,\n        frontier: AVLTreeSetStPer<V>,\n    ) -> AVLTreeSetStPer<V>"
   },
@@ -123,7 +123,7 @@
     "id": 16,
     "function": "pq_min",
     "file": "Chap53/PQMinStEph.rs",
-    "lines": "25-28",
+    "lines": "24-27",
     "spec_strength": "",
     "snippet": "        fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF)                         -> PQMinResult<V, P>\n        where\n            G: Fn(&V) -> AVLTreeSetStEph<V>,\n            PF: Fn(&V) -> P;"
   },
@@ -131,7 +131,7 @@
     "id": 17,
     "function": "pq_min_multi",
     "file": "Chap53/PQMinStEph.rs",
-    "lines": "32-35",
+    "lines": "31-34",
     "spec_strength": "hole",
     "snippet": "        fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStEph<V>, priority_fn: &PF) -> PQMinResult<V, P>\n        where\n            G: Fn(&V) -> AVLTreeSetStEph<V>,\n            PF: Fn(&V) -> P;"
   },
@@ -139,7 +139,7 @@
     "id": 18,
     "function": "pq_find_min_priority",
     "file": "Chap53/PQMinStEph.rs",
-    "lines": "53-55",
+    "lines": "52-54",
     "spec_strength": "hole",
     "snippet": "    fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(\n        frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,\n    ) -> Option<V> {"
   },
@@ -147,7 +147,7 @@
     "id": 19,
     "function": "pq_explore",
     "file": "Chap53/PQMinStEph.rs",
-    "lines": "65-70",
+    "lines": "64-69",
     "spec_strength": "hole",
     "snippet": "    fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(\n        graph: &G,\n        priority_fn: &PF,\n        visited: AVLTreeSetStEph<V>,\n        frontier: AVLTreeSetStEph<Pair<Pair<P, V>, V>>,\n    ) -> (AVLTreeSetStEph<V>, AVLTreeSetStEph<Pair<V, P>>)"
   },
@@ -155,7 +155,7 @@
     "id": 20,
     "function": "pq_min",
     "file": "Chap53/PQMinStPer.rs",
-    "lines": "30-33",
+    "lines": "29-32",
     "spec_strength": "",
     "snippet": "        fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF)                         -> PQMinResult<V, P>\n        where\n            G: Fn(&V) -> AVLTreeSetStPer<V>,\n            PF: Fn(&V) -> P;"
   },
@@ -163,7 +163,7 @@
     "id": 21,
     "function": "pq_min_multi",
     "file": "Chap53/PQMinStPer.rs",
-    "lines": "37-40",
+    "lines": "36-39",
     "spec_strength": "hole",
     "snippet": "        fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStPer<V>, priority_fn: &PF) -> PQMinResult<V, P>\n        where\n            G: Fn(&V) -> AVLTreeSetStPer<V>,\n            PF: Fn(&V) -> P;"
   },
@@ -171,7 +171,7 @@
     "id": 22,
     "function": "pq_find_min_priority",
     "file": "Chap53/PQMinStPer.rs",
-    "lines": "58-60",
+    "lines": "57-59",
     "spec_strength": "hole",
     "snippet": "    fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(\n        frontier: &AVLTreeSetStPer<Pair<Pair<P, V>, V>>,\n    ) -> Option<V> {"
   },
@@ -179,7 +179,7 @@
     "id": 23,
     "function": "pq_explore",
     "file": "Chap53/PQMinStPer.rs",
-    "lines": "70-75",
+    "lines": "69-74",
     "spec_strength": "hole",
     "snippet": "    fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(\n        graph: &G,\n        priority_fn: &PF,\n        visited: AVLTreeSetStPer<V>,\n        frontier: AVLTreeSetStPer<Pair<Pair<P, V>, V>>,\n    ) -> (AVLTreeSetStPer<V>, AVLTreeSetStPer<Pair<V, P>>)"
   }

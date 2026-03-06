@@ -1,91 +1,91 @@
 ❌ AVLTreeSeq.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:589: assume() - assume(spec_avltreeseq_nat_max(
-       527 |     pub fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (inserted: Link<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:573: assume() - assume(spec_avltreeseq_nat_max(
+       511 |     pub fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (inserted: Link<T>)
             ...
-       587 |                 }
-       588 |                 proof {
-       590 |                         spec_avltreeseq_cached_height(&n.left),
-       591 |                         spec_avltreeseq_cached_height(&n.right),
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:1114: external_body - #[verifier::external_body]
-      1115 |         fn next(&mut self) -> (next: Option<&'a T>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:1203: external_body - #[verifier::external_body]
-      1204 |         fn clone(&self) -> (copy: Self) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:1223: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1220 |         fn eq(&self, other: &Self) -> (equal: bool)
+       571 |                 }
+       572 |                 proof {
+       574 |                         spec_avltreeseq_cached_height(&n.left),
+       575 |                         spec_avltreeseq_cached_height(&n.right),
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1098: external_body - #[verifier::external_body]
+      1099 |         fn next(&mut self) -> (next: Option<&'a T>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1187: external_body - #[verifier::external_body]
+      1188 |         fn clone(&self) -> (copy: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1207: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1204 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1221 |             ensures equal == (self@ == other@)
-      1222 |         {
-      1224 |             assume(spec_avltreeseq_wf(other.root));
-      1225 |             assume(obeys_feq_full::<T>());
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:1224: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1220 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1205 |             ensures equal == (self@ == other@)
+      1206 |         {
+      1208 |             assume(spec_avltreeseq_wf(other.root));
+      1209 |             assume(obeys_feq_full::<T>());
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1208: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1204 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1222 |         {
-      1223 |             assume(spec_avltreeseq_wf(self.root));
-      1225 |             assume(obeys_feq_full::<T>());
-      1226 |             assume(spec_avltreeseq_cached_size(&self.root) < usize::MAX);
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:1225: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1220 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1206 |         {
+      1207 |             assume(spec_avltreeseq_wf(self.root));
+      1209 |             assume(obeys_feq_full::<T>());
+      1210 |             assume(spec_avltreeseq_cached_size(&self.root) < usize::MAX);
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1209: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1204 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1223 |             assume(spec_avltreeseq_wf(self.root));
-      1224 |             assume(spec_avltreeseq_wf(other.root));
-      1226 |             assume(spec_avltreeseq_cached_size(&self.root) < usize::MAX);
-      1227 |             assume(spec_avltreeseq_cached_size(&other.root) < usize::MAX);
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:1226: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1220 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1207 |             assume(spec_avltreeseq_wf(self.root));
+      1208 |             assume(spec_avltreeseq_wf(other.root));
+      1210 |             assume(spec_avltreeseq_cached_size(&self.root) < usize::MAX);
+      1211 |             assume(spec_avltreeseq_cached_size(&other.root) < usize::MAX);
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1210: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1204 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1224 |             assume(spec_avltreeseq_wf(other.root));
-      1225 |             assume(obeys_feq_full::<T>());
-      1227 |             assume(spec_avltreeseq_cached_size(&other.root) < usize::MAX);
-      1228 |             let equal = compare_trees(&self.root, &other.root);
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:1227: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1220 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1208 |             assume(spec_avltreeseq_wf(other.root));
+      1209 |             assume(obeys_feq_full::<T>());
+      1211 |             assume(spec_avltreeseq_cached_size(&other.root) < usize::MAX);
+      1212 |             let equal = compare_trees(&self.root, &other.root);
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1211: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1204 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1225 |             assume(obeys_feq_full::<T>());
-      1226 |             assume(spec_avltreeseq_cached_size(&self.root) < usize::MAX);
-      1228 |             let equal = compare_trees(&self.root, &other.root);
-      1229 |             equal
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:1248: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1234 |         fn clone(&self) -> (copy: Self)
+      1209 |             assume(obeys_feq_full::<T>());
+      1210 |             assume(spec_avltreeseq_cached_size(&self.root) < usize::MAX);
+      1212 |             let equal = compare_trees(&self.root, &other.root);
+      1213 |             equal
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1232: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1218 |         fn clone(&self) -> (copy: Self)
             ...
-      1246 |                 // So copy@ == self@
-      1247 |             }
-      1249 |             copy
-      1250 |         }
+      1230 |                 // So copy@ == self@
+      1231 |             }
+      1233 |             copy
+      1234 |         }
    Holes: 3 total
       1 × assume()
       2 × external_body
    Errors: 6 total (6 assume in eq/clone (Verus workaround))
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ AVLTreeSeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:242: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:242: external_body - #[verifier::external_body]
        243 |     fn mk<T: StTInMtT>(value: T, left: Link<T>, right: Link<T>) -> (node: Arc<Node<T>>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:261: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:261: external_body - #[verifier::external_body]
        262 |     fn rotate_right<T: StTInMtT>(y: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:274: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:274: external_body - #[verifier::external_body]
        275 |     fn rotate_left<T: StTInMtT>(x: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:287: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:287: external_body - #[verifier::external_body]
        288 |     fn rebalance<T: StTInMtT>(n: Arc<Node<T>>) -> (balanced: Arc<Node<T>>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:315: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:315: external_body - #[verifier::external_body]
        316 |     fn nth_ref<'a, T: StTInMtT>(cur: &'a Link<T>, index: N) -> (elem: &'a T)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:336: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:336: external_body - #[verifier::external_body]
        337 |     fn set_rec<T: StTInMtT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:364: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:364: external_body - #[verifier::external_body]
        365 |     fn inorder_collect<T: StTInMtT>(cur: &Link<T>, out: &mut Vec<T>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:373: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:373: external_body - #[verifier::external_body]
        374 |     fn build_balanced_from_slice<T: StTInMtT>(a: &[T]) -> (link: Link<T>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:391: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:391: external_body - #[verifier::external_body]
        392 |     fn compare_trees<T: StTInMtT>(a: &Link<T>, b: &Link<T>) -> (equal: bool) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:454: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:454: external_body - #[verifier::external_body]
        455 |         fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:492: assume() - proof { assume(self.spec_well_formed()); }
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:492: assume() - proof { assume(self.spec_well_formed()); }
        490 | 
        491 |         fn values_in_order(&self) -> (values: Vec<T>) {
        493 |             let mut out: Vec<T> = Vec::new();
        494 |             inorder_collect(&self.root, &mut out);
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:532: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:532: external_body - #[verifier::external_body]
        533 |         fn clone(&self) -> (copy: Self)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:526: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:526: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        522 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        524 |         {
@@ -98,50 +98,50 @@
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ AVLTreeSeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:262: assume() - proof { assume(1 + b.left_size + b.right_size < usize::MAX);
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:262: assume() - proof { assume(1 + b.left_size + b.right_size < usize::MAX);
        256 |     fn size_link_fn<T: StT>(n: &Link<T>) -> (size: N)
             ...
        260 |             None => 0,
        261 |             Some(b) => {
        263 |                 1 + b.left_size + b.right_size
        264 |             }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:287: assume() - assume(1 + (if hl >= hr { hl } else { hr }) as int <= usize:
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:287: assume() - assume(1 + (if hl >= hr { hl } else { hr }) as int <= usize:
        268 |     fn update_meta<T: StT>(n: &mut Box<AVLTreeNode<T>>)
             ...
        285 |         let hl = h_fn(&n.left);
        286 |         let hr = h_fn(&n.right);
        288 |         n.height = 1 + if hl >= hr { hl } else { hr };
        289 |     }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:529: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:529: external_body - #[verifier::external_body]
        530 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:640: assume() - assume(i + 1 < usize::MAX);
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:640: assume() - assume(i + 1 < usize::MAX);
        625 |         fn from_vec(values: Vec<T>) -> (tree: AVLTreeSeqStEphS<T>) {
             ...
        638 |             {
        639 |                 proof { lemma_size_eq_inorder_len::<T>(&t.root); }
        641 |                 t.root = insert_at_link(t.root.take(), i, values[i].clone(), &mut t.next_key);
        642 |                 i += 1;
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:665: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:665: external_body - #[verifier::external_body]
        666 |         fn iter<'a>(&'a self) -> (it: AVLTreeSeqIterStEph<'a, T>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:678: assume() - assume(self.next_key < usize::MAX);
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:678: assume() - assume(self.next_key < usize::MAX);
        675 |         fn push_back(&mut self, value: T) {
             ...
        676 |             assert(self.spec_well_formed());
        677 |             let len = self.length();
        679 |             assume(spec_cached_size(&self.root) + 1 < usize::MAX);
        680 |             let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:679: assume() - assume(spec_cached_size(&self.root) + 1 < usize::MAX);
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:679: assume() - assume(spec_cached_size(&self.root) + 1 < usize::MAX);
        675 |         fn push_back(&mut self, value: T) {
             ...
        677 |             let len = self.length();
        678 |             assume(self.next_key < usize::MAX);
        680 |             let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
        681 |             self.root = node;
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:784: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:784: external_body - #[verifier::external_body]
        785 |         fn clone(&self) -> (copy: Self) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:811: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:811: external_body - #[verifier::external_body]
        812 |         fn clone(&self) -> (copy: Self)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:805: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:805: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        801 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        803 |         {
@@ -154,52 +154,36 @@
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ AVLTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:210: external_body - #[verifier::external_body]
-       211 |     fn mk<T: StT>(value: T, left: Link<T>, right: Link<T>) -> (node: Arc<Node<T>>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:229: external_body - #[verifier::external_body]
-       230 |     fn rotate_right<T: StT>(y: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:242: external_body - #[verifier::external_body]
-       243 |     fn rotate_left<T: StT>(x: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:255: external_body - #[verifier::external_body]
-       256 |     fn rebalance<T: StT>(n: Arc<Node<T>>) -> (balanced: Arc<Node<T>>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:283: external_body - #[verifier::external_body]
-       284 |     fn nth_ref<'a, T: StT>(cur: &'a Link<T>, index: N) -> (elem: &'a T)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:304: external_body - #[verifier::external_body]
-       305 |     fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:332: external_body - #[verifier::external_body]
-       333 |     fn inorder_collect<T: StT>(cur: &Link<T>, out: &mut Vec<T>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:341: external_body - #[verifier::external_body]
-       342 |     fn build_balanced_from_slice<T: StT>(a: &[T]) -> (link: Link<T>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:357: external_body - #[verifier::external_body]
-       358 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:421: assume() - proof { assume(self.spec_well_formed()); }
-       419 | 
-       420 |         fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
-       422 |             let n = self.length();
-       423 |             let s = if start < n { start } else { n };
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:452: assume() - proof { assume(self.spec_well_formed()); }
-       450 | 
-       451 |         fn values_in_order(&self) -> (values: Vec<T>) {
-       453 |             let mut out: Vec<T> = Vec::new();
-       454 |             inorder_collect(&self.root, &mut out);
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:459: assume() - proof { assume(self.spec_well_formed()); }
-       457 | 
-       458 |         fn to_arrayseq(&self) -> (seq: ArraySeqStPerS<T>) {
-       460 |             let v = self.values_in_order();
-       461 |             ArraySeqStPerS::from_vec(v)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:464: external_body - #[verifier::external_body]
-       465 |         fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:494: external_body - #[verifier::external_body]
-       495 |         fn clone(&self) -> (copy: Self)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:488: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       484 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:212: external_body - #[verifier::external_body]
+       213 |     fn mk<T: StT>(value: T, left: Link<T>, right: Link<T>) -> (node: Arc<Node<T>>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:231: external_body - #[verifier::external_body]
+       232 |     fn rotate_right<T: StT>(y: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:244: external_body - #[verifier::external_body]
+       245 |     fn rotate_left<T: StT>(x: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:257: external_body - #[verifier::external_body]
+       258 |     fn rebalance<T: StT>(n: Arc<Node<T>>) -> (balanced: Arc<Node<T>>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:285: external_body - #[verifier::external_body]
+       286 |     fn nth_ref<'a, T: StT>(cur: &'a Link<T>, index: N) -> (elem: &'a T)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:306: external_body - #[verifier::external_body]
+       307 |     fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:334: external_body - #[verifier::external_body]
+       335 |     fn inorder_collect<T: StT>(cur: &Link<T>, out: &mut Vec<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:343: external_body - #[verifier::external_body]
+       344 |     fn build_balanced_from_slice<T: StT>(a: &[T]) -> (link: Link<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:359: external_body - #[verifier::external_body]
+       360 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:463: external_body - #[verifier::external_body]
+       464 |         fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:493: external_body - #[verifier::external_body]
+       494 |         fn clone(&self) -> (copy: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:487: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       483 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       486 |         {
-       487 |             let equal = compare_trees(&self.root, &other.root);
-       489 |             equal
-       490 |         }
-   Holes: 14 total
-      3 × assume()
+       485 |         {
+       486 |             let equal = compare_trees(&self.root, &other.root);
+       488 |             equal
+       489 |         }
+   Holes: 11 total
       11 × external_body
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
@@ -211,17 +195,8 @@
 ✓ BSTBBAlphaStEph.rs
 ✓ BSTPlainMtEph.rs
 ✓ BSTPlainStEph.rs
-❌ BSTRBMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTRBMtEph.rs:136: assume() - assume(ls as int + rs as int + 1 <= usize::MAX as int);
-       133 |     fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {
-            ...
-       134 |         let ls = size_link(&node.left);
-       135 |         let rs = size_link(&node.right);
-       137 |         node.size = 1 + ls + rs;
-       138 |     }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTRBMtEph.rs:102: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Holes: 1 total
-      1 × assume()
+ℹ BSTRBMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:112: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Info: 1 total
 ✓ BSTRBStEph.rs
    1 clean proof function
@@ -230,30 +205,13 @@
 ✓ BSTSetPlainMtEph.rs
 ✓ BSTSetRBMtEph.rs
 ✓ BSTSetSplayMtEph.rs
-❌ BSTSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayMtEph.rs:121: assume() - assume(ls as int + rs as int + 1 <= usize::MAX as int);
-       118 |     fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {
-            ...
-       119 |         let ls = size_link(&node.left);
-       120 |         let rs = size_link(&node.right);
-       122 |         node.size = 1 + ls + rs;
-       123 |     }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayMtEph.rs:95: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Holes: 1 total
-      1 × assume()
+ℹ BSTSplayMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:105: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Info: 1 total
 ❌ BSTSplayStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayStEph.rs:179: assume() - assume(ls as int + rs as int + 1 <= usize::MAX as int);
-       169 |     fn update<T: TotalOrder + Clone>(node: &mut Node<T>)
-            ...
-       177 |         let ls = size_link(&node.left);
-       178 |         let rs = size_link(&node.right);
-       180 |         node.size = 1 + ls + rs;
-       181 |     }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayStEph.rs:452: external_body - #[verifier::external_body]
-       453 |         fn clone(&self) -> (copy: Self)
-   Holes: 2 total
-      1 × assume()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayStEph.rs:456: external_body - #[verifier::external_body]
+       457 |         fn clone(&self) -> (copy: Self)
+   Holes: 1 total
       1 × external_body
 
 ═══════════════════════════════════════════════════════════════
@@ -261,8 +219,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   12 clean (no holes)
-   7 holed (contains holes)
+   14 clean (no holes)
+   5 holed (contains holes)
    19 total
 
 Proof Functions:
@@ -270,14 +228,14 @@ Proof Functions:
    0 holed
    9 total
 
-Holes Found: 42 total
-   13 × assume()
+Holes Found: 36 total
+   7 × assume()
    29 × external_body
 
 Errors: 9 total (9 assume in eq/clone (Verus workaround))
 
 Info: 2 total
-   BSTRBMtEph.rs:102: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   BSTSplayMtEph.rs:95: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-nal_body - Verus RwLock new requires an external body at this point.
-   BSTSplayMtEph.rs:95: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   BSTSplayMtEph.rs:105: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   BSTRBMtEph.rs:112: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+_external_body - Verus RwLock new requires an external body at this point.
+   BSTRBMtEph.rs:112: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.

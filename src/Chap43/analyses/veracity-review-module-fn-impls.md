@@ -28,7 +28,7 @@
 | 4 | Chap43 | Example43_1 | 2 | 0 | 0 | 3 | 1 | 3 | 0 | 0 | 4 |
 | 5 | Chap43 | OrderedSetMtEph | 22 | 22 | 0 | 0 | 22 | 0 | 0 | 22 | 0 |
 | 6 | Chap43 | OrderedSetStEph | 22 | 24 | 1 | 1 | 24 | 2 | 11 | 13 | 2 |
-| 7 | Chap43 | OrderedSetStPer | 22 | 24 | 1 | 1 | 25 | 1 | 14 | 11 | 1 |
+| 7 | Chap43 | OrderedSetStPer | 22 | 24 | 1 | 1 | 25 | 1 | 4 | 21 | 1 |
 | 8 | Chap43 | OrderedTableMtEph | 29 | 31 | 1 | 1 | 32 | 1 | 16 | 16 | 1 |
 | 9 | Chap43 | OrderedTableMtPer | 19 | 20 | 0 | 0 | 19 | 1 | 0 | 19 | 1 |
 | 10 | Chap43 | OrderedTableStEph | 29 | 31 | 1 | 1 | 32 | 1 | 14 | 18 | 1 |
@@ -226,18 +226,18 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 157 | `size` | Y | Y |  |  | Y |  |  | unknown | 59&#8209;60 |
+| 157 | `size` | Y | Y |  |  | Y |  |  | hole | 59&#8209;60 |
 | 158 | `empty` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;63 |
 | 159 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;66 |
-| 160 | `find` | Y | Y |  |  | Y |  |  | unknown | 68&#8209;69 |
-| 161 | `insert` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;72 |
-| 162 | `delete` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;75 |
-| 163 | `filter` | Y | Y |  |  | Y |  |  | unknown | 77&#8209;78 |
-| 164 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 80&#8209;81 |
-| 165 | `union` | Y | Y |  |  | Y |  |  | unknown | 83&#8209;84 |
-| 166 | `difference` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;87 |
-| 167 | `to_seq` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;90 |
-| 168 | `from_seq` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;93 |
+| 160 | `find` | Y | Y |  |  | Y |  |  | hole | 68&#8209;69 |
+| 161 | `insert` | Y | Y |  |  | Y |  |  | hole | 71&#8209;72 |
+| 162 | `delete` | Y | Y |  |  | Y |  |  | hole | 74&#8209;75 |
+| 163 | `filter` | Y | Y |  |  | Y |  |  | hole | 77&#8209;78 |
+| 164 | `intersection` | Y | Y |  |  | Y |  |  | hole | 80&#8209;81 |
+| 165 | `union` | Y | Y |  |  | Y |  |  | hole | 83&#8209;84 |
+| 166 | `difference` | Y | Y |  |  | Y |  |  | hole | 86&#8209;87 |
+| 167 | `to_seq` | Y | Y |  |  | Y |  |  | hole | 89&#8209;90 |
+| 168 | `from_seq` | Y | Y |  |  | Y |  |  | hole | 92&#8209;93 |
 | 169 | `first` | Y | Y |  |  | Y |  |  | hole | 97&#8209;101 |
 | 170 | `last` | Y | Y |  |  | Y |  |  | hole | 103&#8209;107 |
 | 171 | `previous` | Y | Y |  |  | Y |  |  | hole | 109&#8209;112 |
@@ -248,10 +248,10 @@
 | 176 | `rank` | Y | Y |  |  | Y |  |  | hole | 139&#8209;142 |
 | 177 | `select` | Y | Y |  |  | Y |  |  | hole | 144&#8209;148 |
 | 178 | `split_rank` | Y | Y |  |  | Y |  |  | hole | 150&#8209;157 |
-| 179 | `from_sorted_elements` |  |  |  | Y | Y |  |  | hole | 438&#8209;439 |
-| 180 | `iter` |  |  | Y |  | Y |  |  | hole | 450&#8209;454 |
-| 181 | `default` |  | Y |  |  | Y |  |  | unknown | 594&#8209;595 |
-| 182 | `eq` |  | Y |  |  |  | Y | Y |  | 627&#8209;629 |
+| 179 | `from_sorted_elements` |  |  |  | Y | Y |  |  | hole | 463&#8209;464 |
+| 180 | `iter` |  |  | Y |  | Y |  |  | hole | 475&#8209;479 |
+| 181 | `default` |  | Y |  |  | Y |  |  | unknown | 619&#8209;620 |
+| 182 | `eq` |  | Y |  |  |  | Y | Y |  | 652&#8209;654 |
 
 ### Chap43/OrderedTableMtEph.rs
 
