@@ -19,9 +19,20 @@
 //! - Arc<A: DeepView> has `deep_view(&self) -> A::V { (**self).deep_view() }`.
 //! - Arc::clone has no explicit spec, but deref gives the same value.
 //!
+//! Arc + RwLock caveat:
+//!
+//! vstd's Arc preserves View and DeepView, but RwLock's `pred()` is not part
+//! of its View. Raw `Arc::new(RwLock::new(...))` and `arc.clone()` lose pred()
+//! in specs, breaking proof propagation for lock invariants. Use
+//! `vstdplus::arc_rwlock::new_arc_rwlock` and `clone_arc_rwlock` — two generic
+//! external_body functions with tight ensures that preserve pred() through Arc
+//! construction and cloning. Do not write type-specific Arc bridges.
+//!
 //! References:
 //! - vstd/view.rs (View and DeepView impls for Arc)
 //! - vstd/std_specs/smart_ptrs.rs (Arc::new spec)
+//! - src/vstdplus/arc_rwlock.rs (pred()-preserving Arc bridges)
+//! - src/standards/arc_rwlock_coarse_standard.rs (full Arc<RwLock> example)
 //! - src/experiments/arc_clone_deref.rs (Arc deref experiment)
 
 //  Table of Contents

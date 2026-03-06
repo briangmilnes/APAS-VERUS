@@ -7,11 +7,20 @@
 //! you re-establish it. This is genuine verified concurrency — not a `true`
 //! predicate that proves nothing.
 //!
-//! This standard shows:
+//! This standard shows the lock protocol in isolation (no Arc wrapping):
 //! - Defining a predicate struct with a ghost field for construction-time context.
 //! - Implementing `RwLockPredicate` with a real invariant.
 //! - acquire_write / modify / prove invariant maintained / release_write.
 //! - acquire_read / borrow / release_read.
+//!
+//! Wrapping RwLock in Arc for multi-threaded use:
+//!
+//! Raw `Arc::new(RwLock::new(...))` and `arc.clone()` lose the lock's `pred()`
+//! in specs — vstd's Arc preserves View but pred() is not part of View.
+//! Use `vstdplus::arc_rwlock::new_arc_rwlock` and `clone_arc_rwlock` instead.
+//! They are two generic external_body functions (the only ones needed project-wide)
+//! with tight ensures that preserve pred() through Arc construction and cloning.
+//! Do not write type-specific Arc bridges — use these.
 //!
 //! Caveats Verus does NOT prove:
 //! - Deadlock freedom (you can forget to release).
@@ -22,6 +31,9 @@
 //! satisfies the predicate, so acquire tells you nothing useful.
 //!
 //! References:
+//! - src/vstdplus/arc_rwlock.rs (new_arc_rwlock, clone_arc_rwlock)
+//! - src/standards/hfscheduler_standard.rs (Arc<RwLock> + join patterns)
+//! - src/standards/arc_rwlock_coarse_standard.rs (full BST behind Arc<RwLock>)
 //! - src/Chap37/BSTPlainMtEph.rs (gold standard — no external_body)
 //! - src/Chap18/ArraySeqMtEph.rs (ghost fields in predicate, complex invariant)
 //! - vstd::rwlock (RwLock is itself a TSM internally)

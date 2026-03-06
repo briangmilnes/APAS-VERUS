@@ -4,7 +4,7 @@ Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are now working Chap45 and only Chap45.
+You are now working Chap39 and only Chap39. 
 
 Read src/standards/* and apply them in your proposed work.
 Your CLAUDE.md should cause you to read them in all planning and hopefully bug fixing.

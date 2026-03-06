@@ -22,55 +22,35 @@ develop two software engineering tools to clean things up:
 - `tests/` - Rust unit tests for algorithm correctness
 - `benches/` - Performance benchmarks using Criterion
 
-### vstdplus Library Extensions
+## Proof State
 
-| # | Module | Description |
-|---|--------|-------------|
-| 1 | `accept` | Accepted proof hole tracking |
-| 2 | `arithmetic/power2_plus` | Power of 2 lemmas (`lemma_pow2_mono`, bounds) |
-| 3 | `arc_rwlock` | Arc<RwLock> bridge functions (`new_arc_rwlock`, `clone_arc_rwlock`) |
-| 4 | `checked_int` | Overflow-checked signed integers (`CheckedI8`..`CheckedI128`) |
-| 5 | `checked_nat` | Overflow-checked unsigned integers (`CheckedU8`..`CheckedU128`) |
-| 6 | `clone_plus` | `ClonePlus` trait for Verus-compatible cloning |
-| 7 | `feq` | Functional equality |
-| 8 | `float` | `FloatTotalOrder` trait and IEEE 754 axioms |
-| 9 | `hash_map_with_view_plus` | Enhanced `HashMap` with view specs |
-| 10 | `hash_set_specs` | HashSet specification helpers |
-| 11 | `hash_set_with_view_plus` | Enhanced `HashSet` with iterator specs |
-| 12 | `hashed_checked_u32` | Hash-compatible checked u32 |
-| 13 | `monoid` | Monoid trait for algebraic structures |
-| 14 | `multiset` | Multiset operations and lemmas |
-| 15 | `partial_order` | `PartialOrdered` trait |
-| 16 | `pervasives_plus` | Common utility functions |
-| 17 | `rand` | Verified random number generation interface |
-| 18 | `seq` | Sequence lemmas |
-| 19 | `seq_set` | Lemmas connecting `Seq` and `Set` operations, weighted sums |
-| 20 | `smart_ptrs` | Arc/Box specification helpers |
-| 21 | `sqrt` | Integer square root |
-| 22 | `threads_plus` | Verified thread primitives (`spawn_plus`, `JoinHandlePlus`) |
-| 23 | `total_order` | `TotalOrdered` trait for all 12 integer types |
-| 24 | `VecQueue` | Verified queue using `Vec` |
+Full verification: **3525 verified, 0 errors**
 
-### Standards Library
+| # | Metric | Count |
+|---|--------|-------|
+| 1 | Chapters verified | 39 |
+| 2 | Chapters with zero holes | 17 |
+| 3 | Clean modules (no holes) | 249 |
+| 4 | Holed modules | 29 |
+| 5 | Total verified modules | 278 |
+| 6 | Clean proof functions | 268 |
+| 7 | Runtime tests (RTT) | 2595 |
+| 8 | Proof time tests (PTT) | 144 |
 
-14 Verus coding standards demonstrating project patterns. Each is a compilable, verified example.
+### Proof Holes: 280 total
 
-| # | Standard | Covers |
-|---|----------|--------|
-| 1 | `mod_standard` | Module layout, TOC, use-statement ordering |
-| 2 | `view_standard` | View trait implementation |
-| 3 | `deep_view_standard` | DeepView trait implementation |
-| 4 | `iterators_standard` | Collection iterator protocol (10 components) |
-| 5 | `mut_standard` | Mutable reference patterns in Verus |
-| 6 | `multi_struct_standard` | Recursive enum with per-type traits |
-| 7 | `table_of_contents_standard` | Section ordering inside/outside verus! |
-| 8 | `using_closures_standard` | Closure patterns for fork-join |
-| 9 | `wrapping_iterators_standard` | Wrapping Rust iterators for Verus |
-| 10 | `rwlock_standard` | RwLockPredicate naming and invariants |
-| 11 | `tsm_standard` | Tokenized state machine patterns |
-| 12 | `arc_standard` | Arc deref pattern for verification |
-| 13 | `hfscheduler_standard` | Help-First Scheduler (Arc<RwLock> + join) |
-| 14 | `arc_rwlock_coarse_standard` | Coarse-grained Arc<RwLock> concurrency |
+| # | Hole Type | Count | Notes |
+|---|-----------|-------|-------|
+| 1 | `accept()` | 136 | Accepted proof holes (PartialEq bridge, iterator ghost) |
+| 2 | `external_body` (accepted) | 68 | Accepted external bodies (atomics, FFI) |
+| 3 | `verus_rwlock_external_body` | 56 | Verus RwLock::new requires external_body |
+| 4 | `unsafe {}` (accepted) | 8 | Unsafe blocks (Chap12 raw pointers) |
+| 5 | `external` (accepted) | 6 | External function specifications |
+| 6 | `external_type_specification` (accepted) | 2 | External type specs |
+| 7 | `struct outside verus!` (accepted) | 2 | Structs outside verus! block |
+| 8 | `enum outside verus!` (accepted) | 2 | Enums outside verus! block |
+
+All holes are explicitly accepted with `// accept hole` comments and tracked by veracity.
 
 ## Algorithm Status
 
@@ -521,35 +501,57 @@ Behind `all_chapters` feature gate.
 - 🔄 PARTIAL - Some files active, some blocked
 - ⬜ BLOCKED - All files blocked (dependency or crate-linking issues)
 
-## Proof State
+### vstdplus Library Extensions
 
-Full verification: **3525 verified, 0 errors**
+| # | Module | Description |
+|---|--------|-------------|
+| 1 | `accept` | Accepted proof hole tracking |
+| 2 | `arithmetic/power2_plus` | Power of 2 lemmas (`lemma_pow2_mono`, bounds) |
+| 3 | `arc_rwlock` | Arc<RwLock> bridge functions (`new_arc_rwlock`, `clone_arc_rwlock`) |
+| 4 | `checked_int` | Overflow-checked signed integers (`CheckedI8`..`CheckedI128`) |
+| 5 | `checked_nat` | Overflow-checked unsigned integers (`CheckedU8`..`CheckedU128`) |
+| 6 | `clone_plus` | `ClonePlus` trait for Verus-compatible cloning |
+| 7 | `feq` | Functional equality |
+| 8 | `float` | `FloatTotalOrder` trait and IEEE 754 axioms |
+| 9 | `hash_map_with_view_plus` | Enhanced `HashMap` with view specs |
+| 10 | `hash_set_specs` | HashSet specification helpers |
+| 11 | `hash_set_with_view_plus` | Enhanced `HashSet` with iterator specs |
+| 12 | `hashed_checked_u32` | Hash-compatible checked u32 |
+| 13 | `monoid` | Monoid trait for algebraic structures |
+| 14 | `multiset` | Multiset operations and lemmas |
+| 15 | `partial_order` | `PartialOrdered` trait |
+| 16 | `pervasives_plus` | Common utility functions |
+| 17 | `rand` | Verified random number generation interface |
+| 18 | `seq` | Sequence lemmas |
+| 19 | `seq_set` | Lemmas connecting `Seq` and `Set` operations, weighted sums |
+| 20 | `smart_ptrs` | Arc/Box specification helpers |
+| 21 | `sqrt` | Integer square root |
+| 22 | `threads_plus` | Verified thread primitives (`spawn_plus`, `JoinHandlePlus`) |
+| 23 | `total_order` | `TotalOrdered` trait for all 12 integer types |
+| 24 | `VecQueue` | Verified queue using `Vec` |
 
-| # | Metric | Count |
-|---|--------|-------|
-| 1 | Chapters verified | 39 |
-| 2 | Chapters with zero holes | 17 |
-| 3 | Clean modules (no holes) | 249 |
-| 4 | Holed modules | 29 |
-| 5 | Total verified modules | 278 |
-| 6 | Clean proof functions | 268 |
-| 7 | Runtime tests (RTT) | 2595 |
-| 8 | Proof time tests (PTT) | 144 |
+### Standards Library
 
-### Proof Holes: 280 total
+14 Verus coding standards demonstrating project patterns. Each is a compilable, verified example.
 
-| # | Hole Type | Count | Notes |
-|---|-----------|-------|-------|
-| 1 | `accept()` | 136 | Accepted proof holes (PartialEq bridge, iterator ghost) |
-| 2 | `external_body` (accepted) | 68 | Accepted external bodies (atomics, FFI) |
-| 3 | `verus_rwlock_external_body` | 56 | Verus RwLock::new requires external_body |
-| 4 | `unsafe {}` (accepted) | 8 | Unsafe blocks (Chap12 raw pointers) |
-| 5 | `external` (accepted) | 6 | External function specifications |
-| 6 | `external_type_specification` (accepted) | 2 | External type specs |
-| 7 | `struct outside verus!` (accepted) | 2 | Structs outside verus! block |
-| 8 | `enum outside verus!` (accepted) | 2 | Enums outside verus! block |
+| # | Standard | Covers |
+|---|----------|--------|
+| 1 | `mod_standard` | Module layout, TOC, use-statement ordering |
+| 2 | `view_standard` | View trait implementation |
+| 3 | `deep_view_standard` | DeepView trait implementation |
+| 4 | `iterators_standard` | Collection iterator protocol (10 components) |
+| 5 | `mut_standard` | Mutable reference patterns in Verus |
+| 6 | `multi_struct_standard` | Recursive enum with per-type traits |
+| 7 | `table_of_contents_standard` | Section ordering inside/outside verus! |
+| 8 | `using_closures_standard` | Closure patterns for fork-join |
+| 9 | `wrapping_iterators_standard` | Wrapping Rust iterators for Verus |
+| 10 | `rwlock_standard` | RwLockPredicate naming and invariants |
+| 11 | `tsm_standard` | Tokenized state machine patterns |
+| 12 | `arc_standard` | Arc deref pattern for verification |
+| 13 | `hfscheduler_standard` | Help-First Scheduler (Arc<RwLock> + join) |
+| 14 | `arc_rwlock_coarse_standard` | Coarse-grained Arc<RwLock> concurrency |
 
-All holes are explicitly accepted with `// accept hole` comments and tracked by veracity.
+---
 
 ## Documentation
 

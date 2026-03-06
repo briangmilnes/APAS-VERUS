@@ -34,10 +34,16 @@ src/Chap36/analyses/veracity-review-verus-proof-holes.log - clean
 
 in process:
 
+src/Chap37/analyses/veracity-review-verus-proof-holes.log - all the trees Main. 
+src/Chap39/analyses/veracity-review-verus-proof-holes.log - Treaps - Agent3. 
+src/Chap40/analyses/veracity-review-verus-proof-holes.log - Key value - Agent1
+src/Chap53/analyses/veracity-review-verus-proof-holes.log - Graph Search/PQ - Agent2 
+src/Chap41/analyses/veracity-review-verus-proof-holes.log - AVL - Agent4 
+
+
+
 Stalled: 
 
-src/Chap37/analyses/veracity-review-verus-proof-holes.log - 
-src/Chap39/analyses/veracity-review-verus-proof-holes.log 
 src/Chap42/analyses/veracity-review-verus-proof-holes.log - 
 src/Chap43/analyses/veracity-review-verus-proof-holes.log - AugOrderedTables, bad.
 src/Chap45/analyses/veracity-review-verus-proof-holes.log  
@@ -52,13 +58,9 @@ src/Chap56/analyses/veracity-review-verus-proof-holes.log -
 
 22 unfinished: 
 
-src/Chap40/analyses/veracity-review-verus-proof-holes.log - started
+
 src/Chap38/analyses/veracity-review-verus-proof-holes.log - started
-src/Chap41/analyses/veracity-review-verus-proof-holes.log - bad
-
-src/Chap53/analyses/veracity-review-verus-proof-holes.log - unclean, not even specified. 
 src/Chap55/analyses/veracity-review-verus-proof-holes.log - DFS, SCCD, not fully verusified.
-
 src/Chap57/analyses/veracity-review-verus-proof-holes.log - Dijsktra, not fully verusified.
 src/Chap58/analyses/veracity-review-verus-proof-holes.log - Bellman Ford, not fully verusified.
 src/Chap59/analyses/veracity-review-verus-proof-holes.log - Johnson, not fully verusified.
