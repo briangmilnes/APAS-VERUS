@@ -23,7 +23,7 @@
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
 | 1 | Chap56 | AllPairsResultStEphF64 | 7 | 7 | 0 | 0 | 7 | 0 | 3 | 0 | 4 |
-| 2 | Chap56 | AllPairsResultStEphI64 | 7 | 7 | 0 | 0 | 7 | 0 | 5 | 0 | 2 |
+| 2 | Chap56 | AllPairsResultStEphI64 | 7 | 7 | 0 | 0 | 7 | 0 | 7 | 0 | 0 |
 | 3 | Chap56 | AllPairsResultStPerF64 | 7 | 7 | 0 | 0 | 7 | 0 | 3 | 0 | 4 |
 | 4 | Chap56 | AllPairsResultStPerI64 | 7 | 7 | 0 | 0 | 7 | 0 | 7 | 0 | 0 |
 | 5 | Chap56 | Example56_1 | 3 | 3 | 0 | 0 | 3 | 0 | 0 | 3 | 0 |
@@ -53,13 +53,13 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 8 | `new` | Y | Y |  |  | Y |  |  | unknown | 40&#8209;41 |
-| 9 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 43&#8209;47 |
-| 10 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 49&#8209;51 |
-| 11 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 53&#8209;58 |
-| 12 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 60&#8209;62 |
-| 13 | `is_reachable` | Y | Y |  |  | Y |  | Y |  | 64 |
-| 14 | `extract_path` | Y | Y |  |  | Y |  | Y |  | 66 |
+| 8 | `new` | Y | Y |  |  | Y |  |  | unknown | 49&#8209;63 |
+| 9 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;69 |
+| 10 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;93 |
+| 11 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;100 |
+| 12 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 102&#8209;124 |
+| 13 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 126&#8209;131 |
+| 14 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 133&#8209;147 |
 
 ### Chap56/AllPairsResultStPerF64.rs
 
@@ -77,13 +77,13 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 22 | `new` | Y | Y |  |  | Y |  |  | unknown | 48&#8209;49 |
-| 23 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 51&#8209;55 |
-| 24 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 57&#8209;58 |
-| 25 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 60&#8209;65 |
-| 26 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
-| 27 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 70 |
-| 28 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 72 |
+| 22 | `new` | Y | Y |  |  | Y |  |  | unknown | 48&#8209;62 |
+| 23 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 64&#8209;68 |
+| 24 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;92 |
+| 25 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;99 |
+| 26 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 101&#8209;123 |
+| 27 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 125&#8209;130 |
+| 28 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 132&#8209;146 |
 
 ### Chap56/Example56_1.rs
 
@@ -134,13 +134,13 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 49 | `new` | Y | Y |  |  | Y |  |  | unknown | 32&#8209;37 |
-| 50 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 39&#8209;42 |
-| 51 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 44&#8209;50 |
-| 52 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 52&#8209;56 |
-| 53 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 58&#8209;64 |
-| 54 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 66&#8209;69 |
-| 55 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;75 |
+| 49 | `new` | Y | Y |  |  | Y |  |  | unknown | 41&#8209;50 |
+| 50 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 52&#8209;55 |
+| 51 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 57&#8209;63 |
+| 52 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;69 |
+| 53 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;77 |
+| 54 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;82 |
+| 55 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 84&#8209;95 |
 
 ### Chap56/SSSPResultStPerF64.rs
 
@@ -164,7 +164,7 @@
 | 66 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;67 |
 | 67 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;74 |
 | 68 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;79 |
-| 69 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;88 |
+| 69 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;92 |
 
 
 ### Legend

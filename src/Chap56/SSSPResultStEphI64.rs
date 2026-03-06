@@ -11,6 +11,13 @@ pub mod SSSPResultStEphI64 {
 
     verus! {
 
+    // Table of Contents
+    // 4. type definitions
+    // 8. traits
+    // 9. impls
+
+    // 4. type definitions
+
     pub const UNREACHABLE: i64 = i64::MAX;
     pub const NO_PREDECESSOR: usize = usize::MAX;
 
@@ -23,6 +30,8 @@ pub mod SSSPResultStEphI64 {
     // 8. traits
 
     pub trait SSSPResultStEphI64Trait: Sized {
+        spec fn spec_ssspresultstephi64_wf(s: &SSSPResultStEphI64) -> bool;
+
         spec fn spec_distances(&self) -> Seq<i64>;
 
         spec fn spec_predecessors(&self) -> Seq<usize>;
@@ -34,7 +43,11 @@ pub mod SSSPResultStEphI64 {
             ensures
                 empty.spec_distances().len() == n,
                 empty.spec_predecessors().len() == n,
-                empty.spec_source() == source;
+                empty.spec_source() == source,
+                forall|i: int| #![trigger empty.spec_distances()[i]] 0 <= i < n ==>
+                    empty.spec_distances()[i] == (if i == source as int { 0i64 } else { UNREACHABLE }),
+                forall|i: int| #![trigger empty.spec_predecessors()[i]] 0 <= i < n ==>
+                    empty.spec_predecessors()[i] == NO_PREDECESSOR;
 
         fn get_distance(&self, v: usize) -> (dist: i64)
             ensures
@@ -70,14 +83,26 @@ pub mod SSSPResultStEphI64 {
 
         fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
             ensures
+                v >= self.spec_distances().len() ==> path is None,
+                v < self.spec_distances().len() && self.spec_distances()[v as int] == UNREACHABLE ==> path is None,
+                v >= self.spec_predecessors().len() ==> path is None,
                 path is Some ==> path->Some_0.spec_len() >= 1,
                 path is Some ==> path->Some_0.spec_index(0) == self.spec_source(),
-                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v;
+                path is Some ==> path->Some_0.spec_index(path->Some_0.spec_len() - 1) == v,
+                path is Some ==>
+                    forall|j: int| #![trigger path->Some_0.spec_index(j)]
+                        0 <= j < path->Some_0.spec_len()
+                        ==> (path->Some_0.spec_index(j) as int) < self.spec_predecessors().len();
     }
 
     // 9. impls
 
     impl SSSPResultStEphI64Trait for SSSPResultStEphI64 {
+        open spec fn spec_ssspresultstephi64_wf(s: &SSSPResultStEphI64) -> bool {
+            s.distances.seq@.len() == s.predecessors.seq@.len()
+            && s.source < s.distances.seq@.len()
+        }
+
         open spec fn spec_distances(&self) -> Seq<i64> { self.distances.seq@ }
 
         open spec fn spec_predecessors(&self) -> Seq<usize> { self.predecessors.seq@ }
@@ -86,13 +111,35 @@ pub mod SSSPResultStEphI64 {
 
         fn new(n: usize, source: usize) -> (empty: Self)
         {
-            let mut dist_seq = ArraySeqStEphS::<i64>::new(n, UNREACHABLE);
-            let ok = dist_seq.set(source, 0i64);
-            assert(ok.is_ok());
-            let pred_seq = ArraySeqStEphS::<usize>::new(n, NO_PREDECESSOR);
+            let mut dist_vec: Vec<i64> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    i <= n,
+                    dist_vec@.len() == i as int,
+                    forall|k: int| #![trigger dist_vec@[k]] 0 <= k < i ==>
+                        dist_vec@[k] == (if k == source as int { 0i64 } else { UNREACHABLE }),
+                decreases n - i,
+            {
+                if i == source { dist_vec.push(0i64); } else { dist_vec.push(UNREACHABLE); }
+                i = i + 1;
+            }
+            let mut pred_vec: Vec<usize> = Vec::new();
+            let mut j: usize = 0;
+            while j < n
+                invariant
+                    j <= n,
+                    pred_vec@.len() == j as int,
+                    forall|k: int| #![trigger pred_vec@[k]] 0 <= k < j ==>
+                        pred_vec@[k] == NO_PREDECESSOR,
+                decreases n - j,
+            {
+                pred_vec.push(NO_PREDECESSOR);
+                j = j + 1;
+            }
             SSSPResultStEphI64 {
-                distances: dist_seq,
-                predecessors: pred_seq,
+                distances: ArraySeqStEphS { seq: dist_vec },
+                predecessors: ArraySeqStEphS { seq: pred_vec },
                 source,
             }
         }
@@ -135,6 +182,7 @@ pub mod SSSPResultStEphI64 {
                 return None;
             }
             let n = self.predecessors.length();
+            if v >= n { return None; }
             let mut path = Vec::new();
             let mut current = v;
             path.push(current);
@@ -142,17 +190,20 @@ pub mod SSSPResultStEphI64 {
             while current != self.source && steps < n
                 invariant
                     steps <= n,
+                    current < n,
                     n == self.predecessors.spec_len(),
                     path@.len() > 0,
                     path@[0] == v,
                     path@[path@.len() - 1] == current,
+                    forall|j: int| #![trigger path@[j]]
+                        0 <= j < path@.len() ==> path@[j] < n,
                 decreases n - steps
             {
                 if current >= n {
                     return None;
                 }
                 let pred = *self.predecessors.nth(current);
-                if pred == NO_PREDECESSOR { return None; }
+                if pred == NO_PREDECESSOR || pred >= n { return None; }
                 path.push(pred);
                 current = pred;
                 steps = steps + 1;
@@ -172,6 +223,9 @@ pub mod SSSPResultStEphI64 {
                     path@[path@.len() - 1] == self.source,
                     forall|j: int| #![trigger reversed@[j]]
                         0 <= j < reversed@.len() ==> reversed@[j] == path@[path_len - 1 - j],
+                    forall|j: int| #![trigger path@[j]]
+                        0 <= j < path@.len() ==> path@[j] < n,
+                    n == self.predecessors.spec_len(),
                 decreases k
             {
                 k = k - 1;

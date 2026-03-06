@@ -1,404 +1,431 @@
 Verus Style Review
 ==================
 
-Path: ./src/Chap37/
-Codebase: .
+Path: /home/milnes/projects/APAS-VERUS-agent2/src/Chap37/
+Codebase: /home/milnes/projects/APAS-VERUS-agent2
 Mode: basic
-Excluding: ["Chap21", "vstdplus", "Types.rs", "Concurrency.rs", "experiments", "lib.rs"]
-Logging to: ./src/Chap37/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/src/Chap37/analyses/veracity-review-verus-style.log
 
 Checking 19 files...
 
-./src/Chap37/AVLTreeSeq.rs:
-./src/Chap37/AVLTreeSeq.rs:1: info: [1] has mod declarations
-./src/Chap37/AVLTreeSeq.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/AVLTreeSeq.rs:1: info: [3] has verus! macro
-./src/Chap37/AVLTreeSeq.rs:1: info: [4] std imports grouped with trailing blank
-./src/Chap37/AVLTreeSeq.rs:1: info: [5] vstd imports grouped with trailing blank
-./src/Chap37/AVLTreeSeq.rs:1: info: [11] Set/Seq usage has broadcast groups
-./src/Chap37/AVLTreeSeq.rs:1: info: [12] all trait fns have specs
-./src/Chap37/AVLTreeSeq.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/AVLTreeSeq.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/AVLTreeSeq.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
-./src/Chap37/AVLTreeSeq.rs:1: info: [16] no Lit macro definitions (ok)
-./src/Chap37/AVLTreeSeq.rs:1: info: [17] no collection structs (ok)
-./src/Chap37/AVLTreeSeq.rs:1: info: [19] no generic return names
-./src/Chap37/AVLTreeSeq.rs:1: info: [20] all traits have impls
-./src/Chap37/AVLTreeSeq.rs:1: info: [21] broadcast use: vstd:: before crate::
-./src/Chap37/AVLTreeSeq.rs:1169: warning: [18] impl Default for AVLTreeS < T > should come before iterators (expected impls before iterators)
-./src/Chap37/AVLTreeSeq.rs:99: warning: [22] free spec fn spec_avltreeseq_inorder_values should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeq.rs:108: warning: [22] free spec fn spec_avltreeseq_inorder should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeq.rs:117: warning: [22] free spec fn spec_avltreeseq_cached_size should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeq.rs:124: warning: [22] free spec fn spec_avltreeseq_cached_height should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeq.rs:131: warning: [22] free spec fn spec_avltreeseq_nat_max should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeq.rs:135: warning: [22] free spec fn spec_avltreeseq_wf should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeq.rs:153: warning: [22] free spec fn spec_avltreeseq_subseq should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeq.rs:161: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1241: warning: [13] impl Default for AVLTreeS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1076: warning: [18] struct AVLTreeSeqIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1082: warning: [18] impl View for AVLTreeSeqIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1089: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1128: warning: [18] struct AVLTreeSeqGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1134: warning: [18] impl View for AVLTreeSeqGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:79: warning: [22] free spec fn spec_avltreeseq_inorder_values should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:88: warning: [22] free spec fn spec_avltreeseq_inorder should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:97: warning: [22] free spec fn spec_avltreeseq_cached_size should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:104: warning: [22] free spec fn spec_avltreeseq_cached_height should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:111: warning: [22] free spec fn spec_avltreeseq_nat_max should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:115: warning: [22] free spec fn spec_avltreeseq_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:133: warning: [22] free spec fn spec_avltreeseq_subseq should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1089: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
 
-./src/Chap37/AVLTreeSeqMtPer.rs:
-./src/Chap37/AVLTreeSeqMtPer.rs:1: info: [1] has mod declarations
-./src/Chap37/AVLTreeSeqMtPer.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/AVLTreeSeqMtPer.rs:1: info: [3] has verus! macro
-./src/Chap37/AVLTreeSeqMtPer.rs:1: info: [4] std imports grouped with trailing blank
-./src/Chap37/AVLTreeSeqMtPer.rs:1: info: [5] no vstd imports (ok)
-./src/Chap37/AVLTreeSeqMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-./src/Chap37/AVLTreeSeqMtPer.rs:1: info: [12] all trait fns have specs
-./src/Chap37/AVLTreeSeqMtPer.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/AVLTreeSeqMtPer.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/AVLTreeSeqMtPer.rs:1: info: [15] Eq, PartialEq, Clone inside verus!
-./src/Chap37/AVLTreeSeqMtPer.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/AVLTreeSeqMtPer.rs:1: info: [19] no generic return names
-./src/Chap37/AVLTreeSeqMtPer.rs:1: info: [20] all traits have impls
-./src/Chap37/AVLTreeSeqMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-./src/Chap37/AVLTreeSeqMtPer.rs:1: warning: [17] collection should have proof test: ./rust_verify_test/tests/Chap37/ProveAVLTreeSeqMtPer.rs
-./src/Chap37/AVLTreeSeqMtPer.rs:544: warning: [18] impl Iterator for AVLTreeSeqMtPerIter < T > should come before derive impls in verus! (expected iterators before derive impls in verus!)
-./src/Chap37/AVLTreeSeqMtPer.rs:560: warning: [18] impl IntoIterator for AVLTreeSeqMtPerS < T > should come before derive impls in verus! (expected iterators before derive impls in verus!)
-./src/Chap37/AVLTreeSeqMtPer.rs:114: warning: [22] free spec fn spec_inorder should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeqMtPer.rs:123: warning: [22] free spec fn spec_cached_height should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeqMtPer.rs:130: warning: [22] free spec fn spec_cached_size should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeqMtPer.rs:137: warning: [22] free spec fn spec_nat_max should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeqMtPer.rs:142: warning: [22] free spec fn spec_avltreeseqmtper_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [15] Eq, PartialEq, Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:214: warning: [12] trait AVLTreeSeqMtPerTrait fn from_vec should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:216: warning: [12] trait AVLTreeSeqMtPerTrait fn values_in_order should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:546: warning: [13] impl Default for AVLTreeSeqMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:609: warning: [13] impl Iterator for AVLTreeSeqMtPerIter should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:622: warning: [13] impl IntoIterator for AVLTreeSeqMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: warning: [17] collection AVLTreeSeqMtPerIter has Iterator impl but it should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: warning: [17] collection AVLTreeSeqMtPerIter has IntoIterator impl but it should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap37/ProveAVLTreeSeqMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: warning: [17] IntoIterator for AVLTreeSeqMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:1: warning: [17] Iterator for AVLTreeSeqMtPerIter should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:511: warning: [18] struct AVLTreeSeqMtPerIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:108: warning: [22] free spec fn spec_inorder should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:117: warning: [22] free spec fn spec_cached_height should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:124: warning: [22] free spec fn spec_cached_size should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:131: warning: [22] free spec fn spec_nat_max should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:136: warning: [22] free spec fn spec_avltreeseqmtper_wf should be an abstract signature in a trait with body in the impl
 
-./src/Chap37/AVLTreeSeqStEph.rs:
-./src/Chap37/AVLTreeSeqStEph.rs:1: info: [1] has mod declarations
-./src/Chap37/AVLTreeSeqStEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/AVLTreeSeqStEph.rs:1: info: [3] has verus! macro
-./src/Chap37/AVLTreeSeqStEph.rs:1: info: [4] std imports grouped with trailing blank
-./src/Chap37/AVLTreeSeqStEph.rs:1: info: [5] no vstd imports (ok)
-./src/Chap37/AVLTreeSeqStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-./src/Chap37/AVLTreeSeqStEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/AVLTreeSeqStEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/AVLTreeSeqStEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/AVLTreeSeqStEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
-./src/Chap37/AVLTreeSeqStEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/AVLTreeSeqStEph.rs:1: info: [19] no generic return names
-./src/Chap37/AVLTreeSeqStEph.rs:1: info: [20] all traits have impls
-./src/Chap37/AVLTreeSeqStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-./src/Chap37/AVLTreeSeqStEph.rs:1: warning: [17] collection should have proof test: ./rust_verify_test/tests/Chap37/ProveAVLTreeSeqStEph.rs
-./src/Chap37/AVLTreeSeqStEph.rs:829: warning: [18] fn push_left_iter should come before derive impls in verus! (expected impls before derive impls in verus!)
-./src/Chap37/AVLTreeSeqStEph.rs:837: warning: [18] impl IntoIterator for & 'a AVLTreeSeqStEphS < T > should come before derive impls in verus! (expected iterators before derive impls in verus!)
-./src/Chap37/AVLTreeSeqStEph.rs:847: warning: [18] impl Iterator for AVLTreeSeqIterStEph < 'a , T > should come before derive impls in verus! (expected iterators before derive impls in verus!)
-./src/Chap37/AVLTreeSeqStEph.rs:114: warning: [22] free spec fn spec_inorder should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeqStEph.rs:123: warning: [22] free spec fn spec_cached_size should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeqStEph.rs:130: warning: [22] free spec fn spec_cached_height should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeqStEph.rs:137: warning: [22] free spec fn spec_nat_max should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeqStEph.rs:142: warning: [22] free spec fn spec_avltreeseqsteph_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:222: warning: [12] trait AVLTreeSeqStEphTrait fn from_vec should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:227: warning: [12] trait AVLTreeSeqStEphTrait fn iter should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:826: warning: [13] impl Default for AVLTreeSeqStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:892: warning: [13] impl Iterator for AVLTreeSeqIterStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: warning: [17] collection AVLTreeSeqIterStEph has Iterator impl but it should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: warning: [17] collection AVLTreeSeqIterStEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap37/ProveAVLTreeSeqStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1: warning: [17] Iterator for AVLTreeSeqIterStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:771: warning: [18] struct AVLTreeSeqIterStEph should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:108: warning: [22] free spec fn spec_inorder should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:117: warning: [22] free spec fn spec_cached_size should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:124: warning: [22] free spec fn spec_cached_height should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:131: warning: [22] free spec fn spec_nat_max should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:136: warning: [22] free spec fn spec_avltreeseqsteph_wf should be an abstract signature in a trait with body in the impl
 
-./src/Chap37/AVLTreeSeqStPer.rs:
-./src/Chap37/AVLTreeSeqStPer.rs:1: info: [1] has mod declarations
-./src/Chap37/AVLTreeSeqStPer.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/AVLTreeSeqStPer.rs:1: info: [3] has verus! macro
-./src/Chap37/AVLTreeSeqStPer.rs:1: info: [4] std imports grouped with trailing blank
-./src/Chap37/AVLTreeSeqStPer.rs:1: info: [5] no vstd imports (ok)
-./src/Chap37/AVLTreeSeqStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-./src/Chap37/AVLTreeSeqStPer.rs:1: info: [12] all trait fns have specs
-./src/Chap37/AVLTreeSeqStPer.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/AVLTreeSeqStPer.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/AVLTreeSeqStPer.rs:1: info: [15] Eq, PartialEq, Clone inside verus!
-./src/Chap37/AVLTreeSeqStPer.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/AVLTreeSeqStPer.rs:1: info: [19] no generic return names
-./src/Chap37/AVLTreeSeqStPer.rs:1: info: [20] all traits have impls
-./src/Chap37/AVLTreeSeqStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-./src/Chap37/AVLTreeSeqStPer.rs:1: warning: [17] collection should have proof test: ./rust_verify_test/tests/Chap37/ProveAVLTreeSeqStPer.rs
-./src/Chap37/AVLTreeSeqStPer.rs:512: warning: [18] fn push_left_iter_stper should come before derive impls in verus! (expected impls before derive impls in verus!)
-./src/Chap37/AVLTreeSeqStPer.rs:519: warning: [18] impl IntoIterator for & 'a AVLTreeSeqStPerS < T > should come before derive impls in verus! (expected iterators before derive impls in verus!)
-./src/Chap37/AVLTreeSeqStPer.rs:529: warning: [18] impl Iterator for AVLTreeSeqStPerIter < 'a , T > should come before derive impls in verus! (expected iterators before derive impls in verus!)
-./src/Chap37/AVLTreeSeqStPer.rs:81: warning: [22] free spec fn spec_inorder should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeqStPer.rs:90: warning: [22] free spec fn spec_cached_height should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeqStPer.rs:97: warning: [22] free spec fn spec_cached_size should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeqStPer.rs:104: warning: [22] free spec fn spec_nat_max should be an abstract signature in a trait with body in the impl
-./src/Chap37/AVLTreeSeqStPer.rs:109: warning: [22] free spec fn spec_avltreeseqstper_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: info: [15] Eq, PartialEq, Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:181: warning: [12] trait AVLTreeSeqStPerTrait fn from_vec should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:189: warning: [12] trait AVLTreeSeqStPerTrait fn iter should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:507: warning: [13] impl Default for AVLTreeSeqStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:572: warning: [13] impl Iterator for AVLTreeSeqStPerIter should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: warning: [17] collection AVLTreeSeqStPerIter has Iterator impl but it should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: warning: [17] collection AVLTreeSeqStPerIter should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap37/ProveAVLTreeSeqStPer.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:1: warning: [17] Iterator for AVLTreeSeqStPerIter should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:81: warning: [22] free spec fn spec_inorder should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:90: warning: [22] free spec fn spec_cached_height should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:97: warning: [22] free spec fn spec_cached_size should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:104: warning: [22] free spec fn spec_nat_max should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:109: warning: [22] free spec fn spec_avltreeseqstper_wf should be an abstract signature in a trait with body in the impl
 
-./src/Chap37/BSTAVLMtEph.rs:
-./src/Chap37/BSTAVLMtEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTAVLMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTAVLMtEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTAVLMtEph.rs:1: info: [4] no std imports (ok)
-./src/Chap37/BSTAVLMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-./src/Chap37/BSTAVLMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-./src/Chap37/BSTAVLMtEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTAVLMtEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTAVLMtEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTAVLMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-./src/Chap37/BSTAVLMtEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTAVLMtEph.rs:1: info: [17] no collection structs (ok)
-./src/Chap37/BSTAVLMtEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTAVLMtEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTAVLMtEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTAVLMtEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTAVLMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
 
-./src/Chap37/BSTAVLStEph.rs:
-./src/Chap37/BSTAVLStEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTAVLStEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTAVLStEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTAVLStEph.rs:1: info: [4] no std imports (ok)
-./src/Chap37/BSTAVLStEph.rs:1: info: [5] no vstd imports (ok)
-./src/Chap37/BSTAVLStEph.rs:1: info: [11] no Set/Seq usage (ok)
-./src/Chap37/BSTAVLStEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTAVLStEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTAVLStEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTAVLStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-./src/Chap37/BSTAVLStEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTAVLStEph.rs:1: info: [17] no collection structs (ok)
-./src/Chap37/BSTAVLStEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTAVLStEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTAVLStEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTAVLStEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTAVLStEph.rs:42: warning: [22] free spec fn avl_balanced should be an abstract signature in a trait with body in the impl
-./src/Chap37/BSTAVLStEph.rs:59: warning: [22] free spec fn tree_is_avl should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:42: warning: [22] free spec fn avl_balanced should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:59: warning: [22] free spec fn tree_is_avl should be an abstract signature in a trait with body in the impl
 
-./src/Chap37/BSTBBAlphaMtEph.rs:
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [4] no std imports (ok)
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [17] no collection structs (ok)
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTBBAlphaMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
 
-./src/Chap37/BSTBBAlphaStEph.rs:
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [4] no std imports (ok)
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [5] vstd imports grouped with trailing blank
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [11] no Set/Seq usage (ok)
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [17] no collection structs (ok)
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTBBAlphaStEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTBBAlphaStEph.rs:44: warning: [22] free spec fn weight_balanced should be an abstract signature in a trait with body in the impl
-./src/Chap37/BSTBBAlphaStEph.rs:60: warning: [22] free spec fn tree_is_bb should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:44: warning: [22] free spec fn weight_balanced should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaStEph.rs:60: warning: [22] free spec fn tree_is_bb should be an abstract signature in a trait with body in the impl
 
-./src/Chap37/BSTPlainMtEph.rs:
-./src/Chap37/BSTPlainMtEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTPlainMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTPlainMtEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTPlainMtEph.rs:1: info: [4] no std imports (ok)
-./src/Chap37/BSTPlainMtEph.rs:1: info: [5] no vstd imports (ok)
-./src/Chap37/BSTPlainMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-./src/Chap37/BSTPlainMtEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTPlainMtEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTPlainMtEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTPlainMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-./src/Chap37/BSTPlainMtEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTPlainMtEph.rs:1: info: [17] no collection structs (ok)
-./src/Chap37/BSTPlainMtEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTPlainMtEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTPlainMtEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTPlainMtEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTPlainMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
 
-./src/Chap37/BSTPlainStEph.rs:
-./src/Chap37/BSTPlainStEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTPlainStEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTPlainStEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTPlainStEph.rs:1: info: [4] no std imports (ok)
-./src/Chap37/BSTPlainStEph.rs:1: info: [5] vstd imports grouped with trailing blank
-./src/Chap37/BSTPlainStEph.rs:1: info: [11] no Set/Seq usage (ok)
-./src/Chap37/BSTPlainStEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTPlainStEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTPlainStEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTPlainStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-./src/Chap37/BSTPlainStEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTPlainStEph.rs:1: info: [17] no collection structs (ok)
-./src/Chap37/BSTPlainStEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTPlainStEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTPlainStEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTPlainStEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTPlainStEph.rs:40: warning: [22] free spec fn tree_contains should be an abstract signature in a trait with body in the impl
-./src/Chap37/BSTPlainStEph.rs:53: warning: [22] free spec fn tree_is_bst should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:40: warning: [22] free spec fn tree_contains should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainStEph.rs:53: warning: [22] free spec fn tree_is_bst should be an abstract signature in a trait with body in the impl
 
-./src/Chap37/BSTRBMtEph.rs:
-./src/Chap37/BSTRBMtEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTRBMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTRBMtEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTRBMtEph.rs:1: info: [4] std imports grouped with trailing blank
-./src/Chap37/BSTRBMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-./src/Chap37/BSTRBMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-./src/Chap37/BSTRBMtEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTRBMtEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTRBMtEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTRBMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-./src/Chap37/BSTRBMtEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTRBMtEph.rs:1: info: [17] no collection structs (ok)
-./src/Chap37/BSTRBMtEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTRBMtEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTRBMtEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTRBMtEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTRBMtEph.rs:64: warning: [22] free spec fn link_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:495: warning: [13] impl BSTRBMtEphTrait for BSTRBMtEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:599: warning: [13] impl Default for BSTRBMtEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:97: warning: [19] reduce return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:63: warning: [22] free spec fn link_wf should be an abstract signature in a trait with body in the impl
 
-./src/Chap37/BSTRBStEph.rs:
-./src/Chap37/BSTRBStEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTRBStEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTRBStEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTRBStEph.rs:1: info: [4] no std imports (ok)
-./src/Chap37/BSTRBStEph.rs:1: info: [5] no vstd imports (ok)
-./src/Chap37/BSTRBStEph.rs:1: info: [11] no Set/Seq usage (ok)
-./src/Chap37/BSTRBStEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTRBStEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTRBStEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTRBStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-./src/Chap37/BSTRBStEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTRBStEph.rs:1: info: [17] no collection structs (ok)
-./src/Chap37/BSTRBStEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTRBStEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTRBStEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTRBStEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTRBStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
 
-./src/Chap37/BSTSetAVLMtEph.rs:
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [4] std imports grouped with trailing blank
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [5] no vstd imports (ok)
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTSetAVLMtEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTSetAVLMtEph.rs:1: warning: [17] collection should have proof test: ./rust_verify_test/tests/Chap37/ProveBSTSetAVLMtEph.rs
-./src/Chap37/BSTSetAVLMtEph.rs:69: warning: [22] free spec fn bstsetavlmteph_iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: warning: [17] collection BSTSetAVLMtEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: warning: [17] collection BSTSetAVLMtEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap37/ProveBSTSetAVLMtEph.rs
 
-./src/Chap37/BSTSetBBAlphaMtEph.rs:
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [4] std imports grouped with trailing blank
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [5] no vstd imports (ok)
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTSetBBAlphaMtEph.rs:1: warning: [17] collection should have proof test: ./rust_verify_test/tests/Chap37/ProveBSTSetBBAlphaMtEph.rs
-./src/Chap37/BSTSetBBAlphaMtEph.rs:54: warning: [22] free spec fn bstsetbbalphamteph_iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: warning: [17] collection BSTSetBBAlphaMtEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: warning: [17] collection BSTSetBBAlphaMtEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap37/ProveBSTSetBBAlphaMtEph.rs
 
-./src/Chap37/BSTSetPlainMtEph.rs:
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [4] std imports grouped with trailing blank
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [5] no vstd imports (ok)
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTSetPlainMtEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTSetPlainMtEph.rs:1: warning: [17] collection should have proof test: ./rust_verify_test/tests/Chap37/ProveBSTSetPlainMtEph.rs
-./src/Chap37/BSTSetPlainMtEph.rs:54: warning: [22] free spec fn bstsetplainmteph_iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: warning: [17] collection BSTSetPlainMtEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: warning: [17] collection BSTSetPlainMtEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap37/ProveBSTSetPlainMtEph.rs
 
-./src/Chap37/BSTSetRBMtEph.rs:
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [4] std imports grouped with trailing blank
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [5] no vstd imports (ok)
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTSetRBMtEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTSetRBMtEph.rs:1: warning: [17] collection should have proof test: ./rust_verify_test/tests/Chap37/ProveBSTSetRBMtEph.rs
-./src/Chap37/BSTSetRBMtEph.rs:54: warning: [22] free spec fn bstsetrbmteph_iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: warning: [17] collection BSTSetRBMtEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: warning: [17] collection BSTSetRBMtEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap37/ProveBSTSetRBMtEph.rs
 
-./src/Chap37/BSTSetSplayMtEph.rs:
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [4] std imports grouped with trailing blank
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [5] no vstd imports (ok)
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTSetSplayMtEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTSetSplayMtEph.rs:1: warning: [17] collection should have proof test: ./rust_verify_test/tests/Chap37/ProveBSTSetSplayMtEph.rs
-./src/Chap37/BSTSetSplayMtEph.rs:54: warning: [22] free spec fn bstsetsplaymteph_iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: warning: [17] collection BSTSetSplayMtEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: warning: [17] collection BSTSetSplayMtEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/tests/Chap37/ProveBSTSetSplayMtEph.rs
 
-./src/Chap37/BSTSplayMtEph.rs:
-./src/Chap37/BSTSplayMtEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTSplayMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTSplayMtEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTSplayMtEph.rs:1: info: [4] std imports grouped with trailing blank
-./src/Chap37/BSTSplayMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-./src/Chap37/BSTSplayMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-./src/Chap37/BSTSplayMtEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTSplayMtEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTSplayMtEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTSplayMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-./src/Chap37/BSTSplayMtEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTSplayMtEph.rs:1: info: [17] no collection structs (ok)
-./src/Chap37/BSTSplayMtEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTSplayMtEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTSplayMtEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTSplayMtEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTSplayMtEph.rs:57: warning: [22] free spec fn link_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:500: warning: [13] impl BSTSplayMtEphTrait for BSTSplayMtEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:601: warning: [13] impl Default for BSTSplayMtEph should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:90: warning: [19] reduce return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:56: warning: [22] free spec fn link_wf should be an abstract signature in a trait with body in the impl
 
-./src/Chap37/BSTSplayStEph.rs:
-./src/Chap37/BSTSplayStEph.rs:1: info: [1] has mod declarations
-./src/Chap37/BSTSplayStEph.rs:1: info: [2] vstd::prelude::* before verus!
-./src/Chap37/BSTSplayStEph.rs:1: info: [3] has verus! macro
-./src/Chap37/BSTSplayStEph.rs:1: info: [4] std imports grouped with trailing blank
-./src/Chap37/BSTSplayStEph.rs:1: info: [5] no vstd imports (ok)
-./src/Chap37/BSTSplayStEph.rs:1: info: [11] no Set/Seq usage (ok)
-./src/Chap37/BSTSplayStEph.rs:1: info: [12] all trait fns have specs
-./src/Chap37/BSTSplayStEph.rs:1: info: [13] trait impls inside verus!
-./src/Chap37/BSTSplayStEph.rs:1: info: [14] Debug, Display outside verus!
-./src/Chap37/BSTSplayStEph.rs:1: info: [15] Clone inside verus!
-./src/Chap37/BSTSplayStEph.rs:1: info: [16] Lit macro definitions at end of file
-./src/Chap37/BSTSplayStEph.rs:1: info: [17] no collection structs (ok)
-./src/Chap37/BSTSplayStEph.rs:1: info: [18] definition order correct
-./src/Chap37/BSTSplayStEph.rs:1: info: [19] no generic return names
-./src/Chap37/BSTSplayStEph.rs:1: info: [20] all traits have impls
-./src/Chap37/BSTSplayStEph.rs:1: info: [21] no broadcast use entries
-./src/Chap37/BSTSplayStEph.rs:54: warning: [22] free spec fn spec_size_link should be an abstract signature in a trait with body in the impl
-./src/Chap37/BSTSplayStEph.rs:61: warning: [22] free spec fn spec_height_link should be an abstract signature in a trait with body in the impl
-./src/Chap37/BSTSplayStEph.rs:75: warning: [22] free spec fn spec_contains_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:54: warning: [22] free spec fn spec_size_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:61: warning: [22] free spec fn spec_height_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:75: warning: [22] free spec fn spec_contains_link should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 296 passed, 56 warnings in 15 files (checked 19 files)
+Summary: 291 passed, 89 warnings in 15 files (checked 19 files)
 ════════════════════════════════════════════════════════════════
