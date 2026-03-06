@@ -27,7 +27,7 @@
     "id": 4,
     "function": "find`",
     "file": "Chap44/DocumentIndex.rs",
-    "lines": "285-287",
+    "lines": "289-291",
     "spec_strength": "",
     "snippet": "        /// - APAS: N/A — delegates to DocumentIndex::find.\n        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)\n        fn find(&self, word: &Word)                                                     -> DocumentSet;"
   },
@@ -69,13 +69,13 @@
     "file": "Chap44/DocumentIndex.rs",
     "lines": "77-79",
     "spec_strength": "",
-    "snippet": "        /// - APAS: (no cost stated)\n        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential iteration over AVL tree sequence\n        fn to_seq(docs: &DocumentSet)                                -> ArraySeqStPerS<DocumentId>;"
+    "snippet": "        /// - APAS: (no cost stated)\n        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential iteration over AVL tree sequence\n        fn to_seq(docs: &DocumentSet)                                -> (seq: ArraySeqStPerS<DocumentId>)"
   },
   {
     "id": 10,
     "function": "empty",
     "file": "Chap44/DocumentIndex.rs",
-    "lines": "81-83",
+    "lines": "85-87",
     "spec_strength": "",
     "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn empty()                                                   -> Self;"
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "function": "get_all_words",
     "file": "Chap44/DocumentIndex.rs",
-    "lines": "85-87",
+    "lines": "89-91",
     "spec_strength": "",
     "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — collects table keys into sequence\n        fn get_all_words(&self)                                      -> ArraySeqStPerS<Word>;"
   },
@@ -91,7 +91,7 @@
     "id": 12,
     "function": "word_count",
     "file": "Chap44/DocumentIndex.rs",
-    "lines": "89-91",
+    "lines": "93-95",
     "spec_strength": "",
     "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to Table.size\n        fn word_count(&self)                                         -> usize;"
   },
@@ -99,7 +99,7 @@
     "id": 13,
     "function": "tokens",
     "file": "Chap44/DocumentIndex.rs",
-    "lines": "195-222",
+    "lines": "199-226",
     "spec_strength": "",
     "snippet": "    /// Tokenization function: splits content into words.\n    /// - APAS: (no cost stated — tokens is a helper assumed O(m) where m = string length)\n    /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — sequential character iteration\n    pub fn tokens(content: &Contents) -> ArraySeqStPerS<Word> {\n        let mut words = ArraySeqStPerS::empty();\n        let content_lower = content.to_lowercase();\n\n        // Simple tokenization: split on whitespace and punctuation\n        let mut current_word = String::new();\n\n        for ch in content_lower.chars() {\n            if ch.is_alphabetic() {\n                current_word.push(ch);\n            } else if !current_word.is_empty() {\n                let single_seq = ArraySeqStPerS::singleton(current_word.clone());\n                words = ArraySeqStPerS::append(&words, &single_seq);\n                current_word = String::new();\n            }\n        }\n\n        // Don't forget the last word\n        if !current_word.is_empty() {\n            let single_seq = ArraySeqStPerS::singleton(current_word);\n            words = ArraySeqStPerS::append(&words, &single_seq);\n        }\n\n        words\n    }"
   },
@@ -107,7 +107,7 @@
     "id": 14,
     "function": "create_finder",
     "file": "Chap44/DocumentIndex.rs",
-    "lines": "224-229",
+    "lines": "228-233",
     "spec_strength": "",
     "snippet": "    /// Convenience function for staged computation pattern (Example 44.2).\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — closure capture only\n    pub fn create_finder(index: &DocumentIndex) -> impl Fn(&Word) -> DocumentSet + '_ {\n        move |word: &Word| index.find(word)\n    }"
   },
@@ -115,7 +115,7 @@
     "id": 15,
     "function": "new",
     "file": "Chap44/DocumentIndex.rs",
-    "lines": "281-283",
+    "lines": "285-287",
     "spec_strength": "",
     "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn new(index: &'a DocumentIndex)                                                -> Self;"
   },
@@ -123,7 +123,7 @@
     "id": 16,
     "function": "and",
     "file": "Chap44/DocumentIndex.rs",
-    "lines": "289-291",
+    "lines": "293-295",
     "spec_strength": "",
     "snippet": "        /// - APAS: N/A — delegates to DocumentIndex::query_and.\n        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m))\n        fn and(&self, docs_a: DocumentSet, docs_b: DocumentSet)                         -> DocumentSet;"
   },
@@ -131,7 +131,7 @@
     "id": 17,
     "function": "or",
     "file": "Chap44/DocumentIndex.rs",
-    "lines": "293-295",
+    "lines": "297-299",
     "spec_strength": "",
     "snippet": "        /// - APAS: N/A — delegates to DocumentIndex::query_or.\n        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m))\n        fn or(&self, docs_a: DocumentSet, docs_b: DocumentSet)                          -> DocumentSet;"
   },
@@ -139,7 +139,7 @@
     "id": 18,
     "function": "and_not",
     "file": "Chap44/DocumentIndex.rs",
-    "lines": "297-299",
+    "lines": "301-303",
     "spec_strength": "",
     "snippet": "        /// - APAS: N/A — delegates to DocumentIndex::query_and_not.\n        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m))\n        fn and_not(&self, docs_a: DocumentSet, docs_b: DocumentSet)                     -> DocumentSet;"
   },
@@ -147,7 +147,7 @@
     "id": 19,
     "function": "complex_query",
     "file": "Chap44/DocumentIndex.rs",
-    "lines": "301-303",
+    "lines": "305-307",
     "spec_strength": "",
     "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work dominated by 4 finds + 3 set operations\n        fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> DocumentSet;"
   },

@@ -22,7 +22,7 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap45 | BalancedTreePQ | 26 | 28 | 0 | 1 | 29 | 0 | 27 | 0 | 2 |
+| 1 | Chap45 | BalancedTreePQ | 26 | 28 | 0 | 1 | 29 | 0 | 5 | 22 | 2 |
 | 2 | Chap45 | BinaryHeapPQ | 18 | 20 | 0 | 11 | 31 | 0 | 30 | 0 | 1 |
 | 3 | Chap45 | Example45_2 | 8 | 8 | 0 | 9 | 9 | 0 | 8 | 0 | 1 |
 | 4 | Chap45 | HeapsortExample | 2 | 3 | 0 | 21 | 4 | 20 | 1 | 0 | 23 |
@@ -36,35 +36,35 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `_balanced_tree_pq_verified` |  |  |  | Y | Y |  | Y |  | 55 |
-| 2 | `empty` | Y | Y |  |  | Y |  |  | unknown | 60&#8209;61 |
-| 3 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;64 |
-| 4 | `find_min` | Y | Y |  |  | Y |  |  | unknown | 66&#8209;69 |
-| 5 | `insert` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;72 |
-| 6 | `delete_min` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;79 |
-| 7 | `meld` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;82 |
-| 8 | `from_seq` | Y | Y |  |  | Y |  |  | unknown | 84&#8209;85 |
-| 9 | `size` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;88 |
-| 10 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 90&#8209;91 |
-| 11 | `to_seq` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;94 |
-| 12 | `find_max` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;99 |
-| 13 | `delete_max` | Y | Y |  |  | Y |  |  | unknown | 101&#8209;106 |
-| 14 | `insert_all` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;109 |
-| 15 | `extract_all_sorted` | Y | Y |  |  | Y |  |  | unknown | 111&#8209;112 |
-| 16 | `contains` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;115 |
-| 17 | `remove` | Y | Y |  |  | Y |  |  | unknown | 117&#8209;120 |
-| 18 | `range` | Y | Y |  |  | Y |  |  | unknown | 122&#8209;123 |
-| 19 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 125&#8209;126 |
-| 20 | `to_vec` | Y | Y |  |  | Y |  |  | unknown | 128&#8209;129 |
-| 21 | `to_sorted_vec` | Y | Y |  |  | Y |  |  | unknown | 131&#8209;132 |
-| 22 | `is_sorted` | Y | Y |  |  | Y |  |  | unknown | 134&#8209;135 |
-| 23 | `height` | Y | Y |  |  | Y |  |  | unknown | 137&#8209;138 |
-| 24 | `split` | Y | Y |  |  | Y |  |  | unknown | 140&#8209;141 |
-| 25 | `join` | Y | Y |  |  | Y |  |  | unknown | 143&#8209;144 |
-| 26 | `filter` | Y | Y |  |  | Y |  |  | unknown | 149&#8209;150 |
-| 27 | `map` | Y | Y |  |  | Y |  |  | unknown | 151&#8209;152 |
-| 28 | `default` |  | Y |  |  | Y |  | Y |  | 380 |
-| 29 | `eq` |  | Y |  |  | Y |  |  | unknown | 430&#8209;431 |
+| 1 | `_balanced_tree_pq_verified` |  |  |  | Y | Y |  | Y |  | 52 |
+| 2 | `empty` | Y | Y |  |  | Y |  |  | hole | 57&#8209;58 |
+| 3 | `singleton` | Y | Y |  |  | Y |  |  | hole | 60&#8209;61 |
+| 4 | `find_min` | Y | Y |  |  | Y |  |  | hole | 63&#8209;66 |
+| 5 | `insert` | Y | Y |  |  | Y |  |  | hole | 68&#8209;69 |
+| 6 | `delete_min` | Y | Y |  |  | Y |  |  | hole | 71&#8209;76 |
+| 7 | `meld` | Y | Y |  |  | Y |  |  | hole | 78&#8209;79 |
+| 8 | `from_seq` | Y | Y |  |  | Y |  |  | hole | 81&#8209;82 |
+| 9 | `size` | Y | Y |  |  | Y |  |  | hole | 84&#8209;85 |
+| 10 | `is_empty` | Y | Y |  |  | Y |  |  | hole | 87&#8209;88 |
+| 11 | `to_seq` | Y | Y |  |  | Y |  |  | unknown | 90&#8209;91 |
+| 12 | `find_max` | Y | Y |  |  | Y |  |  | hole | 93&#8209;96 |
+| 13 | `delete_max` | Y | Y |  |  | Y |  |  | hole | 98&#8209;103 |
+| 14 | `insert_all` | Y | Y |  |  | Y |  |  | hole | 105&#8209;106 |
+| 15 | `extract_all_sorted` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;109 |
+| 16 | `contains` | Y | Y |  |  | Y |  |  | hole | 111&#8209;112 |
+| 17 | `remove` | Y | Y |  |  | Y |  |  | hole | 114&#8209;117 |
+| 18 | `range` | Y | Y |  |  | Y |  |  | hole | 119&#8209;120 |
+| 19 | `from_vec` | Y | Y |  |  | Y |  |  | hole | 122&#8209;123 |
+| 20 | `to_vec` | Y | Y |  |  | Y |  |  | hole | 125&#8209;126 |
+| 21 | `to_sorted_vec` | Y | Y |  |  | Y |  |  | hole | 128&#8209;129 |
+| 22 | `is_sorted` | Y | Y |  |  | Y |  |  | hole | 131&#8209;132 |
+| 23 | `height` | Y | Y |  |  | Y |  |  | hole | 134&#8209;135 |
+| 24 | `split` | Y | Y |  |  | Y |  |  | hole | 137&#8209;138 |
+| 25 | `join` | Y | Y |  |  | Y |  |  | hole | 140&#8209;141 |
+| 26 | `filter` | Y | Y |  |  | Y |  |  | unknown | 146&#8209;147 |
+| 27 | `map` | Y | Y |  |  | Y |  |  | unknown | 148&#8209;149 |
+| 28 | `default` |  | Y |  |  | Y |  | Y |  | 398 |
+| 29 | `eq` |  | Y |  |  | Y |  |  | unknown | 448&#8209;449 |
 
 ### Chap45/BinaryHeapPQ.rs
 
