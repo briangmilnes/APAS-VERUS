@@ -1,95 +1,95 @@
 ❌ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:156: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:156: external - #[verifier::external]
        157 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQTrait<T> for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:378: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:378: external - #[verifier::external]
        379 |         impl<T: StT + Ord + TotalOrder> Default for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:383: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:383: external - #[verifier::external]
        384 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:434: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:434: info: accept() - accept hole
    Holes: 3 total
       3 × external
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 ℹ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:524: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:533: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:554: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:568: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:598: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:610: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:657: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:759: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:779: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:794: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:524: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:533: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:554: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:568: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:598: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:610: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:657: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:759: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:779: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:794: info: accept() - accept hole
    Info: 10 total
    1 clean proof function
 ❌ Example45_2.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:43: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:43: external - #[verifier::external]
         44 |         impl Example45_2Trait for Example45_2 {
    Holes: 1 total
       1 × external
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:137: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:137: external - #[verifier::external]
        138 |         impl<T: StT + Ord + TotalOrder> HeapsortComparisonTrait<T> for HeapsortComparison<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:98: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:113: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:98: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:113: info: accept() - accept hole
    Holes: 1 total
       1 × external
    Info: 2 total
    Proof functions: 1 total (1 clean, 0 holed)
 ℹ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:244: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:383: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:399: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:416: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:432: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:446: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:493: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:605: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:625: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:637: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:647: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:244: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:383: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:399: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:416: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:432: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:446: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:493: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:605: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:625: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:637: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:647: info: accept() - accept hole
    Info: 11 total
    2 clean proof functions
 ❌ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:484: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:484: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        479 |             fn clone(&self) -> (cloned: Self)
             ...
        482 |                 let cloned = SortedListPQ { elements: self.elements.clone() };
        483 |                 proof {
        485 |                     lemma_seq_map_cloned_view_eq(
        486 |                         self.elements.seq@,
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:188: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:198: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:258: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:285: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:349: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:384: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:417: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:445: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:499: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:188: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:198: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:258: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:285: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:349: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:384: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:417: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:445: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:499: info: accept() - accept hole
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Info: 9 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:507: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:507: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        502 |             fn clone(&self) -> (cloned: Self)
             ...
        505 |                 let cloned = UnsortedListPQ { elements: self.elements.clone() };
        506 |                 proof {
        508 |                     lemma_seq_map_cloned_view_eq(
        509 |                         self.elements.seq@,
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:187: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:197: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:251: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:324: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:326: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:328: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:333: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:345: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:485: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:522: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:187: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:197: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:251: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:324: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:326: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:328: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:333: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:345: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:485: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:522: info: accept() - accept hole
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Info: 10 total
    Proof functions: 1 total (1 clean, 0 holed)
@@ -123,29 +123,6 @@ Info: 43 total
    SortedListPQ.rs:417: info: accept() - accept hole
    SortedListPQ.rs:445: info: accept() - accept hole
    SortedListPQ.rs:499: info: accept() - accept hole
-   BalancedTreePQ.rs:434: info: accept() - accept hole
-   BinaryHeapPQ.rs:524: info: accept() - accept hole
-   BinaryHeapPQ.rs:533: info: accept() - accept hole
-   BinaryHeapPQ.rs:554: info: accept() - accept hole
-   BinaryHeapPQ.rs:568: info: accept() - accept hole
-   BinaryHeapPQ.rs:598: info: accept() - accept hole
-   BinaryHeapPQ.rs:610: info: accept() - accept hole
-   BinaryHeapPQ.rs:657: info: accept() - accept hole
-   BinaryHeapPQ.rs:759: info: accept() - accept hole
-   BinaryHeapPQ.rs:779: info: accept() - accept hole
-   BinaryHeapPQ.rs:794: info: accept() - accept hole
-   UnsortedListPQ.rs:187: info: accept() - accept hole
-   UnsortedListPQ.rs:197: info: accept() - accept hole
-   UnsortedListPQ.rs:251: info: accept() - accept hole
-   UnsortedListPQ.rs:324: info: accept() - accept hole
-   UnsortedListPQ.rs:326: info: accept() - accept hole
-   UnsortedListPQ.rs:328: info: accept() - accept hole
-   UnsortedListPQ.rs:333: info: accept() - accept hole
-   UnsortedListPQ.rs:345: info: accept() - accept hole
-   UnsortedListPQ.rs:485: info: accept() - accept hole
-   UnsortedListPQ.rs:522: info: accept() - accept hole
-   HeapsortExample.rs:98: info: accept() - accept hole
-   HeapsortExample.rs:113: info: accept() - accept hole
    LeftistHeapPQ.rs:244: info: accept() - accept hole
    LeftistHeapPQ.rs:383: info: accept() - accept hole
    LeftistHeapPQ.rs:399: info: accept() - accept hole
@@ -157,5 +134,30 @@ Info: 43 total
    LeftistHeapPQ.rs:625: info: accept() - accept hole
    LeftistHeapPQ.rs:637: info: accept() - accept hole
    LeftistHeapPQ.rs:647: info: accept() - accept hole
-stHeapPQ.rs:637: info: accept() - accept hole
-   LeftistHeapPQ.rs:647: info: accept() - accept hole
+   BalancedTreePQ.rs:434: info: accept() - accept hole
+   UnsortedListPQ.rs:187: info: accept() - accept hole
+   UnsortedListPQ.rs:197: info: accept() - accept hole
+   UnsortedListPQ.rs:251: info: accept() - accept hole
+   UnsortedListPQ.rs:324: info: accept() - accept hole
+   UnsortedListPQ.rs:326: info: accept() - accept hole
+   UnsortedListPQ.rs:328: info: accept() - accept hole
+   UnsortedListPQ.rs:333: info: accept() - accept hole
+   UnsortedListPQ.rs:345: info: accept() - accept hole
+   UnsortedListPQ.rs:485: info: accept() - accept hole
+   UnsortedListPQ.rs:522: info: accept() - accept hole
+   BinaryHeapPQ.rs:524: info: accept() - accept hole
+   BinaryHeapPQ.rs:533: info: accept() - accept hole
+   BinaryHeapPQ.rs:554: info: accept() - accept hole
+   BinaryHeapPQ.rs:568: info: accept() - accept hole
+   BinaryHeapPQ.rs:598: info: accept() - accept hole
+   BinaryHeapPQ.rs:610: info: accept() - accept hole
+   BinaryHeapPQ.rs:657: info: accept() - accept hole
+   BinaryHeapPQ.rs:759: info: accept() - accept hole
+   BinaryHeapPQ.rs:779: info: accept() - accept hole
+   BinaryHeapPQ.rs:794: info: accept() - accept hole
+   HeapsortExample.rs:98: info: accept() - accept hole
+   HeapsortExample.rs:113: info: accept() - accept hole
+o: accept() - accept hole
+   BinaryHeapPQ.rs:794: info: accept() - accept hole
+   HeapsortExample.rs:98: info: accept() - accept hole
+   HeapsortExample.rs:113: info: accept() - accept hole

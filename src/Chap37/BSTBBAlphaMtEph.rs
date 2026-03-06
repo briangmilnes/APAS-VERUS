@@ -27,7 +27,7 @@ pub mod BSTBBAlphaMtEph {
     // 2. imports
 
     use crate::Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::{tree_is_bb, weight_balanced};
-    use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{tree_contains, tree_is_bst};
+    use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
@@ -64,7 +64,7 @@ pub mod BSTBBAlphaMtEph {
 
     impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BSTBBAlphaMtEphInv<T> {
         open spec fn inv(self, tree: BalBinTree<T>) -> bool {
-            tree_is_bst::<T>(tree)
+            tree.tree_is_bst()
                 && tree.spec_size() <= usize::MAX
                 && tree.spec_height() <= usize::MAX
         }
@@ -73,12 +73,12 @@ pub mod BSTBBAlphaMtEph {
     // Verified BST insert (same proof as BSTBBAlphaStEph / BSTPlainStEph).
 
     fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)
-        requires tree_is_bst::<T>(node),
+        requires node.tree_is_bst(),
         ensures
-            tree_is_bst::<T>(inserted),
-            tree_contains(inserted, value),
-            forall|x: T| #![auto] tree_contains(inserted, x) <==>
-                (tree_contains(node, x) || x == value),
+            inserted.tree_is_bst(),
+            inserted.tree_contains(value),
+            forall|x: T| #![auto] inserted.tree_contains(x) <==>
+                (node.tree_contains(x) || x == value),
             inserted.spec_size() <= node.spec_size() + 1,
             inserted.spec_height() <= node.spec_height() + 1,
         decreases node.spec_size(),
@@ -100,20 +100,20 @@ pub mod BSTBBAlphaMtEph {
                             left: new_left, value: node_val, right: right,
                         }));
                         proof {
-                            assert(tree_is_bst::<T>(new_left));
-                            assert(tree_is_bst::<T>(old_right));
-                            assert forall|x: T| tree_contains(new_left, x) implies
+                            assert(new_left.tree_is_bst());
+                            assert(old_right.tree_is_bst());
+                            assert forall|x: T| new_left.tree_contains(x) implies
                                 T::le(x, node_val) && x != node_val
-                            by { if tree_contains(old_left, x) {} else { assert(x == value); } };
-                            assert forall|x: T| tree_contains(old_right, x) implies
+                            by { if old_left.tree_contains(x) {} else { assert(x == value); } };
+                            assert forall|x: T| old_right.tree_contains(x) implies
                                 T::le(node_val, x) && x != node_val by {};
-                            assert forall|x: T| tree_contains(r, x) ==
-                                (tree_contains(node, x) || x == value)
+                            assert forall|x: T| r.tree_contains(x) ==
+                                (node.tree_contains(x) || x == value)
                             by {
-                                assert(tree_contains(r, x) == (node_val == x
-                                    || tree_contains(new_left, x) || tree_contains(old_right, x)));
-                                assert(tree_contains(node, x) == (node_val == x
-                                    || tree_contains(old_left, x) || tree_contains(old_right, x)));
+                                assert(r.tree_contains(x) == (node_val == x
+                                    || new_left.tree_contains(x) || old_right.tree_contains(x)));
+                                assert(node.tree_contains(x) == (node_val == x
+                                    || old_left.tree_contains(x) || old_right.tree_contains(x)));
                             };
                         }
                         r
@@ -124,20 +124,20 @@ pub mod BSTBBAlphaMtEph {
                             left: left, value: node_val, right: new_right,
                         }));
                         proof {
-                            assert(tree_is_bst::<T>(old_left));
-                            assert(tree_is_bst::<T>(new_right));
-                            assert forall|x: T| tree_contains(old_left, x) implies
+                            assert(old_left.tree_is_bst());
+                            assert(new_right.tree_is_bst());
+                            assert forall|x: T| old_left.tree_contains(x) implies
                                 T::le(x, node_val) && x != node_val by {};
-                            assert forall|x: T| tree_contains(new_right, x) implies
+                            assert forall|x: T| new_right.tree_contains(x) implies
                                 T::le(node_val, x) && x != node_val
-                            by { if tree_contains(old_right, x) {} else { assert(x == value); } };
-                            assert forall|x: T| tree_contains(r, x) ==
-                                (tree_contains(node, x) || x == value)
+                            by { if old_right.tree_contains(x) {} else { assert(x == value); } };
+                            assert forall|x: T| r.tree_contains(x) ==
+                                (node.tree_contains(x) || x == value)
                             by {
-                                assert(tree_contains(r, x) == (node_val == x
-                                    || tree_contains(old_left, x) || tree_contains(new_right, x)));
-                                assert(tree_contains(node, x) == (node_val == x
-                                    || tree_contains(old_left, x) || tree_contains(old_right, x)));
+                                assert(r.tree_contains(x) == (node_val == x
+                                    || old_left.tree_contains(x) || new_right.tree_contains(x)));
+                                assert(node.tree_contains(x) == (node_val == x
+                                    || old_left.tree_contains(x) || old_right.tree_contains(x)));
                             };
                         }
                         r
@@ -147,13 +147,13 @@ pub mod BSTBBAlphaMtEph {
                             left: left, value: node_val, right: right,
                         }));
                         proof {
-                            assert forall|x: T| tree_contains(r, x) ==
-                                (tree_contains(node, x) || x == value)
+                            assert forall|x: T| r.tree_contains(x) ==
+                                (node.tree_contains(x) || x == value)
                             by {
-                                assert(tree_contains(r, x) == (node_val == x
-                                    || tree_contains(old_left, x) || tree_contains(old_right, x)));
-                                assert(tree_contains(node, x) == (node_val == x
-                                    || tree_contains(old_left, x) || tree_contains(old_right, x)));
+                                assert(r.tree_contains(x) == (node_val == x
+                                    || old_left.tree_contains(x) || old_right.tree_contains(x)));
+                                assert(node.tree_contains(x) == (node_val == x
+                                    || old_left.tree_contains(x) || old_right.tree_contains(x)));
                                 assert(value == node_val);
                             };
                         }
@@ -165,8 +165,8 @@ pub mod BSTBBAlphaMtEph {
     }
 
     fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)
-        requires tree_is_bst::<T>(*node),
-        ensures found == tree_contains(*node, *target),
+        requires (*node).tree_is_bst(),
+        ensures found == (*node).tree_contains(*target),
         decreases node.spec_size(),
     {
         match node {
@@ -176,12 +176,12 @@ pub mod BSTBBAlphaMtEph {
                     core::cmp::Ordering::Equal => true,
                     core::cmp::Ordering::Less => {
                         let r = contains_node(&inner.left, target);
-                        proof { if tree_contains(inner.right, *target) { T::antisymmetric(*target, inner.value); } }
+                        proof { if inner.right.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                         r
                     }
                     core::cmp::Ordering::Greater => {
                         let r = contains_node(&inner.right, target);
-                        proof { if tree_contains(inner.left, *target) { T::antisymmetric(*target, inner.value); } }
+                        proof { if inner.left.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                         r
                     }
                 }
@@ -190,9 +190,9 @@ pub mod BSTBBAlphaMtEph {
     }
 
     fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)
-        requires tree_is_bst::<T>(*node),
+        requires (*node).tree_is_bst(),
         ensures
-            found.is_some() == tree_contains(*node, *target),
+            found.is_some() == (*node).tree_contains(*target),
             found.is_some() ==> *found.unwrap() == *target,
         decreases node.spec_size(),
     {
@@ -203,12 +203,12 @@ pub mod BSTBBAlphaMtEph {
                     core::cmp::Ordering::Equal => Some(&inner.value),
                     core::cmp::Ordering::Less => {
                         let r = find_node(&inner.left, target);
-                        proof { if tree_contains(inner.right, *target) { T::antisymmetric(*target, inner.value); } }
+                        proof { if inner.right.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                         r
                     }
                     core::cmp::Ordering::Greater => {
                         let r = find_node(&inner.right, target);
-                        proof { if tree_contains(inner.left, *target) { T::antisymmetric(*target, inner.value); } }
+                        proof { if inner.left.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                         r
                     }
                 }

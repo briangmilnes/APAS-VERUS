@@ -27,7 +27,9 @@ pub mod BSTBBAlphaStEph {
 
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     #[cfg(verus_keep_ghost)]
-    use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{tree_contains, tree_is_bst};
+    use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{lemma_node_contains, lemma_bst_left, lemma_bst_right};
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
     // 4. type definitions
@@ -58,7 +60,7 @@ pub mod BSTBBAlphaStEph {
 
     /// Combined BB[α] tree invariant: BST ordering + weight balance.
     pub open spec fn tree_is_bb<T: TotalOrder>(tree: BalBinTree<T>) -> bool {
-        tree_is_bst(tree) && weight_balanced(tree)
+        tree.tree_is_bst() && weight_balanced(tree)
     }
 
     // 8. traits
@@ -68,8 +70,8 @@ pub mod BSTBBAlphaStEph {
 
         fn new() -> (tree: Self)
             ensures
-                tree_is_bst::<T>(tree.spec_root()),
-                forall|x: T| !tree_contains(tree.spec_root(), x);
+                tree.spec_root().tree_is_bst(),
+                forall|x: T| !tree.spec_root().tree_contains(x);
         fn size(&self) -> (n: usize)
             requires self.spec_root().spec_size() <= usize::MAX,
             ensures n == self.spec_root().spec_size();
@@ -79,39 +81,39 @@ pub mod BSTBBAlphaStEph {
             requires self.spec_root().spec_height() <= usize::MAX,
             ensures h == self.spec_root().spec_height();
         fn insert(self, value: T) -> (inserted: Self)
-            requires tree_is_bst::<T>(self.spec_root()),
+            requires self.spec_root().tree_is_bst(),
             ensures
-                tree_is_bst::<T>(inserted.spec_root()),
-                tree_contains(inserted.spec_root(), value),
-                forall|x: T| #![auto] tree_contains(inserted.spec_root(), x) <==>
-                    (tree_contains(self.spec_root(), x) || x == value);
+                inserted.spec_root().tree_is_bst(),
+                inserted.spec_root().tree_contains(value),
+                forall|x: T| #![auto] inserted.spec_root().tree_contains(x) <==>
+                    (self.spec_root().tree_contains(x) || x == value);
         fn contains(&self, target: &T) -> (found: bool)
-            requires tree_is_bst::<T>(self.spec_root()),
-            ensures found == tree_contains(self.spec_root(), *target);
+            requires self.spec_root().tree_is_bst(),
+            ensures found == self.spec_root().tree_contains(*target);
         fn find(&self, target: &T) -> (found: Option<&T>)
-            requires tree_is_bst::<T>(self.spec_root()),
+            requires self.spec_root().tree_is_bst(),
             ensures
-                found.is_some() == tree_contains(self.spec_root(), *target),
+                found.is_some() == self.spec_root().tree_contains(*target),
                 found.is_some() ==> *found.unwrap() == *target;
         fn delete(self, target: &T) -> (deleted: Self)
-            requires tree_is_bst::<T>(self.spec_root()),
+            requires self.spec_root().tree_is_bst(),
             ensures
-                tree_is_bst::<T>(deleted.spec_root()),
-                !tree_contains(deleted.spec_root(), *target),
-                forall|x: T| #![auto] tree_contains(deleted.spec_root(), x) <==>
-                    (tree_contains(self.spec_root(), x) && x != *target);
+                deleted.spec_root().tree_is_bst(),
+                !deleted.spec_root().tree_contains(*target),
+                forall|x: T| #![auto] deleted.spec_root().tree_contains(x) <==>
+                    (self.spec_root().tree_contains(x) && x != *target);
         fn minimum(&self) -> (min: Option<&T>)
-            requires tree_is_bst::<T>(self.spec_root()),
+            requires self.spec_root().tree_is_bst(),
             ensures
                 self.spec_root().spec_size() == 0 ==> min.is_none(),
                 self.spec_root().spec_size() > 0 ==> min.is_some(),
-                min.is_some() ==> tree_contains(self.spec_root(), *min.unwrap());
+                min.is_some() ==> self.spec_root().tree_contains(*min.unwrap());
         fn maximum(&self) -> (max: Option<&T>)
-            requires tree_is_bst::<T>(self.spec_root()),
+            requires self.spec_root().tree_is_bst(),
             ensures
                 self.spec_root().spec_size() == 0 ==> max.is_none(),
                 self.spec_root().spec_size() > 0 ==> max.is_some(),
-                max.is_some() ==> tree_contains(self.spec_root(), *max.unwrap());
+                max.is_some() ==> self.spec_root().tree_contains(*max.unwrap());
     }
 
     // 9. impls
@@ -161,21 +163,23 @@ pub mod BSTBBAlphaStEph {
     }
 
     fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)
-        requires tree_is_bst::<T>(node),
+        requires node.tree_is_bst(),
         ensures
-            tree_is_bst::<T>(inserted),
-            tree_contains(inserted, value),
-            forall|x: T| #![auto] tree_contains(inserted, x) <==>
-                (tree_contains(node, x) || x == value),
+            inserted.tree_is_bst(),
+            inserted.tree_contains(value),
+            forall|x: T| #![auto] inserted.tree_contains(x) <==>
+                (node.tree_contains(x) || x == value),
         decreases node.spec_size(),
     {
         match node {
             BalBinTree::Leaf => {
-                BalBinTree::Node(Box::new(BalBinNode {
+                let r = BalBinTree::Node(Box::new(BalBinNode {
                     left: BalBinTree::Leaf,
                     value: value,
                     right: BalBinTree::Leaf,
-                }))
+                }));
+                assert(r.tree_is_bst());
+                r
             }
             BalBinTree::Node(inner) => {
                 let BalBinNode { left, value: node_val, right } = *inner;
@@ -191,33 +195,35 @@ pub mod BSTBBAlphaStEph {
                             right: right,
                         }));
                         proof {
-                            assert(tree_is_bst::<T>(new_left));
-                            assert(tree_is_bst::<T>(old_right));
+                            assert(new_left.tree_is_bst());
+                            assert(old_right.tree_is_bst());
 
-                            assert forall|x: T| tree_contains(new_left, x) implies
+                            assert forall|x: T| new_left.tree_contains(x) implies
                                 T::le(x, node_val) && x != node_val
                             by {
-                                if tree_contains(old_left, x) {
+                                if old_left.tree_contains(x) {
                                 } else {
                                     assert(x == value);
                                 }
                             };
 
-                            assert forall|x: T| tree_contains(old_right, x) implies
+                            assert forall|x: T| old_right.tree_contains(x) implies
                                 T::le(node_val, x) && x != node_val
                             by {};
 
-                            assert forall|x: T| tree_contains(r, x) ==
-                                (tree_contains(node, x) || x == value)
+                            assert(r.tree_is_bst());
+
+                            assert forall|x: T| r.tree_contains(x) ==
+                                (node.tree_contains(x) || x == value)
                             by {
-                                assert(tree_contains(r, x) ==
+                                assert(r.tree_contains(x) ==
                                     (node_val == x
-                                    || tree_contains(new_left, x)
-                                    || tree_contains(old_right, x)));
-                                assert(tree_contains(node, x) ==
+                                    || new_left.tree_contains(x)
+                                    || old_right.tree_contains(x)));
+                                assert(node.tree_contains(x) ==
                                     (node_val == x
-                                    || tree_contains(old_left, x)
-                                    || tree_contains(old_right, x)));
+                                    || old_left.tree_contains(x)
+                                    || old_right.tree_contains(x)));
                             };
                         }
                         r
@@ -230,33 +236,35 @@ pub mod BSTBBAlphaStEph {
                             right: new_right,
                         }));
                         proof {
-                            assert(tree_is_bst::<T>(old_left));
-                            assert(tree_is_bst::<T>(new_right));
+                            assert(old_left.tree_is_bst());
+                            assert(new_right.tree_is_bst());
 
-                            assert forall|x: T| tree_contains(old_left, x) implies
+                            assert forall|x: T| old_left.tree_contains(x) implies
                                 T::le(x, node_val) && x != node_val
                             by {};
 
-                            assert forall|x: T| tree_contains(new_right, x) implies
+                            assert forall|x: T| new_right.tree_contains(x) implies
                                 T::le(node_val, x) && x != node_val
                             by {
-                                if tree_contains(old_right, x) {
+                                if old_right.tree_contains(x) {
                                 } else {
                                     assert(x == value);
                                 }
                             };
 
-                            assert forall|x: T| tree_contains(r, x) ==
-                                (tree_contains(node, x) || x == value)
+                            assert(r.tree_is_bst());
+
+                            assert forall|x: T| r.tree_contains(x) ==
+                                (node.tree_contains(x) || x == value)
                             by {
-                                assert(tree_contains(r, x) ==
+                                assert(r.tree_contains(x) ==
                                     (node_val == x
-                                    || tree_contains(old_left, x)
-                                    || tree_contains(new_right, x)));
-                                assert(tree_contains(node, x) ==
+                                    || old_left.tree_contains(x)
+                                    || new_right.tree_contains(x)));
+                                assert(node.tree_contains(x) ==
                                     (node_val == x
-                                    || tree_contains(old_left, x)
-                                    || tree_contains(old_right, x)));
+                                    || old_left.tree_contains(x)
+                                    || old_right.tree_contains(x)));
                             };
                         }
                         r
@@ -268,17 +276,17 @@ pub mod BSTBBAlphaStEph {
                             right: right,
                         }));
                         proof {
-                            assert forall|x: T| tree_contains(r, x) ==
-                                (tree_contains(node, x) || x == value)
+                            assert forall|x: T| r.tree_contains(x) ==
+                                (node.tree_contains(x) || x == value)
                             by {
-                                assert(tree_contains(r, x) ==
+                                assert(r.tree_contains(x) ==
                                     (node_val == x
-                                    || tree_contains(old_left, x)
-                                    || tree_contains(old_right, x)));
-                                assert(tree_contains(node, x) ==
+                                    || old_left.tree_contains(x)
+                                    || old_right.tree_contains(x)));
+                                assert(node.tree_contains(x) ==
                                     (node_val == x
-                                    || tree_contains(old_left, x)
-                                    || tree_contains(old_right, x)));
+                                    || old_left.tree_contains(x)
+                                    || old_right.tree_contains(x)));
                                 assert(value == node_val);
                             };
                         }
@@ -290,8 +298,8 @@ pub mod BSTBBAlphaStEph {
     }
 
     fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)
-        requires tree_is_bst::<T>(*node),
-        ensures found == tree_contains(*node, *target),
+        requires (*node).tree_is_bst(),
+        ensures found == (*node).tree_contains(*target),
         decreases node.spec_size(),
     {
         match node {
@@ -302,7 +310,7 @@ pub mod BSTBBAlphaStEph {
                     core::cmp::Ordering::Less => {
                         let r = contains_node(&inner.left, target);
                         proof {
-                            if tree_contains(inner.right, *target) {
+                            if inner.right.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
                             }
                         }
@@ -311,7 +319,7 @@ pub mod BSTBBAlphaStEph {
                     core::cmp::Ordering::Greater => {
                         let r = contains_node(&inner.right, target);
                         proof {
-                            if tree_contains(inner.left, *target) {
+                            if inner.left.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
                             }
                         }
@@ -323,9 +331,9 @@ pub mod BSTBBAlphaStEph {
     }
 
     fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)
-        requires tree_is_bst::<T>(*node),
+        requires (*node).tree_is_bst(),
         ensures
-            found.is_some() == tree_contains(*node, *target),
+            found.is_some() == (*node).tree_contains(*target),
             found.is_some() ==> *found.unwrap() == *target,
         decreases node.spec_size(),
     {
@@ -337,7 +345,7 @@ pub mod BSTBBAlphaStEph {
                     core::cmp::Ordering::Less => {
                         let r = find_node(&inner.left, target);
                         proof {
-                            if tree_contains(inner.right, *target) {
+                            if inner.right.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
                             }
                         }
@@ -346,7 +354,7 @@ pub mod BSTBBAlphaStEph {
                     core::cmp::Ordering::Greater => {
                         let r = find_node(&inner.right, target);
                         proof {
-                            if tree_contains(inner.left, *target) {
+                            if inner.left.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
                             }
                         }
@@ -358,11 +366,11 @@ pub mod BSTBBAlphaStEph {
     }
 
     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
-        requires tree_is_bst::<T>(*node),
+        requires (*node).tree_is_bst(),
         ensures
             node.spec_size() == 0 ==> min.is_none(),
             node.spec_size() > 0 ==> min.is_some(),
-            min.is_some() ==> tree_contains(*node, *min.unwrap()),
+            min.is_some() ==> (*node).tree_contains(*min.unwrap()),
         decreases node.spec_size(),
     {
         match node {
@@ -378,11 +386,11 @@ pub mod BSTBBAlphaStEph {
     }
 
     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
-        requires tree_is_bst::<T>(*node),
+        requires (*node).tree_is_bst(),
         ensures
             node.spec_size() == 0 ==> max.is_none(),
             node.spec_size() > 0 ==> max.is_some(),
-            max.is_some() ==> tree_contains(*node, *max.unwrap()),
+            max.is_some() ==> (*node).tree_contains(*max.unwrap()),
         decreases node.spec_size(),
     {
         match node {
@@ -401,14 +409,14 @@ pub mod BSTBBAlphaStEph {
     fn delete_min_node<T: TotalOrder>(node: BalBinTree<T>) -> (pair: (BalBinTree<T>, T))
         requires
             node.spec_size() > 0,
-            tree_is_bst::<T>(node),
+            node.tree_is_bst(),
         ensures
-            tree_is_bst::<T>(pair.0),
-            tree_contains(node, pair.1),
-            !tree_contains(pair.0, pair.1),
-            forall|x: T| #![auto] tree_contains(pair.0, x) <==>
-                (tree_contains(node, x) && x != pair.1),
-            forall|x: T| #![auto] tree_contains(node, x) ==> T::le(pair.1, x),
+            pair.0.tree_is_bst(),
+            node.tree_contains(pair.1),
+            !pair.0.tree_contains(pair.1),
+            forall|x: T| #![auto] pair.0.tree_contains(x) <==>
+                (node.tree_contains(x) && x != pair.1),
+            forall|x: T| #![auto] node.tree_contains(x) ==> T::le(pair.1, x),
         decreases node.spec_size(),
     {
         match node {
@@ -422,29 +430,31 @@ pub mod BSTBBAlphaStEph {
                 let ghost old_right = right;
                 if left.is_leaf() {
                     proof {
-                        assert forall|x: T| tree_contains(right, x) implies
+                        assert forall|x: T| right.tree_contains(x) implies
                             x != node_val
-                        by {};
+                        by {
+                            lemma_bst_right::<T>(old_left, node_val, old_right, x);
+                        };
 
-                        assert forall|x: T| tree_contains(node, x) implies
+                        assert forall|x: T| node.tree_contains(x) implies
                             T::le(node_val, x)
                         by {
-                            assert(tree_contains(node, x) ==
+                            assert(node.tree_contains(x) ==
                                 (node_val == x
-                                || tree_contains(old_left, x)
-                                || tree_contains(old_right, x)));
+                                || old_left.tree_contains(x)
+                                || old_right.tree_contains(x)));
                             if x == node_val {
                                 T::reflexive(node_val);
                             }
                         };
 
-                        assert forall|x: T| tree_contains(old_right, x) ==
-                            (tree_contains(node, x) && x != node_val)
+                        assert forall|x: T| old_right.tree_contains(x) ==
+                            (node.tree_contains(x) && x != node_val)
                         by {
-                            assert(tree_contains(node, x) ==
+                            assert(node.tree_contains(x) ==
                                 (node_val == x
-                                || tree_contains(old_left, x)
-                                || tree_contains(old_right, x)));
+                                || old_left.tree_contains(x)
+                                || old_right.tree_contains(x)));
                         };
                     }
                     (right, node_val)
@@ -456,48 +466,48 @@ pub mod BSTBBAlphaStEph {
                         right: right,
                     }));
                     proof {
-                        assert(tree_is_bst::<T>(new_left));
-                        assert(tree_is_bst::<T>(old_right));
+                        assert(new_left.tree_is_bst());
+                        assert(old_right.tree_is_bst());
 
-                        assert forall|x: T| tree_contains(new_left, x) implies
+                        assert forall|x: T| new_left.tree_contains(x) implies
                             T::le(x, node_val) && x != node_val
                         by {
-                            assert(tree_contains(old_left, x));
+                            assert(old_left.tree_contains(x));
                         };
 
-                        assert forall|x: T| tree_contains(old_right, x) implies
+                        assert forall|x: T| old_right.tree_contains(x) implies
                             T::le(node_val, x) && x != node_val
                         by {};
 
-                        assert(tree_contains(old_left, min_val));
+                        assert(old_left.tree_contains(min_val));
 
-                        assert forall|x: T| tree_contains(node, x) implies
+                        assert forall|x: T| node.tree_contains(x) implies
                             T::le(min_val, x)
                         by {
-                            if tree_contains(old_left, x) {
+                            if old_left.tree_contains(x) {
                             } else if x == node_val {
                                 assert(T::le(min_val, node_val));
                             } else {
-                                assert(tree_contains(old_right, x));
+                                assert(old_right.tree_contains(x));
                                 assert(T::le(min_val, node_val));
                                 assert(T::le(node_val, x));
                                 T::transitive(min_val, node_val, x);
                             }
                         };
 
-                        assert forall|x: T| tree_contains(r, x) ==
-                            (tree_contains(node, x) && x != min_val)
+                        assert forall|x: T| r.tree_contains(x) ==
+                            (node.tree_contains(x) && x != min_val)
                         by {
-                            assert(tree_contains(r, x) ==
+                            assert(r.tree_contains(x) ==
                                 (node_val == x
-                                || tree_contains(new_left, x)
-                                || tree_contains(old_right, x)));
-                            assert(tree_contains(node, x) ==
+                                || new_left.tree_contains(x)
+                                || old_right.tree_contains(x)));
+                            assert(node.tree_contains(x) ==
                                 (node_val == x
-                                || tree_contains(old_left, x)
-                                || tree_contains(old_right, x)));
+                                || old_left.tree_contains(x)
+                                || old_right.tree_contains(x)));
                             if x == min_val {
-                                if tree_contains(old_right, min_val) {
+                                if old_right.tree_contains(min_val) {
                                     assert(T::le(min_val, node_val));
                                     assert(T::le(node_val, min_val));
                                     T::antisymmetric(min_val, node_val);
@@ -513,12 +523,12 @@ pub mod BSTBBAlphaStEph {
 
     /// Delete a key from the BST, returning the modified tree.
     fn delete_node<T: TotalOrder>(node: BalBinTree<T>, target: &T) -> (deleted: BalBinTree<T>)
-        requires tree_is_bst::<T>(node),
+        requires node.tree_is_bst(),
         ensures
-            tree_is_bst::<T>(deleted),
-            !tree_contains(deleted, *target),
-            forall|x: T| #![auto] tree_contains(deleted, x) <==>
-                (tree_contains(node, x) && x != *target),
+            deleted.tree_is_bst(),
+            !deleted.tree_contains(*target),
+            forall|x: T| #![auto] deleted.tree_contains(x) <==>
+                (node.tree_contains(x) && x != *target),
         decreases node.spec_size(),
     {
         match node {
@@ -539,31 +549,31 @@ pub mod BSTBBAlphaStEph {
                             right: right,
                         }));
                         proof {
-                            assert(tree_is_bst::<T>(new_left));
-                            assert(tree_is_bst::<T>(old_right));
+                            assert(new_left.tree_is_bst());
+                            assert(old_right.tree_is_bst());
 
-                            assert forall|x: T| tree_contains(new_left, x) implies
+                            assert forall|x: T| new_left.tree_contains(x) implies
                                 T::le(x, node_val) && x != node_val
                             by {
-                                assert(tree_contains(old_left, x));
+                                assert(old_left.tree_contains(x));
                             };
 
-                            assert forall|x: T| tree_contains(old_right, x) implies
+                            assert forall|x: T| old_right.tree_contains(x) implies
                                 T::le(node_val, x) && x != node_val
                             by {};
 
-                            assert forall|x: T| tree_contains(r, x) ==
-                                (tree_contains(node, x) && x != *target)
+                            assert forall|x: T| r.tree_contains(x) ==
+                                (node.tree_contains(x) && x != *target)
                             by {
-                                assert(tree_contains(r, x) ==
+                                assert(r.tree_contains(x) ==
                                     (node_val == x
-                                    || tree_contains(new_left, x)
-                                    || tree_contains(old_right, x)));
-                                assert(tree_contains(node, x) ==
+                                    || new_left.tree_contains(x)
+                                    || old_right.tree_contains(x)));
+                                assert(node.tree_contains(x) ==
                                     (node_val == x
-                                    || tree_contains(old_left, x)
-                                    || tree_contains(old_right, x)));
-                                if x == *target && tree_contains(old_right, x) {
+                                    || old_left.tree_contains(x)
+                                    || old_right.tree_contains(x)));
+                                if x == *target && old_right.tree_contains(x) {
                                     T::antisymmetric(*target, node_val);
                                 }
                             };
@@ -578,31 +588,31 @@ pub mod BSTBBAlphaStEph {
                             right: new_right,
                         }));
                         proof {
-                            assert(tree_is_bst::<T>(old_left));
-                            assert(tree_is_bst::<T>(new_right));
+                            assert(old_left.tree_is_bst());
+                            assert(new_right.tree_is_bst());
 
-                            assert forall|x: T| tree_contains(old_left, x) implies
+                            assert forall|x: T| old_left.tree_contains(x) implies
                                 T::le(x, node_val) && x != node_val
                             by {};
 
-                            assert forall|x: T| tree_contains(new_right, x) implies
+                            assert forall|x: T| new_right.tree_contains(x) implies
                                 T::le(node_val, x) && x != node_val
                             by {
-                                assert(tree_contains(old_right, x));
+                                assert(old_right.tree_contains(x));
                             };
 
-                            assert forall|x: T| tree_contains(r, x) ==
-                                (tree_contains(node, x) && x != *target)
+                            assert forall|x: T| r.tree_contains(x) ==
+                                (node.tree_contains(x) && x != *target)
                             by {
-                                assert(tree_contains(r, x) ==
+                                assert(r.tree_contains(x) ==
                                     (node_val == x
-                                    || tree_contains(old_left, x)
-                                    || tree_contains(new_right, x)));
-                                assert(tree_contains(node, x) ==
+                                    || old_left.tree_contains(x)
+                                    || new_right.tree_contains(x)));
+                                assert(node.tree_contains(x) ==
                                     (node_val == x
-                                    || tree_contains(old_left, x)
-                                    || tree_contains(old_right, x)));
-                                if x == *target && tree_contains(old_left, x) {
+                                    || old_left.tree_contains(x)
+                                    || old_right.tree_contains(x)));
+                                if x == *target && old_left.tree_contains(x) {
                                     T::antisymmetric(*target, node_val);
                                 }
                             };
@@ -612,25 +622,19 @@ pub mod BSTBBAlphaStEph {
                     core::cmp::Ordering::Equal => {
                         if left.is_leaf() {
                             proof {
-                                assert forall|x: T| tree_contains(old_right, x) ==
-                                    (tree_contains(node, x) && x != *target)
+                                assert forall|x: T| old_right.tree_contains(x) ==
+                                    (node.tree_contains(x) && x != *target)
                                 by {
-                                    assert(tree_contains(node, x) ==
-                                        (node_val == x
-                                        || tree_contains(old_left, x)
-                                        || tree_contains(old_right, x)));
+                                    lemma_node_contains::<T>(old_left, node_val, old_right, x);
                                 };
                             }
                             right
                         } else if right.is_leaf() {
                             proof {
-                                assert forall|x: T| tree_contains(old_left, x) ==
-                                    (tree_contains(node, x) && x != *target)
+                                assert forall|x: T| old_left.tree_contains(x) ==
+                                    (node.tree_contains(x) && x != *target)
                                 by {
-                                    assert(tree_contains(node, x) ==
-                                        (node_val == x
-                                        || tree_contains(old_left, x)
-                                        || tree_contains(old_right, x)));
+                                    lemma_node_contains::<T>(old_left, node_val, old_right, x);
                                 };
                             }
                             left
@@ -642,13 +646,13 @@ pub mod BSTBBAlphaStEph {
                                 right: new_right,
                             }));
                             proof {
-                                assert(tree_is_bst::<T>(old_left));
-                                assert(tree_is_bst::<T>(new_right));
-                                assert(tree_contains(old_right, successor));
+                                assert(old_left.tree_is_bst());
+                                assert(new_right.tree_is_bst());
+                                assert(old_right.tree_contains(successor));
                                 assert(T::le(node_val, successor));
                                 assert(successor != node_val);
 
-                                assert forall|x: T| tree_contains(old_left, x) implies
+                                assert forall|x: T| old_left.tree_contains(x) implies
                                     T::le(x, successor) && x != successor
                                 by {
                                     assert(T::le(x, node_val));
@@ -658,30 +662,30 @@ pub mod BSTBBAlphaStEph {
                                     }
                                 };
 
-                                assert forall|x: T| tree_contains(new_right, x) implies
+                                assert forall|x: T| new_right.tree_contains(x) implies
                                     T::le(successor, x) && x != successor
                                 by {
-                                    assert(tree_contains(old_right, x));
+                                    assert(old_right.tree_contains(x));
                                 };
 
-                                assert forall|x: T| tree_contains(r, x) ==
-                                    (tree_contains(node, x) && x != *target)
+                                assert forall|x: T| r.tree_contains(x) ==
+                                    (node.tree_contains(x) && x != *target)
                                 by {
-                                    assert(tree_contains(r, x) ==
+                                    assert(r.tree_contains(x) ==
                                         (successor == x
-                                        || tree_contains(old_left, x)
-                                        || tree_contains(new_right, x)));
-                                    assert(tree_contains(node, x) ==
+                                        || old_left.tree_contains(x)
+                                        || new_right.tree_contains(x)));
+                                    assert(node.tree_contains(x) ==
                                         (node_val == x
-                                        || tree_contains(old_left, x)
-                                        || tree_contains(old_right, x)));
+                                        || old_left.tree_contains(x)
+                                        || old_right.tree_contains(x)));
 
                                     if successor == x {
-                                        assert(tree_contains(old_right, successor));
+                                        assert(old_right.tree_contains(successor));
                                     }
 
-                                    if tree_contains(old_right, x) && x != *target && x != successor {
-                                        assert(tree_contains(new_right, x));
+                                    if old_right.tree_contains(x) && x != *target && x != successor {
+                                        assert(new_right.tree_contains(x));
                                     }
                                 };
                             }

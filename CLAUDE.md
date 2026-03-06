@@ -142,6 +142,7 @@ minor). You bring:
 - **Show module filenames** (e.g., `src/ChapNN/File.rs`) when providing info about modules.
 - **No Python scripts.** All reusable tools must be Rust. Need explicit permission for even
   throwaway Python.
+- **No Perl.** Never use Perl for any purpose — no `perl -e`, no `perl -i`, no Perl one-liners.
 - Plans and proposed work tables go in `plans/` directory on disk.
 
 ---

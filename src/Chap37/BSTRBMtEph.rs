@@ -28,6 +28,8 @@ pub mod BSTRBMtEph {
 
     // 2. imports
 
+    use crate::vstdplus::arc_rwlock::arc_rwlock::new_arc_rwlock;
+
     // 4. type definitions
 
     #[derive(Clone, Copy, PartialEq, Eq)]
@@ -60,18 +62,28 @@ pub mod BSTRBMtEph {
 
     // 6. spec fns
 
-    /// Uninterpreted well-formedness for RB tree links.
-    pub open spec fn link_wf<T: StTInMtT + Ord>(link: Link<T>) -> bool;
+    /// Structural node count for RB tree links.
+    pub open spec fn link_spec_size<T: StTInMtT + Ord>(link: Link<T>) -> nat
+        decreases link,
+    {
+        match link {
+            None => 0nat,
+            Some(node) => 1 + link_spec_size(node.left) + link_spec_size(node.right),
+        }
+    }
 
 
     // 8. traits
 
     pub trait BSTRBMtEphTrait<T: StTInMtT + Ord>: Sized {
+        spec fn spec_bstrbmteph_wf(&self) -> bool;
+
         fn new() -> (tree: Self)
-            ensures true;
+            ensures tree.spec_bstrbmteph_wf();
         fn from_sorted_slice(values: &[T]) -> (tree: Self)
-            ensures true;
+            ensures tree.spec_bstrbmteph_wf();
         fn insert(&self, value: T)
+            requires self.spec_bstrbmteph_wf(),
             ensures true;
         fn find(&self, target: &T) -> (found: Option<T>)
             ensures true;
@@ -106,13 +118,8 @@ pub mod BSTRBMtEph {
 
     impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTRBMtEphInv {
         open spec fn inv(self, v: Link<T>) -> bool {
-            link_wf(v)
+            link_spec_size(v) <= usize::MAX
         }
-    }
-
-    #[verifier::external_body] // accept hole
-    fn new_rb_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, BSTRBMtEphInv>) {
-        RwLock::new(val, Ghost(BSTRBMtEphInv))
     }
 
     fn new_node<T: StTInMtT + Ord>(key: T) -> Node<T> {
@@ -139,7 +146,13 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {
+    fn update<T: StTInMtT + Ord>(node: &mut Node<T>)
+        ensures
+            node.left == old(node).left,
+            node.right == old(node).right,
+            node.key == old(node).key,
+            node.color == old(node).color,
+    {
         let ls = size_link(&node.left);
         let rs = size_link(&node.right);
         if ls < usize::MAX && rs <= usize::MAX - 1 - ls {
@@ -147,9 +160,15 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn rotate_left<T: StTInMtT + Ord>(link: &mut Link<T>) {
+    fn rotate_left<T: StTInMtT + Ord>(link: &mut Link<T>)
+        ensures link_spec_size(*link) == link_spec_size(*old(link)),
+    {
+        let ghost old_link = *link;
         if let Some(mut h) = link.take() {
+            let ghost old_h_left = h.left;
             if let Some(mut x) = h.right.take() {
+                let ghost old_x_left = x.left;
+                let ghost old_x_right = x.right;
                 h.right = x.left.take();
                 update(&mut h);
                 x.color = h.color;
@@ -166,9 +185,15 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn rotate_right<T: StTInMtT + Ord>(link: &mut Link<T>) {
+    fn rotate_right<T: StTInMtT + Ord>(link: &mut Link<T>)
+        ensures link_spec_size(*link) == link_spec_size(*old(link)),
+    {
+        let ghost old_link = *link;
         if let Some(mut h) = link.take() {
+            let ghost old_h_right = h.right;
             if let Some(mut x) = h.left.take() {
+                let ghost old_x_left = x.left;
+                let ghost old_x_right = x.right;
                 h.left = x.right.take();
                 update(&mut h);
                 x.color = h.color;
@@ -185,7 +210,9 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn flip_colors<T: StTInMtT + Ord>(link: &mut Link<T>) {
+    fn flip_colors<T: StTInMtT + Ord>(link: &mut Link<T>)
+        ensures link_spec_size(*link) == link_spec_size(*old(link)),
+    {
         if let Some(node) = link.as_mut() {
             node.color = match node.color {
                 | Color::Red => Color::Black,
@@ -206,7 +233,9 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn fix_up<T: StTInMtT + Ord>(link: &mut Link<T>) {
+    fn fix_up<T: StTInMtT + Ord>(link: &mut Link<T>)
+        ensures link_spec_size(*link) == link_spec_size(*old(link)),
+    {
         let rotate_left_needed = match link {
             | Some(node) => is_red(&node.right) && !is_red(&node.left),
             | None => false,
@@ -243,6 +272,7 @@ pub mod BSTRBMtEph {
     }
 
     fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T)
+        ensures link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
         decreases old(link),
     {
         if let Some(node) = link.as_mut() {
@@ -359,19 +389,25 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn build_balanced<T: StTInMtT + Ord>(values: &[T]) -> Link<T>
+    fn build_balanced<T: StTInMtT + Ord>(values: &[T]) -> (link: Link<T>)
+        ensures link_spec_size(link) <= values@.len(),
         decreases values.len(),
     {
         if values.is_empty() {
             return None;
         }
         let mid = values.len() / 2;
+        let left_slice = &values[..mid];
+        let right_slice = &values[mid + 1..];
 
         use crate::Types::Types::Pair;
-        let Pair(left, right) = crate::ParaPair!(
-            move || build_balanced(&values[..mid]),
-            move || build_balanced(&values[mid + 1..])
-        );
+        let f1 = move || -> (l: Link<T>)
+            ensures link_spec_size(l) <= left_slice@.len()
+        { build_balanced(left_slice) };
+        let f2 = move || -> (r: Link<T>)
+            ensures link_spec_size(r) <= right_slice@.len()
+        { build_balanced(right_slice) };
+        let Pair(left, right) = crate::ParaPair!(f1, f2);
 
         let mut node = Box::new(new_node(values[mid].clone()));
         node.left = left;
@@ -441,20 +477,43 @@ pub mod BSTRBMtEph {
         }
     }
 
+    /// Exec mirror of link_spec_size for runtime size guards.
+    fn compute_link_spec_size<T: StTInMtT + Ord>(link: &Link<T>) -> (n: usize)
+        requires link_spec_size(*link) <= usize::MAX,
+        ensures n as nat == link_spec_size(*link),
+        decreases *link,
+    {
+        match link {
+            None => 0,
+            Some(node) => {
+                let l = compute_link_spec_size(&node.left);
+                let r = compute_link_spec_size(&node.right);
+                1 + l + r
+            }
+        }
+    }
+
     impl<T: StTInMtT + Ord> BSTRBMtEphTrait<T> for BSTRBMtEph<T> {
+        open spec fn spec_bstrbmteph_wf(&self) -> bool { true }
+
         fn new() -> Self {
             BSTRBMtEph {
-                root: Arc::new(new_rb_link_lock(None)),
+                root: new_arc_rwlock(None, Ghost(BSTRBMtEphInv)),
             }
         }
 
         fn insert(&self, value: T) {
             let (mut current, write_handle) = self.root.acquire_write();
-            insert_link(&mut current, value);
-            if let Some(node) = current.as_mut() {
-                node.color = Color::Black;
+            let sz = compute_link_spec_size(&current);
+            if sz < usize::MAX {
+                insert_link(&mut current, value);
+                if let Some(node) = current.as_mut() {
+                    node.color = Color::Black;
+                }
+                write_handle.release_write(current);
+            } else {
+                write_handle.release_write(current);
             }
-            write_handle.release_write(current);
         }
 
         fn find(&self, target: &T) -> Option<T> {
@@ -511,8 +570,9 @@ pub mod BSTRBMtEph {
         }
 
         fn from_sorted_slice(values: &[T]) -> Self {
+            let link = build_balanced(values);
             BSTRBMtEph {
-                root: Arc::new(new_rb_link_lock(build_balanced(values))),
+                root: new_arc_rwlock(link, Ghost(BSTRBMtEphInv)),
             }
         }
 
