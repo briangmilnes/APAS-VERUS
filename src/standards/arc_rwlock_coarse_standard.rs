@@ -5,7 +5,7 @@
 //!
 //! Demonstrates:
 //! - Multi-struct spec style (Leaf, Interior, Node, Tree) with per-type traits.
-//! - Recursive specs via free fns on Option<Box<Node>> (avoids mutual-recursion fuel issues).
+//! - Recursive specs via bottom-up trait dispatch (no free spec fns).
 //! - RwLockPredicate carrying a real BST ordering invariant.
 //! - new_arc_rwlock / clone_arc_rwlock from vstdplus for pred() preservation.
 //! - Parallel reads via HFScheduler join() with named closures.
@@ -15,7 +15,6 @@
 // 1. module
 // 2. imports
 // 4. type definitions
-// 6. spec fns
 // 7. proof fns
 // 8. traits
 // 9. impls
@@ -61,81 +60,33 @@ pub mod arc_rwlock_coarse_standard {
         pub ghost hi: int,
     }
 
-    // 6. spec fns
-    //
-    // Free fns on Option<Box<Node>> are the primary recursive specs.  They
-    // inline the Node match to avoid mutual recursion with trait dispatch
-    // (which hits Verus fuel limits).  Trait impl specs delegate to these.
-
-    pub open spec fn tree_size(o: Option<Box<Node>>) -> nat
-        decreases o,
-    {
-        match o {
-            None => 0,
-            Some(n) => match *n {
-                Node::LeafNode(_) => 1,
-                Node::InteriorNode(i) => 1 + tree_size(i.left) + tree_size(i.right),
-            },
-        }
-    }
-
-    pub open spec fn tree_contains(o: Option<Box<Node>>, key: u64) -> bool
-        decreases o,
-    {
-        match o {
-            None => false,
-            Some(n) => match *n {
-                Node::LeafNode(l) => l.key == key,
-                Node::InteriorNode(i) => {
-                    i.key == key
-                    || tree_contains(i.left, key)
-                    || tree_contains(i.right, key)
-                },
-            },
-        }
-    }
-
-    pub open spec fn spec_tree_wf(o: Option<Box<Node>>, lo: int, hi: int) -> bool
-        decreases o,
-    {
-        match o {
-            None => true,
-            Some(n) => match *n {
-                Node::LeafNode(l) => lo <= l.key as int && (l.key as int) < hi,
-                Node::InteriorNode(i) => {
-                    lo <= i.key as int && (i.key as int) < hi
-                    && spec_tree_wf(i.left, lo, i.key as int)
-                    && spec_tree_wf(i.right, i.key as int + 1, hi)
-                },
-            },
-        }
-    }
-
     // 7. proof fns
 
     /// Every key in a well-formed subtree lies within [lo, hi).
-    proof fn lemma_tree_wf_bounds(o: Option<Box<Node>>, lo: int, hi: int, k: u64)
+    proof fn lemma_node_wf_bounds(n: &Node, lo: int, hi: int, k: u64)
         requires
-            spec_tree_wf(o, lo, hi),
-            tree_contains(o, k),
+            n.spec_wf(lo, hi),
+            n.spec_contains(k),
         ensures
             lo <= k as int && (k as int) < hi,
-        decreases o,
+        decreases *n,
     {
-        reveal_with_fuel(spec_tree_wf, 2);
-        reveal_with_fuel(tree_contains, 2);
-        match o {
-            None => {},
-            Some(n) => match *n {
-                Node::LeafNode(_) => {},
-                Node::InteriorNode(i) => {
-                    if k == i.key {
-                    } else if tree_contains(i.left, k) {
-                        lemma_tree_wf_bounds(i.left, lo, i.key as int, k);
-                    } else {
-                        lemma_tree_wf_bounds(i.right, i.key as int + 1, hi, k);
+        match n {
+            Node::LeafNode(_) => {},
+            Node::InteriorNode(i) => {
+                if k == i.key {
+                } else if match &i.left {
+                    None => false,
+                    Some(n) => NodeTrait::spec_contains(&**n, k),
+                } {
+                    if let Some(n) = &i.left {
+                        lemma_node_wf_bounds(&**n, lo, i.key as int, k);
                     }
-                },
+                } else {
+                    if let Some(n) = &i.right {
+                        lemma_node_wf_bounds(&**n, i.key as int + 1, hi, k);
+                    }
+                }
             },
         }
     }
@@ -196,7 +147,7 @@ pub mod arc_rwlock_coarse_standard {
 
     impl RwLockPredicate<Tree> for ArcRwLockCoarseStandardInv {
         open spec fn inv(self, t: Tree) -> bool {
-            spec_tree_wf(t.root, self.lo, self.hi)
+            t.spec_wf(self.lo, self.hi)
         }
     }
 
@@ -213,101 +164,120 @@ pub mod arc_rwlock_coarse_standard {
     }
 
     impl InteriorTrait for Interior {
-        open spec fn spec_size(&self) -> nat {
-            1 + tree_size(self.left) + tree_size(self.right)
+        open spec fn spec_size(&self) -> nat
+            decreases self,
+        {
+            let l = match self.left  { None => 0nat, Some(n) => NodeTrait::spec_size(&*n) };
+            let r = match self.right { None => 0nat, Some(n) => NodeTrait::spec_size(&*n) };
+            1 + l + r
         }
 
-        open spec fn spec_contains(&self, key: u64) -> bool {
+        open spec fn spec_contains(&self, key: u64) -> bool
+            decreases self,
+        {
             self.key == key
-            || tree_contains(self.left, key)
-            || tree_contains(self.right, key)
+            || match self.left  { None => false, Some(n) => NodeTrait::spec_contains(&*n, key) }
+            || match self.right { None => false, Some(n) => NodeTrait::spec_contains(&*n, key) }
         }
 
-        open spec fn spec_wf(&self, lo: int, hi: int) -> bool {
+        open spec fn spec_wf(&self, lo: int, hi: int) -> bool
+            decreases self,
+        {
             lo <= self.key as int && (self.key as int) < hi
-            && spec_tree_wf(self.left, lo, self.key as int)
-            && spec_tree_wf(self.right, self.key as int + 1, hi)
+            && match self.left  { None => true, Some(n) => NodeTrait::spec_wf(&*n, lo, self.key as int) }
+            && match self.right { None => true, Some(n) => NodeTrait::spec_wf(&*n, self.key as int + 1, hi) }
         }
     }
 
     impl NodeTrait for Node {
-        open spec fn spec_size(&self) -> nat {
+        open spec fn spec_size(&self) -> nat
+            decreases *self,
+        {
             match *self {
-                Node::LeafNode(_) => 1,
-                Node::InteriorNode(i) => {
-                    1 + tree_size(i.left) + tree_size(i.right)
-                },
+                Node::LeafNode(l)     => LeafTrait::spec_size(&l),
+                Node::InteriorNode(i) => InteriorTrait::spec_size(&i),
             }
         }
 
-        open spec fn spec_contains(&self, key: u64) -> bool {
+        open spec fn spec_contains(&self, key: u64) -> bool
+            decreases *self,
+        {
             match *self {
-                Node::LeafNode(l) => l.key == key,
-                Node::InteriorNode(i) => {
-                    i.key == key
-                    || tree_contains(i.left, key)
-                    || tree_contains(i.right, key)
-                },
+                Node::LeafNode(l)     => LeafTrait::spec_contains(&l, key),
+                Node::InteriorNode(i) => InteriorTrait::spec_contains(&i, key),
             }
         }
 
-        open spec fn spec_wf(&self, lo: int, hi: int) -> bool {
+        open spec fn spec_wf(&self, lo: int, hi: int) -> bool
+            decreases *self,
+        {
             match *self {
-                Node::LeafNode(l) => {
-                    lo <= l.key as int && (l.key as int) < hi
-                },
-                Node::InteriorNode(i) => {
-                    lo <= i.key as int && (i.key as int) < hi
-                    && spec_tree_wf(i.left, lo, i.key as int)
-                    && spec_tree_wf(i.right, i.key as int + 1, hi)
-                },
+                Node::LeafNode(l)     => LeafTrait::spec_wf(&l, lo, hi),
+                Node::InteriorNode(i) => InteriorTrait::spec_wf(&i, lo, hi),
             }
         }
 
         fn insert(self, key: u64, lo: Ghost<int>, hi: Ghost<int>) -> (out: Self)
             decreases self,
         {
-            proof { reveal_with_fuel(spec_tree_wf, 3); reveal_with_fuel(tree_contains, 3); }
             match self {
                 Node::LeafNode(l) => {
                     if key == l.key {
-                        Node::LeafNode(l)
+                        let out = Node::LeafNode(l);
+                        assert(LeafTrait::spec_wf(&l, lo@, hi@));
+                        assert(LeafTrait::spec_contains(&l, key));
+                        out
                     } else if key < l.key {
-                        Node::InteriorNode(Interior {
+                        let interior = Interior {
                             key: l.key,
                             left: Some(Box::new(Node::LeafNode(Leaf { key }))),
                             right: None,
-                        })
+                        };
+                        assert(InteriorTrait::spec_wf(&interior, lo@, hi@));
+                        assert(InteriorTrait::spec_contains(&interior, key));
+                        Node::InteriorNode(interior)
                     } else {
-                        Node::InteriorNode(Interior {
+                        let interior = Interior {
                             key: l.key,
                             left: None,
                             right: Some(Box::new(Node::LeafNode(Leaf { key }))),
-                        })
+                        };
+                        assert(InteriorTrait::spec_wf(&interior, lo@, hi@));
+                        assert(InteriorTrait::spec_contains(&interior, key));
+                        Node::InteriorNode(interior)
                     }
                 },
                 Node::InteriorNode(i) => {
                     let Interior { key: node_key, left, right } = i;
                     if key == node_key {
-                        Node::InteriorNode(Interior { key: node_key, left, right })
+                        let interior = Interior { key: node_key, left, right };
+                        assert(InteriorTrait::spec_wf(&interior, lo@, hi@));
+                        assert(InteriorTrait::spec_contains(&interior, key));
+                        Node::InteriorNode(interior)
                     } else if key < node_key {
                         let new_left = match left {
                             None => Some(Box::new(Node::LeafNode(Leaf { key }))),
                             Some(n) => Some(Box::new(
                                 (*n).insert(key, Ghost(lo@), Ghost(node_key as int)))),
                         };
-                        Node::InteriorNode(Interior {
+                        let interior = Interior {
                             key: node_key, left: new_left, right,
-                        })
+                        };
+                        assert(InteriorTrait::spec_wf(&interior, lo@, hi@));
+                        assert(InteriorTrait::spec_contains(&interior, key));
+                        Node::InteriorNode(interior)
                     } else {
                         let new_right = match right {
                             None => Some(Box::new(Node::LeafNode(Leaf { key }))),
                             Some(n) => Some(Box::new(
                                 (*n).insert(key, Ghost(node_key as int + 1), Ghost(hi@)))),
                         };
-                        Node::InteriorNode(Interior {
+                        let interior = Interior {
                             key: node_key, left, right: new_right,
-                        })
+                        };
+                        assert(InteriorTrait::spec_wf(&interior, lo@, hi@));
+                        assert(InteriorTrait::spec_contains(&interior, key));
+                        Node::InteriorNode(interior)
                     }
                 },
             }
@@ -316,7 +286,6 @@ pub mod arc_rwlock_coarse_standard {
         fn search(&self, key: u64, lo: Ghost<int>, hi: Ghost<int>) -> (found: bool)
             decreases *self,
         {
-            proof { reveal_with_fuel(spec_tree_wf, 2); reveal_with_fuel(tree_contains, 2); }
             match self {
                 Node::LeafNode(l) => l.key == key,
                 Node::InteriorNode(i) => {
@@ -329,8 +298,13 @@ pub mod arc_rwlock_coarse_standard {
                                 Ghost(lo@), Ghost(i.key as int)),
                         };
                         proof {
-                            if tree_contains(i.right, key) {
-                                lemma_tree_wf_bounds(i.right, i.key as int + 1, hi@, key);
+                            if match &i.right {
+                                None => false,
+                                Some(n) => NodeTrait::spec_contains(&**n, key),
+                            } {
+                                if let Some(n) = &i.right {
+                                    lemma_node_wf_bounds(&**n, i.key as int + 1, hi@, key);
+                                }
                             }
                         }
                         found
@@ -341,8 +315,13 @@ pub mod arc_rwlock_coarse_standard {
                                 Ghost(i.key as int + 1), Ghost(hi@)),
                         };
                         proof {
-                            if tree_contains(i.left, key) {
-                                lemma_tree_wf_bounds(i.left, lo@, i.key as int, key);
+                            if match &i.left {
+                                None => false,
+                                Some(n) => NodeTrait::spec_contains(&**n, key),
+                            } {
+                                if let Some(n) = &i.left {
+                                    lemma_node_wf_bounds(&**n, lo@, i.key as int, key);
+                                }
                             }
                         }
                         found
@@ -354,19 +333,18 @@ pub mod arc_rwlock_coarse_standard {
 
     impl TreeTrait for Tree {
         open spec fn spec_size(&self) -> nat {
-            tree_size(self.root)
+            match self.root { None => 0nat, Some(n) => NodeTrait::spec_size(&*n) }
         }
 
         open spec fn spec_contains(&self, key: u64) -> bool {
-            tree_contains(self.root, key)
+            match self.root { None => false, Some(n) => NodeTrait::spec_contains(&*n, key) }
         }
 
         open spec fn spec_wf(&self, lo: int, hi: int) -> bool {
-            spec_tree_wf(self.root, lo, hi)
+            match self.root { None => true, Some(n) => NodeTrait::spec_wf(&*n, lo, hi) }
         }
 
         fn insert(self, key: u64, lo: Ghost<int>, hi: Ghost<int>) -> (out: Self) {
-            proof { reveal_with_fuel(spec_tree_wf, 2); reveal_with_fuel(tree_contains, 2); }
             let new_root = match self.root {
                 None => Some(Box::new(Node::LeafNode(Leaf { key }))),
                 Some(n) => Some(Box::new((*n).insert(key, lo, hi))),
@@ -375,7 +353,6 @@ pub mod arc_rwlock_coarse_standard {
         }
 
         fn search(&self, key: u64, lo: Ghost<int>, hi: Ghost<int>) -> (found: bool) {
-            proof { reveal_with_fuel(spec_tree_wf, 2); reveal_with_fuel(tree_contains, 2); }
             match &self.root {
                 None => false,
                 Some(n) => (**n).search(key, lo, hi),
