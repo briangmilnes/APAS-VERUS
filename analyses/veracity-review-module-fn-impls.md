@@ -22,61 +22,45 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap53 | GraphSearchMtPer | 4 | 1 | 0 | 4 | 5 | 0 | 0 | 2 | 3 |
-| 2 | Chap53 | GraphSearchStEph | 4 | 1 | 0 | 4 | 5 | 0 | 0 | 2 | 3 |
-| 3 | Chap53 | GraphSearchStPer | 4 | 1 | 0 | 4 | 5 | 0 | 0 | 2 | 3 |
-| 4 | Chap53 | PQMinStEph | 2 | 0 | 0 | 4 | 4 | 0 | 0 | 3 | 1 |
-| 5 | Chap53 | PQMinStPer | 2 | 0 | 0 | 4 | 4 | 0 | 0 | 3 | 1 |
+| 1 | Chap66 | BoruvkaMtEph | 5 | 4 | 0 | 12 | 6 | 10 | 1 | 0 | 15 |
+| 2 | Chap66 | BoruvkaStEph | 5 | 9 | 0 | 0 | 6 | 3 | 2 | 3 | 4 |
 
 ## Function-by-Function Detail
 
-### Chap53/GraphSearchMtPer.rs
+### Chap66/BoruvkaMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `select` x2 | Y | Y |  |  | Y |  |  | hole | 31 |
-| 2 | `graph_search` | Y |  |  | Y | Y |  | Y |  | 37&#8209;40 |
-| 3 | `graph_search_multi` | Y |  |  | Y | Y |  | Y |  | 44&#8209;47 |
-| 4 | `reachable` | Y |  |  | Y | Y |  | Y |  | 51&#8209;53 |
-| 5 | `graph_search_explore` |  |  |  | Y | Y |  |  | hole | 85&#8209;90 |
+| 1 | `eq` |  | Y |  |  | Y |  |  | unknown | 42&#8209;43 |
+| 2 | `vertex_bridges_mt` | Y |  |  | Y | Y |  | Y |  | 56&#8209;60 |
+| 3 | `bridge_star_partition_mt` | Y |  |  | Y | Y |  | Y |  | 64&#8209;69 |
+| 4 | `boruvka_mst_mt` | Y |  |  | Y | Y |  | Y |  | 73&#8209;79 |
+| 5 | `boruvka_mst_mt_with_seed` | Y |  |  | Y | Y |  | Y |  | 83&#8209;87 |
+| 6 | `mst_weight` | Y |  |  | Y | Y |  | Y |  | 91&#8209;94 |
+| 7 | `partial_cmp` |  | Y |  |  |  | Y | Y |  | 105&#8209;107 |
+| 8 | `cmp` |  | Y |  |  |  | Y | Y |  | 111&#8209;116 |
+| 9 | `hash` |  | Y |  |  |  | Y | Y |  | 120&#8209;125 |
+| 10 | `hash_coin` |  |  |  | Y |  | Y | Y |  | 140&#8209;151 |
+| 11 | `hash_coin_flips_mt` |  |  |  | Y |  | Y | Y |  | 153&#8209;186 |
+| 12 | `compute_remaining_mt` |  |  |  | Y |  | Y | Y |  | 188&#8209;224 |
+| 13 | `collect_mst_labels_mt` |  |  |  | Y |  | Y | Y |  | 226&#8209;261 |
+| 14 | `build_partition_map_mt` |  |  |  | Y |  | Y | Y |  | 263&#8209;303 |
+| 15 | `filter_tail_to_head_mt` |  |  |  | Y |  | Y | Y |  | 404&#8209;454 |
+| 16 | `reroute_edges_mt` |  |  |  | Y |  | Y | Y |  | 519&#8209;561 |
 
-### Chap53/GraphSearchStEph.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 6 | `select` x2 | Y | Y |  |  | Y |  |  | hole | 25 |
-| 7 | `graph_search` | Y |  |  | Y | Y |  | Y |  | 31&#8209;34 |
-| 8 | `graph_search_multi` | Y |  |  | Y | Y |  | Y |  | 38&#8209;41 |
-| 9 | `reachable` | Y |  |  | Y | Y |  | Y |  | 45&#8209;47 |
-| 10 | `graph_search_explore` |  |  |  | Y | Y |  |  | hole | 79&#8209;84 |
-
-### Chap53/GraphSearchStPer.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 11 | `select` x2 | Y | Y |  |  | Y |  |  | hole | 34 |
-| 12 | `graph_search` | Y |  |  | Y | Y |  | Y |  | 40&#8209;43 |
-| 13 | `graph_search_multi` | Y |  |  | Y | Y |  | Y |  | 47&#8209;50 |
-| 14 | `reachable` | Y |  |  | Y | Y |  | Y |  | 54&#8209;56 |
-| 15 | `graph_search_explore` |  |  |  | Y | Y |  |  | hole | 88&#8209;93 |
-
-### Chap53/PQMinStEph.rs
+### Chap66/BoruvkaStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 16 | `pq_min` | Y |  |  | Y | Y |  | Y |  | 25&#8209;28 |
-| 17 | `pq_min_multi` | Y |  |  | Y | Y |  |  | hole | 32&#8209;35 |
-| 18 | `pq_find_min_priority` |  |  |  | Y | Y |  |  | hole | 53&#8209;55 |
-| 19 | `pq_explore` |  |  |  | Y | Y |  |  | hole | 65&#8209;70 |
-
-### Chap53/PQMinStPer.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 20 | `pq_min` | Y |  |  | Y | Y |  | Y |  | 30&#8209;33 |
-| 21 | `pq_min_multi` | Y |  |  | Y | Y |  |  | hole | 37&#8209;40 |
-| 22 | `pq_find_min_priority` |  |  |  | Y | Y |  |  | hole | 58&#8209;60 |
-| 23 | `pq_explore` |  |  |  | Y | Y |  |  | hole | 70&#8209;75 |
+| 17 | `eq` |  | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
+| 18 | `vertex_bridges` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;114 |
+| 19 | `bridge_star_partition` | Y | Y |  |  | Y |  |  | hole | 121&#8209;125 |
+| 20 | `boruvka_mst` | Y | Y |  |  | Y |  |  | hole | 129&#8209;134 |
+| 21 | `boruvka_mst_with_seed` | Y | Y |  |  | Y |  |  | hole | 138&#8209;142 |
+| 22 | `mst_weight` | Y | Y |  |  | Y |  | Y |  | 146&#8209;149 |
+| 23 | `partial_cmp` |  | Y |  |  |  | Y | Y |  | 369&#8209;371 |
+| 24 | `cmp` |  | Y |  |  |  | Y | Y |  | 375&#8209;380 |
+| 25 | `hash` |  | Y |  |  |  | Y | Y |  | 384&#8209;389 |
 
 
 ### Legend

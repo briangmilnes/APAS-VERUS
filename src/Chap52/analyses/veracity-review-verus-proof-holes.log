@@ -19,7 +19,7 @@
    1 clean proof function
 ✓ AdjTableGraphStPer.rs
 ❌ EdgeSetGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphMtPer.rs:107: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/EdgeSetGraphMtPer.rs:107: external_body - #[verifier::external_body]
        108 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
    Holes: 1 total
       1 × external_body
@@ -42,7 +42,14 @@ Proof Functions:
 
 Holes Found: 1 total
    1 × external_body
-f Functions:
+�══════
+
+Modules:
+   13 clean (no holes)
+   1 holed (contains holes)
+   14 total
+
+Proof Functions:
    21 clean
    0 holed
    21 total

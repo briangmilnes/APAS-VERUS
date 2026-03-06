@@ -3,20 +3,20 @@
 //! Chapter 45: Priority Queue implementation using Binary Heap
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//  1. module
+//  2. imports
+//  3. broadcast use
+//  4. type definitions
+//  5. view impls
+//  6. spec fns
+//  7. proof fns/broadcast groups
+//  8. traits
+//  9. impls
+//  11. derive impls in verus!
+//  12. macros
+//  13. derive impls outside verus!
 
-//		1. module
+//  1. module
 
 
 pub mod BinaryHeapPQ {
@@ -33,16 +33,16 @@ pub mod BinaryHeapPQ {
 
     verus! {
 
-        //		2. imports
+//  2. imports
 
-        use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
         use crate::Types::Types::*;
+        use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+        use crate::vstdplus::accept::accept;
         #[cfg(verus_keep_ghost)]
         use crate::vstdplus::feq::feq::*;
-        use crate::vstdplus::accept::accept;
 
 
-        //		3. broadcast use
+//  3. broadcast use
 
         broadcast use {
             crate::vstdplus::feq::feq::group_feq_axioms,
@@ -53,7 +53,7 @@ pub mod BinaryHeapPQ {
         };
 
 
-        //		4. type definitions
+//  4. type definitions
 
         #[verifier::reject_recursive_types(T)]
         pub struct BinaryHeapPQ<T: StT + Ord> {
@@ -61,7 +61,7 @@ pub mod BinaryHeapPQ {
         }
 
 
-        //		5. view impls
+//  5. view impls
 
         impl<T: StT + Ord> View for BinaryHeapPQ<T> {
             type V = Seq<T::V>;
@@ -69,7 +69,7 @@ pub mod BinaryHeapPQ {
         }
 
 
-        //		6. spec fns
+//  6. spec fns
 
         spec fn parent_spec(i: int) -> int {
             if i == 0 { 0 } else { (i - 1) / 2 }
@@ -83,21 +83,9 @@ pub mod BinaryHeapPQ {
             2 * i + 2
         }
 
-        pub open spec fn spec_heap_inv_at<T: StT + Ord>(seq: Seq<T::V>, i: int) -> bool {
-            let left = 2 * i + 1;
-            let right = 2 * i + 2;
-            (left >= seq.len() || spec_leq_view::<T>(seq[i], seq[left]))
-            && (right >= seq.len() || spec_leq_view::<T>(seq[i], seq[right]))
-        }
-
-        pub uninterp spec fn spec_leq_view<T: StT + Ord>(a: T::V, b: T::V) -> bool;
-
-        pub open spec fn spec_is_heap<T: StT + Ord>(seq: Seq<T::V>) -> bool {
-            forall|i: int| 0 <= i < seq.len() ==> spec_heap_inv_at::<T>(seq, i)
-        }
 
 
-        //		7. proof fns/broadcast groups
+//  7. proof fns/broadcast groups
 
         proof fn lemma_log2_bound(n: int, bits: nat)
             requires
@@ -120,11 +108,14 @@ pub mod BinaryHeapPQ {
         }
 
 
-        //		8. traits
+//  8. traits
 
         /// Trait defining the Meldable Priority Queue ADT operations (Data Type 45.1)
         pub trait BinaryHeapPQTrait<T: StT + Ord>: Sized + View<V = Seq<T::V>> {
             spec fn spec_size(self) -> nat;
+            spec fn spec_heap_inv_at(seq: Seq<T::V>, i: int) -> bool;
+            spec fn spec_leq_view(a: T::V, b: T::V) -> bool;
+            spec fn spec_is_heap(seq: Seq<T::V>) -> bool;
 
             fn empty() -> (pq: Self)
                 ensures pq@.len() == 0;
@@ -176,19 +167,22 @@ pub mod BinaryHeapPQ {
             fn is_empty(&self) -> (empty: bool)
                 ensures empty == (self.spec_size() == 0);
 
-            fn to_seq(&self) -> ArraySeqStPerS<T>
-                requires obeys_feq_clone::<T>();
+            fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)
+                requires obeys_feq_clone::<T>(),
+                ensures seq@.len() == self@.len();
 
-            fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self
+            fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() + elements@.len() <= usize::MAX as int,
-                    (self@.len() + elements@.len()) * 2 <= usize::MAX as int;
+                    (self@.len() + elements@.len()) * 2 <= usize::MAX as int,
+                ensures pq@.len() == self@.len() + elements@.len();
 
-            fn extract_all_sorted(&self) -> ArraySeqStPerS<T>
+            fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>)
                 requires
                     obeys_feq_clone::<T>(),
-                    self@.len() * 2 <= usize::MAX as int;
+                    self@.len() * 2 <= usize::MAX as int,
+                ensures sorted@.len() == self@.len();
 
             fn is_valid_heap(&self) -> (valid: bool)
                 requires self@.len() * 2 <= usize::MAX as int;
@@ -197,28 +191,31 @@ pub mod BinaryHeapPQ {
                 requires self@.len() <= usize::MAX as int,
                 ensures self@.len() == 0 ==> levels == 0;
 
-            fn level_elements(&self, level: usize) -> ArraySeqStPerS<T>
+            fn level_elements(&self, level: usize) -> (elts: ArraySeqStPerS<T>)
                 requires
                     obeys_feq_clone::<T>(),
                     level < 63,
                     usize::BITS >= 64;
 
-            fn from_vec(vec: Vec<T>) -> Self
+            fn from_vec(vec: Vec<T>) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
-                    vec@.len() * 2 <= usize::MAX as int;
+                    vec@.len() * 2 <= usize::MAX as int,
+                ensures pq@.len() == vec@.len();
 
-            fn to_vec(&self) -> Vec<T>
-                requires obeys_feq_clone::<T>();
+            fn to_vec(&self) -> (v: Vec<T>)
+                requires obeys_feq_clone::<T>(),
+                ensures v@.len() == self@.len();
 
-            fn to_sorted_vec(&self) -> Vec<T>
+            fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires
                     obeys_feq_clone::<T>(),
-                    self@.len() * 2 <= usize::MAX as int;
+                    self@.len() * 2 <= usize::MAX as int,
+                ensures v@.len() == self@.len();
         }
 
 
-        //		9. impls
+//  9. impls
 
         #[cfg(verus_keep_ghost)]
         impl<T: StT + Ord> PartialEqSpecImpl for BinaryHeapPQ<T> {
@@ -482,6 +479,19 @@ pub mod BinaryHeapPQ {
                 self@.len()
             }
 
+            open spec fn spec_heap_inv_at(seq: Seq<T::V>, i: int) -> bool {
+                let left = 2 * i + 1;
+                let right = 2 * i + 2;
+                (left >= seq.len() || Self::spec_leq_view(seq[i], seq[left]))
+                && (right >= seq.len() || Self::spec_leq_view(seq[i], seq[right]))
+            }
+
+            uninterp spec fn spec_leq_view(a: T::V, b: T::V) -> bool;
+
+            open spec fn spec_is_heap(seq: Seq<T::V>) -> bool {
+                forall|i: int| 0 <= i < seq.len() ==> Self::spec_heap_inv_at(seq, i)
+            }
+
             fn empty() -> (pq: Self) {
                 BinaryHeapPQ {
                     elements: ArraySeqStPerS::empty(),
@@ -708,7 +718,7 @@ pub mod BinaryHeapPQ {
         }
 
 
-        //		11. derive impls in verus!
+//  11. derive impls in verus!
 
         impl<T: StT + Ord> Clone for BinaryHeapPQ<T> {
             fn clone(&self) -> (cloned: Self)
@@ -741,7 +751,7 @@ pub mod BinaryHeapPQ {
     }
 
 
-    //		13. derive impls outside verus!
+//  13. derive impls outside verus!
 
     impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for BinaryHeapPQ<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -763,9 +773,8 @@ pub mod BinaryHeapPQ {
     }
 
 
-    //		12. macros
+//  12. macros
 
-    // Macro for creating binary heap priority queues
     #[macro_export]
     macro_rules! BinaryHeapPQLit {
         () => {

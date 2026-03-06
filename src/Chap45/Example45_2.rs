@@ -1,14 +1,22 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 45: Example 45.2 - Heapsort Algorithm Demonstrations
 
+//  Table of Contents
+//  1. module
+//  2. imports
+//  4. type definitions
+//  7. proof fns/broadcast groups
+//  8. traits
+//  9. impls
+//  13. derive impls outside verus!
+
 pub mod Example45_2 {
 
     use std::fmt::{Debug, Display, Formatter, Result};
 
     use vstd::prelude::*;
-    use crate::Chap45::HeapsortExample::HeapsortExample::*;
     use crate::Types::Types::*;
-    pub type T = usize;
+    use crate::Chap45::HeapsortExample::HeapsortExample::*;
 
     verus! {
 
@@ -19,24 +27,16 @@ pub mod Example45_2 {
         proof fn _example_45_2_verified() {}
 
 // 8. traits
-        /// Trait for Example 45.2 operations.
+        /// Heapsort demonstrations comparing all five PQ implementations on various inputs.
         pub trait Example45_2Trait {
-            /// Example 45.2: Textbook heapsort demonstration.
-            fn example_45_2_textbook_example()         -> HeapsortComparison<i32>;
-            /// Example 45.2: Reverse-sorted input demonstration.
-            fn example_45_2_reverse_sorted()           -> HeapsortComparison<i32>;
-            /// Example 45.2: Already-sorted input demonstration.
-            fn example_45_2_already_sorted()           -> HeapsortComparison<i32>;
-            /// Example 45.2: Input with duplicates demonstration.
-            fn example_45_2_duplicates()               -> HeapsortComparison<i32>;
-            /// Example 45.2: Single element demonstration.
-            fn example_45_2_single_element()           -> HeapsortComparison<i32>;
-            /// Example 45.2: Empty input demonstration.
-            fn example_45_2_empty()                    -> HeapsortComparison<i32>;
-            /// Example 45.2: Efficiency comparison demonstration.
-            fn example_45_2_efficiency_demonstration() -> Vec<(String, Vec<i32>)>;
-            /// Run comprehensive demonstration of Example 45.2.
-            fn run_example_45_2()                      -> String;
+            fn example_45_2_textbook_example()         -> (comparison: HeapsortComparison<i32>) ensures true;
+            fn example_45_2_reverse_sorted()           -> (comparison: HeapsortComparison<i32>) ensures true;
+            fn example_45_2_already_sorted()           -> (comparison: HeapsortComparison<i32>) ensures true;
+            fn example_45_2_duplicates()               -> (comparison: HeapsortComparison<i32>) ensures true;
+            fn example_45_2_single_element()           -> (comparison: HeapsortComparison<i32>) ensures true;
+            fn example_45_2_empty()                    -> (comparison: HeapsortComparison<i32>) ensures true;
+            fn example_45_2_efficiency_demonstration() -> (results: Vec<(String, Vec<i32>)>) ensures true;
+            fn run_example_45_2()                      -> (output: String) ensures true;
         }
 
 // 9. impls

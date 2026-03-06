@@ -4,6 +4,19 @@
 //! Impl marked `#[verifier::external]`: specs blocked until
 //! AVLTreeSeqStPerS::from_vec gains ensures.
 
+//  Table of Contents
+//  1. module
+//  2. imports
+//  3. broadcast use
+//  4. type definitions
+//  5. view impls
+//  7. proof fns/broadcast groups
+//  8. traits
+//  9. impls
+//  11. derive impls in verus!
+//  12. macros
+//  13. derive impls outside verus!
+
 pub mod BalancedTreePQ {
 
     use std::fmt::{Debug, Display, Formatter, Result};
@@ -11,9 +24,9 @@ pub mod BalancedTreePQ {
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
+    use crate::Types::Types::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::vstdplus::accept::accept;
-    use crate::Types::Types::*;
 
     verus! {
 
@@ -128,6 +141,14 @@ broadcast use {
 
             fn join(left: &Self, right: &Self) -> (pq: Self)
                 ensures pq@.len() == left@.len() + right@.len();
+        }
+
+        /// Extended operations requiring closure parameters.
+        pub trait BalancedTreePQExtTrait<T: StT + Ord>: Sized {
+            fn filter<F>(&self, predicate: F) -> (filtered: Self) where F: Fn(&T) -> bool
+                ensures true;
+            fn map<U, G>(&self, f: G) -> (mapped: BalancedTreePQ<U>) where U: StT + Ord, G: Fn(&T) -> U
+                ensures true;
         }
 
 // 9. impls
@@ -358,6 +379,37 @@ broadcast use {
             fn default() -> Self { Self::empty() }
         }
 
+        #[verifier::external]
+        impl<T: StT + Ord> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
+            fn filter<F>(&self, predicate: F) -> (filtered: Self)
+            where
+                F: Fn(&T) -> bool,
+            {
+                let mut result = Self::empty();
+                for i in 0..self.elements.length() {
+                    let current = self.elements.nth(i);
+                    if predicate(current) {
+                        result = result.insert(current.clone());
+                    }
+                }
+                result
+            }
+
+            fn map<U, G>(&self, f: G) -> (mapped: BalancedTreePQ<U>)
+            where
+                U: StT + Ord,
+                G: Fn(&T) -> U,
+            {
+                let mut result = BalancedTreePQ::<U>::empty();
+                for i in 0..self.elements.length() {
+                    let current = self.elements.nth(i);
+                    let mapped = f(current);
+                    result = result.insert(mapped);
+                }
+                result
+            }
+        }
+
 // 11. derive impls in verus!
         #[cfg(verus_keep_ghost)]
         impl<T: StT + Ord> PartialEqSpecImpl for BalancedTreePQ<T> {
@@ -385,42 +437,6 @@ broadcast use {
 
         impl<T: StT + Ord> core::cmp::Eq for BalancedTreePQ<T> {}
 
-    }
-
-    /// Extended operations requiring closure parameters (outside verus!).
-    pub trait BalancedTreePQExtTrait<T: StT + Ord> {
-        fn filter<F>(&self, predicate: F) -> Self where F: Fn(&T) -> bool;
-        fn map<U, G>(&self, f: G) -> BalancedTreePQ<U> where U: StT + Ord, G: Fn(&T) -> U;
-    }
-
-    impl<T: StT + Ord> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
-        fn filter<F>(&self, predicate: F) -> Self
-        where
-            F: Fn(&T) -> bool,
-        {
-            let mut result = Self::empty();
-            for i in 0..self.elements.length() {
-                let current = self.elements.nth(i);
-                if predicate(current) {
-                    result = result.insert(current.clone());
-                }
-            }
-            result
-        }
-
-        fn map<U, G>(&self, f: G) -> BalancedTreePQ<U>
-        where
-            U: StT + Ord,
-            G: Fn(&T) -> U,
-        {
-            let mut result = BalancedTreePQ::<U>::empty();
-            for i in 0..self.elements.length() {
-                let current = self.elements.nth(i);
-                let mapped = f(current);
-                result = result.insert(mapped);
-            }
-            result
-        }
     }
 
 // 12. macros

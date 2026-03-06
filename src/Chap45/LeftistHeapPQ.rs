@@ -3,17 +3,16 @@
 //! Chapter 45: Priority Queue implementation using Leftist Heap (Data Structure 45.3)
 
 //  Table of Contents
-//	1. module
-//	3. broadcast use
-//	4. type definitions
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
-
-//		1. module
+//  1. module
+//  2. imports
+//  3. broadcast use
+//  4. type definitions
+//  7. proof fns/broadcast groups
+//  8. traits
+//  9. impls
+//  11. derive impls in verus!
+//  12. macros
+//  13. derive impls outside verus!
 
 
 pub mod LeftistHeapPQ {
@@ -23,17 +22,15 @@ pub mod LeftistHeapPQ {
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
+    use crate::Types::Types::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::vstdplus::accept::accept;
-    use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
     verus! {
 
-//		3. broadcast use
-
-// 3. broadcast use
+//  3. broadcast use
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::seq::group_seq_axioms,
@@ -42,9 +39,7 @@ broadcast use {
 };
 
 
-//		4. type definitions
-
-// 4. type definitions
+//  4. type definitions
         #[verifier::reject_recursive_types(T)]
         pub enum LeftistHeapNode<T: StT + Ord> {
             Leaf,
@@ -63,26 +58,37 @@ broadcast use {
         }
 
 
-//		7. proof fns/broadcast groups
+//  7. proof fns/broadcast groups
 
         proof fn _leftist_heap_pq_verified() {}
 
 
-//		8. traits
+//  8. traits
 
         pub trait LeftistHeapNodeTrait<T: StT + Ord>: Sized {
-            fn rank(&self) -> (rank_val: usize);
+            spec fn spec_is_leaf(&self) -> bool;
+            spec fn spec_node_size(&self) -> nat;
+
+            fn rank(&self) -> (rank_val: usize)
+                ensures self.spec_is_leaf() ==> rank_val == 0;
             fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
                 requires left.spec_size() + right.spec_size() + 1 <= usize::MAX as nat,
                 ensures node.spec_size() == left.spec_size() + right.spec_size() + 1;
             fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
                 requires a.spec_size() + b.spec_size() <= usize::MAX as nat,
                 ensures node.spec_size() == a.spec_size() + b.spec_size();
-            fn size(&self) -> (n: usize);
-            fn height(&self) -> (h: usize);
-            fn is_leftist(&self) -> (b: bool);
-            fn is_heap(&self) -> (b: bool);
-            fn to_vec(&self) -> (v: Vec<T>);
+            fn size(&self) -> (n: usize)
+                requires self.spec_node_size() <= usize::MAX as nat,
+                ensures n as nat == self.spec_node_size();
+            fn height(&self) -> (h: usize)
+                ensures self.spec_is_leaf() ==> h == 0;
+            fn is_leftist(&self) -> (b: bool)
+                ensures self.spec_is_leaf() ==> b;
+            fn is_heap(&self) -> (b: bool)
+                ensures self.spec_is_leaf() ==> b;
+            fn to_vec(&self) -> (v: Vec<T>)
+                requires self.spec_node_size() <= usize::MAX as nat,
+                ensures v@.len() as nat == self.spec_node_size();
         }
 
         /// Meldable Priority Queue ADT (Data Type 45.1) using leftist heap.
@@ -132,7 +138,8 @@ broadcast use {
                 requires obeys_feq_clone::<T>(),
                 ensures pq.spec_size() == vec@.len();
             fn to_vec(&self) -> (v: Vec<T>)
-                ensures self.spec_size() == 0 ==> v@.len() == 0;
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures v@.len() as nat == self.spec_size();
             fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures v@.len() as nat == self.spec_size();
@@ -143,7 +150,7 @@ broadcast use {
         }
 
 
-//		9. impls
+//  9. impls
 
         impl<T: StT + Ord> LeftistHeapNode<T> {
             pub open spec fn spec_size(self) -> nat
@@ -158,6 +165,14 @@ broadcast use {
         }
 
         impl<T: StT + Ord> LeftistHeapNodeTrait<T> for LeftistHeapNode<T> {
+            open spec fn spec_is_leaf(&self) -> bool {
+                matches!(*self, LeftistHeapNode::Leaf)
+            }
+
+            open spec fn spec_node_size(&self) -> nat {
+                (*self).spec_size()
+            }
+
             fn rank(&self) -> (rank_val: usize) {
                 match self {
                     LeftistHeapNode::Leaf => 0,
@@ -220,7 +235,6 @@ broadcast use {
                     LeftistHeapNode::Node { left, right, .. } => {
                         let ls = left.size();
                         let rs = right.size();
-                        proof { assume(ls + rs + 1 <= usize::MAX); }
                         1 + ls + rs
                     }
                 }
@@ -278,12 +292,15 @@ broadcast use {
                     LeftistHeapNode::Leaf => Vec::new(),
                     LeftistHeapNode::Node { key, left, right, .. } => {
                         let mut result = left.to_vec();
+                        let left_len = result.len();
                         result.push(key.clone());
                         let right_vec = right.to_vec();
                         let n = right_vec.len();
                         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                         for i in 0..n
-                            invariant n == right_vec@.len()
+                            invariant
+                                n == right_vec@.len(),
+                                result@.len() == left_len + 1 + i,
                         {
                             result.push(right_vec[i].clone());
                         }
@@ -368,9 +385,7 @@ broadcast use {
             }
 
             fn size(&self) -> (n: usize) {
-                let n = self.root.size();
-                proof { assume(n as nat == self.spec_size()); }
-                n
+                self.root.size()
             }
 
             fn is_empty(&self) -> (b: bool) {
@@ -471,7 +486,7 @@ broadcast use {
             }
         }
 
-//		11. derive impls in verus!
+//  11. derive impls in verus!
 
         #[cfg(verus_keep_ghost)]
         impl<T: StT + Ord> PartialEqSpecImpl for LeftistHeapNode<T> {
@@ -555,7 +570,7 @@ broadcast use {
 
     }
 
-//		12. macros
+//  12. macros
 
     #[macro_export]
     macro_rules! LeftistHeapPQLit {
@@ -568,7 +583,7 @@ broadcast use {
         }};
     }
 
-//		13. derive impls outside verus!
+//  13. derive impls outside verus!
 
     impl<T: StT + Ord + Debug> Debug for LeftistHeapNode<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
