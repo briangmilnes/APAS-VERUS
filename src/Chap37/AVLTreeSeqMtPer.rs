@@ -41,6 +41,7 @@ pub mod AVLTreeSeqMtPer {
     use std::fmt::{Debug, Display, Formatter};
 
     use vstd::prelude::*;
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::{spawn, wait};
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
@@ -469,22 +470,20 @@ pub mod AVLTreeSeqMtPer {
             if s >= e {
                 return Self::empty();
             }
-            use std::sync::Arc;
             let result_len = e - s;
             let slots: Vec<_> = (0..result_len)
                 .map(|_| Arc::new(std::sync::Mutex::new(None)))
                 .collect();
-            std::thread::scope(|scope| {
-                for i in s..e {
-                    let self_ref = self;
-                    let idx = i - s;
-                    let slot = Arc::clone(&slots[idx]);
-                    scope.spawn(move || {
-                        let value = self_ref.nth(i).clone();
-                        *slot.lock().unwrap() = Some(value);
-                    });
-                }
-            });
+            let tasks: Vec<_> = (s..e).map(|i| {
+                let self_clone = self.clone();
+                let idx = i - s;
+                let slot = Arc::clone(&slots[idx]);
+                spawn(move || {
+                    let value = self_clone.nth(i).clone();
+                    *slot.lock().unwrap() = Some(value);
+                })
+            }).collect();
+            for task in tasks { wait(task); }
             let vals: Vec<T> = slots
                 .into_iter()
                 .map(|slot| Arc::try_unwrap(slot).unwrap().into_inner().unwrap().unwrap())

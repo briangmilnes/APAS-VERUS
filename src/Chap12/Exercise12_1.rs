@@ -12,7 +12,8 @@ pub mod Exercise12_1 {
     use std::hint::spin_loop;
     use std::sync::Arc;
     use std::sync::atomic::{AtomicUsize, Ordering};
-    use std::thread;
+
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::{spawn, wait};
 
 verus! {
 
@@ -95,12 +96,12 @@ verus! {
     {
         let lock = Arc::new(SpinLock::new());
         let shared = Arc::new(AtomicUsize::new(0));
-        let mut handles = Vec::new();
+        let mut tasks = Vec::new();
 
         for _ in 0..4 {
             let lock_clone = Arc::clone(&lock);
             let shared_clone = Arc::clone(&shared);
-            handles.push(thread::spawn(move || {
+            tasks.push(spawn(move || {
                 for _ in 0..iterations {
                     lock_clone.lock();
                     shared_clone.fetch_add(1, Ordering::Relaxed);
@@ -109,8 +110,8 @@ verus! {
             }));
         }
 
-        for handle in handles {
-            handle.join().expect("parallel_increment: worker panicked");
+        for task in tasks {
+            wait(task);
         }
 
         shared.load(Ordering::Relaxed)

@@ -24,11 +24,11 @@ pub mod BottomUpDPMtPer {
     use std::fmt::{Formatter, Debug, Display};
     use std::sync::Arc;
     use vstd::rwlock::*;
-    use std::thread;
 
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::{spawn, wait};
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
@@ -169,14 +169,14 @@ pub mod BottomUpDPMtPer {
                         if j > 0 && j <= t_len { Some((i, j)) } else { None }
                     }).collect();
 
-                let handles: Vec<_> = positions
+                let tasks: Vec<_> = positions
                     .into_iter()
                     .map(|(i, j)| {
                         let table_clone = Arc::clone(&table);
                         let seq_s_clone = self.seq_s.clone();
                         let seq_t_clone = self.seq_t.clone();
 
-                        thread::spawn(move || {
+                        spawn(move || {
                             let s_char = *seq_s_clone.nth(i - 1);
                             let t_char = *seq_t_clone.nth(j - 1);
 
@@ -193,9 +193,9 @@ pub mod BottomUpDPMtPer {
                         })
                     }).collect();
 
-                let results: Vec<(usize, usize, usize)> = handles
+                let results: Vec<(usize, usize, usize)> = tasks
                     .into_iter()
-                    .map(|h| h.join().unwrap())
+                    .map(|t| wait(t))
                     .collect();
 
                 let (mut current, write_handle) = table.acquire_write();
