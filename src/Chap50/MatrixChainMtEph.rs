@@ -15,6 +15,7 @@ pub mod MatrixChainMtEph {
     use vstd::rwlock::*;
 
     use crate::Types::Types::*;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 
     verus! {
@@ -63,14 +64,6 @@ broadcast use {
         }
     }
 
-    #[verifier::external_body]
-    fn new_mceph_dim_lock(val: Vec<MatrixDim>)
-        -> (lock: RwLock<Vec<MatrixDim>, MatrixChainMtEphDimInv>)
-        requires val@.len() <= usize::MAX as nat
-    {
-        RwLock::new(val, Ghost(MatrixChainMtEphDimInv))
-    }
-
     pub struct MatrixChainMtEphMemoInv {
         pub ghost dims: Seq<MatrixDim>,
     }
@@ -81,17 +74,6 @@ broadcast use {
         }
     }
 
-    #[verifier::external_body]
-    fn new_mceph_memo_lock(
-        val: HashMapWithViewPlus<Pair<usize, usize>, usize>,
-        Ghost(dims): Ghost<Seq<MatrixDim>>,
-    ) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MatrixChainMtEphMemoInv>)
-        requires
-            val@.dom().finite(),
-            spec_memo_correct(dims, val@),
-    {
-        RwLock::new(val, Ghost(MatrixChainMtEphMemoInv { dims }))
-    }
 
     pub struct MatrixChainMtEphS {
         pub dimensions: Arc<RwLock<Vec<MatrixDim>, MatrixChainMtEphDimInv>>,
@@ -173,16 +155,16 @@ broadcast use {
         #[verifier::external_body]
         fn new() -> (mc: Self) {
             Self {
-                dimensions: Arc::new(new_mceph_dim_lock(Vec::new())),
-                memo: Arc::new(new_mceph_memo_lock(HashMapWithViewPlus::new(), Ghost(Seq::empty()))),
+                dimensions: new_arc_rwlock(Vec::new(), Ghost(MatrixChainMtEphDimInv)),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: Seq::empty() })),
             }
         }
 
         #[verifier::external_body]
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
             Self {
-                dimensions: Arc::new(new_mceph_dim_lock(dimensions)),
-                memo: Arc::new(new_mceph_memo_lock(HashMapWithViewPlus::new(), Ghost(Seq::empty()))),
+                dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv)),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: Seq::empty() })),
             }
         }
 
@@ -198,8 +180,8 @@ broadcast use {
                 idx = idx + 1;
             }
             Self {
-                dimensions: Arc::new(new_mceph_dim_lock(dimensions)),
-                memo: Arc::new(new_mceph_memo_lock(HashMapWithViewPlus::new(), Ghost(Seq::empty()))),
+                dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv)),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: Seq::empty() })),
             }
         }
 

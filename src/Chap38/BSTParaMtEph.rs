@@ -24,6 +24,7 @@ pub mod BSTParaMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     verus! {
 
@@ -63,9 +64,13 @@ pub mod BSTParaMtEph {
         pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaMtEphInv>>,
     }
 
-    #[verifier::external_body]
-    fn new_bst_para_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BSTParaMtEphInv>) {
-        RwLock::new(val, Ghost(BSTParaMtEphInv))
+    fn new_param_bst_arc<T: MtKey>(
+        val: Option<Box<NodeInner<T>>>,
+    ) -> (arc: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaMtEphInv>>)
+        requires BSTParaMtEphInv.inv(val),
+        ensures arc.pred() == BSTParaMtEphInv,
+    {
+        new_arc_rwlock(val, Ghost(BSTParaMtEphInv))
     }
 
     // 5. view impls
@@ -323,7 +328,7 @@ pub mod BSTParaMtEph {
     } // verus!
 
     fn new_leaf<T: MtKey>() -> ParamBST<T> {
-        ParamBST { root: Arc::new(new_bst_para_lock(None)) }
+        ParamBST { root: new_param_bst_arc(None) }
     }
 
     fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> Exposed<T> {
@@ -342,7 +347,7 @@ pub mod BSTParaMtEph {
             | Exposed::Node(left, key, right) => {
                 let size = 1 + left.size() + right.size();
                 ParamBST {
-                    root: Arc::new(new_bst_para_lock(Some(Box::new(NodeInner { key, size, left, right })))),
+                    root: new_param_bst_arc(Some(Box::new(NodeInner { key, size, left, right }))),
                 }
             }
         }

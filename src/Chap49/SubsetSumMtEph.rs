@@ -26,6 +26,7 @@ pub mod SubsetSumMtEph {
 
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
@@ -127,21 +128,22 @@ pub mod SubsetSumMtEph {
     // 9. impls
 
     /// Create Arc-wrapped memo lock with empty map.
-    #[verifier::external_body]
     fn new_arc_memo(
         val: HashMapWithViewPlus<Pair<usize, i32>, bool>,
     ) -> (memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtEphMemoInv>>)
         requires val@.dom().finite(),
+        ensures memo.pred() == SubsetSumMtEphMemoInv,
     {
-        Arc::new(RwLock::new(val, Ghost(SubsetSumMtEphMemoInv)))
+        new_arc_rwlock(val, Ghost(SubsetSumMtEphMemoInv))
     }
 
     /// Clone Arc memo (reference count increment).
-    #[verifier::external_body]
     fn clone_arc_memo<T: MtVal>(
         s: &SubsetSumMtEphS<T>,
-    ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtEphMemoInv>>) {
-        s.memo.clone()
+    ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtEphMemoInv>>)
+        ensures cloned.pred() == s.memo.pred(),
+    {
+        clone_arc_rwlock(&s.memo)
     }
 
     /// Recursive memoized parallel subset sum solver.

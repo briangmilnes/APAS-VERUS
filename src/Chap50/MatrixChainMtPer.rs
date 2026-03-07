@@ -18,6 +18,7 @@ pub mod MatrixChainMtPer {
 
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
     #[cfg(verus_keep_ghost)]
@@ -76,17 +77,6 @@ broadcast use {
         }
     }
 
-    #[verifier::external_body]
-    fn new_mcper_memo_lock(
-        val: HashMapWithViewPlus<Pair<usize, usize>, usize>,
-        Ghost(dims): Ghost<Seq<MatrixDim>>,
-    ) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MatrixChainMtPerMemoInv>)
-        requires
-            val@.dom().finite(),
-            spec_memo_correct(dims, val@),
-    {
-        RwLock::new(val, Ghost(MatrixChainMtPerMemoInv { dims }))
-    }
 
     pub struct MatrixChainMtPerS {
         pub dimensions: Arc<Vec<MatrixDim>>,
@@ -208,7 +198,7 @@ broadcast use {
         fn new() -> (mc: Self) {
             Self {
                 dimensions: Arc::new(Vec::new()),
-                memo: Arc::new(new_mcper_memo_lock(HashMapWithViewPlus::new(), Ghost(Seq::empty()))),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtPerMemoInv { dims: Seq::empty() })),
             }
         }
 
@@ -216,7 +206,7 @@ broadcast use {
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
             Self {
                 dimensions: Arc::new(dimensions),
-                memo: Arc::new(new_mcper_memo_lock(HashMapWithViewPlus::new(), Ghost(Seq::empty()))),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtPerMemoInv { dims: Seq::empty() })),
             }
         }
 
@@ -233,7 +223,7 @@ broadcast use {
             }
             Self {
                 dimensions: Arc::new(dimensions),
-                memo: Arc::new(new_mcper_memo_lock(HashMapWithViewPlus::new(), Ghost(Seq::empty()))),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtPerMemoInv { dims: Seq::empty() })),
             }
         }
 

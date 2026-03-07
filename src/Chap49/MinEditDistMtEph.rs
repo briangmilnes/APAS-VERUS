@@ -26,6 +26,7 @@ pub mod MinEditDistMtEph {
 
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
@@ -150,21 +151,22 @@ pub mod MinEditDistMtEph {
     // 9. impls
 
     /// Create Arc-wrapped memo lock.
-    #[verifier::external_body]
     fn new_arc_memo(
         val: HashMapWithViewPlus<Pair<usize, usize>, usize>,
     ) -> (memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtEphMemoInv>>)
         requires val@.dom().finite(),
+        ensures memo.pred() == MinEditDistMtEphMemoInv,
     {
-        Arc::new(RwLock::new(val, Ghost(MinEditDistMtEphMemoInv)))
+        new_arc_rwlock(val, Ghost(MinEditDistMtEphMemoInv))
     }
 
     /// Clone Arc memo (reference count increment).
-    #[verifier::external_body]
     fn clone_arc_memo<T: MtVal>(
         s: &MinEditDistMtEphS<T>,
-    ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtEphMemoInv>>) {
-        s.memo.clone()
+    ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtEphMemoInv>>)
+        ensures cloned.pred() == s.memo.pred(),
+    {
+        clone_arc_rwlock(&s.memo)
     }
 
     /// Recursive memoized parallel minimum edit distance solver.

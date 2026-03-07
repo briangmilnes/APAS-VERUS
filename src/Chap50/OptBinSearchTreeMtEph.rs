@@ -16,6 +16,7 @@ pub mod OptBinSearchTreeMtEph {
 
     use crate::Chap30::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 
     verus! {
@@ -40,24 +41,12 @@ pub mod OptBinSearchTreeMtEph {
                 v@.len() <= usize::MAX as nat
             }
         }
-        #[verifier::external_body]
-        fn new_obst_eph_keys_lock<T: MtVal>(val: Vec<KeyProb<T>>) -> (lock: RwLock<Vec<KeyProb<T>>, OptBSTMtEphKeysInv>)
-            requires val@.len() <= usize::MAX as nat
-        {
-            RwLock::new(val, Ghost(OptBSTMtEphKeysInv))
-        }
 
         pub struct OptBSTMtEphMemoInv;
         impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, Probability>> for OptBSTMtEphMemoInv {
             open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> bool {
                 v@.dom().finite()
             }
-        }
-        #[verifier::external_body]
-        fn new_obst_eph_memo_lock(val: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtEphMemoInv>)
-            requires val@.dom().finite()
-        {
-            RwLock::new(val, Ghost(OptBSTMtEphMemoInv))
         }
 
     /// Ephemeral multi-threaded optimal binary search tree solver using parallel dynamic programming
@@ -167,8 +156,8 @@ pub mod OptBinSearchTreeMtEph {
         #[verifier::external_body]
         fn new() -> (empty: Self) {
             Self {
-                keys: Arc::new(new_obst_eph_keys_lock(Vec::new())),
-                memo: Arc::new(new_obst_eph_memo_lock(HashMapWithViewPlus::new())),
+                keys: new_arc_rwlock(Vec::new(), Ghost(OptBSTMtEphKeysInv)),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
             }
         }
 
@@ -179,16 +168,16 @@ pub mod OptBinSearchTreeMtEph {
                 .zip(probs)
                 .map(|(key, prob)| KeyProb { key, prob }).collect::<Vec<KeyProb<T>>>();
             Self {
-                keys: Arc::new(new_obst_eph_keys_lock(key_probs)),
-                memo: Arc::new(new_obst_eph_memo_lock(HashMapWithViewPlus::new())),
+                keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv)),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
             }
         }
 
         #[verifier::external_body]
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
             Self {
-                keys: Arc::new(new_obst_eph_keys_lock(key_probs)),
-                memo: Arc::new(new_obst_eph_memo_lock(HashMapWithViewPlus::new())),
+                keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv)),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
             }
         }
 

@@ -31,6 +31,7 @@ pub mod BottomUpDPMtPer {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     verus! {
     // 4. type definitions
@@ -93,12 +94,6 @@ pub mod BottomUpDPMtPer {
         }
     }
 
-    #[verifier::external_body]
-    fn new_bu_per_lock(val: Vec<Vec<usize>>)
-        -> (lock: RwLock<Vec<Vec<usize>>, BottomUpDPMtPerInv>)
-    {
-        RwLock::new(val, Ghost(BottomUpDPMtPerInv { s_len: 0, t_len: 0 }))
-    }
 
     // 9. impls
     impl BottomUpDPMtPerTrait for BottomUpDPMtPerS {
@@ -162,7 +157,7 @@ pub mod BottomUpDPMtPer {
                 table[0][j] = j;
             }
 
-            let table = Arc::new(new_bu_per_lock(table));
+            let table: Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerInv>> = new_arc_rwlock(table, Ghost(BottomUpDPMtPerInv { s_len: 0, t_len: 0 }));
 
             for k in 1..=(s_len + t_len) {
                 let start = max(1, k.saturating_sub(t_len));

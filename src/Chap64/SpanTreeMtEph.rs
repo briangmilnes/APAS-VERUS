@@ -10,11 +10,11 @@ pub mod SpanTreeMtEph {
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     #[cfg(not(verus_keep_ghost))]
     use std::collections::HashMap;
     use std::hash::Hash;
-    #[cfg(not(verus_keep_ghost))]
     use std::sync::Arc;
     #[cfg(not(verus_keep_ghost))]
     use std::thread;
@@ -32,20 +32,23 @@ pub mod SpanTreeMtEph {
         impl<V: StT + MtT + Hash + Ord> RwLockPredicate<SetStEph<Edge<V>>> for SpanTreeMtEphEdgesInv {
             open spec fn inv(self, v: SetStEph<Edge<V>>) -> bool { v@.finite() }
         }
-        #[verifier::external_body]
-        fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(
+        fn new_spanning_edges_arc<V: StT + MtT + Hash + Ord>(
             val: SetStEph<Edge<V>>,
-        ) -> (lock: RwLock<SetStEph<Edge<V>>, SpanTreeMtEphEdgesInv>) {
-            RwLock::new(val, Ghost(SpanTreeMtEphEdgesInv))
+        ) -> (arc: Arc<RwLock<SetStEph<Edge<V>>, SpanTreeMtEphEdgesInv>>)
+            requires val@.finite(),
+            ensures arc.pred() == SpanTreeMtEphEdgesInv,
+        {
+            new_arc_rwlock(val, Ghost(SpanTreeMtEphEdgesInv))
         }
 
         pub struct SpanTreeMtEphValidInv;
         impl RwLockPredicate<bool> for SpanTreeMtEphValidInv {
             open spec fn inv(self, v: bool) -> bool { v == true || v == false }
         }
-        #[verifier::external_body]
-        fn new_valid_lock(val: bool) -> (lock: RwLock<bool, SpanTreeMtEphValidInv>) {
-            RwLock::new(val, Ghost(SpanTreeMtEphValidInv))
+        fn new_valid_arc(val: bool) -> (arc: Arc<RwLock<bool, SpanTreeMtEphValidInv>>)
+            ensures arc.pred() == SpanTreeMtEphValidInv,
+        {
+            new_arc_rwlock(val, Ghost(SpanTreeMtEphValidInv))
         }
 
         pub trait SpanTreeMtEphTrait {
@@ -92,7 +95,7 @@ pub mod SpanTreeMtEph {
                       _centers: &SetStEph<V>,
                       partition_map: &HashMap<V, V>,
                       quotient_tree: SetStEph<Edge<V>>| {
-            let spanning_edges = Arc::new(new_spanning_edges_lock(SetLit![]));
+            let spanning_edges = new_spanning_edges_arc(SetLit![]);
 
             // Part 1: Add edges from vertices to their centers (star edges) - PARALLEL
             // Convert HashMap to Vec for parallel processing
@@ -222,7 +225,7 @@ pub mod SpanTreeMtEph {
             return true;
         }
 
-        let valid = Arc::new(new_valid_lock(true));
+        let valid = new_valid_arc(true);
 
         let mid = edges_vec.len() / 2;
         let left_edges = edges_vec[..mid].to_vec();

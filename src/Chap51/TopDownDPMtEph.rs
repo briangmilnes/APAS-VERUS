@@ -31,6 +31,7 @@ pub mod TopDownDPMtEph {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     verus! {
     // 4. type definitions
@@ -114,12 +115,6 @@ pub mod TopDownDPMtEph {
         open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
     }
 
-    #[verifier::external_body]
-    fn new_td_eph_lock(val: HashMap<(usize, usize), usize>, s_len: usize, t_len: usize)
-        -> (lock: RwLock<HashMap<(usize, usize), usize>, TopDownDPMtEphInv>)
-    {
-        RwLock::new(val, Ghost(TopDownDPMtEphInv { s_len: s_len as nat, t_len: t_len as nat }))
-    }
 
     // 9. impls
     impl TopDownDPMtEphTrait for TopDownDPMtEphS {
@@ -185,7 +180,7 @@ pub mod TopDownDPMtEph {
         fn med_memoized_parallel(&mut self) -> (distance: usize) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
-            let memo = Arc::new(new_td_eph_lock(HashMap::new(), s_len, t_len));
+            let memo: Arc<RwLock<HashMap<(usize, usize), usize>, TopDownDPMtEphInv>> = new_arc_rwlock(HashMap::new(), Ghost(TopDownDPMtEphInv { s_len: s_len as nat, t_len: t_len as nat }));
             med_recursive_parallel(&self.seq_s, &self.seq_t, s_len, t_len, &memo)
         }
     }

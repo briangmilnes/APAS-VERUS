@@ -31,6 +31,7 @@ pub mod BottomUpDPMtEph {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     verus! {
     // 4. type definitions
@@ -105,12 +106,6 @@ pub mod BottomUpDPMtEph {
         }
     }
 
-    #[verifier::external_body]
-    fn new_bu_eph_lock(val: Vec<Vec<usize>>)
-        -> (lock: RwLock<Vec<Vec<usize>>, BottomUpDPMtEphInv>)
-    {
-        RwLock::new(val, Ghost(BottomUpDPMtEphInv { s_len: 0, t_len: 0 }))
-    }
 
     // 9. impls
     impl BottomUpDPMtEphTrait for BottomUpDPMtEphS {
@@ -177,7 +172,7 @@ pub mod BottomUpDPMtEph {
                 table[0][j] = j;
             }
 
-            let table = Arc::new(new_bu_eph_lock(table));
+            let table: Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtEphInv>> = new_arc_rwlock(table, Ghost(BottomUpDPMtEphInv { s_len: 0, t_len: 0 }));
 
             for k in 1..=(s_len + t_len) {
                 let start = max(1, k.saturating_sub(t_len));

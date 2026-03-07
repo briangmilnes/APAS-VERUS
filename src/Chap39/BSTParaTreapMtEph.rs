@@ -28,6 +28,7 @@ pub mod BSTParaTreapMtEph {
     use vstd::rwlock::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     verus! {
 
@@ -80,11 +81,13 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    #[verifier::external_body]
-    fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BSTParaTreapMtEphInv>)
+    fn new_param_treap_arc<T: MtKey>(
+        val: Option<Box<NodeInner<T>>>,
+    ) -> (arc: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaTreapMtEphInv>>)
         requires BSTParaTreapMtEphInv.inv(val),
+        ensures arc.pred() == BSTParaTreapMtEphInv,
     {
-        RwLock::new(val, Ghost(BSTParaTreapMtEphInv))
+        new_arc_rwlock(val, Ghost(BSTParaTreapMtEphInv))
     }
 
     //		11. derive impls in verus!
@@ -159,9 +162,9 @@ pub mod BSTParaTreapMtEph {
     fn make_node<T: MtKey>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> ParamTreap<T> {
         let size = 1 + tree_size(&left) + tree_size(&right);
         ParamTreap {
-            root: Arc::new(new_treap_lock(
+            root: new_param_treap_arc(
                 Some(Box::new(NodeInner { key, priority, size, left, right })),
-            )),
+            ),
         }
     }
 
@@ -438,7 +441,7 @@ pub mod BSTParaTreapMtEph {
         #[verifier::external_body]
         fn new() -> (tree: Self) {
             ParamTreap {
-                root: Arc::new(new_treap_lock(None)),
+                root: new_param_treap_arc(None),
             }
         }
 

@@ -18,6 +18,7 @@ pub mod OptBinSearchTreeMtPer {
 
     use crate::Chap30::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 
     verus! {
@@ -41,12 +42,6 @@ pub mod OptBinSearchTreeMtPer {
             open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> bool {
                 v@.dom().finite()
             }
-        }
-        #[verifier::external_body]
-        fn new_obst_per_memo_lock(val: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtPerMemoInv>)
-            requires val@.dom().finite()
-        {
-            RwLock::new(val, Ghost(OptBSTMtPerMemoInv))
         }
 
     /// Persistent multi-threaded optimal binary search tree solver using parallel dynamic programming
@@ -148,7 +143,7 @@ pub mod OptBinSearchTreeMtPer {
         fn new() -> (empty: Self) {
             Self {
                 keys: Arc::new(Vec::new()),
-                memo: Arc::new(new_obst_per_memo_lock(HashMapWithViewPlus::new())),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtPerMemoInv)),
             }
         }
 
@@ -160,7 +155,7 @@ pub mod OptBinSearchTreeMtPer {
                 .map(|(key, prob)| KeyProb { key, prob }).collect::<Vec<KeyProb<T>>>();
             Self {
                 keys: Arc::new(key_probs),
-                memo: Arc::new(new_obst_per_memo_lock(HashMapWithViewPlus::new())),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtPerMemoInv)),
             }
         }
 
@@ -168,7 +163,7 @@ pub mod OptBinSearchTreeMtPer {
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
             Self {
                 keys: Arc::new(key_probs),
-                memo: Arc::new(new_obst_per_memo_lock(HashMapWithViewPlus::new())),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtPerMemoInv)),
             }
         }
 

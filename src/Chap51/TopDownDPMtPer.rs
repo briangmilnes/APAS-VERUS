@@ -31,6 +31,7 @@ pub mod TopDownDPMtPer {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     verus! {
     // 4. type definitions
@@ -90,13 +91,6 @@ pub mod TopDownDPMtPer {
     /// cannot constrain map contents. Ghost fields carry context for documentation.
     impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtPerInv {
         open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
-    }
-
-    #[verifier::external_body]
-    fn new_td_per_lock(val: HashMap<(usize, usize), usize>, s_len: usize, t_len: usize)
-        -> (lock: RwLock<HashMap<(usize, usize), usize>, TopDownDPMtPerInv>)
-    {
-        RwLock::new(val, Ghost(TopDownDPMtPerInv { s_len: s_len as nat, t_len: t_len as nat }))
     }
 
     // 9. impls
@@ -160,7 +154,7 @@ pub mod TopDownDPMtPer {
         fn med_memoized_parallel(&self) -> (distance: usize) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
-            let memo = Arc::new(new_td_per_lock(HashMap::new(), s_len, t_len));
+            let memo: Arc<RwLock<HashMap<(usize, usize), usize>, TopDownDPMtPerInv>> = new_arc_rwlock(HashMap::new(), Ghost(TopDownDPMtPerInv { s_len: s_len as nat, t_len: t_len as nat }));
             med_recursive_parallel(&self.seq_s, &self.seq_t, s_len, t_len, &memo)
         }
     }

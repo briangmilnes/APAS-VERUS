@@ -28,6 +28,7 @@ pub mod BSTParaStEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     verus! {
 
@@ -76,7 +77,6 @@ pub mod BSTParaStEph {
         pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaStEphInv<T>>>,
     }
 
-    #[verifier::external_body]
     fn new_param_bst<T: StT + Ord>(
         val: Option<Box<NodeInner<T>>>,
         Ghost(contents): Ghost<Set<<T as View>::V>>,
@@ -85,7 +85,7 @@ pub mod BSTParaStEph {
         ensures tree@ =~= contents,
     {
         let ghost pred = BSTParaStEphInv::<T> { contents };
-        ParamBST { root: Arc::new(RwLock::new(val, Ghost(pred))) }
+        ParamBST { root: new_arc_rwlock(val, Ghost(pred)) }
     }
 
     // 5. view impls
