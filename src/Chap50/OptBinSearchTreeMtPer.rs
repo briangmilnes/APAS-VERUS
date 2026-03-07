@@ -10,12 +10,12 @@ pub mod OptBinSearchTreeMtPer {
     use std::iter::Cloned;
     use std::slice::Iter;
     use std::sync::Arc;
-    use std::thread;
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
 
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap30::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
@@ -90,11 +90,9 @@ pub mod OptBinSearchTreeMtPer {
         let table_clone1 = table.clone();
         let table_clone2 = table.clone();
 
-        let handle1 = thread::spawn(move || parallel_min_reduction(&table_clone1, left_costs));
-        let handle2 = thread::spawn(move || parallel_min_reduction(&table_clone2, right_costs));
-
-        let left_min = handle1.join().unwrap();
-        let right_min = handle2.join().unwrap();
+        let f1 = move || parallel_min_reduction(&table_clone1, left_costs);
+        let f2 = move || parallel_min_reduction(&table_clone2, right_costs);
+        let (left_min, right_min) = join(f1, f2);
 
         std::cmp::min(left_min, right_min)
     }

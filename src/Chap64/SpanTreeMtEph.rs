@@ -17,7 +17,7 @@ pub mod SpanTreeMtEph {
     use std::hash::Hash;
     use std::sync::Arc;
     #[cfg(not(verus_keep_ghost))]
-    use std::thread;
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     #[cfg(not(verus_keep_ghost))]
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     #[cfg(not(verus_keep_ghost))]
@@ -109,8 +109,9 @@ pub mod SpanTreeMtEph {
                 let left_vec = partition_vec[..mid].to_vec();
                 let right_vec = partition_vec[mid..].to_vec();
 
-                let spanning_edges_clone = Arc::clone(&spanning_edges);
-                let handle = thread::spawn(move || {
+                let spanning_edges_clone1 = Arc::clone(&spanning_edges);
+                let spanning_edges_clone2 = Arc::clone(&spanning_edges);
+                let f1 = move || {
                     for (vertex, center) in left_vec {
                         if vertex != center {
                             let edge = if vertex < center {
@@ -118,27 +119,27 @@ pub mod SpanTreeMtEph {
                             } else {
                                 Edge(center, vertex)
                             };
-                            let (mut current, write_handle) = spanning_edges_clone.acquire_write();
+                            let (mut current, write_handle) = spanning_edges_clone1.acquire_write();
                             current.insert(edge);
                             write_handle.release_write(current);
                         }
                     }
-                });
-
-                for (vertex, center) in right_vec {
-                    if vertex != center {
-                        let edge = if vertex < center {
-                            Edge(vertex, center)
-                        } else {
-                            Edge(center, vertex)
-                        };
-                        let (mut current, write_handle) = spanning_edges.acquire_write();
-                        current.insert(edge);
-                        write_handle.release_write(current);
+                };
+                let f2 = move || {
+                    for (vertex, center) in right_vec {
+                        if vertex != center {
+                            let edge = if vertex < center {
+                                Edge(vertex, center)
+                            } else {
+                                Edge(center, vertex)
+                            };
+                            let (mut current, write_handle) = spanning_edges_clone2.acquire_write();
+                            current.insert(edge);
+                            write_handle.release_write(current);
+                        }
                     }
-                }
-
-                let _ = handle.join();
+                };
+                join(f1, f2);
             }
 
             // Part 2: Map quotient tree edges back to original edges - PARALLEL
@@ -151,49 +152,50 @@ pub mod SpanTreeMtEph {
                 let left_quotient = quotient_vec[..mid].to_vec();
                 let right_quotient = quotient_vec[mid..].to_vec();
 
-                let partition_map_clone = partition_map.clone();
-                let original_vec_clone = original_vec.clone();
-                let spanning_edges_clone = Arc::clone(&spanning_edges);
+                let partition_map_clone1 = partition_map.clone();
+                let original_vec_clone1 = original_vec.clone();
+                let spanning_edges_clone1 = Arc::clone(&spanning_edges);
+                let partition_map_clone2 = partition_map.clone();
+                let original_vec_clone2 = original_vec.clone();
+                let spanning_edges_clone2 = Arc::clone(&spanning_edges);
 
-                let handle = thread::spawn(move || {
+                let f1 = move || {
                     for quotient_edge in left_quotient {
                         let Edge(c1, c2) = quotient_edge;
 
-                        // Find an original edge that connects the two stars (parallel search)
-                        for original_edge in &original_vec_clone {
+                        for original_edge in &original_vec_clone1 {
                             let Edge(u, v) = original_edge;
-                            let u_center = partition_map_clone.get(u).unwrap_or(u);
-                            let v_center = partition_map_clone.get(v).unwrap_or(v);
+                            let u_center = partition_map_clone1.get(u).unwrap_or(u);
+                            let v_center = partition_map_clone1.get(v).unwrap_or(v);
 
                             if (u_center == &c1 && v_center == &c2) || (u_center == &c2 && v_center == &c1) {
-                                let (mut current, write_handle) = spanning_edges_clone.acquire_write();
+                                let (mut current, write_handle) = spanning_edges_clone1.acquire_write();
                                 current.insert(original_edge.clone());
                                 write_handle.release_write(current);
                                 break;
                             }
                         }
                     }
-                });
+                };
+                let f2 = move || {
+                    for quotient_edge in right_quotient {
+                        let Edge(c1, c2) = quotient_edge;
 
-                for quotient_edge in right_quotient {
-                    let Edge(c1, c2) = quotient_edge;
+                        for original_edge in &original_vec_clone2 {
+                            let Edge(u, v) = original_edge;
+                            let u_center = partition_map_clone2.get(u).unwrap_or(u);
+                            let v_center = partition_map_clone2.get(v).unwrap_or(v);
 
-                    // Find an original edge that connects the two stars
-                    for original_edge in &original_vec {
-                        let Edge(u, v) = original_edge;
-                        let u_center = partition_map.get(u).unwrap_or(u);
-                        let v_center = partition_map.get(v).unwrap_or(v);
-
-                        if (u_center == &c1 && v_center == &c2) || (u_center == &c2 && v_center == &c1) {
-                            let (mut current, write_handle) = spanning_edges.acquire_write();
-                            current.insert(original_edge.clone());
-                            write_handle.release_write(current);
-                            break;
+                            if (u_center == &c1 && v_center == &c2) || (u_center == &c2 && v_center == &c1) {
+                                let (mut current, write_handle) = spanning_edges_clone2.acquire_write();
+                                current.insert(original_edge.clone());
+                                write_handle.release_write(current);
+                                break;
+                            }
                         }
                     }
-                }
-
-                let _ = handle.join();
+                };
+                join(f1, f2);
             }
 
             Arc::try_unwrap(spanning_edges).unwrap().into_inner()
@@ -233,29 +235,30 @@ pub mod SpanTreeMtEph {
 
         let graph_edges = graph.edges();
         let graph_edges_clone = graph_edges.clone();
-        let valid_clone = Arc::clone(&valid);
+        let valid_clone1 = Arc::clone(&valid);
+        let valid_clone2 = Arc::clone(&valid);
 
-        let handle = thread::spawn(move || {
+        let f1 = move || {
             for edge in left_edges {
                 let Edge(u, v) = &edge;
                 if !graph_edges_clone.mem(&edge) && !graph_edges_clone.mem(&Edge(v.clone(), u.clone())) {
-                    let (_current, write_handle) = valid_clone.acquire_write();
+                    let (_current, write_handle) = valid_clone1.acquire_write();
                     write_handle.release_write(false);
                     return;
                 }
             }
-        });
-
-        for edge in right_edges {
-            let Edge(u, v) = &edge;
-            if !graph_edges.mem(&edge) && !graph_edges.mem(&Edge(v.clone(), u.clone())) {
-                let (_current, write_handle) = valid.acquire_write();
-                write_handle.release_write(false);
-                break;
+        };
+        let f2 = move || {
+            for edge in right_edges {
+                let Edge(u, v) = &edge;
+                if !graph_edges.mem(&edge) && !graph_edges.mem(&Edge(v.clone(), u.clone())) {
+                    let (_current, write_handle) = valid_clone2.acquire_write();
+                    write_handle.release_write(false);
+                    return;
+                }
             }
-        }
-
-        let _ = handle.join();
+        };
+        join(f1, f2);
 
         let read_handle = valid.acquire_read();
         let result = *read_handle.borrow();

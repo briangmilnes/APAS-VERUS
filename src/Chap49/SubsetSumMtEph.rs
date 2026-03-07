@@ -19,11 +19,11 @@ pub mod SubsetSumMtEph {
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
     use std::sync::Arc;
-    use std::thread;
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
 
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
@@ -175,11 +175,9 @@ pub mod SubsetSumMtEph {
                 let table_clone1 = table.clone();
                 let table_clone2 = table.clone();
 
-                let handle1 = thread::spawn(move || subset_sum_rec(&table_clone1, i - 1, j - element_value));
-                let handle2 = thread::spawn(move || subset_sum_rec(&table_clone2, i - 1, j));
-
-                let result1 = handle1.join().unwrap();
-                let result2 = handle2.join().unwrap();
+                let f1 = move || subset_sum_rec(&table_clone1, i - 1, j - element_value);
+                let f2 = move || subset_sum_rec(&table_clone2, i - 1, j);
+                let (result1, result2) = join(f1, f2);
 
                 result1 || result2
             }

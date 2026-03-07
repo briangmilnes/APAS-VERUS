@@ -20,7 +20,6 @@ pub mod AugOrderedTableMtEph {
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::sync::Arc;
-    use std::thread;
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;

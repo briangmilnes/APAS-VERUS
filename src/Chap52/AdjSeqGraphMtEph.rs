@@ -3,8 +3,6 @@
 
 pub mod AdjSeqGraphMtEph {
 
-    use std::thread;
-
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;

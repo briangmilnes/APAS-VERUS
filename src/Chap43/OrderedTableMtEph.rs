@@ -4,7 +4,6 @@
 pub mod OrderedTableMtEph {
 
     use std::sync::Arc;
-    use std::thread;
 
     use vstd::prelude::*;
 

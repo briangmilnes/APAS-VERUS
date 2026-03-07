@@ -8,12 +8,12 @@ pub mod MatrixChainMtEph {
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::sync::Arc;
-    use std::thread;
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
 
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Types::Types::*;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
@@ -211,11 +211,9 @@ broadcast use {
             let s1 = self.clone();
             let s2 = self.clone();
 
-            let handle1 = thread::spawn(move || s1.parallel_min_reduction(left_costs));
-            let handle2 = thread::spawn(move || s2.parallel_min_reduction(right_costs));
-
-            let left_min = handle1.join().unwrap();
-            let right_min = handle2.join().unwrap();
+            let f1 = move || s1.parallel_min_reduction(left_costs);
+            let f2 = move || s2.parallel_min_reduction(right_costs);
+            let (left_min, right_min) = join(f1, f2);
 
             left_min.min(right_min)
         }

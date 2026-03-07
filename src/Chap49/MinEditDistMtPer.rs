@@ -19,11 +19,11 @@ pub mod MinEditDistMtPer {
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
     use std::sync::Arc;
-    use std::thread;
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
 
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
@@ -173,11 +173,9 @@ pub mod MinEditDistMtPer {
                 let table_clone1 = table.clone();
                 let table_clone2 = table.clone();
 
-                let handle1 = thread::spawn(move || min_edit_distance_rec(&table_clone1, i - 1, j));
-                let handle2 = thread::spawn(move || min_edit_distance_rec(&table_clone2, i, j - 1));
-
-                let delete_cost = handle1.join().unwrap();
-                let insert_cost = handle2.join().unwrap();
+                let f1 = move || min_edit_distance_rec(&table_clone1, i - 1, j);
+                let f2 = move || min_edit_distance_rec(&table_clone2, i, j - 1);
+                let (delete_cost, insert_cost) = join(f1, f2);
 
                 if delete_cost <= insert_cost {
                     1 + delete_cost

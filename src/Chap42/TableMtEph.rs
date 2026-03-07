@@ -22,10 +22,10 @@ pub mod TableMtEph {
 
     use std::cmp::Ordering;
     use std::sync::Arc;
-    use std::thread;
 
     use vstd::prelude::*;
 
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
@@ -255,13 +255,13 @@ broadcast use {
             let left_entries = self.entries.subseq_copy(0, mid);
             let right_entries = self.entries.subseq_copy(mid, len - mid);
 
-            let handle = thread::spawn(move || {
+            let f1 = move || {
                 ArraySeqMtEphS::tabulate(&|i| left_entries.nth(i).0.clone(), left_entries.length()).clone()
-            });
-
-            let right_keys = ArraySeqMtEphS::tabulate(&|i| right_entries.nth(i).0.clone(), right_entries.length()).clone();
-
-            let left_keys = handle.join().unwrap();
+            };
+            let f2 = move || {
+                ArraySeqMtEphS::tabulate(&|i| right_entries.nth(i).0.clone(), right_entries.length()).clone()
+            };
+            let (left_keys, right_keys) = join(f1, f2);
 
             for i in 0..left_keys.length() {
                 keys.insert(left_keys.nth(i).clone());
@@ -294,7 +294,7 @@ broadcast use {
             let right_seq = key_seq.subseq_copy(mid, len - mid);
             let f_clone = f.clone();
 
-            let handle = thread::spawn(move || {
+            let f1 = move || {
                 ArraySeqMtEphS::tabulate(
                     &|i| {
                         let key = left_seq.nth(i);
@@ -303,18 +303,18 @@ broadcast use {
                     },
                     left_seq.length(),
                 )
-            });
-
-            let right_entries = ArraySeqMtEphS::tabulate(
-                &|i| {
-                    let key = right_seq.nth(i);
-                    let value = f(key);
-                    Pair(key.clone(), value)
-                },
-                right_seq.length(),
-            );
-
-            let left_entries = handle.join().unwrap();
+            };
+            let f2 = move || {
+                ArraySeqMtEphS::tabulate(
+                    &|i| {
+                        let key = right_seq.nth(i);
+                        let value = f(key);
+                        Pair(key.clone(), value)
+                    },
+                    right_seq.length(),
+                )
+            };
+            let (left_entries, right_entries) = join(f1, f2);
 
             let total_len = left_entries.length() + right_entries.length();
             let mut entries = Vec::with_capacity(total_len);
@@ -352,7 +352,7 @@ broadcast use {
             let right_entries = self.entries.subseq_copy(mid, len - mid);
             let f_clone = f.clone();
 
-            let handle = thread::spawn(move || {
+            let f1 = move || {
                 ArraySeqMtEphS::tabulate(
                     &|i| {
                         let pair = left_entries.nth(i).clone();
@@ -361,18 +361,18 @@ broadcast use {
                     },
                     left_entries.length(),
                 )
-            });
-
-            let right_mapped = ArraySeqMtEphS::tabulate(
-                &|i| {
-                    let pair = right_entries.nth(i).clone();
-                    let new_value = f(&pair.1);
-                    Pair(pair.0, new_value)
-                },
-                right_entries.length(),
-            );
-
-            let left_mapped = handle.join().unwrap();
+            };
+            let f2 = move || {
+                ArraySeqMtEphS::tabulate(
+                    &|i| {
+                        let pair = right_entries.nth(i).clone();
+                        let new_value = f(&pair.1);
+                        Pair(pair.0, new_value)
+                    },
+                    right_entries.length(),
+                )
+            };
+            let (left_mapped, right_mapped) = join(f1, f2);
 
             let mut mapped_entries = Vec::with_capacity(len);
             for i in 0..left_mapped.length() {
@@ -408,7 +408,7 @@ broadcast use {
             let right_entries = self.entries.subseq_copy(mid, len - mid);
             let f_clone = f.clone();
 
-            let handle = thread::spawn(move || {
+            let f1 = move || {
                 let mut left_filtered = Vec::new();
                 for i in 0..left_entries.length() {
                     let pair = left_entries.nth(i).clone();
@@ -417,17 +417,18 @@ broadcast use {
                     }
                 }
                 left_filtered
-            });
-
-            let mut right_filtered = Vec::new();
-            for i in 0..right_entries.length() {
-                let pair = right_entries.nth(i).clone();
-                if f(&pair.0, &pair.1) {
-                    right_filtered.push(pair);
+            };
+            let f2 = move || {
+                let mut right_filtered = Vec::new();
+                for i in 0..right_entries.length() {
+                    let pair = right_entries.nth(i).clone();
+                    if f(&pair.0, &pair.1) {
+                        right_filtered.push(pair);
+                    }
                 }
-            }
-
-            let left_filtered = handle.join().unwrap();
+                right_filtered
+            };
+            let (left_filtered, right_filtered) = join(f1, f2);
 
             let mut filtered_entries = Vec::with_capacity(left_filtered.len() + right_filtered.len());
             filtered_entries.extend(left_filtered.iter().cloned());
@@ -590,7 +591,7 @@ broadcast use {
             let right_entries = self.entries.subseq_copy(mid, len - mid);
             let key_clone = key.clone();
 
-            let handle = thread::spawn(move || {
+            let f1 = move || {
                 let mut left_filtered = Vec::new();
                 for i in 0..left_entries.length() {
                     let pair = left_entries.nth(i).clone();
@@ -599,18 +600,19 @@ broadcast use {
                     }
                 }
                 left_filtered
-            });
-
+            };
             let key_clone2 = key.clone();
-            let mut right_filtered = Vec::new();
-            for i in 0..right_entries.length() {
-                let pair = right_entries.nth(i).clone();
-                if pair.0 != key_clone2 {
-                    right_filtered.push(pair);
+            let f2 = move || {
+                let mut right_filtered = Vec::new();
+                for i in 0..right_entries.length() {
+                    let pair = right_entries.nth(i).clone();
+                    if pair.0 != key_clone2 {
+                        right_filtered.push(pair);
+                    }
                 }
-            }
-
-            let left_filtered = handle.join().unwrap();
+                right_filtered
+            };
+            let (left_filtered, right_filtered) = join(f1, f2);
 
             let mut filtered_entries = Vec::with_capacity(left_filtered.len() + right_filtered.len());
             filtered_entries.extend(left_filtered.iter().cloned());
@@ -640,7 +642,7 @@ broadcast use {
                 let key_clone = key.clone();
                 let combined_clone = combined_value.clone();
 
-                let handle = thread::spawn(move || {
+                let f1 = move || {
                     ArraySeqMtEphS::tabulate(
                         &|i| {
                             let pair = left_entries.nth(i).clone();
@@ -652,21 +654,21 @@ broadcast use {
                         },
                         left_entries.length(),
                     )
-                });
-
-                let right_updated = ArraySeqMtEphS::tabulate(
-                    &|i| {
-                        let pair = right_entries.nth(i).clone();
-                        if pair.0 == key {
-                            Pair(key.clone(), combined_value.clone())
-                        } else {
-                            pair
-                        }
-                    },
-                    right_entries.length(),
-                );
-
-                let left_updated = handle.join().unwrap();
+                };
+                let f2 = move || {
+                    ArraySeqMtEphS::tabulate(
+                        &|i| {
+                            let pair = right_entries.nth(i).clone();
+                            if pair.0 == key {
+                                Pair(key.clone(), combined_value.clone())
+                            } else {
+                                pair
+                            }
+                        },
+                        right_entries.length(),
+                    )
+                };
+                let (left_updated, right_updated) = join(f1, f2);
 
                 let mut updated_entries = Vec::with_capacity(len);
                 for i in 0..left_updated.length() {
@@ -720,7 +722,7 @@ broadcast use {
             let right_entries = self.entries.subseq_copy(mid, len - mid);
             let keys_clone = keys.clone();
 
-            let handle = thread::spawn(move || {
+            let f1 = move || {
                 let mut left_filtered = Vec::new();
                 for i in 0..left_entries.length() {
                     let pair = left_entries.nth(i).clone();
@@ -729,18 +731,19 @@ broadcast use {
                     }
                 }
                 left_filtered
-            });
-
+            };
             let keys_clone2 = keys.clone();
-            let mut right_filtered = Vec::new();
-            for i in 0..right_entries.length() {
-                let pair = right_entries.nth(i).clone();
-                if keys_clone2.find(&pair.0) {
-                    right_filtered.push(pair);
+            let f2 = move || {
+                let mut right_filtered = Vec::new();
+                for i in 0..right_entries.length() {
+                    let pair = right_entries.nth(i).clone();
+                    if keys_clone2.find(&pair.0) {
+                        right_filtered.push(pair);
+                    }
                 }
-            }
-
-            let left_filtered = handle.join().unwrap();
+                right_filtered
+            };
+            let (left_filtered, right_filtered) = join(f1, f2);
 
             let mut filtered_entries = Vec::with_capacity(left_filtered.len() + right_filtered.len());
             filtered_entries.extend(left_filtered.iter().cloned());
@@ -771,7 +774,7 @@ broadcast use {
             let right_entries = self.entries.subseq_copy(mid, len - mid);
             let keys_clone = keys.clone();
 
-            let handle = thread::spawn(move || {
+            let f1 = move || {
                 let mut left_filtered = Vec::new();
                 for i in 0..left_entries.length() {
                     let pair = left_entries.nth(i).clone();
@@ -780,18 +783,19 @@ broadcast use {
                     }
                 }
                 left_filtered
-            });
-
+            };
             let keys_clone2 = keys.clone();
-            let mut right_filtered = Vec::new();
-            for i in 0..right_entries.length() {
-                let pair = right_entries.nth(i).clone();
-                if !keys_clone2.find(&pair.0) {
-                    right_filtered.push(pair);
+            let f2 = move || {
+                let mut right_filtered = Vec::new();
+                for i in 0..right_entries.length() {
+                    let pair = right_entries.nth(i).clone();
+                    if !keys_clone2.find(&pair.0) {
+                        right_filtered.push(pair);
+                    }
                 }
-            }
-
-            let left_filtered = handle.join().unwrap();
+                right_filtered
+            };
+            let (left_filtered, right_filtered) = join(f1, f2);
 
             let mut filtered_entries = Vec::with_capacity(left_filtered.len() + right_filtered.len());
             filtered_entries.extend(left_filtered.iter().cloned());

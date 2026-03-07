@@ -24,11 +24,11 @@ pub mod TopDownDPMtPer {
     use std::fmt::{Formatter, Debug, Display};
     use std::sync::Arc;
     use vstd::rwlock::*;
-    use std::thread;
 
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
@@ -276,15 +276,13 @@ pub mod TopDownDPMtPer {
                     let t_clone2 = seq_t.clone();
                     let memo_clone2 = memo.clone();
 
-                    let handle1 = thread::spawn(move || {
+                    let f1 = move || {
                         1 + med_recursive_parallel(&s_clone1, &t_clone1, i, j - 1, &memo_clone1)
-                    });
-                    let handle2 = thread::spawn(move || {
+                    };
+                    let f2 = move || {
                         1 + med_recursive_parallel(&s_clone2, &t_clone2, i - 1, j, &memo_clone2)
-                    });
-
-                    let insert_cost = handle1.join().unwrap();
-                    let delete_cost = handle2.join().unwrap();
+                    };
+                    let (insert_cost, delete_cost) = join(f1, f2);
                     insert_cost.min(delete_cost)
                 }
             }
