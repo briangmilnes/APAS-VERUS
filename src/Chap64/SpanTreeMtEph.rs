@@ -70,7 +70,7 @@ pub mod SpanTreeMtEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O(lg² n)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
-    ///   uses 2-way thread::spawn splits (not full divide-and-conquer), and inner
+    ///   uses 2-way join() splits (not full divide-and-conquer), and inner
     ///   loop scanning original_edges for each quotient edge is sequential O(E).
     ///   Span does not achieve polylog; it equals Work.
     ///

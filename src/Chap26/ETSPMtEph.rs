@@ -552,6 +552,7 @@ pub mod ETSPMtEph {
 
     } // verus!
 
+    use std::sync::Arc;
 
     pub trait ETSPPointTrait {
         fn distance(&self, other: &Point) -> f64;
@@ -590,15 +591,17 @@ pub mod ETSPMtEph {
     }
 
     /// Parallel find-best-swap: recursively splits the outer loop over left_tour
-    /// and runs both halves in parallel via std::thread::scope.
+    /// and runs both halves in parallel via HFScheduler join().
     /// Work Θ(n·m), Span Θ(m·lg n) where n = left_tour.len(), m = right_tour.len().
     pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (usize, usize) {
-        let (li, ri, _) = find_best_swap_par(left_tour, right_tour, 0, left_tour.len());
+        let lt = Arc::new(left_tour.clone());
+        let rt = Arc::new(right_tour.clone());
+        let (li, ri, _) = find_best_swap_par(lt, rt, 0, left_tour.len());
         (li, ri)
     }
 
     fn find_best_swap_par(
-        left_tour: &Vec<Edge>, right_tour: &Vec<Edge>, lo: usize, hi: usize,
+        left_tour: Arc<Vec<Edge>>, right_tour: Arc<Vec<Edge>>, lo: usize, hi: usize,
     ) -> (usize, usize, f64) {
         const THRESHOLD: usize = 16;
         if hi <= lo {
@@ -624,12 +627,12 @@ pub mod ETSPMtEph {
             (best_li, best_ri, best_cost)
         } else {
             let mid = lo + (hi - lo) / 2;
-            std::thread::scope(|s| {
-                let left_half = s.spawn(|| find_best_swap_par(left_tour, right_tour, lo, mid));
-                let right_res = find_best_swap_par(left_tour, right_tour, mid, hi);
-                let left_res = left_half.join().unwrap();
-                if left_res.2 <= right_res.2 { left_res } else { right_res }
-            })
+            let lt1 = Arc::clone(&left_tour);
+            let rt1 = Arc::clone(&right_tour);
+            let f1 = move || find_best_swap_par(lt1, rt1, lo, mid);
+            let f2 = move || find_best_swap_par(left_tour, right_tour, mid, hi);
+            let (left_res, right_res) = join(f1, f2);
+            if left_res.2 <= right_res.2 { left_res } else { right_res }
         }
     }
 
