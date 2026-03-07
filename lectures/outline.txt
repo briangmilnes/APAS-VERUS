@@ -13,6 +13,10 @@ Slide count: 60 at most.
  .. This is the iphone moment. 
 . Rust Upsides
 . Rust Downsides
+ .. The 94 technical terms in Rust, 4 of which are from the PL literature.
+ .. Typeclasses are not the be all and end all
+ .. The module writer has to be the module importer: *
+ .. Use does not cascade without a reimport.
 . APAS
  .. Quantitatives
 . APAS-AI work and talk
@@ -22,18 +26,43 @@ Slide count: 60 at most.
 . Verus Pracitcality
 . Verus Problems
 . The Agents
+ .. The costs.
+ .. The response througput.
+ .. The economic model.
+ .. The properties we want in an agent
+ .. They'll just teach you Rust, and they have it wrong at the typeclasses
+ .. Agent babysitting
+ .. Claude-Code is coming to your cell phone to ruin your job.
+ .. Simon and now Pollen on the attention economy
+. I asked Claude about Claude Code
+  .. It started disassembling itself
+  .. It did not do a great job but that' scary
+  .. I told it to just read the documents and
+     it answered my question
 . The Great Things about LLM agents for programming and proving
+  .. They are great with the overly complicated Git.
+  .. They will now sweep your codebase to standards fairly quickly.
 . The Awful Things about LLM agents for programming and proving
  .. It's closed. 
  .. How the heck are these things planning?
- .. You're programming in English
- .. Every silly thing in the world's codebase
+ .. You're programming in English!
+ .. Every silly thing in the world's codebase has been learned.
+ .. They love Python and will mess up your codebase with it. 
+ .. What is context clearing and compaction?
+ .. After it sweeps your codebase, what's in there?
+ .. String hacking instead of AST parsing continually.
 . The Interfaces
 . The Properties We Want in An Interface
 . Cursor
 . Claude
 . Antigravity
 . VSCode
+. Rusticate
+. Veracity
+. Veracity Search
+. Veracity Library Minmization
+. Veracity Hole Detection
+. Veracity Style
 . Head To Head on Fine Grained Locking Trees?
  .. Kung and Lehman 1980.
 . My rules
@@ -44,6 +73,9 @@ Slide count: 60 at most.
 . APAS-VERUS novel contributions
 . Experiments vs Standards
 . Not the first proven algorithms textbook
+. How do you teach and agent to prove?
+  .. Swamy paper
+  .. Lean Dojo paper
 . Integrating programmatic software engineering with LLMs
 . Proust: Proven Rust Objects Universally Secured & Trusted
   .. Ah no people think Proust is hard to read.
@@ -63,3 +95,19 @@ Slide count: 60 at most.
 . What is going to happen in formal verification
 . Futures for my work
 . Questions
+
+
+Extras
+
+. What's a good SE process for this?
+  .. Provers have a thing against test code.
+  .. Hey the code proved, it must be right.
+  .. But when you're trying to prove bad code good luck.
+  .. And when you're sweeping your codebase, tests are as usual invaluable.
+  
+. Forking and in general usage
+ .. Claude code will start forking up parallel jobs
+ .. It has no idea about running you desktop out of CPU or memory.
+ .. I run four of them at once on a 12 thread 32 GB machine
+ .. Verus is fast but it does jam up my desktop once or twice a week.
+ .. APAS-VERUS validates in about 60s 3500 proofs, ? LOC verus.
