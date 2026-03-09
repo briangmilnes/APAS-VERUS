@@ -171,7 +171,7 @@
     "id": 22,
     "function": "distance",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "557",
+    "lines": "558",
     "spec_strength": "",
     "snippet": "        fn distance(&self, other: &Point) -> f64;"
   },
@@ -179,7 +179,7 @@
     "id": 23,
     "function": "sort_and_split_impl",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "568-590",
+    "lines": "569-591",
     "spec_strength": "",
     "snippet": "    /// Sort points by longest-spread dimension and split at median. (f64 arithmetic.)\n    pub fn sort_and_split_impl(points: &Vec<Point>) -> (Vec<Point>, Vec<Point>) {\n        let n = points.len();\n        let (mut min_x, mut max_x, mut min_y, mut max_y) =\n            (points[0].x, points[0].x, points[0].y, points[0].y);\n        for i in 1..n {\n            if points[i].x < min_x { min_x = points[i].x; }\n            if points[i].x > max_x { max_x = points[i].x; }\n            if points[i].y < min_y { min_y = points[i].y; }\n            if points[i].y > max_y { max_y = points[i].y; }\n        }\n        let split_on_x = (max_x - min_x) >= (max_y - min_y);\n        let mut sorted_points = points.clone();\n        if split_on_x {\n            sorted_points.sort_by(|a, b| a.x.partial_cmp(&b.x).unwrap_or(std::cmp::Ordering::Equal));\n        } else {\n            sorted_points.sort_by(|a, b| a.y.partial_cmp(&b.y).unwrap_or(std::cmp::Ordering::Equal));\n        }\n        let mid = (n / 2).max(2);\n        let left: Vec<Point> = sorted_points[..mid].to_vec();\n        let right: Vec<Point> = sorted_points[mid..].to_vec();\n        (left, right)\n    }"
   },
@@ -187,17 +187,17 @@
     "id": 24,
     "function": "find_best_swap_impl",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "592-598",
+    "lines": "593-601",
     "spec_strength": "",
-    "snippet": "    /// Parallel find-best-swap: recursively splits the outer loop over left_tour\n    /// and runs both halves in parallel via std::thread::scope.\n    /// Work Θ(n·m), Span Θ(m·lg n) where n = left_tour.len(), m = right_tour.len().\n    pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (usize, usize) {\n        let (li, ri, _) = find_best_swap_par(left_tour, right_tour, 0, left_tour.len());\n        (li, ri)\n    }"
+    "snippet": "    /// Parallel find-best-swap: recursively splits the outer loop over left_tour\n    /// and runs both halves in parallel via HFScheduler join().\n    /// Work Θ(n·m), Span Θ(m·lg n) where n = left_tour.len(), m = right_tour.len().\n    pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (usize, usize) {\n        let lt = Arc::new(left_tour.clone());\n        let rt = Arc::new(right_tour.clone());\n        let (li, ri, _) = find_best_swap_par(lt, rt, 0, left_tour.len());\n        (li, ri)\n    }"
   },
   {
     "id": 25,
     "function": "find_best_swap_par",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "600-634",
+    "lines": "603-637",
     "spec_strength": "",
-    "snippet": "    fn find_best_swap_par(\n        left_tour: &Vec<Edge>, right_tour: &Vec<Edge>, lo: usize, hi: usize,\n    ) -> (usize, usize, f64) {\n        const THRESHOLD: usize = 16;\n        if hi <= lo {\n            return (0, 0, f64::MAX);\n        }\n        if hi - lo <= THRESHOLD {\n            let mut best_cost = f64::MAX;\n            let mut best_li = 0usize;\n            let mut best_ri = 0usize;\n            for li in lo..hi {\n                for ri in 0..right_tour.len() {\n                    let el = &left_tour[li];\n                    let er = &right_tour[ri];\n                    let cost = el.from.distance(&er.to) + er.from.distance(&el.to)\n                             - el.from.distance(&el.to) - er.from.distance(&er.to);\n                    if cost < best_cost {\n                        best_cost = cost;\n                        best_li = li;\n                        best_ri = ri;\n                    }\n                }\n            }\n            (best_li, best_ri, best_cost)\n        } else {\n            let mid = lo + (hi - lo) / 2;\n            std::thread::scope(|s| {\n                let left_half = s.spawn(|| find_best_swap_par(left_tour, right_tour, lo, mid));\n                let right_res = find_best_swap_par(left_tour, right_tour, mid, hi);\n                let left_res = left_half.join().unwrap();\n                if left_res.2 <= right_res.2 { left_res } else { right_res }\n            })\n        }\n    }"
+    "snippet": "    fn find_best_swap_par(\n        left_tour: Arc<Vec<Edge>>, right_tour: Arc<Vec<Edge>>, lo: usize, hi: usize,\n    ) -> (usize, usize, f64) {\n        const THRESHOLD: usize = 16;\n        if hi <= lo {\n            return (0, 0, f64::MAX);\n        }\n        if hi - lo <= THRESHOLD {\n            let mut best_cost = f64::MAX;\n            let mut best_li = 0usize;\n            let mut best_ri = 0usize;\n            for li in lo..hi {\n                for ri in 0..right_tour.len() {\n                    let el = &left_tour[li];\n                    let er = &right_tour[ri];\n                    let cost = el.from.distance(&er.to) + er.from.distance(&el.to)\n                             - el.from.distance(&el.to) - er.from.distance(&er.to);\n                    if cost < best_cost {\n                        best_cost = cost;\n                        best_li = li;\n                        best_ri = ri;\n                    }\n                }\n            }\n            (best_li, best_ri, best_cost)\n        } else {\n            let mid = lo + (hi - lo) / 2;\n            let lt1 = Arc::clone(&left_tour);\n            let rt1 = Arc::clone(&right_tour);\n            let f1 = move || find_best_swap_par(lt1, rt1, lo, mid);\n            let f2 = move || find_best_swap_par(left_tour, right_tour, mid, hi);\n            let (left_res, right_res) = join(f1, f2);\n            if left_res.2 <= right_res.2 { left_res } else { right_res }\n        }\n    }"
   },
   {
     "id": 26,

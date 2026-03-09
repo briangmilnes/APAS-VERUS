@@ -52,26 +52,26 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 17 | `empty` | Y | Y |  |  | Y |  |  | unknown | 128&#8209;129 |
-| 18 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 134&#8209;137 |
-| 19 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 142&#8209;145 |
-| 20 | `length` | Y | Y |  |  | Y |  |  | unknown | 150&#8209;151 |
-| 21 | `nth` | Y | Y |  |  | Y |  |  | unknown | 156&#8209;158 |
-| 22 | `expose` | Y | Y |  |  | Y |  |  | unknown | 163&#8209;170 |
-| 23 | `join` | Y | Y |  |  | Y |  |  | unknown | 185&#8209;189 |
-| 24 | `append` | Y | Y |  |  | Y |  |  | unknown | 194&#8209;202 |
-| 25 | `subseq` | Y | Y |  |  | Y |  |  | unknown | 207&#8209;215 |
-| 26 | `update` | Y | Y |  |  | Y |  |  | unknown | 220&#8209;228 |
-| 27 | `map` | Y | Y |  |  | Y |  |  | unknown | 233&#8209;238 |
-| 28 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 243&#8209;249 |
-| 29 | `filter` | Y | Y |  |  | Y |  |  | unknown | 254&#8209;266 |
-| 30 | `drop` | Y | Y |  |  | Y |  |  | unknown | 271&#8209;279 |
-| 31 | `flatten` | Y | Y |  |  | Y |  |  | unknown | 284&#8209;289 |
-| 32 | `as_slice` | Y | Y |  |  | Y |  |  | unknown | 294&#8209;295 |
-| 33 | `into_vec` | Y | Y |  |  | Y |  |  | unknown | 300&#8209;301 |
-| 34 | `iter` |  |  | Y |  | Y |  |  | unknown | 321&#8209;325 |
-| 35 | `next` |  | Y |  |  | Y |  |  | unknown | 760&#8209;776 |
-| 36 | `eq` x2 |  | Y |  |  | Y |  |  | unknown | 862&#8209;863 |
+| 17 | `empty` | Y | Y |  |  | Y |  |  | unknown | 133&#8209;134 |
+| 18 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 139&#8209;142 |
+| 19 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 147&#8209;150 |
+| 20 | `length` | Y | Y |  |  | Y |  |  | unknown | 155&#8209;156 |
+| 21 | `nth` | Y | Y |  |  | Y |  |  | unknown | 161&#8209;163 |
+| 22 | `expose` | Y | Y |  |  | Y |  |  | unknown | 168&#8209;175 |
+| 23 | `join` | Y | Y |  |  | Y |  |  | unknown | 190&#8209;194 |
+| 24 | `append` | Y | Y |  |  | Y |  |  | unknown | 199&#8209;207 |
+| 25 | `subseq` | Y | Y |  |  | Y |  |  | unknown | 212&#8209;220 |
+| 26 | `update` | Y | Y |  |  | Y |  |  | unknown | 225&#8209;233 |
+| 27 | `map` | Y | Y |  |  | Y |  |  | unknown | 238&#8209;243 |
+| 28 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 248&#8209;254 |
+| 29 | `filter` | Y | Y |  |  | Y |  |  | unknown | 259&#8209;271 |
+| 30 | `drop` | Y | Y |  |  | Y |  |  | unknown | 276&#8209;284 |
+| 31 | `flatten` | Y | Y |  |  | Y |  |  | unknown | 289&#8209;294 |
+| 32 | `as_slice` | Y | Y |  |  | Y |  |  | unknown | 299&#8209;300 |
+| 33 | `into_vec` | Y | Y |  |  | Y |  |  | unknown | 305&#8209;306 |
+| 34 | `iter` |  |  | Y |  | Y |  |  | unknown | 316&#8209;320 |
+| 35 | `next` |  | Y |  |  | Y |  |  | unknown | 757&#8209;773 |
+| 36 | `eq` x2 |  | Y |  |  | Y |  |  | unknown | 859&#8209;860 |
 
 
 ### Legend

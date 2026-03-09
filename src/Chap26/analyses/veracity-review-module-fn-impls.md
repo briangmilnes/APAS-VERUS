@@ -68,10 +68,10 @@
 | 19 | `etsp_parallel_inner` |  |  |  | Y | Y |  |  | unknown | 323&#8209;328 |
 | 20 | `sort_and_split` |  |  |  | Y | Y |  |  | hole | 509&#8209;520 |
 | 21 | `find_best_swap` |  |  |  | Y | Y |  |  | hole | 527&#8209;533 |
-| 22 | `distance` | Y | Y |  |  |  | Y | Y |  | 557 |
-| 23 | `sort_and_split_impl` |  |  |  | Y |  | Y | Y |  | 568&#8209;590 |
-| 24 | `find_best_swap_impl` |  |  |  | Y |  | Y | Y |  | 592&#8209;598 |
-| 25 | `find_best_swap_par` |  |  |  | Y |  | Y | Y |  | 600&#8209;634 |
+| 22 | `distance` | Y | Y |  |  |  | Y | Y |  | 558 |
+| 23 | `sort_and_split_impl` |  |  |  | Y |  | Y | Y |  | 569&#8209;591 |
+| 24 | `find_best_swap_impl` |  |  |  | Y |  | Y | Y |  | 593&#8209;601 |
+| 25 | `find_best_swap_par` |  |  |  | Y |  | Y | Y |  | 603&#8209;637 |
 
 ### Chap26/ETSPStEph.rs
 

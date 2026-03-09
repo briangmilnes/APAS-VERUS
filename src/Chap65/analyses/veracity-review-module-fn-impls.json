@@ -77,7 +77,7 @@
     "file": "Chap65/UnionFindStEph.rs",
     "lines": "115-121",
     "spec_strength": "hole",
-    "snippet": "        fn insert(&mut self, v: V)\n            requires\n                old(self).wf(),\n            ensures\n                self.wf(),\n                old(self)@.parent.contains_key(v@) ==> self@ == old(self)@,\n                !old(self)@.parent.contains_key(v@) ==> {"
+    "snippet": "        fn insert(&mut self, v: V)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                old(self)@.parent.contains_key(v@) ==> self@ == old(self)@,\n                !old(self)@.parent.contains_key(v@) ==> {"
   },
   {
     "id": 11,
@@ -85,7 +85,7 @@
     "file": "Chap65/UnionFindStEph.rs",
     "lines": "130-143",
     "spec_strength": "hole",
-    "snippet": "        fn find(&mut self, v: &V) -> (root: V)\n            requires\n                old(self).wf(),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.wf(),\n                // Result is the canonical root.\n                root@ == old(self)@.roots[v@],\n                // Path compression preserves the logical partition.\n                self@.roots =~= old(self)@.roots,\n                // Domain unchanged.\n                self@.parent.dom() =~= old(self)@.parent.dom(),\n                self@.rank =~= old(self)@.rank,\n                self@.elements =~= old(self)@.elements;"
+    "snippet": "        fn find(&mut self, v: &V) -> (root: V)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                // Result is the canonical root.\n                root@ == old(self)@.roots[v@],\n                // Path compression preserves the logical partition.\n                self@.roots =~= old(self)@.roots,\n                // Domain unchanged.\n                self@.parent.dom() =~= old(self)@.parent.dom(),\n                self@.rank =~= old(self)@.rank,\n                self@.elements =~= old(self)@.elements;"
   },
   {
     "id": 12,
@@ -93,7 +93,7 @@
     "file": "Chap65/UnionFindStEph.rs",
     "lines": "147-157",
     "spec_strength": "hole",
-    "snippet": "        fn union(&mut self, u: &V, v: &V)\n            requires\n                old(self).wf(),\n                old(self)@.parent.contains_key(u@),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.wf(),\n                self@.parent.dom() =~= old(self)@.parent.dom(),\n                self@.elements =~= old(self)@.elements,\n                // Merged elements share a new root; others unchanged.\n                forall|x: <V as View>::V| #[trigger] self@.roots.contains_key(x) ==> {"
+    "snippet": "        fn union(&mut self, u: &V, v: &V)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n                old(self)@.parent.contains_key(u@),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                self@.parent.dom() =~= old(self)@.parent.dom(),\n                self@.elements =~= old(self)@.elements,\n                // Merged elements share a new root; others unchanged.\n                forall|x: <V as View>::V| #[trigger] self@.roots.contains_key(x) ==> {"
   },
   {
     "id": 13,
@@ -101,7 +101,7 @@
     "file": "Chap65/UnionFindStEph.rs",
     "lines": "169-178",
     "spec_strength": "hole",
-    "snippet": "        fn equals(&mut self, u: &V, v: &V) -> (same: B)\n            requires\n                old(self).wf(),\n                old(self)@.parent.contains_key(u@),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.wf(),\n                same == (old(self)@.roots[u@] == old(self)@.roots[v@]),\n                self@.roots =~= old(self)@.roots,\n                self@.parent.dom() =~= old(self)@.parent.dom();"
+    "snippet": "        fn equals(&mut self, u: &V, v: &V) -> (same: B)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n                old(self)@.parent.contains_key(u@),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                same == (old(self)@.roots[u@] == old(self)@.roots[v@]),\n                self@.roots =~= old(self)@.roots,\n                self@.parent.dom() =~= old(self)@.parent.dom();"
   },
   {
     "id": 14,
@@ -109,6 +109,6 @@
     "file": "Chap65/UnionFindStEph.rs",
     "lines": "182-188",
     "spec_strength": "hole",
-    "snippet": "        fn num_sets(&mut self) -> (count: usize)\n            requires\n                old(self).wf(),\n            ensures\n                self.wf(),\n                self@.roots =~= old(self)@.roots,\n                self@.parent.dom() =~= old(self)@.parent.dom();"
+    "snippet": "        fn num_sets(&mut self) -> (count: usize)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                self@.roots =~= old(self)@.roots,\n                self@.parent.dom() =~= old(self)@.parent.dom();"
   }
 ]

@@ -22,8 +22,8 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap38 | BSTParaMtEph | 17 | 17 | 0 | 16 | 18 | 14 | 0 | 18 | 14 |
-| 2 | Chap38 | BSTParaStEph | 20 | 20 | 0 | 8 | 28 | 0 | 17 | 11 | 0 |
+| 1 | Chap38 | BSTParaMtEph | 17 | 17 | 0 | 16 | 18 | 14 | 1 | 17 | 14 |
+| 2 | Chap38 | BSTParaStEph | 20 | 20 | 0 | 8 | 28 | 0 | 18 | 10 | 0 |
 
 ## Function-by-Function Detail
 
@@ -31,71 +31,71 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `new_bst_para_lock` |  |  |  | Y | Y |  |  | hole | 67 |
-| 2 | `new` | Y | Y |  |  | Y |  |  | hole | 99&#8209;100 |
-| 3 | `singleton` | Y | Y |  |  | Y |  |  | hole | 102&#8209;105 |
-| 4 | `expose` | Y | Y |  |  | Y |  |  | hole | 107&#8209;108 |
-| 5 | `join_mid` | Y | Y |  | Y | Y |  |  | hole | 110&#8209;111 |
-| 6 | `size` | Y | Y |  |  | Y |  |  | hole | 113&#8209;114 |
-| 7 | `is_empty` | Y | Y |  |  | Y |  |  | hole | 116&#8209;117 |
-| 8 | `insert` | Y | Y |  |  | Y |  |  | hole | 120 |
-| 9 | `delete` | Y | Y |  |  | Y |  |  | hole | 123 |
-| 10 | `find` | Y | Y |  |  | Y |  |  | hole | 125&#8209;126 |
-| 11 | `split` | Y | Y |  |  | Y |  |  | hole | 128&#8209;132 |
-| 12 | `join_pair` | Y | Y |  |  | Y |  |  | hole | 134&#8209;135 |
-| 13 | `union` | Y | Y |  |  | Y |  |  | hole | 137&#8209;138 |
-| 14 | `intersect` | Y | Y |  |  | Y |  |  | hole | 140&#8209;141 |
-| 15 | `difference` | Y | Y |  |  | Y |  |  | hole | 143&#8209;144 |
-| 16 | `filter` | Y | Y |  |  | Y |  |  | hole | 146&#8209;147 |
-| 17 | `reduce` | Y | Y |  |  | Y |  |  | hole | 150 |
-| 18 | `in_order` | Y | Y |  |  | Y |  |  | hole | 152&#8209;153 |
-| 19 | `new_leaf` |  |  |  | Y |  | Y | Y |  | 325&#8209;327 |
-| 20 | `expose_internal` |  |  |  | Y |  | Y | Y |  | 329&#8209;337 |
-| 21 | `split_inner` |  |  |  | Y |  | Y | Y |  | 351&#8209;368 |
-| 22 | `join_m` |  |  |  | Y |  | Y | Y |  | 370&#8209;372 |
-| 23 | `min_key` |  |  |  | Y |  | Y | Y |  | 374&#8209;382 |
-| 24 | `join_pair_inner` |  |  |  | Y |  | Y | Y |  | 384&#8209;393 |
-| 25 | `union_inner` |  |  |  | Y |  | Y | Y |  | 395&#8209;406 |
-| 26 | `intersect_inner` |  |  |  | Y |  | Y | Y |  | 408&#8209;422 |
-| 27 | `difference_inner` |  |  |  | Y |  | Y | Y |  | 424&#8209;440 |
-| 28 | `filter_inner` |  |  |  | Y |  | Y | Y |  | 442&#8209;462 |
-| 29 | `filter_parallel` |  |  |  | Y |  | Y | Y |  | 464&#8209;470 |
-| 30 | `reduce_inner` |  |  |  | Y |  | Y | Y |  | 472&#8209;493 |
-| 31 | `reduce_parallel` |  |  |  | Y |  | Y | Y |  | 495&#8209;502 |
-| 32 | `collect_in_order` |  |  |  | Y |  | Y | Y |  | 504&#8209;513 |
+| 1 | `new_param_bst_arc` |  |  |  | Y | Y |  |  | unknown | 67&#8209;71 |
+| 2 | `new` | Y | Y |  |  | Y |  |  | hole | 98&#8209;99 |
+| 3 | `singleton` | Y | Y |  |  | Y |  |  | hole | 101&#8209;104 |
+| 4 | `expose` | Y | Y |  |  | Y |  |  | hole | 106&#8209;107 |
+| 5 | `join_mid` | Y | Y |  | Y | Y |  |  | hole | 109&#8209;110 |
+| 6 | `size` | Y | Y |  |  | Y |  |  | hole | 112&#8209;113 |
+| 7 | `is_empty` | Y | Y |  |  | Y |  |  | hole | 115&#8209;116 |
+| 8 | `insert` | Y | Y |  |  | Y |  |  | hole | 119 |
+| 9 | `delete` | Y | Y |  |  | Y |  |  | hole | 122 |
+| 10 | `find` | Y | Y |  |  | Y |  |  | hole | 124&#8209;125 |
+| 11 | `split` | Y | Y |  |  | Y |  |  | hole | 127&#8209;131 |
+| 12 | `join_pair` | Y | Y |  |  | Y |  |  | hole | 133&#8209;134 |
+| 13 | `union` | Y | Y |  |  | Y |  |  | hole | 136&#8209;137 |
+| 14 | `intersect` | Y | Y |  |  | Y |  |  | hole | 139&#8209;140 |
+| 15 | `difference` | Y | Y |  |  | Y |  |  | hole | 142&#8209;143 |
+| 16 | `filter` | Y | Y |  |  | Y |  |  | hole | 145&#8209;146 |
+| 17 | `reduce` | Y | Y |  |  | Y |  |  | hole | 149 |
+| 18 | `in_order` | Y | Y |  |  | Y |  |  | hole | 151&#8209;152 |
+| 19 | `new_leaf` |  |  |  | Y |  | Y | Y |  | 324&#8209;326 |
+| 20 | `expose_internal` |  |  |  | Y |  | Y | Y |  | 328&#8209;336 |
+| 21 | `split_inner` |  |  |  | Y |  | Y | Y |  | 350&#8209;367 |
+| 22 | `join_m` |  |  |  | Y |  | Y | Y |  | 369&#8209;371 |
+| 23 | `min_key` |  |  |  | Y |  | Y | Y |  | 373&#8209;381 |
+| 24 | `join_pair_inner` |  |  |  | Y |  | Y | Y |  | 383&#8209;392 |
+| 25 | `union_inner` |  |  |  | Y |  | Y | Y |  | 394&#8209;405 |
+| 26 | `intersect_inner` |  |  |  | Y |  | Y | Y |  | 407&#8209;421 |
+| 27 | `difference_inner` |  |  |  | Y |  | Y | Y |  | 423&#8209;439 |
+| 28 | `filter_inner` |  |  |  | Y |  | Y | Y |  | 441&#8209;461 |
+| 29 | `filter_parallel` |  |  |  | Y |  | Y | Y |  | 463&#8209;469 |
+| 30 | `reduce_inner` |  |  |  | Y |  | Y | Y |  | 471&#8209;492 |
+| 31 | `reduce_parallel` |  |  |  | Y |  | Y | Y |  | 494&#8209;501 |
+| 32 | `collect_in_order` |  |  |  | Y |  | Y | Y |  | 503&#8209;512 |
 
 ### Chap38/BSTParaStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 33 | `new_param_bst` |  |  |  | Y | Y |  |  | hole | 80&#8209;85 |
-| 34 | `lemma_cmp_antisymmetry` |  |  |  | Y | Y |  |  | unknown | 124&#8209;129 |
-| 35 | `lemma_cmp_transitivity` |  |  |  | Y | Y |  |  | unknown | 136&#8209;142 |
-| 36 | `lemma_cmp_eq_subst` |  |  |  | Y | Y |  |  | hole | 151&#8209;157 |
-| 37 | `lemma_cmp_equal_congruent` |  |  |  | Y | Y |  |  | hole | 168&#8209;173 |
-| 38 | `lemma_cmp_equal_congruent_right` |  |  |  | Y | Y |  |  | hole | 182&#8209;187 |
-| 39 | `new` | Y | Y |  |  | Y |  |  | unknown | 198&#8209;199 |
-| 40 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 201&#8209;204 |
-| 41 | `expose` | Y | Y |  |  | Y |  |  | hole | 206&#8209;210 |
-| 42 | `join_mid` | Y | Y |  |  | Y |  |  | unknown | 222&#8209;224 |
-| 43 | `join_m` | Y | Y |  |  | Y |  |  | unknown | 235&#8209;242 |
-| 44 | `size` | Y | Y |  |  | Y |  |  | unknown | 244&#8209;245 |
-| 45 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 247&#8209;248 |
-| 46 | `insert` | Y | Y |  |  | Y |  |  | hole | 251 |
-| 47 | `delete` | Y | Y |  |  | Y |  |  | hole | 254 |
-| 48 | `find` | Y | Y |  |  | Y |  |  | unknown | 256&#8209;260 |
-| 49 | `split` | Y | Y |  |  | Y |  |  | hole | 262&#8209;275 |
-| 50 | `min_key` | Y | Y |  |  | Y |  |  | unknown | 277&#8209;285 |
-| 51 | `join_pair` | Y | Y |  |  | Y |  |  | unknown | 287&#8209;292 |
-| 52 | `union` | Y | Y |  |  | Y |  |  | hole | 294&#8209;295 |
-| 53 | `intersect` | Y | Y |  |  | Y |  |  | hole | 297&#8209;298 |
-| 54 | `difference` | Y | Y |  |  | Y |  |  | hole | 300&#8209;301 |
-| 55 | `filter` | Y | Y |  |  | Y |  |  | unknown | 303&#8209;305 |
-| 56 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 308&#8209;309 |
-| 57 | `collect_in_order` | Y | Y |  |  | Y |  |  | unknown | 311&#8209;313 |
-| 58 | `in_order` | Y | Y |  |  | Y |  |  | unknown | 315&#8209;316 |
-| 59 | `filter_inner` |  |  |  | Y | Y |  |  | unknown | 783&#8209;789 |
-| 60 | `reduce_inner` |  |  |  | Y | Y |  |  | unknown | 822&#8209;830 |
+| 33 | `new_param_bst` |  |  |  | Y | Y |  |  | unknown | 80&#8209;85 |
+| 34 | `lemma_cmp_antisymmetry` |  |  |  | Y | Y |  |  | unknown | 118&#8209;123 |
+| 35 | `lemma_cmp_transitivity` |  |  |  | Y | Y |  |  | unknown | 130&#8209;136 |
+| 36 | `lemma_cmp_eq_subst` |  |  |  | Y | Y |  |  | hole | 145&#8209;151 |
+| 37 | `lemma_cmp_equal_congruent` |  |  |  | Y | Y |  |  | hole | 162&#8209;167 |
+| 38 | `lemma_cmp_equal_congruent_right` |  |  |  | Y | Y |  |  | hole | 176&#8209;181 |
+| 39 | `new` | Y | Y |  |  | Y |  |  | unknown | 192&#8209;193 |
+| 40 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 195&#8209;198 |
+| 41 | `expose` | Y | Y |  |  | Y |  |  | hole | 200&#8209;204 |
+| 42 | `join_mid` | Y | Y |  |  | Y |  |  | unknown | 216&#8209;218 |
+| 43 | `join_m` | Y | Y |  |  | Y |  |  | unknown | 229&#8209;236 |
+| 44 | `size` | Y | Y |  |  | Y |  |  | unknown | 238&#8209;239 |
+| 45 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 241&#8209;242 |
+| 46 | `insert` | Y | Y |  |  | Y |  |  | hole | 245 |
+| 47 | `delete` | Y | Y |  |  | Y |  |  | hole | 248 |
+| 48 | `find` | Y | Y |  |  | Y |  |  | unknown | 250&#8209;254 |
+| 49 | `split` | Y | Y |  |  | Y |  |  | hole | 256&#8209;269 |
+| 50 | `min_key` | Y | Y |  |  | Y |  |  | unknown | 271&#8209;279 |
+| 51 | `join_pair` | Y | Y |  |  | Y |  |  | unknown | 281&#8209;286 |
+| 52 | `union` | Y | Y |  |  | Y |  |  | hole | 288&#8209;289 |
+| 53 | `intersect` | Y | Y |  |  | Y |  |  | hole | 291&#8209;292 |
+| 54 | `difference` | Y | Y |  |  | Y |  |  | hole | 294&#8209;295 |
+| 55 | `filter` | Y | Y |  |  | Y |  |  | unknown | 297&#8209;299 |
+| 56 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 302&#8209;303 |
+| 57 | `collect_in_order` | Y | Y |  |  | Y |  |  | unknown | 305&#8209;307 |
+| 58 | `in_order` | Y | Y |  |  | Y |  |  | unknown | 309&#8209;310 |
+| 59 | `filter_inner` |  |  |  | Y | Y |  |  | unknown | 777&#8209;783 |
+| 60 | `reduce_inner` |  |  |  | Y | Y |  |  | unknown | 816&#8209;824 |
 
 
 ### Legend

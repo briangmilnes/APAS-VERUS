@@ -1,25 +1,25 @@
 [
   {
     "id": 1,
-    "function": "new_spanning_edges_lock",
+    "function": "new_spanning_edges_arc",
     "file": "Chap64/SpanTreeMtEph.rs",
-    "lines": "36-38",
-    "spec_strength": "hole",
-    "snippet": "        fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(\n            val: SetStEph<Edge<V>>,\n        ) -> (lock: RwLock<SetStEph<Edge<V>>, SpanTreeMtEphEdgesInv>) {"
+    "lines": "35-39",
+    "spec_strength": "unknown",
+    "snippet": "        fn new_spanning_edges_arc<V: StT + MtT + Hash + Ord>(\n            val: SetStEph<Edge<V>>,\n        ) -> (arc: Arc<RwLock<SetStEph<Edge<V>>, SpanTreeMtEphEdgesInv>>)\n            requires val@.finite(),\n            ensures arc.pred() == SpanTreeMtEphEdgesInv,"
   },
   {
     "id": 2,
-    "function": "new_valid_lock",
+    "function": "new_valid_arc",
     "file": "Chap64/SpanTreeMtEph.rs",
-    "lines": "47",
-    "spec_strength": "hole",
-    "snippet": "        fn new_valid_lock(val: bool) -> (lock: RwLock<bool, SpanTreeMtEphValidInv>) {"
+    "lines": "48-49",
+    "spec_strength": "unknown",
+    "snippet": "        fn new_valid_arc(val: bool) -> (arc: Arc<RwLock<bool, SpanTreeMtEphValidInv>>)\n            ensures arc.pred() == SpanTreeMtEphValidInv,"
   },
   {
     "id": 3,
     "function": "spanning_tree_star_contraction_mt",
     "file": "Chap64/SpanTreeMtEph.rs",
-    "lines": "54-56",
+    "lines": "57-59",
     "spec_strength": "",
     "snippet": "            fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(\n                graph: &UnDirGraphMtEph<V>,\n            ) -> SetStEph<Edge<V>>;"
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "function": "verify_spanning_tree",
     "file": "Chap64/SpanTreeMtEph.rs",
-    "lines": "60",
+    "lines": "63",
     "spec_strength": "",
     "snippet": "            fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> B;"
   },

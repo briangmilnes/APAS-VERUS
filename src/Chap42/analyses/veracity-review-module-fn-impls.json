@@ -171,7 +171,7 @@
     "id": 22,
     "function": "from_sorted_entries",
     "file": "Chap42/TableMtEph.rs",
-    "lines": "816-817",
+    "lines": "820-821",
     "spec_strength": "unknown",
     "snippet": "    pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (constructed: TableMtEph<K, V>)\n        ensures constructed@.dom().finite()"
   },
@@ -179,7 +179,7 @@
     "id": 23,
     "function": "eq",
     "file": "Chap42/TableMtEph.rs",
-    "lines": "840-841",
+    "lines": "844-845",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
@@ -285,7 +285,7 @@
     "file": "Chap42/TableStEph.rs",
     "lines": "312-314",
     "spec_strength": "unknown",
-    "snippet": "        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)\n            requires keys.spec_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>()\n            ensures tabulated@.dom() =~= keys@, tabulated.spec_tablesteph_wf();"
+    "snippet": "        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)\n            requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>()\n            ensures tabulated@.dom() =~= keys@, tabulated.spec_tablesteph_wf();"
   },
   {
     "id": 37,
@@ -501,7 +501,7 @@
     "file": "Chap42/TableStPer.rs",
     "lines": "358-360",
     "spec_strength": "unknown",
-    "snippet": "        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)\n            requires keys.spec_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),\n            ensures tabulated@.dom() =~= keys@, tabulated.spec_tablestper_wf();"
+    "snippet": "        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)\n            requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),\n            ensures tabulated@.dom() =~= keys@, tabulated.spec_tablestper_wf();"
   },
   {
     "id": 64,

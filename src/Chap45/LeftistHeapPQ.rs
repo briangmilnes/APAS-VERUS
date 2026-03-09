@@ -7,7 +7,6 @@
 //  2. imports
 //  3. broadcast use
 //  4. type definitions
-//  6. spec fns
 //  7. proof fns/broadcast groups
 //  8. traits
 //  9. impls
@@ -77,27 +76,13 @@ broadcast use {
             open spec fn view(&self) -> Multiset<T> { self.root.spec_seq().to_multiset() }
         }
 
-//  6. spec fns
-        /// Key is <= the root key of a node (trivially true for Leaf).
-        pub open spec fn spec_key_le_root<T: StT + Ord + TotalOrder>(key: T, node: &LeftistHeapNode<T>) -> bool {
-            match *node {
-                LeftistHeapNode::Leaf => true,
-                LeftistHeapNode::Node { key: nk, .. } => TotalOrder::le(key, nk),
-            }
-        }
-
-        pub open spec fn spec_sorted<T: TotalOrder>(s: Seq<T>) -> bool {
-            forall|i: int, j: int| 0 <= i < j < s.len() ==>
-                #[trigger] TotalOrder::le(s[i], s[j])
-        }
-
 //  7. proof fns/broadcast groups
 
         proof fn _leftist_heap_pq_verified() {}
 
         /// Exec comparison with spec ensures connecting to TotalOrder::le.
-        fn total_order_le<T: StT + Ord + TotalOrder>(a: &T, b: &T) -> (r: bool)
-            ensures r <==> TotalOrder::le(*a, *b)
+        fn total_order_le<T: StT + Ord + TotalOrder>(a: &T, b: &T) -> (le: bool)
+            ensures le <==> TotalOrder::le(*a, *b)
         {
             match TotalOrder::cmp(a, b) {
                 Ordering::Greater => {
@@ -209,6 +194,8 @@ broadcast use {
             spec fn spec_is_leftist(&self) -> bool;
             spec fn spec_is_heap(&self) -> bool;
             spec fn spec_rank_bounded(&self) -> bool;
+            /// Key is <= the root key of a node (trivially true for Leaf).
+            spec fn spec_key_le_root(&self, key: T) -> bool;
         }
 
         pub trait LeftistHeapNodeTrait<T: StT + Ord + TotalOrder>: Sized + LeftistHeapNodeSpec<T> {
@@ -222,8 +209,8 @@ broadcast use {
                     left.spec_is_leftist() && left.spec_is_heap(),
                     right.spec_is_leftist() && right.spec_is_heap(),
                     left.spec_rank_bounded() && right.spec_rank_bounded(),
-                    spec_key_le_root(key, &left),
-                    spec_key_le_root(key, &right),
+                    left.spec_key_le_root(key),
+                    right.spec_key_le_root(key),
                 ensures
                     node.spec_size() == left.spec_size() + right.spec_size() + 1,
                     node.spec_is_leftist(),
@@ -231,7 +218,7 @@ broadcast use {
                     node.spec_rank_bounded(),
                     node@ =~= Multiset::empty().insert(key).add(left@).add(right@),
                     forall|x: T| TotalOrder::le(x, key) ==>
-                        #[trigger] spec_key_le_root(x, &node);
+                        #[trigger] node.spec_key_le_root(x);
             fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
                 requires
                     a.spec_size() + b.spec_size() <= usize::MAX as nat,
@@ -244,8 +231,8 @@ broadcast use {
                     node.spec_is_heap(),
                     node.spec_rank_bounded(),
                     node@ =~= a@.add(b@),
-                    forall|x: T| spec_key_le_root(x, &a) && spec_key_le_root(x, &b) ==>
-                        #[trigger] spec_key_le_root(x, &node);
+                    forall|x: T| a.spec_key_le_root(x) && b.spec_key_le_root(x) ==>
+                        #[trigger] node.spec_key_le_root(x);
             fn size(&self) -> (n: usize)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures n as nat == self.spec_size();
@@ -270,6 +257,7 @@ broadcast use {
         pub trait LeftistHeapPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Multiset<T>> {
             spec fn spec_size(self) -> nat;
             spec fn spec_seq(&self) -> Seq<T>;
+            spec fn spec_sorted(s: Seq<T>) -> bool;
             spec fn spec_is_valid_leftist_heap(&self) -> bool;
 
             fn empty() -> (pq: Self)
@@ -337,7 +325,7 @@ broadcast use {
                     self.spec_is_valid_leftist_heap(),
                 ensures
                     sorted@.len() as nat == self.spec_size(),
-                    spec_sorted(sorted@);
+                    Self::spec_sorted(sorted@);
             fn height(&self) -> (levels: usize)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures self.spec_size() == 0 ==> levels == 0;
@@ -360,7 +348,7 @@ broadcast use {
                     self.spec_is_valid_leftist_heap(),
                 ensures
                     v@.len() as nat == self.spec_size(),
-                    spec_sorted(v@);
+                    Self::spec_sorted(v@);
             spec fn spec_total_size(heaps: Seq<Self>, n: int) -> nat;
 
             fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self)
@@ -452,6 +440,13 @@ broadcast use {
                         rank as nat <= 1 + LeftistHeapNodeSpec::spec_size(&*left) + LeftistHeapNodeSpec::spec_size(&*right)
                         && LeftistHeapNodeSpec::spec_rank_bounded(&*left)
                         && LeftistHeapNodeSpec::spec_rank_bounded(&*right),
+                }
+            }
+
+            open spec fn spec_key_le_root(&self, key: T) -> bool {
+                match *self {
+                    LeftistHeapNode::Leaf => true,
+                    LeftistHeapNode::Node { key: nk, .. } => TotalOrder::le(key, nk),
                 }
             }
         }
@@ -567,7 +562,7 @@ broadcast use {
                             assert(b_node@ =~= b_view);
                             let melded_right = Self::meld_nodes(*ra, b_node);
                             // ka <= kb from total_order_le; ka <= root(ra) from heap property.
-                            assert(spec_key_le_root(ka, &melded_right));
+                            assert(melded_right.spec_key_le_root(ka));
                             let result = Self::make_node(ka, *la, melded_right);
                             proof {
                                 // Unfold a_view via lemma_multiset_commutative.
@@ -598,7 +593,7 @@ broadcast use {
                             assert(a_node@ =~= a_view);
                             let melded_right = Self::meld_nodes(a_node, *rb);
                             // kb <= ka from totality + !le(ka,kb); kb <= root(rb) from heap property.
-                            assert(spec_key_le_root(kb, &melded_right));
+                            assert(melded_right.spec_key_le_root(kb));
                             let result = Self::make_node(kb, *lb, melded_right);
                             proof {
                                 // Unfold b_view via lemma_multiset_commutative.
@@ -742,6 +737,11 @@ broadcast use {
 
             open spec fn spec_seq(&self) -> Seq<T> {
                 self.root.spec_seq()
+            }
+
+            open spec fn spec_sorted(s: Seq<T>) -> bool {
+                forall|i: int, j: int| 0 <= i < j < s.len() ==>
+                    #[trigger] TotalOrder::le(s[i], s[j])
             }
 
             open spec fn spec_is_valid_leftist_heap(&self) -> bool {
@@ -942,7 +942,7 @@ broadcast use {
                         result@.len() as nat + current_heap.spec_size() == self.spec_size(),
                         self.spec_size() <= usize::MAX as nat,
                         current_heap.spec_is_valid_leftist_heap(),
-                        spec_sorted(result@),
+                        Self::spec_sorted(result@),
                         forall|i: int, e: T| 0 <= i < result@.len() && current_heap@.count(e) > 0 ==>
                             #[trigger] TotalOrder::le(result@[i], e),
                 {

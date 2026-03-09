@@ -22,7 +22,7 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap64 | SpanTreeMtEph | 2 | 0 | 0 | 4 | 4 | 0 | 0 | 2 | 2 |
+| 1 | Chap64 | SpanTreeMtEph | 2 | 0 | 0 | 4 | 4 | 0 | 2 | 0 | 2 |
 | 2 | Chap64 | SpanTreeStEph | 2 | 0 | 0 | 2 | 2 | 0 | 0 | 0 | 2 |
 | 3 | Chap64 | TSPApproxStEph | 4 | 0 | 0 | 8 | 1 | 7 | 0 | 0 | 8 |
 
@@ -32,10 +32,10 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `new_spanning_edges_lock` |  |  |  | Y | Y |  |  | hole | 36&#8209;38 |
-| 2 | `new_valid_lock` |  |  |  | Y | Y |  |  | hole | 47 |
-| 3 | `spanning_tree_star_contraction_mt` | Y |  |  | Y | Y |  | Y |  | 54&#8209;56 |
-| 4 | `verify_spanning_tree` | Y |  |  | Y | Y |  | Y |  | 60 |
+| 1 | `new_spanning_edges_arc` |  |  |  | Y | Y |  |  | unknown | 35&#8209;39 |
+| 2 | `new_valid_arc` |  |  |  | Y | Y |  |  | unknown | 48&#8209;49 |
+| 3 | `spanning_tree_star_contraction_mt` | Y |  |  | Y | Y |  | Y |  | 57&#8209;59 |
+| 4 | `verify_spanning_tree` | Y |  |  | Y | Y |  | Y |  | 63 |
 
 ### Chap64/SpanTreeStEph.rs
 

@@ -71,12 +71,6 @@ pub mod BinaryHeapPQ {
 
 
 
-//  6. spec fns
-        pub open spec fn spec_sorted<T: TotalOrder>(s: Seq<T>) -> bool {
-            forall|i: int, j: int| 0 <= i < j < s.len() ==>
-                #[trigger] TotalOrder::le(s[i], s[j])
-        }
-
 //  7. proof fns/broadcast groups
 
         proof fn lemma_log2_bound(n: int, bits: nat)
@@ -106,6 +100,7 @@ pub mod BinaryHeapPQ {
         pub trait BinaryHeapPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Seq<T::V>> {
             spec fn spec_size(self) -> nat;
             spec fn spec_seq(&self) -> Seq<T>;
+            spec fn spec_sorted(s: Seq<T>) -> bool;
             spec fn spec_heap_inv_at(seq: Seq<T::V>, i: int) -> bool;
             spec fn spec_leq_view(a: T::V, b: T::V) -> bool;
             spec fn spec_is_heap(seq: Seq<T::V>) -> bool;
@@ -188,7 +183,7 @@ pub mod BinaryHeapPQ {
                     self@.len() * 2 <= usize::MAX as int,
                 ensures
                     sorted@.len() == self@.len(),
-                    spec_sorted(sorted.seq@);
+                    Self::spec_sorted(sorted.seq@);
 
             fn is_valid_heap(&self) -> (valid: bool)
                 requires self@.len() * 2 <= usize::MAX as int;
@@ -219,7 +214,7 @@ pub mod BinaryHeapPQ {
                     self@.len() * 2 <= usize::MAX as int,
                 ensures
                     v@.len() == self@.len(),
-                    spec_sorted(v@);
+                    Self::spec_sorted(v@);
         }
 
 
@@ -491,6 +486,11 @@ pub mod BinaryHeapPQ {
                 self.elements.seq@
             }
 
+            open spec fn spec_sorted(s: Seq<T>) -> bool {
+                forall|i: int, j: int| 0 <= i < j < s.len() ==>
+                    #[trigger] TotalOrder::le(s[i], s[j])
+            }
+
             open spec fn spec_heap_inv_at(seq: Seq<T::V>, i: int) -> bool {
                 let left = 2 * i + 1;
                 let right = 2 * i + 2;
@@ -654,7 +654,7 @@ pub mod BinaryHeapPQ {
                 }
 
                 // accept hole: Proving sortedness requires heap property invariant (task #8).
-                proof { accept(spec_sorted(result.seq@)); }
+                proof { accept(Self::spec_sorted(result.seq@)); }
                 result
             }
 
@@ -756,7 +756,7 @@ pub mod BinaryHeapPQ {
                     result.push(elem);
                 }
                 // accept hole: Vec elements are clones of sorted ArraySeqStPerS elements.
-                proof { accept(spec_sorted(result@)); }
+                proof { accept(Self::spec_sorted(result@)); }
                 result
             }
         }

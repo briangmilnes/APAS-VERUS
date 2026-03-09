@@ -59,8 +59,8 @@
 | 19 | `restrict` | Y | Y |  |  | Y |  |  | hole | 189&#8209;193 |
 | 20 | `subtract` | Y | Y |  |  | Y |  |  | hole | 195&#8209;199 |
 | 21 | `entries` | Y | Y |  |  | Y |  |  | hole | 201&#8209;202 |
-| 22 | `from_sorted_entries` |  |  |  | Y | Y |  |  | unknown | 816&#8209;817 |
-| 23 | `eq` |  | Y |  |  | Y |  |  | hole | 840&#8209;841 |
+| 22 | `from_sorted_entries` |  |  |  | Y | Y |  |  | unknown | 820&#8209;821 |
+| 23 | `eq` |  | Y |  |  | Y |  |  | hole | 844&#8209;845 |
 
 ### Chap42/TableStEph.rs
 

@@ -22,7 +22,7 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap39 | BSTParaTreapMtEph | 17 | 17 | 0 | 16 | 18 | 15 | 0 | 18 | 15 |
+| 1 | Chap39 | BSTParaTreapMtEph | 17 | 17 | 0 | 16 | 18 | 15 | 1 | 17 | 15 |
 | 2 | Chap39 | BSTSetTreapMtEph | 20 | 20 | 0 | 2 | 22 | 0 | 12 | 10 | 0 |
 | 3 | Chap39 | BSTTreapMtEph | 12 | 13 | 0 | 20 | 33 | 0 | 32 | 0 | 1 |
 | 4 | Chap39 | BSTTreapStEph | 34 | 35 | 0 | 0 | 35 | 0 | 35 | 0 | 0 |
@@ -33,39 +33,39 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `new_treap_lock` |  |  |  | Y | Y |  |  | hole | 84&#8209;85 |
-| 2 | `new` | Y | Y |  |  | Y |  |  | hole | 363&#8209;364 |
-| 3 | `expose` | Y | Y |  |  | Y |  |  | hole | 367&#8209;368 |
-| 4 | `expose_with_priority` | Y | Y |  |  | Y |  |  | hole | 371&#8209;372 |
-| 5 | `join_mid` | Y | Y |  |  | Y |  |  | hole | 375&#8209;376 |
-| 6 | `size` | Y | Y |  |  | Y |  |  | hole | 379&#8209;380 |
-| 7 | `is_empty` | Y | Y |  |  | Y |  |  | hole | 383&#8209;384 |
-| 8 | `insert` | Y | Y |  |  | Y |  |  | hole | 387&#8209;388 |
-| 9 | `delete` | Y | Y |  |  | Y |  |  | hole | 391&#8209;392 |
-| 10 | `find` | Y | Y |  |  | Y |  |  | hole | 395&#8209;396 |
-| 11 | `split` | Y | Y |  |  | Y |  |  | hole | 399&#8209;402 |
-| 12 | `join_pair` | Y | Y |  |  | Y |  |  | hole | 405&#8209;406 |
-| 13 | `union` | Y | Y |  |  | Y |  |  | hole | 409&#8209;410 |
-| 14 | `intersect` | Y | Y |  |  | Y |  |  | hole | 413&#8209;414 |
-| 15 | `difference` | Y | Y |  |  | Y |  |  | hole | 417&#8209;418 |
-| 16 | `filter` | Y | Y |  |  | Y |  |  | hole | 421&#8209;422 |
-| 17 | `reduce` | Y | Y |  |  | Y |  |  | hole | 425&#8209;428 |
-| 18 | `in_order` | Y | Y |  |  | Y |  |  | hole | 431&#8209;432 |
-| 19 | `priority_for` |  |  |  | Y |  | Y | Y |  | 129&#8209;137 |
-| 20 | `tree_priority` |  |  |  | Y |  | Y | Y |  | 139&#8209;146 |
-| 21 | `tree_size` |  |  |  | Y |  | Y | Y |  | 148&#8209;155 |
-| 22 | `make_node` |  |  |  | Y |  | Y | Y |  | 157&#8209;166 |
-| 23 | `join_with_priority` |  |  |  | Y |  | Y | Y |  | 168&#8209;190 |
-| 24 | `split_inner` |  |  |  | Y |  | Y | Y |  | 192&#8209;212 |
-| 25 | `join_pair_inner` |  |  |  | Y |  | Y | Y |  | 214&#8209;227 |
-| 26 | `union_inner` |  |  |  | Y |  | Y | Y |  | 229&#8209;242 |
-| 27 | `intersect_inner` |  |  |  | Y |  | Y | Y |  | 244&#8209;261 |
-| 28 | `difference_inner` |  |  |  | Y |  | Y | Y |  | 263&#8209;280 |
-| 29 | `filter_inner` |  |  |  | Y |  | Y | Y |  | 282&#8209;300 |
-| 30 | `filter_parallel` |  |  |  | Y |  | Y | Y |  | 302&#8209;308 |
-| 31 | `reduce_inner` |  |  |  | Y |  | Y | Y |  | 310&#8209;331 |
-| 32 | `reduce_parallel` |  |  |  | Y |  | Y | Y |  | 333&#8209;340 |
-| 33 | `collect_in_order` |  |  |  | Y |  | Y | Y |  | 342&#8209;354 |
+| 1 | `new_param_treap_arc` |  |  |  | Y | Y |  |  | unknown | 84&#8209;88 |
+| 2 | `new` | Y | Y |  |  | Y |  |  | hole | 366&#8209;367 |
+| 3 | `expose` | Y | Y |  |  | Y |  |  | hole | 370&#8209;371 |
+| 4 | `expose_with_priority` | Y | Y |  |  | Y |  |  | hole | 374&#8209;375 |
+| 5 | `join_mid` | Y | Y |  |  | Y |  |  | hole | 378&#8209;379 |
+| 6 | `size` | Y | Y |  |  | Y |  |  | hole | 382&#8209;383 |
+| 7 | `is_empty` | Y | Y |  |  | Y |  |  | hole | 386&#8209;387 |
+| 8 | `insert` | Y | Y |  |  | Y |  |  | hole | 390&#8209;391 |
+| 9 | `delete` | Y | Y |  |  | Y |  |  | hole | 394&#8209;395 |
+| 10 | `find` | Y | Y |  |  | Y |  |  | hole | 398&#8209;399 |
+| 11 | `split` | Y | Y |  |  | Y |  |  | hole | 402&#8209;405 |
+| 12 | `join_pair` | Y | Y |  |  | Y |  |  | hole | 408&#8209;409 |
+| 13 | `union` | Y | Y |  |  | Y |  |  | hole | 412&#8209;413 |
+| 14 | `intersect` | Y | Y |  |  | Y |  |  | hole | 416&#8209;417 |
+| 15 | `difference` | Y | Y |  |  | Y |  |  | hole | 420&#8209;421 |
+| 16 | `filter` | Y | Y |  |  | Y |  |  | hole | 424&#8209;425 |
+| 17 | `reduce` | Y | Y |  |  | Y |  |  | hole | 428&#8209;431 |
+| 18 | `in_order` | Y | Y |  |  | Y |  |  | hole | 434&#8209;435 |
+| 19 | `priority_for` |  |  |  | Y |  | Y | Y |  | 132&#8209;140 |
+| 20 | `tree_priority` |  |  |  | Y |  | Y | Y |  | 142&#8209;149 |
+| 21 | `tree_size` |  |  |  | Y |  | Y | Y |  | 151&#8209;158 |
+| 22 | `make_node` |  |  |  | Y |  | Y | Y |  | 160&#8209;169 |
+| 23 | `join_with_priority` |  |  |  | Y |  | Y | Y |  | 171&#8209;193 |
+| 24 | `split_inner` |  |  |  | Y |  | Y | Y |  | 195&#8209;215 |
+| 25 | `join_pair_inner` |  |  |  | Y |  | Y | Y |  | 217&#8209;230 |
+| 26 | `union_inner` |  |  |  | Y |  | Y | Y |  | 232&#8209;245 |
+| 27 | `intersect_inner` |  |  |  | Y |  | Y | Y |  | 247&#8209;264 |
+| 28 | `difference_inner` |  |  |  | Y |  | Y | Y |  | 266&#8209;283 |
+| 29 | `filter_inner` |  |  |  | Y |  | Y | Y |  | 285&#8209;303 |
+| 30 | `filter_parallel` |  |  |  | Y |  | Y | Y |  | 305&#8209;311 |
+| 31 | `reduce_inner` |  |  |  | Y |  | Y | Y |  | 313&#8209;334 |
+| 32 | `reduce_parallel` |  |  |  | Y |  | Y | Y |  | 336&#8209;343 |
+| 33 | `collect_in_order` |  |  |  | Y |  | Y | Y |  | 345&#8209;357 |
 
 ### Chap39/BSTSetTreapMtEph.rs
 

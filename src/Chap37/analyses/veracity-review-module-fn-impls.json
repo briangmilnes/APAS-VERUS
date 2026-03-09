@@ -291,7 +291,7 @@
     "id": 37,
     "function": "lemma_size_eq_inorder_len",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "166-169",
+    "lines": "167-170",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_size_eq_inorder_len<T: StTInMtT>(link: &Link<T>)\n        requires spec_avltreeseqmtper_wf(*link),\n        ensures spec_cached_size(link) == spec_inorder(*link).len(),\n        decreases *link,"
   },
@@ -299,7 +299,7 @@
     "id": 38,
     "function": "empty",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "189-190",
+    "lines": "190-191",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (tree: Self)\n            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_well_formed();"
   },
@@ -307,7 +307,7 @@
     "id": 39,
     "function": "new",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "192-193",
+    "lines": "193-194",
     "spec_strength": "unknown",
     "snippet": "        fn new() -> (tree: Self)\n            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_well_formed();"
   },
@@ -315,7 +315,7 @@
     "id": 40,
     "function": "singleton",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "195-196",
+    "lines": "196-197",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(item: T) -> (tree: Self)\n            ensures tree.spec_seq() =~= seq![item@], tree.spec_well_formed();"
   },
@@ -323,7 +323,7 @@
     "id": 41,
     "function": "length",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "198-200",
+    "lines": "199-201",
     "spec_strength": "unknown",
     "snippet": "        fn length(&self) -> (len: N)\n            requires self.spec_well_formed(),\n            ensures len as nat == self.spec_seq().len();"
   },
@@ -331,7 +331,7 @@
     "id": 42,
     "function": "nth",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "202-204",
+    "lines": "203-205",
     "spec_strength": "unknown",
     "snippet": "        fn nth(&self, index: N) -> (elem: &T)\n            requires self.spec_well_formed(), (index as int) < self.spec_seq().len(),\n            ensures elem@ == self.spec_seq()[index as int];"
   },
@@ -339,7 +339,7 @@
     "id": 43,
     "function": "isEmpty",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "206-208",
+    "lines": "207-209",
     "spec_strength": "unknown",
     "snippet": "        fn isEmpty(&self) -> (empty: B)\n            requires self.spec_well_formed(),\n            ensures empty == (self.spec_seq().len() == 0);"
   },
@@ -347,7 +347,7 @@
     "id": 44,
     "function": "isSingleton",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "210-212",
+    "lines": "211-213",
     "spec_strength": "unknown",
     "snippet": "        fn isSingleton(&self) -> (single: B)\n            requires self.spec_well_formed(),\n            ensures single == (self.spec_seq().len() == 1);"
   },
@@ -355,7 +355,7 @@
     "id": 45,
     "function": "set",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "214-215",
+    "lines": "215-216",
     "spec_strength": "unknown",
     "snippet": "        fn set(&self, index: N, item: T) -> (outcome: Result<Self, &'static str>)\n            requires self.spec_well_formed(), (index as int) < self.spec_seq().len();"
   },
@@ -363,7 +363,7 @@
     "id": 46,
     "function": "subseq_copy",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "217-218",
+    "lines": "218-219",
     "spec_strength": "hole",
     "snippet": "        fn subseq_copy(&self, start: N, length: N) -> (sub: Self)\n            requires self.spec_well_formed();"
   },
@@ -371,7 +371,7 @@
     "id": 47,
     "function": "from_vec",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "220-223",
+    "lines": "221-224",
     "spec_strength": "hole",
     "snippet": "        fn from_vec(values: Vec<T>) -> (tree: Self)\n            ensures\n                tree.spec_well_formed(),\n                tree.spec_seq() =~= values@.map_values(|t: T| t@);"
   },
@@ -379,7 +379,7 @@
     "id": 48,
     "function": "values_in_order",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "225-226",
+    "lines": "226-227",
     "spec_strength": "hole",
     "snippet": "        fn values_in_order(&self) -> (values: Vec<T>)\n            ensures true;"
   },
@@ -387,7 +387,7 @@
     "id": 49,
     "function": "height_fn",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "234-235",
+    "lines": "235-236",
     "spec_strength": "unknown",
     "snippet": "    fn height_fn<T: StTInMtT>(n: &Link<T>) -> (h: N)\n        ensures h as nat == spec_cached_height(n),"
   },
@@ -395,7 +395,7 @@
     "id": 50,
     "function": "size_fn",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "243-244",
+    "lines": "244-245",
     "spec_strength": "unknown",
     "snippet": "    fn size_fn<T: StTInMtT>(n: &Link<T>) -> (sz: N)\n        ensures sz as nat == spec_cached_size(n),"
   },
@@ -403,7 +403,7 @@
     "id": 51,
     "function": "mk",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "253-262",
+    "lines": "254-263",
     "spec_strength": "hole",
     "snippet": "    fn mk<T: StTInMtT>(value: T, left: Link<T>, right: Link<T>) -> (node: Arc<Node<T>>)\n        requires\n            1 + spec_cached_size(&left) + spec_cached_size(&right) <= N::MAX as nat,\n            1 + spec_nat_max(spec_cached_height(&left), spec_cached_height(&right)) <= N::MAX as nat,\n        ensures\n            spec_inorder(Some(node)) =~= spec_inorder(left) + seq![value@] + spec_inorder(right),\n            node.size as nat == 1 + spec_cached_size(&left) + spec_cached_size(&right),\n            node.height as nat == 1 + spec_nat_max(\n                spec_cached_height(&left), spec_cached_height(&right)),\n            spec_avltreeseqmtper_wf(left) && spec_avltreeseqmtper_wf(right) ==> spec_avltreeseqmtper_wf(Some(node)),"
   },
@@ -411,7 +411,7 @@
     "id": 52,
     "function": "rotate_right",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "272-276",
+    "lines": "273-277",
     "spec_strength": "hole",
     "snippet": "    fn rotate_right<T: StTInMtT>(y: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)\n        requires y.left.is_some(), spec_avltreeseqmtper_wf(Some(y)),\n        ensures\n            spec_inorder(Some(rotated)) =~= spec_inorder(Some(y)),\n            spec_avltreeseqmtper_wf(Some(rotated)),"
   },
@@ -419,7 +419,7 @@
     "id": 53,
     "function": "rotate_left",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "285-289",
+    "lines": "286-290",
     "spec_strength": "hole",
     "snippet": "    fn rotate_left<T: StTInMtT>(x: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)\n        requires x.right.is_some(), spec_avltreeseqmtper_wf(Some(x)),\n        ensures\n            spec_inorder(Some(rotated)) =~= spec_inorder(Some(x)),\n            spec_avltreeseqmtper_wf(Some(rotated)),"
   },
@@ -427,7 +427,7 @@
     "id": 54,
     "function": "rebalance",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "298-302",
+    "lines": "299-303",
     "spec_strength": "hole",
     "snippet": "    fn rebalance<T: StTInMtT>(n: Arc<Node<T>>) -> (balanced: Arc<Node<T>>)\n        requires spec_avltreeseqmtper_wf(Some(n)),\n        ensures\n            spec_inorder(Some(balanced)) =~= spec_inorder(Some(n)),\n            spec_avltreeseqmtper_wf(Some(balanced)),"
   },
@@ -435,7 +435,7 @@
     "id": 55,
     "function": "nth_ref",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "326-328",
+    "lines": "327-329",
     "spec_strength": "hole",
     "snippet": "    fn nth_ref<'a, T: StTInMtT>(cur: &'a Link<T>, index: N) -> (elem: &'a T)\n        requires spec_avltreeseqmtper_wf(*cur), (index as int) < spec_inorder(*cur).len(),\n        ensures elem@ == spec_inorder(*cur)[index as int],"
   },
@@ -443,7 +443,7 @@
     "id": 56,
     "function": "set_rec",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "347-349",
+    "lines": "348-350",
     "spec_strength": "hole",
     "snippet": "    fn set_rec<T: StTInMtT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)\n        requires spec_avltreeseqmtper_wf(*cur), (index as int) < spec_inorder(*cur).len(),\n        ensures outcome.is_ok(),"
   },
@@ -451,7 +451,7 @@
     "id": 57,
     "function": "inorder_collect",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "375",
+    "lines": "376",
     "spec_strength": "hole",
     "snippet": "    fn inorder_collect<T: StTInMtT>(cur: &Link<T>, out: &mut Vec<T>) {"
   },
@@ -459,7 +459,7 @@
     "id": 58,
     "function": "build_balanced_from_slice",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "384-385",
+    "lines": "385-386",
     "spec_strength": "hole",
     "snippet": "    fn build_balanced_from_slice<T: StTInMtT>(a: &[T]) -> (link: Link<T>)\n        ensures spec_avltreeseqmtper_wf(link),"
   },
@@ -467,7 +467,7 @@
     "id": 59,
     "function": "rec",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "387",
+    "lines": "388",
     "spec_strength": "",
     "snippet": "        fn rec<T: StTInMtT>(a: &[T]) -> Link<T> {"
   },
@@ -475,7 +475,7 @@
     "id": 60,
     "function": "compare_trees",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "402",
+    "lines": "403",
     "spec_strength": "hole",
     "snippet": "    fn compare_trees<T: StTInMtT>(a: &Link<T>, b: &Link<T>) -> (equal: bool) {"
   },
@@ -483,7 +483,7 @@
     "id": 61,
     "function": "default",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "512",
+    "lines": "511",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::empty() }"
   },
@@ -491,7 +491,7 @@
     "id": 62,
     "function": "next",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "520-521",
+    "lines": "519-520",
     "spec_strength": "hole",
     "snippet": "        fn next(&mut self) -> (next: Option<Self::Item>)\n            ensures true,"
   },
@@ -499,7 +499,7 @@
     "id": 63,
     "function": "eq",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "557-558",
+    "lines": "556-557",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },

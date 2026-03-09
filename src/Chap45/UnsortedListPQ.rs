@@ -7,7 +7,6 @@
 //  3. broadcast use
 //  4. type definitions
 //  5. view impls
-//  6. spec fns
 //  7. proof fns/broadcast groups
 //  8. traits
 //  9. impls
@@ -35,6 +34,7 @@ pub mod UnsortedListPQ {
 // 3. broadcast use
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::multiset::group_multiset_axioms,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
@@ -53,12 +53,6 @@ broadcast use {
             open spec fn view(&self) -> Seq<T::V> { self.elements@ }
         }
 
-// 6. spec fns
-        pub open spec fn spec_sorted<T: TotalOrder>(s: Seq<T>) -> bool {
-            forall|i: int, j: int| 0 <= i < j < s.len() ==>
-                #[trigger] TotalOrder::le(s[i], s[j])
-        }
-
 // 7. proof fns
         proof fn _unsorted_list_pq_verified() {}
 
@@ -67,6 +61,7 @@ broadcast use {
         pub trait UnsortedListPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Seq<T::V>> {
             spec fn spec_size(self) -> nat;
             spec fn spec_seq(&self) -> Seq<T>;
+            spec fn spec_sorted(s: Seq<T>) -> bool;
 
             fn empty() -> (pq: Self)
                 ensures
@@ -125,7 +120,7 @@ broadcast use {
 
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
-                ensures pq@.len() == seq@.len();
+                ensures pq@ =~= seq@;
 
             fn size(&self) -> (n: usize)
                 ensures n as int == self.spec_size();
@@ -141,7 +136,9 @@ broadcast use {
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() + elements@.len() <= usize::MAX as int,
-                ensures pq@.len() == self@.len() + elements@.len();
+                ensures
+                    pq@.len() == self@.len() + elements@.len(),
+                    pq@.to_multiset() =~= self@.to_multiset().add(elements@.to_multiset());
 
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>)
                 requires
@@ -149,11 +146,11 @@ broadcast use {
                     self@.len() <= usize::MAX as int,
                 ensures
                     sorted@.len() == self@.len(),
-                    spec_sorted(sorted.seq@);
+                    Self::spec_sorted(sorted.seq@);
 
             fn from_vec(vec: Vec<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
-                ensures pq@.len() == vec@.len();
+                ensures pq@ =~= vec@.map(|_i: int, t: T| t@);
 
             fn to_vec(&self) -> (v: Vec<T>)
                 requires obeys_feq_clone::<T>(),
@@ -165,7 +162,7 @@ broadcast use {
                     self@.len() <= usize::MAX as int,
                 ensures
                     v@.len() == self@.len(),
-                    spec_sorted(v@);
+                    Self::spec_sorted(v@);
         }
 
 // 9. impls
@@ -178,13 +175,21 @@ broadcast use {
                 self.elements.seq@
             }
 
+            open spec fn spec_sorted(s: Seq<T>) -> bool {
+                forall|i: int, j: int| 0 <= i < j < s.len() ==>
+                    #[trigger] TotalOrder::le(s[i], s[j])
+            }
+
             /// APAS Work Θ(1), Span Θ(1).
             fn empty() -> (pq: Self) {
                 let pq = UnsortedListPQ {
                     elements: ArraySeqStPerS::empty(),
                 };
-                // accept hole: Empty seq@ maps to empty multiset.
-                proof { accept(pq@.to_multiset() =~= Multiset::empty()); }
+                proof {
+                    assert(pq@ =~= Seq::<T::V>::empty());
+                    assert(Seq::<T::V>::empty().to_multiset()
+                        =~= Multiset::<T::V>::empty());
+                }
                 pq
             }
 
@@ -193,8 +198,9 @@ broadcast use {
                 let pq = UnsortedListPQ {
                     elements: ArraySeqStPerS::singleton(element),
                 };
-                // accept hole: Single-element seq@ maps to singleton multiset.
-                proof { accept(pq@.to_multiset() =~= Multiset::empty().insert(element@)); }
+                proof {
+                    assert(pq@ =~= Seq::<T::V>::empty().push(element@));
+                }
                 pq
             }
 
@@ -247,8 +253,25 @@ broadcast use {
                 let pq = UnsortedListPQ {
                     elements: ArraySeqStPerS::append(&self.elements, &single_seq),
                 };
-                // accept hole: Append produces concatenation at View level.
-                proof { accept(pq@.to_multiset() =~= self@.to_multiset().insert(element@)); }
+                proof {
+                    let sv = Seq::<T::V>::empty().push(element@);
+                    assert(pq@ =~= self@ + sv) by {
+                        assert(pq@.len() == self@.len() + sv.len());
+                        assert forall|i: int| #![auto] 0 <= i < pq@.len()
+                        implies pq@[i] == (self@ + sv)[i] by {
+                            if i < self@.len() {
+                                assert(pq.elements.spec_index(i)
+                                    == self.elements.seq@[i]);
+                            } else {
+                                assert(pq.elements.spec_index(
+                                    self.elements.seq@.len() as int
+                                    + (i - self@.len()))
+                                    == single_seq.seq@[i - self@.len()]);
+                            }
+                        };
+                    };
+                    vstd::seq_lib::lemma_multiset_commutative(self@, sv);
+                }
                 pq
             }
 
@@ -268,6 +291,7 @@ broadcast use {
                         n == self.elements@.len(),
                         n > 0,
                         (min_index as int) < n,
+                        *min_element == self.elements.seq@[min_index as int],
                         forall|j: int| 0 <= j < i ==>
                             #[trigger] TotalOrder::le(*min_element, self.elements.seq@[j]),
                 {
@@ -303,35 +327,87 @@ broadcast use {
                     invariant
                         n == self.elements@.len(),
                         (min_index as int) < n,
+                        forall|j: int| 0 <= j < n ==>
+                            #[trigger] TotalOrder::le(
+                                *min_element, self.elements.seq@[j]),
                         new_elements@.len() ==
-                            i as int - if (min_index as int) < (i as int) { 1int } else { 0int },
+                            i as int - if (min_index as int) < (i as int)
+                                { 1int } else { 0int },
+                        forall|j: int| #![auto] 0 <= j < new_elements.seq@.len()
+                            ==> TotalOrder::le(
+                                *min_element, new_elements.seq@[j]),
+                        new_elements@ =~= self@.remove(
+                            min_index as int).take(
+                                new_elements@.len() as int),
                 {
                     if i != min_index {
                         let element = self.elements.nth(i);
                         let single_seq = ArraySeqStPerS::singleton(element.clone());
-                        new_elements = ArraySeqStPerS::append(&new_elements, &single_seq);
+                        let ghost old_ne_seq = new_elements.seq@;
+                        let ghost old_ne_view = new_elements@;
+                        let ghost old_len = new_elements.seq@.len();
+                        new_elements = ArraySeqStPerS::append(
+                            &new_elements, &single_seq);
+                        proof {
+                            assert(cloned(self.elements.seq@[i as int],
+                                single_seq.seq@[0]));
+                            axiom_cloned_implies_eq_owned(
+                                self.elements.seq@[i as int],
+                                single_seq.seq@[0]);
+                            // Raw: new element equals self's raw element.
+                            assert(new_elements.seq@[old_len as int]
+                                == self.elements.seq@[i as int]) by {
+                                assert(new_elements.spec_index(
+                                    old_len as int + 0)
+                                    == single_seq.seq@[0]);
+                            };
+                            // Prove le invariant for all new_elements.
+                            assert forall|j: int| #![auto]
+                                0 <= j < new_elements.seq@.len() implies
+                                TotalOrder::le(
+                                    *min_element, new_elements.seq@[j])
+                            by {
+                                if j < old_len as int {
+                                    assert(new_elements.spec_index(j)
+                                        == old_ne_seq[j]);
+                                }
+                            };
+                            // Prove view invariant: new_elements@ extends.
+                            assert forall|j: int| #![auto]
+                                0 <= j < new_elements@.len() implies
+                                new_elements@[j] == self@.remove(
+                                    min_index as int).take(
+                                        new_elements@.len() as int)[j]
+                            by {
+                                if j < old_ne_view.len() as int {
+                                    assert(new_elements.spec_index(j)
+                                        == old_ne_seq[j]);
+                                } else {
+                                    assert(new_elements.spec_index(
+                                        old_len as int + 0)
+                                        == single_seq.seq@[0]);
+                                }
+                            };
+                        }
                     }
                 }
 
                 let returned_min = min_element.clone();
                 let new_pq = UnsortedListPQ { elements: new_elements };
-                // accept hole: Clone preserves T-level identity for TotalOrder::le.
-                // The find-min loop proved le(*min_element, self.elements.seq@[j]) for
-                // all j. The rebuild copies elements from self excluding min_index.
-                // Gap: T::clone() preserves View (feq_clone) but TotalOrder::le may
-                // depend on concrete T, not just T::V.
                 proof {
-                    accept(forall|j: int| 0 <= j < self.spec_seq().len() ==>
-                        #[trigger] TotalOrder::le(returned_min, self.spec_seq()[j]));
-                    accept(forall|j: int| 0 <= j < new_pq.spec_seq().len() ==>
-                        #[trigger] TotalOrder::le(returned_min, new_pq.spec_seq()[j]));
-                    accept(exists|k: int|
-                        #![trigger self.spec_seq()[k]]
-                        0 <= k < self.spec_seq().len() &&
-                        returned_min == self.spec_seq()[k]);
-                    // accept hole: Rebuild removes min_element and preserves other views.
-                    accept(self@.to_multiset() =~=
-                        new_pq@.to_multiset().insert(returned_min@));
+                    // Clone gives raw T equality.
+                    assert(cloned(*min_element, returned_min));
+                    axiom_cloned_implies_eq(min_element, returned_min);
+                    // #6: witness for exists.
+                    assert(self.spec_seq()[min_index as int]
+                        == returned_min);
+                    // #5: new_pq@ == self@.remove(min_index).
+                    assert(new_pq@ =~= self@.remove(min_index as int));
+                    // #5 le: each new_pq element was in self.
+                    assert forall|j: int| 0 <= j < new_pq.spec_seq().len()
+                    implies #[trigger] TotalOrder::le(
+                        returned_min, new_pq.spec_seq()[j]) by {};
+                    // #7: multiset from broadcast to_multiset_remove.
                 }
                 (new_pq, Some(returned_min))
             }
@@ -341,14 +417,38 @@ broadcast use {
                 let pq = UnsortedListPQ {
                     elements: ArraySeqStPerS::append(&self.elements, &other.elements),
                 };
-                // accept hole: Append produces concatenation at View level.
-                proof { accept(pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset())); }
+                proof {
+                    assert(pq@ =~= self@ + other@) by {
+                        assert forall|i: int| #![auto] 0 <= i < pq@.len()
+                        implies pq@[i] == (self@ + other@)[i] by {
+                            if i < self@.len() {
+                                assert(pq.elements.spec_index(i)
+                                    == self.elements.seq@[i]);
+                            } else {
+                                assert(pq.elements.spec_index(
+                                    self.elements.seq@.len() as int
+                                    + (i - self@.len()))
+                                    == other.elements.seq@[
+                                        i - self@.len()]);
+                            }
+                        };
+                    };
+                    vstd::seq_lib::lemma_multiset_commutative(
+                        self@, other@);
+                }
                 pq
             }
 
             /// APAS Work Θ(n), Span Θ(n).
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self) {
-                UnsortedListPQ { elements: seq.clone() }
+                let pq = UnsortedListPQ { elements: seq.clone() };
+                proof {
+                    lemma_seq_map_cloned_view_eq(
+                        seq.seq@,
+                        pq.elements.seq@,
+                    );
+                }
+                pq
             }
 
             fn size(&self) -> (n: usize) { self.elements.length() }
@@ -371,7 +471,7 @@ broadcast use {
                     invariant
                         result@.len() + current_pq@.len() == self@.len(),
                         self@.len() <= usize::MAX as int,
-                        spec_sorted(result.seq@),
+                        Self::spec_sorted(result.seq@),
                         result.seq@.len() > 0 ==> forall|k: int|
                             0 <= k < current_pq.spec_seq().len() ==>
                                 #[trigger] TotalOrder::le(
@@ -447,8 +547,26 @@ broadcast use {
             }
 
             fn from_vec(vec: Vec<T>) -> Self {
+                let ghost vec_view = vec@;
                 let seq = ArraySeqStPerS::from_vec(vec);
-                Self::from_seq(&seq)
+                let pq = Self::from_seq(&seq);
+                proof {
+                    // from_vec gives seq.seq@ =~= vec@ (element-wise + length).
+                    assert(seq.seq@ =~= vec_view) by {
+                        assert forall|i: int| #![auto] 0 <= i < seq.seq@.len()
+                        implies seq.seq@[i] == vec_view[i] by {
+                            assert(seq.spec_index(i) == vec_view[i]);
+                        };
+                    };
+                    // seq@ = seq.seq@.map(view) =~= vec@.map(view), and pq@ =~= seq@.
+                    assert(seq@ =~= vec_view.map(|_i: int, t: T| t@)) by {
+                        assert forall|i: int| #![auto] 0 <= i < seq@.len()
+                        implies seq@[i] == vec_view.map(|_i: int, t: T| t@)[i] by {
+                            assert(seq.seq@[i] == vec_view[i]);
+                        };
+                    };
+                }
+                pq
             }
 
             fn to_vec(&self) -> Vec<T> {
@@ -475,14 +593,27 @@ broadcast use {
                     invariant
                         n == sorted_seq@.len(),
                         result@.len() == i as int,
+                        Self::spec_sorted(sorted_seq.seq@),
+                        forall|k: int| #![auto] 0 <= k < i as int ==>
+                            result@[k] == sorted_seq.seq@[k],
                 {
                     let elem = sorted_seq.nth(i).clone();
+                    proof {
+                        assert(cloned(sorted_seq.seq@[i as int], elem));
+                        axiom_cloned_implies_eq_owned(
+                            sorted_seq.seq@[i as int], elem);
+                    }
                     result.push(elem);
                 }
-                // accept hole: Vec elements are clones of sorted ArraySeqStPerS elements.
-                // spec_sorted(sorted_seq.seq@) is proved, but TotalOrder::le on cloned
-                // T values in Vec requires T-level clone identity (same gap as delete_min).
-                proof { accept(spec_sorted(result@)); }
+                proof {
+                    assert forall|i: int, j: int|
+                        0 <= i < j < result@.len() implies
+                        #[trigger] TotalOrder::le(result@[i], result@[j])
+                    by {
+                        assert(result@[i] == sorted_seq.seq@[i]);
+                        assert(result@[j] == sorted_seq.seq@[j]);
+                    };
+                }
                 result
             }
         }

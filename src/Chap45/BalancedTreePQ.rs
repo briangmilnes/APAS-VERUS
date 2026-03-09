@@ -54,91 +54,120 @@ broadcast use {
 // 8. traits
         /// Meldable Priority Queue ADT (Data Type 45.1) using balanced tree (AVL).
         pub trait BalancedTreePQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Seq<T::V>> {
+            spec fn spec_balancedtreepq_wf(&self) -> bool;
+
             fn empty() -> (pq: Self)
-                ensures pq@.len() == 0;
+                ensures pq@.len() == 0, pq.spec_balancedtreepq_wf();
 
             fn singleton(element: T) -> (pq: Self)
-                ensures pq@.len() == 1;
+                ensures pq@.len() == 1, pq.spec_balancedtreepq_wf();
 
             fn find_min(&self) -> (min_elem: Option<&T>)
+                requires self.spec_balancedtreepq_wf(),
                 ensures
                     self@.len() == 0 ==> min_elem.is_none(),
                     self@.len() > 0 ==> min_elem.is_some();
 
             fn insert(&self, element: T) -> (pq: Self)
-                ensures pq@.len() == self@.len() + 1;
+                requires self.spec_balancedtreepq_wf(),
+                ensures pq@.len() == self@.len() + 1, pq.spec_balancedtreepq_wf();
 
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
+                requires self.spec_balancedtreepq_wf(),
                 ensures
                     self@.len() > 0 ==> min_and_rest.1.is_some(),
                     self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,
                     self@.len() == 0 ==> min_and_rest.1.is_none(),
-                    self@.len() == 0 ==> min_and_rest.0@.len() == self@.len();
+                    self@.len() == 0 ==> min_and_rest.0@.len() == self@.len(),
+                    min_and_rest.0.spec_balancedtreepq_wf();
 
             fn meld(&self, other: &Self) -> (pq: Self)
-                ensures pq@.len() == self@.len() + other@.len();
+                requires self.spec_balancedtreepq_wf(), other.spec_balancedtreepq_wf(),
+                ensures pq@.len() == self@.len() + other@.len(), pq.spec_balancedtreepq_wf();
 
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> (pq: Self)
-                ensures pq@.len() == seq@.len();
+                requires seq.spec_well_formed(),
+                ensures pq@.len() == seq@.len(), pq.spec_balancedtreepq_wf();
 
             fn size(&self) -> (n: usize)
+                requires self.spec_balancedtreepq_wf(),
                 ensures n as int == self@.len();
 
             fn is_empty(&self) -> (b: bool)
+                requires self.spec_balancedtreepq_wf(),
                 ensures b == (self@.len() == 0);
 
             fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
+                requires self.spec_balancedtreepq_wf(),
                 ensures seq@ =~= self@;
 
             fn find_max(&self) -> (max_elem: Option<&T>)
+                requires self.spec_balancedtreepq_wf(),
                 ensures
                     self@.len() == 0 ==> max_elem.is_none(),
                     self@.len() > 0 ==> max_elem.is_some();
 
             fn delete_max(&self) -> (max_and_rest: (Self, Option<T>))
+                requires self.spec_balancedtreepq_wf(),
                 ensures
                     self@.len() > 0 ==> max_and_rest.1.is_some(),
                     self@.len() > 0 ==> max_and_rest.0@.len() == self@.len() - 1,
                     self@.len() == 0 ==> max_and_rest.1.is_none(),
-                    self@.len() == 0 ==> max_and_rest.0@.len() == self@.len();
+                    self@.len() == 0 ==> max_and_rest.0@.len() == self@.len(),
+                    max_and_rest.0.spec_balancedtreepq_wf();
 
             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> (pq: Self)
-                ensures pq@.len() == self@.len() + elements@.len();
+                requires self.spec_balancedtreepq_wf(), elements.spec_well_formed(),
+                ensures pq@.len() == self@.len() + elements@.len(), pq.spec_balancedtreepq_wf();
 
             fn extract_all_sorted(&self) -> (sorted: AVLTreeSeqStPerS<T>)
+                requires self.spec_balancedtreepq_wf(),
                 ensures sorted@.len() == self@.len();
 
             fn contains(&self, element: &T) -> (found: bool)
+                requires self.spec_balancedtreepq_wf(),
                 ensures found == self@.contains(element@);
 
             fn remove(&self, element: &T) -> (rest_and_found: (Self, bool))
+                requires self.spec_balancedtreepq_wf(),
                 ensures
                     rest_and_found.1 ==> rest_and_found.0@.len() == self@.len() - 1,
-                    !rest_and_found.1 ==> rest_and_found.0@.len() == self@.len();
+                    !rest_and_found.1 ==> rest_and_found.0@.len() == self@.len(),
+                    rest_and_found.0.spec_balancedtreepq_wf();
 
             fn range(&self, min_val: &T, max_val: &T) -> (sub: AVLTreeSeqStPerS<T>)
+                requires self.spec_balancedtreepq_wf(),
                 ensures sub@.len() <= self@.len();
 
             fn from_vec(elements: Vec<T>) -> (pq: Self)
-                ensures pq@.len() == elements@.len();
+                ensures pq@.len() == elements@.len(), pq.spec_balancedtreepq_wf();
 
             fn to_vec(&self) -> (vec: Vec<T>)
+                requires self.spec_balancedtreepq_wf(),
                 ensures vec@.len() == self@.len();
 
             fn to_sorted_vec(&self) -> (vec: Vec<T>)
+                requires self.spec_balancedtreepq_wf(),
                 ensures vec@.len() == self@.len();
 
             fn is_sorted(&self) -> (sorted: bool)
+                requires self.spec_balancedtreepq_wf(),
                 ensures self@.len() <= 1 ==> sorted;
 
             fn height(&self) -> (h: usize)
+                requires self.spec_balancedtreepq_wf(),
                 ensures self@.len() == 0 ==> h == 0;
 
             fn split(&self, element: &T) -> (parts: (Self, bool, Self))
-                ensures parts.0@.len() + parts.2@.len() == self@.len();
+                requires self.spec_balancedtreepq_wf(),
+                ensures
+                    parts.0@.len() + parts.2@.len() == self@.len(),
+                    parts.0.spec_balancedtreepq_wf(),
+                    parts.2.spec_balancedtreepq_wf();
 
             fn join(left: &Self, right: &Self) -> (pq: Self)
-                ensures pq@.len() == left@.len() + right@.len();
+                requires left.spec_balancedtreepq_wf(), right.spec_balancedtreepq_wf(),
+                ensures pq@.len() == left@.len() + right@.len(), pq.spec_balancedtreepq_wf();
         }
 
         /// Extended operations requiring closure parameters.
@@ -151,8 +180,11 @@ broadcast use {
 
 // 9. impls
         impl<T: StT + Ord + TotalOrder> BalancedTreePQTrait<T> for BalancedTreePQ<T> {
+            open spec fn spec_balancedtreepq_wf(&self) -> bool {
+                self.elements.spec_well_formed()
+            }
+
             /// APAS Work Θ(1), Span Θ(1).
-            #[verifier::external_body]
             fn empty() -> Self {
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::empty(),
@@ -160,7 +192,6 @@ broadcast use {
             }
 
             /// APAS Work Θ(1), Span Θ(1).
-            #[verifier::external_body]
             fn singleton(element: T) -> Self {
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::singleton(element),
@@ -168,7 +199,6 @@ broadcast use {
             }
 
             /// APAS Work Θ(1), Span Θ(1) — indexed access to first element.
-            #[verifier::external_body]
             fn find_min(&self) -> Option<&T> {
                 if self.elements.length() == 0 {
                     None
@@ -243,20 +273,18 @@ broadcast use {
                 }
             }
 
-            #[verifier::external_body]
             fn size(&self) -> usize { self.elements.length() }
 
-            #[verifier::external_body]
             fn is_empty(&self) -> bool { self.elements.length() == 0 }
 
             fn to_seq(&self) -> AVLTreeSeqStPerS<T> { self.elements.clone() }
 
-            #[verifier::external_body]
             fn find_max(&self) -> Option<&T> {
-                if self.elements.length() == 0 {
+                let n = self.elements.length();
+                if n == 0 {
                     None
                 } else {
-                    Some(self.elements.nth(self.elements.length() - 1))
+                    Some(self.elements.nth(n - 1))
                 }
             }
 

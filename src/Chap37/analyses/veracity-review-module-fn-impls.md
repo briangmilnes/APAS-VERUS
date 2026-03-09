@@ -89,33 +89,33 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 37 | `lemma_size_eq_inorder_len` |  |  |  | Y | Y |  |  | unknown | 166&#8209;169 |
-| 38 | `empty` | Y | Y |  |  | Y |  |  | unknown | 189&#8209;190 |
-| 39 | `new` | Y | Y |  |  | Y |  |  | unknown | 192&#8209;193 |
-| 40 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 195&#8209;196 |
-| 41 | `length` | Y | Y |  |  | Y |  |  | unknown | 198&#8209;200 |
-| 42 | `nth` | Y | Y |  |  | Y |  |  | unknown | 202&#8209;204 |
-| 43 | `isEmpty` | Y | Y |  |  | Y |  |  | unknown | 206&#8209;208 |
-| 44 | `isSingleton` | Y | Y |  |  | Y |  |  | unknown | 210&#8209;212 |
-| 45 | `set` | Y | Y |  |  | Y |  |  | unknown | 214&#8209;215 |
-| 46 | `subseq_copy` | Y | Y |  |  | Y |  |  | hole | 217&#8209;218 |
-| 47 | `from_vec` | Y | Y |  |  | Y |  |  | hole | 220&#8209;223 |
-| 48 | `values_in_order` | Y | Y |  |  | Y |  |  | hole | 225&#8209;226 |
-| 49 | `height_fn` |  |  |  | Y | Y |  |  | unknown | 234&#8209;235 |
-| 50 | `size_fn` |  |  |  | Y | Y |  |  | unknown | 243&#8209;244 |
-| 51 | `mk` |  |  |  | Y | Y |  |  | hole | 253&#8209;262 |
-| 52 | `rotate_right` |  |  |  | Y | Y |  |  | hole | 272&#8209;276 |
-| 53 | `rotate_left` |  |  |  | Y | Y |  |  | hole | 285&#8209;289 |
-| 54 | `rebalance` |  |  |  | Y | Y |  |  | hole | 298&#8209;302 |
-| 55 | `nth_ref` |  |  |  | Y | Y |  |  | hole | 326&#8209;328 |
-| 56 | `set_rec` |  |  |  | Y | Y |  |  | hole | 347&#8209;349 |
-| 57 | `inorder_collect` |  |  |  | Y | Y |  |  | hole | 375 |
-| 58 | `build_balanced_from_slice` |  |  |  | Y | Y |  |  | hole | 384&#8209;385 |
-| 59 | `rec` |  |  |  | Y | Y |  | Y |  | 387 |
-| 60 | `compare_trees` |  |  |  | Y | Y |  |  | hole | 402 |
-| 61 | `default` |  | Y |  |  | Y |  | Y |  | 512 |
-| 62 | `next` |  | Y |  |  | Y |  |  | hole | 520&#8209;521 |
-| 63 | `eq` |  | Y |  |  | Y |  |  | hole | 557&#8209;558 |
+| 37 | `lemma_size_eq_inorder_len` |  |  |  | Y | Y |  |  | unknown | 167&#8209;170 |
+| 38 | `empty` | Y | Y |  |  | Y |  |  | unknown | 190&#8209;191 |
+| 39 | `new` | Y | Y |  |  | Y |  |  | unknown | 193&#8209;194 |
+| 40 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 196&#8209;197 |
+| 41 | `length` | Y | Y |  |  | Y |  |  | unknown | 199&#8209;201 |
+| 42 | `nth` | Y | Y |  |  | Y |  |  | unknown | 203&#8209;205 |
+| 43 | `isEmpty` | Y | Y |  |  | Y |  |  | unknown | 207&#8209;209 |
+| 44 | `isSingleton` | Y | Y |  |  | Y |  |  | unknown | 211&#8209;213 |
+| 45 | `set` | Y | Y |  |  | Y |  |  | unknown | 215&#8209;216 |
+| 46 | `subseq_copy` | Y | Y |  |  | Y |  |  | hole | 218&#8209;219 |
+| 47 | `from_vec` | Y | Y |  |  | Y |  |  | hole | 221&#8209;224 |
+| 48 | `values_in_order` | Y | Y |  |  | Y |  |  | hole | 226&#8209;227 |
+| 49 | `height_fn` |  |  |  | Y | Y |  |  | unknown | 235&#8209;236 |
+| 50 | `size_fn` |  |  |  | Y | Y |  |  | unknown | 244&#8209;245 |
+| 51 | `mk` |  |  |  | Y | Y |  |  | hole | 254&#8209;263 |
+| 52 | `rotate_right` |  |  |  | Y | Y |  |  | hole | 273&#8209;277 |
+| 53 | `rotate_left` |  |  |  | Y | Y |  |  | hole | 286&#8209;290 |
+| 54 | `rebalance` |  |  |  | Y | Y |  |  | hole | 299&#8209;303 |
+| 55 | `nth_ref` |  |  |  | Y | Y |  |  | hole | 327&#8209;329 |
+| 56 | `set_rec` |  |  |  | Y | Y |  |  | hole | 348&#8209;350 |
+| 57 | `inorder_collect` |  |  |  | Y | Y |  |  | hole | 376 |
+| 58 | `build_balanced_from_slice` |  |  |  | Y | Y |  |  | hole | 385&#8209;386 |
+| 59 | `rec` |  |  |  | Y | Y |  | Y |  | 388 |
+| 60 | `compare_trees` |  |  |  | Y | Y |  |  | hole | 403 |
+| 61 | `default` |  | Y |  |  | Y |  | Y |  | 511 |
+| 62 | `next` |  | Y |  |  | Y |  |  | hole | 519&#8209;520 |
+| 63 | `eq` |  | Y |  |  | Y |  |  | hole | 556&#8209;557 |
 
 ### Chap37/AVLTreeSeqStEph.rs
 

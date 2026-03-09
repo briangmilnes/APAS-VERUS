@@ -3,7 +3,7 @@
     "id": 1,
     "function": "lemma_spec_med_bounded",
     "file": "Chap51/BottomUpDPMtEph.rs",
-    "lines": "60-61",
+    "lines": "61-62",
     "spec_strength": "unknown",
     "snippet": "        proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)\n            ensures self.spec_med(i, j) <= i + j;"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "function": "new",
     "file": "Chap51/BottomUpDPMtEph.rs",
-    "lines": "63-68",
+    "lines": "64-69",
     "spec_strength": "unknown",
     "snippet": "        fn new(s: ArraySeqMtEphS<char>, t: ArraySeqMtEphS<char>) -> (dp: Self)\n            ensures\n                dp.spec_s() == s@,\n                dp.spec_t() == t@,\n                dp.spec_s_len() == s.spec_len(),\n                dp.spec_t_len() == t.spec_len();"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "function": "s_length",
     "file": "Chap51/BottomUpDPMtEph.rs",
-    "lines": "70-71",
+    "lines": "71-72",
     "spec_strength": "unknown",
     "snippet": "        fn s_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_s_len();"
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "function": "t_length",
     "file": "Chap51/BottomUpDPMtEph.rs",
-    "lines": "73-74",
+    "lines": "74-75",
     "spec_strength": "unknown",
     "snippet": "        fn t_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_t_len();"
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "function": "is_empty",
     "file": "Chap51/BottomUpDPMtEph.rs",
-    "lines": "76-77",
+    "lines": "77-78",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);"
   },
@@ -43,7 +43,7 @@
     "id": 6,
     "function": "set_s",
     "file": "Chap51/BottomUpDPMtEph.rs",
-    "lines": "79-82",
+    "lines": "80-83",
     "spec_strength": "unknown",
     "snippet": "        fn set_s(&mut self, s: ArraySeqMtEphS<char>)\n            ensures\n                self.spec_s() == s@,\n                self.spec_t() == old(self).spec_t();"
   },
@@ -51,7 +51,7 @@
     "id": 7,
     "function": "set_t",
     "file": "Chap51/BottomUpDPMtEph.rs",
-    "lines": "84-87",
+    "lines": "85-88",
     "spec_strength": "unknown",
     "snippet": "        fn set_t(&mut self, t: ArraySeqMtEphS<char>)\n            ensures\n                self.spec_s() == old(self).spec_s(),\n                self.spec_t() == t@;"
   },
@@ -59,108 +59,92 @@
     "id": 8,
     "function": "med_bottom_up_parallel",
     "file": "Chap51/BottomUpDPMtEph.rs",
-    "lines": "89-97",
+    "lines": "90-98",
     "spec_strength": "hole",
     "snippet": "        fn med_bottom_up_parallel(&mut self) -> (distance: usize)\n            requires old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,\n            ensures\n                distance as nat == old(self).spec_med(\n                    old(self).spec_s_len(),\n                    old(self).spec_t_len()\n                ),\n                self.spec_s() == old(self).spec_s(),\n                self.spec_t() == old(self).spec_t();"
   },
   {
     "id": 9,
-    "function": "new_bu_eph_lock",
-    "file": "Chap51/BottomUpDPMtEph.rs",
-    "lines": "109-110",
-    "spec_strength": "hole",
-    "snippet": "    fn new_bu_eph_lock(val: Vec<Vec<usize>>)\n        -> (lock: RwLock<Vec<Vec<usize>>, BottomUpDPMtEphInv>)"
-  },
-  {
-    "id": 10,
     "function": "default",
     "file": "Chap51/BottomUpDPMtEph.rs",
-    "lines": "244-247",
+    "lines": "239-242",
     "spec_strength": "unknown",
     "snippet": "        fn default() -> (dp: Self)\n            ensures\n                dp.spec_s_len() == 0,\n                dp.spec_t_len() == 0,"
   },
   {
-    "id": 11,
+    "id": 10,
     "function": "eq",
     "file": "Chap51/BottomUpDPMtEph.rs",
-    "lines": "270-271",
+    "lines": "265-266",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (eq: bool)\n            ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)"
   },
   {
-    "id": 12,
+    "id": 11,
     "function": "lemma_spec_med_bounded",
     "file": "Chap51/BottomUpDPMtPer.rs",
-    "lines": "60-61",
+    "lines": "61-62",
     "spec_strength": "unknown",
     "snippet": "        proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)\n            ensures self.spec_med(i, j) <= i + j;"
   },
   {
-    "id": 13,
+    "id": 12,
     "function": "new",
     "file": "Chap51/BottomUpDPMtPer.rs",
-    "lines": "63-68",
+    "lines": "64-69",
     "spec_strength": "unknown",
     "snippet": "        fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> (dp: Self)\n            ensures\n                dp.spec_s() == s@,\n                dp.spec_t() == t@,\n                dp.spec_s_len() == s.spec_len(),\n                dp.spec_t_len() == t.spec_len();"
   },
   {
-    "id": 14,
+    "id": 13,
     "function": "s_length",
     "file": "Chap51/BottomUpDPMtPer.rs",
-    "lines": "70-71",
+    "lines": "71-72",
     "spec_strength": "unknown",
     "snippet": "        fn s_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_s_len();"
   },
   {
-    "id": 15,
+    "id": 14,
     "function": "t_length",
     "file": "Chap51/BottomUpDPMtPer.rs",
-    "lines": "73-74",
+    "lines": "74-75",
     "spec_strength": "unknown",
     "snippet": "        fn t_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_t_len();"
   },
   {
-    "id": 16,
+    "id": 15,
     "function": "is_empty",
     "file": "Chap51/BottomUpDPMtPer.rs",
-    "lines": "76-77",
+    "lines": "77-78",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);"
   },
   {
-    "id": 17,
+    "id": 16,
     "function": "med_bottom_up_parallel",
     "file": "Chap51/BottomUpDPMtPer.rs",
-    "lines": "79-85",
+    "lines": "80-86",
     "spec_strength": "hole",
     "snippet": "        fn med_bottom_up_parallel(&self) -> (distance: usize)\n            requires self.spec_s_len() + self.spec_t_len() < usize::MAX,\n            ensures\n                distance as nat == self.spec_med(\n                    self.spec_s_len(),\n                    self.spec_t_len()\n                );"
   },
   {
-    "id": 18,
-    "function": "new_bu_per_lock",
-    "file": "Chap51/BottomUpDPMtPer.rs",
-    "lines": "97-98",
-    "spec_strength": "hole",
-    "snippet": "    fn new_bu_per_lock(val: Vec<Vec<usize>>)\n        -> (lock: RwLock<Vec<Vec<usize>>, BottomUpDPMtPerInv>)"
-  },
-  {
-    "id": 19,
+    "id": 17,
     "function": "default",
     "file": "Chap51/BottomUpDPMtPer.rs",
-    "lines": "229-232",
+    "lines": "224-227",
     "spec_strength": "unknown",
     "snippet": "        fn default() -> (dp: Self)\n            ensures\n                dp.spec_s_len() == 0,\n                dp.spec_t_len() == 0,"
   },
   {
-    "id": 20,
+    "id": 18,
     "function": "eq",
     "file": "Chap51/BottomUpDPMtPer.rs",
-    "lines": "255-256",
+    "lines": "250-251",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (eq: bool)\n            ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)"
   },
   {
-    "id": 21,
+    "id": 19,
     "function": "lemma_spec_med_bounded",
     "file": "Chap51/BottomUpDPStEph.rs",
     "lines": "50-51",
@@ -168,7 +152,7 @@
     "snippet": "        proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)\n            ensures self.spec_med(i, j) <= i + j;"
   },
   {
-    "id": 22,
+    "id": 20,
     "function": "new",
     "file": "Chap51/BottomUpDPStEph.rs",
     "lines": "53-58",
@@ -176,7 +160,7 @@
     "snippet": "        fn new(s: ArraySeqStEphS<char>, t: ArraySeqStEphS<char>) -> (dp: Self)\n            ensures\n                dp.spec_s() == s@,\n                dp.spec_t() == t@,\n                dp.spec_s_len() == s.spec_len(),\n                dp.spec_t_len() == t.spec_len();"
   },
   {
-    "id": 23,
+    "id": 21,
     "function": "s_length",
     "file": "Chap51/BottomUpDPStEph.rs",
     "lines": "60-61",
@@ -184,7 +168,7 @@
     "snippet": "        fn s_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_s_len();"
   },
   {
-    "id": 24,
+    "id": 22,
     "function": "t_length",
     "file": "Chap51/BottomUpDPStEph.rs",
     "lines": "63-64",
@@ -192,7 +176,7 @@
     "snippet": "        fn t_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_t_len();"
   },
   {
-    "id": 25,
+    "id": 23,
     "function": "is_empty",
     "file": "Chap51/BottomUpDPStEph.rs",
     "lines": "66-67",
@@ -200,7 +184,7 @@
     "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);"
   },
   {
-    "id": 26,
+    "id": 24,
     "function": "set_s",
     "file": "Chap51/BottomUpDPStEph.rs",
     "lines": "69-72",
@@ -208,7 +192,7 @@
     "snippet": "        fn set_s(&mut self, s: ArraySeqStEphS<char>)\n            ensures\n                self.spec_s() == s@,\n                self.spec_t() == old(self).spec_t();"
   },
   {
-    "id": 27,
+    "id": 25,
     "function": "set_t",
     "file": "Chap51/BottomUpDPStEph.rs",
     "lines": "74-77",
@@ -216,7 +200,7 @@
     "snippet": "        fn set_t(&mut self, t: ArraySeqStEphS<char>)\n            ensures\n                self.spec_s() == old(self).spec_s(),\n                self.spec_t() == t@;"
   },
   {
-    "id": 28,
+    "id": 26,
     "function": "med_bottom_up",
     "file": "Chap51/BottomUpDPStEph.rs",
     "lines": "79-87",
@@ -224,7 +208,7 @@
     "snippet": "        fn med_bottom_up(&mut self) -> (distance: usize)\n            requires old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,\n            ensures\n                distance as nat == old(self).spec_med(\n                    old(self).spec_s_len(),\n                    old(self).spec_t_len()\n                ),\n                self.spec_s() == old(self).spec_s(),\n                self.spec_t() == old(self).spec_t();"
   },
   {
-    "id": 29,
+    "id": 27,
     "function": "initialize_base_cases",
     "file": "Chap51/BottomUpDPStEph.rs",
     "lines": "89-103",
@@ -232,7 +216,7 @@
     "snippet": "        fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>)\n            requires\n                self.spec_s_len() < usize::MAX,\n                self.spec_t_len() < usize::MAX,\n            ensures\n                table@.len() == self.spec_s_len() + 1,\n                forall|i: int| #![trigger table@[i]]\n                    0 <= i < table@.len() ==>\n                    table@[i]@.len() == self.spec_t_len() + 1,\n                forall|i: int| #![trigger table@[i]]\n                    0 <= i <= self.spec_s_len() as int ==>\n                    table@[i]@[0] == i as nat,\n                forall|j: int|\n                    0 <= j <= self.spec_t_len() as int ==>\n                    table@[0]@[j] == j as nat;"
   },
   {
-    "id": 30,
+    "id": 28,
     "function": "compute_cell_value",
     "file": "Chap51/BottomUpDPStEph.rs",
     "lines": "105-126",
@@ -240,7 +224,7 @@
     "snippet": "        fn compute_cell_value(\n            &self,\n            table: &Vec<Vec<usize>>,\n            i: usize,\n            j: usize,\n        ) -> (val: usize)\n            requires\n                1 <= i <= self.spec_s_len(),\n                1 <= j <= self.spec_t_len(),\n                self.spec_s_len() + self.spec_t_len() < usize::MAX,\n                table@.len() > i,\n                forall|r: int| #![trigger table@[r]]\n                    0 <= r < table@.len() ==>\n                    table@[r]@.len() > j,\n                table@[(i - 1) as int]@[(j - 1) as int] as nat\n                    == self.spec_med((i - 1) as nat, (j - 1) as nat),\n                table@[(i - 1) as int]@[j as int] as nat\n                    == self.spec_med((i - 1) as nat, j as nat),\n                table@[i as int]@[(j - 1) as int] as nat\n                    == self.spec_med(i as nat, (j - 1) as nat),\n            ensures\n                val as nat == self.spec_med(i as nat, j as nat);"
   },
   {
-    "id": 31,
+    "id": 29,
     "function": "default",
     "file": "Chap51/BottomUpDPStEph.rs",
     "lines": "318-321",
@@ -248,7 +232,7 @@
     "snippet": "        fn default() -> (dp: Self)\n            ensures\n                dp.spec_s_len() == 0,\n                dp.spec_t_len() == 0,"
   },
   {
-    "id": 32,
+    "id": 30,
     "function": "eq",
     "file": "Chap51/BottomUpDPStEph.rs",
     "lines": "344-345",
@@ -256,7 +240,7 @@
     "snippet": "        fn eq(&self, other: &Self) -> (eq: bool)\n            ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)"
   },
   {
-    "id": 33,
+    "id": 31,
     "function": "lemma_spec_med_bounded",
     "file": "Chap51/BottomUpDPStPer.rs",
     "lines": "51-52",
@@ -264,7 +248,7 @@
     "snippet": "        proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)\n            ensures self.spec_med(i, j) <= i + j;"
   },
   {
-    "id": 34,
+    "id": 32,
     "function": "new",
     "file": "Chap51/BottomUpDPStPer.rs",
     "lines": "54-59",
@@ -272,7 +256,7 @@
     "snippet": "        fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> (dp: Self)\n            ensures\n                dp.spec_s() == s@,\n                dp.spec_t() == t@,\n                dp.spec_s_len() == s.spec_len(),\n                dp.spec_t_len() == t.spec_len();"
   },
   {
-    "id": 35,
+    "id": 33,
     "function": "s_length",
     "file": "Chap51/BottomUpDPStPer.rs",
     "lines": "61-62",
@@ -280,7 +264,7 @@
     "snippet": "        fn s_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_s_len();"
   },
   {
-    "id": 36,
+    "id": 34,
     "function": "t_length",
     "file": "Chap51/BottomUpDPStPer.rs",
     "lines": "64-65",
@@ -288,7 +272,7 @@
     "snippet": "        fn t_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_t_len();"
   },
   {
-    "id": 37,
+    "id": 35,
     "function": "is_empty",
     "file": "Chap51/BottomUpDPStPer.rs",
     "lines": "67-68",
@@ -296,7 +280,7 @@
     "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);"
   },
   {
-    "id": 38,
+    "id": 36,
     "function": "med_bottom_up",
     "file": "Chap51/BottomUpDPStPer.rs",
     "lines": "70-76",
@@ -304,7 +288,7 @@
     "snippet": "        fn med_bottom_up(&self) -> (distance: usize)\n            requires self.spec_s_len() + self.spec_t_len() < usize::MAX,\n            ensures\n                distance as nat == self.spec_med(\n                    self.spec_s_len(),\n                    self.spec_t_len()\n                );"
   },
   {
-    "id": 39,
+    "id": 37,
     "function": "initialize_base_cases",
     "file": "Chap51/BottomUpDPStPer.rs",
     "lines": "78-92",
@@ -312,7 +296,7 @@
     "snippet": "        fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>)\n            requires\n                self.spec_s_len() < usize::MAX,\n                self.spec_t_len() < usize::MAX,\n            ensures\n                table@.len() == self.spec_s_len() + 1,\n                forall|i: int| #![trigger table@[i]]\n                    0 <= i < table@.len() ==>\n                    table@[i]@.len() == self.spec_t_len() + 1,\n                forall|i: int| #![trigger table@[i]]\n                    0 <= i <= self.spec_s_len() as int ==>\n                    table@[i]@[0] == i as nat,\n                forall|j: int|\n                    0 <= j <= self.spec_t_len() as int ==>\n                    table@[0]@[j] == j as nat;"
   },
   {
-    "id": 40,
+    "id": 38,
     "function": "compute_cell_value",
     "file": "Chap51/BottomUpDPStPer.rs",
     "lines": "94-115",
@@ -320,7 +304,7 @@
     "snippet": "        fn compute_cell_value(\n            &self,\n            table: &Vec<Vec<usize>>,\n            i: usize,\n            j: usize,\n        ) -> (val: usize)\n            requires\n                1 <= i <= self.spec_s_len(),\n                1 <= j <= self.spec_t_len(),\n                self.spec_s_len() + self.spec_t_len() < usize::MAX,\n                table@.len() > i,\n                forall|r: int| #![trigger table@[r]]\n                    0 <= r < table@.len() ==>\n                    table@[r]@.len() > j,\n                table@[(i - 1) as int]@[(j - 1) as int] as nat\n                    == self.spec_med((i - 1) as nat, (j - 1) as nat),\n                table@[(i - 1) as int]@[j as int] as nat\n                    == self.spec_med((i - 1) as nat, j as nat),\n                table@[i as int]@[(j - 1) as int] as nat\n                    == self.spec_med(i as nat, (j - 1) as nat),\n            ensures\n                val as nat == self.spec_med(i as nat, j as nat);"
   },
   {
-    "id": 41,
+    "id": 39,
     "function": "default",
     "file": "Chap51/BottomUpDPStPer.rs",
     "lines": "304-307",
@@ -328,7 +312,7 @@
     "snippet": "        fn default() -> (dp: Self)\n            ensures\n                dp.spec_s_len() == 0,\n                dp.spec_t_len() == 0,"
   },
   {
-    "id": 42,
+    "id": 40,
     "function": "eq",
     "file": "Chap51/BottomUpDPStPer.rs",
     "lines": "330-331",
@@ -336,215 +320,199 @@
     "snippet": "        fn eq(&self, other: &Self) -> (eq: bool)\n            ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)"
   },
   {
-    "id": 43,
+    "id": 41,
     "function": "lemma_spec_med_bounded",
     "file": "Chap51/TopDownDPMtEph.rs",
-    "lines": "61-62",
+    "lines": "62-63",
     "spec_strength": "unknown",
     "snippet": "        proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)\n            ensures self.spec_med(i, j) <= i + j;"
   },
   {
-    "id": 44,
+    "id": 42,
     "function": "new",
     "file": "Chap51/TopDownDPMtEph.rs",
-    "lines": "64-69",
+    "lines": "65-70",
     "spec_strength": "unknown",
     "snippet": "        fn new(s: ArraySeqMtEphS<char>, t: ArraySeqMtEphS<char>) -> (dp: Self)\n            ensures\n                dp.spec_s() == s@,\n                dp.spec_t() == t@,\n                dp.spec_s_len() == s.spec_len(),\n                dp.spec_t_len() == t.spec_len();"
   },
   {
-    "id": 45,
+    "id": 43,
     "function": "s_length",
     "file": "Chap51/TopDownDPMtEph.rs",
-    "lines": "71-72",
+    "lines": "72-73",
     "spec_strength": "unknown",
     "snippet": "        fn s_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_s_len();"
   },
   {
-    "id": 46,
+    "id": 44,
     "function": "t_length",
     "file": "Chap51/TopDownDPMtEph.rs",
-    "lines": "74-75",
+    "lines": "75-76",
     "spec_strength": "unknown",
     "snippet": "        fn t_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_t_len();"
   },
   {
-    "id": 47,
+    "id": 45,
     "function": "is_empty",
     "file": "Chap51/TopDownDPMtEph.rs",
-    "lines": "77-78",
+    "lines": "78-79",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);"
   },
   {
-    "id": 48,
+    "id": 46,
     "function": "set_s",
     "file": "Chap51/TopDownDPMtEph.rs",
-    "lines": "80-83",
+    "lines": "81-84",
     "spec_strength": "unknown",
     "snippet": "        fn set_s(&mut self, s: ArraySeqMtEphS<char>)\n            ensures\n                self.spec_s() == s@,\n                self.spec_t() == old(self).spec_t();"
   },
   {
-    "id": 49,
+    "id": 47,
     "function": "set_t",
     "file": "Chap51/TopDownDPMtEph.rs",
-    "lines": "85-88",
+    "lines": "86-89",
     "spec_strength": "unknown",
     "snippet": "        fn set_t(&mut self, t: ArraySeqMtEphS<char>)\n            ensures\n                self.spec_s() == old(self).spec_s(),\n                self.spec_t() == t@;"
   },
   {
-    "id": 50,
+    "id": 48,
     "function": "med_memoized_concurrent",
     "file": "Chap51/TopDownDPMtEph.rs",
-    "lines": "90-98",
+    "lines": "91-99",
     "spec_strength": "hole",
     "snippet": "        fn med_memoized_concurrent(&mut self) -> (distance: usize)\n            requires old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,\n            ensures\n                distance as nat == old(self).spec_med(\n                    old(self).spec_s_len(),\n                    old(self).spec_t_len()\n                ),\n                self.spec_s() == old(self).spec_s(),\n                self.spec_t() == old(self).spec_t();"
   },
   {
-    "id": 51,
+    "id": 49,
     "function": "med_memoized_parallel",
     "file": "Chap51/TopDownDPMtEph.rs",
-    "lines": "100-108",
+    "lines": "101-109",
     "spec_strength": "hole",
     "snippet": "        fn med_memoized_parallel(&mut self) -> (distance: usize)\n            requires old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,\n            ensures\n                distance as nat == old(self).spec_med(\n                    old(self).spec_s_len(),\n                    old(self).spec_t_len()\n                ),\n                self.spec_s() == old(self).spec_s(),\n                self.spec_t() == old(self).spec_t();"
   },
   {
-    "id": 52,
-    "function": "new_td_eph_lock",
-    "file": "Chap51/TopDownDPMtEph.rs",
-    "lines": "118-119",
-    "spec_strength": "hole",
-    "snippet": "    fn new_td_eph_lock(val: HashMap<(usize, usize), usize>, s_len: usize, t_len: usize)\n        -> (lock: RwLock<HashMap<(usize, usize), usize>, TopDownDPMtEphInv>)"
-  },
-  {
-    "id": 53,
+    "id": 50,
     "function": "default",
     "file": "Chap51/TopDownDPMtEph.rs",
-    "lines": "202-205",
+    "lines": "197-200",
     "spec_strength": "unknown",
     "snippet": "        fn default() -> (dp: Self)\n            ensures\n                dp.spec_s_len() == 0,\n                dp.spec_t_len() == 0,"
   },
   {
-    "id": 54,
+    "id": 51,
     "function": "eq",
     "file": "Chap51/TopDownDPMtEph.rs",
-    "lines": "228-229",
+    "lines": "223-224",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (eq: bool)\n            ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)"
   },
   {
-    "id": 55,
+    "id": 52,
     "function": "med_recursive_concurrent",
     "file": "Chap51/TopDownDPMtEph.rs",
-    "lines": "243-274",
+    "lines": "238-269",
     "spec_strength": "",
     "snippet": "    /// Sequential recursive MED with memoization.\n    fn med_recursive_concurrent(\n        seq_s: &ArraySeqMtEphS<char>,\n        seq_t: &ArraySeqMtEphS<char>,\n        i: usize,\n        j: usize,\n        memo: &mut HashMap<(usize, usize), usize>,\n    ) -> usize {\n        if let Some(&cached) = memo.get(&(i, j)) {\n            return cached;\n        }\n\n        let result = match (i, j) {\n            | (0, j) => j,\n            | (i, 0) => i,\n            | (i, j) => {\n                let s_char = seq_s.nth(i - 1).clone();\n                let t_char = seq_t.nth(j - 1).clone();\n\n                if s_char == t_char {\n                    med_recursive_concurrent(seq_s, seq_t, i - 1, j - 1, memo)\n                } else {\n                    let insert_cost = 1 + med_recursive_concurrent(seq_s, seq_t, i, j - 1, memo);\n                    let delete_cost = 1 + med_recursive_concurrent(seq_s, seq_t, i - 1, j, memo);\n                    insert_cost.min(delete_cost)\n                }\n            }\n        };\n\n        memo.insert((i, j), result);\n        result\n    }"
   },
   {
-    "id": 56,
+    "id": 53,
     "function": "med_recursive_parallel",
     "file": "Chap51/TopDownDPMtEph.rs",
-    "lines": "276-330",
+    "lines": "271-323",
     "spec_strength": "",
-    "snippet": "    /// Parallel recursive MED with thread-safe memoization.\n    fn med_recursive_parallel(\n        seq_s: &ArraySeqMtEphS<char>,\n        seq_t: &ArraySeqMtEphS<char>,\n        i: usize,\n        j: usize,\n        memo: &Arc<RwLock<HashMap<(usize, usize), usize>, TopDownDPMtEphInv>>,\n    ) -> usize {\n        {\n            let read_handle = memo.acquire_read();\n            let cached = read_handle.borrow().get(&(i, j)).copied();\n            read_handle.release_read();\n            if let Some(cached_result) = cached {\n                return cached_result;\n            }\n        }\n\n        let result = match (i, j) {\n            | (0, j) => j,\n            | (i, 0) => i,\n            | (i, j) => {\n                let s_char = seq_s.nth(i - 1).clone();\n                let t_char = seq_t.nth(j - 1).clone();\n\n                if s_char == t_char {\n                    med_recursive_parallel(seq_s, seq_t, i - 1, j - 1, memo)\n                } else {\n                    let s_clone1 = seq_s.clone();\n                    let t_clone1 = seq_t.clone();\n                    let memo_clone1 = memo.clone();\n                    let s_clone2 = seq_s.clone();\n                    let t_clone2 = seq_t.clone();\n                    let memo_clone2 = memo.clone();\n\n                    let handle1 = thread::spawn(move || {\n                        1 + med_recursive_parallel(&s_clone1, &t_clone1, i, j - 1, &memo_clone1)\n                    });\n                    let handle2 = thread::spawn(move || {\n                        1 + med_recursive_parallel(&s_clone2, &t_clone2, i - 1, j, &memo_clone2)\n                    });\n\n                    let insert_cost = handle1.join().unwrap();\n                    let delete_cost = handle2.join().unwrap();\n                    insert_cost.min(delete_cost)\n                }\n            }\n        };\n\n        {\n            let (mut current, write_handle) = memo.acquire_write();\n            current.insert((i, j), result);\n            write_handle.release_write(current);\n        }\n        result\n    }"
+    "snippet": "    /// Parallel recursive MED with thread-safe memoization.\n    fn med_recursive_parallel(\n        seq_s: &ArraySeqMtEphS<char>,\n        seq_t: &ArraySeqMtEphS<char>,\n        i: usize,\n        j: usize,\n        memo: &Arc<RwLock<HashMap<(usize, usize), usize>, TopDownDPMtEphInv>>,\n    ) -> usize {\n        {\n            let read_handle = memo.acquire_read();\n            let cached = read_handle.borrow().get(&(i, j)).copied();\n            read_handle.release_read();\n            if let Some(cached_result) = cached {\n                return cached_result;\n            }\n        }\n\n        let result = match (i, j) {\n            | (0, j) => j,\n            | (i, 0) => i,\n            | (i, j) => {\n                let s_char = seq_s.nth(i - 1).clone();\n                let t_char = seq_t.nth(j - 1).clone();\n\n                if s_char == t_char {\n                    med_recursive_parallel(seq_s, seq_t, i - 1, j - 1, memo)\n                } else {\n                    let s_clone1 = seq_s.clone();\n                    let t_clone1 = seq_t.clone();\n                    let memo_clone1 = memo.clone();\n                    let s_clone2 = seq_s.clone();\n                    let t_clone2 = seq_t.clone();\n                    let memo_clone2 = memo.clone();\n\n                    let f1 = move || {\n                        1 + med_recursive_parallel(&s_clone1, &t_clone1, i, j - 1, &memo_clone1)\n                    };\n                    let f2 = move || {\n                        1 + med_recursive_parallel(&s_clone2, &t_clone2, i - 1, j, &memo_clone2)\n                    };\n                    let (insert_cost, delete_cost) = join(f1, f2);\n                    insert_cost.min(delete_cost)\n                }\n            }\n        };\n\n        {\n            let (mut current, write_handle) = memo.acquire_write();\n            current.insert((i, j), result);\n            write_handle.release_write(current);\n        }\n        result\n    }"
   },
   {
-    "id": 57,
+    "id": 54,
     "function": "lemma_spec_med_bounded",
     "file": "Chap51/TopDownDPMtPer.rs",
-    "lines": "61-62",
+    "lines": "62-63",
     "spec_strength": "unknown",
     "snippet": "        proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)\n            ensures self.spec_med(i, j) <= i + j;"
   },
   {
-    "id": 58,
+    "id": 55,
     "function": "new",
     "file": "Chap51/TopDownDPMtPer.rs",
-    "lines": "64-69",
+    "lines": "65-70",
     "spec_strength": "unknown",
     "snippet": "        fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> (dp: Self)\n            ensures\n                dp.spec_s() == s@,\n                dp.spec_t() == t@,\n                dp.spec_s_len() == s.spec_len(),\n                dp.spec_t_len() == t.spec_len();"
   },
   {
-    "id": 59,
+    "id": 56,
     "function": "s_length",
     "file": "Chap51/TopDownDPMtPer.rs",
-    "lines": "71-72",
+    "lines": "72-73",
     "spec_strength": "unknown",
     "snippet": "        fn s_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_s_len();"
   },
   {
-    "id": 60,
+    "id": 57,
     "function": "t_length",
     "file": "Chap51/TopDownDPMtPer.rs",
-    "lines": "74-75",
+    "lines": "75-76",
     "spec_strength": "unknown",
     "snippet": "        fn t_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_t_len();"
   },
   {
-    "id": 61,
+    "id": 58,
     "function": "is_empty",
     "file": "Chap51/TopDownDPMtPer.rs",
-    "lines": "77-78",
+    "lines": "78-79",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);"
   },
   {
-    "id": 62,
+    "id": 59,
     "function": "med_memoized_concurrent",
     "file": "Chap51/TopDownDPMtPer.rs",
-    "lines": "80-82",
+    "lines": "81-83",
     "spec_strength": "hole",
     "snippet": "        fn med_memoized_concurrent(&self) -> (distance: usize)\n            requires self.spec_s_len() + self.spec_t_len() < usize::MAX,\n            ensures distance as nat == self.spec_med(self.spec_s_len(), self.spec_t_len());"
   },
   {
-    "id": 63,
+    "id": 60,
     "function": "med_memoized_parallel",
     "file": "Chap51/TopDownDPMtPer.rs",
-    "lines": "84-86",
+    "lines": "85-87",
     "spec_strength": "hole",
     "snippet": "        fn med_memoized_parallel(&self) -> (distance: usize)\n            requires self.spec_s_len() + self.spec_t_len() < usize::MAX,\n            ensures distance as nat == self.spec_med(self.spec_s_len(), self.spec_t_len());"
   },
   {
-    "id": 64,
-    "function": "new_td_per_lock",
-    "file": "Chap51/TopDownDPMtPer.rs",
-    "lines": "96-97",
-    "spec_strength": "hole",
-    "snippet": "    fn new_td_per_lock(val: HashMap<(usize, usize), usize>, s_len: usize, t_len: usize)\n        -> (lock: RwLock<HashMap<(usize, usize), usize>, TopDownDPMtPerInv>)"
-  },
-  {
-    "id": 65,
+    "id": 61,
     "function": "default",
     "file": "Chap51/TopDownDPMtPer.rs",
-    "lines": "177-180",
+    "lines": "171-174",
     "spec_strength": "unknown",
     "snippet": "        fn default() -> (dp: Self)\n            ensures\n                dp.spec_s_len() == 0,\n                dp.spec_t_len() == 0,"
   },
   {
-    "id": 66,
+    "id": 62,
     "function": "eq",
     "file": "Chap51/TopDownDPMtPer.rs",
-    "lines": "203-204",
+    "lines": "197-198",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (eq: bool)\n            ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)"
   },
   {
-    "id": 67,
+    "id": 63,
     "function": "med_recursive_concurrent",
     "file": "Chap51/TopDownDPMtPer.rs",
-    "lines": "218-249",
+    "lines": "212-243",
     "spec_strength": "",
     "snippet": "    /// Sequential recursive MED with memoization.\n    fn med_recursive_concurrent(\n        seq_s: &ArraySeqMtPerS<char>,\n        seq_t: &ArraySeqMtPerS<char>,\n        i: usize,\n        j: usize,\n        memo: &mut HashMap<(usize, usize), usize>,\n    ) -> usize {\n        if let Some(&cached) = memo.get(&(i, j)) {\n            return cached;\n        }\n\n        let result = match (i, j) {\n            | (0, j) => j,\n            | (i, 0) => i,\n            | (i, j) => {\n                let s_char = *seq_s.nth(i - 1);\n                let t_char = *seq_t.nth(j - 1);\n\n                if s_char == t_char {\n                    med_recursive_concurrent(seq_s, seq_t, i - 1, j - 1, memo)\n                } else {\n                    let insert_cost = 1 + med_recursive_concurrent(seq_s, seq_t, i, j - 1, memo);\n                    let delete_cost = 1 + med_recursive_concurrent(seq_s, seq_t, i - 1, j, memo);\n                    insert_cost.min(delete_cost)\n                }\n            }\n        };\n\n        memo.insert((i, j), result);\n        result\n    }"
   },
   {
-    "id": 68,
+    "id": 64,
     "function": "med_recursive_parallel",
     "file": "Chap51/TopDownDPMtPer.rs",
-    "lines": "251-305",
+    "lines": "245-297",
     "spec_strength": "",
-    "snippet": "    /// Parallel recursive MED with thread-safe memoization.\n    fn med_recursive_parallel(\n        seq_s: &ArraySeqMtPerS<char>,\n        seq_t: &ArraySeqMtPerS<char>,\n        i: usize,\n        j: usize,\n        memo: &Arc<RwLock<HashMap<(usize, usize), usize>, TopDownDPMtPerInv>>,\n    ) -> usize {\n        {\n            let read_handle = memo.acquire_read();\n            let cached = read_handle.borrow().get(&(i, j)).copied();\n            read_handle.release_read();\n            if let Some(cached_result) = cached {\n                return cached_result;\n            }\n        }\n\n        let result = match (i, j) {\n            | (0, j) => j,\n            | (i, 0) => i,\n            | (i, j) => {\n                let s_char = *seq_s.nth(i - 1);\n                let t_char = *seq_t.nth(j - 1);\n\n                if s_char == t_char {\n                    med_recursive_parallel(seq_s, seq_t, i - 1, j - 1, memo)\n                } else {\n                    let s_clone1 = seq_s.clone();\n                    let t_clone1 = seq_t.clone();\n                    let memo_clone1 = memo.clone();\n                    let s_clone2 = seq_s.clone();\n                    let t_clone2 = seq_t.clone();\n                    let memo_clone2 = memo.clone();\n\n                    let handle1 = thread::spawn(move || {\n                        1 + med_recursive_parallel(&s_clone1, &t_clone1, i, j - 1, &memo_clone1)\n                    });\n                    let handle2 = thread::spawn(move || {\n                        1 + med_recursive_parallel(&s_clone2, &t_clone2, i - 1, j, &memo_clone2)\n                    });\n\n                    let insert_cost = handle1.join().unwrap();\n                    let delete_cost = handle2.join().unwrap();\n                    insert_cost.min(delete_cost)\n                }\n            }\n        };\n\n        {\n            let (mut current, write_handle) = memo.acquire_write();\n            current.insert((i, j), result);\n            write_handle.release_write(current);\n        }\n        result\n    }"
+    "snippet": "    /// Parallel recursive MED with thread-safe memoization.\n    fn med_recursive_parallel(\n        seq_s: &ArraySeqMtPerS<char>,\n        seq_t: &ArraySeqMtPerS<char>,\n        i: usize,\n        j: usize,\n        memo: &Arc<RwLock<HashMap<(usize, usize), usize>, TopDownDPMtPerInv>>,\n    ) -> usize {\n        {\n            let read_handle = memo.acquire_read();\n            let cached = read_handle.borrow().get(&(i, j)).copied();\n            read_handle.release_read();\n            if let Some(cached_result) = cached {\n                return cached_result;\n            }\n        }\n\n        let result = match (i, j) {\n            | (0, j) => j,\n            | (i, 0) => i,\n            | (i, j) => {\n                let s_char = *seq_s.nth(i - 1);\n                let t_char = *seq_t.nth(j - 1);\n\n                if s_char == t_char {\n                    med_recursive_parallel(seq_s, seq_t, i - 1, j - 1, memo)\n                } else {\n                    let s_clone1 = seq_s.clone();\n                    let t_clone1 = seq_t.clone();\n                    let memo_clone1 = memo.clone();\n                    let s_clone2 = seq_s.clone();\n                    let t_clone2 = seq_t.clone();\n                    let memo_clone2 = memo.clone();\n\n                    let f1 = move || {\n                        1 + med_recursive_parallel(&s_clone1, &t_clone1, i, j - 1, &memo_clone1)\n                    };\n                    let f2 = move || {\n                        1 + med_recursive_parallel(&s_clone2, &t_clone2, i - 1, j, &memo_clone2)\n                    };\n                    let (insert_cost, delete_cost) = join(f1, f2);\n                    insert_cost.min(delete_cost)\n                }\n            }\n        };\n\n        {\n            let (mut current, write_handle) = memo.acquire_write();\n            current.insert((i, j), result);\n            write_handle.release_write(current);\n        }\n        result\n    }"
   },
   {
-    "id": 69,
+    "id": 65,
     "function": "lemma_spec_med_fn_bounded",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "70-72",
@@ -552,7 +520,7 @@
     "snippet": "    pub proof fn lemma_spec_med_fn_bounded(s: Seq<char>, t: Seq<char>, i: nat, j: nat)\n        ensures spec_med_fn(s, t, i, j) <= i + j,\n        decreases i + j,"
   },
   {
-    "id": 70,
+    "id": 66,
     "function": "lemma_spec_med_bounded",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "93-94",
@@ -560,7 +528,7 @@
     "snippet": "        proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)\n            ensures self.spec_med(i, j) <= i + j;"
   },
   {
-    "id": 71,
+    "id": 67,
     "function": "new",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "96-101",
@@ -568,7 +536,7 @@
     "snippet": "        fn new(s: ArraySeqStEphS<char>, t: ArraySeqStEphS<char>) -> (dp: Self)\n            ensures\n                dp.spec_s() == s@,\n                dp.spec_t() == t@,\n                dp.spec_s_len() == s.spec_len(),\n                dp.spec_t_len() == t.spec_len();"
   },
   {
-    "id": 72,
+    "id": 68,
     "function": "s_length",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "103-104",
@@ -576,7 +544,7 @@
     "snippet": "        fn s_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_s_len();"
   },
   {
-    "id": 73,
+    "id": 69,
     "function": "t_length",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "106-107",
@@ -584,7 +552,7 @@
     "snippet": "        fn t_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_t_len();"
   },
   {
-    "id": 74,
+    "id": 70,
     "function": "is_empty",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "109-110",
@@ -592,7 +560,7 @@
     "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);"
   },
   {
-    "id": 75,
+    "id": 71,
     "function": "memo_size",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "112-113",
@@ -600,7 +568,7 @@
     "snippet": "        fn memo_size(&self) -> (size: usize)\n            ensures size == self.spec_memo().len();"
   },
   {
-    "id": 76,
+    "id": 72,
     "function": "is_memoized",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "115-116",
@@ -608,7 +576,7 @@
     "snippet": "        fn is_memoized(&self, i: usize, j: usize) -> (memoized: bool)\n            ensures memoized == self.spec_memo().contains_key((i, j));"
   },
   {
-    "id": 77,
+    "id": 73,
     "function": "get_memoized",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "118-124",
@@ -616,7 +584,7 @@
     "snippet": "        fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>)\n            ensures\n                match val {\n                    Some(v) => self.spec_memo().contains_key((i, j))\n                        && v == self.spec_memo()[(i, j)],\n                    None => !self.spec_memo().contains_key((i, j)),\n                };"
   },
   {
-    "id": 78,
+    "id": 74,
     "function": "insert_memo",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "126-130",
@@ -624,7 +592,7 @@
     "snippet": "        fn insert_memo(&mut self, i: usize, j: usize, value: usize)\n            ensures\n                self.spec_s() == old(self).spec_s(),\n                self.spec_t() == old(self).spec_t(),\n                self.spec_memo() == old(self).spec_memo().insert((i, j), value);"
   },
   {
-    "id": 79,
+    "id": 75,
     "function": "clear_memo",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "132-136",
@@ -632,7 +600,7 @@
     "snippet": "        fn clear_memo(&mut self)\n            ensures\n                self.spec_s() == old(self).spec_s(),\n                self.spec_t() == old(self).spec_t(),\n                self.spec_memo() == Map::<(usize, usize), usize>::empty();"
   },
   {
-    "id": 80,
+    "id": 76,
     "function": "set_s",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "138-141",
@@ -640,7 +608,7 @@
     "snippet": "        fn set_s(&mut self, s: ArraySeqStEphS<char>)\n            ensures\n                self.spec_s() == s@,\n                self.spec_t() == old(self).spec_t();"
   },
   {
-    "id": 81,
+    "id": 77,
     "function": "set_t",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "143-146",
@@ -648,7 +616,7 @@
     "snippet": "        fn set_t(&mut self, t: ArraySeqStEphS<char>)\n            ensures\n                self.spec_s() == old(self).spec_s(),\n                self.spec_t() == t@;"
   },
   {
-    "id": 82,
+    "id": 78,
     "function": "med_memoized",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "148-156",
@@ -656,7 +624,7 @@
     "snippet": "        fn med_memoized(&mut self) -> (distance: usize)\n            requires old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,\n            ensures\n                distance as nat == old(self).spec_med(\n                    old(self).spec_s_len(),\n                    old(self).spec_t_len()\n                ),\n                self.spec_s() == old(self).spec_s(),\n                self.spec_t() == old(self).spec_t();"
   },
   {
-    "id": 83,
+    "id": 79,
     "function": "med_recursive",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "158-171",
@@ -664,7 +632,7 @@
     "snippet": "        fn med_recursive(&mut self, i: usize, j: usize) -> (distance: usize)\n            requires\n                i <= old(self).spec_s_len(),\n                j <= old(self).spec_t_len(),\n                old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,\n                old(self).spec_memo_correct(),\n            ensures\n                distance as nat == old(self).spec_med(i as nat, j as nat),\n                self.spec_s() == old(self).spec_s(),\n                self.spec_t() == old(self).spec_t(),\n                self.spec_s_len() == old(self).spec_s_len(),\n                self.spec_t_len() == old(self).spec_t_len(),\n                self.spec_memo_correct(),\n            decreases i + j;"
   },
   {
-    "id": 84,
+    "id": 80,
     "function": "default",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "328-331",
@@ -672,7 +640,7 @@
     "snippet": "        fn default() -> (dp: Self)\n            ensures\n                dp.spec_s_len() == 0,\n                dp.spec_t_len() == 0,"
   },
   {
-    "id": 85,
+    "id": 81,
     "function": "eq",
     "file": "Chap51/TopDownDPStEph.rs",
     "lines": "355-356",
@@ -680,7 +648,7 @@
     "snippet": "        fn eq(&self, other: &Self) -> (eq: bool)\n            ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)"
   },
   {
-    "id": 86,
+    "id": 82,
     "function": "lemma_spec_med_fn_bounded",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "70-72",
@@ -688,7 +656,7 @@
     "snippet": "    pub proof fn lemma_spec_med_fn_bounded(s: Seq<char>, t: Seq<char>, i: nat, j: nat)\n        ensures spec_med_fn(s, t, i, j) <= i + j,\n        decreases i + j,"
   },
   {
-    "id": 87,
+    "id": 83,
     "function": "lemma_spec_med_bounded",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "93-94",
@@ -696,7 +664,7 @@
     "snippet": "        proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)\n            ensures self.spec_med(i, j) <= i + j;"
   },
   {
-    "id": 88,
+    "id": 84,
     "function": "new",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "96-101",
@@ -704,7 +672,7 @@
     "snippet": "        fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> (dp: Self)\n            ensures\n                dp.spec_s() == s@,\n                dp.spec_t() == t@,\n                dp.spec_s_len() == s.spec_len(),\n                dp.spec_t_len() == t.spec_len();"
   },
   {
-    "id": 89,
+    "id": 85,
     "function": "s_length",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "103-104",
@@ -712,7 +680,7 @@
     "snippet": "        fn s_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_s_len();"
   },
   {
-    "id": 90,
+    "id": 86,
     "function": "t_length",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "106-107",
@@ -720,7 +688,7 @@
     "snippet": "        fn t_length(&self) -> (len: usize)\n            ensures len as nat == self.spec_t_len();"
   },
   {
-    "id": 91,
+    "id": 87,
     "function": "is_empty",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "109-110",
@@ -728,7 +696,7 @@
     "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);"
   },
   {
-    "id": 92,
+    "id": 88,
     "function": "memo_size",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "112-113",
@@ -736,7 +704,7 @@
     "snippet": "        fn memo_size(&self) -> (size: usize)\n            ensures size == self.spec_memo().len();"
   },
   {
-    "id": 93,
+    "id": 89,
     "function": "is_memoized",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "115-116",
@@ -744,7 +712,7 @@
     "snippet": "        fn is_memoized(&self, i: usize, j: usize) -> (memoized: bool)\n            ensures memoized == self.spec_memo().contains_key((i, j));"
   },
   {
-    "id": 94,
+    "id": 90,
     "function": "get_memoized",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "118-124",
@@ -752,7 +720,7 @@
     "snippet": "        fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>)\n            ensures\n                match val {\n                    Some(v) => self.spec_memo().contains_key((i, j))\n                        && v == self.spec_memo()[(i, j)],\n                    None => !self.spec_memo().contains_key((i, j)),\n                };"
   },
   {
-    "id": 95,
+    "id": 91,
     "function": "with_memo_table",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "126-129",
@@ -760,7 +728,7 @@
     "snippet": "        fn with_memo_table(self, memo: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> (dp: Self)\n            ensures\n                dp.spec_s() == self.spec_s(),\n                dp.spec_t() == self.spec_t();"
   },
   {
-    "id": 96,
+    "id": 92,
     "function": "clear_memo",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "131-134",
@@ -768,7 +736,7 @@
     "snippet": "        fn clear_memo(self) -> (dp: Self)\n            ensures\n                dp.spec_s() == self.spec_s(),\n                dp.spec_t() == self.spec_t();"
   },
   {
-    "id": 97,
+    "id": 93,
     "function": "med_memoized",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "136-138",
@@ -776,7 +744,7 @@
     "snippet": "        fn med_memoized(&self) -> (distance: usize)\n            requires self.spec_s_len() + self.spec_t_len() < usize::MAX,\n            ensures distance as nat == self.spec_med(self.spec_s_len(), self.spec_t_len());"
   },
   {
-    "id": 98,
+    "id": 94,
     "function": "med_recursive",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "140-154",
@@ -784,7 +752,7 @@
     "snippet": "        fn med_recursive(\n            &self,\n            i: usize,\n            j: usize,\n            memo: &mut HashMapWithViewPlus<Pair<usize, usize>, usize>,\n        ) -> (distance: usize)\n            requires\n                i <= self.spec_s_len(),\n                j <= self.spec_t_len(),\n                self.spec_s_len() + self.spec_t_len() < usize::MAX,\n                self.spec_memo_correct(old(memo)@),\n            ensures\n                distance as nat == self.spec_med(i as nat, j as nat),\n                self.spec_memo_correct(memo@),\n            decreases i + j;"
   },
   {
-    "id": 99,
+    "id": 95,
     "function": "default",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "302-305",
@@ -792,7 +760,7 @@
     "snippet": "        fn default() -> (dp: Self)\n            ensures\n                dp.spec_s_len() == 0,\n                dp.spec_t_len() == 0,"
   },
   {
-    "id": 100,
+    "id": 96,
     "function": "eq",
     "file": "Chap51/TopDownDPStPer.rs",
     "lines": "329-330",

@@ -485,7 +485,7 @@
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "108-115",
     "spec_strength": "unknown",
-    "snippet": "    proof fn set_bit64_proof(bv_new: u64, bv_old: u64, index: u64, bit: bool)\n        requires\n            bv_new == set_bit64!(bv_old, index, bit),\n            index < 64,\n        ensures\n            get_bit64!(bv_new, index) == bit,\n            forall|loc2: u64| (loc2 < 64 && loc2 != index) ==>\n                (get_bit64!(bv_new, loc2) == get_bit64!(bv_old, loc2)),"
+    "snippet": "    proof fn set_bit64_proof(bv_new: u64, bv_old: u64, index: u64, bit: bool)\n        requires\n            bv_new == set_bit64!(bv_old, index, bit),\n            index < 64,\n        ensures\n            get_bit64!(bv_new, index) == bit,\n            forall|loc2: u64| #![auto] (loc2 < 64 && loc2 != index) ==>\n                (get_bit64!(bv_new, loc2) == get_bit64!(bv_old, loc2)),"
   },
   {
     "id": 62,
@@ -493,7 +493,7 @@
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "119-122",
     "spec_strength": "unknown",
-    "snippet": "    proof fn bit_or_64_proof(bv1: u64, bv2: u64, bv_new: u64)\n        requires bv_new == bv1 | bv2,\n        ensures forall|i: u64| (i < 64) ==>\n            get_bit64!(bv_new, i) == (get_bit64!(bv1, i) || get_bit64!(bv2, i)),"
+    "snippet": "    proof fn bit_or_64_proof(bv1: u64, bv2: u64, bv_new: u64)\n        requires bv_new == bv1 | bv2,\n        ensures forall|i: u64| #![auto] (i < 64) ==>\n            get_bit64!(bv_new, i) == (get_bit64!(bv1, i) || get_bit64!(bv2, i)),"
   },
   {
     "id": 63,
@@ -501,7 +501,7 @@
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "126-129",
     "spec_strength": "unknown",
-    "snippet": "    proof fn bit_and_64_proof(bv1: u64, bv2: u64, bv_new: u64)\n        requires bv_new == bv1 & bv2,\n        ensures forall|i: u64| (i < 64) ==>\n            get_bit64!(bv_new, i) == (get_bit64!(bv1, i) && get_bit64!(bv2, i)),"
+    "snippet": "    proof fn bit_and_64_proof(bv1: u64, bv2: u64, bv_new: u64)\n        requires bv_new == bv1 & bv2,\n        ensures forall|i: u64| #![auto] (i < 64) ==>\n            get_bit64!(bv_new, i) == (get_bit64!(bv1, i) && get_bit64!(bv2, i)),"
   },
   {
     "id": 64,
@@ -509,7 +509,7 @@
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "133-136",
     "spec_strength": "unknown",
-    "snippet": "    proof fn bit_andnot_64_proof(bv1: u64, bv2: u64, bv_new: u64)\n        requires bv_new == bv1 & !bv2,\n        ensures forall|i: u64| (i < 64) ==>\n            get_bit64!(bv_new, i) == (get_bit64!(bv1, i) && !get_bit64!(bv2, i)),"
+    "snippet": "    proof fn bit_andnot_64_proof(bv1: u64, bv2: u64, bv_new: u64)\n        requires bv_new == bv1 & !bv2,\n        ensures forall|i: u64| #![auto] (i < 64) ==>\n            get_bit64!(bv_new, i) == (get_bit64!(bv1, i) && !get_bit64!(bv2, i)),"
   },
   {
     "id": 65,
@@ -653,7 +653,7 @@
     "file": "Chap41/ArraySetStEph.rs",
     "lines": "144-146",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_filter_in_original<V>(s: Seq<V>, pred: spec_fn(V) -> bool)\n        ensures forall|v: V| s.filter(pred).contains(v) ==> s.contains(v)\n        decreases s.len()"
+    "snippet": "    proof fn lemma_filter_in_original<V>(s: Seq<V>, pred: spec_fn(V) -> bool)\n        ensures forall|v: V| s.filter(pred).contains(v) ==> #[trigger] s.contains(v)\n        decreases s.len()"
   },
   {
     "id": 83,
@@ -693,7 +693,7 @@
     "file": "Chap41/ArraySetStEph.rs",
     "lines": "309-311",
     "spec_strength": "unknown",
-    "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_wf()\n            ensures count == self@.len(), self@.finite();"
+    "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_arraysetsteph_wf()\n            ensures count == self@.len(), self@.finite();"
   },
   {
     "id": 88,
@@ -701,7 +701,7 @@
     "file": "Chap41/ArraySetStEph.rs",
     "lines": "313-318",
     "spec_strength": "hole",
-    "snippet": "        fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)\n            requires self.spec_wf(),\n            ensures\n                self@.finite(),\n                seq@.no_duplicates(),\n                seq@.to_set() =~= self@;"
+    "snippet": "        fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)\n            requires self.spec_arraysetsteph_wf(),\n            ensures\n                self@.finite(),\n                seq@.no_duplicates(),\n                seq@.to_set() =~= self@;"
   },
   {
     "id": 89,
@@ -709,7 +709,7 @@
     "file": "Chap41/ArraySetStEph.rs",
     "lines": "320-321",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (empty: Self)\n            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_wf();"
+    "snippet": "        fn empty() -> (empty: Self)\n            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_arraysetsteph_wf();"
   },
   {
     "id": 90,
@@ -717,7 +717,7 @@
     "file": "Chap41/ArraySetStEph.rs",
     "lines": "323-324",
     "spec_strength": "unknown",
-    "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_wf();"
+    "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_arraysetsteph_wf();"
   },
   {
     "id": 91,
@@ -725,7 +725,7 @@
     "file": "Chap41/ArraySetStEph.rs",
     "lines": "326-327",
     "spec_strength": "unknown",
-    "snippet": "        fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)\n            ensures constructed@.finite(), constructed.spec_wf();"
+    "snippet": "        fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)\n            ensures constructed@.finite(), constructed.spec_arraysetsteph_wf();"
   },
   {
     "id": 92,
@@ -733,7 +733,7 @@
     "file": "Chap41/ArraySetStEph.rs",
     "lines": "329-336",
     "spec_strength": "hole",
-    "snippet": "        fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)\n            requires\n                self.spec_wf(),\n                self@.finite(),\n            ensures\n                filtered@.finite(),\n                filtered@.subset_of(self@),\n                filtered.spec_wf();"
+    "snippet": "        fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                self@.finite(),\n            ensures\n                filtered@.finite(),\n                filtered@.subset_of(self@),\n                filtered.spec_arraysetsteph_wf();"
   },
   {
     "id": 93,
@@ -741,7 +741,7 @@
     "file": "Chap41/ArraySetStEph.rs",
     "lines": "338-347",
     "spec_strength": "hole",
-    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_wf(),\n                other.spec_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                common@ == self@.intersect(other@),\n                common@.finite(),\n                common.spec_wf();"
+    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                other.spec_arraysetsteph_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                common@ == self@.intersect(other@),\n                common@.finite(),\n                common.spec_arraysetsteph_wf();"
   },
   {
     "id": 94,
@@ -749,7 +749,7 @@
     "file": "Chap41/ArraySetStEph.rs",
     "lines": "349-358",
     "spec_strength": "hole",
-    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_wf(),\n                other.spec_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining@.finite(),\n                remaining.spec_wf();"
+    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                other.spec_arraysetsteph_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining@.finite(),\n                remaining.spec_arraysetsteph_wf();"
   },
   {
     "id": 95,
@@ -757,7 +757,7 @@
     "file": "Chap41/ArraySetStEph.rs",
     "lines": "360-369",
     "spec_strength": "hole",
-    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_wf(),\n                other.spec_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                combined@ == self@.union(other@),\n                combined@.finite(),\n                combined.spec_wf();"
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                other.spec_arraysetsteph_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                combined@ == self@.union(other@),\n                combined@.finite(),\n                combined.spec_arraysetsteph_wf();"
   },
   {
     "id": 96,
@@ -773,7 +773,7 @@
     "file": "Chap41/ArraySetStEph.rs",
     "lines": "375-382",
     "spec_strength": "hole",
-    "snippet": "        fn delete(&mut self, x: &T)\n            requires\n                old(self).spec_wf(),\n                old(self)@.finite(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self@.finite(),\n                self.spec_wf();"
+    "snippet": "        fn delete(&mut self, x: &T)\n            requires\n                old(self).spec_arraysetsteph_wf(),\n                old(self)@.finite(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self@.finite(),\n                self.spec_arraysetsteph_wf();"
   },
   {
     "id": 98,
@@ -781,7 +781,7 @@
     "file": "Chap41/ArraySetStEph.rs",
     "lines": "384-391",
     "spec_strength": "hole",
-    "snippet": "        fn insert(&mut self, x: T)\n            requires\n                old(self).spec_wf(),\n                old(self)@.finite(),\n            ensures\n                self@ == old(self)@.insert(x@),\n                self@.finite(),\n                self.spec_wf();"
+    "snippet": "        fn insert(&mut self, x: T)\n            requires\n                old(self).spec_arraysetsteph_wf(),\n                old(self)@.finite(),\n            ensures\n                self@ == old(self)@.insert(x@),\n                self@.finite(),\n                self.spec_arraysetsteph_wf();"
   },
   {
     "id": 99,

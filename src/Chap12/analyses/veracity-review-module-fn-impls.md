@@ -32,12 +32,12 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `new` | Y | Y |  |  | Y |  |  | hole | 32&#8209;33 |
-| 2 | `lock` | Y | Y |  |  | Y |  |  | hole | 38&#8209;39 |
-| 3 | `unlock` | Y | Y |  |  | Y |  |  | hole | 44&#8209;46 |
-| 4 | `with_lock` | Y | Y |  |  | Y |  |  | hole | 53 |
-| 5 | `parallel_increment` |  |  |  | Y | Y |  |  | hole | 93&#8209;94 |
-| 6 | `default` |  | Y |  |  | Y |  | Y |  | 120 |
+| 1 | `new` | Y | Y |  |  | Y |  |  | hole | 33&#8209;34 |
+| 2 | `lock` | Y | Y |  |  | Y |  |  | hole | 39&#8209;40 |
+| 3 | `unlock` | Y | Y |  |  | Y |  |  | hole | 45&#8209;47 |
+| 4 | `with_lock` | Y | Y |  |  | Y |  |  | hole | 54 |
+| 5 | `parallel_increment` |  |  |  | Y | Y |  |  | hole | 94&#8209;95 |
+| 6 | `default` |  | Y |  |  | Y |  | Y |  | 121 |
 
 ### Chap12/Exercise12_2.rs
 

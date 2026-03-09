@@ -110,15 +110,15 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 48 | `lemma_sum_of_monotone` |  |  |  | Y | Y |  |  | unknown | 62&#8209;65 |
-| 49 | `lemma_sum_of_unfold` |  |  |  | Y | Y |  |  | unknown | 73&#8209;75 |
-| 50 | `new` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;92 |
-| 51 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;96 |
-| 52 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;109 |
-| 53 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;116 |
-| 54 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 119&#8209;124 |
-| 55 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 127&#8209;129 |
-| 56 | `set_edge` | Y | Y |  |  | Y |  |  | unknown | 132&#8209;149 |
+| 48 | `lemma_sum_of_monotone` |  |  |  | Y | Y |  |  | unknown | 60&#8209;63 |
+| 49 | `lemma_sum_of_unfold` |  |  |  | Y | Y |  |  | unknown | 71&#8209;73 |
+| 50 | `new` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;90 |
+| 51 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;94 |
+| 52 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;107 |
+| 53 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 110&#8209;114 |
+| 54 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 117&#8209;122 |
+| 55 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 125&#8209;127 |
+| 56 | `set_edge` | Y | Y |  |  | Y |  |  | unknown | 130&#8209;147 |
 
 ### Chap52/AdjSeqGraphMtPer.rs
 

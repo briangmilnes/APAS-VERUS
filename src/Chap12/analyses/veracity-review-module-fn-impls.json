@@ -3,7 +3,7 @@
     "id": 1,
     "function": "new",
     "file": "Chap12/Exercise12_1.rs",
-    "lines": "32-33",
+    "lines": "33-34",
     "spec_strength": "hole",
     "snippet": "        fn new() -> (lock: Self)\n            ensures !lock.spec_locked();"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "function": "lock",
     "file": "Chap12/Exercise12_1.rs",
-    "lines": "38-39",
+    "lines": "39-40",
     "spec_strength": "hole",
     "snippet": "        fn lock(&self)\n            ensures self.spec_locked();"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "function": "unlock",
     "file": "Chap12/Exercise12_1.rs",
-    "lines": "44-46",
+    "lines": "45-47",
     "spec_strength": "hole",
     "snippet": "        fn unlock(&self)\n            requires self.spec_locked()\n            ensures !self.spec_locked();"
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "function": "with_lock",
     "file": "Chap12/Exercise12_1.rs",
-    "lines": "53",
+    "lines": "54",
     "spec_strength": "hole",
     "snippet": "        fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T;"
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "function": "parallel_increment",
     "file": "Chap12/Exercise12_1.rs",
-    "lines": "93-94",
+    "lines": "94-95",
     "spec_strength": "hole",
     "snippet": "    pub fn parallel_increment(iterations: usize) -> (incremented: usize)\n        ensures incremented == 4 * iterations"
   },
@@ -43,7 +43,7 @@
     "id": 6,
     "function": "default",
     "file": "Chap12/Exercise12_1.rs",
-    "lines": "120",
+    "lines": "121",
     "spec_strength": "",
     "snippet": "    fn default() -> Self { SpinLock::new() }"
   },

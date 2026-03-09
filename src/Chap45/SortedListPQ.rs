@@ -7,7 +7,6 @@
 //  3. broadcast use
 //  4. type definitions
 //  5. view impls
-//  6. spec fns
 //  7. proof fns/broadcast groups
 //  8. traits
 //  9. impls
@@ -54,72 +53,56 @@ broadcast use {
             open spec fn view(&self) -> Seq<T::V> { self.elements@ }
         }
 
-// 6. spec fns
-        pub open spec fn spec_sorted<T: TotalOrder>(s: Seq<T>) -> bool {
-            forall|i: int, j: int| 0 <= i < j < s.len() ==>
-                #[trigger] TotalOrder::le(s[i], s[j])
-        }
-
 // 7. proof fns
         proof fn _sorted_list_pq_verified() {}
-
-        /// Pushing an element >= the last onto a sorted seq preserves sorted.
-        proof fn lemma_push_preserves_sorted<T: TotalOrder>(
-            s: Seq<T>, x: T)
-            requires
-                spec_sorted(s),
-                s.len() > 0 ==> TotalOrder::le(s.last(), x),
-            ensures
-                spec_sorted(s.push(x)),
-        {
-            assert forall|a: int, b: int|
-                0 <= a < b < s.push(x).len() implies
-                #[trigger] TotalOrder::le(s.push(x)[a], s.push(x)[b])
-            by {
-                if b == s.len() as int && a < s.len() as int - 1 {
-                    TotalOrder::transitive(s[a], s.last(), x);
-                }
-            }
-        }
 
 // 8. traits
         /// Meldable Priority Queue ADT (Data Type 45.1) using sorted list.
         pub trait SortedListPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Seq<T::V>> {
             spec fn spec_size(self) -> nat;
             spec fn spec_seq(&self) -> Seq<T>;
+            spec fn spec_sorted(s: Seq<T>) -> bool;
+
+            proof fn lemma_push_preserves_sorted(s: Seq<T>, x: T)
+                requires
+                    Self::spec_sorted(s),
+                    s.len() > 0 ==> TotalOrder::le(s.last(), x),
+                ensures
+                    Self::spec_sorted(s.push(x));
 
             fn empty() -> (pq: Self)
                 ensures
                     pq@.len() == 0,
                     pq@.to_multiset() =~= Multiset::empty(),
-                    spec_sorted(pq.spec_seq());
+                    Self::spec_sorted(pq.spec_seq());
 
             fn singleton(element: T) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
                     pq@.len() == 1,
                     pq@.to_multiset() =~= Multiset::empty().insert(element@),
-                    spec_sorted(pq.spec_seq());
+                    Self::spec_sorted(pq.spec_seq());
 
             fn find_min(&self) -> (min_elem: Option<&T>)
                 ensures
                     self@.len() == 0 ==> min_elem.is_none(),
-                    self@.len() > 0 ==> min_elem.is_some();
+                    self@.len() > 0 ==> min_elem.is_some(),
+                    self@.len() > 0 ==> min_elem.unwrap()@ == self@[0];
 
             fn insert(&self, element: T) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() + 1 <= usize::MAX as int,
-                    spec_sorted(self.spec_seq()),
+                    Self::spec_sorted(self.spec_seq()),
                 ensures
                     pq@.len() == self@.len() + 1,
                     pq@.to_multiset() =~= self@.to_multiset().insert(element@),
-                    spec_sorted(pq.spec_seq());
+                    Self::spec_sorted(pq.spec_seq());
 
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires
                     obeys_feq_clone::<T>(),
-                    spec_sorted(self.spec_seq()),
+                    Self::spec_sorted(self.spec_seq()),
                 ensures
                     self@.len() > 0 ==> min_and_rest.1.is_some(),
                     self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,
@@ -127,24 +110,25 @@ broadcast use {
                     self@.len() == 0 ==> min_and_rest.0@.len() == self@.len(),
                     self@.len() > 0 ==> self@.to_multiset() =~=
                         min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@),
-                    spec_sorted(min_and_rest.0.spec_seq());
+                    Self::spec_sorted(min_and_rest.0.spec_seq());
 
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() + other@.len() <= usize::MAX as int,
-                    spec_sorted(self.spec_seq()),
-                    spec_sorted(other.spec_seq()),
+                    Self::spec_sorted(self.spec_seq()),
+                    Self::spec_sorted(other.spec_seq()),
                 ensures
                     pq@.len() == self@.len() + other@.len(),
                     pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset()),
-                    spec_sorted(pq.spec_seq());
+                    Self::spec_sorted(pq.spec_seq());
 
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
                     pq@.len() == seq@.len(),
-                    spec_sorted(pq.spec_seq());
+                    pq@.to_multiset() =~= seq@.to_multiset(),
+                    Self::spec_sorted(pq.spec_seq());
 
             fn size(&self) -> (n: usize)
                 ensures n as int == self.spec_size();
@@ -160,26 +144,30 @@ broadcast use {
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() + elements@.len() <= usize::MAX as int,
-                    spec_sorted(self.spec_seq()),
-                ensures pq@.len() == self@.len() + elements@.len();
+                    Self::spec_sorted(self.spec_seq()),
+                ensures
+                    pq@.len() == self@.len() + elements@.len(),
+                    pq@.to_multiset() =~= self@.to_multiset().add(elements@.to_multiset()),
+                    Self::spec_sorted(pq.spec_seq());
 
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>)
                 requires
                     obeys_feq_clone::<T>(),
-                    spec_sorted(self.spec_seq()),
+                    Self::spec_sorted(self.spec_seq()),
                 ensures
                     sorted@.len() == self@.len(),
-                    spec_sorted(sorted.seq@);
+                    Self::spec_sorted(sorted.seq@);
 
             fn find_max(&self) -> (max_elem: Option<&T>)
                 ensures
                     self@.len() == 0 ==> max_elem.is_none(),
-                    self@.len() > 0 ==> max_elem.is_some();
+                    self@.len() > 0 ==> max_elem.is_some(),
+                    self@.len() > 0 ==> max_elem.unwrap()@ == self@[self@.len() - 1];
 
             fn delete_max(&self) -> (max_and_rest: (Self, Option<T>))
                 requires
                     obeys_feq_clone::<T>(),
-                    spec_sorted(self.spec_seq()),
+                    Self::spec_sorted(self.spec_seq()),
                 ensures
                     self@.len() > 0 ==> max_and_rest.1.is_some(),
                     self@.len() > 0 ==> max_and_rest.0@.len() == self@.len() - 1,
@@ -187,13 +175,14 @@ broadcast use {
                     self@.len() == 0 ==> max_and_rest.0@.len() == self@.len(),
                     self@.len() > 0 ==> self@.to_multiset() =~=
                         max_and_rest.0@.to_multiset().insert(max_and_rest.1.unwrap()@),
-                    spec_sorted(max_and_rest.0.spec_seq());
+                    Self::spec_sorted(max_and_rest.0.spec_seq());
 
             fn from_vec(vec: Vec<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
                     pq@.len() == vec@.len(),
-                    spec_sorted(pq.spec_seq());
+                    pq@.to_multiset() =~= vec@.map(|_i: int, t: T| t@).to_multiset(),
+                    Self::spec_sorted(pq.spec_seq());
 
             fn to_vec(&self) -> (v: Vec<T>)
                 requires obeys_feq_clone::<T>(),
@@ -202,13 +191,15 @@ broadcast use {
             fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires
                     obeys_feq_clone::<T>(),
-                    spec_sorted(self.spec_seq()),
+                    Self::spec_sorted(self.spec_seq()),
                 ensures
                     v@.len() == self@.len(),
-                    spec_sorted(v@);
+                    Self::spec_sorted(v@);
 
             fn is_sorted(&self) -> (sorted: bool)
-                ensures self@.len() <= 1 ==> sorted;
+                ensures
+                    sorted == Self::spec_sorted(self.spec_seq()),
+                    self@.len() <= 1 ==> sorted;
         }
 
 // 9. impls
@@ -219,6 +210,23 @@ broadcast use {
 
             open spec fn spec_seq(&self) -> Seq<T> {
                 self.elements.seq@
+            }
+
+            open spec fn spec_sorted(s: Seq<T>) -> bool {
+                forall|i: int, j: int| 0 <= i < j < s.len() ==>
+                    #[trigger] TotalOrder::le(s[i], s[j])
+            }
+
+            /// Pushing an element >= the last onto a sorted seq preserves sorted.
+            proof fn lemma_push_preserves_sorted(s: Seq<T>, x: T) {
+                assert forall|a: int, b: int|
+                    0 <= a < b < s.push(x).len() implies
+                    #[trigger] TotalOrder::le(s.push(x)[a], s.push(x)[b])
+                by {
+                    if b == s.len() as int && a < s.len() as int - 1 {
+                        TotalOrder::transitive(s[a], s.last(), x);
+                    }
+                }
             }
 
             /// APAS Work Θ(1), Span Θ(1).
@@ -469,7 +477,7 @@ broadcast use {
                         result@.to_multiset() =~=
                             self@.take(i as int).to_multiset().add(
                                 other@.take(j as int).to_multiset()),
-                        spec_sorted(result.seq@),
+                        Self::spec_sorted(result.seq@),
                         result.seq@.len() > 0 && i < n ==>
                             TotalOrder::le(result.seq@.last(),
                                 self.elements.seq@[i as int]),
@@ -514,7 +522,7 @@ broadcast use {
                                 }
                                 assert(result.seq@ =~= old_result_seq.push(
                                     self.elements.seq@[i as int]));
-                                lemma_push_preserves_sorted(
+                                Self::lemma_push_preserves_sorted(
                                     old_result_seq,
                                     self.elements.seq@[i as int]);
                                 assert(result.seq@.last()
@@ -570,7 +578,7 @@ broadcast use {
                                 }
                                 assert(result.seq@ =~= old_result_seq.push(
                                     other.elements.seq@[j as int]));
-                                lemma_push_preserves_sorted(
+                                Self::lemma_push_preserves_sorted(
                                     old_result_seq,
                                     other.elements.seq@[j as int]);
                                 assert(result.seq@.last()
@@ -610,7 +618,7 @@ broadcast use {
                         result@.to_multiset() =~=
                             self@.take(i as int).to_multiset().add(
                                 other@.take(j as int).to_multiset()),
-                        spec_sorted(result.seq@),
+                        Self::spec_sorted(result.seq@),
                         result.seq@.len() > 0 && i < n ==>
                             TotalOrder::le(result.seq@.last(),
                                 self.elements.seq@[i as int]),
@@ -648,7 +656,7 @@ broadcast use {
                         }
                         assert(result.seq@ =~= old_result_seq.push(
                             self.elements.seq@[i as int]));
-                        lemma_push_preserves_sorted(
+                        Self::lemma_push_preserves_sorted(
                             old_result_seq,
                             self.elements.seq@[i as int]);
                         assert(result.seq@.last()
@@ -685,7 +693,7 @@ broadcast use {
                         result@.to_multiset() =~=
                             self@.take(i as int).to_multiset().add(
                                 other@.take(j as int).to_multiset()),
-                        spec_sorted(result.seq@),
+                        Self::spec_sorted(result.seq@),
                         result.seq@.len() > 0 && j < m ==>
                             TotalOrder::le(result.seq@.last(),
                                 other.elements.seq@[j as int]),
@@ -719,7 +727,7 @@ broadcast use {
                         }
                         assert(result.seq@ =~= old_result_seq.push(
                             other.elements.seq@[j as int]));
-                        lemma_push_preserves_sorted(
+                        Self::lemma_push_preserves_sorted(
                             old_result_seq,
                             other.elements.seq@[j as int]);
                         assert(result.seq@.last()
@@ -763,9 +771,23 @@ broadcast use {
                     invariant
                         n == seq@.len(),
                         pq@.len() == i as int,
-                        spec_sorted(pq.spec_seq()),
+                        pq@.to_multiset() =~= seq@.take(i as int).to_multiset(),
+                        Self::spec_sorted(pq.spec_seq()),
                 {
-                    pq = pq.insert(seq.nth(i).clone());
+                    let elem = seq.nth(i).clone();
+                    proof {
+                        assert(cloned(seq.seq@[i as int], elem));
+                        axiom_cloned_implies_eq_owned(seq.seq@[i as int], elem);
+                        // elem@ == seq@[i].
+                    }
+                    let ghost old_pq_view = pq@;
+                    pq = pq.insert(elem);
+                    proof {
+                        // pq@.to_multiset() =~= old_pq.ms.insert(elem@)
+                        //                    =~= seq@.take(i).ms.insert(seq@[i])
+                        //                    =~= seq@.take(i+1).ms
+                        seq@.lemma_take_succ_push(i as int);
+                    }
                 }
                 pq
             }
@@ -859,8 +881,19 @@ broadcast use {
             }
 
             fn from_vec(vec: Vec<T>) -> Self {
+                let ghost vec_view = vec@;
                 let seq = ArraySeqStPerS::from_vec(vec);
-                Self::from_seq(&seq)
+                let pq = Self::from_seq(&seq);
+                proof {
+                    // seq@ =~= vec@.map(view): chain through spec_index.
+                    assert(seq@ =~= vec_view.map(|_i: int, t: T| t@)) by {
+                        assert forall|i: int| #![auto] 0 <= i < seq@.len()
+                        implies seq@[i] == vec_view.map(|_i: int, t: T| t@)[i] by {
+                            assert(seq.spec_index(i) == vec_view[i]);
+                        };
+                    };
+                }
+                pq
             }
 
             fn to_vec(&self) -> Vec<T> {
@@ -914,9 +947,65 @@ broadcast use {
                 for i in 1..n
                     invariant
                         n == self.elements@.len(),
+                        n > 1,
+                        forall|a: int, b: int| 0 <= a < b < i as int ==>
+                            #[trigger] TotalOrder::le(
+                                self.elements.seq@[a], self.elements.seq@[b]),
                 {
-                    if *self.elements.nth(i - 1) > *self.elements.nth(i) {
-                        return false;
+                    let prev = self.elements.nth(i - 1);
+                    let curr = self.elements.nth(i);
+                    match TotalOrder::cmp(prev, curr) {
+                        core::cmp::Ordering::Greater => {
+                            proof {
+                                // le(curr, prev) && prev != curr.
+                                // If le(prev, curr) too, antisymmetric gives
+                                // prev == curr — contradiction. So !le(prev, curr).
+                                assert(!TotalOrder::le(*prev, *curr)) by {
+                                    if TotalOrder::le(*prev, *curr) {
+                                        TotalOrder::antisymmetric(*prev, *curr);
+                                    }
+                                };
+                            }
+                            return false;
+                        }
+                        core::cmp::Ordering::Equal => {
+                            proof {
+                                // prev == curr, so le(prev, curr) by reflexive.
+                                TotalOrder::reflexive(*prev);
+                                assert(TotalOrder::le(
+                                    self.elements.seq@[(i - 1) as int],
+                                    self.elements.seq@[i as int]));
+                                assert forall|a: int, b: int|
+                                    0 <= a < b < (i + 1) as int implies
+                                    #[trigger] TotalOrder::le(
+                                        self.elements.seq@[a], self.elements.seq@[b])
+                                by {
+                                    if b == i as int && a < (i - 1) as int {
+                                        TotalOrder::transitive(
+                                            self.elements.seq@[a],
+                                            self.elements.seq@[(i - 1) as int],
+                                            self.elements.seq@[i as int]);
+                                    }
+                                }
+                            }
+                        }
+                        core::cmp::Ordering::Less => {
+                            proof {
+                                // le(prev, curr) directly.
+                                assert forall|a: int, b: int|
+                                    0 <= a < b < (i + 1) as int implies
+                                    #[trigger] TotalOrder::le(
+                                        self.elements.seq@[a], self.elements.seq@[b])
+                                by {
+                                    if b == i as int && a < (i - 1) as int {
+                                        TotalOrder::transitive(
+                                            self.elements.seq@[a],
+                                            self.elements.seq@[(i - 1) as int],
+                                            self.elements.seq@[i as int]);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 true

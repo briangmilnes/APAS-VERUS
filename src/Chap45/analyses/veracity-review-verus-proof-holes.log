@@ -1,57 +1,45 @@
 $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap45/
 
 ❌ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:155: external_body - #[verifier::external_body]
-       156 |             fn empty() -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:163: external_body - #[verifier::external_body]
-       164 |             fn singleton(element: T) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:171: external_body - #[verifier::external_body]
-       172 |             fn find_min(&self) -> Option<&T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:181: external_body - #[verifier::external_body]
-       182 |             fn insert(&self, element: T) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:195: external_body - #[verifier::external_body]
-       196 |             fn delete_min(&self) -> (Self, Option<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:207: external_body - #[verifier::external_body]
-       208 |             fn meld(&self, other: &Self) -> Self {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:211: external_body - #[verifier::external_body]
+       212 |             fn insert(&self, element: T) -> Self {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:225: external_body - #[verifier::external_body]
+       226 |             fn delete_min(&self) -> (Self, Option<T>) {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:237: external_body - #[verifier::external_body]
-       238 |             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:246: external_body - #[verifier::external_body]
-       247 |             fn size(&self) -> usize { self.elements.length() }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:249: external_body - #[verifier::external_body]
-       250 |             fn is_empty(&self) -> bool { self.elements.length() == 0 }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:254: external_body - #[verifier::external_body]
-       255 |             fn find_max(&self) -> Option<&T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:264: external_body - #[verifier::external_body]
-       265 |             fn delete_max(&self) -> (Self, Option<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:275: external_body - #[verifier::external_body]
-       276 |             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:288: external_body - #[verifier::external_body]
-       289 |             fn contains(&self, element: &T) -> bool {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:302: external_body - #[verifier::external_body]
-       303 |             fn remove(&self, element: &T) -> (Self, bool) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:314: external_body - #[verifier::external_body]
-       315 |             fn range(&self, min_val: &T, max_val: &T) -> AVLTreeSeqStPerS<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:328: external_body - #[verifier::external_body]
-       329 |             fn from_vec(elements: Vec<T>) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:337: external_body - #[verifier::external_body]
-       338 |             fn to_vec(&self) -> Vec<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:346: external_body - #[verifier::external_body]
-       347 |             fn to_sorted_vec(&self) -> Vec<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:351: external_body - #[verifier::external_body]
-       352 |             fn is_sorted(&self) -> bool {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:364: external_body - #[verifier::external_body]
-       365 |             fn height(&self) -> usize {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:373: external_body - #[verifier::external_body]
-       374 |             fn split(&self, element: &T) -> (Self, bool, Self) {
+       238 |             fn meld(&self, other: &Self) -> Self {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:267: external_body - #[verifier::external_body]
+       268 |             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:292: external_body - #[verifier::external_body]
+       293 |             fn delete_max(&self) -> (Self, Option<T>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:303: external_body - #[verifier::external_body]
+       304 |             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:316: external_body - #[verifier::external_body]
+       317 |             fn contains(&self, element: &T) -> bool {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:330: external_body - #[verifier::external_body]
+       331 |             fn remove(&self, element: &T) -> (Self, bool) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:342: external_body - #[verifier::external_body]
+       343 |             fn range(&self, min_val: &T, max_val: &T) -> AVLTreeSeqStPerS<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:356: external_body - #[verifier::external_body]
+       357 |             fn from_vec(elements: Vec<T>) -> Self {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:365: external_body - #[verifier::external_body]
+       366 |             fn to_vec(&self) -> Vec<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:374: external_body - #[verifier::external_body]
+       375 |             fn to_sorted_vec(&self) -> Vec<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:379: external_body - #[verifier::external_body]
+       380 |             fn is_sorted(&self) -> bool {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:392: external_body - #[verifier::external_body]
-       393 |             fn join(left: &Self, right: &Self) -> Self { left.meld(right) }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:396: external - #[verifier::external]
-       397 |         impl<T: StT + Ord + TotalOrder> Default for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:401: external - #[verifier::external]
-       402 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:452: info: accept() - accept hole
-   Holes: 24 total
-      22 × external_body
+       393 |             fn height(&self) -> usize {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:401: external_body - #[verifier::external_body]
+       402 |             fn split(&self, element: &T) -> (Self, bool, Self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:420: external_body - #[verifier::external_body]
+       421 |             fn join(left: &Self, right: &Self) -> Self { left.meld(right) }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:424: external - #[verifier::external]
+       425 |         impl<T: StT + Ord + TotalOrder> Default for BalancedTreePQ<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:429: external - #[verifier::external]
+       430 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:480: info: accept() - accept hole
+   Holes: 18 total
+      16 × external_body
       2 × external
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
@@ -91,35 +79,26 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Info: 4 total
    4 clean proof functions
 ❌ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:943: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       938 |             fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1032: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1027 |             fn clone(&self) -> (cloned: Self)
             ...
-       941 |                 let cloned = SortedListPQ { elements: self.elements.clone() };
-       942 |                 proof {
-       944 |                     lemma_seq_map_cloned_view_eq(
-       945 |                         self.elements.seq@,
+      1030 |                 let cloned = SortedListPQ { elements: self.elements.clone() };
+      1031 |                 proof {
+      1033 |                     lemma_seq_map_cloned_view_eq(
+      1034 |                         self.elements.seq@,
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
-   Proof functions: 2 total (2 clean, 0 holed)
+   Proof functions: 1 total (1 clean, 0 holed)
 ❌ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:507: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       502 |             fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:638: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       633 |             fn clone(&self) -> (cloned: Self)
             ...
-       505 |                 let cloned = UnsortedListPQ { elements: self.elements.clone() };
-       506 |                 proof {
-       508 |                     lemma_seq_map_cloned_view_eq(
-       509 |                         self.elements.seq@,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:187: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:197: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:251: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:324: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:326: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:328: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:333: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:345: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:485: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:522: info: accept() - accept hole
+       636 |                 let cloned = UnsortedListPQ { elements: self.elements.clone() };
+       637 |                 proof {
+       639 |                     lemma_seq_map_cloned_view_eq(
+       640 |                         self.elements.seq@,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:653: info: accept() - accept hole
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
-   Info: 10 total
+   Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 
 ═══════════════════════════════════════════════════════════════
@@ -132,18 +111,17 @@ Modules:
    7 total
 
 Proof Functions:
-   11 clean
+   10 clean
    0 holed
-   11 total
+   10 total
 
-Holes Found: 26 total
-   22 × external_body
+Holes Found: 20 total
+   16 × external_body
    4 × external
 
 Errors: 2 total (2 assume in eq/clone (Verus workaround))
 
-Info: 27 total
-   BalancedTreePQ.rs:452: info: accept() - accept hole
+Info: 18 total
    HeapsortExample.rs:98: info: accept() - accept hole
    HeapsortExample.rs:113: info: accept() - accept hole
    BinaryHeapPQ.rs:524: info: accept() - accept hole
@@ -160,13 +138,5 @@ Info: 27 total
    LeftistHeapPQ.rs:1143: info: accept() - accept hole
    LeftistHeapPQ.rs:1155: info: accept() - accept hole
    LeftistHeapPQ.rs:1165: info: accept() - accept hole
-   UnsortedListPQ.rs:187: info: accept() - accept hole
-   UnsortedListPQ.rs:197: info: accept() - accept hole
-   UnsortedListPQ.rs:251: info: accept() - accept hole
-   UnsortedListPQ.rs:324: info: accept() - accept hole
-   UnsortedListPQ.rs:326: info: accept() - accept hole
-   UnsortedListPQ.rs:328: info: accept() - accept hole
-   UnsortedListPQ.rs:333: info: accept() - accept hole
-   UnsortedListPQ.rs:345: info: accept() - accept hole
-   UnsortedListPQ.rs:485: info: accept() - accept hole
-   UnsortedListPQ.rs:522: info: accept() - accept hole
+   BalancedTreePQ.rs:480: info: accept() - accept hole
+   UnsortedListPQ.rs:653: info: accept() - accept hole

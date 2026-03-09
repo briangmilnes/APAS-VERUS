@@ -31,11 +31,11 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `johnson_apsp` | Y |  |  | Y | Y |  | Y |  | 37 |
-| 2 | `parallel_dijkstra_all` |  |  |  | Y |  | Y | Y |  | 79&#8209;138 |
-| 3 | `add_dummy_source` |  |  |  | Y |  | Y | Y |  | 140&#8209;164 |
-| 4 | `reweight_graph` |  |  |  | Y |  | Y | Y |  | 166&#8209;190 |
-| 5 | `create_negative_cycle_result` |  |  |  | Y |  | Y | Y |  | 192&#8209;205 |
+| 1 | `johnson_apsp` | Y |  |  | Y | Y |  | Y |  | 35 |
+| 2 | `parallel_dijkstra_all` |  |  |  | Y |  | Y | Y |  | 77&#8209;136 |
+| 3 | `add_dummy_source` |  |  |  | Y |  | Y | Y |  | 138&#8209;162 |
+| 4 | `reweight_graph` |  |  |  | Y |  | Y | Y |  | 164&#8209;188 |
+| 5 | `create_negative_cycle_result` |  |  |  | Y |  | Y | Y |  | 190&#8209;203 |
 
 ### Chap59/JohnsonStEphI64.rs
 

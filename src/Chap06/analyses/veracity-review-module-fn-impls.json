@@ -5,7 +5,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "98-103",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (g: Self)\n            requires valid_key_type_for_graph::<V>()\n            ensures \n                wf_graph_view(g@),\n                g@.V == Set::<<V as View>::V>::empty(), \n                g@.A == Set::<(<V as View>::V, <V as View>::V)>::empty();"
+    "snippet": "        fn empty() -> (g: Self)\n            requires valid_key_type_for_graph::<V>()\n            ensures \n                spec_graphview_wf(g@),\n                g@.V == Set::<<V as View>::V>::empty(), \n                g@.A == Set::<(<V as View>::V, <V as View>::V)>::empty();"
   },
   {
     "id": 2,
@@ -13,7 +13,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "107-117",
     "spec_strength": "unknown",
-    "snippet": "        fn from_sets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (g: Self)\n            requires \n                valid_key_type_for_graph::<V>(),\n                V@.finite(),\n                A@.finite(),\n                forall |u: V::V, w: V::V| \n                    #[trigger] A@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),\n            ensures \n                wf_graph_view(g@),\n                g@.V == V@, \n                g@.A == A@;"
+    "snippet": "        fn from_sets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (g: Self)\n            requires \n                valid_key_type_for_graph::<V>(),\n                V@.finite(),\n                A@.finite(),\n                forall |u: V::V, w: V::V| \n                    #[trigger] A@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),\n            ensures \n                spec_graphview_wf(g@),\n                g@.V == V@, \n                g@.A == A@;"
   },
   {
     "id": 3,
@@ -53,7 +53,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "141-147",
     "spec_strength": "unknown",
-    "snippet": "        fn neighbor(&self, u: &V, v: &V) -> (b: B)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(u@),\n                self@.V.contains(v@),\n            ensures b == self@.A.contains((u@, v@));"
+    "snippet": "        fn neighbor(&self, u: &V, v: &V) -> (b: B)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(u@),\n                self@.V.contains(v@),\n            ensures b == self@.A.contains((u@, v@));"
   },
   {
     "id": 8,
@@ -69,7 +69,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "171-178",
     "spec_strength": "unknown",
-    "snippet": "        fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures \n                out_neighbors@ == self.spec_n_plus(v@),\n                out_neighbors@ <= self@.V;"
+    "snippet": "        fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures \n                out_neighbors@ == self.spec_n_plus(v@),\n                out_neighbors@ <= self@.V;"
   },
   {
     "id": 10,
@@ -77,7 +77,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "182-187",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, v: &V) -> (n: N)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures n == self.spec_n_plus(v@).len();"
+    "snippet": "        fn out_degree(&self, v: &V) -> (n: N)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures n == self.spec_n_plus(v@).len();"
   },
   {
     "id": 11,
@@ -85,7 +85,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "205-212",
     "spec_strength": "unknown",
-    "snippet": "        fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures \n                in_neighbors@ == self.spec_n_minus(v@),\n                in_neighbors@ <= self@.V;"
+    "snippet": "        fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures \n                in_neighbors@ == self.spec_n_minus(v@),\n                in_neighbors@ <= self@.V;"
   },
   {
     "id": 12,
@@ -93,7 +93,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "216-221",
     "spec_strength": "unknown",
-    "snippet": "        fn in_degree(&self, v: &V) -> (n: N)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures n == self.spec_n_minus(v@).len();"
+    "snippet": "        fn in_degree(&self, v: &V) -> (n: N)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures n == self.spec_n_minus(v@).len();"
   },
   {
     "id": 13,
@@ -101,7 +101,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "231-238",
     "spec_strength": "unknown",
-    "snippet": "        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures \n                neighbors@ == self.spec_ng(v@),\n                neighbors@ <= self@.V;"
+    "snippet": "        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures \n                neighbors@ == self.spec_ng(v@),\n                neighbors@ <= self@.V;"
   },
   {
     "id": 14,
@@ -109,7 +109,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "248-253",
     "spec_strength": "unknown",
-    "snippet": "        fn degree(&self, v: &V) -> (n: N)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures n == self.spec_degree(v@);"
+    "snippet": "        fn degree(&self, v: &V) -> (n: N)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures n == self.spec_degree(v@);"
   },
   {
     "id": 15,
@@ -117,7 +117,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "269-276",
     "spec_strength": "unknown",
-    "snippet": "        fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_for_graph::<V>(),\n                u_set@ <= self@.V,\n            ensures \n                out_neighbors@ == self.spec_n_plus_of_vertices(u_set@),\n                out_neighbors@ <= self@.V;"
+    "snippet": "        fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_for_graph::<V>(),\n                u_set@ <= self@.V,\n            ensures \n                out_neighbors@ == self.spec_n_plus_of_vertices(u_set@),\n                out_neighbors@ <= self@.V;"
   },
   {
     "id": 16,
@@ -125,7 +125,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "292-299",
     "spec_strength": "unknown",
-    "snippet": "        fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_for_graph::<V>(),\n                u_set@ <= self@.V,\n            ensures \n                in_neighbors@ == self.spec_n_minus_of_vertices(u_set@),\n                in_neighbors@ <= self@.V;"
+    "snippet": "        fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_for_graph::<V>(),\n                u_set@ <= self@.V,\n            ensures \n                in_neighbors@ == self.spec_n_minus_of_vertices(u_set@),\n                in_neighbors@ <= self@.V;"
   },
   {
     "id": 17,
@@ -133,7 +133,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "315-322",
     "spec_strength": "unknown",
-    "snippet": "        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_for_graph::<V>(),\n                u_set@ <= self@.V,\n            ensures \n                neighbors@ == self.spec_ng_of_vertices(u_set@),\n                neighbors@ <= self@.V;"
+    "snippet": "        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_for_graph::<V>(),\n                u_set@ <= self@.V,\n            ensures \n                neighbors@ == self.spec_ng_of_vertices(u_set@),\n                neighbors@ <= self@.V;"
   },
   {
     "id": 18,
@@ -141,7 +141,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "329-339",
     "spec_strength": "unknown",
-    "snippet": "    fn n_plus_par<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>) \n                                                     -> (out_neighbors: SetStEph<V>)\n        requires\n            valid_key_type::<V>(),\n            valid_key_type::<Edge<V>>(),\n            wf_graph_view(g@),\n            arcs@ <= g@.A,\n        ensures \n            out_neighbors@ == g.spec_n_plus_from_set(v@, arcs@),\n            out_neighbors@ <= g.spec_n_plus(v@)\n        decreases arcs@.len()"
+    "snippet": "    fn n_plus_par<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>) \n                                                     -> (out_neighbors: SetStEph<V>)\n        requires\n            valid_key_type::<V>(),\n            valid_key_type::<Edge<V>>(),\n            spec_graphview_wf(g@),\n            arcs@ <= g@.A,\n        ensures \n            out_neighbors@ == g.spec_n_plus_from_set(v@, arcs@),\n            out_neighbors@ <= g.spec_n_plus(v@)\n        decreases arcs@.len()"
   },
   {
     "id": 19,
@@ -149,7 +149,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "376-386",
     "spec_strength": "unknown",
-    "snippet": "    fn n_minus_par<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>) \n                                                      -> (in_neighbors: SetStEph<V>)\n        requires\n            valid_key_type::<V>(),\n            valid_key_type::<Edge<V>>(),\n            wf_graph_view(g@),\n            arcs@ <= g@.A,\n        ensures \n            in_neighbors@ == g.spec_n_minus_from_set(v@, arcs@),\n            in_neighbors@ <= g.spec_n_minus(v@)\n        decreases arcs@.len()"
+    "snippet": "    fn n_minus_par<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>) \n                                                      -> (in_neighbors: SetStEph<V>)\n        requires\n            valid_key_type::<V>(),\n            valid_key_type::<Edge<V>>(),\n            spec_graphview_wf(g@),\n            arcs@ <= g@.A,\n        ensures \n            in_neighbors@ == g.spec_n_minus_from_set(v@, arcs@),\n            in_neighbors@ <= g.spec_n_minus(v@)\n        decreases arcs@.len()"
   },
   {
     "id": 20,
@@ -157,7 +157,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "423-435",
     "spec_strength": "unknown",
-    "snippet": "    fn n_plus_of_vertices_par<V: StTInMtT + Hash + 'static>(\n        g: &DirGraphMtEph<V>,\n        verts: SetStEph<V>,\n    ) -> (out_neighbors: SetStEph<V>)\n        requires \n            valid_key_type::<V>(),\n            valid_key_type::<Edge<V>>(),\n            wf_graph_view(g@),\n            verts@ <= g@.V,\n        ensures \n            out_neighbors@ == g.spec_n_plus_of_vertices_from_set(verts@),\n            out_neighbors@ <= g@.V\n        decreases verts@.len()"
+    "snippet": "    fn n_plus_of_vertices_par<V: StTInMtT + Hash + 'static>(\n        g: &DirGraphMtEph<V>,\n        verts: SetStEph<V>,\n    ) -> (out_neighbors: SetStEph<V>)\n        requires \n            valid_key_type::<V>(),\n            valid_key_type::<Edge<V>>(),\n            spec_graphview_wf(g@),\n            verts@ <= g@.V,\n        ensures \n            out_neighbors@ == g.spec_n_plus_of_vertices_from_set(verts@),\n            out_neighbors@ <= g@.V\n        decreases verts@.len()"
   },
   {
     "id": 21,
@@ -165,7 +165,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "490-502",
     "spec_strength": "unknown",
-    "snippet": "    fn n_minus_of_vertices_par<V: StTInMtT + Hash + 'static>(\n        g: &DirGraphMtEph<V>,\n        verts: SetStEph<V>,\n    ) -> (in_neighbors: SetStEph<V>)\n        requires \n            valid_key_type::<V>(),\n            valid_key_type::<Edge<V>>(),\n            wf_graph_view(g@),\n            verts@ <= g@.V,\n        ensures \n            in_neighbors@ == g.spec_n_minus_of_vertices_from_set(verts@),\n            in_neighbors@ <= g@.V\n        decreases verts@.len()"
+    "snippet": "    fn n_minus_of_vertices_par<V: StTInMtT + Hash + 'static>(\n        g: &DirGraphMtEph<V>,\n        verts: SetStEph<V>,\n    ) -> (in_neighbors: SetStEph<V>)\n        requires \n            valid_key_type::<V>(),\n            valid_key_type::<Edge<V>>(),\n            spec_graphview_wf(g@),\n            verts@ <= g@.V,\n        ensures \n            in_neighbors@ == g.spec_n_minus_of_vertices_from_set(verts@),\n            in_neighbors@ <= g@.V\n        decreases verts@.len()"
   },
   {
     "id": 22,
@@ -173,7 +173,7 @@
     "file": "Chap06/DirGraphMtEph.rs",
     "lines": "557-569",
     "spec_strength": "unknown",
-    "snippet": "    fn ng_of_vertices_par<V: StTInMtT + Hash + 'static>(\n        g: &DirGraphMtEph<V>,\n        verts: SetStEph<V>,\n    ) -> (neighbors: SetStEph<V>)\n        requires \n            valid_key_type::<V>(),\n            valid_key_type::<Edge<V>>(),\n            wf_graph_view(g@),\n            verts@ <= g@.V,\n        ensures \n            neighbors@ == g.spec_ng_of_vertices_from_set(verts@),\n            neighbors@ <= g@.V\n        decreases verts@.len()"
+    "snippet": "    fn ng_of_vertices_par<V: StTInMtT + Hash + 'static>(\n        g: &DirGraphMtEph<V>,\n        verts: SetStEph<V>,\n    ) -> (neighbors: SetStEph<V>)\n        requires \n            valid_key_type::<V>(),\n            valid_key_type::<Edge<V>>(),\n            spec_graphview_wf(g@),\n            verts@ <= g@.V,\n        ensures \n            neighbors@ == g.spec_ng_of_vertices_from_set(verts@),\n            neighbors@ <= g@.V\n        decreases verts@.len()"
   },
   {
     "id": 23,
@@ -189,7 +189,7 @@
     "file": "Chap06/DirGraphStEph.rs",
     "lines": "114-119",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (g: DirGraphStEph<V>)\n            requires valid_key_type_Edge::<V>()\n            ensures\n                wf_graph_view(g@),\n                g@.V =~= Set::<<V as View>::V>::empty(),\n                g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();"
+    "snippet": "        fn empty() -> (g: DirGraphStEph<V>)\n            requires valid_key_type_Edge::<V>()\n            ensures\n                spec_graphview_wf(g@),\n                g@.V =~= Set::<<V as View>::V>::empty(),\n                g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();"
   },
   {
     "id": 25,
@@ -197,7 +197,7 @@
     "file": "Chap06/DirGraphStEph.rs",
     "lines": "123-131",
     "spec_strength": "unknown",
-    "snippet": "        fn from_sets(vertices: SetStEph<V>, arcs: SetStEph<Edge<V>>) -> (g: DirGraphStEph<V>)\n            requires\n                forall |u: V::V, w: V::V| \n                    #[trigger] arcs@.contains((u, w)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures\n                wf_graph_view(g@),\n                g@.V =~= vertices@,\n                g@.A =~= arcs@;"
+    "snippet": "        fn from_sets(vertices: SetStEph<V>, arcs: SetStEph<Edge<V>>) -> (g: DirGraphStEph<V>)\n            requires\n                forall |u: V::V, w: V::V| \n                    #[trigger] arcs@.contains((u, w)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures\n                spec_graphview_wf(g@),\n                g@.V =~= vertices@,\n                g@.A =~= arcs@;"
   },
   {
     "id": 26,
@@ -221,7 +221,7 @@
     "file": "Chap06/DirGraphStEph.rs",
     "lines": "145-147",
     "spec_strength": "unknown",
-    "snippet": "        fn sizeV(&self) -> (n: N)\n            requires wf_graph_view(self@), valid_key_type_Edge::<V>()\n            ensures n == self@.V.len();"
+    "snippet": "        fn sizeV(&self) -> (n: N)\n            requires spec_graphview_wf(self@), valid_key_type_Edge::<V>()\n            ensures n == self@.V.len();"
   },
   {
     "id": 29,
@@ -229,7 +229,7 @@
     "file": "Chap06/DirGraphStEph.rs",
     "lines": "151-153",
     "spec_strength": "unknown",
-    "snippet": "        fn sizeA(&self) -> (n: N)\n            requires wf_graph_view(self@), valid_key_type_Edge::<V>()\n            ensures n == self@.A.len();"
+    "snippet": "        fn sizeA(&self) -> (n: N)\n            requires spec_graphview_wf(self@), valid_key_type_Edge::<V>()\n            ensures n == self@.A.len();"
   },
   {
     "id": 30,
@@ -237,7 +237,7 @@
     "file": "Chap06/DirGraphStEph.rs",
     "lines": "157-159",
     "spec_strength": "unknown",
-    "snippet": "        fn neighbor(&self, u: &V, v: &V) -> (b: B)\n            requires wf_graph_view(self@), valid_key_type_Edge::<V>()\n            ensures b == self@.A.contains((u@, v@));"
+    "snippet": "        fn neighbor(&self, u: &V, v: &V) -> (b: B)\n            requires spec_graphview_wf(self@), valid_key_type_Edge::<V>()\n            ensures b == self@.A.contains((u@, v@));"
   },
   {
     "id": 31,
@@ -245,7 +245,7 @@
     "file": "Chap06/DirGraphStEph.rs",
     "lines": "163-165",
     "spec_strength": "unknown",
-    "snippet": "        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)\n            requires wf_graph_view(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)\n            ensures neighbors@ == self.spec_ng(v@);"
+    "snippet": "        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)\n            requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)\n            ensures neighbors@ == self.spec_ng(v@);"
   },
   {
     "id": 32,
@@ -253,7 +253,7 @@
     "file": "Chap06/DirGraphStEph.rs",
     "lines": "169-171",
     "spec_strength": "unknown",
-    "snippet": "        fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)\n            requires wf_graph_view(self@), valid_key_type_Edge::<V>(), vertices@ <= self@.V\n            ensures neighbors@ == self.spec_ng_of_vertices(vertices@);"
+    "snippet": "        fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)\n            requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), vertices@ <= self@.V\n            ensures neighbors@ == self.spec_ng_of_vertices(vertices@);"
   },
   {
     "id": 33,
@@ -261,7 +261,7 @@
     "file": "Chap06/DirGraphStEph.rs",
     "lines": "175-177",
     "spec_strength": "unknown",
-    "snippet": "        fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)\n            requires wf_graph_view(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)\n            ensures out_neighbors@ == self.spec_n_plus(v@);"
+    "snippet": "        fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)\n            requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)\n            ensures out_neighbors@ == self.spec_n_plus(v@);"
   },
   {
     "id": 34,
@@ -269,7 +269,7 @@
     "file": "Chap06/DirGraphStEph.rs",
     "lines": "181-183",
     "spec_strength": "unknown",
-    "snippet": "        fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)\n            requires wf_graph_view(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)\n            ensures in_neighbors@ == self.spec_n_minus(v@);"
+    "snippet": "        fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)\n            requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)\n            ensures in_neighbors@ == self.spec_n_minus(v@);"
   },
   {
     "id": 35,
@@ -277,7 +277,7 @@
     "file": "Chap06/DirGraphStEph.rs",
     "lines": "187-189",
     "spec_strength": "unknown",
-    "snippet": "        fn n_plus_of_vertices(&self, vertices: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)\n            requires wf_graph_view(self@), valid_key_type_Edge::<V>(), vertices@ <= self@.V\n            ensures out_neighbors@ == self.spec_n_plus_of_vertices(vertices@);"
+    "snippet": "        fn n_plus_of_vertices(&self, vertices: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)\n            requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), vertices@ <= self@.V\n            ensures out_neighbors@ == self.spec_n_plus_of_vertices(vertices@);"
   },
   {
     "id": 36,
@@ -285,7 +285,7 @@
     "file": "Chap06/DirGraphStEph.rs",
     "lines": "193-195",
     "spec_strength": "unknown",
-    "snippet": "        fn n_minus_of_vertices(&self, vertices: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)\n            requires wf_graph_view(self@), valid_key_type_Edge::<V>(), vertices@ <= self@.V\n            ensures in_neighbors@ == self.spec_n_minus_of_vertices(vertices@);"
+    "snippet": "        fn n_minus_of_vertices(&self, vertices: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)\n            requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), vertices@ <= self@.V\n            ensures in_neighbors@ == self.spec_n_minus_of_vertices(vertices@);"
   },
   {
     "id": 37,
@@ -301,7 +301,7 @@
     "file": "Chap06/DirGraphStEph.rs",
     "lines": "205-207",
     "spec_strength": "unknown",
-    "snippet": "        fn degree(&self, v: &V) -> (n: N)\n            requires wf_graph_view(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)\n            ensures n == self.spec_degree(v@);"
+    "snippet": "        fn degree(&self, v: &V) -> (n: N)\n            requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)\n            ensures n == self.spec_degree(v@);"
   },
   {
     "id": 39,
@@ -309,7 +309,7 @@
     "file": "Chap06/DirGraphStEph.rs",
     "lines": "211-213",
     "spec_strength": "unknown",
-    "snippet": "        fn in_degree(&self, v: &V) -> (n: N)\n            requires wf_graph_view(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)\n            ensures n == self.spec_n_minus(v@).len();"
+    "snippet": "        fn in_degree(&self, v: &V) -> (n: N)\n            requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)\n            ensures n == self.spec_n_minus(v@).len();"
   },
   {
     "id": 40,
@@ -317,7 +317,7 @@
     "file": "Chap06/DirGraphStEph.rs",
     "lines": "217-219",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, v: &V) -> (n: N)\n            requires wf_graph_view(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)\n            ensures n == self.spec_n_plus(v@).len();"
+    "snippet": "        fn out_degree(&self, v: &V) -> (n: N)\n            requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)\n            ensures n == self.spec_n_plus(v@).len();"
   },
   {
     "id": 41,
@@ -349,7 +349,7 @@
     "file": "Chap06/LabDirGraphMtEph.rs",
     "lines": "97-102",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (g: Self)\n            requires valid_key_type_for_lab_graph::<V, L>()\n            ensures\n                wf_lab_graph_view(g@),\n                g@.V == Set::<<V as View>::V>::empty(),\n                g@.A == Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();"
+    "snippet": "        fn empty() -> (g: Self)\n            requires valid_key_type_for_lab_graph::<V, L>()\n            ensures\n                spec_labgraphview_wf(g@),\n                g@.V == Set::<<V as View>::V>::empty(),\n                g@.A == Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();"
   },
   {
     "id": 45,
@@ -357,7 +357,7 @@
     "file": "Chap06/LabDirGraphMtEph.rs",
     "lines": "106-116",
     "spec_strength": "unknown",
-    "snippet": "        fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: Self)\n            requires\n                valid_key_type_for_lab_graph::<V, L>(),\n                vertices@.finite(),\n                labeled_arcs@.finite(),\n                forall |u: V::V, w: V::V, l: L::V|\n                    #[trigger] labeled_arcs@.contains((u, w, l)) ==> vertices@.contains(u) && vertices@.contains(w),\n            ensures\n                wf_lab_graph_view(g@),\n                g@.V == vertices@,\n                g@.A == labeled_arcs@;"
+    "snippet": "        fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: Self)\n            requires\n                valid_key_type_for_lab_graph::<V, L>(),\n                vertices@.finite(),\n                labeled_arcs@.finite(),\n                forall |u: V::V, w: V::V, l: L::V|\n                    #[trigger] labeled_arcs@.contains((u, w, l)) ==> vertices@.contains(u) && vertices@.contains(w),\n            ensures\n                spec_labgraphview_wf(g@),\n                g@.V == vertices@,\n                g@.A == labeled_arcs@;"
   },
   {
     "id": 46,
@@ -381,7 +381,7 @@
     "file": "Chap06/LabDirGraphMtEph.rs",
     "lines": "130-133",
     "spec_strength": "unknown",
-    "snippet": "        fn arcs(&self) -> (arcs: SetStEph<Edge<V>>)\n            requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>(), valid_key_type_Edge::<V>()\n            ensures forall |u: V::V, w: V::V| arcs@.contains((u, w)) == \n                (exists |l: L::V| #![trigger self@.A.contains((u, w, l))] self@.A.contains((u, w, l)));"
+    "snippet": "        fn arcs(&self) -> (arcs: SetStEph<Edge<V>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>(), valid_key_type_Edge::<V>()\n            ensures forall |u: V::V, w: V::V| arcs@.contains((u, w)) == \n                (exists |l: L::V| #![trigger self@.A.contains((u, w, l))] self@.A.contains((u, w, l)));"
   },
   {
     "id": 49,
@@ -389,7 +389,7 @@
     "file": "Chap06/LabDirGraphMtEph.rs",
     "lines": "137-139",
     "spec_strength": "unknown",
-    "snippet": "        fn add_vertex(&mut self, v: V)\n            requires wf_lab_graph_view(old(self)@), valid_key_type_for_lab_graph::<V, L>()\n            ensures wf_lab_graph_view(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;"
+    "snippet": "        fn add_vertex(&mut self, v: V)\n            requires spec_labgraphview_wf(old(self)@), valid_key_type_for_lab_graph::<V, L>()\n            ensures spec_labgraphview_wf(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;"
   },
   {
     "id": 50,
@@ -397,7 +397,7 @@
     "file": "Chap06/LabDirGraphMtEph.rs",
     "lines": "143-148",
     "spec_strength": "unknown",
-    "snippet": "        fn add_labeled_arc(&mut self, from: V, to: V, label: L)\n            requires wf_lab_graph_view(old(self)@), valid_key_type_for_lab_graph::<V, L>()\n            ensures \n                wf_lab_graph_view(self@),\n                self@.V == old(self)@.V.insert(from@).insert(to@),\n                self@.A == old(self)@.A.insert((from@, to@, label@));"
+    "snippet": "        fn add_labeled_arc(&mut self, from: V, to: V, label: L)\n            requires spec_labgraphview_wf(old(self)@), valid_key_type_for_lab_graph::<V, L>()\n            ensures \n                spec_labgraphview_wf(self@),\n                self@.V == old(self)@.V.insert(from@).insert(to@),\n                self@.A == old(self)@.A.insert((from@, to@, label@));"
   },
   {
     "id": 51,
@@ -405,7 +405,7 @@
     "file": "Chap06/LabDirGraphMtEph.rs",
     "lines": "152-157",
     "spec_strength": "unknown",
-    "snippet": "        fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>)\n            requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>()\n            ensures match label {\n                Some(l) => self@.A.contains((from@, to@, l@)),\n                None => forall |l: L::V| !self@.A.contains((from@, to@, l)),\n            };"
+    "snippet": "        fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>)\n            requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>()\n            ensures match label {\n                Some(l) => self@.A.contains((from@, to@, l@)),\n                None => forall |l: L::V| !self@.A.contains((from@, to@, l)),\n            };"
   },
   {
     "id": 52,
@@ -413,7 +413,7 @@
     "file": "Chap06/LabDirGraphMtEph.rs",
     "lines": "161-163",
     "spec_strength": "unknown",
-    "snippet": "        fn has_arc(&self, from: &V, to: &V) -> (b: bool)\n            requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>()\n            ensures b == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l)));"
+    "snippet": "        fn has_arc(&self, from: &V, to: &V) -> (b: bool)\n            requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>()\n            ensures b == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l)));"
   },
   {
     "id": 53,
@@ -421,7 +421,7 @@
     "file": "Chap06/LabDirGraphMtEph.rs",
     "lines": "196-203",
     "spec_strength": "unknown",
-    "snippet": "        fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)\n            requires \n                wf_lab_graph_view(self@), \n                valid_key_type_for_lab_graph::<V, L>(),\n                self@.V.contains(v@),\n            ensures \n                n_plus@ == self.spec_n_plus(v@),\n                n_plus@ <= self@.V;"
+    "snippet": "        fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)\n            requires \n                spec_labgraphview_wf(self@), \n                valid_key_type_for_lab_graph::<V, L>(),\n                self@.V.contains(v@),\n            ensures \n                n_plus@ == self.spec_n_plus(v@),\n                n_plus@ <= self@.V;"
   },
   {
     "id": 54,
@@ -429,7 +429,7 @@
     "file": "Chap06/LabDirGraphMtEph.rs",
     "lines": "208-215",
     "spec_strength": "unknown",
-    "snippet": "        fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)\n            requires \n                wf_lab_graph_view(self@), \n                valid_key_type_for_lab_graph::<V, L>(),\n                self@.V.contains(v@),\n            ensures \n                n_minus@ == self.spec_n_minus(v@),\n                n_minus@ <= self@.V;"
+    "snippet": "        fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)\n            requires \n                spec_labgraphview_wf(self@), \n                valid_key_type_for_lab_graph::<V, L>(),\n                self@.V.contains(v@),\n            ensures \n                n_minus@ == self.spec_n_minus(v@),\n                n_minus@ <= self@.V;"
   },
   {
     "id": 55,
@@ -437,7 +437,7 @@
     "file": "Chap06/LabDirGraphMtEph.rs",
     "lines": "222-235",
     "spec_strength": "unknown",
-    "snippet": "    fn n_plus_par<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(\n        g: &LabDirGraphMtEph<V, L>, \n        v: V, \n        arcs: SetStEph<LabEdge<V, L>>\n    ) -> (n_plus: SetStEph<V>)\n        requires\n            valid_key_type::<V>(),\n            valid_key_type_LabEdge::<V, L>(),\n            wf_lab_graph_view(g@),\n            arcs@ <= g@.A,\n        ensures \n            n_plus@ == g.spec_n_plus_from_set(v@, arcs@),\n            n_plus@ <= g.spec_n_plus(v@)\n        decreases arcs@.len()"
+    "snippet": "    fn n_plus_par<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(\n        g: &LabDirGraphMtEph<V, L>, \n        v: V, \n        arcs: SetStEph<LabEdge<V, L>>\n    ) -> (n_plus: SetStEph<V>)\n        requires\n            valid_key_type::<V>(),\n            valid_key_type_LabEdge::<V, L>(),\n            spec_labgraphview_wf(g@),\n            arcs@ <= g@.A,\n        ensures \n            n_plus@ == g.spec_n_plus_from_set(v@, arcs@),\n            n_plus@ <= g.spec_n_plus(v@)\n        decreases arcs@.len()"
   },
   {
     "id": 56,
@@ -445,7 +445,7 @@
     "file": "Chap06/LabDirGraphMtEph.rs",
     "lines": "337-350",
     "spec_strength": "unknown",
-    "snippet": "    fn n_minus_par<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(\n        g: &LabDirGraphMtEph<V, L>, \n        v: V, \n        arcs: SetStEph<LabEdge<V, L>>\n    ) -> (n_minus: SetStEph<V>)\n        requires\n            valid_key_type::<V>(),\n            valid_key_type_LabEdge::<V, L>(),\n            wf_lab_graph_view(g@),\n            arcs@ <= g@.A,\n        ensures \n            n_minus@ == g.spec_n_minus_from_set(v@, arcs@),\n            n_minus@ <= g.spec_n_minus(v@)\n        decreases arcs@.len()"
+    "snippet": "    fn n_minus_par<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(\n        g: &LabDirGraphMtEph<V, L>, \n        v: V, \n        arcs: SetStEph<LabEdge<V, L>>\n    ) -> (n_minus: SetStEph<V>)\n        requires\n            valid_key_type::<V>(),\n            valid_key_type_LabEdge::<V, L>(),\n            spec_labgraphview_wf(g@),\n            arcs@ <= g@.A,\n        ensures \n            n_minus@ == g.spec_n_minus_from_set(v@, arcs@),\n            n_minus@ <= g.spec_n_minus(v@)\n        decreases arcs@.len()"
   },
   {
     "id": 57,
@@ -453,7 +453,7 @@
     "file": "Chap06/LabDirGraphStEph.rs",
     "lines": "70-75",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (g: LabDirGraphStEph<V, L>)\n            requires valid_key_type_LabEdge::<V, L>()\n            ensures\n                wf_lab_graph_view(g@),\n                g@.V =~= Set::<<V as View>::V>::empty(),\n                g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();"
+    "snippet": "        fn empty() -> (g: LabDirGraphStEph<V, L>)\n            requires valid_key_type_LabEdge::<V, L>()\n            ensures\n                spec_labgraphview_wf(g@),\n                g@.V =~= Set::<<V as View>::V>::empty(),\n                g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();"
   },
   {
     "id": 58,
@@ -461,7 +461,7 @@
     "file": "Chap06/LabDirGraphStEph.rs",
     "lines": "79-87",
     "spec_strength": "unknown",
-    "snippet": "        fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: LabDirGraphStEph<V, L>)\n            requires\n                forall |u: V::V, w: V::V, l: L::V| \n                    #[trigger] labeled_arcs@.contains((u, w, l)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures\n                wf_lab_graph_view(g@),\n                g@.V =~= vertices@,\n                g@.A =~= labeled_arcs@;"
+    "snippet": "        fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: LabDirGraphStEph<V, L>)\n            requires\n                forall |u: V::V, w: V::V, l: L::V| \n                    #[trigger] labeled_arcs@.contains((u, w, l)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures\n                spec_labgraphview_wf(g@),\n                g@.V =~= vertices@,\n                g@.A =~= labeled_arcs@;"
   },
   {
     "id": 59,
@@ -509,7 +509,7 @@
     "file": "Chap06/LabDirGraphStEph.rs",
     "lines": "121-125",
     "spec_strength": "unknown",
-    "snippet": "        fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>)\n            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()\n            ensures \n                label.is_some() == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l))),\n                label.is_some() ==> self@.A.contains((from@, to@, label.unwrap()@));"
+    "snippet": "        fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>)\n            requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()\n            ensures \n                label.is_some() == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l))),\n                label.is_some() ==> self@.A.contains((from@, to@, label.unwrap()@));"
   },
   {
     "id": 65,
@@ -517,7 +517,7 @@
     "file": "Chap06/LabDirGraphStEph.rs",
     "lines": "129-131",
     "spec_strength": "unknown",
-    "snippet": "        fn has_arc(&self, from: &V, to: &V) -> (b: bool)\n            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()\n            ensures b == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l)));"
+    "snippet": "        fn has_arc(&self, from: &V, to: &V) -> (b: bool)\n            requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()\n            ensures b == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l)));"
   },
   {
     "id": 66,
@@ -525,7 +525,7 @@
     "file": "Chap06/LabDirGraphStEph.rs",
     "lines": "136-138",
     "spec_strength": "unknown",
-    "snippet": "        fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)\n            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()\n            ensures n_plus@.finite(), n_plus@ == self.spec_n_plus(v@);"
+    "snippet": "        fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)\n            requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()\n            ensures n_plus@.finite(), n_plus@ == self.spec_n_plus(v@);"
   },
   {
     "id": 67,
@@ -533,7 +533,7 @@
     "file": "Chap06/LabDirGraphStEph.rs",
     "lines": "143-145",
     "spec_strength": "unknown",
-    "snippet": "        fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)\n            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()\n            ensures n_minus@.finite(), n_minus@ == self.spec_n_minus(v@);"
+    "snippet": "        fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)\n            requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()\n            ensures n_minus@.finite(), n_minus@ == self.spec_n_minus(v@);"
   },
   {
     "id": 68,
@@ -541,7 +541,7 @@
     "file": "Chap06/LabUnDirGraphMtEph.rs",
     "lines": "105-110",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (g: Self)\n            requires valid_key_type_for_lab_graph::<V, L>()\n            ensures\n                wf_lab_graph_view(g@),\n                g@.V == Set::<<V as View>::V>::empty(),\n                g@.A == Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();"
+    "snippet": "        fn empty() -> (g: Self)\n            requires valid_key_type_for_lab_graph::<V, L>()\n            ensures\n                spec_labgraphview_wf(g@),\n                g@.V == Set::<<V as View>::V>::empty(),\n                g@.A == Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();"
   },
   {
     "id": 69,
@@ -549,7 +549,7 @@
     "file": "Chap06/LabUnDirGraphMtEph.rs",
     "lines": "114-124",
     "spec_strength": "unknown",
-    "snippet": "        fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: Self)\n            requires\n                valid_key_type_for_lab_graph::<V, L>(),\n                vertices@.finite(),\n                labeled_edges@.finite(),\n                forall |u: V::V, w: V::V, l: L::V|\n                    #[trigger] labeled_edges@.contains((u, w, l)) ==> vertices@.contains(u) && vertices@.contains(w),\n            ensures\n                wf_lab_graph_view(g@),\n                g@.V == vertices@,\n                g@.A == labeled_edges@;"
+    "snippet": "        fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: Self)\n            requires\n                valid_key_type_for_lab_graph::<V, L>(),\n                vertices@.finite(),\n                labeled_edges@.finite(),\n                forall |u: V::V, w: V::V, l: L::V|\n                    #[trigger] labeled_edges@.contains((u, w, l)) ==> vertices@.contains(u) && vertices@.contains(w),\n            ensures\n                spec_labgraphview_wf(g@),\n                g@.V == vertices@,\n                g@.A == labeled_edges@;"
   },
   {
     "id": 70,
@@ -573,7 +573,7 @@
     "file": "Chap06/LabUnDirGraphMtEph.rs",
     "lines": "138-141",
     "spec_strength": "unknown",
-    "snippet": "        fn edges(&self) -> (edges: SetStEph<Edge<V>>)\n            requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>(), valid_key_type_Edge::<V>()\n            ensures forall |u: V::V, w: V::V| edges@.contains((u, w)) ==\n                (exists |l: L::V| #![trigger self@.A.contains((u, w, l))] self@.A.contains((u, w, l)));"
+    "snippet": "        fn edges(&self) -> (edges: SetStEph<Edge<V>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>(), valid_key_type_Edge::<V>()\n            ensures forall |u: V::V, w: V::V| edges@.contains((u, w)) ==\n                (exists |l: L::V| #![trigger self@.A.contains((u, w, l))] self@.A.contains((u, w, l)));"
   },
   {
     "id": 73,
@@ -581,7 +581,7 @@
     "file": "Chap06/LabUnDirGraphMtEph.rs",
     "lines": "145-147",
     "spec_strength": "unknown",
-    "snippet": "        fn add_vertex(&mut self, v: V)\n            requires wf_lab_graph_view(old(self)@), valid_key_type_for_lab_graph::<V, L>()\n            ensures wf_lab_graph_view(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;"
+    "snippet": "        fn add_vertex(&mut self, v: V)\n            requires spec_labgraphview_wf(old(self)@), valid_key_type_for_lab_graph::<V, L>()\n            ensures spec_labgraphview_wf(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;"
   },
   {
     "id": 74,
@@ -589,7 +589,7 @@
     "file": "Chap06/LabUnDirGraphMtEph.rs",
     "lines": "151-153",
     "spec_strength": "unknown",
-    "snippet": "        fn add_labeled_edge(&mut self, v1: V, v2: V, label: L)\n            requires wf_lab_graph_view(old(self)@), valid_key_type_for_lab_graph::<V, L>()\n            ensures wf_lab_graph_view(self@);"
+    "snippet": "        fn add_labeled_edge(&mut self, v1: V, v2: V, label: L)\n            requires spec_labgraphview_wf(old(self)@), valid_key_type_for_lab_graph::<V, L>()\n            ensures spec_labgraphview_wf(self@);"
   },
   {
     "id": 75,
@@ -597,7 +597,7 @@
     "file": "Chap06/LabUnDirGraphMtEph.rs",
     "lines": "157-162",
     "spec_strength": "unknown",
-    "snippet": "        fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>)\n            requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>()\n            ensures match label {\n                Some(l) => self@.A.contains((v1@, v2@, l@)) || self@.A.contains((v2@, v1@, l@)),\n                None => forall |l: L::V| !self@.A.contains((v1@, v2@, l)) && !self@.A.contains((v2@, v1@, l)),\n            };"
+    "snippet": "        fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>)\n            requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>()\n            ensures match label {\n                Some(l) => self@.A.contains((v1@, v2@, l@)) || self@.A.contains((v2@, v1@, l@)),\n                None => forall |l: L::V| !self@.A.contains((v1@, v2@, l)) && !self@.A.contains((v2@, v1@, l)),\n            };"
   },
   {
     "id": 76,
@@ -605,7 +605,7 @@
     "file": "Chap06/LabUnDirGraphMtEph.rs",
     "lines": "166-171",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, v1: &V, v2: &V) -> (b: bool)\n            requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>()\n            ensures b == (exists |l: L::V| \n                #![trigger self@.A.contains((v1@, v2@, l))] \n                #![trigger self@.A.contains((v2@, v1@, l))]\n                self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l)));"
+    "snippet": "        fn has_edge(&self, v1: &V, v2: &V) -> (b: bool)\n            requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>()\n            ensures b == (exists |l: L::V| \n                #![trigger self@.A.contains((v1@, v2@, l))] \n                #![trigger self@.A.contains((v2@, v1@, l))]\n                self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l)));"
   },
   {
     "id": 77,
@@ -613,7 +613,7 @@
     "file": "Chap06/LabUnDirGraphMtEph.rs",
     "lines": "181-188",
     "spec_strength": "unknown",
-    "snippet": "        fn ng(&self, v: &V) -> (ng: SetStEph<V>)\n            requires\n                wf_lab_graph_view(self@),\n                valid_key_type_for_lab_graph::<V, L>(),\n                self@.V.contains(v@),\n            ensures\n                ng@ == self.spec_ng(v@),\n                ng@ <= self@.V;"
+    "snippet": "        fn ng(&self, v: &V) -> (ng: SetStEph<V>)\n            requires\n                spec_labgraphview_wf(self@),\n                valid_key_type_for_lab_graph::<V, L>(),\n                self@.V.contains(v@),\n            ensures\n                ng@ == self.spec_ng(v@),\n                ng@ <= self@.V;"
   },
   {
     "id": 78,
@@ -621,7 +621,7 @@
     "file": "Chap06/LabUnDirGraphMtEph.rs",
     "lines": "195-208",
     "spec_strength": "unknown",
-    "snippet": "    fn ng_par<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static>(\n        g: &LabUnDirGraphMtEph<V, L>, \n        v: V, \n        edges: SetStEph<LabEdge<V, L>>\n    ) -> (neighbors: SetStEph<V>)\n        requires\n            valid_key_type::<V>(),\n            valid_key_type_LabEdge::<V, L>(),\n            wf_lab_graph_view(g@),\n            edges@ <= g@.A,\n        ensures \n            neighbors@ == g.spec_ng_from_set(v@, edges@),\n            neighbors@ <= g.spec_ng(v@)\n        decreases edges@.len()"
+    "snippet": "    fn ng_par<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static>(\n        g: &LabUnDirGraphMtEph<V, L>, \n        v: V, \n        edges: SetStEph<LabEdge<V, L>>\n    ) -> (neighbors: SetStEph<V>)\n        requires\n            valid_key_type::<V>(),\n            valid_key_type_LabEdge::<V, L>(),\n            spec_labgraphview_wf(g@),\n            edges@ <= g@.A,\n        ensures \n            neighbors@ == g.spec_ng_from_set(v@, edges@),\n            neighbors@ <= g.spec_ng(v@)\n        decreases edges@.len()"
   },
   {
     "id": 79,
@@ -629,7 +629,7 @@
     "file": "Chap06/LabUnDirGraphStEph.rs",
     "lines": "66-71",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (g: LabUnDirGraphStEph<V, L>)\n            requires valid_key_type_LabEdge::<V, L>()\n            ensures\n                wf_lab_graph_view(g@),\n                g@.V =~= Set::<<V as View>::V>::empty(),\n                g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();"
+    "snippet": "        fn empty() -> (g: LabUnDirGraphStEph<V, L>)\n            requires valid_key_type_LabEdge::<V, L>()\n            ensures\n                spec_labgraphview_wf(g@),\n                g@.V =~= Set::<<V as View>::V>::empty(),\n                g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();"
   },
   {
     "id": 80,
@@ -637,7 +637,7 @@
     "file": "Chap06/LabUnDirGraphStEph.rs",
     "lines": "75-83",
     "spec_strength": "unknown",
-    "snippet": "        fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: LabUnDirGraphStEph<V, L>)\n            requires\n                forall |u: V::V, w: V::V, l: L::V| \n                    #[trigger] labeled_edges@.contains((u, w, l)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures\n                wf_lab_graph_view(g@),\n                g@.V =~= vertices@,\n                g@.A =~= labeled_edges@;"
+    "snippet": "        fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: LabUnDirGraphStEph<V, L>)\n            requires\n                forall |u: V::V, w: V::V, l: L::V| \n                    #[trigger] labeled_edges@.contains((u, w, l)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures\n                spec_labgraphview_wf(g@),\n                g@.V =~= vertices@,\n                g@.A =~= labeled_edges@;"
   },
   {
     "id": 81,
@@ -685,7 +685,7 @@
     "file": "Chap06/LabUnDirGraphStEph.rs",
     "lines": "119-125",
     "spec_strength": "unknown",
-    "snippet": "        fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>)\n            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()\n            ensures \n                label.is_some() == (exists |l: L::V| \n                    self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l))),\n                label.is_some() ==> (self@.A.contains((v1@, v2@, label.unwrap()@)) || \n                                      self@.A.contains((v2@, v1@, label.unwrap()@)));"
+    "snippet": "        fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>)\n            requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()\n            ensures \n                label.is_some() == (exists |l: L::V| \n                    self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l))),\n                label.is_some() ==> (self@.A.contains((v1@, v2@, label.unwrap()@)) || \n                                      self@.A.contains((v2@, v1@, label.unwrap()@)));"
   },
   {
     "id": 87,
@@ -693,7 +693,7 @@
     "file": "Chap06/LabUnDirGraphStEph.rs",
     "lines": "129-132",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, v1: &V, v2: &V) -> (b: bool)\n            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()\n            ensures b == (exists |l: L::V| \n                self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l)));"
+    "snippet": "        fn has_edge(&self, v1: &V, v2: &V) -> (b: bool)\n            requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()\n            ensures b == (exists |l: L::V| \n                self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l)));"
   },
   {
     "id": 88,
@@ -701,7 +701,7 @@
     "file": "Chap06/LabUnDirGraphStEph.rs",
     "lines": "136-138",
     "spec_strength": "unknown",
-    "snippet": "        fn ng(&self, v: &V) -> (ng: SetStEph<V>)\n            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()\n            ensures ng@ == self.spec_ng(v@);"
+    "snippet": "        fn ng(&self, v: &V) -> (ng: SetStEph<V>)\n            requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()\n            ensures ng@ == self.spec_ng(v@);"
   },
   {
     "id": 89,
@@ -709,7 +709,7 @@
     "file": "Chap06/UnDirGraphMtEph.rs",
     "lines": "110-115",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (g: Self)\n            requires valid_key_type_for_graph::<V>()\n            ensures \n                wf_graph_view(g@),\n                g@.V == Set::<<V as View>::V>::empty(), \n                g@.A == Set::<(<V as View>::V, <V as View>::V)>::empty();"
+    "snippet": "        fn empty() -> (g: Self)\n            requires valid_key_type_for_graph::<V>()\n            ensures \n                spec_graphview_wf(g@),\n                g@.V == Set::<<V as View>::V>::empty(), \n                g@.A == Set::<(<V as View>::V, <V as View>::V)>::empty();"
   },
   {
     "id": 90,
@@ -717,7 +717,7 @@
     "file": "Chap06/UnDirGraphMtEph.rs",
     "lines": "119-129",
     "spec_strength": "unknown",
-    "snippet": "        fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: Self)\n            requires \n                valid_key_type_for_graph::<V>(),\n                V@.finite(),\n                E@.finite(),\n                forall |u: V::V, w: V::V| \n                    #[trigger] E@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),\n            ensures \n                wf_graph_view(g@),\n                g@.V == V@, \n                g@.A == E@;"
+    "snippet": "        fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: Self)\n            requires \n                valid_key_type_for_graph::<V>(),\n                V@.finite(),\n                E@.finite(),\n                forall |u: V::V, w: V::V| \n                    #[trigger] E@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),\n            ensures \n                spec_graphview_wf(g@),\n                g@.V == V@, \n                g@.A == E@;"
   },
   {
     "id": 91,
@@ -757,7 +757,7 @@
     "file": "Chap06/UnDirGraphMtEph.rs",
     "lines": "153-159",
     "spec_strength": "unknown",
-    "snippet": "        fn neighbor(&self, u: &V, v: &V) -> (b: B)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(u@),\n                self@.V.contains(v@),\n            ensures b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)));"
+    "snippet": "        fn neighbor(&self, u: &V, v: &V) -> (b: B)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(u@),\n                self@.V.contains(v@),\n            ensures b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)));"
   },
   {
     "id": 96,
@@ -765,7 +765,7 @@
     "file": "Chap06/UnDirGraphMtEph.rs",
     "lines": "169-176",
     "spec_strength": "unknown",
-    "snippet": "        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures \n                neighbors@ == self.spec_ng(v@),\n                neighbors@ <= self@.V;"
+    "snippet": "        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures \n                neighbors@ == self.spec_ng(v@),\n                neighbors@ <= self@.V;"
   },
   {
     "id": 97,
@@ -773,7 +773,7 @@
     "file": "Chap06/UnDirGraphMtEph.rs",
     "lines": "186-193",
     "spec_strength": "unknown",
-    "snippet": "        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_for_graph::<V>(),\n                u_set@ <= self@.V,\n            ensures \n                neighbors@ == self.spec_ng_of_vertices(u_set@),\n                neighbors@ <= self@.V;"
+    "snippet": "        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_for_graph::<V>(),\n                u_set@ <= self@.V,\n            ensures \n                neighbors@ == self.spec_ng_of_vertices(u_set@),\n                neighbors@ <= self@.V;"
   },
   {
     "id": 98,
@@ -789,7 +789,7 @@
     "file": "Chap06/UnDirGraphMtEph.rs",
     "lines": "203-208",
     "spec_strength": "unknown",
-    "snippet": "        fn degree(&self, v: &V) -> (n: N)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures n == self.spec_ng(v@).len();"
+    "snippet": "        fn degree(&self, v: &V) -> (n: N)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_for_graph::<V>(),\n                self@.V.contains(v@),\n            ensures n == self.spec_ng(v@).len();"
   },
   {
     "id": 100,
@@ -797,7 +797,7 @@
     "file": "Chap06/UnDirGraphMtEph.rs",
     "lines": "215-225",
     "spec_strength": "unknown",
-    "snippet": "    fn ng_par<V: StTInMtT + Hash + 'static>(g: &UnDirGraphMtEph<V>, v: V, edges: SetStEph<Edge<V>>) \n                                                  -> (neighbors: SetStEph<V>)\n        requires\n            valid_key_type::<V>(),\n            valid_key_type::<Edge<V>>(),\n            wf_graph_view(g@),\n            edges@ <= g@.A,\n        ensures \n            neighbors@ == g.spec_ng_from_set(v@, edges@),\n            neighbors@ <= g.spec_ng(v@)\n        decreases edges@.len()"
+    "snippet": "    fn ng_par<V: StTInMtT + Hash + 'static>(g: &UnDirGraphMtEph<V>, v: V, edges: SetStEph<Edge<V>>) \n                                                  -> (neighbors: SetStEph<V>)\n        requires\n            valid_key_type::<V>(),\n            valid_key_type::<Edge<V>>(),\n            spec_graphview_wf(g@),\n            edges@ <= g@.A,\n        ensures \n            neighbors@ == g.spec_ng_from_set(v@, edges@),\n            neighbors@ <= g.spec_ng(v@)\n        decreases edges@.len()"
   },
   {
     "id": 101,
@@ -805,7 +805,7 @@
     "file": "Chap06/UnDirGraphMtEph.rs",
     "lines": "312-324",
     "spec_strength": "unknown",
-    "snippet": "    fn ng_of_vertices_par<V: StTInMtT + Hash + 'static>(\n        g: &UnDirGraphMtEph<V>,\n        verts: SetStEph<V>,\n    ) -> (neighbors: SetStEph<V>)\n        requires \n            valid_key_type::<V>(),\n            valid_key_type::<Edge<V>>(),\n            wf_graph_view(g@),\n            verts@ <= g@.V,\n        ensures \n            neighbors@ == g.spec_ng_of_vertices_from_set(verts@),\n            neighbors@ <= g@.V\n        decreases verts@.len()"
+    "snippet": "    fn ng_of_vertices_par<V: StTInMtT + Hash + 'static>(\n        g: &UnDirGraphMtEph<V>,\n        verts: SetStEph<V>,\n    ) -> (neighbors: SetStEph<V>)\n        requires \n            valid_key_type::<V>(),\n            valid_key_type::<Edge<V>>(),\n            spec_graphview_wf(g@),\n            verts@ <= g@.V,\n        ensures \n            neighbors@ == g.spec_ng_of_vertices_from_set(verts@),\n            neighbors@ <= g@.V\n        decreases verts@.len()"
   },
   {
     "id": 102,
@@ -821,7 +821,7 @@
     "file": "Chap06/UnDirGraphStEph.rs",
     "lines": "95-100",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (g: UnDirGraphStEph<V>)\n            requires valid_key_type_Edge::<V>()\n            ensures\n                wf_graph_view(g@),\n                g@.V =~= Set::<<V as View>::V>::empty(),\n                g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();"
+    "snippet": "        fn empty() -> (g: UnDirGraphStEph<V>)\n            requires valid_key_type_Edge::<V>()\n            ensures\n                spec_graphview_wf(g@),\n                g@.V =~= Set::<<V as View>::V>::empty(),\n                g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();"
   },
   {
     "id": 104,
@@ -829,7 +829,7 @@
     "file": "Chap06/UnDirGraphStEph.rs",
     "lines": "103-110",
     "spec_strength": "unknown",
-    "snippet": "        fn from_sets(vertices: SetStEph<V>, edges: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>)\n            requires\n                forall |u: V::V, w: V::V| \n                    #[trigger] edges@.contains((u, w)) ==> vertices@.contains(u) && vertices@.contains(w),\n            ensures\n                wf_graph_view(g@),\n                g@.V =~= vertices@,\n                g@.A =~= edges@;"
+    "snippet": "        fn from_sets(vertices: SetStEph<V>, edges: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>)\n            requires\n                forall |u: V::V, w: V::V| \n                    #[trigger] edges@.contains((u, w)) ==> vertices@.contains(u) && vertices@.contains(w),\n            ensures\n                spec_graphview_wf(g@),\n                g@.V =~= vertices@,\n                g@.A =~= edges@;"
   },
   {
     "id": 105,
@@ -869,7 +869,7 @@
     "file": "Chap06/UnDirGraphStEph.rs",
     "lines": "135-141",
     "spec_strength": "unknown",
-    "snippet": "        fn neighbor(&self, u: &V, v: &V) -> (b: B)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_Edge::<V>(),\n                self@.V.contains(u@),\n                self@.V.contains(v@),\n            ensures b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)));"
+    "snippet": "        fn neighbor(&self, u: &V, v: &V) -> (b: B)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_Edge::<V>(),\n                self@.V.contains(u@),\n                self@.V.contains(v@),\n            ensures b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)));"
   },
   {
     "id": 110,
@@ -877,7 +877,7 @@
     "file": "Chap06/UnDirGraphStEph.rs",
     "lines": "144-151",
     "spec_strength": "unknown",
-    "snippet": "        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_Edge::<V>(),\n                self@.V.contains(v@),\n            ensures \n                neighbors@ == self.spec_ng(v@),\n                neighbors@ <= self@.V;"
+    "snippet": "        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_Edge::<V>(),\n                self@.V.contains(v@),\n            ensures \n                neighbors@ == self.spec_ng(v@),\n                neighbors@ <= self@.V;"
   },
   {
     "id": 111,
@@ -885,7 +885,7 @@
     "file": "Chap06/UnDirGraphStEph.rs",
     "lines": "154-161",
     "spec_strength": "unknown",
-    "snippet": "        fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_Edge::<V>(),\n                vertices@ <= self@.V,\n            ensures \n                neighbors@ == self.spec_ng_of_vertices(vertices@),\n                neighbors@ <= self@.V;"
+    "snippet": "        fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_Edge::<V>(),\n                vertices@ <= self@.V,\n            ensures \n                neighbors@ == self.spec_ng_of_vertices(vertices@),\n                neighbors@ <= self@.V;"
   },
   {
     "id": 112,
@@ -901,7 +901,7 @@
     "file": "Chap06/UnDirGraphStEph.rs",
     "lines": "169-174",
     "spec_strength": "unknown",
-    "snippet": "        fn degree(&self, v: &V) -> (n: N)\n            requires \n                wf_graph_view(self@),\n                valid_key_type_Edge::<V>(),\n                self@.V.contains(v@),\n            ensures n == self.spec_degree(v@);"
+    "snippet": "        fn degree(&self, v: &V) -> (n: N)\n            requires \n                spec_graphview_wf(self@),\n                valid_key_type_Edge::<V>(),\n                self@.V.contains(v@),\n            ensures n == self.spec_degree(v@);"
   },
   {
     "id": 114,
@@ -917,7 +917,7 @@
     "file": "Chap06/WeightedDirGraphStEphI128.rs",
     "lines": "42-48",
     "spec_strength": "unknown",
-    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i128>>) -> (g: WeightedDirGraphStEphI128<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, i128>(),\n                forall |u: V::V, w: V::V, weight: i128| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures wf_lab_graph_view(g@), g@.V =~= vertices@;"
+    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i128>>) -> (g: WeightedDirGraphStEphI128<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, i128>(),\n                forall |u: V::V, w: V::V, weight: i128| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;"
   },
   {
     "id": 116,
@@ -933,7 +933,7 @@
     "file": "Chap06/WeightedDirGraphStEphI128.rs",
     "lines": "58-62",
     "spec_strength": "unknown",
-    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i128>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i128>()\n            ensures \n                weight.is_some() == (exists |w: i128| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
+    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i128>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i128>()\n            ensures \n                weight.is_some() == (exists |w: i128| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
   },
   {
     "id": 118,
@@ -941,7 +941,7 @@
     "file": "Chap06/WeightedDirGraphStEphI128.rs",
     "lines": "65-68",
     "spec_strength": "unknown",
-    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i128>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i128>()\n            ensures \n                forall |t: (V::V, V::V, i128)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
+    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i128>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i128>()\n            ensures \n                forall |t: (V::V, V::V, i128)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
   },
   {
     "id": 119,
@@ -949,7 +949,7 @@
     "file": "Chap06/WeightedDirGraphStEphI128.rs",
     "lines": "71-75",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i128>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i128>()\n            ensures \n                forall |p: (V::V, i128)| out_neighbors@.contains(p) == \n                    (exists |w: i128| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
+    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i128>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i128>()\n            ensures \n                forall |p: (V::V, i128)| out_neighbors@.contains(p) == \n                    (exists |w: i128| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
   },
   {
     "id": 120,
@@ -957,7 +957,7 @@
     "file": "Chap06/WeightedDirGraphStEphI128.rs",
     "lines": "78-82",
     "spec_strength": "unknown",
-    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i128>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i128>()\n            ensures \n                forall |p: (V::V, i128)| in_neighbors@.contains(p) == \n                    (exists |w: i128| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
+    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i128>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i128>()\n            ensures \n                forall |p: (V::V, i128)| in_neighbors@.contains(p) == \n                    (exists |w: i128| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
   },
   {
     "id": 121,
@@ -965,7 +965,7 @@
     "file": "Chap06/WeightedDirGraphStEphI128.rs",
     "lines": "85-87",
     "spec_strength": "unknown",
-    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedI128)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i128>()\n            ensures total_weight@ == self.spec_total_weight();"
+    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedI128)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i128>()\n            ensures total_weight@ == self.spec_total_weight();"
   },
   {
     "id": 122,
@@ -973,7 +973,7 @@
     "file": "Chap06/WeightedDirGraphStEphI128.rs",
     "lines": "89-93",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_above_weight(&self, threshold: i128) -> (edges_above: SetStEph<WeightedEdge<V, i128>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i128>()\n            ensures \n                forall |t: (V::V, V::V, i128)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
+    "snippet": "        fn edges_above_weight(&self, threshold: i128) -> (edges_above: SetStEph<WeightedEdge<V, i128>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i128>()\n            ensures \n                forall |t: (V::V, V::V, i128)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
   },
   {
     "id": 123,
@@ -981,7 +981,7 @@
     "file": "Chap06/WeightedDirGraphStEphI128.rs",
     "lines": "95-99",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_below_weight(&self, threshold: i128) -> (edges_below: SetStEph<WeightedEdge<V, i128>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i128>()\n            ensures \n                forall |t: (V::V, V::V, i128)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
+    "snippet": "        fn edges_below_weight(&self, threshold: i128) -> (edges_below: SetStEph<WeightedEdge<V, i128>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i128>()\n            ensures \n                forall |t: (V::V, V::V, i128)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
   },
   {
     "id": 124,
@@ -989,7 +989,7 @@
     "file": "Chap06/WeightedDirGraphStEphI16.rs",
     "lines": "42-48",
     "spec_strength": "unknown",
-    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i16>>) -> (g: WeightedDirGraphStEphI16<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, i16>(),\n                forall |u: V::V, w: V::V, weight: i16| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures wf_lab_graph_view(g@), g@.V =~= vertices@;"
+    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i16>>) -> (g: WeightedDirGraphStEphI16<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, i16>(),\n                forall |u: V::V, w: V::V, weight: i16| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;"
   },
   {
     "id": 125,
@@ -1005,7 +1005,7 @@
     "file": "Chap06/WeightedDirGraphStEphI16.rs",
     "lines": "58-62",
     "spec_strength": "unknown",
-    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i16>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i16>()\n            ensures \n                weight.is_some() == (exists |w: i16| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
+    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i16>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i16>()\n            ensures \n                weight.is_some() == (exists |w: i16| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
   },
   {
     "id": 127,
@@ -1013,7 +1013,7 @@
     "file": "Chap06/WeightedDirGraphStEphI16.rs",
     "lines": "65-68",
     "spec_strength": "unknown",
-    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i16>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i16>()\n            ensures \n                forall |t: (V::V, V::V, i16)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
+    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i16>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i16>()\n            ensures \n                forall |t: (V::V, V::V, i16)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
   },
   {
     "id": 128,
@@ -1021,7 +1021,7 @@
     "file": "Chap06/WeightedDirGraphStEphI16.rs",
     "lines": "71-75",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i16>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i16>()\n            ensures \n                forall |p: (V::V, i16)| out_neighbors@.contains(p) == \n                    (exists |w: i16| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
+    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i16>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i16>()\n            ensures \n                forall |p: (V::V, i16)| out_neighbors@.contains(p) == \n                    (exists |w: i16| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
   },
   {
     "id": 129,
@@ -1029,7 +1029,7 @@
     "file": "Chap06/WeightedDirGraphStEphI16.rs",
     "lines": "78-82",
     "spec_strength": "unknown",
-    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i16>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i16>()\n            ensures \n                forall |p: (V::V, i16)| in_neighbors@.contains(p) == \n                    (exists |w: i16| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
+    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i16>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i16>()\n            ensures \n                forall |p: (V::V, i16)| in_neighbors@.contains(p) == \n                    (exists |w: i16| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
   },
   {
     "id": 130,
@@ -1037,7 +1037,7 @@
     "file": "Chap06/WeightedDirGraphStEphI16.rs",
     "lines": "85-87",
     "spec_strength": "unknown",
-    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedI16)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i16>()\n            ensures total_weight@ == self.spec_total_weight();"
+    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedI16)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i16>()\n            ensures total_weight@ == self.spec_total_weight();"
   },
   {
     "id": 131,
@@ -1045,7 +1045,7 @@
     "file": "Chap06/WeightedDirGraphStEphI16.rs",
     "lines": "89-93",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_above_weight(&self, threshold: i16) -> (edges_above: SetStEph<WeightedEdge<V, i16>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i16>()\n            ensures \n                forall |t: (V::V, V::V, i16)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
+    "snippet": "        fn edges_above_weight(&self, threshold: i16) -> (edges_above: SetStEph<WeightedEdge<V, i16>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i16>()\n            ensures \n                forall |t: (V::V, V::V, i16)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
   },
   {
     "id": 132,
@@ -1053,7 +1053,7 @@
     "file": "Chap06/WeightedDirGraphStEphI16.rs",
     "lines": "95-99",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_below_weight(&self, threshold: i16) -> (edges_below: SetStEph<WeightedEdge<V, i16>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i16>()\n            ensures \n                forall |t: (V::V, V::V, i16)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
+    "snippet": "        fn edges_below_weight(&self, threshold: i16) -> (edges_below: SetStEph<WeightedEdge<V, i16>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i16>()\n            ensures \n                forall |t: (V::V, V::V, i16)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
   },
   {
     "id": 133,
@@ -1061,7 +1061,7 @@
     "file": "Chap06/WeightedDirGraphStEphI32.rs",
     "lines": "42-48",
     "spec_strength": "unknown",
-    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i32>>) -> (g: WeightedDirGraphStEphI32<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, i32>(),\n                forall |u: V::V, w: V::V, weight: i32| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures wf_lab_graph_view(g@), g@.V =~= vertices@;"
+    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i32>>) -> (g: WeightedDirGraphStEphI32<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, i32>(),\n                forall |u: V::V, w: V::V, weight: i32| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;"
   },
   {
     "id": 134,
@@ -1077,7 +1077,7 @@
     "file": "Chap06/WeightedDirGraphStEphI32.rs",
     "lines": "58-62",
     "spec_strength": "unknown",
-    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i32>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i32>()\n            ensures \n                weight.is_some() == (exists |w: i32| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
+    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i32>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i32>()\n            ensures \n                weight.is_some() == (exists |w: i32| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
   },
   {
     "id": 136,
@@ -1085,7 +1085,7 @@
     "file": "Chap06/WeightedDirGraphStEphI32.rs",
     "lines": "65-68",
     "spec_strength": "unknown",
-    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i32>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i32>()\n            ensures \n                forall |t: (V::V, V::V, i32)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
+    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i32>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i32>()\n            ensures \n                forall |t: (V::V, V::V, i32)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
   },
   {
     "id": 137,
@@ -1093,7 +1093,7 @@
     "file": "Chap06/WeightedDirGraphStEphI32.rs",
     "lines": "71-75",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i32>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i32>()\n            ensures \n                forall |p: (V::V, i32)| out_neighbors@.contains(p) == \n                    (exists |w: i32| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
+    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i32>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i32>()\n            ensures \n                forall |p: (V::V, i32)| out_neighbors@.contains(p) == \n                    (exists |w: i32| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
   },
   {
     "id": 138,
@@ -1101,7 +1101,7 @@
     "file": "Chap06/WeightedDirGraphStEphI32.rs",
     "lines": "78-82",
     "spec_strength": "unknown",
-    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i32>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i32>()\n            ensures \n                forall |p: (V::V, i32)| in_neighbors@.contains(p) == \n                    (exists |w: i32| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
+    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i32>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i32>()\n            ensures \n                forall |p: (V::V, i32)| in_neighbors@.contains(p) == \n                    (exists |w: i32| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
   },
   {
     "id": 139,
@@ -1109,7 +1109,7 @@
     "file": "Chap06/WeightedDirGraphStEphI32.rs",
     "lines": "85-87",
     "spec_strength": "unknown",
-    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedI32)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i32>()\n            ensures total_weight@ == self.spec_total_weight();"
+    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedI32)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i32>()\n            ensures total_weight@ == self.spec_total_weight();"
   },
   {
     "id": 140,
@@ -1117,7 +1117,7 @@
     "file": "Chap06/WeightedDirGraphStEphI32.rs",
     "lines": "89-93",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_above_weight(&self, threshold: i32) -> (edges_above: SetStEph<WeightedEdge<V, i32>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i32>()\n            ensures \n                forall |t: (V::V, V::V, i32)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
+    "snippet": "        fn edges_above_weight(&self, threshold: i32) -> (edges_above: SetStEph<WeightedEdge<V, i32>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i32>()\n            ensures \n                forall |t: (V::V, V::V, i32)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
   },
   {
     "id": 141,
@@ -1125,7 +1125,7 @@
     "file": "Chap06/WeightedDirGraphStEphI32.rs",
     "lines": "95-99",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_below_weight(&self, threshold: i32) -> (edges_below: SetStEph<WeightedEdge<V, i32>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i32>()\n            ensures \n                forall |t: (V::V, V::V, i32)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
+    "snippet": "        fn edges_below_weight(&self, threshold: i32) -> (edges_below: SetStEph<WeightedEdge<V, i32>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i32>()\n            ensures \n                forall |t: (V::V, V::V, i32)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
   },
   {
     "id": 142,
@@ -1133,7 +1133,7 @@
     "file": "Chap06/WeightedDirGraphStEphI64.rs",
     "lines": "42-48",
     "spec_strength": "unknown",
-    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i64>>) -> (g: WeightedDirGraphStEphI64<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, i64>(),\n                forall |u: V::V, w: V::V, weight: i64| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures wf_lab_graph_view(g@), g@.V =~= vertices@;"
+    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i64>>) -> (g: WeightedDirGraphStEphI64<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, i64>(),\n                forall |u: V::V, w: V::V, weight: i64| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;"
   },
   {
     "id": 143,
@@ -1149,7 +1149,7 @@
     "file": "Chap06/WeightedDirGraphStEphI64.rs",
     "lines": "58-62",
     "spec_strength": "unknown",
-    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i64>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i64>()\n            ensures \n                weight.is_some() == (exists |w: i64| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
+    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i64>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i64>()\n            ensures \n                weight.is_some() == (exists |w: i64| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
   },
   {
     "id": 145,
@@ -1157,7 +1157,7 @@
     "file": "Chap06/WeightedDirGraphStEphI64.rs",
     "lines": "65-68",
     "spec_strength": "unknown",
-    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i64>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i64>()\n            ensures \n                forall |t: (V::V, V::V, i64)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
+    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i64>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i64>()\n            ensures \n                forall |t: (V::V, V::V, i64)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
   },
   {
     "id": 146,
@@ -1165,7 +1165,7 @@
     "file": "Chap06/WeightedDirGraphStEphI64.rs",
     "lines": "71-75",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i64>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i64>()\n            ensures \n                forall |p: (V::V, i64)| out_neighbors@.contains(p) == \n                    (exists |w: i64| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
+    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i64>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i64>()\n            ensures \n                forall |p: (V::V, i64)| out_neighbors@.contains(p) == \n                    (exists |w: i64| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
   },
   {
     "id": 147,
@@ -1173,7 +1173,7 @@
     "file": "Chap06/WeightedDirGraphStEphI64.rs",
     "lines": "78-82",
     "spec_strength": "unknown",
-    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i64>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i64>()\n            ensures \n                forall |p: (V::V, i64)| in_neighbors@.contains(p) == \n                    (exists |w: i64| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
+    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i64>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i64>()\n            ensures \n                forall |p: (V::V, i64)| in_neighbors@.contains(p) == \n                    (exists |w: i64| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
   },
   {
     "id": 148,
@@ -1181,7 +1181,7 @@
     "file": "Chap06/WeightedDirGraphStEphI64.rs",
     "lines": "85-87",
     "spec_strength": "unknown",
-    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedI64)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i64>()\n            ensures total_weight@ == self.spec_total_weight();"
+    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedI64)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i64>()\n            ensures total_weight@ == self.spec_total_weight();"
   },
   {
     "id": 149,
@@ -1189,7 +1189,7 @@
     "file": "Chap06/WeightedDirGraphStEphI64.rs",
     "lines": "89-93",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_above_weight(&self, threshold: i64) -> (edges_above: SetStEph<WeightedEdge<V, i64>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i64>()\n            ensures \n                forall |t: (V::V, V::V, i64)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
+    "snippet": "        fn edges_above_weight(&self, threshold: i64) -> (edges_above: SetStEph<WeightedEdge<V, i64>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i64>()\n            ensures \n                forall |t: (V::V, V::V, i64)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
   },
   {
     "id": 150,
@@ -1197,7 +1197,7 @@
     "file": "Chap06/WeightedDirGraphStEphI64.rs",
     "lines": "95-99",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_below_weight(&self, threshold: i64) -> (edges_below: SetStEph<WeightedEdge<V, i64>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i64>()\n            ensures \n                forall |t: (V::V, V::V, i64)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
+    "snippet": "        fn edges_below_weight(&self, threshold: i64) -> (edges_below: SetStEph<WeightedEdge<V, i64>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i64>()\n            ensures \n                forall |t: (V::V, V::V, i64)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
   },
   {
     "id": 151,
@@ -1205,7 +1205,7 @@
     "file": "Chap06/WeightedDirGraphStEphI8.rs",
     "lines": "42-48",
     "spec_strength": "unknown",
-    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i8>>) -> (g: WeightedDirGraphStEphI8<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, i8>(),\n                forall |u: V::V, w: V::V, weight: i8| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures wf_lab_graph_view(g@), g@.V =~= vertices@;"
+    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i8>>) -> (g: WeightedDirGraphStEphI8<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, i8>(),\n                forall |u: V::V, w: V::V, weight: i8| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;"
   },
   {
     "id": 152,
@@ -1221,7 +1221,7 @@
     "file": "Chap06/WeightedDirGraphStEphI8.rs",
     "lines": "58-62",
     "spec_strength": "unknown",
-    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i8>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i8>()\n            ensures \n                weight.is_some() == (exists |w: i8| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
+    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i8>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i8>()\n            ensures \n                weight.is_some() == (exists |w: i8| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
   },
   {
     "id": 154,
@@ -1229,7 +1229,7 @@
     "file": "Chap06/WeightedDirGraphStEphI8.rs",
     "lines": "65-68",
     "spec_strength": "unknown",
-    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i8>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i8>()\n            ensures \n                forall |t: (V::V, V::V, i8)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
+    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i8>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i8>()\n            ensures \n                forall |t: (V::V, V::V, i8)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
   },
   {
     "id": 155,
@@ -1237,7 +1237,7 @@
     "file": "Chap06/WeightedDirGraphStEphI8.rs",
     "lines": "71-75",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i8>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i8>()\n            ensures \n                forall |p: (V::V, i8)| out_neighbors@.contains(p) == \n                    (exists |w: i8| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
+    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i8>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i8>()\n            ensures \n                forall |p: (V::V, i8)| out_neighbors@.contains(p) == \n                    (exists |w: i8| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
   },
   {
     "id": 156,
@@ -1245,7 +1245,7 @@
     "file": "Chap06/WeightedDirGraphStEphI8.rs",
     "lines": "78-82",
     "spec_strength": "unknown",
-    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i8>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i8>()\n            ensures \n                forall |p: (V::V, i8)| in_neighbors@.contains(p) == \n                    (exists |w: i8| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
+    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i8>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i8>()\n            ensures \n                forall |p: (V::V, i8)| in_neighbors@.contains(p) == \n                    (exists |w: i8| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
   },
   {
     "id": 157,
@@ -1253,7 +1253,7 @@
     "file": "Chap06/WeightedDirGraphStEphI8.rs",
     "lines": "85-87",
     "spec_strength": "unknown",
-    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedI8)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i8>()\n            ensures total_weight@ == self.spec_total_weight();"
+    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedI8)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i8>()\n            ensures total_weight@ == self.spec_total_weight();"
   },
   {
     "id": 158,
@@ -1261,7 +1261,7 @@
     "file": "Chap06/WeightedDirGraphStEphI8.rs",
     "lines": "89-93",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_above_weight(&self, threshold: i8) -> (edges_above: SetStEph<WeightedEdge<V, i8>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i8>()\n            ensures \n                forall |t: (V::V, V::V, i8)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
+    "snippet": "        fn edges_above_weight(&self, threshold: i8) -> (edges_above: SetStEph<WeightedEdge<V, i8>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i8>()\n            ensures \n                forall |t: (V::V, V::V, i8)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
   },
   {
     "id": 159,
@@ -1269,7 +1269,7 @@
     "file": "Chap06/WeightedDirGraphStEphI8.rs",
     "lines": "95-99",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_below_weight(&self, threshold: i8) -> (edges_below: SetStEph<WeightedEdge<V, i8>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, i8>()\n            ensures \n                forall |t: (V::V, V::V, i8)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
+    "snippet": "        fn edges_below_weight(&self, threshold: i8) -> (edges_below: SetStEph<WeightedEdge<V, i8>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i8>()\n            ensures \n                forall |t: (V::V, V::V, i8)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
   },
   {
     "id": 160,
@@ -1277,7 +1277,7 @@
     "file": "Chap06/WeightedDirGraphStEphIsize.rs",
     "lines": "42-48",
     "spec_strength": "unknown",
-    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, isize>>) -> (g: WeightedDirGraphStEphIsize<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, isize>(),\n                forall |u: V::V, w: V::V, weight: isize| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures wf_lab_graph_view(g@), g@.V =~= vertices@;"
+    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, isize>>) -> (g: WeightedDirGraphStEphIsize<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, isize>(),\n                forall |u: V::V, w: V::V, weight: isize| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;"
   },
   {
     "id": 161,
@@ -1293,7 +1293,7 @@
     "file": "Chap06/WeightedDirGraphStEphIsize.rs",
     "lines": "58-62",
     "spec_strength": "unknown",
-    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<isize>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, isize>()\n            ensures \n                weight.is_some() == (exists |w: isize| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
+    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<isize>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()\n            ensures \n                weight.is_some() == (exists |w: isize| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
   },
   {
     "id": 163,
@@ -1301,7 +1301,7 @@
     "file": "Chap06/WeightedDirGraphStEphIsize.rs",
     "lines": "65-68",
     "spec_strength": "unknown",
-    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, isize>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, isize>()\n            ensures \n                forall |t: (V::V, V::V, isize)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
+    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, isize>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()\n            ensures \n                forall |t: (V::V, V::V, isize)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
   },
   {
     "id": 164,
@@ -1309,7 +1309,7 @@
     "file": "Chap06/WeightedDirGraphStEphIsize.rs",
     "lines": "71-75",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, isize>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, isize>()\n            ensures \n                forall |p: (V::V, isize)| out_neighbors@.contains(p) == \n                    (exists |w: isize| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
+    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, isize>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()\n            ensures \n                forall |p: (V::V, isize)| out_neighbors@.contains(p) == \n                    (exists |w: isize| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
   },
   {
     "id": 165,
@@ -1317,7 +1317,7 @@
     "file": "Chap06/WeightedDirGraphStEphIsize.rs",
     "lines": "78-82",
     "spec_strength": "unknown",
-    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, isize>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, isize>()\n            ensures \n                forall |p: (V::V, isize)| in_neighbors@.contains(p) == \n                    (exists |w: isize| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
+    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, isize>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()\n            ensures \n                forall |p: (V::V, isize)| in_neighbors@.contains(p) == \n                    (exists |w: isize| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
   },
   {
     "id": 166,
@@ -1325,7 +1325,7 @@
     "file": "Chap06/WeightedDirGraphStEphIsize.rs",
     "lines": "85-87",
     "spec_strength": "unknown",
-    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedIsize)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, isize>()\n            ensures total_weight@ == self.spec_total_weight();"
+    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedIsize)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()\n            ensures total_weight@ == self.spec_total_weight();"
   },
   {
     "id": 167,
@@ -1333,7 +1333,7 @@
     "file": "Chap06/WeightedDirGraphStEphIsize.rs",
     "lines": "89-93",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_above_weight(&self, threshold: isize) -> (edges_above: SetStEph<WeightedEdge<V, isize>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, isize>()\n            ensures \n                forall |t: (V::V, V::V, isize)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
+    "snippet": "        fn edges_above_weight(&self, threshold: isize) -> (edges_above: SetStEph<WeightedEdge<V, isize>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()\n            ensures \n                forall |t: (V::V, V::V, isize)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
   },
   {
     "id": 168,
@@ -1341,7 +1341,7 @@
     "file": "Chap06/WeightedDirGraphStEphIsize.rs",
     "lines": "95-99",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_below_weight(&self, threshold: isize) -> (edges_below: SetStEph<WeightedEdge<V, isize>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, isize>()\n            ensures \n                forall |t: (V::V, V::V, isize)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
+    "snippet": "        fn edges_below_weight(&self, threshold: isize) -> (edges_below: SetStEph<WeightedEdge<V, isize>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()\n            ensures \n                forall |t: (V::V, V::V, isize)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
   },
   {
     "id": 169,
@@ -1349,7 +1349,7 @@
     "file": "Chap06/WeightedDirGraphStEphU128.rs",
     "lines": "42-48",
     "spec_strength": "unknown",
-    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u128>>) -> (g: WeightedDirGraphStEphU128<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, u128>(),\n                forall |u: V::V, w: V::V, weight: u128| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures wf_lab_graph_view(g@), g@.V =~= vertices@;"
+    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u128>>) -> (g: WeightedDirGraphStEphU128<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, u128>(),\n                forall |u: V::V, w: V::V, weight: u128| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;"
   },
   {
     "id": 170,
@@ -1365,7 +1365,7 @@
     "file": "Chap06/WeightedDirGraphStEphU128.rs",
     "lines": "58-62",
     "spec_strength": "unknown",
-    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<u128>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u128>()\n            ensures \n                weight.is_some() == (exists |w: u128| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
+    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<u128>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u128>()\n            ensures \n                weight.is_some() == (exists |w: u128| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
   },
   {
     "id": 172,
@@ -1373,7 +1373,7 @@
     "file": "Chap06/WeightedDirGraphStEphU128.rs",
     "lines": "65-68",
     "spec_strength": "unknown",
-    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, u128>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u128>()\n            ensures \n                forall |t: (V::V, V::V, u128)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
+    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, u128>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u128>()\n            ensures \n                forall |t: (V::V, V::V, u128)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
   },
   {
     "id": 173,
@@ -1381,7 +1381,7 @@
     "file": "Chap06/WeightedDirGraphStEphU128.rs",
     "lines": "71-75",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, u128>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u128>()\n            ensures \n                forall |p: (V::V, u128)| out_neighbors@.contains(p) == \n                    (exists |w: u128| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
+    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, u128>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u128>()\n            ensures \n                forall |p: (V::V, u128)| out_neighbors@.contains(p) == \n                    (exists |w: u128| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
   },
   {
     "id": 174,
@@ -1389,7 +1389,7 @@
     "file": "Chap06/WeightedDirGraphStEphU128.rs",
     "lines": "78-82",
     "spec_strength": "unknown",
-    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, u128>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u128>()\n            ensures \n                forall |p: (V::V, u128)| in_neighbors@.contains(p) == \n                    (exists |w: u128| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
+    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, u128>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u128>()\n            ensures \n                forall |p: (V::V, u128)| in_neighbors@.contains(p) == \n                    (exists |w: u128| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
   },
   {
     "id": 175,
@@ -1397,7 +1397,7 @@
     "file": "Chap06/WeightedDirGraphStEphU128.rs",
     "lines": "85-87",
     "spec_strength": "unknown",
-    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedU128)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u128>()\n            ensures total_weight@ == self.spec_total_weight() as int;"
+    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedU128)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u128>()\n            ensures total_weight@ == self.spec_total_weight() as int;"
   },
   {
     "id": 176,
@@ -1405,7 +1405,7 @@
     "file": "Chap06/WeightedDirGraphStEphU128.rs",
     "lines": "89-93",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_above_weight(&self, threshold: u128) -> (edges_above: SetStEph<WeightedEdge<V, u128>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u128>()\n            ensures \n                forall |t: (V::V, V::V, u128)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
+    "snippet": "        fn edges_above_weight(&self, threshold: u128) -> (edges_above: SetStEph<WeightedEdge<V, u128>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u128>()\n            ensures \n                forall |t: (V::V, V::V, u128)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
   },
   {
     "id": 177,
@@ -1413,7 +1413,7 @@
     "file": "Chap06/WeightedDirGraphStEphU128.rs",
     "lines": "95-99",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_below_weight(&self, threshold: u128) -> (edges_below: SetStEph<WeightedEdge<V, u128>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u128>()\n            ensures \n                forall |t: (V::V, V::V, u128)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
+    "snippet": "        fn edges_below_weight(&self, threshold: u128) -> (edges_below: SetStEph<WeightedEdge<V, u128>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u128>()\n            ensures \n                forall |t: (V::V, V::V, u128)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
   },
   {
     "id": 178,
@@ -1421,7 +1421,7 @@
     "file": "Chap06/WeightedDirGraphStEphU16.rs",
     "lines": "42-48",
     "spec_strength": "unknown",
-    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u16>>) -> (g: WeightedDirGraphStEphU16<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, u16>(),\n                forall |u: V::V, w: V::V, weight: u16| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures wf_lab_graph_view(g@), g@.V =~= vertices@;"
+    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u16>>) -> (g: WeightedDirGraphStEphU16<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, u16>(),\n                forall |u: V::V, w: V::V, weight: u16| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;"
   },
   {
     "id": 179,
@@ -1437,7 +1437,7 @@
     "file": "Chap06/WeightedDirGraphStEphU16.rs",
     "lines": "58-62",
     "spec_strength": "unknown",
-    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<u16>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u16>()\n            ensures \n                weight.is_some() == (exists |w: u16| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
+    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<u16>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u16>()\n            ensures \n                weight.is_some() == (exists |w: u16| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
   },
   {
     "id": 181,
@@ -1445,7 +1445,7 @@
     "file": "Chap06/WeightedDirGraphStEphU16.rs",
     "lines": "65-68",
     "spec_strength": "unknown",
-    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, u16>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u16>()\n            ensures \n                forall |t: (V::V, V::V, u16)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
+    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, u16>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u16>()\n            ensures \n                forall |t: (V::V, V::V, u16)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
   },
   {
     "id": 182,
@@ -1453,7 +1453,7 @@
     "file": "Chap06/WeightedDirGraphStEphU16.rs",
     "lines": "71-75",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, u16>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u16>()\n            ensures \n                forall |p: (V::V, u16)| out_neighbors@.contains(p) == \n                    (exists |w: u16| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
+    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, u16>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u16>()\n            ensures \n                forall |p: (V::V, u16)| out_neighbors@.contains(p) == \n                    (exists |w: u16| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
   },
   {
     "id": 183,
@@ -1461,7 +1461,7 @@
     "file": "Chap06/WeightedDirGraphStEphU16.rs",
     "lines": "78-82",
     "spec_strength": "unknown",
-    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, u16>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u16>()\n            ensures \n                forall |p: (V::V, u16)| in_neighbors@.contains(p) == \n                    (exists |w: u16| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
+    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, u16>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u16>()\n            ensures \n                forall |p: (V::V, u16)| in_neighbors@.contains(p) == \n                    (exists |w: u16| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
   },
   {
     "id": 184,
@@ -1469,7 +1469,7 @@
     "file": "Chap06/WeightedDirGraphStEphU16.rs",
     "lines": "85-87",
     "spec_strength": "unknown",
-    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedU16)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u16>()\n            ensures total_weight@ == self.spec_total_weight() as int;"
+    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedU16)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u16>()\n            ensures total_weight@ == self.spec_total_weight() as int;"
   },
   {
     "id": 185,
@@ -1477,7 +1477,7 @@
     "file": "Chap06/WeightedDirGraphStEphU16.rs",
     "lines": "89-93",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_above_weight(&self, threshold: u16) -> (edges_above: SetStEph<WeightedEdge<V, u16>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u16>()\n            ensures \n                forall |t: (V::V, V::V, u16)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
+    "snippet": "        fn edges_above_weight(&self, threshold: u16) -> (edges_above: SetStEph<WeightedEdge<V, u16>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u16>()\n            ensures \n                forall |t: (V::V, V::V, u16)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
   },
   {
     "id": 186,
@@ -1485,7 +1485,7 @@
     "file": "Chap06/WeightedDirGraphStEphU16.rs",
     "lines": "95-99",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_below_weight(&self, threshold: u16) -> (edges_below: SetStEph<WeightedEdge<V, u16>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u16>()\n            ensures \n                forall |t: (V::V, V::V, u16)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
+    "snippet": "        fn edges_below_weight(&self, threshold: u16) -> (edges_below: SetStEph<WeightedEdge<V, u16>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u16>()\n            ensures \n                forall |t: (V::V, V::V, u16)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
   },
   {
     "id": 187,
@@ -1493,7 +1493,7 @@
     "file": "Chap06/WeightedDirGraphStEphU32.rs",
     "lines": "42-48",
     "spec_strength": "unknown",
-    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u32>>) -> (g: WeightedDirGraphStEphU32<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, u32>(),\n                forall |u: V::V, w: V::V, weight: u32| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures wf_lab_graph_view(g@), g@.V =~= vertices@;"
+    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u32>>) -> (g: WeightedDirGraphStEphU32<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, u32>(),\n                forall |u: V::V, w: V::V, weight: u32| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;"
   },
   {
     "id": 188,
@@ -1509,7 +1509,7 @@
     "file": "Chap06/WeightedDirGraphStEphU32.rs",
     "lines": "58-62",
     "spec_strength": "unknown",
-    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<u32>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u32>()\n            ensures \n                weight.is_some() == (exists |w: u32| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
+    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<u32>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u32>()\n            ensures \n                weight.is_some() == (exists |w: u32| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
   },
   {
     "id": 190,
@@ -1517,7 +1517,7 @@
     "file": "Chap06/WeightedDirGraphStEphU32.rs",
     "lines": "65-68",
     "spec_strength": "unknown",
-    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, u32>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u32>()\n            ensures \n                forall |t: (V::V, V::V, u32)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
+    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, u32>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u32>()\n            ensures \n                forall |t: (V::V, V::V, u32)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
   },
   {
     "id": 191,
@@ -1525,7 +1525,7 @@
     "file": "Chap06/WeightedDirGraphStEphU32.rs",
     "lines": "71-75",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, u32>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u32>()\n            ensures \n                forall |p: (V::V, u32)| out_neighbors@.contains(p) == \n                    (exists |w: u32| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
+    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, u32>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u32>()\n            ensures \n                forall |p: (V::V, u32)| out_neighbors@.contains(p) == \n                    (exists |w: u32| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
   },
   {
     "id": 192,
@@ -1533,7 +1533,7 @@
     "file": "Chap06/WeightedDirGraphStEphU32.rs",
     "lines": "78-82",
     "spec_strength": "unknown",
-    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, u32>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u32>()\n            ensures \n                forall |p: (V::V, u32)| in_neighbors@.contains(p) == \n                    (exists |w: u32| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
+    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, u32>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u32>()\n            ensures \n                forall |p: (V::V, u32)| in_neighbors@.contains(p) == \n                    (exists |w: u32| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
   },
   {
     "id": 193,
@@ -1541,7 +1541,7 @@
     "file": "Chap06/WeightedDirGraphStEphU32.rs",
     "lines": "85-87",
     "spec_strength": "unknown",
-    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedU32)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u32>()\n            ensures total_weight@ == self.spec_total_weight() as int;"
+    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedU32)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u32>()\n            ensures total_weight@ == self.spec_total_weight() as int;"
   },
   {
     "id": 194,
@@ -1549,7 +1549,7 @@
     "file": "Chap06/WeightedDirGraphStEphU32.rs",
     "lines": "89-93",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_above_weight(&self, threshold: u32) -> (edges_above: SetStEph<WeightedEdge<V, u32>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u32>()\n            ensures \n                forall |t: (V::V, V::V, u32)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
+    "snippet": "        fn edges_above_weight(&self, threshold: u32) -> (edges_above: SetStEph<WeightedEdge<V, u32>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u32>()\n            ensures \n                forall |t: (V::V, V::V, u32)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
   },
   {
     "id": 195,
@@ -1557,7 +1557,7 @@
     "file": "Chap06/WeightedDirGraphStEphU32.rs",
     "lines": "95-99",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_below_weight(&self, threshold: u32) -> (edges_below: SetStEph<WeightedEdge<V, u32>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u32>()\n            ensures \n                forall |t: (V::V, V::V, u32)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
+    "snippet": "        fn edges_below_weight(&self, threshold: u32) -> (edges_below: SetStEph<WeightedEdge<V, u32>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u32>()\n            ensures \n                forall |t: (V::V, V::V, u32)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
   },
   {
     "id": 196,
@@ -1565,7 +1565,7 @@
     "file": "Chap06/WeightedDirGraphStEphU64.rs",
     "lines": "42-48",
     "spec_strength": "unknown",
-    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u64>>) -> (g: WeightedDirGraphStEphU64<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, u64>(),\n                forall |u: V::V, w: V::V, weight: u64| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures wf_lab_graph_view(g@), g@.V =~= vertices@;"
+    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u64>>) -> (g: WeightedDirGraphStEphU64<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, u64>(),\n                forall |u: V::V, w: V::V, weight: u64| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;"
   },
   {
     "id": 197,
@@ -1581,7 +1581,7 @@
     "file": "Chap06/WeightedDirGraphStEphU64.rs",
     "lines": "58-62",
     "spec_strength": "unknown",
-    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<u64>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u64>()\n            ensures \n                weight.is_some() == (exists |w: u64| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
+    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<u64>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u64>()\n            ensures \n                weight.is_some() == (exists |w: u64| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
   },
   {
     "id": 199,
@@ -1589,7 +1589,7 @@
     "file": "Chap06/WeightedDirGraphStEphU64.rs",
     "lines": "65-68",
     "spec_strength": "unknown",
-    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, u64>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u64>()\n            ensures \n                forall |t: (V::V, V::V, u64)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
+    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, u64>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u64>()\n            ensures \n                forall |t: (V::V, V::V, u64)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
   },
   {
     "id": 200,
@@ -1597,7 +1597,7 @@
     "file": "Chap06/WeightedDirGraphStEphU64.rs",
     "lines": "71-75",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, u64>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u64>()\n            ensures \n                forall |p: (V::V, u64)| out_neighbors@.contains(p) == \n                    (exists |w: u64| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
+    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, u64>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u64>()\n            ensures \n                forall |p: (V::V, u64)| out_neighbors@.contains(p) == \n                    (exists |w: u64| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
   },
   {
     "id": 201,
@@ -1605,7 +1605,7 @@
     "file": "Chap06/WeightedDirGraphStEphU64.rs",
     "lines": "78-82",
     "spec_strength": "unknown",
-    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, u64>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u64>()\n            ensures \n                forall |p: (V::V, u64)| in_neighbors@.contains(p) == \n                    (exists |w: u64| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
+    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, u64>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u64>()\n            ensures \n                forall |p: (V::V, u64)| in_neighbors@.contains(p) == \n                    (exists |w: u64| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
   },
   {
     "id": 202,
@@ -1613,7 +1613,7 @@
     "file": "Chap06/WeightedDirGraphStEphU64.rs",
     "lines": "85-87",
     "spec_strength": "unknown",
-    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedU64)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u64>()\n            ensures total_weight@ == self.spec_total_weight() as int;"
+    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedU64)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u64>()\n            ensures total_weight@ == self.spec_total_weight() as int;"
   },
   {
     "id": 203,
@@ -1621,7 +1621,7 @@
     "file": "Chap06/WeightedDirGraphStEphU64.rs",
     "lines": "89-93",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_above_weight(&self, threshold: u64) -> (edges_above: SetStEph<WeightedEdge<V, u64>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u64>()\n            ensures \n                forall |t: (V::V, V::V, u64)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
+    "snippet": "        fn edges_above_weight(&self, threshold: u64) -> (edges_above: SetStEph<WeightedEdge<V, u64>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u64>()\n            ensures \n                forall |t: (V::V, V::V, u64)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
   },
   {
     "id": 204,
@@ -1629,7 +1629,7 @@
     "file": "Chap06/WeightedDirGraphStEphU64.rs",
     "lines": "95-99",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_below_weight(&self, threshold: u64) -> (edges_below: SetStEph<WeightedEdge<V, u64>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u64>()\n            ensures \n                forall |t: (V::V, V::V, u64)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
+    "snippet": "        fn edges_below_weight(&self, threshold: u64) -> (edges_below: SetStEph<WeightedEdge<V, u64>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u64>()\n            ensures \n                forall |t: (V::V, V::V, u64)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
   },
   {
     "id": 205,
@@ -1637,7 +1637,7 @@
     "file": "Chap06/WeightedDirGraphStEphU8.rs",
     "lines": "42-48",
     "spec_strength": "unknown",
-    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u8>>) -> (g: WeightedDirGraphStEphU8<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, u8>(),\n                forall |u: V::V, w: V::V, weight: u8| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures wf_lab_graph_view(g@), g@.V =~= vertices@;"
+    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u8>>) -> (g: WeightedDirGraphStEphU8<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, u8>(),\n                forall |u: V::V, w: V::V, weight: u8| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;"
   },
   {
     "id": 206,
@@ -1653,7 +1653,7 @@
     "file": "Chap06/WeightedDirGraphStEphU8.rs",
     "lines": "58-62",
     "spec_strength": "unknown",
-    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<u8>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u8>()\n            ensures \n                weight.is_some() == (exists |w: u8| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
+    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<u8>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u8>()\n            ensures \n                weight.is_some() == (exists |w: u8| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
   },
   {
     "id": 208,
@@ -1661,7 +1661,7 @@
     "file": "Chap06/WeightedDirGraphStEphU8.rs",
     "lines": "65-68",
     "spec_strength": "unknown",
-    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, u8>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u8>()\n            ensures \n                forall |t: (V::V, V::V, u8)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
+    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, u8>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u8>()\n            ensures \n                forall |t: (V::V, V::V, u8)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
   },
   {
     "id": 209,
@@ -1669,7 +1669,7 @@
     "file": "Chap06/WeightedDirGraphStEphU8.rs",
     "lines": "71-75",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, u8>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u8>()\n            ensures \n                forall |p: (V::V, u8)| out_neighbors@.contains(p) == \n                    (exists |w: u8| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
+    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, u8>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u8>()\n            ensures \n                forall |p: (V::V, u8)| out_neighbors@.contains(p) == \n                    (exists |w: u8| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
   },
   {
     "id": 210,
@@ -1677,7 +1677,7 @@
     "file": "Chap06/WeightedDirGraphStEphU8.rs",
     "lines": "78-82",
     "spec_strength": "unknown",
-    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, u8>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u8>()\n            ensures \n                forall |p: (V::V, u8)| in_neighbors@.contains(p) == \n                    (exists |w: u8| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
+    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, u8>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u8>()\n            ensures \n                forall |p: (V::V, u8)| in_neighbors@.contains(p) == \n                    (exists |w: u8| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
   },
   {
     "id": 211,
@@ -1685,7 +1685,7 @@
     "file": "Chap06/WeightedDirGraphStEphU8.rs",
     "lines": "85-87",
     "spec_strength": "unknown",
-    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedU8)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u8>()\n            ensures total_weight@ == self.spec_total_weight() as int;"
+    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedU8)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u8>()\n            ensures total_weight@ == self.spec_total_weight() as int;"
   },
   {
     "id": 212,
@@ -1693,7 +1693,7 @@
     "file": "Chap06/WeightedDirGraphStEphU8.rs",
     "lines": "89-93",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_above_weight(&self, threshold: u8) -> (edges_above: SetStEph<WeightedEdge<V, u8>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u8>()\n            ensures \n                forall |t: (V::V, V::V, u8)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
+    "snippet": "        fn edges_above_weight(&self, threshold: u8) -> (edges_above: SetStEph<WeightedEdge<V, u8>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u8>()\n            ensures \n                forall |t: (V::V, V::V, u8)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
   },
   {
     "id": 213,
@@ -1701,7 +1701,7 @@
     "file": "Chap06/WeightedDirGraphStEphU8.rs",
     "lines": "95-99",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_below_weight(&self, threshold: u8) -> (edges_below: SetStEph<WeightedEdge<V, u8>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, u8>()\n            ensures \n                forall |t: (V::V, V::V, u8)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
+    "snippet": "        fn edges_below_weight(&self, threshold: u8) -> (edges_below: SetStEph<WeightedEdge<V, u8>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u8>()\n            ensures \n                forall |t: (V::V, V::V, u8)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
   },
   {
     "id": 214,
@@ -1709,7 +1709,7 @@
     "file": "Chap06/WeightedDirGraphStEphUsize.rs",
     "lines": "42-48",
     "spec_strength": "unknown",
-    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, usize>>) -> (g: WeightedDirGraphStEphUsize<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, usize>(),\n                forall |u: V::V, w: V::V, weight: usize| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures wf_lab_graph_view(g@), g@.V =~= vertices@;"
+    "snippet": "        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, usize>>) -> (g: WeightedDirGraphStEphUsize<V>)\n            requires \n                valid_key_type_WeightedEdge::<V, usize>(),\n                forall |u: V::V, w: V::V, weight: usize| \n                    #[trigger] edges@.contains((u, w, weight)) ==> \n                        vertices@.contains(u) && vertices@.contains(w),\n            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;"
   },
   {
     "id": 215,
@@ -1725,7 +1725,7 @@
     "file": "Chap06/WeightedDirGraphStEphUsize.rs",
     "lines": "58-62",
     "spec_strength": "unknown",
-    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<usize>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, usize>()\n            ensures \n                weight.is_some() == (exists |w: usize| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
+    "snippet": "        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<usize>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, usize>()\n            ensures \n                weight.is_some() == (exists |w: usize| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),\n                weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));"
   },
   {
     "id": 217,
@@ -1733,7 +1733,7 @@
     "file": "Chap06/WeightedDirGraphStEphUsize.rs",
     "lines": "65-68",
     "spec_strength": "unknown",
-    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, usize>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, usize>()\n            ensures \n                forall |t: (V::V, V::V, usize)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
+    "snippet": "        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, usize>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, usize>()\n            ensures \n                forall |t: (V::V, V::V, usize)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);"
   },
   {
     "id": 218,
@@ -1741,7 +1741,7 @@
     "file": "Chap06/WeightedDirGraphStEphUsize.rs",
     "lines": "71-75",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, usize>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, usize>()\n            ensures \n                forall |p: (V::V, usize)| out_neighbors@.contains(p) == \n                    (exists |w: usize| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
+    "snippet": "        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, usize>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, usize>()\n            ensures \n                forall |p: (V::V, usize)| out_neighbors@.contains(p) == \n                    (exists |w: usize| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);"
   },
   {
     "id": 219,
@@ -1749,7 +1749,7 @@
     "file": "Chap06/WeightedDirGraphStEphUsize.rs",
     "lines": "78-82",
     "spec_strength": "unknown",
-    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, usize>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, usize>()\n            ensures \n                forall |p: (V::V, usize)| in_neighbors@.contains(p) == \n                    (exists |w: usize| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
+    "snippet": "        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, usize>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, usize>()\n            ensures \n                forall |p: (V::V, usize)| in_neighbors@.contains(p) == \n                    (exists |w: usize| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);"
   },
   {
     "id": 220,
@@ -1757,7 +1757,7 @@
     "file": "Chap06/WeightedDirGraphStEphUsize.rs",
     "lines": "85-87",
     "spec_strength": "unknown",
-    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedUsize)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, usize>()\n            ensures total_weight@ == self.spec_total_weight() as int;"
+    "snippet": "        fn total_weight(&self) -> (total_weight: CheckedUsize)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, usize>()\n            ensures total_weight@ == self.spec_total_weight() as int;"
   },
   {
     "id": 221,
@@ -1765,7 +1765,7 @@
     "file": "Chap06/WeightedDirGraphStEphUsize.rs",
     "lines": "89-93",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_above_weight(&self, threshold: usize) -> (edges_above: SetStEph<WeightedEdge<V, usize>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, usize>()\n            ensures \n                forall |t: (V::V, V::V, usize)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
+    "snippet": "        fn edges_above_weight(&self, threshold: usize) -> (edges_above: SetStEph<WeightedEdge<V, usize>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, usize>()\n            ensures \n                forall |t: (V::V, V::V, usize)| #[trigger] edges_above@.contains(t) == \n                    (self@.A.contains(t) && t.2 > threshold);"
   },
   {
     "id": 222,
@@ -1773,6 +1773,6 @@
     "file": "Chap06/WeightedDirGraphStEphUsize.rs",
     "lines": "95-99",
     "spec_strength": "unknown",
-    "snippet": "        fn edges_below_weight(&self, threshold: usize) -> (edges_below: SetStEph<WeightedEdge<V, usize>>)\n            requires wf_lab_graph_view(self@), valid_key_type_WeightedEdge::<V, usize>()\n            ensures \n                forall |t: (V::V, V::V, usize)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
+    "snippet": "        fn edges_below_weight(&self, threshold: usize) -> (edges_below: SetStEph<WeightedEdge<V, usize>>)\n            requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, usize>()\n            ensures \n                forall |t: (V::V, V::V, usize)| #[trigger] edges_below@.contains(t) == \n                    (self@.A.contains(t) && t.2 < threshold);"
   }
 ]
