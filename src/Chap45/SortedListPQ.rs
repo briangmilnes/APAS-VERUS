@@ -35,6 +35,7 @@ pub mod SortedListPQ {
 // 3. broadcast use
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::multiset::group_multiset_axioms,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
@@ -62,6 +63,25 @@ broadcast use {
 // 7. proof fns
         proof fn _sorted_list_pq_verified() {}
 
+        /// Pushing an element >= the last onto a sorted seq preserves sorted.
+        proof fn lemma_push_preserves_sorted<T: TotalOrder>(
+            s: Seq<T>, x: T)
+            requires
+                spec_sorted(s),
+                s.len() > 0 ==> TotalOrder::le(s.last(), x),
+            ensures
+                spec_sorted(s.push(x)),
+        {
+            assert forall|a: int, b: int|
+                0 <= a < b < s.push(x).len() implies
+                #[trigger] TotalOrder::le(s.push(x)[a], s.push(x)[b])
+            by {
+                if b == s.len() as int && a < s.len() as int - 1 {
+                    TotalOrder::transitive(s[a], s.last(), x);
+                }
+            }
+        }
+
 // 8. traits
         /// Meldable Priority Queue ADT (Data Type 45.1) using sorted list.
         pub trait SortedListPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Seq<T::V>> {
@@ -71,13 +91,15 @@ broadcast use {
             fn empty() -> (pq: Self)
                 ensures
                     pq@.len() == 0,
-                    pq@.to_multiset() =~= Multiset::empty();
+                    pq@.to_multiset() =~= Multiset::empty(),
+                    spec_sorted(pq.spec_seq());
 
             fn singleton(element: T) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
                     pq@.len() == 1,
-                    pq@.to_multiset() =~= Multiset::empty().insert(element@);
+                    pq@.to_multiset() =~= Multiset::empty().insert(element@),
+                    spec_sorted(pq.spec_seq());
 
             fn find_min(&self) -> (min_elem: Option<&T>)
                 ensures
@@ -88,31 +110,41 @@ broadcast use {
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() + 1 <= usize::MAX as int,
+                    spec_sorted(self.spec_seq()),
                 ensures
                     pq@.len() == self@.len() + 1,
-                    pq@.to_multiset() =~= self@.to_multiset().insert(element@);
+                    pq@.to_multiset() =~= self@.to_multiset().insert(element@),
+                    spec_sorted(pq.spec_seq());
 
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
-                requires obeys_feq_clone::<T>(),
+                requires
+                    obeys_feq_clone::<T>(),
+                    spec_sorted(self.spec_seq()),
                 ensures
                     self@.len() > 0 ==> min_and_rest.1.is_some(),
                     self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,
                     self@.len() == 0 ==> min_and_rest.1.is_none(),
                     self@.len() == 0 ==> min_and_rest.0@.len() == self@.len(),
                     self@.len() > 0 ==> self@.to_multiset() =~=
-                        min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@);
+                        min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@),
+                    spec_sorted(min_and_rest.0.spec_seq());
 
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() + other@.len() <= usize::MAX as int,
+                    spec_sorted(self.spec_seq()),
+                    spec_sorted(other.spec_seq()),
                 ensures
                     pq@.len() == self@.len() + other@.len(),
-                    pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset());
+                    pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset()),
+                    spec_sorted(pq.spec_seq());
 
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
-                ensures pq@.len() == seq@.len();
+                ensures
+                    pq@.len() == seq@.len(),
+                    spec_sorted(pq.spec_seq());
 
             fn size(&self) -> (n: usize)
                 ensures n as int == self.spec_size();
@@ -128,10 +160,13 @@ broadcast use {
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() + elements@.len() <= usize::MAX as int,
+                    spec_sorted(self.spec_seq()),
                 ensures pq@.len() == self@.len() + elements@.len();
 
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>)
-                requires obeys_feq_clone::<T>(),
+                requires
+                    obeys_feq_clone::<T>(),
+                    spec_sorted(self.spec_seq()),
                 ensures
                     sorted@.len() == self@.len(),
                     spec_sorted(sorted.seq@);
@@ -142,25 +177,32 @@ broadcast use {
                     self@.len() > 0 ==> max_elem.is_some();
 
             fn delete_max(&self) -> (max_and_rest: (Self, Option<T>))
-                requires obeys_feq_clone::<T>(),
+                requires
+                    obeys_feq_clone::<T>(),
+                    spec_sorted(self.spec_seq()),
                 ensures
                     self@.len() > 0 ==> max_and_rest.1.is_some(),
                     self@.len() > 0 ==> max_and_rest.0@.len() == self@.len() - 1,
                     self@.len() == 0 ==> max_and_rest.1.is_none(),
                     self@.len() == 0 ==> max_and_rest.0@.len() == self@.len(),
                     self@.len() > 0 ==> self@.to_multiset() =~=
-                        max_and_rest.0@.to_multiset().insert(max_and_rest.1.unwrap()@);
+                        max_and_rest.0@.to_multiset().insert(max_and_rest.1.unwrap()@),
+                    spec_sorted(max_and_rest.0.spec_seq());
 
             fn from_vec(vec: Vec<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
-                ensures pq@.len() == vec@.len();
+                ensures
+                    pq@.len() == vec@.len(),
+                    spec_sorted(pq.spec_seq());
 
             fn to_vec(&self) -> (v: Vec<T>)
                 requires obeys_feq_clone::<T>(),
                 ensures v@.len() == self@.len();
 
             fn to_sorted_vec(&self) -> (v: Vec<T>)
-                requires obeys_feq_clone::<T>(),
+                requires
+                    obeys_feq_clone::<T>(),
+                    spec_sorted(self.spec_seq()),
                 ensures
                     v@.len() == self@.len(),
                     spec_sorted(v@);
@@ -184,8 +226,10 @@ broadcast use {
                 let pq = SortedListPQ {
                     elements: ArraySeqStPerS::empty(),
                 };
-                // accept hole: Empty seq@ maps to empty multiset.
-                proof { accept(pq@.to_multiset() =~= Multiset::empty()); }
+                proof {
+                    assert(pq@ =~= Seq::<T::V>::empty());
+                    assert(Seq::<T::V>::empty().to_multiset() =~= Multiset::<T::V>::empty());
+                }
                 pq
             }
 
@@ -194,8 +238,9 @@ broadcast use {
                 let pq = SortedListPQ {
                     elements: ArraySeqStPerS::singleton(element),
                 };
-                // accept hole: Single-element seq@ maps to singleton multiset.
-                proof { accept(pq@.to_multiset() =~= Multiset::empty().insert(element@)); }
+                proof {
+                    assert(pq@ =~= Seq::<T::V>::empty().push(element@));
+                }
                 pq
             }
 
@@ -212,50 +257,157 @@ broadcast use {
             fn insert(&self, element: T) -> (pq: Self) {
                 let n = self.elements.length();
 
-                // Find insertion position (first element >= new element).
+                // Find insertion position via TotalOrder::cmp for spec-level ordering.
                 let mut insert_pos: usize = n;
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
                     invariant
                         n == self.elements@.len(),
                         insert_pos <= n,
+                        insert_pos < n ==> (insert_pos < i),
+                        insert_pos < n as int ==>
+                            TotalOrder::le(
+                                element, self.elements.seq@[insert_pos as int]),
+                        forall|k: int| #![auto] 0 <= k < i as int
+                            && k < insert_pos as int ==>
+                            TotalOrder::le(self.elements.seq@[k], element),
                 {
-                    if insert_pos == n && element <= *self.elements.nth(i) {
-                        insert_pos = i;
+                    if insert_pos == n {
+                        match TotalOrder::cmp(
+                            &element, self.elements.nth(i))
+                        {
+                            core::cmp::Ordering::Less => {
+                                insert_pos = i;
+                            }
+                            core::cmp::Ordering::Equal => {
+                                proof { TotalOrder::reflexive(element); }
+                                insert_pos = i;
+                            }
+                            core::cmp::Ordering::Greater => {}
+                        }
                     }
                 }
 
-                // Build new sequence with element inserted at insert_pos.
-                let mut new_elements = ArraySeqStPerS::empty();
-
-                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-                for k in 0..insert_pos
-                    invariant
-                        n == self.elements@.len(),
-                        insert_pos <= n,
-                        new_elements@.len() == k as int,
-                {
-                    let single_seq = ArraySeqStPerS::singleton(self.elements.nth(k).clone());
-                    new_elements = ArraySeqStPerS::append(&new_elements, &single_seq);
-                }
-
-                let new_elem_seq = ArraySeqStPerS::singleton(element);
-                new_elements = ArraySeqStPerS::append(&new_elements, &new_elem_seq);
-
-                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-                for k in insert_pos..n
-                    invariant
-                        n == self.elements@.len(),
-                        insert_pos <= n,
-                        new_elements@.len() == (k as int) + 1,
-                {
-                    let single_seq = ArraySeqStPerS::singleton(self.elements.nth(k).clone());
-                    new_elements = ArraySeqStPerS::append(&new_elements, &single_seq);
-                }
+                // Build prefix ++ [element] ++ suffix via subseq_copy + append.
+                let prefix = self.elements.subseq_copy(0, insert_pos);
+                let suffix = self.elements.subseq_copy(insert_pos, n - insert_pos);
+                let ghost element_view = element@;
+                let ghost raw_element = element;
+                let elem_seq = ArraySeqStPerS::singleton(element);
+                let prefix_elem = ArraySeqStPerS::append(&prefix, &elem_seq);
+                let new_elements = ArraySeqStPerS::append(&prefix_elem, &suffix);
 
                 let pq = SortedListPQ { elements: new_elements };
-                // accept hole: Insert preserves multiset with new element added.
-                proof { accept(pq@.to_multiset() =~= self@.to_multiset().insert(element@)); }
+                proof {
+                    let target: Seq<T::V> = Seq::new((n + 1) as nat, |j: int|
+                        if j < insert_pos as int { self@[j] }
+                        else if j == insert_pos as int { element_view }
+                        else { self@[j - 1] });
+                    // Chain spec_index equalities through append/subseq_copy.
+                    assert forall|j: int| 0 <= j < (n + 1) as int implies
+                        #[trigger] pq@[j] == target[j]
+                    by {
+                        if j < insert_pos as int {
+                            assert(prefix.spec_index(j)
+                                == self.elements.spec_index(j));
+                            assert(prefix_elem.spec_index(j) == prefix.seq@[j]);
+                            assert(new_elements.spec_index(j)
+                                == prefix_elem.seq@[j]);
+                        } else if j == insert_pos as int {
+                            assert(new_elements.spec_index(j)
+                                == prefix_elem.seq@[j]);
+                            assert(prefix_elem.spec_index(
+                                prefix.seq@.len() as int + 0)
+                                == elem_seq.seq@[0]);
+                        } else {
+                            let si = j - (insert_pos as int + 1);
+                            assert(suffix.spec_index(si)
+                                == self.elements.spec_index(
+                                    insert_pos as int + si));
+                            assert(new_elements.spec_index(
+                                prefix_elem.seq@.len() as int + si)
+                                == suffix.seq@[si]);
+                        }
+                    }
+                    assert(pq@ =~= target);
+                    // Multiset: target = prefix_view ++ [element_view] ++ suffix_view.
+                    let pv = self@.take(insert_pos as int);
+                    let sv = self@.subrange(insert_pos as int, n as int);
+                    assert(self@ =~= pv + sv);
+                    assert(target =~= pv
+                        + Seq::<T::V>::empty().push(element_view) + sv);
+                    vstd::seq_lib::lemma_multiset_commutative(
+                        pv + Seq::<T::V>::empty().push(element_view), sv);
+                    vstd::seq_lib::lemma_multiset_commutative(
+                        pv, Seq::<T::V>::empty().push(element_view));
+                    vstd::seq_lib::lemma_multiset_commutative(pv, sv);
+                    // Sorted: result is prefix ++ [element] ++ suffix.
+                    assert(elem_seq.seq@[0] == raw_element);
+                    assert forall|a: int, b: int|
+                        0 <= a < b < new_elements.seq@.len() implies
+                        #[trigger] TotalOrder::le(
+                            new_elements.seq@[a], new_elements.seq@[b])
+                    by {
+                        // Establish raw-level position mappings.
+                        if a < insert_pos as int {
+                            assert(prefix.spec_index(a)
+                                == self.elements.spec_index(a));
+                            assert(prefix_elem.spec_index(a)
+                                == prefix.seq@[a]);
+                            assert(new_elements.spec_index(a)
+                                == prefix_elem.seq@[a]);
+                        } else if a == insert_pos as int {
+                            assert(new_elements.spec_index(a)
+                                == prefix_elem.seq@[a]);
+                            assert(prefix_elem.spec_index(
+                                prefix.seq@.len() as int + 0)
+                                == elem_seq.seq@[0]);
+                        } else {
+                            let sa = a - (insert_pos as int + 1);
+                            assert(suffix.spec_index(sa)
+                                == self.elements.spec_index(
+                                    insert_pos as int + sa));
+                            assert(new_elements.spec_index(
+                                prefix_elem.seq@.len() as int + sa)
+                                == suffix.seq@[sa]);
+                        }
+                        if b > insert_pos as int {
+                            let sb = b - (insert_pos as int + 1);
+                            assert(suffix.spec_index(sb)
+                                == self.elements.spec_index(
+                                    insert_pos as int + sb));
+                            assert(new_elements.spec_index(
+                                prefix_elem.seq@.len() as int + sb)
+                                == suffix.seq@[sb]);
+                        } else if b == insert_pos as int {
+                            assert(new_elements.spec_index(b)
+                                == prefix_elem.seq@[b]);
+                            assert(prefix_elem.spec_index(
+                                prefix.seq@.len() as int + 0)
+                                == elem_seq.seq@[0]);
+                        } else {
+                            assert(prefix.spec_index(b)
+                                == self.elements.spec_index(b));
+                            assert(prefix_elem.spec_index(b)
+                                == prefix.seq@[b]);
+                            assert(new_elements.spec_index(b)
+                                == prefix_elem.seq@[b]);
+                        }
+                        // Element-to-suffix needs transitivity.
+                        if a == insert_pos as int
+                            && b > insert_pos as int
+                        {
+                            let sb = b - (insert_pos as int + 1);
+                            if sb > 0 {
+                                TotalOrder::transitive(
+                                    raw_element,
+                                    self.elements.seq@[insert_pos as int],
+                                    self.elements.seq@[
+                                        insert_pos as int + sb]);
+                            }
+                        }
+                    }
+                }
                 pq
             }
 
@@ -266,24 +418,35 @@ broadcast use {
                 }
                 let n = self.elements.length();
                 let min_element = self.elements.nth(0).clone();
-
-                let mut new_elements = ArraySeqStPerS::empty();
-                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-                for i in 1..n
-                    invariant
-                        n == self.elements@.len(),
-                        n > 0,
-                        new_elements@.len() == (i - 1) as int,
-                {
-                    let single_seq = ArraySeqStPerS::singleton(self.elements.nth(i).clone());
-                    new_elements = ArraySeqStPerS::append(&new_elements, &single_seq);
-                }
-
-                let new_pq = SortedListPQ { elements: new_elements };
-                // accept hole: Rebuild removes min_element and preserves other views.
                 proof {
-                    accept(self@.to_multiset() =~=
-                        new_pq@.to_multiset().insert(min_element@));
+                    assert(cloned(self.elements.seq@[0], min_element));
+                    axiom_cloned_implies_eq_owned(self.elements.seq@[0], min_element);
+                }
+                let new_elements = self.elements.subseq_copy(1, n - 1);
+                let new_pq = SortedListPQ { elements: new_elements };
+                proof {
+                    assert forall|i: int| 0 <= i < (n - 1) as int implies
+                        #[trigger] new_pq@[i] == self@[i + 1]
+                    by {
+                        assert(new_elements.spec_index(i)
+                            == self.elements.spec_index(1 + i));
+                    }
+                    assert(new_pq@ =~= self@.subrange(1, n as int));
+                    assert(self@.take(1) =~= Seq::<T::V>::empty().push(min_element@));
+                    assert(self@ =~= self@.take(1) + self@.subrange(1, n as int));
+                    vstd::seq_lib::lemma_multiset_commutative(
+                        self@.take(1), self@.subrange(1, n as int));
+                    // Sorted: subsequence of sorted seq is sorted.
+                    assert forall|i: int, j: int|
+                        0 <= i < j < new_elements.seq@.len() implies
+                        #[trigger] TotalOrder::le(
+                            new_elements.seq@[i], new_elements.seq@[j])
+                    by {
+                        assert(new_elements.spec_index(i)
+                            == self.elements.spec_index(1 + i));
+                        assert(new_elements.spec_index(j)
+                            == self.elements.spec_index(1 + j));
+                    }
                 }
                 (new_pq, Some(min_element))
             }
@@ -303,16 +466,137 @@ broadcast use {
                         m == other.elements@.len(),
                         i <= n, j <= m,
                         result@.len() == (i + j) as int,
+                        result@.to_multiset() =~=
+                            self@.take(i as int).to_multiset().add(
+                                other@.take(j as int).to_multiset()),
+                        spec_sorted(result.seq@),
+                        result.seq@.len() > 0 && i < n ==>
+                            TotalOrder::le(result.seq@.last(),
+                                self.elements.seq@[i as int]),
+                        result.seq@.len() > 0 && j < m ==>
+                            TotalOrder::le(result.seq@.last(),
+                                other.elements.seq@[j as int]),
                     decreases (n - i) + (m - j),
                 {
-                    if *self.elements.nth(i) <= *other.elements.nth(j) {
-                        let single_seq = ArraySeqStPerS::singleton(self.elements.nth(i).clone());
-                        result = ArraySeqStPerS::append(&result, &single_seq);
-                        i = i + 1;
-                    } else {
-                        let single_seq = ArraySeqStPerS::singleton(other.elements.nth(j).clone());
-                        result = ArraySeqStPerS::append(&result, &single_seq);
-                        j = j + 1;
+                    let ghost old_result_seq = result.seq@;
+                    let ghost old_result_view = result@;
+                    let si = self.elements.nth(i);
+                    let oj = other.elements.nth(j);
+                    match TotalOrder::cmp(si, oj) {
+                        core::cmp::Ordering::Less
+                        | core::cmp::Ordering::Equal => {
+                            proof { TotalOrder::reflexive(*si); }
+                            let single_seq =
+                                ArraySeqStPerS::singleton(si.clone());
+                            result = ArraySeqStPerS::append(
+                                &result, &single_seq);
+                            proof {
+                                assert(cloned(
+                                    self.elements.seq@[i as int],
+                                    single_seq.seq@[0]));
+                                axiom_cloned_implies_eq_owned(
+                                    self.elements.seq@[i as int],
+                                    single_seq.seq@[0]);
+                                // Raw push for sorted proof.
+                                assert forall|k: int| #![auto]
+                                    0 <= k < result.seq@.len() implies
+                                    result.seq@[k] == old_result_seq.push(
+                                        self.elements.seq@[i as int])[k]
+                                by {
+                                    if k < old_result_seq.len() as int {
+                                        assert(result.spec_index(k)
+                                            == old_result_seq[k]);
+                                    } else {
+                                        assert(result.spec_index(
+                                            old_result_seq.len() as int + 0)
+                                            == single_seq.seq@[0]);
+                                    }
+                                }
+                                assert(result.seq@ =~= old_result_seq.push(
+                                    self.elements.seq@[i as int]));
+                                lemma_push_preserves_sorted(
+                                    old_result_seq,
+                                    self.elements.seq@[i as int]);
+                                assert(result.seq@.last()
+                                    == self.elements.seq@[i as int]);
+                                // View push for multiset proof.
+                                assert forall|k: int|
+                                    0 <= k < result@.len() implies
+                                    #[trigger] result@[k]
+                                        == old_result_view.push(
+                                            self@[i as int])[k]
+                                by {
+                                    if k < old_result_view.len() {
+                                        assert(result.spec_index(k)
+                                            == old_result_seq[k]);
+                                    } else {
+                                        assert(result.spec_index(
+                                            old_result_seq.len() as int + 0)
+                                            == single_seq.seq@[0]);
+                                    }
+                                }
+                                assert(result@ =~= old_result_view.push(
+                                    self@[i as int]));
+                                self@.lemma_take_succ_push(i as int);
+                            }
+                            i = i + 1;
+                        }
+                        core::cmp::Ordering::Greater => {
+                            let single_seq =
+                                ArraySeqStPerS::singleton(oj.clone());
+                            result = ArraySeqStPerS::append(
+                                &result, &single_seq);
+                            proof {
+                                assert(cloned(
+                                    other.elements.seq@[j as int],
+                                    single_seq.seq@[0]));
+                                axiom_cloned_implies_eq_owned(
+                                    other.elements.seq@[j as int],
+                                    single_seq.seq@[0]);
+                                // Raw push for sorted proof.
+                                assert forall|k: int| #![auto]
+                                    0 <= k < result.seq@.len() implies
+                                    result.seq@[k] == old_result_seq.push(
+                                        other.elements.seq@[j as int])[k]
+                                by {
+                                    if k < old_result_seq.len() as int {
+                                        assert(result.spec_index(k)
+                                            == old_result_seq[k]);
+                                    } else {
+                                        assert(result.spec_index(
+                                            old_result_seq.len() as int + 0)
+                                            == single_seq.seq@[0]);
+                                    }
+                                }
+                                assert(result.seq@ =~= old_result_seq.push(
+                                    other.elements.seq@[j as int]));
+                                lemma_push_preserves_sorted(
+                                    old_result_seq,
+                                    other.elements.seq@[j as int]);
+                                assert(result.seq@.last()
+                                    == other.elements.seq@[j as int]);
+                                // View push for multiset proof.
+                                assert forall|k: int|
+                                    0 <= k < result@.len() implies
+                                    #[trigger] result@[k]
+                                        == old_result_view.push(
+                                            other@[j as int])[k]
+                                by {
+                                    if k < old_result_view.len() {
+                                        assert(result.spec_index(k)
+                                            == old_result_seq[k]);
+                                    } else {
+                                        assert(result.spec_index(
+                                            old_result_seq.len() as int + 0)
+                                            == single_seq.seq@[0]);
+                                    }
+                                }
+                                assert(result@ =~= old_result_view.push(
+                                    other@[j as int]));
+                                other@.lemma_take_succ_push(j as int);
+                            }
+                            j = j + 1;
+                        }
                     }
                 }
 
@@ -323,10 +607,71 @@ broadcast use {
                         m == other.elements@.len(),
                         i <= n, j <= m,
                         result@.len() == (i + j) as int,
+                        result@.to_multiset() =~=
+                            self@.take(i as int).to_multiset().add(
+                                other@.take(j as int).to_multiset()),
+                        spec_sorted(result.seq@),
+                        result.seq@.len() > 0 && i < n ==>
+                            TotalOrder::le(result.seq@.last(),
+                                self.elements.seq@[i as int]),
+                        i >= n || j >= m,
+                        j < m && result.seq@.len() > 0 ==>
+                            TotalOrder::le(result.seq@.last(),
+                                other.elements.seq@[j as int]),
                     decreases n - i,
                 {
-                    let single_seq = ArraySeqStPerS::singleton(self.elements.nth(i).clone());
-                    result = ArraySeqStPerS::append(&result, &single_seq);
+                    let ghost old_result_seq = result.seq@;
+                    let ghost old_result_view = result@;
+                    let single_seq = ArraySeqStPerS::singleton(
+                        self.elements.nth(i).clone());
+                    result = ArraySeqStPerS::append(
+                        &result, &single_seq);
+                    proof {
+                        assert(cloned(self.elements.seq@[i as int],
+                            single_seq.seq@[0]));
+                        axiom_cloned_implies_eq_owned(
+                            self.elements.seq@[i as int],
+                            single_seq.seq@[0]);
+                        assert forall|k: int| #![auto]
+                            0 <= k < result.seq@.len() implies
+                            result.seq@[k] == old_result_seq.push(
+                                self.elements.seq@[i as int])[k]
+                        by {
+                            if k < old_result_seq.len() as int {
+                                assert(result.spec_index(k)
+                                    == old_result_seq[k]);
+                            } else {
+                                assert(result.spec_index(
+                                    old_result_seq.len() as int + 0)
+                                    == single_seq.seq@[0]);
+                            }
+                        }
+                        assert(result.seq@ =~= old_result_seq.push(
+                            self.elements.seq@[i as int]));
+                        lemma_push_preserves_sorted(
+                            old_result_seq,
+                            self.elements.seq@[i as int]);
+                        assert(result.seq@.last()
+                            == self.elements.seq@[i as int]);
+                        assert forall|k: int|
+                            0 <= k < result@.len() implies
+                            #[trigger] result@[k]
+                                == old_result_view.push(
+                                    self@[i as int])[k]
+                        by {
+                            if k < old_result_view.len() {
+                                assert(result.spec_index(k)
+                                    == old_result_seq[k]);
+                            } else {
+                                assert(result.spec_index(
+                                    old_result_seq.len() as int + 0)
+                                    == single_seq.seq@[0]);
+                            }
+                        }
+                        assert(result@ =~= old_result_view.push(
+                            self@[i as int]));
+                        self@.lemma_take_succ_push(i as int);
+                    }
                     i = i + 1;
                 }
 
@@ -337,16 +682,75 @@ broadcast use {
                         m == other.elements@.len(),
                         i <= n, j <= m,
                         result@.len() == (i + j) as int,
+                        result@.to_multiset() =~=
+                            self@.take(i as int).to_multiset().add(
+                                other@.take(j as int).to_multiset()),
+                        spec_sorted(result.seq@),
+                        result.seq@.len() > 0 && j < m ==>
+                            TotalOrder::le(result.seq@.last(),
+                                other.elements.seq@[j as int]),
                     decreases m - j,
                 {
-                    let single_seq = ArraySeqStPerS::singleton(other.elements.nth(j).clone());
-                    result = ArraySeqStPerS::append(&result, &single_seq);
+                    let ghost old_result_seq = result.seq@;
+                    let ghost old_result_view = result@;
+                    let single_seq = ArraySeqStPerS::singleton(
+                        other.elements.nth(j).clone());
+                    result = ArraySeqStPerS::append(
+                        &result, &single_seq);
+                    proof {
+                        assert(cloned(other.elements.seq@[j as int],
+                            single_seq.seq@[0]));
+                        axiom_cloned_implies_eq_owned(
+                            other.elements.seq@[j as int],
+                            single_seq.seq@[0]);
+                        assert forall|k: int| #![auto]
+                            0 <= k < result.seq@.len() implies
+                            result.seq@[k] == old_result_seq.push(
+                                other.elements.seq@[j as int])[k]
+                        by {
+                            if k < old_result_seq.len() as int {
+                                assert(result.spec_index(k)
+                                    == old_result_seq[k]);
+                            } else {
+                                assert(result.spec_index(
+                                    old_result_seq.len() as int + 0)
+                                    == single_seq.seq@[0]);
+                            }
+                        }
+                        assert(result.seq@ =~= old_result_seq.push(
+                            other.elements.seq@[j as int]));
+                        lemma_push_preserves_sorted(
+                            old_result_seq,
+                            other.elements.seq@[j as int]);
+                        assert(result.seq@.last()
+                            == other.elements.seq@[j as int]);
+                        assert forall|k: int|
+                            0 <= k < result@.len() implies
+                            #[trigger] result@[k]
+                                == old_result_view.push(
+                                    other@[j as int])[k]
+                        by {
+                            if k < old_result_view.len() {
+                                assert(result.spec_index(k)
+                                    == old_result_seq[k]);
+                            } else {
+                                assert(result.spec_index(
+                                    old_result_seq.len() as int + 0)
+                                    == single_seq.seq@[0]);
+                            }
+                        }
+                        assert(result@ =~= old_result_view.push(
+                            other@[j as int]));
+                        other@.lemma_take_succ_push(j as int);
+                    }
                     j = j + 1;
                 }
 
                 let pq = SortedListPQ { elements: result };
-                // accept hole: Merge preserves multiset union.
-                proof { accept(pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset())); }
+                proof {
+                    assert(self@.take(n as int) =~= self@);
+                    assert(other@.take(m as int) =~= other@);
+                }
                 pq
             }
 
@@ -359,6 +763,7 @@ broadcast use {
                     invariant
                         n == seq@.len(),
                         pq@.len() == i as int,
+                        spec_sorted(pq.spec_seq()),
                 {
                     pq = pq.insert(seq.nth(i).clone());
                 }
@@ -376,12 +781,29 @@ broadcast use {
                 self.meld(&other)
             }
 
-            /// Already sorted — just clone the backing sequence.
+            /// Already sorted — just copy the backing sequence.
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>) {
-                let sorted = self.elements.clone();
-                // accept hole: SortedListPQ maintains sorted order by construction.
-                // Proving requires a sorted well-formedness invariant (task #7).
-                proof { accept(spec_sorted(sorted.seq@)); }
+                let n = self.elements.length();
+                let sorted = self.elements.subseq_copy(0, n);
+                proof {
+                    assert forall|i: int| 0 <= i < sorted@.len() implies
+                        #[trigger] sorted@[i] == self@[i]
+                    by {
+                        assert(sorted.spec_index(i)
+                            == self.elements.spec_index(0 + i));
+                    }
+                    assert(sorted@ =~= self@);
+                    assert forall|i: int, j: int|
+                        0 <= i < j < sorted.seq@.len() implies
+                        #[trigger] TotalOrder::le(
+                            sorted.seq@[i], sorted.seq@[j])
+                    by {
+                        assert(sorted.spec_index(i)
+                            == self.elements.spec_index(0 + i));
+                        assert(sorted.spec_index(j)
+                            == self.elements.spec_index(0 + j));
+                    }
+                }
                 sorted
             }
 
@@ -399,23 +821,39 @@ broadcast use {
                 }
                 let n = self.elements.length();
                 let max_element = self.elements.nth(n - 1).clone();
-                let end = n - 1;
-                let mut new_elements = ArraySeqStPerS::empty();
-                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-                for i in 0..end
-                    invariant
-                        n == self.elements@.len(),
-                        end == n - 1,
-                        new_elements@.len() == i as int,
-                {
-                    let single_seq = ArraySeqStPerS::singleton(self.elements.nth(i).clone());
-                    new_elements = ArraySeqStPerS::append(&new_elements, &single_seq);
-                }
-                let new_pq = SortedListPQ { elements: new_elements };
-                // accept hole: Rebuild removes max_element and preserves other views.
                 proof {
-                    accept(self@.to_multiset() =~=
-                        new_pq@.to_multiset().insert(max_element@));
+                    assert(cloned(self.elements.seq@[(n - 1) as int], max_element));
+                    axiom_cloned_implies_eq_owned(
+                        self.elements.seq@[(n - 1) as int], max_element);
+                }
+                let new_elements = self.elements.subseq_copy(0, n - 1);
+                let new_pq = SortedListPQ { elements: new_elements };
+                proof {
+                    assert forall|i: int| 0 <= i < (n - 1) as int implies
+                        #[trigger] new_pq@[i] == self@[i]
+                    by {
+                        assert(new_elements.spec_index(i)
+                            == self.elements.spec_index(0 + i));
+                    }
+                    assert(new_pq@ =~= self@.take((n - 1) as int));
+                    assert(self@.take((n - 1) as int)
+                        =~= self@.subrange(0, (n - 1) as int));
+                    let sv = self@.subrange((n - 1) as int, n as int);
+                    assert(sv =~= Seq::<T::V>::empty().push(max_element@));
+                    assert(self@ =~= self@.take((n - 1) as int) + sv);
+                    vstd::seq_lib::lemma_multiset_commutative(
+                        self@.take((n - 1) as int), sv);
+                    // Sorted: prefix of sorted seq is sorted.
+                    assert forall|i: int, j: int|
+                        0 <= i < j < new_elements.seq@.len() implies
+                        #[trigger] TotalOrder::le(
+                            new_elements.seq@[i], new_elements.seq@[j])
+                    by {
+                        assert(new_elements.spec_index(i)
+                            == self.elements.spec_index(0 + i));
+                        assert(new_elements.spec_index(j)
+                            == self.elements.spec_index(0 + j));
+                    }
                 }
                 (new_pq, Some(max_element))
             }
@@ -440,9 +878,30 @@ broadcast use {
             }
 
             fn to_sorted_vec(&self) -> Vec<T> {
-                let v = self.to_vec();
-                // accept hole: Same clone gap as extract_all_sorted + Vec conversion.
-                proof { accept(spec_sorted(v@)); }
+                let n = self.elements.length();
+                let mut v: Vec<T> = Vec::new();
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                for i in 0..n
+                    invariant
+                        n == self.elements@.len(),
+                        v@.len() == i as int,
+                        forall|k: int| #![auto] 0 <= k < i as int ==>
+                            v@[k] == self.elements.seq@[k],
+                {
+                    let elem = self.elements.nth(i).clone();
+                    proof {
+                        assert(cloned(self.elements.seq@[i as int], elem));
+                        axiom_cloned_implies_eq_owned(
+                            self.elements.seq@[i as int], elem);
+                    }
+                    v.push(elem);
+                }
+                proof {
+                    assert forall|i: int, j: int|
+                        0 <= i < j < v@.len() implies
+                        #[trigger] TotalOrder::le(v@[i], v@[j])
+                    by {}
+                }
                 v
             }
 
@@ -496,7 +955,6 @@ broadcast use {
                 ensures equal == (self@ == other@)
             {
                 let equal = self.elements == other.elements;
-                proof { accept(equal == (self@ == other@)); }
                 equal
             }
         }
