@@ -75,16 +75,10 @@ pub mod BSTParaMtEph {
 
     // 5. view impls
 
-    impl<T: MtKey> ParamBST<T> {
-        #[verifier::external_body]
-        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-            Set::empty()
-        }
-    }
-
     impl<T: MtKey> View for ParamBST<T> {
         type V = Set<<T as View>::V>;
-        open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
+        #[verifier::external_body]
+        open spec fn view(&self) -> Set<<T as View>::V> { Set::empty() }
     }
 
     impl<T: MtKey> View for Exposed<T> {

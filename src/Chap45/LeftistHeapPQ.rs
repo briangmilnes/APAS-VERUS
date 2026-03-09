@@ -18,6 +18,7 @@
 
 pub mod LeftistHeapPQ {
 
+    use std::cmp::Ordering;
     use std::fmt::{Debug, Display, Formatter, Result};
 
     use vstd::prelude::*;
@@ -26,6 +27,7 @@ pub mod LeftistHeapPQ {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Types::Types::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::Concurrency::diverge;
     use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
@@ -36,6 +38,7 @@ pub mod LeftistHeapPQ {
 //  3. broadcast use
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::multiset::group_multiset_axioms,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
@@ -62,7 +65,27 @@ broadcast use {
         }
 
 
+//  5. view impls
+
+        impl<T: StT + Ord + TotalOrder> View for LeftistHeapNode<T> {
+            type V = Multiset<T>;
+            open spec fn view(&self) -> Multiset<T> { self.spec_seq().to_multiset() }
+        }
+
+        impl<T: StT + Ord + TotalOrder> View for LeftistHeapPQ<T> {
+            type V = Multiset<T>;
+            open spec fn view(&self) -> Multiset<T> { self.root.spec_seq().to_multiset() }
+        }
+
 //  6. spec fns
+        /// Key is <= the root key of a node (trivially true for Leaf).
+        pub open spec fn spec_key_le_root<T: StT + Ord + TotalOrder>(key: T, node: &LeftistHeapNode<T>) -> bool {
+            match *node {
+                LeftistHeapNode::Leaf => true,
+                LeftistHeapNode::Node { key: nk, .. } => TotalOrder::le(key, nk),
+            }
+        }
+
         pub open spec fn spec_sorted<T: TotalOrder>(s: Seq<T>) -> bool {
             forall|i: int, j: int| 0 <= i < j < s.len() ==>
                 #[trigger] TotalOrder::le(s[i], s[j])
@@ -71,6 +94,26 @@ broadcast use {
 //  7. proof fns/broadcast groups
 
         proof fn _leftist_heap_pq_verified() {}
+
+        /// Exec comparison with spec ensures connecting to TotalOrder::le.
+        fn total_order_le<T: StT + Ord + TotalOrder>(a: &T, b: &T) -> (r: bool)
+            ensures r <==> TotalOrder::le(*a, *b)
+        {
+            match TotalOrder::cmp(a, b) {
+                Ordering::Greater => {
+                    proof {
+                        if TotalOrder::le(*a, *b) {
+                            TotalOrder::antisymmetric(*a, *b);
+                        }
+                    }
+                    false
+                }
+                _ => {
+                    proof { TotalOrder::reflexive(*a); }
+                    true
+                }
+            }
+        }
 
         proof fn lemma_total_size_monotone<T: StT + Ord + TotalOrder>(heaps: Seq<LeftistHeapPQ<T>>, j: int, k: int)
             requires 0 <= j <= k <= heaps.len(),
@@ -82,84 +125,216 @@ broadcast use {
             }
         }
 
+        /// Heap invariant implies root is <= all elements in spec_seq.
+        proof fn lemma_heap_root_is_min<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>)
+            requires node.spec_is_heap(),
+            ensures
+                node.spec_seq().len() > 0 ==>
+                    forall|i: int| 0 <= i < node.spec_seq().len() ==>
+                        #[trigger] TotalOrder::le(node.spec_seq()[0], node.spec_seq()[i]),
+            decreases *node,
+        {
+            match node {
+                LeftistHeapNode::Leaf => {},
+                LeftistHeapNode::Node { key, left, right, .. } => {
+                    let s = node.spec_seq();
+                    let ls = left.spec_seq();
+                    let rs = right.spec_seq();
+                    assert(s =~= Seq::empty().push(*key) + ls + rs);
+                    assert(s[0] == *key);
+                    TotalOrder::reflexive(*key);
+
+                    lemma_heap_root_is_min(&**left);
+                    lemma_heap_root_is_min(&**right);
+
+                    assert forall|i: int| 0 <= i < s.len() implies
+                        #[trigger] TotalOrder::le(s[0], s[i])
+                    by {
+                        if i == 0 {
+                            // s[0] == *key, reflexive
+                        } else if i < 1 + ls.len() {
+                            // Element is in left subtree
+                            let li = i - 1;
+                            assert(s[i] == ls[li]);
+                            match &**left {
+                                LeftistHeapNode::Leaf => {},
+                                LeftistHeapNode::Node { key: lk, left: ll, right: lr, .. } => {
+                                    assert(ls =~= Seq::empty().push(*lk) + ll.spec_seq() + lr.spec_seq());
+                                    assert(ls[0] == *lk);
+                                    assert(TotalOrder::le(*key, *lk));
+                                    assert(TotalOrder::le(ls[0], ls[li]));
+                                    TotalOrder::transitive(*key, *lk, ls[li]);
+                                },
+                            }
+                        } else {
+                            // Element is in right subtree
+                            let ri = i - 1 - ls.len();
+                            assert(s[i] == rs[ri]);
+                            match &**right {
+                                LeftistHeapNode::Leaf => {},
+                                LeftistHeapNode::Node { key: rk, left: rl, right: rr, .. } => {
+                                    assert(rs =~= Seq::empty().push(*rk) + rl.spec_seq() + rr.spec_seq());
+                                    assert(rs[0] == *rk);
+                                    assert(TotalOrder::le(*key, *rk));
+                                    assert(TotalOrder::le(rs[0], rs[ri]));
+                                    TotalOrder::transitive(*key, *rk, rs[ri]);
+                                },
+                            }
+                        }
+                    }
+                },
+            }
+        }
+
+        /// spec_rank_bounded implies spec_rank() <= spec_size().
+        proof fn lemma_rank_le_size<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>)
+            requires node.spec_rank_bounded(),
+            ensures node.spec_rank() <= node.spec_size(),
+        {
+            match node {
+                LeftistHeapNode::Leaf => {},
+                LeftistHeapNode::Node { rank, left, right, .. } => {
+                    assert(rank as nat <= 1 + left.spec_size() + right.spec_size());
+                },
+            }
+        }
 
 //  8. traits
 
-        pub trait LeftistHeapNodeTrait<T: StT + Ord + TotalOrder>: Sized {
+        /// Recursive spec functions on the node enum (spec-only, no exec methods).
+        pub trait LeftistHeapNodeSpec<T: StT + Ord + TotalOrder>: Sized {
+            spec fn spec_size(&self) -> nat;
+            spec fn spec_seq(&self) -> Seq<T>;
+            spec fn spec_rank(&self) -> nat;
+            spec fn spec_is_leftist(&self) -> bool;
+            spec fn spec_is_heap(&self) -> bool;
+            spec fn spec_rank_bounded(&self) -> bool;
+        }
+
+        pub trait LeftistHeapNodeTrait<T: StT + Ord + TotalOrder>: Sized + LeftistHeapNodeSpec<T> {
             spec fn spec_is_leaf(&self) -> bool;
-            spec fn spec_node_size(&self) -> nat;
 
             fn rank(&self) -> (rank_val: usize)
-                ensures self.spec_is_leaf() ==> rank_val == 0;
+                ensures rank_val as nat == self.spec_rank();
             fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
-                requires left.spec_size() + right.spec_size() + 1 <= usize::MAX as nat,
-                ensures node.spec_size() == left.spec_size() + right.spec_size() + 1;
+                requires
+                    left.spec_size() + right.spec_size() + 1 <= usize::MAX as nat,
+                    left.spec_is_leftist() && left.spec_is_heap(),
+                    right.spec_is_leftist() && right.spec_is_heap(),
+                    left.spec_rank_bounded() && right.spec_rank_bounded(),
+                    spec_key_le_root(key, &left),
+                    spec_key_le_root(key, &right),
+                ensures
+                    node.spec_size() == left.spec_size() + right.spec_size() + 1,
+                    node.spec_is_leftist(),
+                    node.spec_is_heap(),
+                    node.spec_rank_bounded(),
+                    node@ =~= Multiset::empty().insert(key).add(left@).add(right@),
+                    forall|x: T| TotalOrder::le(x, key) ==>
+                        #[trigger] spec_key_le_root(x, &node);
             fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
-                requires a.spec_size() + b.spec_size() <= usize::MAX as nat,
-                ensures node.spec_size() == a.spec_size() + b.spec_size();
+                requires
+                    a.spec_size() + b.spec_size() <= usize::MAX as nat,
+                    a.spec_is_leftist() && a.spec_is_heap(),
+                    b.spec_is_leftist() && b.spec_is_heap(),
+                    a.spec_rank_bounded() && b.spec_rank_bounded(),
+                ensures
+                    node.spec_size() == a.spec_size() + b.spec_size(),
+                    node.spec_is_leftist(),
+                    node.spec_is_heap(),
+                    node.spec_rank_bounded(),
+                    node@ =~= a@.add(b@),
+                    forall|x: T| spec_key_le_root(x, &a) && spec_key_le_root(x, &b) ==>
+                        #[trigger] spec_key_le_root(x, &node);
             fn size(&self) -> (n: usize)
-                requires self.spec_node_size() <= usize::MAX as nat,
-                ensures n as nat == self.spec_node_size();
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures n as nat == self.spec_size();
             fn height(&self) -> (h: usize)
-                requires self.spec_node_size() <= usize::MAX as nat,
+                requires self.spec_size() <= usize::MAX as nat,
                 ensures
                     self.spec_is_leaf() ==> h == 0,
-                    h as nat <= self.spec_node_size();
-            fn is_leftist(&self) -> (b: bool)
-                ensures self.spec_is_leaf() ==> b;
-            fn is_heap(&self) -> (b: bool)
-                ensures self.spec_is_leaf() ==> b;
+                    h as nat <= self.spec_size();
+            fn is_leftist(&self) -> (is_leftist: bool)
+                ensures is_leftist <==> self.spec_is_leftist();
+            fn is_heap(&self) -> (is_heap: bool)
+                ensures is_heap <==> self.spec_is_heap();
+            fn is_rank_bounded(&self) -> (bounded: bool)
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures bounded <==> self.spec_rank_bounded();
             fn to_vec(&self) -> (v: Vec<T>)
-                requires self.spec_node_size() <= usize::MAX as nat,
-                ensures v@.len() as nat == self.spec_node_size();
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures v@.len() as nat == self.spec_size();
         }
 
         /// Meldable Priority Queue ADT (Data Type 45.1) using leftist heap.
-        pub trait LeftistHeapPQTrait<T: StT + Ord + TotalOrder>: Sized {
+        pub trait LeftistHeapPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Multiset<T>> {
             spec fn spec_size(self) -> nat;
             spec fn spec_seq(&self) -> Seq<T>;
+            spec fn spec_is_valid_leftist_heap(&self) -> bool;
 
             fn empty() -> (pq: Self)
                 ensures
                     pq.spec_size() == 0,
-                    pq.spec_seq().to_multiset() =~= Multiset::empty();
+                    pq@ =~= Multiset::empty(),
+                    pq.spec_is_valid_leftist_heap();
             fn singleton(element: T) -> (pq: Self)
                 ensures
                     pq.spec_size() == 1,
-                    pq.spec_seq().to_multiset() =~= Multiset::empty().insert(element);
+                    pq@ =~= Multiset::empty().insert(element),
+                    pq.spec_is_valid_leftist_heap();
             fn find_min(&self) -> (min_elem: Option<&T>)
+                requires self.spec_is_valid_leftist_heap(),
                 ensures
                     self.spec_size() == 0 ==> min_elem.is_none(),
-                    self.spec_size() > 0 ==> min_elem.is_some();
+                    self.spec_size() > 0 ==> min_elem.is_some(),
+                    self.spec_size() > 0 ==> self@.count(*min_elem.unwrap()) > 0,
+                    self.spec_size() > 0 ==> forall|e: T| self@.count(e) > 0 ==>
+                        #[trigger] TotalOrder::le(*min_elem.unwrap(), e);
             fn insert(&self, element: T) -> (pq: Self)
-                requires self.spec_size() + 1 <= usize::MAX as nat,
+                requires
+                    self.spec_size() + 1 <= usize::MAX as nat,
+                    self.spec_is_valid_leftist_heap(),
                 ensures
                     pq.spec_size() == self.spec_size() + 1,
-                    pq.spec_seq().to_multiset() =~= self.spec_seq().to_multiset().insert(element);
+                    pq@ =~= self@.insert(element),
+                    pq.spec_is_valid_leftist_heap();
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
-                requires self.spec_size() <= usize::MAX as nat,
+                requires
+                    self.spec_size() <= usize::MAX as nat,
+                    self.spec_is_valid_leftist_heap(),
                 ensures
                     self.spec_size() > 0 ==> min_and_rest.1.is_some(),
                     self.spec_size() > 0 ==> min_and_rest.0.spec_size() == self.spec_size() - 1,
                     self.spec_size() == 0 ==> min_and_rest.1.is_none(),
                     self.spec_size() == 0 ==> min_and_rest.0.spec_size() == self.spec_size(),
-                    self.spec_size() > 0 ==> self.spec_seq().to_multiset() =~=
-                        min_and_rest.0.spec_seq().to_multiset().insert(min_and_rest.1.unwrap());
+                    self.spec_size() > 0 ==> self@ =~=
+                        min_and_rest.0@.insert(min_and_rest.1.unwrap()),
+                    self.spec_size() > 0 ==> forall|e: T| self@.count(e) > 0 ==>
+                        #[trigger] TotalOrder::le(min_and_rest.1.unwrap(), e),
+                    min_and_rest.0.spec_is_valid_leftist_heap();
             fn meld(&self, other: &Self) -> (pq: Self)
-                requires self.spec_size() + other.spec_size() <= usize::MAX as nat,
+                requires
+                    self.spec_size() + other.spec_size() <= usize::MAX as nat,
+                    self.spec_is_valid_leftist_heap(),
+                    other.spec_is_valid_leftist_heap(),
                 ensures
                     pq.spec_size() == self.spec_size() + other.spec_size(),
-                    pq.spec_seq().to_multiset() =~= self.spec_seq().to_multiset().add(other.spec_seq().to_multiset());
+                    pq@ =~= self@.add(other@),
+                    pq.spec_is_valid_leftist_heap();
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
-                ensures pq.spec_size() == seq@.len();
+                ensures
+                    pq.spec_size() == seq@.len(),
+                    pq.spec_is_valid_leftist_heap();
             fn size(&self) -> (n: usize)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures n as nat == self.spec_size();
-            fn is_empty(&self) -> (b: bool)
-                ensures b == (self.spec_size() == 0);
+            fn is_empty(&self) -> (is_empty: bool)
+                ensures is_empty == (self.spec_size() == 0);
             fn extract_all_sorted(&self) -> (sorted: Vec<T>)
-                requires self.spec_size() <= usize::MAX as nat,
+                requires
+                    self.spec_size() <= usize::MAX as nat,
+                    self.spec_is_valid_leftist_heap(),
                 ensures
                     sorted@.len() as nat == self.spec_size(),
                     spec_sorted(sorted@);
@@ -168,49 +343,115 @@ broadcast use {
                 ensures self.spec_size() == 0 ==> levels == 0;
             fn root_rank(&self) -> (rank_val: usize)
                 ensures self.spec_size() == 0 ==> rank_val == 0;
-            fn is_valid_leftist_heap(&self) -> (b: bool)
-                ensures self.spec_size() == 0 ==> b;
+            fn is_valid_leftist_heap(&self) -> (is_valid: bool)
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures is_valid <==> self.spec_is_valid_leftist_heap();
             fn from_vec(vec: Vec<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
-                ensures pq.spec_size() == vec@.len();
+                ensures
+                    pq.spec_size() == vec@.len(),
+                    pq.spec_is_valid_leftist_heap();
             fn to_vec(&self) -> (v: Vec<T>)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures v@.len() as nat == self.spec_size();
             fn to_sorted_vec(&self) -> (v: Vec<T>)
-                requires self.spec_size() <= usize::MAX as nat,
+                requires
+                    self.spec_size() <= usize::MAX as nat,
+                    self.spec_is_valid_leftist_heap(),
                 ensures
                     v@.len() as nat == self.spec_size(),
                     spec_sorted(v@);
             spec fn spec_total_size(heaps: Seq<Self>, n: int) -> nat;
 
             fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self)
-                requires Self::spec_total_size(heaps@, heaps@.len() as int) <= usize::MAX as nat,
-                ensures pq.spec_size() == Self::spec_total_size(heaps@, heaps@.len() as int);
+                requires
+                    Self::spec_total_size(heaps@, heaps@.len() as int) <= usize::MAX as nat,
+                    forall|i: int| 0 <= i < heaps@.len() ==>
+                        (#[trigger] heaps@[i]).spec_is_valid_leftist_heap(),
+                ensures
+                    pq.spec_size() == Self::spec_total_size(heaps@, heaps@.len() as int),
+                    pq.spec_is_valid_leftist_heap();
             fn split(&self, key: &T) -> (parts: (Self, Self))
-                requires self.spec_size() <= usize::MAX as nat;
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures
+                    parts.0.spec_is_valid_leftist_heap(),
+                    parts.1.spec_is_valid_leftist_heap();
         }
 
 
 //  9. impls
 
-        impl<T: StT + Ord + TotalOrder> LeftistHeapNode<T> {
-            pub open spec fn spec_size(self) -> nat
-                decreases self
+        impl<T: StT + Ord + TotalOrder> LeftistHeapNodeSpec<T> for LeftistHeapNode<T> {
+            open spec fn spec_size(&self) -> nat
+                decreases *self,
             {
-                match self {
+                match *self {
                     LeftistHeapNode::Leaf => 0,
                     LeftistHeapNode::Node { left, right, .. } =>
-                        1 + (*left).spec_size() + (*right).spec_size(),
+                        1 + LeftistHeapNodeSpec::spec_size(&*left) + LeftistHeapNodeSpec::spec_size(&*right),
                 }
             }
 
-            pub open spec fn spec_seq(self) -> Seq<T>
-                decreases self
+            open spec fn spec_seq(&self) -> Seq<T>
+                decreases *self,
             {
-                match self {
+                match *self {
                     LeftistHeapNode::Leaf => Seq::empty(),
                     LeftistHeapNode::Node { key, left, right, .. } =>
-                        Seq::empty().push(key) + (*left).spec_seq() + (*right).spec_seq(),
+                        Seq::empty().push(key) + LeftistHeapNodeSpec::spec_seq(&*left) + LeftistHeapNodeSpec::spec_seq(&*right),
+                }
+            }
+
+            open spec fn spec_rank(&self) -> nat {
+                match *self {
+                    LeftistHeapNode::Leaf => 0,
+                    LeftistHeapNode::Node { rank, .. } => rank as nat,
+                }
+            }
+
+            open spec fn spec_is_leftist(&self) -> bool
+                decreases *self,
+            {
+                match *self {
+                    LeftistHeapNode::Leaf => true,
+                    LeftistHeapNode::Node { left, right, .. } =>
+                        LeftistHeapNodeSpec::spec_rank(&*left) >= LeftistHeapNodeSpec::spec_rank(&*right)
+                        && LeftistHeapNodeSpec::spec_is_leftist(&*left)
+                        && LeftistHeapNodeSpec::spec_is_leftist(&*right),
+                }
+            }
+
+            open spec fn spec_is_heap(&self) -> bool
+                decreases *self,
+            {
+                match *self {
+                    LeftistHeapNode::Leaf => true,
+                    LeftistHeapNode::Node { key, left, right, .. } => {
+                        let left_ok = match *left {
+                            LeftistHeapNode::Leaf => true,
+                            LeftistHeapNode::Node { key: lk, .. } => TotalOrder::le(key, lk),
+                        };
+                        let right_ok = match *right {
+                            LeftistHeapNode::Leaf => true,
+                            LeftistHeapNode::Node { key: rk, .. } => TotalOrder::le(key, rk),
+                        };
+                        left_ok && right_ok
+                        && LeftistHeapNodeSpec::spec_is_heap(&*left)
+                        && LeftistHeapNodeSpec::spec_is_heap(&*right)
+                    }
+                }
+            }
+
+            /// Stored rank field is bounded by node size, recursively.
+            open spec fn spec_rank_bounded(&self) -> bool
+                decreases *self,
+            {
+                match *self {
+                    LeftistHeapNode::Leaf => true,
+                    LeftistHeapNode::Node { rank, left, right, .. } =>
+                        rank as nat <= 1 + LeftistHeapNodeSpec::spec_size(&*left) + LeftistHeapNodeSpec::spec_size(&*right)
+                        && LeftistHeapNodeSpec::spec_rank_bounded(&*left)
+                        && LeftistHeapNodeSpec::spec_rank_bounded(&*right),
                 }
             }
         }
@@ -220,18 +461,22 @@ broadcast use {
                 matches!(*self, LeftistHeapNode::Leaf)
             }
 
-            open spec fn spec_node_size(&self) -> nat {
-                (*self).spec_size()
-            }
-
             fn rank(&self) -> (rank_val: usize) {
                 match self {
-                    LeftistHeapNode::Leaf => 0,
-                    LeftistHeapNode::Node { rank, .. } => *rank,
+                    LeftistHeapNode::Leaf => {
+                        assert(self.spec_rank() == 0);
+                        0
+                    }
+                    LeftistHeapNode::Node { rank, .. } => {
+                        assert(self.spec_rank() == *rank as nat);
+                        *rank
+                    }
                 }
             }
 
             fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> (node: Self) {
+                let ghost left_ms = left@;
+                let ghost right_ms = right@;
                 let left_rank = left.rank();
                 let right_rank = right.rank();
                 let (final_left, final_right) = if left_rank >= right_rank {
@@ -240,40 +485,133 @@ broadcast use {
                     (right, left)
                 };
                 let fr = final_right.rank();
-                // accept hole: rank ≤ log₂(size+1) < usize::MAX; proving requires spec_rank + wf invariant.
-                proof { accept(fr < usize::MAX); }
+                proof { lemma_rank_le_size(&final_right); }
                 let node_rank = fr + 1;
-                LeftistHeapNode::Node {
+                let node = LeftistHeapNode::Node {
                     key,
                     left: Box::new(final_left),
                     right: Box::new(final_right),
                     rank: node_rank,
+                };
+                // Leftist: rank(final_left) >= rank(final_right) by swap, children leftist from requires.
+                assert(node.spec_is_leftist() == (
+                    final_left.spec_rank() >= final_right.spec_rank()
+                    && final_left.spec_is_leftist() && final_right.spec_is_leftist()));
+                // Heap: key <= children roots from requires (swap preserves), children heaps from requires.
+                assert(node.spec_is_heap() == ({
+                    let lo = match final_left {
+                        LeftistHeapNode::Leaf => true,
+                        LeftistHeapNode::Node { key: lk, .. } => TotalOrder::le(key, lk),
+                    };
+                    let ro = match final_right {
+                        LeftistHeapNode::Leaf => true,
+                        LeftistHeapNode::Node { key: rk, .. } => TotalOrder::le(key, rk),
+                    };
+                    lo && ro && final_left.spec_is_heap() && final_right.spec_is_heap()
+                }));
+                // Rank bounded: node_rank = fr + 1 <= final_right.spec_size() + 1 <= size.
+                assert(node.spec_rank_bounded() == (
+                    node_rank as nat <= 1 + final_left.spec_size() + final_right.spec_size()
+                    && final_left.spec_rank_bounded() && final_right.spec_rank_bounded()));
+                // Multiset preservation: unfold to_multiset of concatenation.
+                proof {
+                    let s1 = Seq::<T>::empty().push(key);
+                    let s2 = final_left.spec_seq();
+                    let s3 = final_right.spec_seq();
+                    assert(node.spec_seq() =~= s1 + s2 + s3);
+                    vstd::seq_lib::lemma_multiset_commutative(s1 + s2, s3);
+                    vstd::seq_lib::lemma_multiset_commutative(s1, s2);
+                    assert(node@ =~= Multiset::empty().insert(key).add(final_left@).add(final_right@));
                 }
+                node
             }
 
             /// Core meld operation following right spines (Data Structure 45.3).
             fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
                 decreases a.spec_size() + b.spec_size()
             {
+                let ghost a_view = a@;
+                let ghost b_view = b@;
+                let ghost a_seq = a.spec_seq();
+                let ghost b_seq = b.spec_seq();
                 match (a, b) {
-                    (LeftistHeapNode::Leaf, other) => other,
-                    (other, LeftistHeapNode::Leaf) => other,
+                    (LeftistHeapNode::Leaf, other) => {
+                        assert(a_view =~= Multiset::empty());
+                        other
+                    }
+                    (other, LeftistHeapNode::Leaf) => {
+                        assert(b_view =~= Multiset::empty());
+                        other
+                    }
                     (
                         LeftistHeapNode::Node { key: ka, left: la, right: ra, .. },
                         LeftistHeapNode::Node { key: kb, left: lb, right: rb, .. },
                     ) => {
-                        if ka <= kb {
-                            let melded_right = Self::meld_nodes(
-                                *ra,
-                                LeftistHeapNode::Node { key: kb, left: lb, right: rb, rank: 0 },
-                            );
-                            Self::make_node(ka, *la, melded_right)
+                        assert((*ra).spec_size() < 1 + (*la).spec_size() + (*ra).spec_size());
+                        assert((*rb).spec_size() < 1 + (*lb).spec_size() + (*rb).spec_size());
+                        let ka_le_kb = total_order_le(&ka, &kb);
+                        if ka_le_kb {
+                            let b_node = LeftistHeapNode::Node { key: kb, left: lb, right: rb, rank: 0 };
+                            // Reconstructed node has same children/key as b, so validity matches.
+                            assert(b_node.spec_is_leftist() == (lb.spec_rank() >= rb.spec_rank()
+                                && lb.spec_is_leftist() && rb.spec_is_leftist()));
+                            assert(b_node.spec_is_heap() == ({
+                                let lo = match *lb { LeftistHeapNode::Leaf => true,
+                                    LeftistHeapNode::Node { key: lk, .. } => TotalOrder::le(kb, lk) };
+                                let ro = match *rb { LeftistHeapNode::Leaf => true,
+                                    LeftistHeapNode::Node { key: rk, .. } => TotalOrder::le(kb, rk) };
+                                lo && ro && lb.spec_is_heap() && rb.spec_is_heap()
+                            }));
+                            assert(b_node.spec_rank_bounded());
+                            assert(b_node.spec_seq() =~= Seq::empty().push(kb) + lb.spec_seq() + rb.spec_seq());
+                            assert(b_node@ =~= b_view);
+                            let melded_right = Self::meld_nodes(*ra, b_node);
+                            // ka <= kb from total_order_le; ka <= root(ra) from heap property.
+                            assert(spec_key_le_root(ka, &melded_right));
+                            let result = Self::make_node(ka, *la, melded_right);
+                            proof {
+                                // Unfold a_view via lemma_multiset_commutative.
+                                assert(a_seq =~= Seq::empty().push(ka) + la.spec_seq() + ra.spec_seq());
+                                vstd::seq_lib::lemma_multiset_commutative(
+                                    Seq::<T>::empty().push(ka) + la.spec_seq(), ra.spec_seq());
+                                vstd::seq_lib::lemma_multiset_commutative(
+                                    Seq::<T>::empty().push(ka), la.spec_seq());
+                                assert(a_view =~= Multiset::empty().insert(ka).add(la@).add(ra@));
+                                // result@ = {ka}.add(la@).add(melded_right@) from make_node.
+                                // melded_right@ = ra@.add(b_node@) = ra@.add(b_view).
+                            }
+                            result
                         } else {
-                            let melded_right = Self::meld_nodes(
-                                LeftistHeapNode::Node { key: ka, left: la, right: ra, rank: 0 },
-                                *rb,
-                            );
-                            Self::make_node(kb, *lb, melded_right)
+                            proof { TotalOrder::total(ka, kb); }
+                            let a_node = LeftistHeapNode::Node { key: ka, left: la, right: ra, rank: 0 };
+                            assert(a_node.spec_is_leftist() == (la.spec_rank() >= ra.spec_rank()
+                                && la.spec_is_leftist() && ra.spec_is_leftist()));
+                            assert(a_node.spec_is_heap() == ({
+                                let lo = match *la { LeftistHeapNode::Leaf => true,
+                                    LeftistHeapNode::Node { key: lk, .. } => TotalOrder::le(ka, lk) };
+                                let ro = match *ra { LeftistHeapNode::Leaf => true,
+                                    LeftistHeapNode::Node { key: rk, .. } => TotalOrder::le(ka, rk) };
+                                lo && ro && la.spec_is_heap() && ra.spec_is_heap()
+                            }));
+                            assert(a_node.spec_rank_bounded());
+                            assert(a_node.spec_seq() =~= Seq::empty().push(ka) + la.spec_seq() + ra.spec_seq());
+                            assert(a_node@ =~= a_view);
+                            let melded_right = Self::meld_nodes(a_node, *rb);
+                            // kb <= ka from totality + !le(ka,kb); kb <= root(rb) from heap property.
+                            assert(spec_key_le_root(kb, &melded_right));
+                            let result = Self::make_node(kb, *lb, melded_right);
+                            proof {
+                                // Unfold b_view via lemma_multiset_commutative.
+                                assert(b_seq =~= Seq::empty().push(kb) + lb.spec_seq() + rb.spec_seq());
+                                vstd::seq_lib::lemma_multiset_commutative(
+                                    Seq::<T>::empty().push(kb) + lb.spec_seq(), rb.spec_seq());
+                                vstd::seq_lib::lemma_multiset_commutative(
+                                    Seq::<T>::empty().push(kb), lb.spec_seq());
+                                assert(b_view =~= Multiset::empty().insert(kb).add(lb@).add(rb@));
+                                // result@ = {kb}.add(lb@).add(melded_right@) from make_node.
+                                // melded_right@ = a_node@.add(rb@) = a_view.add(rb@).
+                            }
+                            result
                         }
                     }
                 }
@@ -285,6 +623,7 @@ broadcast use {
                 match self {
                     LeftistHeapNode::Leaf => 0,
                     LeftistHeapNode::Node { left, right, .. } => {
+                        assert(self.spec_size() == 1 + left.spec_size() + right.spec_size());
                         let ls = left.size();
                         let rs = right.size();
                         1 + ls + rs
@@ -298,6 +637,7 @@ broadcast use {
                 match self {
                     LeftistHeapNode::Leaf => 0,
                     LeftistHeapNode::Node { left, right, .. } => {
+                        assert(self.spec_size() == 1 + left.spec_size() + right.spec_size());
                         let lh = left.height();
                         let rh = right.height();
                         let mh = if lh >= rh { lh } else { rh };
@@ -306,32 +646,65 @@ broadcast use {
                 }
             }
 
-            fn is_leftist(&self) -> (b: bool)
+            fn is_leftist(&self) -> (is_leftist: bool)
                 decreases *self
             {
                 match self {
                     LeftistHeapNode::Leaf => true,
                     LeftistHeapNode::Node { left, right, .. } => {
+                        assert(self.spec_is_leftist() == (
+                            left.spec_rank() >= right.spec_rank()
+                            && left.spec_is_leftist()
+                            && right.spec_is_leftist()
+                        ));
                         left.rank() >= right.rank() && left.is_leftist() && right.is_leftist()
                     }
                 }
             }
 
-            fn is_heap(&self) -> (b: bool)
+            fn is_heap(&self) -> (is_heap: bool)
                 decreases *self
             {
                 match self {
                     LeftistHeapNode::Leaf => true,
                     LeftistHeapNode::Node { key, left, right, .. } => {
+                        assert(self.spec_is_heap() == ({
+                            let lo = match **left {
+                                LeftistHeapNode::Leaf => true,
+                                LeftistHeapNode::Node { key: lk, .. } => TotalOrder::le(*key, lk),
+                            };
+                            let ro = match **right {
+                                LeftistHeapNode::Leaf => true,
+                                LeftistHeapNode::Node { key: rk, .. } => TotalOrder::le(*key, rk),
+                            };
+                            lo && ro
+                            && left.spec_is_heap()
+                            && right.spec_is_heap()
+                        }));
                         let left_ok = match &**left {
                             LeftistHeapNode::Leaf => true,
-                            LeftistHeapNode::Node { key: left_key, .. } => *key <= *left_key,
+                            LeftistHeapNode::Node { key: left_key, .. } =>
+                                total_order_le(key, left_key),
                         };
                         let right_ok = match &**right {
                             LeftistHeapNode::Leaf => true,
-                            LeftistHeapNode::Node { key: right_key, .. } => *key <= *right_key,
+                            LeftistHeapNode::Node { key: right_key, .. } =>
+                                total_order_le(key, right_key),
                         };
                         left_ok && right_ok && left.is_heap() && right.is_heap()
+                    }
+                }
+            }
+
+            fn is_rank_bounded(&self) -> (bounded: bool)
+                decreases *self
+            {
+                match self {
+                    LeftistHeapNode::Leaf => true,
+                    LeftistHeapNode::Node { rank, left, right, .. } => {
+                        assert(self.spec_size() == 1 + left.spec_size() + right.spec_size());
+                        let sz = left.size() + right.size() + 1;
+                        *rank <= sz && left.is_rank_bounded() && right.is_rank_bounded()
                     }
                 }
             }
@@ -342,6 +715,7 @@ broadcast use {
                 match self {
                     LeftistHeapNode::Leaf => Vec::new(),
                     LeftistHeapNode::Node { key, left, right, .. } => {
+                        assert(self.spec_size() == 1 + left.spec_size() + right.spec_size());
                         let mut result = left.to_vec();
                         let left_len = result.len();
                         result.push(key.clone());
@@ -370,6 +744,10 @@ broadcast use {
                 self.root.spec_seq()
             }
 
+            open spec fn spec_is_valid_leftist_heap(&self) -> bool {
+                self.root.spec_is_leftist() && self.root.spec_is_heap() && self.root.spec_rank_bounded()
+            }
+
             open spec fn spec_total_size(heaps: Seq<Self>, n: int) -> nat
                 decreases n
             {
@@ -379,8 +757,10 @@ broadcast use {
             /// APAS Work Θ(1), Span Θ(1).
             fn empty() -> (pq: Self) {
                 let pq = LeftistHeapPQ { root: LeftistHeapNode::Leaf };
-                // accept hole: Empty leaf has empty spec_seq.
-                proof { accept(pq.spec_seq().to_multiset() =~= Multiset::empty()); }
+                assert(pq.root.spec_is_leftist());
+                assert(pq.root.spec_is_heap());
+                assert(pq.root.spec_seq() =~= Seq::<T>::empty());
+                assert(Seq::<T>::empty().to_multiset() =~= Multiset::<T>::empty());
                 pq
             }
 
@@ -395,16 +775,45 @@ broadcast use {
                     },
                 };
                 assert(LeftistHeapNode::<T>::Leaf.spec_size() == 0);
-                // accept hole: Singleton node spec_seq is [element].
-                proof { accept(pq.spec_seq().to_multiset() =~= Multiset::empty().insert(element)); }
+                assert(LeftistHeapNode::<T>::Leaf.spec_is_leftist());
+                assert(LeftistHeapNode::<T>::Leaf.spec_is_heap());
+                assert(LeftistHeapNode::<T>::Leaf.spec_rank() == 0);
+                assert(LeftistHeapNode::<T>::Leaf.spec_rank_bounded());
+                assert(pq.root.spec_is_leftist());
+                assert(pq.root.spec_is_heap());
+                assert(pq.root.spec_rank_bounded());
+                assert(LeftistHeapNode::<T>::Leaf.spec_seq() =~= Seq::<T>::empty());
+                assert(pq.root.spec_seq() =~= Seq::empty().push(element) + Seq::<T>::empty() + Seq::<T>::empty());
+                assert(pq.root.spec_seq() =~= Seq::empty().push(element));
                 pq
             }
 
             /// APAS Work Θ(1), Span Θ(1) — root access.
             fn find_min(&self) -> (min_elem: Option<&T>) {
                 match &self.root {
-                    LeftistHeapNode::Leaf => None,
-                    LeftistHeapNode::Node { key, .. } => Some(key),
+                    LeftistHeapNode::Leaf => {
+                        assert(self.root.spec_size() == 0);
+                        None
+                    }
+                    LeftistHeapNode::Node { key, left, right, .. } => {
+                        assert(self.root.spec_size() == 1 + left.spec_size() + right.spec_size());
+                        proof {
+                            let s = self.root.spec_seq();
+                            assert(s =~= Seq::empty().push(*key) + left.spec_seq() + right.spec_seq());
+                            assert(s[0] == *key);
+                            assert(s.contains(*key));
+                            lemma_heap_root_is_min(&self.root);
+                            assert forall|e: T| self@.count(e) > 0 implies
+                                #[trigger] TotalOrder::le(*key, e)
+                            by {
+                                assert(s.to_multiset().count(e) > 0);
+                                assert(s.contains(e));
+                                let i = choose|i: int| 0 <= i < s.len() && s[i] == e;
+                                assert(TotalOrder::le(s[0], s[i]));
+                            }
+                        }
+                        Some(key)
+                    }
                 }
             }
 
@@ -412,8 +821,14 @@ broadcast use {
             fn insert(&self, element: T) -> (pq: Self) {
                 let singleton = Self::singleton(element);
                 let pq = self.meld(&singleton);
-                // accept hole: meld preserves multiset union; singleton is {element}.
-                proof { accept(pq.spec_seq().to_multiset() =~= self.spec_seq().to_multiset().insert(element)); }
+                proof {
+                    assert(singleton@ =~= Multiset::empty().insert(element));
+                    assert(pq@ =~= self@.add(singleton@));
+                    assert forall|x: T| #![trigger self@.insert(element).count(x)]
+                        self@.add(Multiset::<T>::empty().insert(element)).count(x) ==
+                        self@.insert(element).count(x)
+                    by {}
+                }
                 pq
             }
 
@@ -421,18 +836,56 @@ broadcast use {
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
                 match &self.root {
                     LeftistHeapNode::Leaf => (self.clone(), None),
-                    LeftistHeapNode::Node { key, left, right, .. } => {
-                        let min_element = key.clone();
-                        let melded_root = LeftistHeapNode::meld_nodes(
-                            (**left).clone(), (**right).clone(),
-                        );
-                        let new_pq = LeftistHeapPQ { root: melded_root };
-                        // accept hole: Root removal + meld of children preserves multiset minus root.
-                        proof {
-                            accept(self.spec_seq().to_multiset() =~=
-                                new_pq.spec_seq().to_multiset().insert(min_element));
+                    LeftistHeapNode::Node { key: ref_key, left: ref_left, right: ref_right, .. } => {
+                        // Unfold validity for children.
+                        assert(self.root.spec_is_heap() == ({
+                            let lo = match **ref_left { LeftistHeapNode::Leaf => true,
+                                LeftistHeapNode::Node { key: lk, .. } => TotalOrder::le(*ref_key, lk) };
+                            let ro = match **ref_right { LeftistHeapNode::Leaf => true,
+                                LeftistHeapNode::Node { key: rk, .. } => TotalOrder::le(*ref_key, rk) };
+                            lo && ro && ref_left.spec_is_heap() && ref_right.spec_is_heap()
+                        }));
+                        assert(self.root.spec_is_leftist() == (
+                            ref_left.spec_rank() >= ref_right.spec_rank()
+                            && ref_left.spec_is_leftist() && ref_right.spec_is_leftist()));
+                        assert(ref_left.spec_rank_bounded() && ref_right.spec_rank_bounded());
+                        // Clone root and destructure to get owned key (avoids key.clone() equality issue).
+                        let cloned_root = self.root.clone();
+                        match cloned_root {
+                            LeftistHeapNode::Leaf => {
+                                // Unreachable: cloned_root == self.root (Clone ensures) and self.root is Node.
+                                proof { assert(false); }
+                                diverge()
+                            }
+                            LeftistHeapNode::Node { key, left, right, .. } => {
+                                let melded_root = LeftistHeapNode::meld_nodes(*left, *right);
+                                let new_pq = LeftistHeapPQ { root: melded_root };
+                                proof {
+                                    // cloned_root == self.root, so same spec_seq.
+                                    let s1 = Seq::<T>::empty().push(key);
+                                    let s2 = left.spec_seq();
+                                    let s3 = right.spec_seq();
+                                    assert(self.root.spec_seq() =~= s1 + s2 + s3);
+                                    vstd::seq_lib::lemma_multiset_commutative(s1 + s2, s3);
+                                    vstd::seq_lib::lemma_multiset_commutative(s1, s2);
+                                    assert(self@ =~= Multiset::empty().insert(key).add(left@).add(right@));
+                                    assert(new_pq@ =~= left@.add(right@));
+                                    // Prove key is minimum of self@.
+                                    lemma_heap_root_is_min(&self.root);
+                                    let s = self.root.spec_seq();
+                                    assert(s[0] == key);
+                                    assert forall|e: T| self@.count(e) > 0 implies
+                                        #[trigger] TotalOrder::le(key, e)
+                                    by {
+                                        assert(s.to_multiset().count(e) > 0);
+                                        assert(s.contains(e));
+                                        let i = choose|i: int| 0 <= i < s.len() && s[i] == e;
+                                        assert(TotalOrder::le(s[0], s[i]));
+                                    }
+                                }
+                                (new_pq, Some(key))
+                            }
                         }
-                        (new_pq, Some(min_element))
                     }
                 }
             }
@@ -442,8 +895,7 @@ broadcast use {
                 let pq = LeftistHeapPQ {
                     root: LeftistHeapNode::meld_nodes(self.root.clone(), other.root.clone()),
                 };
-                // accept hole: meld_nodes preserves multiset union.
-                proof { accept(pq.spec_seq().to_multiset() =~= self.spec_seq().to_multiset().add(other.spec_seq().to_multiset())); }
+                // meld_nodes ensures node@ =~= a@.add(b@) directly.
                 pq
             }
 
@@ -456,6 +908,7 @@ broadcast use {
                     invariant
                         n == seq@.len(),
                         pq.spec_size() == i as nat,
+                        pq.spec_is_valid_leftist_heap(),
                 {
                     pq = pq.insert(seq.nth(i).clone());
                 }
@@ -466,10 +919,16 @@ broadcast use {
                 self.root.size()
             }
 
-            fn is_empty(&self) -> (b: bool) {
+            fn is_empty(&self) -> (is_empty: bool) {
                 match &self.root {
-                    LeftistHeapNode::Leaf => true,
-                    _ => false,
+                    LeftistHeapNode::Leaf => {
+                        assert(self.root.spec_size() == 0);
+                        true
+                    }
+                    LeftistHeapNode::Node { left, right, .. } => {
+                        assert(self.root.spec_size() == 1 + left.spec_size() + right.spec_size());
+                        false
+                    }
                 }
             }
 
@@ -482,15 +941,68 @@ broadcast use {
                     invariant
                         result@.len() as nat + current_heap.spec_size() == self.spec_size(),
                         self.spec_size() <= usize::MAX as nat,
+                        current_heap.spec_is_valid_leftist_heap(),
+                        spec_sorted(result@),
+                        forall|i: int, e: T| 0 <= i < result@.len() && current_heap@.count(e) > 0 ==>
+                            #[trigger] TotalOrder::le(result@[i], e),
                 {
+                    let ghost old_result = result@;
+                    let ghost old_heap_ms = current_heap@;
                     let (new_heap, min_element) = current_heap.delete_min();
                     if let Some(element) = min_element {
+                        proof {
+                            // element is the minimum of old_heap_ms.
+                            // All prior result elements are <= all old_heap elements (invariant).
+                            // So all prior result elements are <= element.
+                            // element is <= all elements in new_heap (subset of old_heap).
+                            // Thus after push, result is still sorted and all <= new_heap elements.
+
+                            // Sortedness: element >= all prior result elements.
+                            assert forall|i: int, j: int|
+                                0 <= i < j < result@.push(element).len()
+                                implies #[trigger] TotalOrder::le(result@.push(element)[i], result@.push(element)[j])
+                            by {
+                                if j < old_result.len() {
+                                    // Both in old result — sorted by invariant.
+                                    assert(result@.push(element)[i] == old_result[i]);
+                                    assert(result@.push(element)[j] == old_result[j]);
+                                } else {
+                                    // j == old_result.len(), so result@.push(element)[j] == element.
+                                    assert(result@.push(element)[j] == element);
+                                    if i < old_result.len() {
+                                        // old_result[i] <= element by invariant (element in old_heap).
+                                        assert(result@.push(element)[i] == old_result[i]);
+                                        assert(old_heap_ms.count(element) > 0);
+                                        assert(TotalOrder::le(old_result[i], element));
+                                    } else {
+                                        // i == j, contradiction with i < j.
+                                    }
+                                }
+                            }
+
+                            // All result elements (including element) are <= all new_heap elements.
+                            assert forall|i: int, e2: T|
+                                0 <= i < result@.push(element).len() && new_heap@.count(e2) > 0
+                                implies #[trigger] TotalOrder::le(result@.push(element)[i], e2)
+                            by {
+                                // e2 is in new_heap, which is old_heap minus element.
+                                // old_heap@ =~= new_heap@.insert(element), so old_heap has e2.
+                                assert(old_heap_ms.count(e2) > 0);
+                                if i < old_result.len() as int {
+                                    // old_result[i] <= e2 by invariant.
+                                    assert(result@.push(element)[i] == old_result[i]);
+                                } else {
+                                    // i == old_result.len(), result@.push(element)[i] == element.
+                                    assert(result@.push(element)[i] == element);
+                                    // element is min of old_heap, so element <= e2.
+                                    assert(TotalOrder::le(element, e2));
+                                }
+                            }
+                        }
                         result.push(element);
                     }
                     current_heap = new_heap;
                 }
-                // accept hole: Proving sortedness requires heap + leftist invariant (task #9).
-                proof { accept(spec_sorted(result@)); }
                 result
             }
 
@@ -503,16 +1015,19 @@ broadcast use {
 
             fn root_rank(&self) -> (rank_val: usize) {
                 match &self.root {
-                    LeftistHeapNode::Leaf => 0,
-                    _ => self.root.rank(),
+                    LeftistHeapNode::Leaf => {
+                        assert(self.root.spec_size() == 0);
+                        0
+                    }
+                    LeftistHeapNode::Node { left, right, .. } => {
+                        assert(self.root.spec_size() == 1 + left.spec_size() + right.spec_size());
+                        self.root.rank()
+                    }
                 }
             }
 
-            fn is_valid_leftist_heap(&self) -> (b: bool) {
-                match &self.root {
-                    LeftistHeapNode::Leaf => true,
-                    _ => self.root.is_leftist() && self.root.is_heap(),
-                }
+            fn is_valid_leftist_heap(&self) -> (is_valid: bool) {
+                self.root.is_leftist() && self.root.is_heap() && self.root.is_rank_bounded()
             }
 
             fn from_vec(vec: Vec<T>) -> (pq: Self) {
@@ -538,6 +1053,7 @@ broadcast use {
                         n == heaps@.len(),
                         result.spec_size() == Self::spec_total_size(heaps@, i as int),
                         Self::spec_total_size(heaps@, heaps@.len() as int) <= usize::MAX as nat,
+                        result.spec_is_valid_leftist_heap(),
                 {
                     proof { lemma_total_size_monotone::<T>(heaps@, (i + 1) as int, n as int); }
                     result = result.meld(&heaps[i]);
@@ -557,6 +1073,8 @@ broadcast use {
                         n as nat == self.spec_size(),
                         self.spec_size() <= usize::MAX as nat,
                         less_than.spec_size() + equal_or_greater.spec_size() == i as nat,
+                        less_than.spec_is_valid_leftist_heap(),
+                        equal_or_greater.spec_is_valid_leftist_heap(),
                 {
                     let element = all_elements[i].clone();
                     if element < *key {

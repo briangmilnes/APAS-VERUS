@@ -118,9 +118,14 @@ pub mod PrimTreeSeqStPer {
 
     //		8. traits
 
-    pub trait PrimTreeSeqStTrait<T>: Sized + View<V = Seq<T>> {
+    /// Spec functions for the primitive tree sequence (spec-only, no exec methods).
+    pub trait PrimTreeSeqStSpec<T>: Sized + View<V = Seq<T>> {
         spec fn spec_len(&self) -> nat;
-        spec fn spec_index(&self, i: int) -> T;
+        spec fn spec_index(&self, i: int) -> T
+            recommends 0 <= i < self.spec_len();
+    }
+
+    pub trait PrimTreeSeqStTrait<T>: Sized + PrimTreeSeqStSpec<T> + View<V = Seq<T>> {
 
         /// Creates an empty sequence.
         /// - APAS: Algorithm 23.3. Work Θ(1), Span Θ(1).
@@ -305,16 +310,6 @@ pub mod PrimTreeSeqStPer {
     //		9. impls
 
     impl<T> PrimTreeSeqStS<T> {
-        pub open spec fn spec_len(&self) -> nat {
-            self.seq@.len() as nat
-        }
-
-        pub open spec fn spec_index(&self, i: int) -> T
-            recommends 0 <= i < self.spec_len(),
-        {
-            self.seq@[i]
-        }
-
         /// Returns a borrow iterator over the sequence elements.
         /// - APAS: N/A — Verus-specific iterator scaffolding.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps slice::Iter.
@@ -330,7 +325,7 @@ pub mod PrimTreeSeqStPer {
 
     //		9. impls
 
-    impl<T> PrimTreeSeqStTrait<T> for PrimTreeSeqStS<T> {
+    impl<T> PrimTreeSeqStSpec<T> for PrimTreeSeqStS<T> {
         open spec fn spec_len(&self) -> nat {
             self.seq@.len() as nat
         }
@@ -338,7 +333,9 @@ pub mod PrimTreeSeqStPer {
         open spec fn spec_index(&self, i: int) -> T {
             self.seq@[i]
         }
+    }
 
+    impl<T> PrimTreeSeqStTrait<T> for PrimTreeSeqStS<T> {
         fn empty() -> (empty_seq: Self)
         {
             PrimTreeSeqStS { seq: Vec::new() }

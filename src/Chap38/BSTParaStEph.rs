@@ -90,15 +90,9 @@ pub mod BSTParaStEph {
 
     // 5. view impls
 
-    impl<T: StT + Ord> ParamBST<T> {
-        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-            self.root.pred().contents
-        }
-    }
-
     impl<T: StT + Ord> View for ParamBST<T> {
         type V = Set<<T as View>::V>;
-        open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
+        open spec fn view(&self) -> Set<<T as View>::V> { self.root.pred().contents }
     }
 
     impl<T: StT + Ord> View for Exposed<T> {
