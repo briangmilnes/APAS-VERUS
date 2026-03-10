@@ -314,6 +314,10 @@ path = "tests/standards/Testwrapping_iterators_standard.rs"
 name = "Testtoplevel_coarse_rwlocks_for_mt_modules"
 path = "tests/standards/Testtoplevel_coarse_rwlocks_for_mt_modules.rs"
 
+[[test]]
+name = "Testspec_naming_convention"
+path = "tests/standards/Testspec_naming_convention.rs"
+
 ## Testrwlock_standard moved to attic
 ## Testarc_standard moved to attic
 

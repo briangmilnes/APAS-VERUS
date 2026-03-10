@@ -244,6 +244,7 @@ pub mod standards {
 //    pub mod arc_standard;  // moved to attic/standards/
     pub mod hfscheduler_standard;
 //    pub mod arc_rwlock_coarse_standard;  // moved to attic/standards/
+    pub mod spec_naming_convention;
 }
 
 pub mod vstdplus {
