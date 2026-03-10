@@ -16,13 +16,26 @@ pub mod Concurrency;
 pub mod ParaPairs;
 
 pub mod experiments {
+//    pub mod struct_rwlock_arc_with_fn_specs;  // FAILS: assumes/external_body at lock boundary
+//    pub mod struct_rwlock_with_fn_specs;  // FAILS: assumes/external_body at lock boundary
+//    pub mod struct_rwlock_with_fn_specs_result;  // FAILS: assumes at lock boundary
+//    pub mod struct_rwlock_with_fn_specs_result_handles;  // FAILS: assumes at lock boundary
+//    pub mod pub_crate_type_invariant;  // FAILS: field expr for opaque datatype
+//    pub mod pub_crate_type_invariant_with_accessors;
+//    pub mod struct_rwlock_type_invariant;
+//    pub mod vstd_rwlock_example1;
+//    pub mod vstd_rwlock_example2;
+//    pub mod arc_rwlock_trivial;
+//    pub mod rwlock_tsm;
+//    pub mod rwlock_tsm_increment;
+//    pub mod rwlock_inc_token_inside_lock;
 //    pub mod collect;
 //    pub mod clone_fn;
 //    pub mod baseviewtypes;
 //    pub mod tcb_foul;  // TCB foul experiment - Verus blocks unspecified &mut self methods
 //    pub mod pervasives;
 //    pub mod sigma_pi;
-    // pub mod abstract_set_iter;  // FAILS: vstdplus::vec, clone_view moved to attic
+//    pub mod abstract_set_iter;  // FAILS: vstdplus::vec, clone_view moved to attic
 //    pub mod SetLoops;
 //    pub mod ToVecProof;
 //    pub mod supertrait;
@@ -154,9 +167,9 @@ pub mod experiments {
     // pub mod total_ord_gen;  // FAILS: assertion failed (axiom_cloned_view_eq)
     // pub mod ToVecProof;  // FAILS: clone_view moved to attic
     // pub mod triangle;
-    pub mod tree_module_style;
-    pub mod tree_mut_data_updates;
-    pub mod tree_mut_structure_updates;
+//    pub mod tree_module_style;
+//    pub mod tree_mut_data_updates;
+//    pub mod tree_mut_structure_updates;
     // pub mod unsigned_int;
     // pub mod proven_partialeq;
     // pub mod use_proven_partialeq;
@@ -214,6 +227,7 @@ pub mod experiments {
 //    pub mod external_body_accept_hole;
 }
 
+#[cfg(not(feature = "experiments_only"))]
 pub mod standards {
     pub mod mod_standard;
     pub mod view_standard;

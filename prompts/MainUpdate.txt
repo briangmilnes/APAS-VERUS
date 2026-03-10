@@ -4,7 +4,7 @@
  Read ./rules/style/senior-prose-engineer.mdc. 
  REREAD ANY FILES BEFORE MODIFYING THEM.
 
-You are working src/Chap37 all the darn trees.
+You are working src/Chap39 the Treaps and only this chapter.
 Read src/standards/* and apply them in your proposed work.
 Fix trigger warnings as they occur using the rules.
 

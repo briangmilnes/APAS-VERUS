@@ -5,10 +5,14 @@
 //!
 //! Demonstrates:
 //! - RwLockPredicate with ghost field for construction-time context.
-//! - vstdplus::arc_rwlock for pred()-preserving Arc::new and Arc::clone.
+//! - external_body helpers for Arc::new(RwLock::new(...)) and Arc::clone.
 //! - HFScheduler join() with named closures for spec propagation.
 //! - acquire_write/release_write and acquire_read/release_read through Arc.
 //! - ParaPair! macro alternative.
+//!
+//! The gap this fills: vstd::rwlock, std::sync::Arc, and HFScheduler each
+//! work independently but Verus can't prove pred() preservation through Arc.
+//! Small external_body helpers bridge that gap with tight ensures.
 
 pub mod hfscheduler_standard {
 
@@ -18,7 +22,6 @@ pub mod hfscheduler_standard {
     use vstd::rwlock::*;
 
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
-    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::Types::Types::*;
     use crate::ParaPair;
 
@@ -39,11 +42,30 @@ pub mod hfscheduler_standard {
         }
     }
 
+    // Bridge: Arc::new(RwLock::new(...)) with pred() in ensures.
+    #[verifier::external_body]
+    fn new_arc_counter(init: u64, Ghost(pred): Ghost<BoundedCounterInv>)
+        -> (arc: Arc<RwLock<u64, BoundedCounterInv>>)
+        requires pred.inv(init),
+        ensures arc.pred() == pred,
+    {
+        Arc::new(RwLock::new(init, Ghost(pred)))
+    }
+
+    // Bridge: Arc::clone with pred() preservation.
+    #[verifier::external_body]
+    fn clone_arc_counter(arc: &Arc<RwLock<u64, BoundedCounterInv>>)
+        -> (cloned: Arc<RwLock<u64, BoundedCounterInv>>)
+        ensures cloned.pred() == arc.pred(),
+    {
+        arc.clone()
+    }
+
     fn parallel_reads() {
         let ghost pred = BoundedCounterInv { max_val: 100 };
-        let arc = new_arc_rwlock::<u64, BoundedCounterInv>(42u64, Ghost(pred));
-        let arc1 = clone_arc_rwlock(&arc);
-        let arc2 = clone_arc_rwlock(&arc);
+        let arc = new_arc_counter(42, Ghost(pred));
+        let arc1 = clone_arc_counter(&arc);
+        let arc2 = clone_arc_counter(&arc);
 
         // Named closures: required for spec propagation through join().
         // Inline closures lose ensures; bind to a variable first.
@@ -93,9 +115,9 @@ pub mod hfscheduler_standard {
 
     fn parallel_writes() {
         let ghost pred = BoundedCounterInv { max_val: 100 };
-        let arc = new_arc_rwlock::<u64, BoundedCounterInv>(0u64, Ghost(pred));
-        let arc1 = clone_arc_rwlock(&arc);
-        let arc2 = clone_arc_rwlock(&arc);
+        let arc = new_arc_counter(0, Ghost(pred));
+        let arc1 = clone_arc_counter(&arc);
+        let arc2 = clone_arc_counter(&arc);
 
         let f1 = move || -> (r: ())
             requires arc1.pred() == pred, pred.max_val == 100,
@@ -121,9 +143,9 @@ pub mod hfscheduler_standard {
 
     fn parallel_reads_parapair() {
         let ghost pred = BoundedCounterInv { max_val: 100 };
-        let arc = new_arc_rwlock::<u64, BoundedCounterInv>(42u64, Ghost(pred));
-        let arc1 = clone_arc_rwlock(&arc);
-        let arc2 = clone_arc_rwlock(&arc);
+        let arc = new_arc_counter(42, Ghost(pred));
+        let arc1 = clone_arc_counter(&arc);
+        let arc2 = clone_arc_counter(&arc);
 
         let f1 = move || -> (r: u64)
             requires arc1.pred() == pred

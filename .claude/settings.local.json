@@ -64,7 +64,8 @@
       "WebFetch(domain:www.parallel-algorithms-book.com)",
       "WebSearch",
       "Bash(do:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "WebFetch(domain:)"
     ]
   }
 }

@@ -33,20 +33,20 @@ src/Chap44/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap36/analyses/veracity-review-verus-proof-holes.log - clean
 
 in process:
-
-src/Chap37/analyses/veracity-review-verus-proof-holes.log - all the trees Main. 
-src/Chap39/analyses/veracity-review-verus-proof-holes.log - Treaps - Agent3. 
-src/Chap40/analyses/veracity-review-verus-proof-holes.log - Key value - Agent1
-src/Chap53/analyses/veracity-review-verus-proof-holes.log - Graph Search/PQ - Agent2 
-src/Chap41/analyses/veracity-review-verus-proof-holes.log - AVL - Agent4 
-
+src/Chap45/analyses/veracity-review-verus-proof-holes.log  - PQs agent1 
+src/Chap39/analyses/veracity-review-verus-proof-holes.log - Treaps - agent2 
 
 
 Stalled: 
 
+src/Chap37/analyses/veracity-review-verus-proof-holes.log - all the trees Main. 
+src/Chap40/analyses/veracity-review-verus-proof-holes.log - Key value - 
+src/Chap53/analyses/veracity-review-verus-proof-holes.log - Graph Search/PQ - 
+
+src/Chap41/analyses/veracity-review-verus-proof-holes.log - AVL -
 src/Chap42/analyses/veracity-review-verus-proof-holes.log - 
 src/Chap43/analyses/veracity-review-verus-proof-holes.log - AugOrderedTables, bad.
-src/Chap45/analyses/veracity-review-verus-proof-holes.log  
+
 src/Chap47/analyses/veracity-review-verus-proof-holes.log - Hashtables.
 src/Chap49/analyses/veracity-review-verus-proof-holes.log 
 src/Chap50/analyses/veracity-review-verus-proof-holes.log - Tables.  Arc<RwLock>

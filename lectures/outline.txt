@@ -70,6 +70,7 @@ Slide count: 60 at most.
  .. Discuss
  .. Plan
  .. Roles
+ .. What's next?
 . APAS-VERUS novel contributions
 . Experiments vs Standards
 . Not the first proven algorithms textbook
@@ -111,3 +112,8 @@ Extras
  .. I run four of them at once on a 12 thread 32 GB machine
  .. Verus is fast but it does jam up my desktop once or twice a week.
  .. APAS-VERUS validates in about 60s 3500 proofs, ? LOC verus.
+
+. Planning
+ .. What's next?
+ .. The lingua franka of planning is md.
+ .. 
