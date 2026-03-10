@@ -238,11 +238,12 @@ pub mod standards {
     pub mod table_of_contents_standard;
     pub mod using_closures_standard;
     pub mod wrapping_iterators_standard;
-    pub mod rwlock_standard;
+//    pub mod rwlock_standard;  // moved to attic/standards/
     pub mod tsm_standard;
-    pub mod arc_standard;
+    pub mod toplevel_coarse_rwlocks_for_mt_modules;
+//    pub mod arc_standard;  // moved to attic/standards/
     pub mod hfscheduler_standard;
-    pub mod arc_rwlock_coarse_standard;
+//    pub mod arc_rwlock_coarse_standard;  // moved to attic/standards/
 }
 
 pub mod vstdplus {

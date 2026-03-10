@@ -311,12 +311,11 @@ name = "Testwrapping_iterators_standard"
 path = "tests/standards/Testwrapping_iterators_standard.rs"
 
 [[test]]
-name = "Testrwlock_standard"
-path = "tests/standards/Testrwlock_standard.rs"
+name = "Testtoplevel_coarse_rwlocks_for_mt_modules"
+path = "tests/standards/Testtoplevel_coarse_rwlocks_for_mt_modules.rs"
 
-[[test]]
-name = "Testarc_standard"
-path = "tests/standards/Testarc_standard.rs"
+## Testrwlock_standard moved to attic
+## Testarc_standard moved to attic
 
 # Experiments removed - use verus-proof-time-testing project instead
 # [[test]]
