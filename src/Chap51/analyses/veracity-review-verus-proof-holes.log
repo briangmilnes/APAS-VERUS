@@ -1,7 +1,7 @@
 ❌ BottomUpDPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPMtEph.rs:161: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:161: external_body - #[verifier::external_body]
        162 |         fn med_bottom_up_parallel(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPMtEph.rs:269: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:269: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        265 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
        267 |         {
@@ -12,9 +12,9 @@
       1 × external_body
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
 ❌ BottomUpDPMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPMtPer.rs:146: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:146: external_body - #[verifier::external_body]
        147 |         fn med_bottom_up_parallel(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPMtPer.rs:254: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:254: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        250 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
        252 |         {
@@ -25,9 +25,9 @@
       1 × external_body
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
 ❌ BottomUpDPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPStEph.rs:180: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:180: external_body - #[verifier::external_body]
        181 |         fn med_bottom_up(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPStEph.rs:348: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:348: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        344 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
        346 |         {
@@ -38,9 +38,9 @@
       1 × external_body
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
 ❌ BottomUpDPStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPStPer.rs:166: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:166: external_body - #[verifier::external_body]
        167 |         fn med_bottom_up(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPStPer.rs:334: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:334: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        330 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
        332 |         {
@@ -51,18 +51,18 @@
       1 × external_body
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
 ❌ TopDownDPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtEph.rs:170: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:170: external_body - #[verifier::external_body]
        171 |         fn med_memoized_concurrent(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtEph.rs:179: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:179: external_body - #[verifier::external_body]
        180 |         fn med_memoized_parallel(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtEph.rs:115: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:115: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
        101 |         fn med_memoized_parallel(&mut self) -> (distance: usize)
             ...
        113 |     /// cannot constrain map contents. Ghost fields carry context for documentation.
        114 |     impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtEphInv {
        116 |     }
        117 | 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtEph.rs:227: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:227: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        223 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
        225 |         {
@@ -73,18 +73,18 @@
       2 × external_body
    Errors: 2 total (1 assume in eq/clone (Verus workaround), 1 dummy RwLockPredicate)
 ❌ TopDownDPMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtPer.rs:144: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:144: external_body - #[verifier::external_body]
        145 |         fn med_memoized_concurrent(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtPer.rs:153: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:153: external_body - #[verifier::external_body]
        154 |         fn med_memoized_parallel(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtPer.rs:93: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:93: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         85 |         fn med_memoized_parallel(&self) -> (distance: usize)
             ...
         91 |     /// cannot constrain map contents. Ghost fields carry context for documentation.
         92 |     impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtPerInv {
         94 |     }
         95 | 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtPer.rs:201: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:201: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        197 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
        199 |         {
@@ -95,7 +95,7 @@
       2 × external_body
    Errors: 2 total (1 assume in eq/clone (Verus workaround), 1 dummy RwLockPredicate)
 ❌ TopDownDPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPStEph.rs:359: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:359: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        355 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
        357 |         {
@@ -105,7 +105,7 @@
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ TopDownDPStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPStPer.rs:333: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:333: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        329 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
        331 |         {

@@ -24,7 +24,7 @@
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
 | 1 | Chap39 | BSTParaTreapMtEph | 17 | 17 | 0 | 16 | 18 | 15 | 1 | 17 | 15 |
 | 2 | Chap39 | BSTSetTreapMtEph | 20 | 20 | 0 | 2 | 22 | 0 | 12 | 10 | 0 |
-| 3 | Chap39 | BSTTreapMtEph | 12 | 13 | 0 | 20 | 33 | 0 | 32 | 0 | 1 |
+| 3 | Chap39 | BSTTreapMtEph | 12 | 13 | 0 | 20 | 33 | 0 | 22 | 9 | 2 |
 | 4 | Chap39 | BSTTreapStEph | 34 | 35 | 0 | 0 | 35 | 0 | 35 | 0 | 0 |
 
 ## Function-by-Function Detail
@@ -98,39 +98,39 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 56 | `lemma_bst_decompose` |  |  |  | Y | Y |  |  | unknown | 87&#8209;97 |
-| 57 | `lemma_contains_left` |  |  |  | Y | Y |  |  | unknown | 101&#8209;103 |
-| 58 | `lemma_contains_right` |  |  |  | Y | Y |  |  | unknown | 107&#8209;109 |
-| 59 | `lemma_contains_root` |  |  |  | Y | Y |  |  | unknown | 113&#8209;114 |
-| 60 | `lemma_height_le_size` |  |  |  | Y | Y |  |  | unknown | 118&#8209;123 |
-| 61 | `lemma_size_wf_child_bounded` |  |  |  | Y | Y |  |  | unknown | 135&#8209;148 |
-| 62 | `lemma_wf_assemble_node` |  |  |  | Y | Y |  |  | unknown | 159&#8209;164 |
-| 63 | `new` | Y | Y |  |  | Y |  |  | unknown | 186&#8209;187 |
-| 64 | `insert` | Y | Y |  |  | Y |  |  | unknown | 190&#8209;192 |
-| 65 | `delete` | Y | Y |  |  | Y |  |  | unknown | 195&#8209;197 |
-| 66 | `find` | Y | Y |  |  | Y |  |  | unknown | 200&#8209;201 |
-| 67 | `contains` | Y | Y |  |  | Y |  |  | unknown | 204&#8209;205 |
-| 68 | `size` | Y | Y |  |  | Y |  |  | unknown | 208&#8209;209 |
-| 69 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 212&#8209;213 |
-| 70 | `height` | Y | Y |  |  | Y |  |  | unknown | 216&#8209;217 |
-| 71 | `minimum` | Y | Y |  |  | Y |  |  | unknown | 220&#8209;221 |
-| 72 | `maximum` | Y | Y |  |  | Y |  |  | unknown | 224&#8209;225 |
-| 73 | `in_order` | Y | Y |  |  | Y |  |  | unknown | 228&#8209;229 |
-| 74 | `pre_order` | Y | Y |  |  | Y |  |  | unknown | 232&#8209;233 |
-| 75 | `clone_link` |  |  |  | Y | Y |  |  | unknown | 290&#8209;294 |
-| 76 | `size_link` |  |  |  | Y | Y |  |  | unknown | 325&#8209;326 |
-| 77 | `update` |  |  |  | Y | Y |  |  | unknown | 334&#8209;340 |
-| 78 | `rotate_left` |  |  |  | Y | Y |  |  | unknown | 349&#8209;357 |
-| 79 | `rotate_right` |  |  |  | Y | Y |  |  | unknown | 423&#8209;431 |
-| 80 | `insert_link` |  |  |  | Y | Y |  |  | unknown | 499&#8209;511 |
-| 81 | `delete_link` |  |  |  | Y | Y |  |  | unknown | 604&#8209;614 |
-| 82 | `find_link` |  |  |  | Y | Y |  |  | unknown | 788&#8209;790 |
-| 83 | `min_link` |  |  |  | Y | Y |  |  | unknown | 817&#8209;819 |
-| 84 | `max_link` |  |  |  | Y | Y |  |  | unknown | 841&#8209;843 |
-| 85 | `height_link` |  |  |  | Y | Y |  |  | unknown | 863&#8209;868 |
-| 86 | `in_order_collect` |  |  |  | Y | Y |  |  | unknown | 892&#8209;895 |
-| 87 | `pre_order_collect` |  |  |  | Y | Y |  |  | unknown | 906&#8209;909 |
-| 88 | `default` |  | Y |  |  | Y |  | Y |  | 1002 |
+| 56 | `lemma_bst_decompose` |  |  |  | Y | Y |  |  | unknown | 107&#8209;117 |
+| 57 | `lemma_contains_left` |  |  |  | Y | Y |  |  | unknown | 121&#8209;123 |
+| 58 | `lemma_contains_right` |  |  |  | Y | Y |  |  | unknown | 127&#8209;129 |
+| 59 | `lemma_contains_root` |  |  |  | Y | Y |  |  | unknown | 133&#8209;134 |
+| 60 | `lemma_height_le_size` |  |  |  | Y | Y |  |  | unknown | 138&#8209;143 |
+| 61 | `lemma_size_wf_child_bounded` |  |  |  | Y | Y |  |  | unknown | 155&#8209;168 |
+| 62 | `lemma_wf_assemble_node` |  |  |  | Y | Y |  |  | unknown | 179&#8209;184 |
+| 63 | `new` | Y | Y |  |  | Y |  |  | hole | 206&#8209;207 |
+| 64 | `insert` | Y | Y |  |  | Y |  |  | hole | 209&#8209;211 |
+| 65 | `delete` | Y | Y |  |  | Y |  |  | hole | 213&#8209;215 |
+| 66 | `find` | Y | Y |  |  | Y |  |  | hole | 217&#8209;218 |
+| 67 | `contains` | Y | Y |  |  | Y |  |  | unknown | 220&#8209;221 |
+| 68 | `size` | Y | Y |  |  | Y |  |  | hole | 223&#8209;224 |
+| 69 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 226&#8209;227 |
+| 70 | `height` | Y | Y |  |  | Y |  | Y |  | 229 |
+| 71 | `minimum` | Y | Y |  |  | Y |  |  | hole | 231&#8209;232 |
+| 72 | `maximum` | Y | Y |  |  | Y |  |  | hole | 234&#8209;235 |
+| 73 | `in_order` | Y | Y |  |  | Y |  |  | hole | 237&#8209;238 |
+| 74 | `pre_order` | Y | Y |  |  | Y |  |  | hole | 240&#8209;241 |
+| 75 | `clone_link` |  |  |  | Y | Y |  |  | unknown | 298&#8209;302 |
+| 76 | `size_link` |  |  |  | Y | Y |  |  | unknown | 333&#8209;334 |
+| 77 | `update` |  |  |  | Y | Y |  |  | unknown | 342&#8209;348 |
+| 78 | `rotate_left` |  |  |  | Y | Y |  |  | unknown | 357&#8209;365 |
+| 79 | `rotate_right` |  |  |  | Y | Y |  |  | unknown | 431&#8209;439 |
+| 80 | `insert_link` |  |  |  | Y | Y |  |  | unknown | 507&#8209;519 |
+| 81 | `delete_link` |  |  |  | Y | Y |  |  | unknown | 612&#8209;622 |
+| 82 | `find_link` |  |  |  | Y | Y |  |  | unknown | 796&#8209;798 |
+| 83 | `min_link` |  |  |  | Y | Y |  |  | unknown | 825&#8209;827 |
+| 84 | `max_link` |  |  |  | Y | Y |  |  | unknown | 849&#8209;851 |
+| 85 | `height_link` |  |  |  | Y | Y |  |  | unknown | 871&#8209;876 |
+| 86 | `in_order_collect` |  |  |  | Y | Y |  |  | unknown | 900&#8209;903 |
+| 87 | `pre_order_collect` |  |  |  | Y | Y |  |  | unknown | 914&#8209;917 |
+| 88 | `default` |  | Y |  |  | Y |  | Y |  | 1041 |
 
 ### Chap39/BSTTreapStEph.rs
 

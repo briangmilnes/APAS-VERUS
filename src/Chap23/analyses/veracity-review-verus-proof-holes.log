@@ -1,16 +1,16 @@
 ℹ BalBinTreeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:773: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:788: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:806: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:827: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:773: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:788: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:806: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:827: info: accept() - accept hole
    Info: 4 total
    2 clean proof functions
 ℹ PrimTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:853: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:863: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:879: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:895: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:900: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:853: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:863: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:879: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:895: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:900: info: accept() - accept hole
    Info: 5 total
 
 ═══════════════════════════════════════════════════════════════
@@ -30,17 +30,17 @@ Proof Functions:
 Holes Found: 0 total
 
 Info: 9 total
+   BalBinTreeStEph.rs:773: info: accept() - accept hole
+   BalBinTreeStEph.rs:788: info: accept() - accept hole
+   BalBinTreeStEph.rs:806: info: accept() - accept hole
+   BalBinTreeStEph.rs:827: info: accept() - accept hole
    PrimTreeSeqStPer.rs:853: info: accept() - accept hole
    PrimTreeSeqStPer.rs:863: info: accept() - accept hole
    PrimTreeSeqStPer.rs:879: info: accept() - accept hole
    PrimTreeSeqStPer.rs:895: info: accept() - accept hole
    PrimTreeSeqStPer.rs:900: info: accept() - accept hole
-   BalBinTreeStEph.rs:773: info: accept() - accept hole
-   BalBinTreeStEph.rs:788: info: accept() - accept hole
-   BalBinTreeStEph.rs:806: info: accept() - accept hole
-   BalBinTreeStEph.rs:827: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.
-h.rs:827: info: accept() - accept hole
+fo: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.

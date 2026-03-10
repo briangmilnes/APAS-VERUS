@@ -1,5 +1,65 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap39/BSTTreapMtEph.rs
-
+❌ BSTParaTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:66: external_body - #[verifier::external_body]
+        67 |         open spec fn view(&self) -> Set<T::V> {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:441: external_body - #[verifier::external_body]
+       442 |         fn new() -> (tree: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:450: external_body - #[verifier::external_body]
+       451 |         fn expose(&self) -> (exposed: Exposed<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:460: external_body - #[verifier::external_body]
+       461 |         fn expose_with_priority(&self) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:472: external_body - #[verifier::external_body]
+       473 |         fn join_mid(exposed: Exposed<T>) -> (tree: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:485: external_body - #[verifier::external_body]
+       486 |         fn size(&self) -> (count: usize) { tree_size(self) }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:490: external_body - #[verifier::external_body]
+       491 |         fn is_empty(&self) -> (empty: bool) { self.size() == 0 }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:495: external_body - #[verifier::external_body]
+       496 |         fn insert(&self, key: T) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:509: external_body - #[verifier::external_body]
+       510 |         fn delete(&self, key: &T) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:522: external_body - #[verifier::external_body]
+       523 |         fn find(&self, key: &T) -> (found: Option<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:536: external_body - #[verifier::external_body]
+       537 |         fn split(&self, key: &T) -> (parts: (Self, bool, Self)) { split_inner(self, key) }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:541: external_body - #[verifier::external_body]
+       542 |         fn join_pair(&self, other: Self) -> (joined: Self) { join_pair_inner(self.clone(), other) }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:546: external_body - #[verifier::external_body]
+       547 |         fn union(&self, other: &Self) -> (combined: Self) { union_inner(self, other) }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:551: external_body - #[verifier::external_body]
+       552 |         fn intersect(&self, other: &Self) -> (common: Self) { intersect_inner(self, other) }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:556: external_body - #[verifier::external_body]
+       557 |         fn difference(&self, other: &Self) -> (diff: Self) { difference_inner(self, other) }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:561: external_body - #[verifier::external_body]
+       562 |         fn filter<F: Pred<T>>(&self, predicate: F) -> (filtered: Self) { filter_parallel(self, predicate) }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:566: external_body - #[verifier::external_body]
+       567 |         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:576: external_body - #[verifier::external_body]
+       577 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
+   Holes: 18 total
+      18 × external_body
+❌ BSTSetTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:125: external_body - #[verifier::external_body]
+       126 |     fn minimum_inner<T: MtKey + 'static>(tree: &ParamTreap<T>) -> (min: Option<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:141: external_body - #[verifier::external_body]
+       142 |     fn maximum_inner<T: MtKey + 'static>(tree: &ParamTreap<T>) -> (max: Option<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:162: external_body - #[verifier::external_body]
+       163 |         fn singleton(value: T) -> (set: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:175: external_body - #[verifier::external_body]
+       176 |         fn contains(&self, value: &T) -> (found: bool) { self.find(value).is_some() }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:178: external_body - #[verifier::external_body]
+       179 |         fn minimum(&self) -> (min: Option<T>) { minimum_inner(&self.tree) }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:181: external_body - #[verifier::external_body]
+       182 |         fn maximum(&self) -> (max: Option<T>) { maximum_inner(&self.tree) }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:184: external_body - #[verifier::external_body]
+       185 |         fn insert(&mut self, value: T) { self.tree.insert(value); }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:187: external_body - #[verifier::external_body]
+       188 |         fn delete(&mut self, target: &T) { self.tree.delete(target); }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:211: external_body - #[verifier::external_body]
+       212 |         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:231: external_body - #[verifier::external_body]
+       232 |         fn as_tree(&self) -> (tree: &ParamTreap<T>) { &self.tree }
+   Holes: 10 total
+      10 × external_body
 ❌ BSTTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:71: external_body - #[verifier::external_body]
         72 |         pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
@@ -28,25 +88,29 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/
       10 × external_body
    Info: 3 total
    Proof functions: 7 total (7 clean, 0 holed)
+✓ BSTTreapStEph.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   0 clean (no holes)
-   1 holed (contains holes)
-   1 total
+   1 clean (no holes)
+   3 holed (contains holes)
+   4 total
 
 Proof Functions:
    7 clean
    0 holed
    7 total
 
-Holes Found: 10 total
-   10 × external_body
+Holes Found: 38 total
+   38 × external_body
 
 Info: 3 total
    BSTTreapMtEph.rs:307: info: accept() - accept hole
+   BSTTreapMtEph.rs:320: info: accept() - accept hole
+   BSTTreapMtEph.rs:1058: info: accept() - accept hole
+ole
    BSTTreapMtEph.rs:320: info: accept() - accept hole
    BSTTreapMtEph.rs:1058: info: accept() - accept hole
