@@ -4,9 +4,19 @@ Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are working in Chap41 and only chapter 41.
-
 Read src/standards/* and apply them in your proposed work.
 Your CLAUDE.md should cause you to read them in all planning and hopefully bug fixing.
 Fix trigger warnings as they occur using the rules.
-Check the holes and style and Propose work in a table. 
+Your src/Chap*/analyses files have been updated.
+
+We are going to work on bringing the code base up to
+     src/standards/multi_struct_standard.rs
+and  src/standards/spec_wf_standard.rs.
+
+Read the plan in plans/wf-and-multi-struct-update-plan.md.
+
+You have been asigned to work in Chap  61, 62, 63, 64, 65, 66
+and only in those chapters.
+Double check their structure against the standards. 
+Propose a plan of work.
+
