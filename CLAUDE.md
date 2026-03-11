@@ -180,13 +180,16 @@ Every Verus source file follows this section ordering:
 //  8. traits
 //  9. impls
 //  10. iterators
-//  11. derive impls in verus!
-//  12. macros
-//  13. derive impls outside verus!
+//  11. top level coarse locking
+//  12. derive impls in verus!
+//  13. macros
+//  14. derive impls outside verus!
 ```
 
-- Sections 1-11: inside `verus!`. Sections 12-13: outside `verus!`.
-- Omit sections that don't apply. Section headers are plain numbered comments, no dividers.
+- Sections 1-12: inside `verus!`. Sections 13-14: outside `verus!`.
+- Section 11 is for Mt modules only. See `toplevel_coarse_rwlocks_for_mt_modules.rs`.
+- Omit sections that don't apply (especially 11 for non-Mt files).
+- Section headers are plain numbered comments, no dividers.
 - Use `veracity-review-verus-style -r` to reorder and insert TOC automatically.
 
 ### Use Statement Order

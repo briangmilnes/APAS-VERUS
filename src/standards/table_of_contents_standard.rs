@@ -1,11 +1,11 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Table of Contents Standard: the complete APAS-VERUS module template.
 //!
-//! Every APAS-VERUS source file follows this 13-section ordering. This file
+//! Every APAS-VERUS source file follows this 14-section ordering. This file
 //! contains compilable code in every section, showing where each kind of
 //! definition belongs.
 //!
-//! Sections 1-11 live inside verus!. Sections 12-13 live outside verus! but
+//! Sections 1-12 live inside verus!. Sections 13-14 live outside verus!, but
 //! inside the pub mod.
 //!
 //! Key pattern demonstrated: spec fns (section 6) can have looser bounds
@@ -13,7 +13,14 @@
 //! (T: View + Copy + PartialEq). This lets spec fns be reusable across
 //! more contexts.
 //!
-//! Reference: src/Chap05/SetStEph.rs (the only chapter file with all 13 sections).
+//! Section 11 (top level coarse locking) is for Mt modules that wrap a verified
+//! St struct in an RwLock. It contains the complete Layer 2: Inv struct,
+//! RwLockPredicate impl, Locked struct, type_invariant inherent impl, Locked
+//! View, LockedTrait, and LockedTrait impl. Inside verus!, after iterators,
+//! before derive impls. Omit for files that do not use this pattern.
+//! See toplevel_coarse_rwlocks_for_mt_modules.rs for the full standard.
+//!
+//! Reference: src/Chap05/SetStEph.rs (the only chapter file with all 14 sections).
 //  Table of Contents
 //  1. module
 //  2. imports
@@ -25,9 +32,10 @@
 //  8. traits
 //  9. impls
 //  10. iterators
-//  11. derive impls in verus!
-//  12. macros
-//  13. derive impls outside verus!
+//  11. top level coarse locking
+//  12. derive impls in verus!
+//  13. macros
+//  14. derive impls outside verus!
 // 1. module
 pub mod table_of_contents_standard {
 
@@ -341,7 +349,16 @@ pub mod table_of_contents_standard {
         }
     }
 
-    // 11. derive impls in verus!
+    // 11. top level coarse locking
+    //
+    // Mt modules only. Contains the complete Layer 2 locking wrapper:
+    // Inv struct, RwLockPredicate impl, Locked struct, type_invariant
+    // inherent impl (with closed accessor), Locked View, LockedTrait,
+    // and LockedTrait impl. Omit for St modules and Mt modules that
+    // do not use coarse locking.
+    // See: src/standards/toplevel_coarse_rwlocks_for_mt_modules.rs
+
+    // 12. derive impls in verus!
     //
     // Clone, PartialEq, Eq go inside verus! so they can have ensures.
     impl<T: Clone> Clone for ExampleS<T> {
@@ -364,10 +381,10 @@ pub mod table_of_contents_standard {
 
     } // verus!
 
-      // 12. macros
-      //
-      // macro_rules! goes outside verus!, inside the pub mod.
-      // Use $crate for fully qualified paths so the macro works from any crate.
+    // 13. macros
+    //
+    // macro_rules! goes outside verus!, inside the pub mod.
+    // Use $crate for fully qualified paths so the macro works from any crate.
     #[macro_export]
     macro_rules! ExampleLit {
         () => {{
@@ -382,7 +399,7 @@ pub mod table_of_contents_standard {
         }};
     }
 
-    // 13. derive impls outside verus!
+    // 14. derive impls outside verus!
     //
     // Display and Debug go outside verus!, inside the pub mod.
 
