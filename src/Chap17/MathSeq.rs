@@ -128,15 +128,10 @@ pub mod MathSeq {
 
         pub trait MathSeqSTrait<T: StT>: Sized + View<V = Seq<T::V>> {
             spec fn spec_len(&self) -> nat;
-
             spec fn spec_nth(&self, i: int) -> T::V
                 recommends 0 <= i < self.spec_len();
-
             spec fn spec_is_empty(&self) -> bool;
-
             spec fn spec_is_singleton(&self) -> bool;
-
-            /// Raw data access for clone-level reasoning.
             spec fn spec_seq(&self) -> Seq<T>;
 
             /// - APAS: no cost spec (definitions chapter).

@@ -264,7 +264,7 @@ broadcast use {
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             ensures constructed@.finite()
         {
-            proof { assume(seq.spec_well_formed()); }
+            proof { assume(seq.spec_avltreeseqstper_wf()); }
             OrderedSetStPer {
                 base_set: AVLTreeSetStPer::from_seq(seq),
             }

@@ -117,3 +117,8 @@ Extras
  .. What's next?
  .. The lingua franka of planning is md.
  .. 
+
+. The internet apocalypse
+ .. I have 100% belief that these LLMs are moving faster than computer security
+ .. One is going to be unleashed that will take down, over the net, all operating systems.
+ 

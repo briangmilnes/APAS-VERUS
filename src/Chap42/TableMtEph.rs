@@ -128,6 +128,8 @@ broadcast use {
 
     /// Trait defining the Table ADT operations from Chapter 42.
     pub trait TableMtEphTrait<K: MtKey, V: MtVal>: Sized + View<V = Map<K::V, V::V>> {
+        spec fn spec_tablemteph_wf(&self) -> bool;
+
         /// APAS: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len();
@@ -205,15 +207,11 @@ broadcast use {
 
 //		9. impls
 
-    impl<K: MtKey, V: MtVal> TableMtEph<K, V> {
-        pub open spec fn spec_tablemteph_wf(&self) -> bool {
+    impl<K: MtKey, V: MtVal> TableMtEphTrait<K, V> for TableMtEph<K, V> {
+        open spec fn spec_tablemteph_wf(&self) -> bool {
             spec_keys_no_dups(self.entries@)
         }
-    }
 
-    // 9. impls
-
-    impl<K: MtKey, V: MtVal> TableMtEphTrait<K, V> for TableMtEph<K, V> {
         #[verifier::external_body]
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len()

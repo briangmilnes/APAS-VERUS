@@ -125,8 +125,11 @@ verus! {
 
     //		8. traits
 
-    pub trait MappingStEphTrait<X: StT + Hash, Y: StT + Hash> : 
+    pub trait MappingStEphTrait<X: StT + Hash, Y: StT + Hash> :
         View<V = Map<X::V, Y::V>> + Sized {
+
+        spec fn spec_mappingsteph_wf(&self) -> bool;
+        spec fn spec_valid_key_type() -> bool;
 
         /// A mapping is finite
         open spec fn spec_finite(&self) -> bool {
@@ -138,72 +141,71 @@ verus! {
         /// - APAS: Work Θ(|v|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|v|), Span Θ(1) — agrees. Iterates vec, checks domain uniqueness via hash set.
         fn is_functional_vec(v: &Vec<Pair<X, Y>>) -> (functional: bool)
-            requires valid_key_type_Pair::<X, Y>()
+            requires Self::spec_valid_key_type()
             ensures functional == is_functional_seq(v@);
 
         /// - APAS: Work Θ(|v|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|v|), Span Θ(1) — agrees. Scans vec for duplicate domain key at p.
         fn is_functional_vec_at(v: &Vec<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool)
-            requires valid_key_type_Pair::<X, Y>()
+            requires Self::spec_valid_key_type()
             ensures functional == is_functional_seq_at(v@, p@);
 
         /// - APAS: Work Θ(|s|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|s|), Span Θ(1) — agrees. Iterates set, checks domain key at p.
         fn is_functional_SetStEph_at(s: &SetStEph<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool)
-            requires valid_key_type_Pair::<X, Y>()
+            requires Self::spec_valid_key_type()
             ensures functional == is_functional_set_at(s@, p@);
 
         /// - APAS: Work Θ(|s|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|s|²), Span Θ(|s|²) — disagrees. Iterates set and for each pair calls is_functional_SetStEph_at which is O(|s|), yielding quadratic total.
         fn is_functional_SetStEph(s: &SetStEph<Pair<X, Y>>) -> (functional: bool)
-            requires valid_key_type_Pair::<X, Y>()
+            requires Self::spec_valid_key_type()
             ensures functional == is_functional_set(s@);
 
         /// - APAS: Work Θ(|r|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|r|²), Span Θ(|r|²) — disagrees. Delegates to is_functional_SetStEph which is O(|s|²).
         fn is_functional_RelationStEph(r: &RelationStEph<X, Y>) -> (functional: bool)
-            requires valid_key_type_Pair::<X, Y>()
+            requires Self::spec_valid_key_type()
             ensures functional == is_functional_relation(*r);
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
-            requires valid_key_type_Pair::<X, Y>()
-            ensures 
-                empty@.dom().finite(),
-                empty@ == Map::<X::V, Y::V>::empty(),
-                empty.is_functional();
+            requires Self::spec_valid_key_type()
+            ensures
+                empty.spec_mappingsteph_wf(),
+                empty@ == Map::<X::V, Y::V>::empty();
 
         /// - APAS: Work Θ(|v|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|v|), Span Θ(1)
         fn from_vec(v: Vec<Pair<X, Y>>) -> (mapping: Self)
-            requires valid_key_type_Pair::<X, Y>(), is_functional_seq(v@)
-            ensures mapping@.dom().finite(), mapping.is_functional();
+            requires Self::spec_valid_key_type(), is_functional_seq(v@)
+            ensures mapping.spec_mappingsteph_wf();
 
         /// - APAS: Work Θ(|r|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|r|), Span Θ(1)
         fn from_relation(r: &RelationStEph<X, Y>) -> (mapping: Self)
-            requires valid_key_type_Pair::<X, Y>(), is_functional_relation(*r)
-            ensures mapping@.dom().finite(), mapping.is_functional();
+            requires Self::spec_valid_key_type(), is_functional_relation(*r)
+            ensures mapping.spec_mappingsteph_wf();
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self) -> N
-            requires self.is_functional();
+            requires self.spec_mappingsteph_wf();
 
         /// - APAS: Work Θ(|m|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|m|), Span Θ(1)
         fn domain(&self) -> (domain: SetStEph<X>)
-            requires valid_key_type_Pair::<X, Y>(), self.is_functional()
+            requires self.spec_mappingsteph_wf()
             ensures domain@.finite(), domain@ == self@.dom();
 
         /// - APAS: Work Θ(|m|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|m|), Span Θ(|m|) — agrees on work. Iterates pairs, inserts each value.
         /// - Matches vstd Map::values() from map_lib.
         fn range(&self) -> (range: SetStEph<Y>)
-            requires valid_key_type_Pair::<X, Y>(), self.is_functional()
-            ensures 
-                range@.finite(), 
+            requires self.spec_mappingsteph_wf()
+            ensures
+                range@.finite(),
                 range@ =~= Set::<Y::V>::new(|y: Y::V| exists |x: X::V| #![trigger self@[x]] self@.dom().contains(x) && self@[x] == y),
                 range@ == self@.values();  // vstd equivalence
 
@@ -211,18 +213,18 @@ verus! {
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set contains() on the pair.
         /// - Matches vstd Map::contains_pair() from map_lib.
         fn mem(&self, p: &Pair<X, Y>) -> (contains: B)
-            requires valid_key_type_Pair::<X, Y>(), self.is_functional()
-            ensures 
+            requires self.spec_mappingsteph_wf()
+            ensures
                 contains == (self@.dom().contains(p@.0) && self@[p@.0] == p@.1),
                 contains == self@.contains_pair(p@.0, p@.1);  // vstd equivalence
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Creates iterator handle.
         fn iter<'a>(&'a self) -> (it: MappingStEphIter<'a, X, Y>)
-            requires valid_key_type_Pair::<X, Y>(), self.is_functional()
+            requires self.spec_mappingsteph_wf()
             ensures
                 it@.0 == 0int,
-                it@.1.map(|i: int, p: Pair<X, Y>| p@).to_set() == 
+                it@.1.map(|i: int, p: Pair<X, Y>| p@).to_set() ==
                     Set::new(|p: (X::V, Y::V)| self@.dom().contains(p.0) && self@[p.0] == p.1),
                 it@.1.no_duplicates();
     }
@@ -230,8 +232,18 @@ verus! {
 
     //		9. impls
 
-    impl<X: StT + Hash, Y: StT + Hash> 
+    impl<X: StT + Hash, Y: StT + Hash>
         MappingStEphTrait<X, Y> for MappingStEph<X, Y> {
+
+        open spec fn spec_mappingsteph_wf(&self) -> bool {
+               self.mapping@.finite()
+            && valid_key_type_Pair::<X, Y>()
+            && is_functional_set(self.mapping@)
+        }
+
+        open spec fn spec_valid_key_type() -> bool {
+            valid_key_type_Pair::<X, Y>()
+        }
 
         open spec fn is_functional(&self) -> bool {
             is_functional_set(self.mapping@)
@@ -539,7 +551,7 @@ verus! {
         type Item = &'a Pair<X, Y>;
         type IntoIter = MappingStEphIter<'a, X, Y>;
         fn into_iter(self) -> (it: Self::IntoIter)
-            requires valid_key_type_Pair::<X, Y>(), self.is_functional()
+            requires self.spec_mappingsteph_wf()
             ensures
                 it@.0 == 0int,
                 it@.1.map(|i: int, p: Pair<X, Y>| p@).to_set() ==

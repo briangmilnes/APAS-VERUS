@@ -232,7 +232,7 @@ broadcast use {
             let mut i: usize = 0;
             while i < len
                 invariant
-                    eph_seq.spec_well_formed(),
+                    eph_seq.spec_avltreeseqsteph_wf(),
                     len as nat == eph_seq@.len(),
                     0 <= i <= len,
                     elements@.len() == i as int,

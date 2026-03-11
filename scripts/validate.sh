@@ -18,7 +18,8 @@ case "$MODE" in
     full)     CFG_FLAG=() ;;
     dev_only) CFG_FLAG=(--cfg 'feature="dev_only"') ;;
     exp)      CFG_FLAG=(--cfg 'feature="experiments_only"') ;;
-    *)        echo "Usage: validate.sh [full|dev_only|exp] [--time]"; exit 1 ;;
+    wf)       CFG_FLAG=(--cfg 'feature="wf"') ;;
+    *)        echo "Usage: validate.sh [full|dev_only|exp|wf] [--time]"; exit 1 ;;
 esac
 
 TIME_FLAG=()

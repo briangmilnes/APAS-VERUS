@@ -454,7 +454,7 @@ pub mod UnDirGraphMtEph {
         type Item = &'a V;
         type IntoIter = SetStEphIter<'a, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
-            requires valid_key_type::<V>()
+            requires valid_key_type::<V>(), spec_graphview_wf(self@)
             ensures
                 it@.0 == 0int,
                 it@.1.map(|i: int, k: V| k@).to_set() == self@.V,

@@ -88,7 +88,7 @@ broadcast use {
                 tree.spec_avltreesetstper_wf();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
-            requires seq.spec_well_formed(),
+            requires seq.spec_avltreeseqstper_wf(),
             ensures
                 constructed@.finite(),
                 constructed.spec_avltreesetstper_wf();
@@ -157,7 +157,7 @@ broadcast use {
 
     impl<T: StT + Ord> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
         open spec fn spec_avltreesetstper_wf(&self) -> bool {
-            self.elements.spec_well_formed()
+            self.elements.spec_avltreeseqstper_wf()
         }
 
         fn size(&self) -> (count: usize)
@@ -221,7 +221,7 @@ broadcast use {
             let mut i: usize = 0;
             while i < n
                 invariant
-                    seq.spec_well_formed(),
+                    seq.spec_avltreeseqstper_wf(),
                     n as int == seq.spec_seq().len(),
                     i <= n,
                     constructed@.finite(),
@@ -242,7 +242,7 @@ broadcast use {
             let mut i: usize = 0;
             while i < n
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqstper_wf(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
                     filtered@.finite(),
@@ -269,7 +269,7 @@ broadcast use {
             let mut i: usize = 0;
             while i < n
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqstper_wf(),
                     other.spec_avltreesetstper_wf(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
@@ -296,7 +296,7 @@ broadcast use {
             let mut i: usize = 0;
             while i < n
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqstper_wf(),
                     other.spec_avltreesetstper_wf(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
@@ -323,7 +323,7 @@ broadcast use {
             let mut i: usize = 0;
             while i < self_len
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqstper_wf(),
                     self_len as int == self.elements.spec_seq().len(),
                     i <= self_len,
                     combined@.finite(),
@@ -337,7 +337,7 @@ broadcast use {
             let mut j: usize = 0;
             while j < other_len
                 invariant
-                    other.elements.spec_well_formed(),
+                    other.elements.spec_avltreeseqstper_wf(),
                     other_len as int == other.elements.spec_seq().len(),
                     j <= other_len,
                     combined@.finite(),
@@ -361,7 +361,7 @@ broadcast use {
             let mut hi: usize = n;
             while lo < hi
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqstper_wf(),
                     obeys_feq_full::<T>(),
                     n as int == self.elements.spec_seq().len(),
                     lo <= hi, hi <= n,
@@ -391,7 +391,7 @@ broadcast use {
             let mut i: usize = 0;
             while i < n
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqstper_wf(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
                 decreases n - i,
@@ -428,7 +428,7 @@ broadcast use {
             let mut hi: usize = n;
             while lo < hi
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqstper_wf(),
                     n as int == self.elements.spec_seq().len(),
                     lo <= hi, hi <= n,
                 decreases hi - lo,
@@ -444,7 +444,7 @@ broadcast use {
             let mut i: usize = 0;
             while i < lo
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqstper_wf(),
                     n as int == self.elements.spec_seq().len(),
                     i <= lo, lo <= n,
                 decreases lo - i,
@@ -456,7 +456,7 @@ broadcast use {
             let mut j: usize = lo;
             while j < n
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqstper_wf(),
                     n as int == self.elements.spec_seq().len(),
                     lo <= j, j <= n,
                 decreases n - j,
@@ -500,7 +500,7 @@ broadcast use {
                 let mut all_found = true;
                 while i < n
                     invariant
-                        self.elements.spec_well_formed(),
+                        self.elements.spec_avltreeseqstper_wf(),
                         other.spec_avltreesetstper_wf(),
                         n == self.elements.spec_seq().len(),
                         i <= n,

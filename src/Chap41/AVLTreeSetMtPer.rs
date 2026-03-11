@@ -142,7 +142,7 @@ broadcast use {
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
         fn size(&self) -> (count: usize)
         {
-            proof { assume(self.elements.spec_well_formed()); }
+            proof { assume(self.elements.spec_avltreeseqmtper_wf()); }
             let r = self.elements.length();
             proof { assume(r == self@.len()); assume(self@.finite()); }
             r
@@ -426,7 +426,7 @@ broadcast use {
         fn find(&self, x: &T) -> (found: B)
         {
             proof {
-                assume(self.elements.spec_well_formed());
+                assume(self.elements.spec_avltreeseqmtper_wf());
                 assume(obeys_feq_full::<T>());
             }
             let n = self.elements.length();
@@ -434,7 +434,7 @@ broadcast use {
             let mut hi: usize = n;
             while lo < hi
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqmtper_wf(),
                     obeys_feq_full::<T>(),
                     n as int == self.elements.spec_seq().len(),
                     lo <= hi, hi <= n,
@@ -506,8 +506,8 @@ broadcast use {
                 let mut all_found = true;
                 while i < n
                     invariant
-                        self.elements.spec_well_formed(),
-                        other.elements.spec_well_formed(),
+                        self.elements.spec_avltreeseqmtper_wf(),
+                        other.elements.spec_avltreeseqmtper_wf(),
                         n == self.elements.spec_seq().len(),
                         i <= n,
                     decreases n - i,
@@ -541,8 +541,8 @@ broadcast use {
             let mut i: usize = 0;
             while i < min_n
                 invariant
-                    self.elements.spec_well_formed(),
-                    other.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqmtper_wf(),
+                    other.elements.spec_avltreeseqmtper_wf(),
                     i <= min_n,
                     min_n <= n_self,
                     min_n <= n_other,

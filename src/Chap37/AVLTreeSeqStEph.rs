@@ -196,46 +196,46 @@ pub mod AVLTreeSeqStEph {
 
     pub trait AVLTreeSeqStEphTrait<T: StT>: Sized {
         spec fn spec_seq(&self) -> Seq<T::V>;
-        spec fn spec_well_formed(&self) -> bool;
+        spec fn spec_avltreeseqsteph_wf(&self) -> bool;
 
         fn empty() -> (tree: Self)
-            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_well_formed();
+            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqsteph_wf();
 
         fn new() -> (tree: Self)
-            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_well_formed();
+            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqsteph_wf();
 
         fn length(&self) -> (len: N)
-            requires self.spec_well_formed(),
+            requires self.spec_avltreeseqsteph_wf(),
             ensures len as nat == self.spec_seq().len();
 
         fn nth(&self, index: N) -> (elem: &T)
-            requires self.spec_well_formed(), (index as int) < self.spec_seq().len(),
+            requires self.spec_avltreeseqsteph_wf(), (index as int) < self.spec_seq().len(),
             ensures elem@ == self.spec_seq()[index as int];
 
         fn set(&mut self, index: N, item: T) -> (outcome: Result<(), &'static str>)
-            requires old(self).spec_well_formed(), (index as int) < old(self).spec_seq().len();
+            requires old(self).spec_avltreeseqsteph_wf(), (index as int) < old(self).spec_seq().len();
 
         fn singleton(item: T) -> (tree: Self)
-            ensures tree.spec_seq().len() == 1, tree.spec_well_formed();
+            ensures tree.spec_seq().len() == 1, tree.spec_avltreeseqsteph_wf();
 
         fn isEmpty(&self) -> (empty: B)
-            requires self.spec_well_formed(),
+            requires self.spec_avltreeseqsteph_wf(),
             ensures empty == (self.spec_seq().len() == 0);
 
         fn isSingleton(&self) -> (single: B)
-            requires self.spec_well_formed(),
+            requires self.spec_avltreeseqsteph_wf(),
             ensures single == (self.spec_seq().len() == 1);
 
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self)
-            requires self.spec_well_formed(), obeys_feq_full::<T>(), self.spec_seq().len() < usize::MAX,
+            requires self.spec_avltreeseqsteph_wf(), obeys_feq_full::<T>(), self.spec_seq().len() < usize::MAX,
             ensures sub.spec_seq() =~= spec_subseq(self.spec_seq(), start as nat, length as nat);
 
         fn new_root() -> (tree: Self)
-            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_well_formed();
+            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqsteph_wf();
 
         fn update(&mut self, index: N, item: T)
             requires
-                old(self).spec_well_formed(),
+                old(self).spec_avltreeseqsteph_wf(),
                 (index as int) < old(self).spec_seq().len();
 
         fn from_vec(values: Vec<T>) -> (tree: AVLTreeSeqStEphS<T>)
@@ -247,7 +247,7 @@ pub mod AVLTreeSeqStEph {
                 spec_inorder(tree.root) =~= values@.map_values(|t: T| t@);
 
         fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>)
-            requires self.spec_well_formed(), obeys_feq_full::<T>(),
+            requires self.spec_avltreeseqsteph_wf(), obeys_feq_full::<T>(),
             ensures
                 seq.spec_len() == self.spec_seq().len(),
                 forall|i: int| #![trigger seq.spec_index(i)]
@@ -258,23 +258,23 @@ pub mod AVLTreeSeqStEph {
 
         fn push_back(&mut self, value: T)
             requires
-                old(self).spec_well_formed(),
+                old(self).spec_avltreeseqsteph_wf(),
                 old(self).spec_seq().len() + 1 < usize::MAX,
             ensures self.spec_seq() =~= old(self).spec_seq().push(value@);
 
         fn contains_value(&self, target: &T) -> (found: B)
-            requires self.spec_well_formed(), obeys_feq_full::<T>(),
+            requires self.spec_avltreeseqsteph_wf(), obeys_feq_full::<T>(),
             ensures found == exists|j: int| 0 <= j < self.spec_seq().len()
                 && self.spec_seq()[j] == target@;
 
         fn insert_value(&mut self, value: T)
             requires
-                old(self).spec_well_formed(),
+                old(self).spec_avltreeseqsteph_wf(),
                 old(self).spec_seq().len() + 1 < usize::MAX,
             ensures self.spec_seq() =~= old(self).spec_seq().push(value@);
 
         fn delete_value(&mut self, target: &T) -> (deleted: bool)
-            requires old(self).spec_well_formed(), obeys_feq_full::<T>(),
+            requires old(self).spec_avltreeseqsteph_wf(), obeys_feq_full::<T>(),
             ensures
                 !deleted ==> self.spec_seq() =~= old(self).spec_seq(),
                 deleted ==> exists|idx: int|
@@ -606,7 +606,7 @@ pub mod AVLTreeSeqStEph {
             spec_inorder(self.root)
         }
 
-        open spec fn spec_well_formed(&self) -> bool {
+        open spec fn spec_avltreeseqsteph_wf(&self) -> bool {
             spec_avltreeseqsteph_wf(self.root)
         }
 
@@ -648,7 +648,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
-            assert(self.spec_well_formed());
+            assert(self.spec_avltreeseqsteph_wf());
             assert(obeys_feq_full::<T>());
             let n = self.length();
             let s = if start < n { start } else { n };
@@ -662,7 +662,7 @@ pub mod AVLTreeSeqStEph {
             let mut i: usize = s;
             while i < e
                 invariant
-                    self.spec_well_formed(),
+                    self.spec_avltreeseqsteph_wf(),
                     obeys_feq_full::<T>(),
                     n as int == self.spec_seq().len(),
                     n < usize::MAX,
@@ -696,7 +696,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn update(&mut self, index: N, item: T) {
-            assert(self.spec_well_formed());
+            assert(self.spec_avltreeseqsteph_wf());
             assert((index as int) < self.spec_seq().len());
             let _ = self.set(index, item);
         }
@@ -742,13 +742,13 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>) {
-            assert(self.spec_well_formed());
+            assert(self.spec_avltreeseqsteph_wf());
             let n = self.length();
             let mut vals: Vec<T> = Vec::new();
             let mut i: usize = 0;
             while i < n
                 invariant
-                    self.spec_well_formed(),
+                    self.spec_avltreeseqsteph_wf(),
                     obeys_feq_full::<T>(),
                     n as int == self.spec_seq().len(),
                     i <= n,
@@ -779,7 +779,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn push_back(&mut self, value: T) {
-            assert(self.spec_well_formed());
+            assert(self.spec_avltreeseqsteph_wf());
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             let ghost old_inorder = spec_inorder(self.root);
             let len = self.length();
@@ -793,14 +793,14 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn contains_value(&self, target: &T) -> (found: B) {
-            assert(self.spec_well_formed());
+            assert(self.spec_avltreeseqsteph_wf());
             assert(obeys_feq_full::<T>());
             let n = self.length();
             let ghost seq = self.spec_seq();
             let mut i: usize = 0;
             while i < n
                 invariant
-                    self.spec_well_formed(),
+                    self.spec_avltreeseqsteph_wf(),
                     obeys_feq_full::<T>(),
                     n as int == seq.len(),
                     seq == self.spec_seq(),
@@ -820,12 +820,12 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn insert_value(&mut self, value: T) {
-            assert(self.spec_well_formed());
+            assert(self.spec_avltreeseqsteph_wf());
             self.push_back(value);
         }
 
         fn delete_value(&mut self, target: &T) -> (deleted: bool) {
-            assert(self.spec_well_formed());
+            assert(self.spec_avltreeseqsteph_wf());
             assert(obeys_feq_full::<T>());
             let len = self.length();
             let ghost old_seq = self.spec_seq();
@@ -833,7 +833,7 @@ pub mod AVLTreeSeqStEph {
             let mut i: usize = 0;
             while i < len
                 invariant
-                    self.spec_well_formed(),
+                    self.spec_avltreeseqsteph_wf(),
                     obeys_feq_full::<T>(),
                     len as int == old_seq.len(),
                     old_seq == self.spec_seq(),
@@ -858,7 +858,7 @@ pub mod AVLTreeSeqStEph {
                 let mut j: usize = 0;
                 while j < idx
                     invariant
-                        self.spec_well_formed(),
+                        self.spec_avltreeseqsteph_wf(),
                         obeys_feq_full::<T>(),
                         len as int == old_seq.len(),
                         old_seq == self.spec_seq(),
@@ -879,7 +879,7 @@ pub mod AVLTreeSeqStEph {
                 let mut k: usize = idx + 1;
                 while k < len
                     invariant
-                        self.spec_well_formed(),
+                        self.spec_avltreeseqsteph_wf(),
                         obeys_feq_full::<T>(),
                         len as int == old_seq.len(),
                         old_seq == self.spec_seq(),

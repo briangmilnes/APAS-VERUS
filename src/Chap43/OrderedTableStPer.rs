@@ -124,7 +124,7 @@ pub mod OrderedTableStPer {
             requires self.spec_orderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
             ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite(), sorted_entries.spec_well_formed();
+            ensures self@.dom().finite(), sorted_entries.spec_avltreeseqstper_wf();
         /// ADT 43.1 first_key. Work Θ(log n), Span Θ(log n).
         fn first_key(&self) -> (key: Option<K>)
             ensures
@@ -319,7 +319,7 @@ pub mod OrderedTableStPer {
 
         #[verifier::external_body]
         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite(), sorted_entries.spec_well_formed()
+            ensures self@.dom().finite(), sorted_entries.spec_avltreeseqstper_wf()
         {
             let array_seq = self.base_table.collect();
             let len = array_seq.length();
@@ -548,13 +548,13 @@ pub mod OrderedTableStPer {
     ) -> (table: OrderedTableStPer<K, V>)
         ensures table@.dom().finite()
     {
-        proof { assume(entries.spec_well_formed()); }
+        proof { assume(entries.spec_avltreeseqstper_wf()); }
         let len = entries.length();
         let mut elements: Vec<Pair<K, V>> = Vec::new();
         let mut i: usize = 0;
         while i < len
             invariant
-                entries.spec_well_formed(),
+                entries.spec_avltreeseqstper_wf(),
                 len as nat == entries.spec_seq().len(),
                 i <= len,
             decreases len - i,

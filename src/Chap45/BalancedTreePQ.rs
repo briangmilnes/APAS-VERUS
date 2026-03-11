@@ -86,7 +86,7 @@ broadcast use {
                 ensures pq@.len() == self@.len() + other@.len(), pq.spec_balancedtreepq_wf();
 
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> (pq: Self)
-                requires seq.spec_well_formed(),
+                requires seq.spec_avltreeseqstper_wf(),
                 ensures pq@.len() == seq@.len(), pq.spec_balancedtreepq_wf();
 
             fn size(&self) -> (n: usize)
@@ -117,7 +117,7 @@ broadcast use {
                     max_and_rest.0.spec_balancedtreepq_wf();
 
             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> (pq: Self)
-                requires self.spec_balancedtreepq_wf(), elements.spec_well_formed(),
+                requires self.spec_balancedtreepq_wf(), elements.spec_avltreeseqstper_wf(),
                 ensures pq@.len() == self@.len() + elements@.len(), pq.spec_balancedtreepq_wf();
 
             fn extract_all_sorted(&self) -> (sorted: AVLTreeSeqStPerS<T>)
@@ -181,7 +181,7 @@ broadcast use {
 // 9. impls
         impl<T: StT + Ord + TotalOrder> BalancedTreePQTrait<T> for BalancedTreePQ<T> {
             open spec fn spec_balancedtreepq_wf(&self) -> bool {
-                self.elements.spec_well_formed()
+                self.elements.spec_avltreeseqstper_wf()
             }
 
             /// APAS Work Θ(1), Span Θ(1).

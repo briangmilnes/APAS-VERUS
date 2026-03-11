@@ -81,9 +81,9 @@ broadcast use {
         ensures base@.dom().finite(),
     {
         let pairs = base.collect();
-        // collect ensures: base@.dom().finite(), pairs.spec_well_formed()
+        // collect ensures: base@.dom().finite(), pairs.spec_avltreeseqstper_wf()
         let sz = pairs.length();
-        // length ensures: sz as nat == pairs@.len(), given spec_well_formed()
+        // length ensures: sz as nat == pairs@.len(), given spec_avltreeseqstper_wf()
         if sz == 0 {
             return identity.clone();
         }
@@ -94,7 +94,7 @@ broadcast use {
             invariant
                 1 <= i <= pairs@.len(),
                 sz as nat == pairs@.len(),
-                pairs.spec_well_formed(),
+                pairs.spec_avltreeseqstper_wf(),
             decreases pairs@.len() - i,
         {
             let pair = pairs.nth(i);
@@ -185,7 +185,7 @@ broadcast use {
             requires self.spec_augorderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
             ensures subtracted@.dom().finite(), subtracted.spec_augorderedtablestper_wf();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite(), collected.spec_well_formed();
+            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf();
         fn first_key(&self) -> (first: Option<K>)
             ensures
                 self@.dom().finite(),
@@ -465,7 +465,7 @@ broadcast use {
         }
 
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite(), collected.spec_well_formed()
+            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf()
         {
             proof { lemma_aug_view(self); }
             self.base_table.collect()

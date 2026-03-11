@@ -42,6 +42,7 @@ verus! {
         fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i8>>) -> (g: WeightedDirGraphStEphI8<V>)
             requires 
                 valid_key_type_WeightedEdge::<V, i8>(),
+                edges@.finite(),
                 forall |u: V::V, w: V::V, weight: i8| 
                     #[trigger] edges@.contains((u, w, weight)) ==> 
                         vertices@.contains(u) && vertices@.contains(w),

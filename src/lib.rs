@@ -123,6 +123,7 @@ pub mod experiments {
     // pub mod external_body_accept_hole;
     // pub mod f64_bits_sort;
     // pub mod f64_float_cmp_sort;
+    // pub mod generic_specs_to_prevent_cycles;  // FAILS: parse error (4c); only free fn (4a) works
     // pub mod f64_sort;  // FAILS: assertion failed (f64_le_spec in loop invariant)
     // pub mod ForFor;  // FAILS: precondition not satisfied, invariant not satisfied
     // pub mod ForLoops;
@@ -245,6 +246,7 @@ pub mod standards {
     pub mod hfscheduler_standard;
 //    pub mod arc_rwlock_coarse_standard;  // moved to attic/standards/
     pub mod spec_naming_convention;
+    pub mod spec_wf_standard;
 }
 
 pub mod vstdplus {
@@ -296,7 +298,7 @@ pub mod Chap05 {
     pub mod KleeneStPer;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap06 {
     pub mod DirGraphStEph;
     pub mod UnDirGraphStEph;
@@ -326,7 +328,7 @@ pub mod Chap06 {
     // Use per-type variants above instead.
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap11 {
     pub mod FibonacciStEph;
     pub mod FibonacciMtPerAllThreads;
@@ -335,19 +337,19 @@ pub mod Chap11 {
     pub mod FibonacciMtEphRecomputes;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap12 {
     pub mod Exercise12_1;
     pub mod Exercise12_2;
     pub mod Exercise12_5;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap17 {
     pub mod MathSeq;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "wf")))]
 pub mod Chap18 {
     pub mod ArraySeq;
     pub mod ArraySeqStPer;
@@ -358,7 +360,7 @@ pub mod Chap18 {
     pub mod ArraySeqMtPer;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "wf")))]
 pub mod Chap19 {
     pub mod ArraySeqStPer;
     pub mod ArraySeqStEph;
@@ -366,7 +368,7 @@ pub mod Chap19 {
     pub mod ArraySeqMtEphSlice;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap21 {
     pub mod Algorithm21_1;
     pub mod Algorithm21_2;
@@ -382,13 +384,13 @@ pub mod Chap21 {
     pub mod Problem21_4;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "wf")))]
 pub mod Chap23 {
     pub mod PrimTreeSeqStPer;
     pub mod BalBinTreeStEph;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap26 {
     pub mod DivConReduceStPer;
     pub mod MergeSortStPer;
@@ -400,7 +402,7 @@ pub mod Chap26 {
     pub mod ScanDCMtPer;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap27 {
     pub mod ReduceContractStEph;
     pub mod ReduceContractMtEph;
@@ -408,7 +410,7 @@ pub mod Chap27 {
     pub mod ScanContractMtEph;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap28 {
     pub mod MCSSSpec;
     pub mod MaxContigSubSumBruteStEph;
@@ -423,12 +425,12 @@ pub mod Chap28 {
     pub mod MaxContigSubSumDivConOptMtEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "wf")))]
 pub mod Chap30 {
     pub mod Probability;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "wf")))]
 pub mod Chap35 {
     pub mod OrderStatSelectStEph;
     pub mod OrderStatSelectStPer;
@@ -436,14 +438,14 @@ pub mod Chap35 {
     pub mod OrderStatSelectMtPer;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap36 {
     pub mod QuickSortStEph;
     pub mod QuickSortMtEph;
     // pub mod QuickSortMtEphSlice;  // uses missing with_exclusive method + nested fns
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "wf")))]
 pub mod Chap37 {
     pub mod AVLTreeSeq;
     pub mod AVLTreeSeqStEph;
@@ -474,13 +476,13 @@ pub mod Chap37 {
     pub mod BSTSetBBAlphaMtEph;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap38 {
     pub mod BSTParaStEph;
     pub mod BSTParaMtEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "wf")))]
 pub mod Chap39 {
     pub mod BSTTreapStEph;
     pub mod BSTTreapMtEph;
@@ -488,14 +490,14 @@ pub mod Chap39 {
     pub mod BSTSetTreapMtEph;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap40 {
     pub mod BSTKeyValueStEph;
     pub mod BSTSizeStEph;
     pub mod BSTReducedStEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "wf")))]
 pub mod Chap41 {
     pub mod ArraySetStEph;
     pub mod ArraySetEnumMtEph;
@@ -507,7 +509,7 @@ pub mod Chap41 {
     pub mod Example41_3;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "wf")))]
 pub mod Chap42 {
     pub mod TableStEph;
     pub mod TableStPer;
@@ -515,7 +517,7 @@ pub mod Chap42 {
     pub mod Example42_1;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap43 {
     // Wave 1: OrderedTable + AugOrderedTable (depend on ArraySetStEph, AVLTreeSeqStEph/StPer)
     pub mod OrderedTableStEph;
@@ -534,13 +536,13 @@ pub mod Chap43 {
     pub mod Example43_1;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap44 {
     // pub mod DocumentIndex;  // depends on Chap41::AVLTreeSet (types outside verus!)
     // pub mod Example44_1;  // depends on DocumentIndex
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap45 {
     pub mod UnsortedListPQ;
     pub mod SortedListPQ;
@@ -551,7 +553,7 @@ pub mod Chap45 {
     pub mod Example45_2;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap47 {
     pub mod ChainedHashTable;
     pub mod StructChainedHashTable;
@@ -564,7 +566,7 @@ pub mod Chap47 {
     pub mod ParaHashTableStEph;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap49 {
     pub mod SubsetSumStEph;
     pub mod SubsetSumStPer;
@@ -576,7 +578,7 @@ pub mod Chap49 {
     pub mod MinEditDistMtPer;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "wf")))]
 pub mod Chap50 {
     pub mod MatrixChainStEph;
     pub mod MatrixChainStPer;
@@ -588,7 +590,7 @@ pub mod Chap50 {
     pub mod OptBinSearchTreeMtPer;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap51 {
     pub mod BottomUpDPStEph;
     pub mod BottomUpDPStPer;
@@ -600,7 +602,7 @@ pub mod Chap51 {
     pub mod TopDownDPMtPer;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap52 {
     // AdjSeq/AdjMatrix files depend only on Chap18/19 (compiled).
     pub mod AdjSeqGraphStEph;
@@ -624,7 +626,7 @@ pub mod Chap52 {
     pub mod EdgeSetGraphMtPer;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap53 {
     pub mod PQMinStEph;
     pub mod PQMinStPer;
@@ -633,7 +635,7 @@ pub mod Chap53 {
     // pub mod GraphSearchMtPer; // Requires AVLTreeSetMtPer (all_chapters feature)
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap54 {
     pub mod BFSStEph;
     pub mod BFSStPer;
@@ -641,7 +643,7 @@ pub mod Chap54 {
     pub mod BFSMtPer;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap55 {
     // All files use types from Chap37/41 declared outside verus!
     // pub mod DFSStEph;
@@ -654,7 +656,7 @@ pub mod Chap55 {
     // pub mod SCCStPer;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap56 {
     pub mod SSSPResultStEphI64;
     pub mod SSSPResultStPerI64;
@@ -670,20 +672,20 @@ pub mod Chap56 {
     // pub mod Example56_3;  // uses ordered_float (removed)
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap57 {
     pub mod StackStEph;
     // pub mod DijkstraStEphI64;  // depends on Chap45::BinaryHeapPQ (types outside verus!)
     // pub mod DijkstraStEphF64;  // blocked: no WeightedDirGraphStEphF64 + BinaryHeapPQ
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap58 {
     pub mod BellmanFordStEphI64;
     // pub mod BellmanFordStEphF64;  // blocked: no WeightedDirGraphStEphF64
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap59 {
     // pub mod JohnsonStEphI64;  // depends on DijkstraStEphI64
     // pub mod JohnsonMtEphI64;  // depends on DijkstraStEphI64
@@ -691,7 +693,7 @@ pub mod Chap59 {
     // pub mod JohnsonMtEphF64;  // blocked: no WeightedDirGraphStEphF64
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap61 {
     // pub mod EdgeContractionStEph;  // depends on VertexMatchingStEph
     // pub mod EdgeContractionMtEph;  // depends on VertexMatchingMtEph
@@ -699,7 +701,7 @@ pub mod Chap61 {
     // pub mod VertexMatchingMtEph;  // uses rand (Verus can't link)
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap62 {
     pub mod StarPartitionStEph;
     // pub mod StarPartitionMtEph;  // uses rand (Verus can't link)
@@ -707,27 +709,27 @@ pub mod Chap62 {
     // pub mod StarContractionMtEph;  // depends on StarPartitionMtEph
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap63 {
     pub mod ConnectivityStEph;
     // pub mod ConnectivityMtEph;  // depends on StarPartitionMtEph
 }
 
-#[cfg(feature = "all_chapters")]
+#[cfg(all(feature = "all_chapters", not(feature = "wf")))]
 pub mod Chap64 {
     pub mod SpanTreeStEph;
     pub mod SpanTreeMtEph;
     pub mod TSPApproxStEph;
 }
 
-#[cfg(feature = "all_chapters")]
+#[cfg(all(feature = "all_chapters", not(feature = "wf")))]
 pub mod Chap65 {
     pub mod UnionFindStEph;
     pub mod KruskalStEph;
     pub mod PrimStEph;
 }
 
-#[cfg(feature = "all_chapters")]
+#[cfg(all(feature = "all_chapters", not(feature = "wf")))]
 pub mod Chap66 {
     pub mod BoruvkaStEph;
     pub mod BoruvkaMtEph;

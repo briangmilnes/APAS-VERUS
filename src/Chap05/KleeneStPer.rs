@@ -186,31 +186,35 @@ verus! {
 
     pub trait KleeneStPerTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
 
+        spec fn spec_kleenestper_wf(&self) -> bool;
+        spec fn spec_valid_key_type() -> bool;
+
         /// Construct from an alphabet Σ.
         /// - APAS: (no cost stated — Chapter 5 is purely definitional)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — stores alphabet, O(1).
         fn new(alphabet: SetStEph<T>) -> (kleene: Self)
-            requires valid_key_type::<T>()
-            ensures kleene@ == alphabet@;
+            requires Self::spec_valid_key_type(), alphabet@.finite()
+            ensures kleene.spec_kleenestper_wf(), kleene@ == alphabet@;
 
         /// Membership in Σ*: is every element of s in the alphabet?
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work Θ(|s|), Span Θ(|s|) — linear scan, sequential.
         fn mem_star(&self, s: &[T]) -> (member: bool)
-            requires valid_key_type::<T>()
+            requires self.spec_kleenestper_wf()
             ensures member == in_star(self@, viewed(s@));
 
         /// Membership in Σ+: non-empty and every element in the alphabet?
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work Θ(|s|), Span Θ(|s|) — length check + linear scan.
         fn mem_plus(&self, s: &[T]) -> (member: bool)
-            requires valid_key_type::<T>()
+            requires self.spec_kleenestper_wf()
             ensures member == in_plus(self@, viewed(s@));
 
         /// Read-only access to the underlying alphabet.
         /// - APAS: (no cost stated — Chapter 5 is purely definitional)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reference return, O(1).
         fn alphabet(&self) -> (alpha: &SetStEph<T>)
+            requires self.spec_kleenestper_wf()
             ensures alpha@ == self@;
     }
 
@@ -218,6 +222,15 @@ verus! {
     //		9. impls
 
     impl<T: StT + Hash> KleeneStPerTrait<T> for KleeneStPer<T> {
+
+        open spec fn spec_kleenestper_wf(&self) -> bool {
+               self@.finite()
+            && valid_key_type::<T>()
+        }
+
+        open spec fn spec_valid_key_type() -> bool {
+            valid_key_type::<T>()
+        }
 
         fn new(alphabet: SetStEph<T>) -> (kleene: Self) {
             KleeneStPer { alphabet }
@@ -228,6 +241,7 @@ verus! {
             while i < s.len()
                 invariant
                     valid_key_type::<T>(),
+                    self.alphabet@.finite(),
                     0 <= i <= s.len(),
                     forall|j: int| 0 <= j < i as int
                         ==> self.alphabet@.contains(#[trigger] s@[j]@),

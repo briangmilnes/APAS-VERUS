@@ -185,42 +185,42 @@ pub mod AVLTreeSeqMtPer {
 
     pub trait AVLTreeSeqMtPerTrait<T: StTInMtT>: Sized {
         spec fn spec_seq(&self) -> Seq<T::V>;
-        spec fn spec_well_formed(&self) -> bool;
+        spec fn spec_avltreeseqmtper_wf(&self) -> bool;
 
         fn empty() -> (tree: Self)
-            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_well_formed();
+            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqmtper_wf();
 
         fn new() -> (tree: Self)
-            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_well_formed();
+            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqmtper_wf();
 
         fn singleton(item: T) -> (tree: Self)
-            ensures tree.spec_seq() =~= seq![item@], tree.spec_well_formed();
+            ensures tree.spec_seq() =~= seq![item@], tree.spec_avltreeseqmtper_wf();
 
         fn length(&self) -> (len: N)
-            requires self.spec_well_formed(),
+            requires self.spec_avltreeseqmtper_wf(),
             ensures len as nat == self.spec_seq().len();
 
         fn nth(&self, index: N) -> (elem: &T)
-            requires self.spec_well_formed(), (index as int) < self.spec_seq().len(),
+            requires self.spec_avltreeseqmtper_wf(), (index as int) < self.spec_seq().len(),
             ensures elem@ == self.spec_seq()[index as int];
 
         fn isEmpty(&self) -> (empty: B)
-            requires self.spec_well_formed(),
+            requires self.spec_avltreeseqmtper_wf(),
             ensures empty == (self.spec_seq().len() == 0);
 
         fn isSingleton(&self) -> (single: B)
-            requires self.spec_well_formed(),
+            requires self.spec_avltreeseqmtper_wf(),
             ensures single == (self.spec_seq().len() == 1);
 
         fn set(&self, index: N, item: T) -> (outcome: Result<Self, &'static str>)
-            requires self.spec_well_formed(), (index as int) < self.spec_seq().len();
+            requires self.spec_avltreeseqmtper_wf(), (index as int) < self.spec_seq().len();
 
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self)
-            requires self.spec_well_formed();
+            requires self.spec_avltreeseqmtper_wf();
 
         fn from_vec(values: Vec<T>) -> (tree: Self)
             ensures
-                tree.spec_well_formed(),
+                tree.spec_avltreeseqmtper_wf(),
                 tree.spec_seq() =~= values@.map_values(|t: T| t@);
 
         fn values_in_order(&self) -> (values: Vec<T>)
@@ -419,7 +419,7 @@ pub mod AVLTreeSeqMtPer {
             spec_inorder(self.root)
         }
 
-        open spec fn spec_well_formed(&self) -> bool {
+        open spec fn spec_avltreeseqmtper_wf(&self) -> bool {
             spec_avltreeseqmtper_wf(self.root)
         }
 
@@ -500,7 +500,7 @@ pub mod AVLTreeSeqMtPer {
         }
 
         fn values_in_order(&self) -> (values: Vec<T>) {
-            proof { assume(self.spec_well_formed()); }
+            proof { assume(self.spec_avltreeseqmtper_wf()); }
             let mut out: Vec<T> = Vec::new();
             inorder_collect(&self.root, &mut out);
             out

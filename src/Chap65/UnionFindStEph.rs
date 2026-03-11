@@ -58,45 +58,13 @@ pub mod UnionFindStEph {
 
     // 6. spec fns
 
-    impl<V: StT + Hash> UnionFindStEph<V> {
-        /// Well-formedness invariant for the Union-Find structure.
-        pub open spec fn spec_unionfindsteph_wf(&self) -> bool {
-            // Key model requirements for hash collections.
-            &&& obeys_key_model::<V>()
-            &&& obeys_feq_full::<V>()
-            &&& forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2
-            // parent and rank have the same domain.
-            &&& self.parent@.dom() =~= self.rank@.dom()
-            // roots has the same domain as parent.
-            &&& self.roots.dom() =~= self.parent@.dom()
-            // Every root is a fixed point: roots[roots[v]] == roots[v].
-            &&& forall|v: <V as View>::V| #[trigger] self.roots.contains_key(v) ==> {
-                &&& self.roots.contains_key(self.roots[v])
-                &&& self.roots[self.roots[v]] == self.roots[v]
-            }
-            // Parent pointers stay within the domain.
-            &&& forall|v: <V as View>::V| #[trigger] self.parent@.contains_key(v) ==>
-                self.parent@.contains_key(self.parent@[v]@)
-            // Roots are within the domain.
-            &&& forall|v: <V as View>::V| #[trigger] self.roots.contains_key(v) ==>
-                self.parent@.contains_key(self.roots[v])
-            // elements vec covers exactly the parent domain.
-            &&& forall|i: int| 0 <= i < self.elements@.len() as int ==>
-                self.parent@.contains_key(#[trigger] self.elements@[i]@)
-            &&& forall|v: <V as View>::V| #[trigger] self.parent@.contains_key(v) ==>
-                exists|i: int| 0 <= i < self.elements@.len() as int && self.elements@[i]@ == v
-            // elements have no duplicate views.
-            &&& forall|i: int, j: int|
-                0 <= i < self.elements@.len() as int &&
-                0 <= j < self.elements@.len() as int &&
-                i != j ==>
-                self.elements@[i]@ != self.elements@[j]@
-        }
-    }
+    // (spec_unionfindsteph_wf moved to trait abstract + open impl)
 
     // 8. traits
 
     pub trait UnionFindStEphTrait<V: StT + Hash>: Sized + View<V = UnionFindStEphV<V>> {
+        spec fn spec_unionfindsteph_wf(&self) -> bool;
+
         /// Create a new empty Union-Find structure.
         /// APAS: Work Theta(1), Span Theta(1)
         fn new() -> (uf: Self)
@@ -191,6 +159,40 @@ pub mod UnionFindStEph {
     // 9. impls
 
     impl<V: StT + Hash> UnionFindStEphTrait<V> for UnionFindStEph<V> {
+        /// Well-formedness invariant for the Union-Find structure.
+        open spec fn spec_unionfindsteph_wf(&self) -> bool {
+            // Key model requirements for hash collections.
+            &&& obeys_key_model::<V>()
+            &&& obeys_feq_full::<V>()
+            &&& forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2
+            // parent and rank have the same domain.
+            &&& self.parent@.dom() =~= self.rank@.dom()
+            // roots has the same domain as parent.
+            &&& self.roots.dom() =~= self.parent@.dom()
+            // Every root is a fixed point: roots[roots[v]] == roots[v].
+            &&& forall|v: <V as View>::V| #[trigger] self.roots.contains_key(v) ==> {
+                &&& self.roots.contains_key(self.roots[v])
+                &&& self.roots[self.roots[v]] == self.roots[v]
+            }
+            // Parent pointers stay within the domain.
+            &&& forall|v: <V as View>::V| #[trigger] self.parent@.contains_key(v) ==>
+                self.parent@.contains_key(self.parent@[v]@)
+            // Roots are within the domain.
+            &&& forall|v: <V as View>::V| #[trigger] self.roots.contains_key(v) ==>
+                self.parent@.contains_key(self.roots[v])
+            // elements vec covers exactly the parent domain.
+            &&& forall|i: int| 0 <= i < self.elements@.len() as int ==>
+                self.parent@.contains_key(#[trigger] self.elements@[i]@)
+            &&& forall|v: <V as View>::V| #[trigger] self.parent@.contains_key(v) ==>
+                exists|i: int| 0 <= i < self.elements@.len() as int && self.elements@[i]@ == v
+            // elements have no duplicate views.
+            &&& forall|i: int, j: int|
+                0 <= i < self.elements@.len() as int &&
+                0 <= j < self.elements@.len() as int &&
+                i != j ==>
+                self.elements@[i]@ != self.elements@[j]@
+        }
+
         /// - APAS: Work Theta(1), Span Theta(1)
         fn new() -> (uf: Self) {
             UnionFindStEph {

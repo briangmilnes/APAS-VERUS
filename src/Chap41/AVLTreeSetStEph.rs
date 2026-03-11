@@ -76,7 +76,7 @@ broadcast use {
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
             ensures
                 self@.finite(),
-                seq.spec_well_formed(),
+                seq.spec_avltreeseqsteph_wf(),
                 seq@.to_set() =~= self@,
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// - APAS Cost Spec 41.4: Work 1, Span 1
@@ -136,7 +136,7 @@ broadcast use {
     impl<T: StT + Ord> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
         fn size(&self) -> (count: usize)
         {
-            proof { assume(self.elements.spec_well_formed()); }
+            proof { assume(self.elements.spec_avltreeseqsteph_wf()); }
             let r = self.elements.length();
             proof {
                 assume(r == self@.len());
@@ -151,7 +151,7 @@ broadcast use {
             proof {
                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
                 assert(seq@ =~= self.elements@);
-                assume(seq.spec_well_formed());
+                assume(seq.spec_avltreeseqsteph_wf());
             }
             seq
         }
@@ -187,13 +187,13 @@ broadcast use {
 
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
         {
-            proof { assume(seq.spec_well_formed()); }
+            proof { assume(seq.spec_avltreeseqsteph_wf()); }
             let mut constructed = Self::empty();
             let n = seq.length();
             let mut i: usize = 0;
             while i < n
                 invariant
-                    seq.spec_well_formed(),
+                    seq.spec_avltreeseqsteph_wf(),
                     n as int == seq.spec_seq().len(),
                     i <= n,
                     constructed@.finite(),
@@ -208,13 +208,13 @@ broadcast use {
 
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
         {
-            proof { assume(self.elements.spec_well_formed()); }
+            proof { assume(self.elements.spec_avltreeseqsteph_wf()); }
             let mut filtered = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
             while i < n
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqsteph_wf(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
                     filtered@.finite(),
@@ -235,13 +235,13 @@ broadcast use {
 
         fn intersection(&self, other: &Self) -> (common: Self)
         {
-            proof { assume(self.elements.spec_well_formed()); }
+            proof { assume(self.elements.spec_avltreeseqsteph_wf()); }
             let mut common = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
             while i < n
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqsteph_wf(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
                     common@.finite(),
@@ -261,13 +261,13 @@ broadcast use {
 
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
-            proof { assume(self.elements.spec_well_formed()); }
+            proof { assume(self.elements.spec_avltreeseqsteph_wf()); }
             let mut remaining = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
             while i < n
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqsteph_wf(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
                     remaining@.finite(),
@@ -288,15 +288,15 @@ broadcast use {
         fn union(&self, other: &Self) -> (combined: Self)
         {
             proof {
-                assume(self.elements.spec_well_formed());
-                assume(other.elements.spec_well_formed());
+                assume(self.elements.spec_avltreeseqsteph_wf());
+                assume(other.elements.spec_avltreeseqsteph_wf());
             }
             let mut combined = Self::empty();
             let self_len = self.elements.length();
             let mut i: usize = 0;
             while i < self_len
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqsteph_wf(),
                     self_len as int == self.elements.spec_seq().len(),
                     i <= self_len,
                     combined@.finite(),
@@ -309,7 +309,7 @@ broadcast use {
             let mut j: usize = 0;
             while j < other_len
                 invariant
-                    other.elements.spec_well_formed(),
+                    other.elements.spec_avltreeseqsteph_wf(),
                     other_len as int == other.elements.spec_seq().len(),
                     j <= other_len,
                     combined@.finite(),
@@ -327,7 +327,7 @@ broadcast use {
         fn find(&self, x: &T) -> (found: B)
         {
             proof {
-                assume(self.elements.spec_well_formed());
+                assume(self.elements.spec_avltreeseqsteph_wf());
                 assume(obeys_feq_full::<T>());
             }
             let n = self.elements.length();
@@ -335,7 +335,7 @@ broadcast use {
             let mut hi: usize = n;
             while lo < hi
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqsteph_wf(),
                     obeys_feq_full::<T>(),
                     n as int == self.elements.spec_seq().len(),
                     lo <= hi, hi <= n,
@@ -360,13 +360,13 @@ broadcast use {
 
         fn delete(&mut self, x: &T)
         {
-            proof { assume(self.elements.spec_well_formed()); }
+            proof { assume(self.elements.spec_avltreeseqsteph_wf()); }
             let n = self.elements.length();
             let mut result_vec: Vec<T> = Vec::new();
             let mut i: usize = 0;
             while i < n
                 invariant
-                    self.elements.spec_well_formed(),
+                    self.elements.spec_avltreeseqsteph_wf(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
                 decreases n - i,
@@ -387,7 +387,7 @@ broadcast use {
 
         fn insert(&mut self, x: T)
         {
-            proof { assume(self.elements.spec_well_formed()); }
+            proof { assume(self.elements.spec_avltreeseqsteph_wf()); }
             let ghost x_view = x@;
             if !self.find(&x) {
                 let n = self.elements.length();
@@ -395,7 +395,7 @@ broadcast use {
                 let mut hi: usize = n;
                 while lo < hi
                     invariant
-                        self.elements.spec_well_formed(),
+                        self.elements.spec_avltreeseqsteph_wf(),
                         n as int == self.elements.spec_seq().len(),
                         lo <= hi, hi <= n,
                     decreases hi - lo,
@@ -411,7 +411,7 @@ broadcast use {
                 let mut i: usize = 0;
                 while i < lo
                     invariant
-                        self.elements.spec_well_formed(),
+                        self.elements.spec_avltreeseqsteph_wf(),
                         n as int == self.elements.spec_seq().len(),
                         i <= lo, lo <= n,
                     decreases lo - i,
@@ -423,7 +423,7 @@ broadcast use {
                 let mut j: usize = lo;
                 while j < n
                     invariant
-                        self.elements.spec_well_formed(),
+                        self.elements.spec_avltreeseqsteph_wf(),
                         n as int == self.elements.spec_seq().len(),
                         lo <= j, j <= n,
                     decreases n - j,
@@ -463,8 +463,8 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             proof {
-                assume(self.elements.spec_well_formed());
-                assume(other.elements.spec_well_formed());
+                assume(self.elements.spec_avltreeseqsteph_wf());
+                assume(other.elements.spec_avltreeseqsteph_wf());
             }
             let equal = self.size() == other.size() && {
                 let n = self.elements.length();
@@ -472,8 +472,8 @@ broadcast use {
                 let mut all_found = true;
                 while i < n
                     invariant
-                        self.elements.spec_well_formed(),
-                        other.elements.spec_well_formed(),
+                        self.elements.spec_avltreeseqsteph_wf(),
+                        other.elements.spec_avltreeseqsteph_wf(),
                         n == self.elements.spec_seq().len(),
                         i <= n,
                     decreases n - i,
