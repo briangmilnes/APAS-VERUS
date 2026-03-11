@@ -188,14 +188,17 @@ pub mod BSTParaStEph {
     // 8. traits
 
     pub trait ParamBSTTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
+        spec fn spec_bstparasteph_wf(&self) -> bool;
+
         /// - APAS: Work O(1), Span O(1)
         fn new() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty();
+            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparasteph_wf();
         /// - APAS: Work O(1), Span O(1)
         fn singleton(key: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(key@),
-                tree@.finite();
+                tree@.finite(),
+                tree.spec_bstparasteph_wf();
         /// - APAS: Work O(1), Span O(1)
         fn expose(&self) -> (exposed: Exposed<T>)
             ensures
@@ -313,14 +316,19 @@ pub mod BSTParaStEph {
     // 9. impls
 
     impl<T: StT + Ord> ParamBSTTrait<T> for ParamBST<T> {
+        open spec fn spec_bstparasteph_wf(&self) -> bool {
+            self@.finite()
+        }
+
         fn new() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty()
+            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparasteph_wf()
         { new_param_bst(None, Ghost(Set::empty())) }
 
         fn singleton(key: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(key@),
-                tree@.finite()
+                tree@.finite(),
+                tree.spec_bstparasteph_wf()
         {
             let left: Self = Self::new();
             let right: Self = Self::new();

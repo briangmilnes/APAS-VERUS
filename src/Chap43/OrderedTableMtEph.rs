@@ -55,14 +55,16 @@ broadcast use {
 
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1 for keys) with multi-threaded ephemeral semantics
     pub trait OrderedTableMtEphTrait<K: MtKey, V: MtVal>: Sized + View<V = Map<K::V, V::V>> {
+        spec fn spec_orderedtablemteph_wf(&self) -> bool;
+
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite();
 
         fn empty() -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty();
+            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_orderedtablemteph_wf();
 
         fn singleton(k: K, v: V) -> (tree: Self)
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite();
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablemteph_wf();
 
         fn find(&self, k: &K) -> (found: Option<V>)
             ensures
@@ -157,6 +159,10 @@ broadcast use {
     // 9. impls
 
     impl<K: MtKey, V: MtVal> OrderedTableMtEphTrait<K, V> for OrderedTableMtEph<K, V> {
+        open spec fn spec_orderedtablemteph_wf(&self) -> bool {
+            self@.dom().finite()
+        }
+
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite()
         {
@@ -169,7 +175,7 @@ broadcast use {
         }
 
         fn empty() -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty()
+            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_orderedtablemteph_wf()
         {
             OrderedTableMtEph {
                 base_table: TableMtEph::empty(),
@@ -178,7 +184,7 @@ broadcast use {
 
         #[verifier::external_body]
         fn singleton(k: K, v: V) -> (tree: Self)
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite()
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablemteph_wf()
         {
             OrderedTableMtEph {
                 base_table: TableMtEph::singleton(k, v),

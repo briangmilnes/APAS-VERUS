@@ -48,12 +48,14 @@ pub mod BSTSetTreapMtEph {
     // 8. traits
 
     pub trait BSTSetTreapMtEphTrait<T: MtKey>: Sized + View<V = Set<T::V>> {
+        spec fn spec_bstsettreapmteph_wf(&self) -> bool;
+
         /// - APAS: Work Θ(1), Span Θ(1)
         fn empty() -> (set: Self)
-            ensures set@.finite(), set@.len() == 0;
+            ensures set@.finite(), set@.len() == 0, set.spec_bstsettreapmteph_wf();
         /// - APAS: Work O(log n), Span O(log n)
         fn singleton(value: T) -> (set: Self)
-            ensures set@.finite(), set@.len() == 1, set@.contains(value@);
+            ensures set@.finite(), set@.len() == 1, set@.contains(value@), set.spec_bstsettreapmteph_wf();
         /// - APAS: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
             ensures self@.finite(), count == self@.len();
@@ -155,6 +157,10 @@ pub mod BSTSetTreapMtEph {
     }
 
     impl<T: MtKey + 'static> BSTSetTreapMtEphTrait<T> for BSTSetTreapMtEph<T> {
+        open spec fn spec_bstsettreapmteph_wf(&self) -> bool {
+            self@.finite()
+        }
+
         fn empty() -> (set: Self) {
             BSTSetTreapMtEph { tree: ParamTreap::new() }
         }

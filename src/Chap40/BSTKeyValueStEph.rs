@@ -58,7 +58,7 @@ pub mod BSTKeyValueStEph {
 
     pub type BSTreeKeyValue<K, V> = BSTKeyValueStEph<K, V>;
 
-
+    pub struct Lnk;
 
     // 5. view impls
 
@@ -69,32 +69,9 @@ pub mod BSTKeyValueStEph {
         }
     }
 
-
-
     // 6. spec fns
 
-    pub open spec fn spec_height_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> nat
-        decreases *link,
-    {
-        match link {
-            None => 0,
-            Some(node) => {
-                let l = spec_height_link(&node.left);
-                let r = spec_height_link(&node.right);
-                1 + if l >= r { l } else { r }
-            }
-        }
-    }
-
-    pub open spec fn spec_node_count_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> nat
-        decreases *link,
-    {
-        match link {
-            None => 0,
-            Some(node) => 1 + spec_node_count_link(&node.left) + spec_node_count_link(&node.right),
-        }
-    }
-
+    // Free spec fns: proofs require body unfolding, trait methods are uninterpreted.
     pub open spec fn spec_content_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Map<K, V>
         decreases *link,
     {
@@ -107,31 +84,14 @@ pub mod BSTKeyValueStEph {
         }
     }
 
-    pub open spec fn spec_min_key_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Option<K>
+    pub open spec fn spec_node_count_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> nat
         decreases *link,
     {
         match link {
-            None => None,
-            Some(node) => match node.left {
-                None => Some(node.key),
-                Some(_) => spec_min_key_link(&node.left),
-            },
+            None => 0,
+            Some(node) => 1 + spec_node_count_link(&node.left) + spec_node_count_link(&node.right),
         }
     }
-
-    pub open spec fn spec_max_key_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Option<K>
-        decreases *link,
-    {
-        match link {
-            None => None,
-            Some(node) => match node.right {
-                None => Some(node.key),
-                Some(_) => spec_max_key_link(&node.right),
-            },
-        }
-    }
-
-
 
     // 7. proof fns
 
@@ -227,6 +187,12 @@ pub mod BSTKeyValueStEph {
 
 
     // 8. traits
+
+    pub trait LinkTrait<K: StT + Ord, V: StT>: Sized {
+        spec fn spec_height_link(link: &Link<K, V>) -> nat;
+        spec fn spec_min_key_link(link: &Link<K, V>) -> Option<K>;
+        spec fn spec_max_key_link(link: &Link<K, V>) -> Option<K>;
+    }
 
     pub trait NodeTrait<K: StT + Ord, V: StT>: Sized {
         spec fn spec_height(&self) -> nat;
@@ -325,8 +291,8 @@ pub mod BSTKeyValueStEph {
         // Internal associated functions.
 
         fn height_link(link: &Link<K, V>) -> (height: usize)
-            requires spec_height_link(link) < usize::MAX as nat,
-            ensures height == spec_height_link(link),
+            requires Lnk::spec_height_link(link) < usize::MAX as nat,
+            ensures height == Lnk::spec_height_link(link),
             decreases *link;
         fn rotate_left(link: &mut Link<K, V>)
             ensures
@@ -350,7 +316,7 @@ pub mod BSTKeyValueStEph {
             ensures
                 link.is_none() ==> minimum.is_none(),
                 link.is_some() ==> minimum.is_some(),
-                match (minimum, spec_min_key_link(link)) {
+                match (minimum, Lnk::spec_min_key_link(link)) {
                     (Some(rv), Some(sv)) => *rv == sv,
                     (None, None) => true,
                     _ => false,
@@ -360,7 +326,7 @@ pub mod BSTKeyValueStEph {
             ensures
                 link.is_none() ==> maximum.is_none(),
                 link.is_some() ==> maximum.is_some(),
-                match (maximum, spec_max_key_link(link)) {
+                match (maximum, Lnk::spec_max_key_link(link)) {
                     (Some(rv), Some(sv)) => *rv == sv,
                     (None, None) => true,
                     _ => false,
@@ -418,6 +384,46 @@ pub mod BSTKeyValueStEph {
     }
 
     // 9. impls
+
+    impl<K: StT + Ord, V: StT> LinkTrait<K, V> for Lnk {
+        open spec fn spec_height_link(link: &Link<K, V>) -> nat
+            decreases *link,
+        {
+            match link {
+                None => 0,
+                Some(node) => {
+                    let l = Self::spec_height_link(&node.left);
+                    let r = Self::spec_height_link(&node.right);
+                    1 + if l >= r { l } else { r }
+                }
+            }
+        }
+
+
+        open spec fn spec_min_key_link(link: &Link<K, V>) -> Option<K>
+            decreases *link,
+        {
+            match link {
+                None => None,
+                Some(node) => match node.left {
+                    None => Some(node.key),
+                    Some(_) => Self::spec_min_key_link(&node.left),
+                },
+            }
+        }
+
+        open spec fn spec_max_key_link(link: &Link<K, V>) -> Option<K>
+            decreases *link,
+        {
+            match link {
+                None => None,
+                Some(node) => match node.right {
+                    None => Some(node.key),
+                    Some(_) => Self::spec_max_key_link(&node.right),
+                },
+            }
+        }
+    }
 
     impl<K: StT + Ord, V: StT> NodeTrait<K, V> for Node<K, V> {
         open spec fn spec_height(&self) -> nat
@@ -490,12 +496,12 @@ pub mod BSTKeyValueStEph {
 
     impl<K: StT + Ord + TotalOrder, V: StT> BSTKeyValueStEphTrait<K, V> for BSTKeyValueStEph<K, V> {
         open spec fn spec_size(&self) -> nat { self.size as nat }
-        open spec fn spec_height(&self) -> nat { spec_height_link(&self.root) }
+        open spec fn spec_height(&self) -> nat { Lnk::spec_height_link(&self.root) }
         open spec fn spec_bstkeyvaluesteph_wf(&self) -> bool {
             self.size as nat == spec_node_count_link(&self.root)
         }
-        open spec fn spec_min_key(&self) -> Option<K> { spec_min_key_link(&self.root) }
-        open spec fn spec_max_key(&self) -> Option<K> { spec_max_key_link(&self.root) }
+        open spec fn spec_min_key(&self) -> Option<K> { Lnk::spec_min_key_link(&self.root) }
+        open spec fn spec_max_key(&self) -> Option<K> { Lnk::spec_max_key_link(&self.root) }
 
         fn new() -> (empty: Self) { BSTKeyValueStEph { root: None, size: 0 } }
 

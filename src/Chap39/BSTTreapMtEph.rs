@@ -81,7 +81,7 @@ pub mod BSTTreapMtEph {
 
     //		6. spec fns
 
-    pub open spec fn spec_bsttreapmteph_wf<T: StTInMtT + Ord + IsLtTransitive>(link: &Link<T>) -> bool {
+    pub open spec fn spec_bsttreapmteph_link_wf<T: StTInMtT + Ord + IsLtTransitive>(link: &Link<T>) -> bool {
         Lnk::spec_link_size_wf(link)
         && Lnk::spec_size_link(link) < usize::MAX as nat
         && Lnk::spec_bst_link(link)
@@ -197,14 +197,16 @@ pub mod BSTTreapMtEph {
 
     /// Treap trait for multi-threaded ephemeral access.
     ///
-    /// The RwLock invariant (`BSTTreapMtEphInv`) enforces `spec_bsttreapmteph_wf`
+    /// The RwLock invariant (`BSTTreapMtEphInv`) enforces `spec_bsttreapmteph_link_wf` on the link
     /// (size well-formedness, size < MAX, and BST ordering) on every acquire/release.
     /// Read-only methods have Set-based specs via external_body View.
     /// Interior mutability via RwLock precludes `old()` specs on insert/delete.
     pub trait BSTTreapMtEphTrait<T: StTInMtT + Ord + IsLtTransitive>: Sized + View<V = Set<<T as View>::V>> {
+        spec fn spec_bsttreapmteph_wf(&self) -> bool;
+
         /// - APAS: Work Θ(1), Span Θ(1)
         fn new() -> (empty_tree: Self)
-            ensures empty_tree@ == Set::<<T as View>::V>::empty();
+            ensures empty_tree@ == Set::<<T as View>::V>::empty(), empty_tree.spec_bsttreapmteph_wf();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn insert(&self, value: T, priority: u64)
             requires T::obeys_partial_cmp_spec(),
@@ -325,7 +327,7 @@ pub mod BSTTreapMtEph {
 
     impl<T: StTInMtT + Ord + IsLtTransitive> RwLockPredicate<Link<T>> for BSTTreapMtEphInv {
         open spec fn inv(self, v: Link<T>) -> bool {
-            spec_bsttreapmteph_wf(&v)
+            spec_bsttreapmteph_link_wf(&v)
         }
     }
 
@@ -924,9 +926,13 @@ pub mod BSTTreapMtEph {
     }
 
     impl<T: StTInMtT + Ord + IsLtTransitive> BSTTreapMtEphTrait<T> for BSTTreapMtEph<T> {
+        open spec fn spec_bsttreapmteph_wf(&self) -> bool {
+            self@.finite()
+        }
+
         #[verifier::external_body]
         fn new() -> (empty_tree: Self)
-            ensures empty_tree@ == Set::<<T as View>::V>::empty()
+            ensures empty_tree@ == Set::<<T as View>::V>::empty(), empty_tree.spec_bsttreapmteph_wf()
         {
             BSTTreapMtEph {
                 root: new_arc_rwlock::<Link<T>, BSTTreapMtEphInv>(None, Ghost(BSTTreapMtEphInv)),

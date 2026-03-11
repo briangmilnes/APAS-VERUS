@@ -361,10 +361,12 @@ pub mod BSTParaTreapMtEph {
     //		8. traits
 
     pub trait ParamTreapTrait<T: MtKey + 'static>: Sized + View<V = Set<T::V>> {
+        spec fn spec_bstparatreapmteph_wf(&self) -> bool;
+
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn new() -> (tree: Self)
-            ensures tree@.finite(), tree@.len() == 0;
+            ensures tree@.finite(), tree@.len() == 0, tree.spec_bstparatreapmteph_wf();
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn expose(&self) -> (exposed: Exposed<T>)
@@ -436,10 +438,16 @@ pub mod BSTParaTreapMtEph {
     }
 
     impl<T: MtKey + 'static> ParamTreapTrait<T> for ParamTreap<T> {
+        open spec fn spec_bstparatreapmteph_wf(&self) -> bool {
+            self@.finite()
+        }
+
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         #[verifier::external_body]
-        fn new() -> (tree: Self) {
+        fn new() -> (tree: Self)
+            ensures tree.spec_bstparatreapmteph_wf()
+        {
             ParamTreap {
                 root: new_param_treap_arc(None),
             }

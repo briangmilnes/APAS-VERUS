@@ -113,12 +113,14 @@ broadcast use {
     /// Trait defining all augmented ordered table operations (ADT 43.3) with multi-threaded ephemeral semantics
     /// Extends ordered table operations with efficient reduction and thread-safe operations
     pub trait AugOrderedTableMtEphTrait<K: MtKey, V: MtVal, F: MtReduceFn<V>>: Sized + View<V = Map<K::V, V::V>> {
+        spec fn spec_augorderedtablemteph_wf(&self) -> bool;
+
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite();
         fn empty(reducer: F, identity: V) -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty();
+            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_augorderedtablemteph_wf();
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
-            ensures tree@.dom().finite();
+            ensures tree@.dom().finite(), tree.spec_augorderedtablemteph_wf();
         fn find(&self, k: &K) -> (found: Option<V>)
             ensures
                 match found {
@@ -198,6 +200,10 @@ broadcast use {
     // 9. impls
 
     impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> AugOrderedTableMtEphTrait<K, V, F> for AugOrderedTableMtEph<K, V, F> {
+        open spec fn spec_augorderedtablemteph_wf(&self) -> bool {
+            self@.dom().finite()
+        }
+
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite()
         {
@@ -206,7 +212,7 @@ broadcast use {
         }
 
         fn empty(reducer: F, identity: V) -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty()
+            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_augorderedtablemteph_wf()
         {
             let base = OrderedTableMtEph::empty();
             let r = Self {
@@ -220,7 +226,7 @@ broadcast use {
         }
 
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
-            ensures tree@.dom().finite()
+            ensures tree@.dom().finite(), tree.spec_augorderedtablemteph_wf()
         {
             let base = OrderedTableMtEph::singleton(k, v.clone());
             let r = Self {

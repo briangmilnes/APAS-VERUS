@@ -94,9 +94,11 @@ pub mod BSTParaMtEph {
     // 8. traits
 
     pub trait ParamBSTTrait<T: MtKey + 'static>: Sized + View<V = Set<<T as View>::V>> {
+        spec fn spec_bstparamteph_wf(&self) -> bool;
+
         /// - APAS: Work O(1), Span O(1)
         fn new() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty();
+            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparamteph_wf();
         /// - APAS: Work O(1), Span O(1)
         fn singleton(key: T) -> (tree: Self)
             ensures
@@ -155,9 +157,13 @@ pub mod BSTParaMtEph {
     // 9. impls
 
     impl<T: MtKey + 'static> ParamBSTTrait<T> for ParamBST<T> {
+        open spec fn spec_bstparamteph_wf(&self) -> bool {
+            self@.finite()
+        }
+
         #[verifier::external_body]
         fn new() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty()
+            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparamteph_wf()
         { new_leaf() }
 
         #[verifier::external_body]
