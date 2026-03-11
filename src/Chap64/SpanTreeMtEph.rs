@@ -47,27 +47,25 @@ pub mod SpanTreeMtEph {
         new_arc_rwlock(val, Ghost(SpanTreeMtEphEdgesInv))
     }
 
-    // 6. spec fns
-
-    /// Well-formedness for parallel spanning tree algorithm input.
-    pub open spec fn spec_spantreemteph_wf<V: StT + MtT + Hash>(graph: &UnDirGraphMtEph<V>) -> bool {
-        spec_graphview_wf(graph@)
-    }
-
     // 8. traits
 
     pub trait SpanTreeMtEphTrait {
+        /// Well-formedness for parallel spanning tree algorithm input.
+        open spec fn spec_spantreemteph_wf<V: StT + MtT + Hash>(graph: &UnDirGraphMtEph<V>) -> bool {
+            spec_graphview_wf(graph@)
+        }
+
         /// Parallel spanning tree via star contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
         fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
             graph: &UnDirGraphMtEph<V>,
         ) -> SetStEph<Edge<V>>
-            requires spec_spantreemteph_wf(graph);
+            requires Self::spec_spantreemteph_wf(graph);
 
         /// Verify spanning tree properties.
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
         fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> B
-            requires spec_spantreemteph_wf(graph);
+            requires Self::spec_spantreemteph_wf(graph);
     }
 
     } // verus!

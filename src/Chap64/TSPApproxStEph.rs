@@ -36,16 +36,14 @@ pub mod TSPApproxStEph {
     /// Namespace struct for trait impl.
     pub struct TSPApproxStEph;
 
-    // 6. spec fns
-
-    /// Well-formedness for sequential TSP approximation algorithm input.
-    pub open spec fn spec_tspapproxsteph_wf<V: StT + Hash>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
-        spec_labgraphview_wf(graph@)
-    }
-
     // 8. traits
 
     pub trait TSPApproxStEphTrait {
+        /// Well-formedness for sequential TSP approximation algorithm input.
+        open spec fn spec_tspapproxsteph_wf<V: StT + Hash>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
+            spec_labgraphview_wf(graph@)
+        }
+
         /// Compute Euler tour of a tree.
         /// APAS: Work O(|V|), Span O(|V|)
         fn euler_tour<V: StT + Hash + Ord>(
@@ -53,7 +51,7 @@ pub mod TSPApproxStEph {
             start: &V,
             tree_edges: &SetStEph<LabEdge<V, WrappedF64>>,
         ) -> Vec<V>
-            requires spec_tspapproxsteph_wf(graph);
+            requires Self::spec_tspapproxsteph_wf(graph);
 
         /// Shortcut Euler tour to avoid revisiting vertices.
         /// APAS: Work O(|V|), Span O(|V|)
@@ -65,7 +63,7 @@ pub mod TSPApproxStEph {
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             tour: &[V],
         ) -> WrappedF64
-            requires spec_tspapproxsteph_wf(graph);
+            requires Self::spec_tspapproxsteph_wf(graph);
 
         /// 2-approximation algorithm for metric TSP.
         /// APAS: Work O(|V|² log |V|), Span O(|V|² log |V|)
@@ -74,7 +72,7 @@ pub mod TSPApproxStEph {
             spanning_tree: &SetStEph<LabEdge<V, WrappedF64>>,
             start: &V,
         ) -> (Vec<V>, WrappedF64)
-            requires spec_tspapproxsteph_wf(graph);
+            requires Self::spec_tspapproxsteph_wf(graph);
     }
 
     } // verus!

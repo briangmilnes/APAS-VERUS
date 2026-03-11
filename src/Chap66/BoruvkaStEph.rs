@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 //! Chapter 66: Borůvka's MST Algorithm (Sequential Ephemeral)
 //!
@@ -98,16 +98,16 @@ pub mod BoruvkaStEph {
         forall|e: LabeledEdge<V>| edges.contains(e) ==> e.2.spec_is_finite()
     }
 
-    /// Well-formedness for sequential Borůvka MST algorithm input.
-    pub open spec fn spec_boruvkasteph_wf<V: View<V = V> + Copy>(
-        edges: Set<LabeledEdge<V>>,
-    ) -> bool {
-        spec_all_weights_finite(edges)
-    }
-
     //		8. traits
 
     pub trait BoruvkaStEphTrait {
+        /// Well-formedness for sequential Borůvka MST algorithm input.
+        open spec fn spec_boruvkasteph_wf<V: View<V = V> + Copy>(
+            edges: Set<LabeledEdge<V>>,
+        ) -> bool {
+            spec_all_weights_finite(edges)
+        }
+
         /// Find vertex bridges for Borůvka's algorithm.
         /// APAS: Work O(|E|), Span O(|E|)
         fn vertex_bridges<V: StT + Hash + Ord>(
@@ -139,7 +139,7 @@ pub mod BoruvkaStEph {
             mst_labels: SetStEph<usize>,
             rng: &mut StdRng,
         ) -> (mst: SetStEph<usize>)
-            requires spec_boruvkasteph_wf(edges@);
+            requires Self::spec_boruvkasteph_wf(edges@);
 
         /// Borůvka's MST with random seed.
         /// APAS: Work O(m log n), Span O(m log n)
@@ -148,7 +148,7 @@ pub mod BoruvkaStEph {
             edges: &SetStEph<LabeledEdge<V>>,
             seed: u64,
         ) -> (mst: SetStEph<usize>)
-            requires spec_boruvkasteph_wf(edges@);
+            requires Self::spec_boruvkasteph_wf(edges@);
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)

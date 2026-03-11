@@ -26,22 +26,20 @@ pub mod KruskalStEph {
     /// Namespace struct for trait impl.
     pub struct KruskalStEph;
 
-    // 6. spec fns
-
-    /// Well-formedness for sequential Kruskal MST algorithm input.
-    pub open spec fn spec_kruskalsteph_wf<V: StT + Hash>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
-        spec_labgraphview_wf(graph@)
-    }
-
     // 8. traits
 
     pub trait KruskalStEphTrait {
+        /// Well-formedness for sequential Kruskal MST algorithm input.
+        open spec fn spec_kruskalsteph_wf<V: StT + Hash>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
+            spec_labgraphview_wf(graph@)
+        }
+
         /// Kruskal's MST algorithm.
         /// APAS: Work O(m log m), Span O(m log m) where m = |E|
         fn kruskal_mst<V: StT + Hash + Ord>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
         ) -> SetStEph<LabEdge<V, WrappedF64>>
-            requires spec_kruskalsteph_wf(graph);
+            requires Self::spec_kruskalsteph_wf(graph);
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
@@ -53,7 +51,7 @@ pub mod KruskalStEph {
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             mst: &SetStEph<LabEdge<V, WrappedF64>>,
         ) -> B
-            requires spec_kruskalsteph_wf(graph);
+            requires Self::spec_kruskalsteph_wf(graph);
     }
 
     } // verus!

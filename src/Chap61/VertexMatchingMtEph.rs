@@ -30,20 +30,18 @@ pub mod VertexMatchingMtEph {
     /// Namespace struct for trait impl.
     pub struct VertexMatchingMtEph;
 
-    // 6. spec fns
-
-    /// Well-formedness for parallel vertex matching algorithm input.
-    pub open spec fn spec_vertexmatchingmteph_wf<V: StT + MtT + Hash>(graph: &UnDirGraphMtEph<V>) -> bool {
-        spec_graphview_wf(graph@)
-    }
-
     // 8. traits
 
     pub trait VertexMatchingMtEphTrait {
+        /// Well-formedness for parallel vertex matching algorithm input.
+        open spec fn spec_vertexmatchingmteph_wf<V: StT + MtT + Hash>(graph: &UnDirGraphMtEph<V>) -> bool {
+            spec_graphview_wf(graph@)
+        }
+
         /// Parallel vertex matching using randomized symmetry breaking.
         /// APAS: Work O(|E|), Span O(lg |V|)
         fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<Edge<V>>
-            requires spec_vertexmatchingmteph_wf(graph);
+            requires Self::spec_vertexmatchingmteph_wf(graph);
     }
 
     } // verus!
