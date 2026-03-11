@@ -99,18 +99,20 @@ pub mod BSTAVLMtEph {
     // 8. traits
 
     pub trait BSTAVLMtEphTrait<T: TotalOrder>: Sized {
+        spec fn spec_bstavlmteph_wf(&self) -> bool;
+
         fn new() -> (tree: Self)
-            ensures true;
+            ensures tree.spec_bstavlmteph_wf();
         fn insert(&self, value: T)
-            ensures true;
+            requires self.spec_bstavlmteph_wf();
         fn contains(&self, target: &T) -> (found: bool)
-            ensures true;
+            requires self.spec_bstavlmteph_wf();
         fn size(&self) -> (n: usize)
-            ensures true;
+            requires self.spec_bstavlmteph_wf();
         fn is_empty(&self) -> (b: bool)
-            ensures true;
+            requires self.spec_bstavlmteph_wf();
         fn height(&self) -> (h: usize)
-            ensures true;
+            requires self.spec_bstavlmteph_wf();
     }
 
     // 9. impls
@@ -429,6 +431,10 @@ pub mod BSTAVLMtEph {
     // Public API: lock operations are fully verified through vstd::rwlock.
 
     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+        open spec fn spec_bstavlmteph_wf(&self) -> bool {
+            true
+        }
+
         pub fn new() -> (tree: Self)
         {
             BSTAVLMtEph {

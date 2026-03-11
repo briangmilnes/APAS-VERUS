@@ -80,20 +80,20 @@ pub mod ArraySeqMtEphSlice {
     // 8. traits
 
     pub trait ArraySeqMtEphSliceTrait<T: Eq + Clone>: Sized {
-        spec fn slice_wf(&self) -> bool;
+        spec fn spec_arrayseqmtephslice_wf(&self) -> bool;
 
         spec fn spec_len(&self) -> nat;
 
         spec fn spec_index(&self, i: int) -> T
-            recommends self.slice_wf(), i < self.spec_len();
+            recommends self.spec_arrayseqmtephslice_wf(), i < self.spec_len();
 
         fn length(&self) -> (len: usize)
-            requires self.slice_wf(),
+            requires self.spec_arrayseqmtephslice_wf(),
             ensures len as int == self.spec_len();
 
         fn nth_cloned(&self, index: usize) -> (elem: T)
             requires
-                self.slice_wf(),
+                self.spec_arrayseqmtephslice_wf(),
                 index < self.spec_len(),
                 obeys_feq_clone::<T>(),
             ensures elem == self.spec_index(index as int);
@@ -101,11 +101,11 @@ pub mod ArraySeqMtEphSlice {
         /// O(1) slice: shares backing storage, adjusts window.
         fn slice(&self, start: usize, length: usize) -> (sliced: Self)
             requires
-                self.slice_wf(),
+                self.spec_arrayseqmtephslice_wf(),
                 start + length <= usize::MAX,
                 start + length <= self.spec_len(),
             ensures
-                sliced.slice_wf(),
+                sliced.spec_arrayseqmtephslice_wf(),
                 sliced.spec_len() == length as int,
                 forall|i: int| #![trigger sliced.spec_index(i)]
                     0 <= i < length ==> sliced.spec_index(i) == self.spec_index(start as int + i);
@@ -113,31 +113,31 @@ pub mod ArraySeqMtEphSlice {
         /// O(1) subseq: same as slice (shares backing storage).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             requires
-                self.slice_wf(),
+                self.spec_arrayseqmtephslice_wf(),
                 start + length <= usize::MAX,
                 start + length <= self.spec_len(),
             ensures
-                subseq.slice_wf(),
+                subseq.spec_arrayseqmtephslice_wf(),
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)]
                     0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
         fn from_vec(data: Vec<T>) -> (seq: Self)
             ensures
-                seq.slice_wf(),
+                seq.spec_arrayseqmtephslice_wf(),
                 seq.spec_len() == data@.len(),
                 forall|i: int| #![trigger seq.spec_index(i)]
                     0 <= i < data@.len() ==> seq.spec_index(i) == data@[i];
 
         fn empty() -> (empty_seq: Self)
             ensures
-                empty_seq.slice_wf(),
+                empty_seq.spec_arrayseqmtephslice_wf(),
                 empty_seq.spec_len() == 0;
 
         fn singleton(item: T) -> (s: Self)
             requires obeys_feq_clone::<T>(),
             ensures
-                s.slice_wf(),
+                s.spec_arrayseqmtephslice_wf(),
                 s.spec_len() == 1,
                 s.spec_index(0) == item;
 
@@ -146,7 +146,7 @@ pub mod ArraySeqMtEphSlice {
                 length <= usize::MAX,
                 obeys_feq_clone::<T>(),
             ensures
-                new_seq.slice_wf(),
+                new_seq.spec_arrayseqmtephslice_wf(),
                 new_seq.spec_len() == length as int,
                 forall|i: int| #![trigger new_seq.spec_index(i)]
                     0 <= i < length ==> new_seq.spec_index(i) == init_value;
@@ -155,7 +155,7 @@ pub mod ArraySeqMtEphSlice {
     // 9. impls
 
     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
-        open spec fn slice_wf(&self) -> bool {
+        open spec fn spec_arrayseqmtephslice_wf(&self) -> bool {
             self.start + self.len <= (*self.data)@.len()
             && self.start + self.len <= usize::MAX
         }
@@ -247,7 +247,7 @@ pub mod ArraySeqMtEphSlice {
 
     impl<'a, T: Eq + Clone> ArraySeqMtEphSliceS<T> {
         pub fn iter(&'a self) -> (it: std::slice::Iter<'a, T>)
-            requires self.slice_wf(),
+            requires self.spec_arrayseqmtephslice_wf(),
             ensures
                 it@.0 == 0,
                 it@.1.len() == self.spec_len(),
@@ -266,7 +266,7 @@ pub mod ArraySeqMtEphSlice {
         type IntoIter = std::slice::Iter<'a, T>;
 
         fn into_iter(self) -> (it: std::slice::Iter<'a, T>)
-            requires self.slice_wf(),
+            requires self.spec_arrayseqmtephslice_wf(),
             ensures
                 it@.0 == 0,
                 it@.1.len() == self.spec_len(),

@@ -56,47 +56,68 @@ pub mod BSTSetRBMtEph {
     }
 
     pub trait BSTSetRBMtEphTrait<T: StTInMtT + Ord>: Sized {
+        spec fn spec_bstsetrbmteph_wf(&self) -> bool;
+
         fn empty() -> (set: Self)
-            ensures true;
+            ensures set.spec_bstsetrbmteph_wf();
         fn singleton(value: T) -> (set: Self)
-            ensures true;
+            ensures set.spec_bstsetrbmteph_wf();
         fn size(&self) -> (n: N)
+            requires self.spec_bstsetrbmteph_wf()
             ensures true;
         fn is_empty(&self) -> (b: B)
+            requires self.spec_bstsetrbmteph_wf()
             ensures true;
         fn find(&self, value: &T) -> (found: Option<T>)
+            requires self.spec_bstsetrbmteph_wf()
             ensures true;
         fn contains(&self, value: &T) -> (found: B)
+            requires self.spec_bstsetrbmteph_wf()
             ensures true;
         fn minimum(&self) -> (min: Option<T>)
+            requires self.spec_bstsetrbmteph_wf()
             ensures true;
         fn maximum(&self) -> (max: Option<T>)
+            requires self.spec_bstsetrbmteph_wf()
             ensures true;
         fn insert(&mut self, value: T)
-            ensures true;
+            requires old(self).spec_bstsetrbmteph_wf()
+            ensures self.spec_bstsetrbmteph_wf();
         fn delete(&mut self, target: &T)
-            ensures true;
+            requires old(self).spec_bstsetrbmteph_wf()
+            ensures self.spec_bstsetrbmteph_wf();
         fn union(&self, other: &Self) -> (combined: Self)
-            ensures true;
+            requires self.spec_bstsetrbmteph_wf(), other.spec_bstsetrbmteph_wf()
+            ensures combined.spec_bstsetrbmteph_wf();
         fn intersection(&self, other: &Self) -> (common: Self)
-            ensures true;
+            requires self.spec_bstsetrbmteph_wf(), other.spec_bstsetrbmteph_wf()
+            ensures common.spec_bstsetrbmteph_wf();
         fn difference(&self, other: &Self) -> (diff: Self)
-            ensures true;
+            requires self.spec_bstsetrbmteph_wf(), other.spec_bstsetrbmteph_wf()
+            ensures diff.spec_bstsetrbmteph_wf();
         fn split(&self, pivot: &T) -> (parts: (Self, B, Self))
-            ensures true;
+            requires self.spec_bstsetrbmteph_wf()
+            ensures parts.0.spec_bstsetrbmteph_wf(), parts.2.spec_bstsetrbmteph_wf();
         fn join_pair(left: Self, right: Self) -> (joined: Self)
-            ensures true;
+            requires left.spec_bstsetrbmteph_wf(), right.spec_bstsetrbmteph_wf()
+            ensures joined.spec_bstsetrbmteph_wf();
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)
-            ensures true;
+            requires left.spec_bstsetrbmteph_wf(), right.spec_bstsetrbmteph_wf()
+            ensures joined.spec_bstsetrbmteph_wf();
         fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)
-            ensures true;
+            requires self.spec_bstsetrbmteph_wf()
+            ensures filtered.spec_bstsetrbmteph_wf();
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> (reduced: T)
+            requires self.spec_bstsetrbmteph_wf()
             ensures true;
         fn iter_in_order(&self) -> (seq: ArraySeqStPerS<T>)
+            requires self.spec_bstsetrbmteph_wf()
             ensures true;
         fn as_tree(&self) -> (tree: &BSTRBMtEph<T>)
+            requires self.spec_bstsetrbmteph_wf()
             ensures true;
         fn iter(&self) -> (it: BSTSetRBMtEphIter<T>)
+            requires self.spec_bstsetrbmteph_wf()
             ensures it@.0 == 0, bstsetrbmteph_iter_invariant(&it);
     }
 
@@ -112,6 +133,10 @@ pub mod BSTSetRBMtEph {
     }
 
     impl<T: StTInMtT + Ord> BSTSetRBMtEphTrait<T> for BSTSetRBMtEph<T> {
+        open spec fn spec_bstsetrbmteph_wf(&self) -> bool {
+            self.tree.spec_bstrbmteph_wf()
+        }
+
         fn empty() -> Self {
             Self {
                 tree: BSTRBMtEph::new(),
@@ -418,6 +443,7 @@ pub mod BSTSetRBMtEph {
         type Item = T;
         type IntoIter = BSTSetRBMtEphIter<T>;
         fn into_iter(self) -> (it: BSTSetRBMtEphIter<T>)
+            requires self.spec_bstsetrbmteph_wf()
             ensures it@.0 == 0, bstsetrbmteph_iter_invariant(&it),
         {
             self.iter()
