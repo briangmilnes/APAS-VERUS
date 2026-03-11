@@ -70,8 +70,8 @@
       5 × external_body
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ ParaHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:139: external_body - #[verifier::external_body]
-       140 |         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:147: external_body - #[verifier::external_body]
+       148 |         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
    Holes: 1 total
       1 × external_body
 ❌ QuadProbFlatHashTableStEph.rs
@@ -143,10 +143,11 @@ Holes Found: 39 total
 Errors: 1 total (1 assume in eq/clone (Verus workaround))
 
 Info: 5 total
+   ChainedHashTable.rs:146: info: accept() - accept hole
    StructChainedHashTable.rs:304: info: accept() - accept hole
    StructChainedHashTable.rs:321: info: accept() - accept hole
    StructChainedHashTable.rs:338: info: accept() - accept hole
    StructChainedHashTable.rs:352: info: accept() - accept hole
-   ChainedHashTable.rs:146: info: accept() - accept hole
+
+   StructChainedHashTable.rs:338: info: accept() - accept hole
    StructChainedHashTable.rs:352: info: accept() - accept hole
-   ChainedHashTable.rs:146: info: accept() - accept hole

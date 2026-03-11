@@ -21,13 +21,13 @@
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
 ❌ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:480: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       476 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       509 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       478 |         {
-       479 |             let equal = self.adj == other.adj;
-       481 |             equal
-       482 |         }
+       511 |         {
+       512 |             let equal = self.adj == other.adj;
+       514 |             equal
+       515 |         }
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 2 total (2 clean, 0 holed)
 ✓ AdjTableGraphMtPer.rs
@@ -35,8 +35,8 @@
    1 clean proof function
 ✓ AdjTableGraphStPer.rs
 ❌ EdgeSetGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:107: external_body - #[verifier::external_body]
-       108 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:135: external_body - #[verifier::external_body]
+       136 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
    Holes: 1 total
       1 × external_body
 ✓ EdgeSetGraphStEph.rs

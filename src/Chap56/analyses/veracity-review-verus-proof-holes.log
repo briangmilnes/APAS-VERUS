@@ -21,14 +21,14 @@
 ✓ PathWeightUtilsStEph.rs
 ✓ PathWeightUtilsStPer.rs
 ❌ SSSPResultStEphF64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:146: external_body - #[verifier::external_body]
-       147 |         fn is_reachable(&self, v: usize) -> (b: bool) {
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:153: external_body - #[verifier::external_body]
+       154 |         fn is_reachable(&self, v: usize) -> (b: bool) {
    Holes: 1 total
       1 × external_body
 ✓ SSSPResultStEphI64.rs
 ❌ SSSPResultStPerF64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:174: external_body - #[verifier::external_body]
-       175 |         fn is_reachable(&self, v: usize) -> (reachable: bool) {
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:181: external_body - #[verifier::external_body]
+       182 |         fn is_reachable(&self, v: usize) -> (reachable: bool) {
    Holes: 1 total
       1 × external_body
 ✓ SSSPResultStPerI64.rs
@@ -49,7 +49,9 @@ Proof Functions:
 
 Holes Found: 7 total
    7 × external_body
-oof Functions:
+  12 total
+
+Proof Functions:
    0 clean
    0 holed
    0 total

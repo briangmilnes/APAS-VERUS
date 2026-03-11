@@ -1,7 +1,6 @@
 ✓ SpanTreeMtEph.rs
 ✓ SpanTreeStEph.rs
 ✓ TSPApproxStEph.rs
-   1 clean proof function
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -13,14 +12,21 @@ Modules:
    3 total
 
 Proof Functions:
-   1 clean
+   0 clean
    0 holed
-   1 total
+   0 total
 
 Holes Found: 0 total
 
 🎉 No proof holes or warnings found! All proofs are complete.
-otal
+n (no holes)
+   0 holed (contains holes)
+   3 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
 
 Holes Found: 0 total
 
