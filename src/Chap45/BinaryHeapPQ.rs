@@ -98,6 +98,7 @@ pub mod BinaryHeapPQ {
 
         /// Trait defining the Meldable Priority Queue ADT operations (Data Type 45.1)
         pub trait BinaryHeapPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Seq<T::V>> {
+            spec fn spec_binaryheappq_wf(&self) -> bool;
             spec fn spec_size(self) -> nat;
             spec fn spec_seq(&self) -> Seq<T>;
             spec fn spec_sorted(s: Seq<T>) -> bool;
@@ -111,13 +112,15 @@ pub mod BinaryHeapPQ {
             fn empty() -> (pq: Self)
                 ensures
                     pq@.len() == 0,
-                    pq@.to_multiset() =~= Multiset::empty();
+                    pq@.to_multiset() =~= Multiset::empty(),
+                    pq.spec_binaryheappq_wf();
 
             fn singleton(element: T) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
                     pq@.len() == 1,
-                    pq@.to_multiset() =~= Multiset::empty().insert(element@);
+                    pq@.to_multiset() =~= Multiset::empty().insert(element@),
+                    pq.spec_binaryheappq_wf();
 
             fn find_min(&self) -> (min_elem: Option<&T>)
                 ensures
@@ -478,6 +481,10 @@ pub mod BinaryHeapPQ {
         }
 
         impl<T: StT + Ord + TotalOrder> BinaryHeapPQTrait<T> for BinaryHeapPQ<T> {
+            open spec fn spec_binaryheappq_wf(&self) -> bool {
+                true
+            }
+
             open spec fn spec_size(self) -> nat {
                 self@.len()
             }

@@ -49,16 +49,18 @@ broadcast use {
 
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1) with multi-threaded ephemeral semantics
     pub trait OrderedSetMtEphTrait<T: MtKey + 'static>: Sized + View<V = Set<<T as View>::V>> {
+        spec fn spec_orderedsetmteph_wf(&self) -> bool;
+
         // Base set operations (ADT 41.1) - ephemeral semantics with parallelism
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty();
+            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_orderedsetmteph_wf();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite();
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_orderedsetmteph_wf();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (found: B)
             ensures found == self@.contains(x@);
@@ -128,6 +130,10 @@ broadcast use {
     // 9. impls
 
     impl<T: MtKey + 'static> OrderedSetMtEphTrait<T> for OrderedSetMtEph<T> {
+        open spec fn spec_orderedsetmteph_wf(&self) -> bool {
+            self@.finite()
+        }
+
         #[verifier::external_body]
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
@@ -135,12 +141,12 @@ broadcast use {
 
         #[verifier::external_body]
         fn empty() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty()
+            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_orderedsetmteph_wf()
         { OrderedSetMtEph { tree: ParamTreap::new() } }
 
         #[verifier::external_body]
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite()
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_orderedsetmteph_wf()
         {
             let tree = ParamTreap::new();
             tree.insert(x);

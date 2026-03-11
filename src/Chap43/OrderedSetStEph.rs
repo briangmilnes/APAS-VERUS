@@ -53,16 +53,18 @@ broadcast use {
 
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1) with ephemeral semantics
     pub trait OrderedSetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
+        spec fn spec_orderedsetsteph_wf(&self) -> bool;
+
         // Base set operations (ADT 41.1) - ephemeral semantics
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty();
+            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_orderedsetsteph_wf();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite();
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_orderedsetsteph_wf();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (found: B)
             ensures found == self@.contains(x@);
@@ -164,12 +166,16 @@ broadcast use {
     // 9. impls
 
     impl<T: StT + Ord> OrderedSetStEphTrait<T> for OrderedSetStEph<T> {
+        open spec fn spec_orderedsetsteph_wf(&self) -> bool {
+            self@.finite()
+        }
+
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         { self.base_set.size() }
 
         fn empty() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty()
+            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_orderedsetsteph_wf()
         {
             OrderedSetStEph {
                 base_set: AVLTreeSetStEph::empty(),
@@ -177,7 +183,7 @@ broadcast use {
         }
 
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite()
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_orderedsetsteph_wf()
         {
             OrderedSetStEph {
                 base_set: AVLTreeSetStEph::singleton(x),

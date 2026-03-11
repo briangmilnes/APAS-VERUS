@@ -56,14 +56,16 @@ broadcast use {
     // 8. traits
 
     pub trait OrderedTableMtPerTrait<K: MtKey + 'static, V: StTInMtT + Ord + 'static>: Sized + View<V = Map<K::V, V::V>> {
+        spec fn spec_orderedtablemtper_wf(&self) -> bool;
+
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite();
 
         fn empty() -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty();
+            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_orderedtablemtper_wf();
 
         fn singleton(k: K, v: V) -> (tree: Self)
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite();
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablemtper_wf();
 
         fn find(&self, k: &K) -> (found: Option<V>);
 
@@ -118,6 +120,10 @@ broadcast use {
     // 9. impls
 
     impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+        open spec fn spec_orderedtablemtper_wf(&self) -> bool {
+            self@.dom().finite()
+        }
+
         #[verifier::external_body]
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite()
@@ -127,7 +133,7 @@ broadcast use {
 
         #[verifier::external_body]
         fn empty() -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty()
+            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_orderedtablemtper_wf()
         {
             OrderedTableMtPer {
                 tree: ParamTreap::new(),
@@ -136,7 +142,7 @@ broadcast use {
 
         #[verifier::external_body]
         fn singleton(k: K, v: V) -> (tree: Self)
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite()
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablemtper_wf()
         {
             let tree = ParamTreap::new();
             tree.insert(Pair(k, v));

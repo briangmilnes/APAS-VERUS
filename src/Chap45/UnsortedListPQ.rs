@@ -59,6 +59,7 @@ broadcast use {
 // 8. traits
         /// Meldable Priority Queue ADT (Data Type 45.1) using unsorted list.
         pub trait UnsortedListPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Seq<T::V>> {
+            spec fn spec_unsortedlistpq_wf(&self) -> bool;
             spec fn spec_size(self) -> nat;
             spec fn spec_seq(&self) -> Seq<T>;
             spec fn spec_sorted(s: Seq<T>) -> bool;
@@ -66,13 +67,15 @@ broadcast use {
             fn empty() -> (pq: Self)
                 ensures
                     pq@.len() == 0,
-                    pq@.to_multiset() =~= Multiset::empty();
+                    pq@.to_multiset() =~= Multiset::empty(),
+                    pq.spec_unsortedlistpq_wf();
 
             fn singleton(element: T) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
                     pq@.len() == 1,
-                    pq@.to_multiset() =~= Multiset::empty().insert(element@);
+                    pq@.to_multiset() =~= Multiset::empty().insert(element@),
+                    pq.spec_unsortedlistpq_wf();
 
             fn find_min(&self) -> (min_elem: Option<&T>)
                 ensures
@@ -167,6 +170,10 @@ broadcast use {
 
 // 9. impls
         impl<T: StT + Ord + TotalOrder> UnsortedListPQTrait<T> for UnsortedListPQ<T> {
+            open spec fn spec_unsortedlistpq_wf(&self) -> bool {
+                true
+            }
+
             open spec fn spec_size(self) -> nat {
                 self@.len()
             }

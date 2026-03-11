@@ -10,6 +10,7 @@ pub mod ParaHashTableStEph {
     // 1. module
     // 2. imports
     // 4. type definitions (inside verus!: LoadAndSize, HashTable)
+    // 6. spec fns
     // 8. traits (inside verus!: EntryTrait, ParaHashTableStEphTrait)
     // 13. derive impls outside verus!
 
@@ -40,6 +41,12 @@ pub mod ParaHashTableStEph {
         pub num_elements: usize,
         pub metrics: Metrics,
         pub _phantom: PhantomData<(Key, Value)>,
+    }
+
+    // 6. spec fns
+
+    pub open spec fn spec_hashtable_wf<Key, Value, Entry, Metrics, H>(table: &HashTable<Key, Value, Entry, Metrics, H>) -> bool {
+        table.table@.len() == table.current_size as int
     }
 
     // 8. traits
@@ -73,6 +80,7 @@ pub mod ParaHashTableStEph {
                 table.current_size == initial_size,
                 table.num_elements == 0,
                 table.table@.len() == initial_size as int,
+                spec_hashtable_wf(&table),
         {
             let mut table_vec: Vec<Entry> = Vec::new();
             let mut i: usize = 0;

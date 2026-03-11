@@ -255,6 +255,7 @@ broadcast use {
 
         /// Meldable Priority Queue ADT (Data Type 45.1) using leftist heap.
         pub trait LeftistHeapPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Multiset<T>> {
+            spec fn spec_leftistheappq_wf(&self) -> bool;
             spec fn spec_size(self) -> nat;
             spec fn spec_seq(&self) -> Seq<T>;
             spec fn spec_sorted(s: Seq<T>) -> bool;
@@ -264,12 +265,14 @@ broadcast use {
                 ensures
                     pq.spec_size() == 0,
                     pq@ =~= Multiset::empty(),
-                    pq.spec_is_valid_leftist_heap();
+                    pq.spec_is_valid_leftist_heap(),
+                    pq.spec_leftistheappq_wf();
             fn singleton(element: T) -> (pq: Self)
                 ensures
                     pq.spec_size() == 1,
                     pq@ =~= Multiset::empty().insert(element),
-                    pq.spec_is_valid_leftist_heap();
+                    pq.spec_is_valid_leftist_heap(),
+                    pq.spec_leftistheappq_wf();
             fn find_min(&self) -> (min_elem: Option<&T>)
                 requires self.spec_is_valid_leftist_heap(),
                 ensures
@@ -731,6 +734,10 @@ broadcast use {
         }
 
         impl<T: StT + Ord + TotalOrder> LeftistHeapPQTrait<T> for LeftistHeapPQ<T> {
+            open spec fn spec_leftistheappq_wf(&self) -> bool {
+                self.spec_is_valid_leftist_heap()
+            }
+
             open spec fn spec_size(self) -> nat {
                 self.root.spec_size()
             }
