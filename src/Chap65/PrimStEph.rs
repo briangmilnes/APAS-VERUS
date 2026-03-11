@@ -29,32 +29,51 @@ pub mod PrimStEph {
     pub type T<V> = PQEntry<V>;
 
     verus! {
-        /// Priority queue entry for Prim's algorithm.
-        #[derive(Clone, PartialEq, Eq)]
-        pub struct PQEntry<V: StT + Ord + Clone> {
-            pub priority: WrappedF64,
-            pub vertex: V,
-            pub parent: Option<V>,
-        }
 
-        pub trait PrimStEphTrait {
-            /// Prim's MST algorithm
-            /// APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
-            fn prim_mst<V: StT + Hash + Ord>(
-                graph: &LabUnDirGraphStEph<V, WrappedF64>,
-                start: V,
-            ) -> SetStEph<LabEdge<V, WrappedF64>>;
+    // 4. type definitions
 
-            /// Compute total weight of MST
-            /// APAS: Work O(m), Span O(1)
-            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64;
-        }
+    /// Namespace struct for trait impl.
+    pub struct PrimStEph;
 
-        impl<V: StT + Ord> View for PQEntry<V> {
-            type V = Self;
-            open spec fn view(&self) -> Self { *self }
-        }
+    /// Priority queue entry for Prim's algorithm.
+    #[derive(Clone, PartialEq, Eq)]
+    pub struct PQEntry<V: StT + Ord + Clone> {
+        pub priority: WrappedF64,
+        pub vertex: V,
+        pub parent: Option<V>,
     }
+
+    // 5. view impls
+
+    impl<V: StT + Ord> View for PQEntry<V> {
+        type V = Self;
+        open spec fn view(&self) -> Self { *self }
+    }
+
+    // 6. spec fns
+
+    /// Well-formedness for sequential Prim MST algorithm input.
+    pub open spec fn spec_primsteph_wf<V: StT + Hash>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
+        spec_labgraphview_wf(graph@)
+    }
+
+    // 8. traits
+
+    pub trait PrimStEphTrait {
+        /// Prim's MST algorithm.
+        /// APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
+        fn prim_mst<V: StT + Hash + Ord>(
+            graph: &LabUnDirGraphStEph<V, WrappedF64>,
+            start: V,
+        ) -> SetStEph<LabEdge<V, WrappedF64>>
+            requires spec_primsteph_wf(graph);
+
+        /// Compute total weight of MST.
+        /// APAS: Work O(m), Span O(1)
+        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64;
+    }
+
+    } // verus!
 
     /// Module-level function to create a new PQEntry.
     /// - APAS: N/A — Verus-specific scaffolding.

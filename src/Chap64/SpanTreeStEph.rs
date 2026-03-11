@@ -21,16 +21,34 @@ pub mod SpanTreeStEph {
     pub type T<V> = UnDirGraphStEph<V>;
 
     verus! {
-        pub trait SpanTreeStEphTrait {
-            /// Sequential spanning tree via star contraction
-            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-            fn spanning_tree_star_contraction<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>;
 
-            /// Verify spanning tree properties
-            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-            fn verify_spanning_tree<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>, tree: &SetStEph<Edge<V>>) -> B;
-        }
+    // 4. type definitions
+
+    /// Namespace struct for trait impl.
+    pub struct SpanTreeStEph;
+
+    // 6. spec fns
+
+    /// Well-formedness for sequential spanning tree algorithm input.
+    pub open spec fn spec_spantreesteph_wf<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> bool {
+        spec_graphview_wf(graph@)
     }
+
+    // 8. traits
+
+    pub trait SpanTreeStEphTrait {
+        /// Sequential spanning tree via star contraction.
+        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        fn spanning_tree_star_contraction<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>
+            requires spec_spantreesteph_wf(graph);
+
+        /// Verify spanning tree properties.
+        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        fn verify_spanning_tree<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>, tree: &SetStEph<Edge<V>>) -> B
+            requires spec_spantreesteph_wf(graph);
+    }
+
+    } // verus!
 
     /// Exercise 64.2: Spanning Tree via Star Contraction
     ///

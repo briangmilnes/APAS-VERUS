@@ -24,18 +24,36 @@ pub mod EdgeContractionStEph {
     use crate::SetLit;
 
     verus! {
-        pub trait EdgeContractionStEphTrait {
-            /// Sequential edge contraction algorithm
-            /// APAS: Work O(|E|), Span O(|E|)
-            fn edge_contract<V: StT + Hash + Ord>(
-                graph: &UnDirGraphStEph<V>,
-                matching: &SetStEph<Edge<V>>,
-            ) -> UnDirGraphStEph<V>;
 
-            /// Single round of sequential edge contraction
-            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-            fn contract_round<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V>;
-        }
+    // 4. type definitions
+
+    /// Namespace struct for trait impl.
+    pub struct EdgeContractionStEph;
+
+    // 6. spec fns
+
+    /// Well-formedness for edge contraction algorithm input.
+    pub open spec fn spec_edgecontractionsteph_wf<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> bool {
+        spec_graphview_wf(graph@)
+    }
+
+    // 8. traits
+
+    pub trait EdgeContractionStEphTrait {
+        /// Sequential edge contraction algorithm.
+        /// APAS: Work O(|E|), Span O(|E|)
+        fn edge_contract<V: StT + Hash + Ord>(
+            graph: &UnDirGraphStEph<V>,
+            matching: &SetStEph<Edge<V>>,
+        ) -> UnDirGraphStEph<V>
+            requires spec_edgecontractionsteph_wf(graph);
+
+        /// Single round of sequential edge contraction.
+        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        fn contract_round<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V>
+            requires spec_edgecontractionsteph_wf(graph);
+    }
+
     } // verus!
 
     #[cfg(not(verus_keep_ghost))]

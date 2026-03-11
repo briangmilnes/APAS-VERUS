@@ -20,14 +20,31 @@ pub mod StarPartitionMtEph {
     use crate::SetLit;
 
     verus! {
-        pub trait StarPartitionMtEphTrait {
-            /// Parallel star partition using randomized coin flips
-            /// APAS: Work O(|V| + |E|), Span O(lg |V|)
-            fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(
-                graph: &UnDirGraphMtEph<V>,
-                seed: u64,
-            ) -> (SetStEph<V>, HashMap<V, V>);
-        }
+
+    // 4. type definitions
+
+    /// Namespace struct for trait impl.
+    pub struct StarPartitionMtEph;
+
+    // 6. spec fns
+
+    /// Well-formedness for parallel star partition algorithm input.
+    pub open spec fn spec_starpartitionmteph_wf<V: StT + MtT + Hash>(graph: &UnDirGraphMtEph<V>) -> bool {
+        spec_graphview_wf(graph@)
+    }
+
+    // 8. traits
+
+    pub trait StarPartitionMtEphTrait {
+        /// Parallel star partition using randomized coin flips.
+        /// APAS: Work O(|V| + |E|), Span O(lg |V|)
+        fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(
+            graph: &UnDirGraphMtEph<V>,
+            seed: u64,
+        ) -> (SetStEph<V>, HashMap<V, V>)
+            requires spec_starpartitionmteph_wf(graph);
+    }
+
     } // verus!
 
     #[cfg(not(verus_keep_ghost))]

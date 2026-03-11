@@ -28,41 +28,49 @@ pub mod SpanTreeMtEph {
     pub type T<V> = UnDirGraphMtEph<V>;
 
     verus! {
-        pub struct SpanTreeMtEphEdgesInv;
-        impl<V: StT + MtT + Hash + Ord> RwLockPredicate<SetStEph<Edge<V>>> for SpanTreeMtEphEdgesInv {
-            open spec fn inv(self, v: SetStEph<Edge<V>>) -> bool { v@.finite() }
-        }
-        fn new_spanning_edges_arc<V: StT + MtT + Hash + Ord>(
-            val: SetStEph<Edge<V>>,
-        ) -> (arc: Arc<RwLock<SetStEph<Edge<V>>, SpanTreeMtEphEdgesInv>>)
-            requires val@.finite(),
-            ensures arc.pred() == SpanTreeMtEphEdgesInv,
-        {
-            new_arc_rwlock(val, Ghost(SpanTreeMtEphEdgesInv))
-        }
 
-        pub struct SpanTreeMtEphValidInv;
-        impl RwLockPredicate<bool> for SpanTreeMtEphValidInv {
-            open spec fn inv(self, v: bool) -> bool { v == true || v == false }
-        }
-        fn new_valid_arc(val: bool) -> (arc: Arc<RwLock<bool, SpanTreeMtEphValidInv>>)
-            ensures arc.pred() == SpanTreeMtEphValidInv,
-        {
-            new_arc_rwlock(val, Ghost(SpanTreeMtEphValidInv))
-        }
+    // 4. type definitions
 
-        pub trait SpanTreeMtEphTrait {
-            /// Parallel spanning tree via star contraction
-            /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
-            fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
-                graph: &UnDirGraphMtEph<V>,
-            ) -> SetStEph<Edge<V>>;
+    /// Namespace struct for trait impl.
+    pub struct SpanTreeMtEph;
 
-            /// Verify spanning tree properties
-            /// APAS: Work O(|V| + |E|), Span O(lg |V|)
-            fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> B;
-        }
+    pub struct SpanTreeMtEphEdgesInv;
+    impl<V: StT + MtT + Hash + Ord> RwLockPredicate<SetStEph<Edge<V>>> for SpanTreeMtEphEdgesInv {
+        open spec fn inv(self, v: SetStEph<Edge<V>>) -> bool { v@.finite() }
     }
+    fn new_spanning_edges_arc<V: StT + MtT + Hash + Ord>(
+        val: SetStEph<Edge<V>>,
+    ) -> (arc: Arc<RwLock<SetStEph<Edge<V>>, SpanTreeMtEphEdgesInv>>)
+        requires val@.finite(),
+        ensures arc.pred() == SpanTreeMtEphEdgesInv,
+    {
+        new_arc_rwlock(val, Ghost(SpanTreeMtEphEdgesInv))
+    }
+
+    // 6. spec fns
+
+    /// Well-formedness for parallel spanning tree algorithm input.
+    pub open spec fn spec_spantreemteph_wf<V: StT + MtT + Hash>(graph: &UnDirGraphMtEph<V>) -> bool {
+        spec_graphview_wf(graph@)
+    }
+
+    // 8. traits
+
+    pub trait SpanTreeMtEphTrait {
+        /// Parallel spanning tree via star contraction.
+        /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
+        fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
+            graph: &UnDirGraphMtEph<V>,
+        ) -> SetStEph<Edge<V>>
+            requires spec_spantreemteph_wf(graph);
+
+        /// Verify spanning tree properties.
+        /// APAS: Work O(|V| + |E|), Span O(lg |V|)
+        fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> B
+            requires spec_spantreemteph_wf(graph);
+    }
+
+    } // verus!
 
     /// Exercise 64.2: Spanning Tree via Star Contraction (Parallel)
     ///
@@ -227,7 +235,7 @@ pub mod SpanTreeMtEph {
             return true;
         }
 
-        let valid = new_valid_arc(true);
+        let valid = Arc::new(std::sync::Mutex::new(true));
 
         let mid = edges_vec.len() / 2;
         let left_edges = edges_vec[..mid].to_vec();
@@ -242,8 +250,7 @@ pub mod SpanTreeMtEph {
             for edge in left_edges {
                 let Edge(u, v) = &edge;
                 if !graph_edges_clone.mem(&edge) && !graph_edges_clone.mem(&Edge(v.clone(), u.clone())) {
-                    let (_current, write_handle) = valid_clone1.acquire_write();
-                    write_handle.release_write(false);
+                    *valid_clone1.lock().unwrap() = false;
                     return;
                 }
             }
@@ -252,17 +259,13 @@ pub mod SpanTreeMtEph {
             for edge in right_edges {
                 let Edge(u, v) = &edge;
                 if !graph_edges.mem(&edge) && !graph_edges.mem(&Edge(v.clone(), u.clone())) {
-                    let (_current, write_handle) = valid_clone2.acquire_write();
-                    write_handle.release_write(false);
+                    *valid_clone2.lock().unwrap() = false;
                     return;
                 }
             }
         };
         join(f1, f2);
 
-        let read_handle = valid.acquire_read();
-        let result = *read_handle.borrow();
-        read_handle.release_read();
-        result
+        *valid.lock().unwrap()
     }
 }

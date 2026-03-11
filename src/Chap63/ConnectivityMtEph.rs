@@ -30,29 +30,49 @@ pub mod ConnectivityMtEph {
     use crate::{ParaPair, SetLit};
 
     verus! {
-        pub trait ConnectivityMtEphTrait {
-            /// Count connected components using parallel star contraction
-            /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
-            fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N;
 
-            /// Find connected components using parallel star contraction
-            /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
-            fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
-                graph: &UnDirGraphMtEph<V>,
-                seed: u64,
-            ) -> (SetStEph<V>, HashMap<V, V>);
+    // 4. type definitions
 
-            /// Count components using higher-order function approach
-            /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
-            fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N;
+    /// Namespace struct for trait impl.
+    pub struct ConnectivityMtEph;
 
-            /// Find components using higher-order function approach
-            /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
-            fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
-                graph: &UnDirGraphMtEph<V>,
-                seed: u64,
-            ) -> (SetStEph<V>, HashMap<V, V>);
-        }
+    // 6. spec fns
+
+    /// Well-formedness for parallel connectivity algorithm input.
+    pub open spec fn spec_connectivitymteph_wf<V: StT + MtT + Hash>(graph: &UnDirGraphMtEph<V>) -> bool {
+        spec_graphview_wf(graph@)
+    }
+
+    // 8. traits
+
+    pub trait ConnectivityMtEphTrait {
+        /// Count connected components using parallel star contraction.
+        /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
+        fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
+            requires spec_connectivitymteph_wf(graph);
+
+        /// Find connected components using parallel star contraction.
+        /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
+        fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
+            graph: &UnDirGraphMtEph<V>,
+            seed: u64,
+        ) -> (SetStEph<V>, HashMap<V, V>)
+            requires spec_connectivitymteph_wf(graph);
+
+        /// Count components using higher-order function approach.
+        /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
+        fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
+            requires spec_connectivitymteph_wf(graph);
+
+        /// Find components using higher-order function approach.
+        /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
+        fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
+            graph: &UnDirGraphMtEph<V>,
+            seed: u64,
+        ) -> (SetStEph<V>, HashMap<V, V>)
+            requires spec_connectivitymteph_wf(graph);
+    }
+
     } // verus!
 
     #[cfg(not(verus_keep_ghost))]

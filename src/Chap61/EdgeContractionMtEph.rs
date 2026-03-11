@@ -26,21 +26,39 @@ pub mod EdgeContractionMtEph {
     use crate::{ParaPair, SetLit};
 
     verus! {
-        pub trait EdgeContractionMtEphTrait {
-            /// Parallel edge contraction algorithm
-            /// APAS: Work O(|E|), Span O(lg |V|)
-            fn edge_contract_mt<V: StT + MtT + Hash + Ord + 'static>(
-                graph: &UnDirGraphMtEph<V>,
-                matching: &SetStEph<Edge<V>>,
-            ) -> UnDirGraphMtEph<V>;
 
-            /// Single round of parallel edge contraction
-            /// APAS: Work O(|V| + |E|), Span O(lg |V|)
-            fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(
-                graph: &UnDirGraphMtEph<V>,
-                seed: u64,
-            ) -> UnDirGraphMtEph<V>;
-        }
+    // 4. type definitions
+
+    /// Namespace struct for trait impl.
+    pub struct EdgeContractionMtEph;
+
+    // 6. spec fns
+
+    /// Well-formedness for parallel edge contraction algorithm input.
+    pub open spec fn spec_edgecontractionmteph_wf<V: StT + MtT + Hash>(graph: &UnDirGraphMtEph<V>) -> bool {
+        spec_graphview_wf(graph@)
+    }
+
+    // 8. traits
+
+    pub trait EdgeContractionMtEphTrait {
+        /// Parallel edge contraction algorithm.
+        /// APAS: Work O(|E|), Span O(lg |V|)
+        fn edge_contract_mt<V: StT + MtT + Hash + Ord + 'static>(
+            graph: &UnDirGraphMtEph<V>,
+            matching: &SetStEph<Edge<V>>,
+        ) -> UnDirGraphMtEph<V>
+            requires spec_edgecontractionmteph_wf(graph);
+
+        /// Single round of parallel edge contraction.
+        /// APAS: Work O(|V| + |E|), Span O(lg |V|)
+        fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(
+            graph: &UnDirGraphMtEph<V>,
+            seed: u64,
+        ) -> UnDirGraphMtEph<V>
+            requires spec_edgecontractionmteph_wf(graph);
+    }
+
     } // verus!
 
     /// Algorithm 61.6: Parallel Edge Contraction

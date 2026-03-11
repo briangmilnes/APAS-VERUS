@@ -25,32 +25,54 @@ pub mod BoruvkaMtEph {
     use crate::{ParaPair, SetLit};
 
     verus! {
-        /// Edge with label: (u, v, weight, label). Vertices u,v change during contraction.
-        pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
 
-        impl<V: Copy> Copy for LabeledEdge<V> {}
+    // 4. type definitions
 
-        impl<V: Copy> Clone for LabeledEdge<V> {
-            fn clone(&self) -> (s: Self)
-                ensures s@ == self@
-            {
-                *self
-            }
+    /// Namespace struct for trait impl.
+    pub struct BoruvkaMtEph;
+
+    /// Edge with label: (u, v, weight, label). Vertices u,v change during contraction.
+    pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
+
+    impl<V: Copy> Copy for LabeledEdge<V> {}
+
+    impl<V: Copy> Clone for LabeledEdge<V> {
+        fn clone(&self) -> (s: Self)
+            ensures s@ == self@
+        {
+            *self
         }
+    }
 
-        impl<V: PartialEq + Copy> PartialEq for LabeledEdge<V> {
-            fn eq(&self, other: &Self) -> (r: bool)
-                ensures r == (self@ == other@)
-            {
-                let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
-                proof { accept(r == (self@ == other@)); }
-                r
-            }
+    impl<V: PartialEq + Copy> PartialEq for LabeledEdge<V> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
+            proof { accept(r == (self@ == other@)); }
+            r
         }
+    }
 
-        impl<V: Eq + Copy> Eq for LabeledEdge<V> {}
+    impl<V: Eq + Copy> Eq for LabeledEdge<V> {}
 
-        pub trait BoruvkaMtEphTrait {
+    // 6. spec fns
+
+    /// All edge weights are finite.
+    pub open spec fn spec_all_weights_finite<V: View<V = V> + Copy>(edges: Set<LabeledEdge<V>>) -> bool {
+        forall|e: LabeledEdge<V>| edges.contains(e) ==> e.2.spec_is_finite()
+    }
+
+    /// Well-formedness for parallel Borůvka MST algorithm input.
+    pub open spec fn spec_boruvkamteph_wf<V: View<V = V> + Copy>(
+        edges: Set<LabeledEdge<V>>,
+    ) -> bool {
+        spec_all_weights_finite(edges)
+    }
+
+    // 8. traits
+
+    pub trait BoruvkaMtEphTrait {
             /// Find vertex bridges for parallel Borůvka's algorithm.
             /// APAS: Work O(|E|), Span O(lg |E|)
             fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
@@ -84,7 +106,8 @@ pub mod BoruvkaMtEph {
                 vertices: &SetStEph<V>,
                 edges: &SetStEph<LabeledEdge<V>>,
                 seed: u64,
-            ) -> SetStEph<usize>;
+            ) -> SetStEph<usize>
+                requires spec_boruvkamteph_wf(edges@);
 
             /// Compute total weight of MST.
             /// APAS: Work O(m), Span O(1)
@@ -94,11 +117,14 @@ pub mod BoruvkaMtEph {
             ) -> WrappedF64;
         }
 
-        impl<V: StTInMtT + Ord + 'static> View for LabeledEdge<V> {
-            type V = Self;
-            open spec fn view(&self) -> Self { *self }
-        }
+    // 5. view impls
+
+    impl<V: StTInMtT + Ord + 'static> View for LabeledEdge<V> {
+        type V = Self;
+        open spec fn view(&self) -> Self { *self }
     }
+
+    } // verus!
 
     #[cfg(not(verus_keep_ghost))]
     impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> PartialOrd for LabeledEdge<V> {

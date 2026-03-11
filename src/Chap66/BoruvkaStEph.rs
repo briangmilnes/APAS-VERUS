@@ -98,6 +98,13 @@ pub mod BoruvkaStEph {
         forall|e: LabeledEdge<V>| edges.contains(e) ==> e.2.spec_is_finite()
     }
 
+    /// Well-formedness for sequential Borůvka MST algorithm input.
+    pub open spec fn spec_boruvkasteph_wf<V: View<V = V> + Copy>(
+        edges: Set<LabeledEdge<V>>,
+    ) -> bool {
+        spec_all_weights_finite(edges)
+    }
+
     //		8. traits
 
     pub trait BoruvkaStEphTrait {
@@ -131,7 +138,8 @@ pub mod BoruvkaStEph {
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: SetStEph<usize>,
             rng: &mut StdRng,
-        ) -> (mst: SetStEph<usize>);
+        ) -> (mst: SetStEph<usize>)
+            requires spec_boruvkasteph_wf(edges@);
 
         /// Borůvka's MST with random seed.
         /// APAS: Work O(m log n), Span O(m log n)
@@ -139,7 +147,8 @@ pub mod BoruvkaStEph {
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
             seed: u64,
-        ) -> (mst: SetStEph<usize>);
+        ) -> (mst: SetStEph<usize>)
+            requires spec_boruvkasteph_wf(edges@);
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
