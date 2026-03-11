@@ -1,89 +1,89 @@
 ❌ BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:66: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:66: external_body - #[verifier::external_body]
         67 |         open spec fn view(&self) -> Set<T::V> {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:447: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:447: external_body - #[verifier::external_body]
        448 |         fn new() -> (tree: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:458: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:458: external_body - #[verifier::external_body]
        459 |         fn expose(&self) -> (exposed: Exposed<T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:468: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:468: external_body - #[verifier::external_body]
        469 |         fn expose_with_priority(&self) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>) {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:480: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:480: external_body - #[verifier::external_body]
        481 |         fn join_mid(exposed: Exposed<T>) -> (tree: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:493: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:493: external_body - #[verifier::external_body]
        494 |         fn size(&self) -> (count: usize) { tree_size(self) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:498: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:498: external_body - #[verifier::external_body]
        499 |         fn is_empty(&self) -> (empty: bool) { self.size() == 0 }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:503: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:503: external_body - #[verifier::external_body]
        504 |         fn insert(&self, key: T) {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:517: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:517: external_body - #[verifier::external_body]
        518 |         fn delete(&self, key: &T) {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:530: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:530: external_body - #[verifier::external_body]
        531 |         fn find(&self, key: &T) -> (found: Option<T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:544: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:544: external_body - #[verifier::external_body]
        545 |         fn split(&self, key: &T) -> (parts: (Self, bool, Self)) { split_inner(self, key) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:549: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:549: external_body - #[verifier::external_body]
        550 |         fn join_pair(&self, other: Self) -> (joined: Self) { join_pair_inner(self.clone(), other) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:554: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:554: external_body - #[verifier::external_body]
        555 |         fn union(&self, other: &Self) -> (combined: Self) { union_inner(self, other) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:559: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:559: external_body - #[verifier::external_body]
        560 |         fn intersect(&self, other: &Self) -> (common: Self) { intersect_inner(self, other) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:564: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:564: external_body - #[verifier::external_body]
        565 |         fn difference(&self, other: &Self) -> (diff: Self) { difference_inner(self, other) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:569: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:569: external_body - #[verifier::external_body]
        570 |         fn filter<F: Pred<T>>(&self, predicate: F) -> (filtered: Self) { filter_parallel(self, predicate) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:574: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:574: external_body - #[verifier::external_body]
        575 |         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:584: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:584: external_body - #[verifier::external_body]
        585 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
    Holes: 18 total
       18 × external_body
 ❌ BSTSetTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:127: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTSetTreapMtEph.rs:127: external_body - #[verifier::external_body]
        128 |     fn minimum_inner<T: MtKey + 'static>(tree: &ParamTreap<T>) -> (min: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:143: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTSetTreapMtEph.rs:143: external_body - #[verifier::external_body]
        144 |     fn maximum_inner<T: MtKey + 'static>(tree: &ParamTreap<T>) -> (max: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:168: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTSetTreapMtEph.rs:168: external_body - #[verifier::external_body]
        169 |         fn singleton(value: T) -> (set: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:181: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTSetTreapMtEph.rs:181: external_body - #[verifier::external_body]
        182 |         fn contains(&self, value: &T) -> (found: bool) { self.find(value).is_some() }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:184: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTSetTreapMtEph.rs:184: external_body - #[verifier::external_body]
        185 |         fn minimum(&self) -> (min: Option<T>) { minimum_inner(&self.tree) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:187: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTSetTreapMtEph.rs:187: external_body - #[verifier::external_body]
        188 |         fn maximum(&self) -> (max: Option<T>) { maximum_inner(&self.tree) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:190: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTSetTreapMtEph.rs:190: external_body - #[verifier::external_body]
        191 |         fn insert(&mut self, value: T) { self.tree.insert(value); }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:193: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTSetTreapMtEph.rs:193: external_body - #[verifier::external_body]
        194 |         fn delete(&mut self, target: &T) { self.tree.delete(target); }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:217: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTSetTreapMtEph.rs:217: external_body - #[verifier::external_body]
        218 |         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:237: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTSetTreapMtEph.rs:237: external_body - #[verifier::external_body]
        238 |         fn as_tree(&self) -> (tree: &ParamTreap<T>) { &self.tree }
    Holes: 10 total
       10 × external_body
 ❌ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:71: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:71: external_body - #[verifier::external_body]
         72 |         pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:933: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:933: external_body - #[verifier::external_body]
        934 |         fn new() -> (empty_tree: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:942: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:942: external_body - #[verifier::external_body]
        943 |         fn insert(&self, value: T, priority: u64)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:954: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:954: external_body - #[verifier::external_body]
        955 |         fn delete(&self, target: &T)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:963: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:963: external_body - #[verifier::external_body]
        964 |         fn find(&self, target: &T) -> (found: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:979: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:979: external_body - #[verifier::external_body]
        980 |         fn size(&self) -> (count: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1003: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1003: external_body - #[verifier::external_body]
       1004 |         fn minimum(&self) -> (min_val: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1013: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1013: external_body - #[verifier::external_body]
       1014 |         fn maximum(&self) -> (max_val: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1023: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1023: external_body - #[verifier::external_body]
       1024 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1034: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1034: external_body - #[verifier::external_body]
       1035 |         fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:309: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:322: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1064: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:309: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:322: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1064: info: accept() - accept hole
    Holes: 10 total
       10 × external_body
    Info: 3 total
@@ -111,6 +111,6 @@ Info: 3 total
    BSTTreapMtEph.rs:309: info: accept() - accept hole
    BSTTreapMtEph.rs:322: info: accept() - accept hole
    BSTTreapMtEph.rs:1064: info: accept() - accept hole
-ole
+ccept hole
    BSTTreapMtEph.rs:322: info: accept() - accept hole
    BSTTreapMtEph.rs:1064: info: accept() - accept hole

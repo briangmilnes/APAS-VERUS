@@ -1,16 +1,18 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
-//! Ephemeral splay-style (simple BST) structure with interior locking for multi-threaded access.
+//! Ephemeral splay-style binary search tree with coarse RwLock for multi-threaded access.
+//! Layer 1 (verified algorithms on Link/Node) in sections 6/9.
+//! Layer 2 (locked wrapper with ghost shadow) in section 11.
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 4. type definitions
-// 6. spec fns
-// 8. traits
-// 9. impls
-// 12. macros
-// 13. derive impls outside verus!
+//  Table of Contents
+//  1. module
+//  2. imports
+//  4. type definitions
+//  6. spec fns
+//  9. impls
+//  11. top level coarse locking
+//  13. macros
+//  14. derive impls outside verus!
 
 // 1. module
 
@@ -28,7 +30,7 @@ pub mod BSTSplayMtEph {
 
     // 2. imports
 
-    use crate::vstdplus::arc_rwlock::arc_rwlock::new_arc_rwlock;
+    // (Arc kept for filter_parallel/reduce_parallel closure sharing.)
 
     // 4. type definitions
 
@@ -43,16 +45,6 @@ pub mod BSTSplayMtEph {
 
     type Link<T> = Option<Box<Node<T>>>;
 
-    pub struct BSTSplayMtEphInv;
-
-    #[verifier::reject_recursive_types(T)]
-    #[derive(Clone)]
-    pub struct BSTSplayMtEph<T: StTInMtT + Ord> {
-        root: Arc<RwLock<Link<T>, BSTSplayMtEphInv>>,
-    }
-
-    pub type BSTreeSplay<T> = BSTSplayMtEph<T>;
-
     // 6. spec fns
 
     /// Structural node count for splay tree links.
@@ -65,55 +57,35 @@ pub mod BSTSplayMtEph {
         }
     }
 
-
-    // 8. traits
-
-    pub trait BSTSplayMtEphTrait<T: StTInMtT + Ord>: Sized {
-        spec fn spec_bstsplaymteph_wf(&self) -> bool;
-
-        fn new() -> (tree: Self)
-            ensures tree.spec_bstsplaymteph_wf();
-        fn from_sorted_slice(values: &[T]) -> (tree: Self)
-            ensures tree.spec_bstsplaymteph_wf();
-        fn insert(&self, value: T)
-            requires self.spec_bstsplaymteph_wf(),
-            ensures true;
-        fn find(&self, target: &T) -> (found: Option<T>)
-            ensures true;
-        fn contains(&self, target: &T) -> (found: B)
-            ensures true;
-        fn size(&self) -> (n: N)
-            ensures true;
-        fn is_empty(&self) -> (b: B)
-            ensures true;
-        fn height(&self) -> (h: N)
-            ensures true;
-        fn minimum(&self) -> (min: Option<T>)
-            ensures true;
-        fn maximum(&self) -> (max: Option<T>)
-            ensures true;
-        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
-            ensures true;
-        fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
-            ensures true;
-        fn filter<F>(&self, predicate: F) -> (seq: ArraySeqStPerS<T>)
-        where
-            F: Fn(&T) -> bool + Send + Sync
-            ensures true;
-        fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
-        where
-            F: Fn(T, T) -> T + Send + Sync
-            ensures true;
+    /// Spec-level containment for splay tree links.
+    pub open spec fn link_contains<T: StTInMtT + Ord>(link: Link<T>, target: T) -> bool
+        decreases link,
+    {
+        match link {
+            None => false,
+            Some(node) => node.key == target
+                || link_contains(node.left, target)
+                || link_contains(node.right, target),
+        }
     }
 
+    /// Spec-level height for splay tree links.
+    pub open spec fn link_height<T: StTInMtT + Ord>(link: Link<T>) -> nat
+        decreases link,
+    {
+        match link {
+            None => 0nat,
+            Some(node) => {
+                let lh = link_height(node.left);
+                let rh = link_height(node.right);
+                1 + if lh > rh { lh } else { rh }
+            }
+        }
+    }
 
     // 9. impls
 
-    impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTSplayMtEphInv {
-        open spec fn inv(self, v: Link<T>) -> bool {
-            link_spec_size(v) <= usize::MAX
-        }
-    }
+    // Verified splay tree algorithms (Layer 1).
 
     fn new_node<T: StTInMtT + Ord>(key: T) -> Node<T> {
         Node {
@@ -500,24 +472,167 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    // 11. top level coarse locking
+
+    /// Lock predicate: link size fits in usize.
+    pub struct BSTSplayMtEphInv;
+
+    impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTSplayMtEphInv {
+        open spec fn inv(self, v: Link<T>) -> bool {
+            link_spec_size(v) <= usize::MAX
+        }
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSplayMtEph<T: StTInMtT + Ord> {
+        pub(crate) root: RwLock<Link<T>, BSTSplayMtEphInv>,
+        pub(crate) ghost_root: Ghost<Link<T>>,
+    }
+
+    pub type BSTreeSplay<T> = BSTSplayMtEph<T>;
+
+    impl<T: StTInMtT + Ord> BSTSplayMtEph<T> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            link_spec_size(self.ghost_root@) <= usize::MAX
+        }
+
+        pub closed spec fn spec_ghost_root(self) -> Link<T> {
+            self.ghost_root@
+        }
+    }
+
+    impl<T: StTInMtT + Ord> View for BSTSplayMtEph<T> {
+        type V = Link<T>;
+        open spec fn view(&self) -> Link<T> { self.spec_ghost_root() }
+    }
+
+    pub trait BSTSplayMtEphTrait<T: StTInMtT + Ord>: Sized + View<V = Link<T>> {
+        spec fn spec_bstsplaymteph_wf(&self) -> bool;
+
+        fn new() -> (tree: Self)
+            ensures tree.spec_bstsplaymteph_wf(),
+                    tree@ is None;
+
+        fn from_sorted_slice(values: &[T]) -> (tree: Self)
+            ensures tree.spec_bstsplaymteph_wf();
+
+        fn insert(&mut self, value: T) -> (r: Result<(), ()>)
+            requires old(self).spec_bstsplaymteph_wf(),
+            ensures self.spec_bstsplaymteph_wf(),
+                    match r {
+                        Ok(_) => link_spec_size(self@) <= link_spec_size(old(self)@) + 1,
+                        Err(_) => self@ == old(self)@,
+                    };
+
+        fn contains(&self, target: &T) -> (found: B)
+            requires self.spec_bstsplaymteph_wf(),
+            ensures found == link_contains(self@, *target);
+
+        fn size(&self) -> (n: N)
+            requires self.spec_bstsplaymteph_wf(),
+            ensures n as nat == link_spec_size(self@);
+
+        fn is_empty(&self) -> (b: B)
+            requires self.spec_bstsplaymteph_wf(),
+            ensures b == (self@ is None);
+
+        fn height(&self) -> (h: N)
+            requires self.spec_bstsplaymteph_wf(),
+            ensures h as nat == link_height(self@);
+
+        fn find(&self, target: &T) -> (found: Option<T>)
+            ensures true;
+        fn minimum(&self) -> (min: Option<T>)
+            ensures true;
+        fn maximum(&self) -> (max: Option<T>)
+            ensures true;
+        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
+            ensures true;
+        fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
+            ensures true;
+        fn filter<F>(&self, predicate: F) -> (seq: ArraySeqStPerS<T>)
+        where
+            F: Fn(&T) -> bool + Send + Sync
+            ensures true;
+        fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
+        where
+            F: Fn(T, T) -> T + Send + Sync
+            ensures true;
+    }
+
     impl<T: StTInMtT + Ord> BSTSplayMtEphTrait<T> for BSTSplayMtEph<T> {
-        open spec fn spec_bstsplaymteph_wf(&self) -> bool { true }
+        open spec fn spec_bstsplaymteph_wf(&self) -> bool {
+            link_spec_size(self@) <= usize::MAX
+        }
 
         fn new() -> Self {
             BSTSplayMtEph {
-                root: new_arc_rwlock(None, Ghost(BSTSplayMtEphInv)),
+                root: RwLock::new(None, Ghost(BSTSplayMtEphInv)),
+                ghost_root: Ghost(None),
             }
         }
 
-        fn insert(&self, value: T) {
+        fn from_sorted_slice(values: &[T]) -> Self {
+            let link = build_balanced(values);
+            let ghost ghost_link = link;
+            BSTSplayMtEph {
+                root: RwLock::new(link, Ghost(BSTSplayMtEphInv)),
+                ghost_root: Ghost(ghost_link),
+            }
+        }
+
+        // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
+        fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
             let (mut current, write_handle) = self.root.acquire_write();
+            proof { assume(self.ghost_root@ == current); }
             let sz = compute_link_spec_size(&current);
             if sz < usize::MAX {
                 insert_link(&mut current, value);
+                let ghost new_root = current;
+                self.ghost_root = Ghost(new_root);
                 write_handle.release_write(current);
+                Ok(())
             } else {
                 write_handle.release_write(current);
+                Err(())
             }
+        }
+
+        // Reader: assume return value matches ghost.
+        fn contains(&self, target: &T) -> (found: B) {
+            let handle = self.root.acquire_read();
+            let found = find_link(handle.borrow(), target).is_some();
+            proof { assume(found == link_contains(self@, *target)); }
+            handle.release_read();
+            found
+        }
+
+        // Reader: assume return value matches ghost.
+        fn size(&self) -> (n: N) {
+            let handle = self.root.acquire_read();
+            let n = size_link(handle.borrow());
+            proof { assume(n as nat == link_spec_size(self@)); }
+            handle.release_read();
+            n
+        }
+
+        // Predicate: assume return predicate matches spec predicate.
+        fn is_empty(&self) -> (b: B) {
+            let handle = self.root.acquire_read();
+            let b = handle.borrow().is_none();
+            proof { assume(b == (self@ is None)); }
+            handle.release_read();
+            b
+        }
+
+        // Reader: assume return value matches ghost.
+        fn height(&self) -> (h: N) {
+            let handle = self.root.acquire_read();
+            let h = height_rec(handle.borrow());
+            proof { assume(h as nat == link_height(self@)); }
+            handle.release_read();
+            h
         }
 
         fn find(&self, target: &T) -> Option<T> {
@@ -525,24 +640,6 @@ pub mod BSTSplayMtEph {
             let found = find_link(handle.borrow(), target).cloned();
             handle.release_read();
             found
-        }
-
-        fn contains(&self, target: &T) -> B { self.find(target).is_some() }
-
-        fn size(&self) -> N {
-            let handle = self.root.acquire_read();
-            let n = size_link(handle.borrow());
-            handle.release_read();
-            n
-        }
-
-        fn is_empty(&self) -> B { self.size() == 0 }
-
-        fn height(&self) -> N {
-            let handle = self.root.acquire_read();
-            let h = height_rec(handle.borrow());
-            handle.release_read();
-            h
         }
 
         fn minimum(&self) -> Option<T> {
@@ -571,13 +668,6 @@ pub mod BSTSplayMtEph {
             let out = pre_order_parallel(handle.borrow());
             handle.release_read();
             ArraySeqStPerS::from_vec(out)
-        }
-
-        fn from_sorted_slice(values: &[T]) -> Self {
-            let link = build_balanced(values);
-            BSTSplayMtEph {
-                root: new_arc_rwlock(link, Ghost(BSTSplayMtEphInv)),
-            }
         }
 
         fn filter<F>(&self, predicate: F) -> ArraySeqStPerS<T>
@@ -609,7 +699,21 @@ pub mod BSTSplayMtEph {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    // 13. macros
+
+    #[macro_export]
+    macro_rules! BSTSplayMtEphLit {
+        () => {
+            < $crate::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEph<_> >::new()
+        };
+        ( $( $x:expr ),* $(,)? ) => {{
+            let mut __tree = < $crate::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEph<_> >::new();
+            $( let _ = __tree.insert($x); )*
+            __tree
+        }};
+    }
+
+    // 14. derive impls outside verus!
 
     impl<T: StTInMtT + Ord> std::fmt::Debug for Node<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -648,19 +752,5 @@ pub mod BSTSplayMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "BSTSplayMtEph(size={})", self.size())
         }
-    }
-
-    // 12. macros
-
-    #[macro_export]
-    macro_rules! BSTSplayMtEphLit {
-        () => {
-            < $crate::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEph<_> as $crate::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait<_> >::new()
-        };
-        ( $( $x:expr ),* $(,)? ) => {{
-            let __tree = < $crate::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEph<_> as $crate::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait<_> >::new();
-            $( __tree.insert($x); )*
-            __tree
-        }};
     }
 }

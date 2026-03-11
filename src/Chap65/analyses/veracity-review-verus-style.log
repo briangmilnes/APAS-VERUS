@@ -1,80 +1,80 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS/src/Chap65/
-Codebase: /home/milnes/projects/APAS-VERUS
+Path: /home/milnes/projects/APAS-VERUS-agent2/src/Chap65/
+Codebase: /home/milnes/projects/APAS-VERUS-agent2
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS/src/Chap65/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/src/Chap65/analyses/veracity-review-verus-style.log
 
 Checking 3 files...
 
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [13] no non-derive trait impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:48: warning: [12] trait KruskalStEphTrait fn mst_weight should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:27: warning: [14] struct KruskalStEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:27: warning: [14] struct KruskalStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:38: warning: [20] trait KruskalStEphTrait is defined but has no impl
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:32: warning: [22] free spec fn spec_kruskalsteph_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:48: warning: [12] trait KruskalStEphTrait fn mst_weight should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:27: warning: [14] struct KruskalStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:27: warning: [14] struct KruskalStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:38: warning: [20] trait KruskalStEphTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:32: warning: [22] free spec fn spec_kruskalsteph_wf should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [14] Display, Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:73: warning: [12] trait PrimStEphTrait fn mst_weight should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:36: warning: [14] struct PrimStEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:36: warning: [14] struct PrimStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:90: warning: [15] impl Ord should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:97: warning: [15] impl PartialOrd should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:62: warning: [20] trait PrimStEphTrait is defined but has no impl
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:56: warning: [22] free spec fn spec_primsteph_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:73: warning: [12] trait PrimStEphTrait fn mst_weight should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:36: warning: [14] struct PrimStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:36: warning: [14] struct PrimStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:90: warning: [15] impl Ord should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:97: warning: [15] impl PartialOrd should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:62: warning: [20] trait PrimStEphTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:56: warning: [22] free spec fn spec_primsteph_wf should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [18] verus! block empty (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: warning: [24] copyright text present but wrong format; got `// Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:1: warning: [24] copyright text present but wrong format; got `// Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 ════════════════════════════════════════════════════════════════
 Summary: 49 passed, 13 warnings in 3 files (checked 3 files)

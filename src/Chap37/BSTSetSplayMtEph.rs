@@ -1,5 +1,19 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Set interface built atop the Splay multi-threaded BST implementation.
+
+//  Table of Contents
+//	1. module
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	8. traits
+//	9. impls
+//	10. iterators
+//	13. macros
+//	14. derive impls outside verus!
+
+//	1. module
 
 pub mod BSTSetSplayMtEph {
 
@@ -14,14 +28,13 @@ pub mod BSTSetSplayMtEph {
 
     verus! {
 
-    #[derive(Clone)]
+    //	4. type definitions
+
     pub struct BSTSetSplayMtEph<T: StTInMtT + Ord> {
         tree: BSTSplayMtEph<T>,
     }
 
     pub type BSTSetSplayMt<T> = BSTSetSplayMtEph<T>;
-
-    // 4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTSetSplayMtEphIter<T: StTInMtT + Ord> {
@@ -55,6 +68,8 @@ pub mod BSTSetSplayMtEph {
         0 <= it@.0 <= it@.1.len()
     }
 
+    //	8. traits
+
     pub trait BSTSetSplayMtEphTrait<T: StTInMtT + Ord>: Sized {
         spec fn spec_bstsetsplaymteph_wf(&self) -> bool;
 
@@ -80,7 +95,7 @@ pub mod BSTSetSplayMtEph {
         fn maximum(&self) -> (max: Option<T>)
             requires self.spec_bstsetsplaymteph_wf()
             ensures true;
-        fn insert(&mut self, value: T)
+        fn insert(&mut self, value: T) -> (r: Result<(), ()>)
             requires old(self).spec_bstsetsplaymteph_wf()
             ensures self.spec_bstsetsplaymteph_wf();
         fn delete(&mut self, target: &T)
@@ -121,16 +136,33 @@ pub mod BSTSetSplayMtEph {
             ensures it@.0 == 0, bstsetsplaymteph_iter_invariant(&it);
     }
 
+    //	9. impls
+
     fn values_vec<T: StTInMtT + Ord>(tree: &BSTSplayMtEph<T>) -> Vec<T> {
         tree.in_order().iter().cloned().collect()
     }
 
-    fn from_sorted_iter<T: StTInMtT + Ord, I: IntoIterator<Item = T>>(values: I) -> BSTSetSplayMtEph<T> {
-        let tree = BSTSplayMtEph::new();
+    fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> BSTSplayMtEph<T> {
+        let mut tree = BSTSplayMtEph::new();
         for value in values {
-            tree.insert(value);
+            let _ = tree.insert(value);
+        }
+        tree
+    }
+
+    fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> BSTSetSplayMtEph<T>
+    where
+        I: IntoIterator<Item = T>,
+    {
+        let mut tree = BSTSplayMtEph::new();
+        for value in values {
+            let _ = tree.insert(value);
         }
         BSTSetSplayMtEph { tree }
+    }
+
+    fn copy_set<T: StTInMtT + Ord>(set: &BSTSetSplayMtEph<T>) -> BSTSetSplayMtEph<T> {
+        from_sorted_iter(values_vec(&set.tree))
     }
 
     impl<T: StTInMtT + Ord> BSTSetSplayMtEphTrait<T> for BSTSetSplayMtEph<T> {
@@ -145,8 +177,8 @@ pub mod BSTSetSplayMtEph {
         }
 
         fn singleton(value: T) -> Self {
-            let tree = BSTSplayMtEph::new();
-            tree.insert(value);
+            let mut tree = BSTSplayMtEph::new();
+            let _ = tree.insert(value);
             Self { tree }
         }
 
@@ -162,7 +194,7 @@ pub mod BSTSetSplayMtEph {
 
         fn maximum(&self) -> Option<T> { self.tree.maximum() }
 
-        fn insert(&mut self, value: T) { self.tree.insert(value); }
+        fn insert(&mut self, value: T) -> (r: Result<(), ()>) { self.tree.insert(value) }
 
         fn delete(&mut self, target: &T) {
             if !self.contains(target) {
@@ -175,40 +207,32 @@ pub mod BSTSetSplayMtEph {
                 .filter(|x| x != target)
                 .cloned()
                 .collect();
-            self.tree = BSTSplayMtEph::from_sorted_slice(&filtered);
+            self.tree = rebuild_from_vec(filtered);
         }
 
         fn union(&self, other: &Self) -> Self {
-            // Algorithm: Parallel divide-and-conquer using split/join primitives
-            // Work: O(m log(n/m)), Span: O(log n × log m)
-            
-            // Base cases
             if self.is_empty() {
-                return other.clone();
+                return copy_set(other);
             }
             if other.is_empty() {
-                return self.clone();
+                return copy_set(self);
             }
-            
-            // Pick pivot from smaller tree for better balance
+
             let pivot = if self.size() <= other.size() {
                 self.tree.minimum().unwrap()
             } else {
                 other.tree.minimum().unwrap()
             };
-            
-            // Split both trees at pivot
+
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
-            
-            // Parallel recursive union on left and right subtrees
+
             use crate::Types::Types::Pair;
             let Pair(left_union, right_union) = crate::ParaPair!(
                 move || self_left.union(&other_left),
                 move || self_right.union(&other_right)
             );
-            
-            // Join results: include pivot if found in either tree
+
             if found_self || found_other {
                 Self::join_m(left_union, pivot, right_union)
             } else {
@@ -217,33 +241,25 @@ pub mod BSTSetSplayMtEph {
         }
 
         fn intersection(&self, other: &Self) -> Self {
-            // Algorithm: Parallel divide-and-conquer using split/join primitives
-            // Work: O(m log(n/m)), Span: O(log n × log m)
-            
-            // Base cases
             if self.is_empty() || other.is_empty() {
                 return Self::empty();
             }
-            
-            // Pick pivot from smaller tree
+
             let pivot = if self.size() <= other.size() {
                 self.tree.minimum().unwrap()
             } else {
                 other.tree.minimum().unwrap()
             };
-            
-            // Split both trees at pivot
+
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
-            
-            // Parallel recursive intersection on left and right subtrees
+
             use crate::Types::Types::Pair;
             let Pair(left_inter, right_inter) = crate::ParaPair!(
                 move || self_left.intersection(&other_left),
                 move || self_right.intersection(&other_right)
             );
-            
-            // Join results: include pivot only if found in BOTH trees
+
             if found_self && found_other {
                 Self::join_m(left_inter, pivot, right_inter)
             } else {
@@ -252,32 +268,24 @@ pub mod BSTSetSplayMtEph {
         }
 
         fn difference(&self, other: &Self) -> Self {
-            // Algorithm: Parallel divide-and-conquer using split/join primitives
-            // Work: O(m log(n/m)), Span: O(log n × log m)
-            
-            // Base cases
             if self.is_empty() {
                 return Self::empty();
             }
             if other.is_empty() {
-                return self.clone();
+                return copy_set(self);
             }
-            
-            // Pick pivot from self (the set we're subtracting from)
+
             let pivot = self.tree.minimum().unwrap();
-            
-            // Split both trees at pivot
+
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
-            
-            // Parallel recursive difference on left and right subtrees
+
             use crate::Types::Types::Pair;
             let Pair(left_diff, right_diff) = crate::ParaPair!(
                 move || self_left.difference(&other_left),
                 move || self_right.difference(&other_right)
             );
-            
-            // Join results: include pivot only if found in self but NOT in other
+
             if found_self && !found_other {
                 Self::join_m(left_diff, pivot, right_diff)
             } else {
@@ -302,14 +310,12 @@ pub mod BSTSetSplayMtEph {
         }
 
         fn join_pair(left: Self, right: Self) -> Self {
-            // Parallel extraction of values from both trees
             use crate::Types::Types::Pair;
             let Pair(left_values, right_values) = crate::ParaPair!(
                 move || values_vec(&left.tree),
                 move || values_vec(&right.tree)
             );
-            
-            // Merge into BTreeSet and rebuild
+
             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
             for value in right_values {
                 combined.insert(value);
@@ -318,14 +324,12 @@ pub mod BSTSetSplayMtEph {
         }
 
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-            // Parallel extraction of values from both trees
             use crate::Types::Types::Pair;
             let Pair(left_values, right_values) = crate::ParaPair!(
                 move || values_vec(&left.tree),
                 move || values_vec(&right.tree)
             );
-            
-            // Merge into BTreeSet with pivot and rebuild
+
             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
             combined.insert(pivot);
             for value in right_values {
@@ -335,8 +339,6 @@ pub mod BSTSetSplayMtEph {
         }
 
         fn filter<F: FnMut(&T) -> bool + Send>(&self, mut predicate: F) -> Self {
-            // Sequential implementation due to FnMut constraint
-            // Parallel implementation would require Fn + Sync which is incompatible with FnMut API
             let filtered = self
                 .tree
                 .in_order()
@@ -346,8 +348,6 @@ pub mod BSTSetSplayMtEph {
         }
 
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, mut op: F, base: T) -> T {
-            // Sequential implementation due to FnMut constraint
-            // Parallel implementation would require Fn + Sync which is incompatible with FnMut API
             self.tree
                 .in_order()
                 .iter()
@@ -462,7 +462,23 @@ pub mod BSTSetSplayMtEph {
         }
     }
 
+    } // verus!
+
+    //	13. macros
+
+    #[macro_export]
+    macro_rules! BSTSetSplayMtEphLit {
+        () => {
+            < $crate::Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEph<_> as $crate::Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait<_> >::empty()
+        };
+        ( $( $x:expr ),* $(,)? ) => {{
+            let mut __set = < $crate::Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEph<_> as $crate::Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait<_> >::empty();
+            $( let _ = __set.insert($x); )*
+            __set
+        }};
     }
+
+    //	14. derive impls outside verus!
 
     impl<T: StTInMtT + Ord + fmt::Debug> fmt::Debug for BSTSetSplayMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -498,18 +514,6 @@ pub mod BSTSetSplayMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "BSTSetSplayMtEphGhostIter")
         }
-    }
-
-    #[macro_export]
-    macro_rules! BSTSetSplayMtEphLit {
-        () => {
-            < $crate::Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEph<_> as $crate::Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait<_> >::empty()
-        };
-        ( $( $x:expr ),* $(,)? ) => {{
-            let mut __set = < $crate::Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEph<_> as $crate::Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait<_> >::empty();
-            $( __set.insert($x); )*
-            __set
-        }};
     }
 }
 

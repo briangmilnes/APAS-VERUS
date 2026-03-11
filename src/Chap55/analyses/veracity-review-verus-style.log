@@ -1,211 +1,211 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS/src/Chap55/
-Codebase: /home/milnes/projects/APAS-VERUS
+Path: /home/milnes/projects/APAS-VERUS-agent2/src/Chap55/
+Codebase: /home/milnes/projects/APAS-VERUS-agent2
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS/src/Chap55/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/src/Chap55/analyses/veracity-review-verus-style.log
 
 Checking 8 files...
 
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:25: warning: [14] struct CycleDetectStEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:25: warning: [14] struct CycleDetectStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:25: warning: [14] struct CycleDetectStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:25: warning: [14] struct CycleDetectStEph should have impl Display outside verus!
 
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:26: warning: [14] struct CycleDetectStPer should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:26: warning: [14] struct CycleDetectStPer should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:31: warning: [22] free spec fn spec_cycledetectstper_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:26: warning: [14] struct CycleDetectStPer should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:26: warning: [14] struct CycleDetectStPer should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:31: warning: [22] free spec fn spec_cycledetectstper_wf should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:26: warning: [14] struct DFSStEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:26: warning: [14] struct DFSStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:26: warning: [14] struct DFSStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:26: warning: [14] struct DFSStEph should have impl Display outside verus!
 
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:27: warning: [14] struct DFSStPer should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:27: warning: [14] struct DFSStPer should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:27: warning: [14] struct DFSStPer should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:27: warning: [14] struct DFSStPer should have impl Display outside verus!
 
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:30: warning: [14] struct SCCStEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:30: warning: [14] struct SCCStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:30: warning: [14] struct SCCStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:30: warning: [14] struct SCCStEph should have impl Display outside verus!
 
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:28: warning: [14] struct SCCStPer should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:28: warning: [14] struct SCCStPer should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:28: warning: [14] struct SCCStPer should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:28: warning: [14] struct SCCStPer should have impl Display outside verus!
 
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:35: warning: [14] struct TopoSortStEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:35: warning: [14] struct TopoSortStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:40: warning: [22] free spec fn spec_num_false should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:49: warning: [22] free spec fn spec_toposortsteph_wf should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:56: warning: [22] free spec fn spec_has_edge should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:62: warning: [22] free spec fn spec_is_path should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:69: warning: [22] free spec fn spec_reachable should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:74: warning: [22] free spec fn spec_is_dag should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:79: warning: [22] free spec fn spec_is_topo_order should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:90: warning: [22] free spec fn spec_strongly_connected should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:96: warning: [22] free spec fn spec_is_scc should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:35: warning: [14] struct TopoSortStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:35: warning: [14] struct TopoSortStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:40: warning: [22] free spec fn spec_num_false should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:49: warning: [22] free spec fn spec_toposortsteph_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:56: warning: [22] free spec fn spec_has_edge should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:62: warning: [22] free spec fn spec_is_path should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:69: warning: [22] free spec fn spec_reachable should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:74: warning: [22] free spec fn spec_is_dag should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:79: warning: [22] free spec fn spec_is_topo_order should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:90: warning: [22] free spec fn spec_strongly_connected should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:96: warning: [22] free spec fn spec_is_scc should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:27: warning: [14] struct TopoSortStPer should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:27: warning: [14] struct TopoSortStPer should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:32: warning: [22] free spec fn spec_toposortstper_wf should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:39: warning: [22] free spec fn spec_has_edge_per should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:45: warning: [22] free spec fn spec_is_path_per should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:52: warning: [22] free spec fn spec_reachable_per should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:57: warning: [22] free spec fn spec_is_dag_per should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:62: warning: [22] free spec fn spec_is_topo_order_per should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:73: warning: [22] free spec fn spec_strongly_connected_per should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:79: warning: [22] free spec fn spec_is_scc_per should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:27: warning: [14] struct TopoSortStPer should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:27: warning: [14] struct TopoSortStPer should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:32: warning: [22] free spec fn spec_toposortstper_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:39: warning: [22] free spec fn spec_has_edge_per should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:45: warning: [22] free spec fn spec_is_path_per should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:52: warning: [22] free spec fn spec_reachable_per should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:57: warning: [22] free spec fn spec_is_dag_per should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:62: warning: [22] free spec fn spec_is_topo_order_per should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:73: warning: [22] free spec fn spec_strongly_connected_per should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:79: warning: [22] free spec fn spec_is_scc_per should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
 Summary: 149 passed, 34 warnings in 8 files (checked 8 files)

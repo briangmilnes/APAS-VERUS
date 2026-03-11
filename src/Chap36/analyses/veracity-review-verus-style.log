@@ -1,83 +1,83 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS/src/Chap36/
-Codebase: /home/milnes/projects/APAS-VERUS
+Path: /home/milnes/projects/APAS-VERUS-agent2/src/Chap36/
+Codebase: /home/milnes/projects/APAS-VERUS-agent2
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS/src/Chap36/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/src/Chap36/analyses/veracity-review-verus-style.log
 
 Checking 3 files...
 
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:44: warning: [22] free spec fn spec_leq should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEph.rs:49: warning: [22] free spec fn spec_median_of_three should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:44: warning: [22] free spec fn spec_leq should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:49: warning: [22] free spec fn spec_median_of_three should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:46: warning: [22] free spec fn spec_leq should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:51: warning: [22] free spec fn elements should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:56: warning: [22] free spec fn spec_median_of_three should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:46: warning: [23] free fn spec_leq param T has bounds `TotalOrder` but trait QuickSortMtEphSliceTrait has `TotalOrder + Eq + Clone`
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:51: warning: [23] free fn elements param T has bounds `Eq + Clone` but trait QuickSortMtEphSliceTrait has `TotalOrder + Eq + Clone`
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:56: warning: [23] free fn spec_median_of_three param T has bounds `TotalOrder` but trait QuickSortMtEphSliceTrait has `TotalOrder + Eq + Clone`
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:71: warning: [23] free fn lemma_total_ordering param T has bounds `TotalOrder` but trait QuickSortMtEphSliceTrait has `TotalOrder + Eq + Clone`
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:97: warning: [23] free fn lemma_partition_sort_concat param T has bounds `TotalOrder` but trait QuickSortMtEphSliceTrait has `TotalOrder + Eq + Clone`
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:46: warning: [22] free spec fn spec_leq should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:51: warning: [22] free spec fn elements should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:56: warning: [22] free spec fn spec_median_of_three should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:46: warning: [23] free fn spec_leq param T has bounds `TotalOrder` but trait QuickSortMtEphSliceTrait has `TotalOrder + Eq + Clone`
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:51: warning: [23] free fn elements param T has bounds `Eq + Clone` but trait QuickSortMtEphSliceTrait has `TotalOrder + Eq + Clone`
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:56: warning: [23] free fn spec_median_of_three param T has bounds `TotalOrder` but trait QuickSortMtEphSliceTrait has `TotalOrder + Eq + Clone`
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:71: warning: [23] free fn lemma_total_ordering param T has bounds `TotalOrder` but trait QuickSortMtEphSliceTrait has `TotalOrder + Eq + Clone`
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEphSlice.rs:97: warning: [23] free fn lemma_partition_sort_concat param T has bounds `TotalOrder` but trait QuickSortMtEphSliceTrait has `TotalOrder + Eq + Clone`
 
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:42: warning: [22] free spec fn spec_leq should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortStEph.rs:47: warning: [22] free spec fn spec_median_of_three should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:42: warning: [22] free spec fn spec_leq should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:47: warning: [22] free spec fn spec_median_of_three should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
 Summary: 53 passed, 12 warnings in 3 files (checked 3 files)

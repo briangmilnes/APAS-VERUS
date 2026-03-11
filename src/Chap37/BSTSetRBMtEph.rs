@@ -14,7 +14,6 @@ pub mod BSTSetRBMtEph {
 
     verus! {
 
-    #[derive(Clone)]
     pub struct BSTSetRBMtEph<T: StTInMtT + Ord> {
         tree: BSTRBMtEph<T>,
     }
@@ -80,7 +79,7 @@ pub mod BSTSetRBMtEph {
         fn maximum(&self) -> (max: Option<T>)
             requires self.spec_bstsetrbmteph_wf()
             ensures true;
-        fn insert(&mut self, value: T)
+        fn insert(&mut self, value: T) -> (r: Result<(), ()>)
             requires old(self).spec_bstsetrbmteph_wf()
             ensures self.spec_bstsetrbmteph_wf();
         fn delete(&mut self, target: &T)
@@ -124,10 +123,19 @@ pub mod BSTSetRBMtEph {
     fn values_vec<T: StTInMtT + Ord>(tree: &BSTRBMtEph<T>) -> Vec<T> {
         tree.in_order().iter().cloned().collect()
     }
+
+    fn copy_set<T: StTInMtT + Ord>(set: &BSTSetRBMtEph<T>) -> (out: BSTSetRBMtEph<T>)
+        requires set.spec_bstsetrbmteph_wf()
+        ensures out.spec_bstsetrbmteph_wf()
+    {
+        let values = values_vec(&set.tree);
+        from_sorted_iter(values)
+    }
+
     fn from_sorted_iter<T: StTInMtT + Ord, I: IntoIterator<Item = T>>(values: I) -> BSTSetRBMtEph<T> {
-        let tree = BSTRBMtEph::new();
+        let mut tree = BSTRBMtEph::new();
         for value in values {
-            tree.insert(value);
+            let _ = tree.insert(value);
         }
         BSTSetRBMtEph { tree }
     }
@@ -144,8 +152,8 @@ pub mod BSTSetRBMtEph {
         }
 
         fn singleton(value: T) -> Self {
-            let tree = BSTRBMtEph::new();
-            tree.insert(value);
+            let mut tree = BSTRBMtEph::new();
+            let _ = tree.insert(value);
             Self { tree }
         }
 
@@ -161,7 +169,7 @@ pub mod BSTSetRBMtEph {
 
         fn maximum(&self) -> Option<T> { self.tree.maximum() }
 
-        fn insert(&mut self, value: T) { self.tree.insert(value); }
+        fn insert(&mut self, value: T) -> (r: Result<(), ()>) { self.tree.insert(value) }
 
         fn delete(&mut self, target: &T) {
             if !self.contains(target) {
@@ -183,30 +191,30 @@ pub mod BSTSetRBMtEph {
             
             // Base cases
             if self.is_empty() {
-                return other.clone();
+                return copy_set(other);
             }
             if other.is_empty() {
-                return self.clone();
+                return copy_set(self);
             }
-            
+
             // Pick pivot from smaller tree for better balance
             let pivot = if self.size() <= other.size() {
                 self.tree.minimum().unwrap()
             } else {
                 other.tree.minimum().unwrap()
             };
-            
+
             // Split both trees at pivot
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
-            
+
             // Parallel recursive union on left and right subtrees
             use crate::Types::Types::Pair;
             let Pair(left_union, right_union) = crate::ParaPair!(
                 move || self_left.union(&other_left),
                 move || self_right.union(&other_right)
             );
-            
+
             // Join results: include pivot if found in either tree
             if found_self || found_other {
                 Self::join_m(left_union, pivot, right_union)
@@ -218,30 +226,30 @@ pub mod BSTSetRBMtEph {
         fn intersection(&self, other: &Self) -> Self {
             // Algorithm: Parallel divide-and-conquer using split/join primitives
             // Work: O(m log(n/m)), Span: O(log n × log m)
-            
+
             // Base cases
             if self.is_empty() || other.is_empty() {
                 return Self::empty();
             }
-            
+
             // Pick pivot from smaller tree
             let pivot = if self.size() <= other.size() {
                 self.tree.minimum().unwrap()
             } else {
                 other.tree.minimum().unwrap()
             };
-            
+
             // Split both trees at pivot
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
-            
+
             // Parallel recursive intersection on left and right subtrees
             use crate::Types::Types::Pair;
             let Pair(left_inter, right_inter) = crate::ParaPair!(
                 move || self_left.intersection(&other_left),
                 move || self_right.intersection(&other_right)
             );
-            
+
             // Join results: include pivot only if found in BOTH trees
             if found_self && found_other {
                 Self::join_m(left_inter, pivot, right_inter)
@@ -253,13 +261,13 @@ pub mod BSTSetRBMtEph {
         fn difference(&self, other: &Self) -> Self {
             // Algorithm: Parallel divide-and-conquer using split/join primitives
             // Work: O(m log(n/m)), Span: O(log n × log m)
-            
+
             // Base cases
             if self.is_empty() {
                 return Self::empty();
             }
             if other.is_empty() {
-                return self.clone();
+                return copy_set(self);
             }
             
             // Pick pivot from self (the set we're subtracting from)
@@ -506,7 +514,7 @@ pub mod BSTSetRBMtEph {
         };
         ( $( $x:expr ),* $(,)? ) => {{
             let mut __set = < $crate::Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEph<_> as $crate::Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait<_> >::empty();
-            $( __set.insert($x); )*
+            $( let _ = __set.insert($x); )*
             __set
         }};
     }

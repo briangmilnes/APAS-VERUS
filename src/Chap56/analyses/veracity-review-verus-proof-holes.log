@@ -3,31 +3,31 @@
 ✓ AllPairsResultStPerF64.rs
 ✓ AllPairsResultStPerI64.rs
 ❌ Example56_1.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:47: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/Example56_1.rs:47: external_body - #[verifier::external_body]
         48 |     fn example_path_weight_int() {
-/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:66: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/Example56_1.rs:66: external_body - #[verifier::external_body]
         67 |     fn example_path_weight_float() {
-/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:94: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/Example56_1.rs:94: external_body - #[verifier::external_body]
         95 |     fn example_negative_weights() {
    Holes: 3 total
       3 × external_body
 ❌ Example56_3.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:45: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/Example56_3.rs:45: external_body - #[verifier::external_body]
         46 |     fn example_negative_cycle() {
-/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:79: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/Example56_3.rs:79: external_body - #[verifier::external_body]
         80 |     fn example_undefined_shortest_path() {
    Holes: 2 total
       2 × external_body
 ✓ PathWeightUtilsStEph.rs
 ✓ PathWeightUtilsStPer.rs
 ❌ SSSPResultStEphF64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:153: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStEphF64.rs:153: external_body - #[verifier::external_body]
        154 |         fn is_reachable(&self, v: usize) -> (b: bool) {
    Holes: 1 total
       1 × external_body
 ✓ SSSPResultStEphI64.rs
 ❌ SSSPResultStPerF64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:181: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStPerF64.rs:181: external_body - #[verifier::external_body]
        182 |         fn is_reachable(&self, v: usize) -> (reachable: bool) {
    Holes: 1 total
       1 × external_body
@@ -49,9 +49,7 @@ Proof Functions:
 
 Holes Found: 7 total
    7 × external_body
-  12 total
-
-Proof Functions:
+oof Functions:
    0 clean
    0 holed
    0 total
