@@ -126,18 +126,21 @@ pub mod PrimTreeSeqStPer {
     }
 
     pub trait PrimTreeSeqStTrait<T>: Sized + PrimTreeSeqStSpec<T> + View<V = Seq<T>> {
+        spec fn spec_primtreeseqstper_wf(&self) -> bool;
 
         /// Creates an empty sequence.
         /// - APAS: Algorithm 23.3. Work Θ(1), Span Θ(1).
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn empty() -> (empty_seq: Self)
-            ensures empty_seq.spec_len() == 0;
+            ensures empty_seq.spec_primtreeseqstper_wf(),
+                    empty_seq.spec_len() == 0;
 
         /// Builds a sequence containing a single element.
         /// - APAS: Algorithm 23.3. Work Θ(1), Span Θ(1).
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn singleton(value: T) -> (single: Self)
             ensures
+                single.spec_primtreeseqstper_wf(),
                 single.spec_len() == 1,
                 single.spec_index(0) == value;
 
@@ -146,6 +149,7 @@ pub mod PrimTreeSeqStPer {
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps existing Vec.
         fn from_vec(vec: Vec<T>) -> (seq: Self)
             ensures
+                seq.spec_primtreeseqstper_wf(),
                 seq.spec_len() == vec@.len(),
                 forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < vec@.len() ==> seq.spec_index(i) == vec@[i];
 
@@ -153,13 +157,15 @@ pub mod PrimTreeSeqStPer {
         /// - APAS: Cost Spec 23.2. Work Θ(1), Span Θ(1).
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn length(&self) -> (len: usize)
+            requires self.spec_primtreeseqstper_wf(),
             ensures len == self.spec_len();
 
         /// Algorithm 23.3 (nth). Return a reference to the element at `index`.
         /// - APAS: Algorithm 23.3. Work Θ(log n), Span Θ(log n) — tree-based recursive.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec-backed direct index.
         fn nth(&self, index: usize) -> (nth_elem: &T)
-            requires index < self.spec_len()
+            requires self.spec_primtreeseqstper_wf(),
+                     index < self.spec_len(),
             ensures *nth_elem == self.spec_index(index as int);
 
         /// Exposes the internal structure as Zero, One, or Two parts.
@@ -168,6 +174,7 @@ pub mod PrimTreeSeqStPer {
         fn expose(&self) -> (tree: PrimTreeSeqStTree<T>)
             where T: Clone + Eq
             requires
+                self.spec_primtreeseqstper_wf(),
                 self.spec_len() <= usize::MAX,
                 obeys_feq_clone::<T>(),
             ensures
@@ -189,6 +196,7 @@ pub mod PrimTreeSeqStPer {
         /// - Claude-Opus-4.6: Work Θ(|L| + |R|), Span Θ(|L| + |R|) for Two; Θ(1) for Zero/One — Vec append.
         fn join(tree: PrimTreeSeqStTree<T>) -> (joined: Self)
             ensures
+                joined.spec_primtreeseqstper_wf(),
                 tree@ is Zero ==> joined@ =~= Seq::<T>::empty(),
                 tree@ is One ==> joined@ =~= seq![tree@->One_0],
                 tree@ is Two ==> joined@ =~= tree@->Two_0 + tree@->Two_1;
@@ -199,9 +207,12 @@ pub mod PrimTreeSeqStPer {
         fn append(a: &Self, b: &Self) -> (appended: Self)
             where T: Clone + Eq
             requires
+                a.spec_primtreeseqstper_wf(),
+                b.spec_primtreeseqstper_wf(),
                 obeys_feq_clone::<T>(),
                 a.spec_len() + b.spec_len() <= usize::MAX as nat,
             ensures
+                appended.spec_primtreeseqstper_wf(),
                 appended.spec_len() == a.spec_len() + b.spec_len(),
                 forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.spec_len() ==> appended.spec_index(i) == a.spec_index(i),
                 forall|i: int| #![trigger b.spec_index(i)] 0 <= i < b.spec_len() ==> appended.spec_index(a.spec_len() as int + i) == b.spec_index(i);
@@ -212,10 +223,12 @@ pub mod PrimTreeSeqStPer {
         fn subseq(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
+                self.spec_primtreeseqstper_wf(),
                 obeys_feq_clone::<T>(),
                 start + length <= usize::MAX,
                 start + length <= self.spec_len(),
             ensures
+                subseq.spec_primtreeseqstper_wf(),
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
@@ -225,9 +238,11 @@ pub mod PrimTreeSeqStPer {
         fn update(a: &Self, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
+                a.spec_primtreeseqstper_wf(),
                 obeys_feq_clone::<T>(),
                 index < a.spec_len(),
             ensures
+                updated.spec_primtreeseqstper_wf(),
                 updated.spec_len() == a.spec_len(),
                 updated.spec_index(index as int) == item,
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.spec_len() && i != index as int ==> updated.spec_index(i) == a.spec_index(i);
@@ -250,6 +265,7 @@ pub mod PrimTreeSeqStPer {
                 length <= usize::MAX,
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
             ensures
+                tab_seq.spec_primtreeseqstper_wf(),
                 tab_seq.spec_len() == length,
                 forall|i: int| #![trigger tab_seq.spec_index(i)] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.spec_index(i));
 
@@ -276,10 +292,12 @@ pub mod PrimTreeSeqStPer {
         fn drop(&self, n: usize) -> (dropped: Self)
             where T: Clone + Eq
             requires
+                self.spec_primtreeseqstper_wf(),
                 obeys_feq_clone::<T>(),
                 n <= self.spec_len(),
                 self.spec_len() <= usize::MAX,
             ensures
+                dropped.spec_primtreeseqstper_wf(),
                 dropped.spec_len() == self.spec_len() - n,
                 forall|i: int| #![trigger dropped.spec_index(i)] 0 <= i < dropped.spec_len() ==> dropped.spec_index(i) == self.spec_index(n as int + i);
 
@@ -297,12 +315,14 @@ pub mod PrimTreeSeqStPer {
         /// - APAS: N/A — utility method, not in prose.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn as_slice(&self) -> (slice: &[T])
+            requires self.spec_primtreeseqstper_wf(),
             ensures slice@ =~= self@;
 
         /// Unwraps into the inner Vec.
         /// - APAS: N/A — utility method, not in prose.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn into_vec(self) -> (vec: Vec<T>)
+            requires self.spec_primtreeseqstper_wf(),
             ensures vec@ =~= self@;
     }
 
@@ -336,6 +356,8 @@ pub mod PrimTreeSeqStPer {
     }
 
     impl<T> PrimTreeSeqStTrait<T> for PrimTreeSeqStS<T> {
+        open spec fn spec_primtreeseqstper_wf(&self) -> bool { true }
+
         fn empty() -> (empty_seq: Self)
         {
             PrimTreeSeqStS { seq: Vec::new() }

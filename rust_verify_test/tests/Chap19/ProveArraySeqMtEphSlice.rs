@@ -19,7 +19,7 @@ test_verify_one_file! {
 
         fn test_empty() {
             let e: ArraySeqMtEphSliceS<u64> = ArraySeqMtEphSliceS::empty();
-            assert(e.slice_wf());
+            assert(e.spec_arrayseqmtephslice_wf());
             assert(e.spec_len() == 0);
             let len = e.length();
             assert(len == 0);
@@ -27,7 +27,7 @@ test_verify_one_file! {
 
         fn test_singleton() {
             let s: ArraySeqMtEphSliceS<u64> = ArraySeqMtEphSliceS::singleton(7);
-            assert(s.slice_wf());
+            assert(s.spec_arrayseqmtephslice_wf());
             assert(s.spec_len() == 1);
             assert(s.spec_index(0) == 7u64);
             let len = s.length();
@@ -38,7 +38,7 @@ test_verify_one_file! {
 
         fn test_new() {
             let a: ArraySeqMtEphSliceS<u64> = ArraySeqMtEphSliceS::new(5, 42);
-            assert(a.slice_wf());
+            assert(a.spec_arrayseqmtephslice_wf());
             assert(a.spec_len() == 5);
             assert(a.spec_index(0) == 42u64);
             assert(a.spec_index(4) == 42u64);
@@ -55,7 +55,7 @@ test_verify_one_file! {
             v.push(30);
             let ghost v_view = v@;
             let fv: ArraySeqMtEphSliceS<u64> = ArraySeqMtEphSliceS::from_vec(v);
-            assert(fv.slice_wf());
+            assert(fv.spec_arrayseqmtephslice_wf());
             assert(fv.spec_len() == 3);
             assert(fv.spec_index(0) == v_view[0]);
             assert(fv.spec_index(1) == v_view[1]);
@@ -65,7 +65,7 @@ test_verify_one_file! {
         fn test_slice() {
             let a: ArraySeqMtEphSliceS<u64> = ArraySeqMtEphSliceS::new(5, 42);
             let sl = a.slice(1, 3);
-            assert(sl.slice_wf());
+            assert(sl.spec_arrayseqmtephslice_wf());
             assert(sl.spec_len() == 3);
             assert(sl.spec_index(0) == a.spec_index(1));
             assert(sl.spec_index(0) == 42u64);
@@ -79,7 +79,7 @@ test_verify_one_file! {
         fn test_subseq_copy() {
             let a: ArraySeqMtEphSliceS<u64> = ArraySeqMtEphSliceS::new(5, 42);
             let sub = a.subseq_copy(2, 2);
-            assert(sub.slice_wf());
+            assert(sub.spec_arrayseqmtephslice_wf());
             assert(sub.spec_len() == 2);
             assert(sub.spec_index(0) == a.spec_index(2));
             assert(sub.spec_index(0) == 42u64);

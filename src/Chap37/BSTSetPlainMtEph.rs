@@ -56,47 +56,68 @@ pub mod BSTSetPlainMtEph {
     }
 
     pub trait BSTSetPlainMtEphTrait<T: StTInMtT + Ord>: Sized {
+        spec fn spec_bstsetplainmteph_wf(&self) -> bool;
+
         fn empty() -> (set: Self)
-            ensures true;
+            ensures set.spec_bstsetplainmteph_wf();
         fn singleton(value: T) -> (set: Self)
-            ensures true;
+            ensures set.spec_bstsetplainmteph_wf();
         fn size(&self) -> (n: N)
+            requires self.spec_bstsetplainmteph_wf()
             ensures true;
         fn is_empty(&self) -> (b: B)
+            requires self.spec_bstsetplainmteph_wf()
             ensures true;
         fn find(&self, value: &T) -> (found: Option<T>)
+            requires self.spec_bstsetplainmteph_wf()
             ensures true;
         fn contains(&self, value: &T) -> (found: B)
+            requires self.spec_bstsetplainmteph_wf()
             ensures true;
         fn minimum(&self) -> (min: Option<T>)
+            requires self.spec_bstsetplainmteph_wf()
             ensures true;
         fn maximum(&self) -> (max: Option<T>)
+            requires self.spec_bstsetplainmteph_wf()
             ensures true;
         fn insert(&mut self, value: T)
-            ensures true;
+            requires old(self).spec_bstsetplainmteph_wf()
+            ensures self.spec_bstsetplainmteph_wf();
         fn delete(&mut self, target: &T)
-            ensures true;
+            requires old(self).spec_bstsetplainmteph_wf()
+            ensures self.spec_bstsetplainmteph_wf();
         fn union(&self, other: &Self) -> (combined: Self)
-            ensures true;
+            requires self.spec_bstsetplainmteph_wf(), other.spec_bstsetplainmteph_wf()
+            ensures combined.spec_bstsetplainmteph_wf();
         fn intersection(&self, other: &Self) -> (common: Self)
-            ensures true;
+            requires self.spec_bstsetplainmteph_wf(), other.spec_bstsetplainmteph_wf()
+            ensures common.spec_bstsetplainmteph_wf();
         fn difference(&self, other: &Self) -> (diff: Self)
-            ensures true;
+            requires self.spec_bstsetplainmteph_wf(), other.spec_bstsetplainmteph_wf()
+            ensures diff.spec_bstsetplainmteph_wf();
         fn split(&self, pivot: &T) -> (parts: (Self, B, Self))
-            ensures true;
+            requires self.spec_bstsetplainmteph_wf()
+            ensures parts.0.spec_bstsetplainmteph_wf(), parts.2.spec_bstsetplainmteph_wf();
         fn join_pair(left: Self, right: Self) -> (joined: Self)
-            ensures true;
+            requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf()
+            ensures joined.spec_bstsetplainmteph_wf();
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)
-            ensures true;
+            requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf()
+            ensures joined.spec_bstsetplainmteph_wf();
         fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)
-            ensures true;
+            requires self.spec_bstsetplainmteph_wf()
+            ensures filtered.spec_bstsetplainmteph_wf();
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> (reduced: T)
+            requires self.spec_bstsetplainmteph_wf()
             ensures true;
         fn iter_in_order(&self) -> (seq: ArraySeqStPerS<T>)
+            requires self.spec_bstsetplainmteph_wf()
             ensures true;
         fn as_tree(&self) -> (tree: &BSTPlainMtEph<T>)
+            requires self.spec_bstsetplainmteph_wf()
             ensures true;
         fn iter(&self) -> (it: BSTSetPlainMtEphIter<T>)
+            requires self.spec_bstsetplainmteph_wf()
             ensures it@.0 == 0, bstsetplainmteph_iter_invariant(&it);
     }
 
@@ -115,6 +136,10 @@ pub mod BSTSetPlainMtEph {
     }
 
     impl<T: StTInMtT + Ord> BSTSetPlainMtEphTrait<T> for BSTSetPlainMtEph<T> {
+        open spec fn spec_bstsetplainmteph_wf(&self) -> bool {
+            self.tree.spec_bstplainmteph_wf()
+        }
+
         fn empty() -> Self {
             Self {
                 tree: BSTPlainMtEph::new(),
@@ -390,6 +415,7 @@ pub mod BSTSetPlainMtEph {
         type Item = T;
         type IntoIter = BSTSetPlainMtEphIter<T>;
         fn into_iter(self) -> (it: BSTSetPlainMtEphIter<T>)
+            requires self.spec_bstsetplainmteph_wf()
             ensures it@.0 == 0, bstsetplainmteph_iter_invariant(&it),
         {
             self.iter()

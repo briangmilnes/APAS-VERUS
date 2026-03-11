@@ -91,6 +91,8 @@ pub mod LinkedListStEph {
 
     /// Base trait for single-threaded ephemeral linked list sequences (Chapter 18).
     pub trait LinkedListStEphBaseTrait<T>: Sized {
+        spec fn spec_linkedliststeph_wf(&self) -> bool;
+
         spec fn spec_len(&self) -> nat;
         spec fn spec_index(&self, i: int) -> T
             recommends i < self.spec_len();
@@ -103,6 +105,7 @@ pub mod LinkedListStEph {
                 obeys_feq_clone::<T>(),
                 length <= usize::MAX,
             ensures
+                new_seq.spec_linkedliststeph_wf(),
                 new_seq.spec_len() == length as int,
                 forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
@@ -135,6 +138,7 @@ pub mod LinkedListStEph {
                 start + length <= usize::MAX,
                 start + length <= self.spec_len(),
             ensures
+                subseq.spec_linkedliststeph_wf(),
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
@@ -142,6 +146,7 @@ pub mod LinkedListStEph {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
+                seq.spec_linkedliststeph_wf(),
                 seq.spec_len() == elts@.len(),
                 forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
     }
@@ -152,12 +157,13 @@ pub mod LinkedListStEph {
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn empty() -> (empty_seq: Self)
-            ensures empty_seq.spec_len() == 0;
+            ensures empty_seq.spec_linkedliststeph_wf(), empty_seq.spec_len() == 0;
 
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn singleton(item: T) -> (singleton: Self)
             ensures
+                singleton.spec_linkedliststeph_wf(),
                 singleton.spec_len() == 1,
                 singleton.spec_index(0) == item;
 
@@ -188,6 +194,7 @@ pub mod LinkedListStEph {
                 obeys_feq_clone::<T>(),
                 a.seq@.len() + b.seq@.len() <= usize::MAX as int,
             ensures
+                appended.spec_linkedliststeph_wf(),
                 appended.spec_len() == a.seq@.len() + b.seq@.len(),
                 forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],
                 forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
@@ -204,6 +211,7 @@ pub mod LinkedListStEph {
                 // The biconditional bridge ties the exec closure to the spec predicate.
                 forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
             ensures
+                filtered.spec_linkedliststeph_wf(),
                 filtered.spec_len() <= a.seq@.len(),
                 filtered.spec_len() == spec_filter_len(
                     Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
@@ -229,6 +237,7 @@ pub mod LinkedListStEph {
                 obeys_feq_clone::<T>(),
                 index < a.seq@.len(),
             ensures
+                updated.spec_linkedliststeph_wf(),
                 updated.spec_len() == a.seq@.len(),
                 updated.spec_index(index as int) == item,
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
@@ -285,6 +294,8 @@ pub mod LinkedListStEph {
     //		9. impl BaseTrait for Struct
 
     impl<T> LinkedListStEphBaseTrait<T> for LinkedListStEphS<T> {
+        open spec fn spec_linkedliststeph_wf(&self) -> bool { true }
+
         open spec fn spec_len(&self) -> nat {
             self.seq@.len()
         }

@@ -86,7 +86,7 @@ pub mod BalBinTreeStEph {
 
 
     // spec_size, spec_height, spec_in_order, spec_pre_order, spec_post_order
-    // are defined in impl BalBinTreeTrait for BalBinTree below.
+    // are defined in impl BalBinTree (section 9); trait impl delegates to them.
 
     //		7. proof fns/broadcast groups
 
@@ -181,6 +181,7 @@ pub mod BalBinTreeStEph {
     //		8. traits
 
     pub trait BalBinTreeTrait<T>: Sized {
+        spec fn spec_balbintreesteph_wf(&self) -> bool;
         spec fn spec_size(self) -> nat;
         spec fn spec_height(self) -> nat;
         spec fn spec_in_order(self) -> Seq<T>;
@@ -191,7 +192,8 @@ pub mod BalBinTreeStEph {
         /// - APAS: Work Θ(1), Span Θ(1).
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn leaf() -> (l: Self)
-            ensures l.spec_size() == 0,
+            ensures l.spec_balbintreesteph_wf(),
+                    l.spec_size() == 0,
                     l.spec_height() == 0,
                     l.spec_in_order() == Seq::<T>::empty(),
                     l.spec_pre_order() == Seq::<T>::empty(),
@@ -200,7 +202,8 @@ pub mod BalBinTreeStEph {
         /// - APAS: Work Θ(1), Span Θ(1).
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn node(left: Self, value: T, right: Self) -> (n: Self)
-            ensures n.spec_size() == 1 + left.spec_size() + right.spec_size(),
+            ensures n.spec_balbintreesteph_wf(),
+                    n.spec_size() == 1 + left.spec_size() + right.spec_size(),
                     n.spec_height() == 1 + if left.spec_height() >= right.spec_height()
                                             { left.spec_height() } else { right.spec_height() },
                     n.spec_in_order() == left.spec_in_order() + seq![value] + right.spec_in_order(),
@@ -210,18 +213,21 @@ pub mod BalBinTreeStEph {
         /// - APAS: Work Θ(1), Span Θ(1).
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_leaf(&self) -> (b: bool)
+            requires self.spec_balbintreesteph_wf(),
             ensures b == (self.spec_size() == 0);
 
         /// - APAS: Work Θ(n), Span Θ(n).
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal, no stored size.
         fn size(&self) -> (count: usize)
-            requires self.spec_size() <= usize::MAX,
+            requires self.spec_balbintreesteph_wf(),
+                     self.spec_size() <= usize::MAX,
             ensures count == self.spec_size();
 
         /// - APAS: Work Θ(n), Span Θ(n).
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal.
         fn height(&self) -> (h: usize)
-            requires self.spec_height() <= usize::MAX,
+            requires self.spec_balbintreesteph_wf(),
+                     self.spec_height() <= usize::MAX,
             ensures h == self.spec_height();
 
         /// In-order traversal: left, root, right.
@@ -229,7 +235,8 @@ pub mod BalBinTreeStEph {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal with Vec building.
         fn in_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
-            requires self.spec_size() <= usize::MAX,
+            requires self.spec_balbintreesteph_wf(),
+                     self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
             ensures traversal@ =~= self.spec_in_order();
 
@@ -238,7 +245,8 @@ pub mod BalBinTreeStEph {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal with Vec building.
         fn pre_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
-            requires self.spec_size() <= usize::MAX,
+            requires self.spec_balbintreesteph_wf(),
+                     self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
             ensures traversal@ =~= self.spec_pre_order();
 
@@ -247,7 +255,8 @@ pub mod BalBinTreeStEph {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal with Vec building.
         fn post_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
-            requires self.spec_size() <= usize::MAX,
+            requires self.spec_balbintreesteph_wf(),
+                     self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
             ensures traversal@ =~= self.spec_post_order();
     }
@@ -256,8 +265,9 @@ pub mod BalBinTreeStEph {
     //		9. impls
 
     // Inherent impl: recursive spec fn bodies with `decreases self`.
-    // Verus cannot unfold `open spec fn` through trait dispatch, so these
-    // must live here; the trait impl delegates to them with one-liners.
+    // Verus cannot unfold `open spec fn` through trait dispatch when the
+    // caller is an exec method in the same impl, so these must live here;
+    // the trait impl delegates to them with one-liners.
     // Exception: bare_impl allowed per trait-impl-pattern (recursive-spec-fn).
     impl<T> BalBinTree<T> {
         pub open spec fn spec_size(self) -> nat
@@ -315,6 +325,7 @@ pub mod BalBinTreeStEph {
 
     // Trait impl: delegates recursive specs to inherent methods.
     impl<T> BalBinTreeTrait<T> for BalBinTree<T> {
+        open spec fn spec_balbintreesteph_wf(&self) -> bool { true }
         open spec fn spec_size(self) -> nat { BalBinTree::spec_size(self) }
         open spec fn spec_height(self) -> nat { BalBinTree::spec_height(self) }
         open spec fn spec_in_order(self) -> Seq<T> { BalBinTree::spec_in_order(self) }

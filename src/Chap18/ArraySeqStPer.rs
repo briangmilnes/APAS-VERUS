@@ -103,6 +103,8 @@ pub mod ArraySeqStPer {
     /// - Base trait for single-threaded persistent array sequences (Chapter 18).
     /// - These methods are never redefined in later chapters.
     pub trait ArraySeqStPerBaseTrait<T>: Sized {
+        spec fn spec_arrayseqstper_wf(&self) -> bool;
+
         spec fn spec_len(&self) -> nat;
         spec fn spec_index(&self, i: int) -> T
             recommends i < self.spec_len();
@@ -116,6 +118,7 @@ pub mod ArraySeqStPer {
                 obeys_feq_clone::<T>(),
                 length <= usize::MAX,
             ensures
+                new_seq.spec_arrayseqstper_wf(),
                 new_seq.spec_len() == length as int,
                 forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
@@ -142,6 +145,7 @@ pub mod ArraySeqStPer {
                 start + length <= usize::MAX,
                 start + length <= self.spec_len(),
             ensures
+                subseq.spec_arrayseqstper_wf(),
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
@@ -155,6 +159,7 @@ pub mod ArraySeqStPer {
                 start + length <= usize::MAX,
                 start + length <= a.spec_len(),
             ensures
+                subseq.spec_arrayseqstper_wf(),
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
@@ -163,6 +168,7 @@ pub mod ArraySeqStPer {
         /// - Claude-Opus-4.6: Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
+                seq.spec_arrayseqstper_wf(),
                 seq.spec_len() == elts@.len(),
                 forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
     }
@@ -174,13 +180,14 @@ pub mod ArraySeqStPer {
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn empty() -> (empty_seq: Self)
-            ensures empty_seq.spec_len() == 0;
+            ensures empty_seq.spec_arrayseqstper_wf(), empty_seq.spec_len() == 0;
 
         /// - Definition 18.1 (singleton). Construct a singleton sequence containing `item`.
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn singleton(item: T) -> (singleton: Self)
             ensures
+                singleton.spec_arrayseqstper_wf(),
                 singleton.spec_len() == 1,
                 singleton.spec_index(0) == item;
 
@@ -193,6 +200,7 @@ pub mod ArraySeqStPer {
                 obeys_feq_clone::<T>(),
                 a.seq@.len() + b.seq@.len() <= usize::MAX as int,
             ensures
+                appended.spec_arrayseqstper_wf(),
                 appended.spec_len() == a.seq@.len() + b.seq@.len(),
                 forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],
                 forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
@@ -210,6 +218,7 @@ pub mod ArraySeqStPer {
                 // The biconditional bridge ties the exec closure to the spec predicate.
                 forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
             ensures
+                filtered.spec_arrayseqstper_wf(),
                 filtered.spec_len() <= a.seq@.len(),
                 filtered.spec_len() == spec_filter_len(
                     Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
@@ -227,6 +236,7 @@ pub mod ArraySeqStPer {
                 obeys_feq_clone::<T>(),
                 index < a.seq@.len(),
             ensures
+                updated.spec_arrayseqstper_wf(),
                 updated.spec_len() == a.seq@.len(),
                 updated.spec_index(index as int) == item,
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
@@ -240,6 +250,7 @@ pub mod ArraySeqStPer {
             requires
                 obeys_feq_clone::<T>(),
             ensures
+                injected.spec_arrayseqstper_wf(),
                 injected.spec_len() == a.spec_len(),
                 Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
                     =~= spec_inject(
@@ -334,6 +345,8 @@ pub mod ArraySeqStPer {
     //		9. impl BaseTrait for Struct
 
     impl<T> ArraySeqStPerBaseTrait<T> for ArraySeqStPerS<T> {
+        open spec fn spec_arrayseqstper_wf(&self) -> bool { true }
+
         open spec fn spec_len(&self) -> nat {
             self.seq@.len()
         }

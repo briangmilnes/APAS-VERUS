@@ -186,7 +186,7 @@ pub mod QuickSortMtEphSlice {
     /// Prove elements(from_vec(v)) =~= v@.
     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
         requires
-            a.slice_wf(),
+            a.spec_arrayseqmtephslice_wf(),
             a.spec_len() == v.len(),
             forall|i: int| #![trigger a.spec_index(i)]
                 0 <= i < v.len() ==> a.spec_index(i) == v[i],
@@ -208,11 +208,11 @@ pub mod QuickSortMtEphSlice {
         /// - Claude-Opus-4.6: Agrees.
         fn quick_sort_first(a: &mut ArraySeqMtEphSliceS<T>)
             requires
-                old(a).slice_wf(),
+                old(a).spec_arrayseqmtephslice_wf(),
                 old(a).spec_len() <= usize::MAX,
                 obeys_feq_clone::<T>(),
             ensures
-                a.slice_wf(),
+                a.spec_arrayseqmtephslice_wf(),
                 elements(*a) =~= elements(*old(a)).sort_by(spec_leq::<T>()),
                 a.spec_len() == old(a).spec_len(),
             decreases old(a).spec_len();
@@ -222,11 +222,11 @@ pub mod QuickSortMtEphSlice {
         /// - Claude-Opus-4.6: Agrees.
         fn quick_sort_median3(a: &mut ArraySeqMtEphSliceS<T>)
             requires
-                old(a).slice_wf(),
+                old(a).spec_arrayseqmtephslice_wf(),
                 old(a).spec_len() <= usize::MAX,
                 obeys_feq_clone::<T>(),
             ensures
-                a.slice_wf(),
+                a.spec_arrayseqmtephslice_wf(),
                 elements(*a) =~= elements(*old(a)).sort_by(spec_leq::<T>()),
                 a.spec_len() == old(a).spec_len(),
             decreases old(a).spec_len();
@@ -236,11 +236,11 @@ pub mod QuickSortMtEphSlice {
         /// - Claude-Opus-4.6: Agrees.
         fn quick_sort_random(a: &mut ArraySeqMtEphSliceS<T>)
             requires
-                old(a).slice_wf(),
+                old(a).spec_arrayseqmtephslice_wf(),
                 old(a).spec_len() <= usize::MAX,
                 obeys_feq_clone::<T>(),
             ensures
-                a.slice_wf(),
+                a.spec_arrayseqmtephslice_wf(),
                 elements(*a) =~= elements(*old(a)).sort_by(spec_leq::<T>()),
                 a.spec_len() == old(a).spec_len(),
             decreases old(a).spec_len();
@@ -255,7 +255,7 @@ pub mod QuickSortMtEphSlice {
         fn median3_pivot_idx(a: &ArraySeqMtEphSliceS<T>, n: usize) -> (idx: usize)
             requires
                 n >= 2, n == a.spec_len(),
-                a.slice_wf(),
+                a.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
             ensures
                 idx < n,
@@ -464,7 +464,7 @@ pub mod QuickSortMtEphSlice {
             while i < n
                 invariant
                     0 <= i <= n, n == a.spec_len() as usize, n <= usize::MAX, n >= 2,
-                    a.slice_wf(),
+                    a.spec_arrayseqmtephslice_wf(),
                     obeys_feq_clone::<T>(),
                     pivot_idx < n, pivot == s[pivot_idx as int], s == elements(*a),
                     leq == spec_leq::<T>(),
@@ -597,7 +597,7 @@ pub mod QuickSortMtEphSlice {
             while i < n
                 invariant
                     0 <= i <= n, n == a.spec_len() as usize, n <= usize::MAX, n >= 2,
-                    a.slice_wf(),
+                    a.spec_arrayseqmtephslice_wf(),
                     obeys_feq_clone::<T>(),
                     pivot_idx < n, pivot == s[pivot_idx as int], s == elements(*a),
                     leq == spec_leq::<T>(),
@@ -730,7 +730,7 @@ pub mod QuickSortMtEphSlice {
             while i < n
                 invariant
                     0 <= i <= n, n == a.spec_len() as usize, n <= usize::MAX, n >= 2,
-                    a.slice_wf(),
+                    a.spec_arrayseqmtephslice_wf(),
                     obeys_feq_clone::<T>(),
                     pivot_idx < n, pivot == s[pivot_idx as int], s == elements(*a),
                     leq == spec_leq::<T>(),

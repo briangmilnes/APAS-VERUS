@@ -91,37 +91,51 @@ pub mod BSTSplayStEph {
         spec fn spec_size(self) -> nat;
         spec fn spec_height(self) -> nat;
         spec fn spec_contains(self, value: T) -> bool;
+        spec fn spec_bstsplaysteph_wf(&self) -> bool;
 
         fn new() -> (tree: Self)
         where
             Self: Sized,
             ensures
+                tree.spec_bstsplaysteph_wf(),
                 tree.spec_size() == 0,
                 forall|x: T| !tree.spec_contains(x);
         fn size(&self) -> (n: N)
+            requires self.spec_bstsplaysteph_wf(),
             ensures n as nat == self.spec_size();
         fn is_empty(&self) -> (b: B)
+            requires self.spec_bstsplaysteph_wf(),
             ensures b == (self.spec_size() == 0);
         fn height(&self) -> (h: N)
-            requires self.spec_height() < usize::MAX as nat,
+            requires
+                self.spec_bstsplaysteph_wf(),
+                self.spec_height() < usize::MAX as nat,
             ensures h as nat == self.spec_height();
         fn insert(&mut self, value: T)
-            ensures true;
+            requires old(self).spec_bstsplaysteph_wf(),
+            ensures
+                self.spec_bstsplaysteph_wf();
         fn find(&self, target: &T) -> (found: Option<&T>)
+            requires self.spec_bstsplaysteph_wf(),
             ensures found.is_some() ==> *found.unwrap() == *target;
         fn contains(&self, target: &T) -> (found: B)
+            requires self.spec_bstsplaysteph_wf(),
             ensures true;
         fn minimum(&self) -> (min: Option<&T>)
+            requires self.spec_bstsplaysteph_wf(),
             ensures
                 self.spec_size() > 0 ==> min.is_some(),
                 min.is_some() ==> self.spec_contains(*min.unwrap());
         fn maximum(&self) -> (max: Option<&T>)
+            requires self.spec_bstsplaysteph_wf(),
             ensures
                 self.spec_size() > 0 ==> max.is_some(),
                 max.is_some() ==> self.spec_contains(*max.unwrap());
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
+            requires self.spec_bstsplaysteph_wf(),
             ensures true;
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
+            requires self.spec_bstsplaysteph_wf(),
             ensures true;
     }
 
@@ -411,6 +425,7 @@ pub mod BSTSplayStEph {
         open spec fn spec_size(self) -> nat { spec_size_link(&self.root) }
         open spec fn spec_height(self) -> nat { spec_height_link(&self.root) }
         open spec fn spec_contains(self, value: T) -> bool { spec_contains_link(&self.root, value) }
+        open spec fn spec_bstsplaysteph_wf(&self) -> bool { true }
 
         fn new() -> (tree: Self) { BSTSplayStEph { root: None } }
 

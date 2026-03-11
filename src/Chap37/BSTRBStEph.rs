@@ -101,31 +101,45 @@ pub mod BSTRBStEph {
 
     pub trait BSTRBStEphTrait<T: TotalOrder>: Sized {
         spec fn spec_root(self) -> BalBinTree<T>;
+        spec fn spec_bstrbsteph_wf(&self) -> bool;
 
         fn new() -> (tree: Self)
             ensures
+                tree.spec_bstrbsteph_wf(),
                 tree.spec_root().tree_is_bst(),
                 forall|x: T| !tree.spec_root().tree_contains(x);
         fn size(&self) -> (n: usize)
-            requires self.spec_root().spec_size() <= usize::MAX,
+            requires
+                self.spec_bstrbsteph_wf(),
+                self.spec_root().spec_size() <= usize::MAX,
             ensures n == self.spec_root().spec_size();
         fn is_empty(&self) -> (b: bool)
+            requires self.spec_bstrbsteph_wf(),
             ensures b == (self.spec_root().spec_size() == 0);
         fn height(&self) -> (h: usize)
-            requires self.spec_root().spec_height() <= usize::MAX,
+            requires
+                self.spec_bstrbsteph_wf(),
+                self.spec_root().spec_height() <= usize::MAX,
             ensures h == self.spec_root().spec_height();
         fn insert(self, value: T) -> (inserted: Self)
-            requires self.spec_root().tree_is_bst(),
+            requires
+                self.spec_bstrbsteph_wf(),
+                self.spec_root().tree_is_bst(),
             ensures
+                inserted.spec_bstrbsteph_wf(),
                 inserted.spec_root().tree_is_bst(),
                 inserted.spec_root().tree_contains(value),
                 forall|x: T| #![auto] inserted.spec_root().tree_contains(x) <==>
                     (self.spec_root().tree_contains(x) || x == value);
         fn contains(&self, target: &T) -> (found: bool)
-            requires self.spec_root().tree_is_bst(),
+            requires
+                self.spec_bstrbsteph_wf(),
+                self.spec_root().tree_is_bst(),
             ensures found == self.spec_root().tree_contains(*target);
         fn find(&self, target: &T) -> (found: Option<&T>)
-            requires self.spec_root().tree_is_bst(),
+            requires
+                self.spec_bstrbsteph_wf(),
+                self.spec_root().tree_is_bst(),
             ensures
                 found.is_some() == self.spec_root().tree_contains(*target),
                 found.is_some() ==> *found.unwrap() == *target;
@@ -568,6 +582,7 @@ pub mod BSTRBStEph {
 
     impl<T: TotalOrder> BSTRBStEphTrait<T> for BSTRBStEph<T> {
         open spec fn spec_root(self) -> BalBinTree<T> { self.root }
+        open spec fn spec_bstrbsteph_wf(&self) -> bool { self.spec_root().tree_is_bst() }
 
         fn new() -> (tree: Self) {
             BSTRBStEph { root: BalBinTree::Leaf }

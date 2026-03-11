@@ -102,6 +102,8 @@ pub mod ArraySeqStEph {
     /// - Base trait for single-threaded ephemeral array sequences (Chapter 18).
     /// - These methods are never redefined in later chapters.
     pub trait ArraySeqStEphBaseTrait<T>: Sized {
+        spec fn spec_arrayseqsteph_wf(&self) -> bool;
+
         spec fn spec_len(&self) -> nat;
 
         spec fn spec_index(&self, i: int) -> T
@@ -116,6 +118,7 @@ pub mod ArraySeqStEph {
                 obeys_feq_clone::<T>(),
                 length <= usize::MAX,
             ensures
+                new_seq.spec_arrayseqsteph_wf(),
                 new_seq.spec_len() == length as int,
                 forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
@@ -152,6 +155,7 @@ pub mod ArraySeqStEph {
                 start + length <= usize::MAX,
                 start + length <= self.spec_len(),
             ensures
+                subseq.spec_arrayseqsteph_wf(),
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
@@ -165,6 +169,7 @@ pub mod ArraySeqStEph {
                 start + length <= usize::MAX,
                 start + length <= a.spec_len(),
             ensures
+                subseq.spec_arrayseqsteph_wf(),
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
@@ -173,6 +178,7 @@ pub mod ArraySeqStEph {
         /// - Claude-Opus-4.6: Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
+                seq.spec_arrayseqsteph_wf(),
                 seq.spec_len() == elts@.len(),
                 forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
     }
@@ -184,13 +190,14 @@ pub mod ArraySeqStEph {
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn empty() -> (empty_seq: Self)
-            ensures empty_seq.spec_len() == 0;
+            ensures empty_seq.spec_arrayseqsteph_wf(), empty_seq.spec_len() == 0;
 
         /// - Definition 18.1 (singleton). Construct a singleton sequence containing `item`.
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn singleton(item: T) -> (singleton: Self)
             ensures
+                singleton.spec_arrayseqsteph_wf(),
                 singleton.spec_len() == 1,
                 singleton.spec_index(0) == item;
 
@@ -344,6 +351,10 @@ pub mod ArraySeqStEph {
     //		9. impl BaseTrait for Struct
 
     impl<T> ArraySeqStEphBaseTrait<T> for ArraySeqStEphS<T> {
+        open spec fn spec_arrayseqsteph_wf(&self) -> bool {
+            true
+        }
+
         open spec fn spec_len(&self) -> nat {
             self.seq@.len()
         }
