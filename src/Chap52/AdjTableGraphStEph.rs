@@ -82,40 +82,75 @@ broadcast use {
     // 8. traits
 
     pub trait AdjTableGraphStEphTrait<V: StT + Ord>: Sized {
+        spec fn spec_adjtablegraphsteph_wf(&self) -> bool;
         spec fn spec_adj(&self) -> Map<<V as View>::V, Set<<V as View>::V>>;
         spec fn spec_num_edges(&self) -> nat;
 
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                                                     -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn from_table(table: OrderedTableStEph<V, AVLTreeSetStEph<V>>) -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn num_vertices(&self)                                         -> N;
-        /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V| + |E|), Parallelism Θ(1)
+        /// Work Theta(1), Span Theta(1)
+        fn empty() -> (out: Self)
+            ensures out.spec_adjtablegraphsteph_wf();
+        /// Work Theta(1), Span Theta(1)
+        fn from_table(table: OrderedTableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self)
+            requires
+                forall|u: <V as View>::V, v: <V as View>::V|
+                    table@.dom().contains(u)
+                    && #[trigger] table@.index(u).contains(v)
+                    ==> table@.dom().contains(v),
+            ensures out.spec_adjtablegraphsteph_wf();
+        /// Work Theta(1), Span Theta(1)
+        fn num_vertices(&self) -> N
+            requires self.spec_adjtablegraphsteph_wf();
+        /// Work Theta(|V| + |E|), Span Theta(|V| + |E|)
         fn num_edges(&self) -> (m: N)
-            requires self.spec_num_edges() <= usize::MAX as nat
+            requires self.spec_adjtablegraphsteph_wf(), self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges();
-        /// claude-4-sonet: Work Θ(|V|), Span Θ(|V|), Parallelism Θ(1)
-        fn vertices(&self)                                             -> AVLTreeSetStEph<V>;
-        /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
-        fn has_edge(&self, u: &V, v: &V)                               -> B;
-        /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
-        fn out_neighbors(&self, u: &V)                                 -> AVLTreeSetStEph<V>;
-        /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
-        fn out_degree(&self, u: &V)                                    -> N;
-        /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
-        fn insert_vertex(&mut self, v: V);
-        /// claude-4-sonet: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|), Parallelism Θ(1)
-        fn delete_vertex(&mut self, v: &V);
-        /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
-        fn insert_edge(&mut self, u: V, v: V);
-        /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
-        fn delete_edge(&mut self, u: &V, v: &V);
+        /// Work Theta(|V|), Span Theta(|V|)
+        fn vertices(&self) -> AVLTreeSetStEph<V>
+            requires self.spec_adjtablegraphsteph_wf();
+        /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
+        fn has_edge(&self, u: &V, v: &V) -> B
+            requires self.spec_adjtablegraphsteph_wf();
+        /// Work Theta(log |V|), Span Theta(log |V|)
+        fn out_neighbors(&self, u: &V) -> AVLTreeSetStEph<V>
+            requires self.spec_adjtablegraphsteph_wf();
+        /// Work Theta(log |V|), Span Theta(log |V|)
+        fn out_degree(&self, u: &V) -> N
+            requires self.spec_adjtablegraphsteph_wf();
+        /// Work Theta(log |V|), Span Theta(log |V|)
+        fn insert_vertex(&mut self, v: V)
+            requires old(self).spec_adjtablegraphsteph_wf()
+            ensures self.spec_adjtablegraphsteph_wf(), self.spec_adj().dom().contains(v@);
+        /// Work Theta((|V| + |E|) log |V|), Span Theta((|V| + |E|) log |V|)
+        fn delete_vertex(&mut self, v: &V)
+            requires old(self).spec_adjtablegraphsteph_wf()
+            ensures self.spec_adjtablegraphsteph_wf(), !self.spec_adj().dom().contains(v@);
+        /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
+        fn insert_edge(&mut self, u: V, v: V)
+            requires old(self).spec_adjtablegraphsteph_wf()
+            ensures
+                self.spec_adjtablegraphsteph_wf(),
+                self.spec_adj().dom().contains(u@),
+                self.spec_adj().dom().contains(v@),
+                self.spec_adj()[u@].contains(v@);
+        /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
+        fn delete_edge(&mut self, u: &V, v: &V)
+            requires old(self).spec_adjtablegraphsteph_wf()
+            ensures
+                self.spec_adjtablegraphsteph_wf(),
+                !self.spec_adj().dom().contains(u@)
+                    || !self.spec_adj()[u@].contains(v@);
     }
 
     // 9. impls
 
     impl<V: StT + Ord> AdjTableGraphStEphTrait<V> for AdjTableGraphStEph<V> {
+        open spec fn spec_adjtablegraphsteph_wf(&self) -> bool {
+            forall|u: <V as View>::V, v: <V as View>::V|
+                self.spec_adj().dom().contains(u)
+                && #[trigger] self.spec_adj().index(u).contains(v)
+                ==> self.spec_adj().dom().contains(v)
+        }
+
         open spec fn spec_adj(&self) -> Map<<V as View>::V, Set<<V as View>::V>> {
             self.adj@
         }
@@ -124,13 +159,13 @@ broadcast use {
             spec_sum_adj_sizes(self.spec_adj())
         }
 
-        fn empty() -> Self {
+        fn empty() -> (out: Self) {
             AdjTableGraphStEph {
                 adj: OrderedTableStEph::empty(),
             }
         }
 
-        fn from_table(table: OrderedTableStEph<V, AVLTreeSetStEph<V>>) -> Self { AdjTableGraphStEph { adj: table } }
+        fn from_table(table: OrderedTableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self) { AdjTableGraphStEph { adj: table } }
 
         fn num_vertices(&self) -> N { self.adj.size() }
 

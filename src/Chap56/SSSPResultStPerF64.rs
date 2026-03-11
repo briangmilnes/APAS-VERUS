@@ -50,6 +50,8 @@ broadcast use {
     // 8. traits
 
     pub trait SSSPResultStPerF64Trait: Sized {
+        spec fn spec_ssspresultstperf64_wf(s: &SSSPResultStPerF64) -> bool;
+
         spec fn spec_distances(&self) -> Seq<WrappedF64>;
 
         spec fn spec_predecessors(&self) -> Seq<usize>;
@@ -101,6 +103,11 @@ broadcast use {
     // 9. impls
 
     impl SSSPResultStPerF64Trait for SSSPResultStPerF64 {
+        open spec fn spec_ssspresultstperf64_wf(s: &SSSPResultStPerF64) -> bool {
+            s.distances.seq@.len() == s.predecessors.seq@.len()
+            && s.source < s.distances.seq@.len()
+        }
+
         open spec fn spec_distances(&self) -> Seq<WrappedF64> { self.distances.seq@ }
 
         open spec fn spec_predecessors(&self) -> Seq<usize> { self.predecessors.seq@ }

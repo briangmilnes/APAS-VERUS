@@ -34,6 +34,8 @@ pub mod SSSPResultStEphF64 {
     // 8. traits
 
     pub trait SSSPResultStEphF64Trait: Sized {
+        spec fn spec_ssspresultstephf64_wf(s: &SSSPResultStEphF64) -> bool;
+
         spec fn spec_distances(&self) -> Seq<WrappedF64>;
 
         spec fn spec_predecessors(&self) -> Seq<usize>;
@@ -85,6 +87,11 @@ pub mod SSSPResultStEphF64 {
     // 9. impls
 
     impl SSSPResultStEphF64Trait for SSSPResultStEphF64 {
+        open spec fn spec_ssspresultstephf64_wf(s: &SSSPResultStEphF64) -> bool {
+            s.distances.seq@.len() == s.predecessors.seq@.len()
+            && s.source < s.distances.seq@.len()
+        }
+
         open spec fn spec_distances(&self) -> Seq<WrappedF64> { self.distances.seq@ }
 
         open spec fn spec_predecessors(&self) -> Seq<usize> { self.predecessors.seq@ }

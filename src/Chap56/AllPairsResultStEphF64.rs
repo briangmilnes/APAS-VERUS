@@ -33,6 +33,8 @@ pub mod AllPairsResultStEphF64 {
     // 8. traits
 
     pub trait AllPairsResultStEphF64Trait: Sized {
+        spec fn spec_allpairsresultstephf64_wf(s: &AllPairsResultStEphF64) -> bool;
+
         spec fn spec_n(&self) -> usize;
 
         fn new(n: usize) -> (empty: Self)
@@ -58,9 +60,19 @@ pub mod AllPairsResultStEphF64 {
     // 9. impls
 
     impl AllPairsResultStEphF64Trait for AllPairsResultStEphF64 {
+        open spec fn spec_allpairsresultstephf64_wf(s: &AllPairsResultStEphF64) -> bool {
+            s.distances.spec_len() == s.n as nat
+            && s.predecessors.spec_len() == s.n as nat
+            && forall|r: int| #![trigger s.distances.spec_index(r)]
+                0 <= r < s.n ==> s.distances.spec_index(r).spec_len() == s.n as nat
+            && forall|r: int| #![trigger s.predecessors.spec_index(r)]
+                0 <= r < s.n ==> s.predecessors.spec_index(r).spec_len() == s.n as nat
+        }
+
         open spec fn spec_n(&self) -> usize { self.n }
 
         fn new(n: usize) -> (empty: Self)
+            ensures Self::spec_allpairsresultstephf64_wf(&empty),
         {
             let unreach = unreachable_dist();
             let zero = zero_dist();
@@ -70,6 +82,8 @@ pub mod AllPairsResultStEphF64 {
                 invariant
                     i <= n,
                     dist_rows@.len() == i as int,
+                    forall|r: int| #![trigger dist_rows@[r]]
+                        0 <= r < i ==> dist_rows@[r].spec_len() == n as nat,
                 decreases n - i,
             {
                 let mut row: Vec<WrappedF64> = Vec::new();
@@ -92,6 +106,8 @@ pub mod AllPairsResultStEphF64 {
                 invariant
                     k <= n,
                     pred_rows@.len() == k as int,
+                    forall|r: int| #![trigger pred_rows@[r]]
+                        0 <= r < k ==> pred_rows@[r].spec_len() == n as nat,
                 decreases n - k,
             {
                 let mut prow: Vec<usize> = Vec::new();
