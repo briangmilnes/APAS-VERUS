@@ -112,11 +112,12 @@ verus! {
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, i64>(),
+                    edge_set.spec_setsteph_wf(),
                     it@.0 <= edge_seq.len(),
                     it@.1 == edge_seq,
                     edge_seq.map(|i: int, e: WeightedEdge<V, i64>| e@).to_set() == edges@,
-                    forall |u: V::V, w: V::V, weight: i64| 
-                        #[trigger] edge_set@.contains((u, w, weight)) ==> 
+                    forall |u: V::V, w: V::V, weight: i64|
+                        #[trigger] edge_set@.contains((u, w, weight)) ==>
                             vertices@.contains(u) && vertices@.contains(w),
                 decreases edge_seq.len() - it@.0,
             {
@@ -158,10 +159,11 @@ verus! {
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, i64>(),
+                    edges.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, i64>| e@).to_set() == wa_view,
-                    forall |t: (V::V, V::V, i64)| edges@.contains(t) == 
+                    forall |t: (V::V, V::V, i64)| edges@.contains(t) ==
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@ == t),
                 decreases wa_seq.len() - it@.0,
             {
@@ -201,10 +203,11 @@ assert forall |t: (V::V, V::V, i64)| #[trigger] wa_view.contains(t) implies edge
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, i64>(),
+                    neighbors.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, i64>| e@).to_set() == wa_view,
-                    forall |p: (V::V, i64)| neighbors@.contains(p) == 
+                    forall |p: (V::V, i64)| neighbors@.contains(p) ==
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@.0 == v_view && wa_seq[i]@.1 == p.0 && wa_seq[i]@.2 == p.1),
                 decreases wa_seq.len() - it@.0,
             {
@@ -249,10 +252,11 @@ assert forall |p: (V::V, i64)| (exists |w: i64| #![trigger wa_view.contains((v_v
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, i64>(),
+                    neighbors.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, i64>| e@).to_set() == wa_view,
-                    forall |p: (V::V, i64)| neighbors@.contains(p) == 
+                    forall |p: (V::V, i64)| neighbors@.contains(p) ==
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@.1 == v_view && wa_seq[i]@.0 == p.0 && wa_seq[i]@.2 == p.1),
                 decreases wa_seq.len() - it@.0,
             {
@@ -329,10 +333,11 @@ proof { assert(wa_seq.take(it@.0 as int).drop_last() =~= wa_seq.take((it@.0 - 1)
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, i64>(),
+                    edges.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, i64>| e@).to_set() == wa_view,
-                    forall |t: (V::V, V::V, i64)| edges@.contains(t) == 
+                    forall |t: (V::V, V::V, i64)| edges@.contains(t) ==
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@ == t && t.2 > threshold),
                 decreases wa_seq.len() - it@.0,
             {
@@ -374,10 +379,11 @@ assert forall |t: (V::V, V::V, i64)| #[trigger] wa_view.contains(t) && t.2 > thr
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, i64>(),
+                    edges.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, i64>| e@).to_set() == wa_view,
-                    forall |t: (V::V, V::V, i64)| edges@.contains(t) == 
+                    forall |t: (V::V, V::V, i64)| edges@.contains(t) ==
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@ == t && t.2 < threshold),
                 decreases wa_seq.len() - it@.0,
             {

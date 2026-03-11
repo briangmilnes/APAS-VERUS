@@ -194,11 +194,12 @@ pub mod LabDirGraphMtEph {
         /// - APAS: Work Θ(|A|), Span Θ(log |A|) — parallel
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — ParaPair! split arcs
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)
-            requires 
-                spec_labgraphview_wf(self@), 
+            requires
+                spec_labgraphview_wf(self@),
                 valid_key_type_for_lab_graph::<V, L>(),
                 self@.V.contains(v@),
-            ensures 
+            ensures
+                n_plus.spec_setsteph_wf(),
                 n_plus@ == self.spec_n_plus(v@),
                 n_plus@ <= self@.V;
 
@@ -206,11 +207,12 @@ pub mod LabDirGraphMtEph {
         /// - APAS: Work Θ(|A|), Span Θ(log |A|) — parallel
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — ParaPair! split arcs
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)
-            requires 
-                spec_labgraphview_wf(self@), 
+            requires
+                spec_labgraphview_wf(self@),
                 valid_key_type_for_lab_graph::<V, L>(),
                 self@.V.contains(v@),
-            ensures 
+            ensures
+                n_minus.spec_setsteph_wf(),
                 n_minus@ == self.spec_n_minus(v@),
                 n_minus@ <= self@.V;
     }
@@ -229,7 +231,8 @@ pub mod LabDirGraphMtEph {
             valid_key_type_LabEdge::<V, L>(),
             spec_labgraphview_wf(g@),
             arcs@ <= g@.A,
-        ensures 
+        ensures
+            n_plus.spec_setsteph_wf(),
             n_plus@ == g.spec_n_plus_from_set(v@, arcs@),
             n_plus@ <= g.spec_n_plus(v@)
         decreases arcs@.len()
@@ -292,11 +295,11 @@ pub mod LabDirGraphMtEph {
             let g_right = g.clone_plus();
             
             let f1 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_left.spec_n_plus_from_set(v_left@, left_arcs@)
+                ensures out.spec_setsteph_wf(), out@ == g_left.spec_n_plus_from_set(v_left@, left_arcs@)
             { n_plus_par(&g_left, v_left, left_arcs) };
-            
+
             let f2 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_right.spec_n_plus_from_set(v_right@, right_arcs@)
+                ensures out.spec_setsteph_wf(), out@ == g_right.spec_n_plus_from_set(v_right@, right_arcs@)
             { n_plus_par(&g_right, v_right, right_arcs) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
@@ -344,7 +347,8 @@ pub mod LabDirGraphMtEph {
             valid_key_type_LabEdge::<V, L>(),
             spec_labgraphview_wf(g@),
             arcs@ <= g@.A,
-        ensures 
+        ensures
+            n_minus.spec_setsteph_wf(),
             n_minus@ == g.spec_n_minus_from_set(v@, arcs@),
             n_minus@ <= g.spec_n_minus(v@)
         decreases arcs@.len()
@@ -419,11 +423,11 @@ pub mod LabDirGraphMtEph {
             let g_right = g.clone_plus();
             
             let f1 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_left.spec_n_minus_from_set(v_left@, left_arcs@)
+                ensures out.spec_setsteph_wf(), out@ == g_left.spec_n_minus_from_set(v_left@, left_arcs@)
             { n_minus_par(&g_left, v_left, left_arcs) };
-            
+
             let f2 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_right.spec_n_minus_from_set(v_right@, right_arcs@)
+                ensures out.spec_setsteph_wf(), out@ == g_right.spec_n_minus_from_set(v_right@, right_arcs@)
             { n_minus_par(&g_right, v_right, right_arcs) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
@@ -493,10 +497,12 @@ pub mod LabDirGraphMtEph {
             loop
                 invariant
                     valid_key_type_LabEdge::<V, L>(),
+                    valid_key_type_Edge::<V>(),
+                    arcs.spec_setsteph_wf(),
                     it@.0 <= la_seq.len(),
                     it@.1 == la_seq,
                     la_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == la_view,
-                    arcs@ == Set::new(|e: (V::V, V::V)| 
+                    arcs@ == Set::new(|e: (V::V, V::V)|
                         exists |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 && la_seq[i]@.0 == e.0 && la_seq[i]@.1 == e.1),
                 decreases la_seq.len() - it@.0,
             {

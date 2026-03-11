@@ -112,6 +112,7 @@ verus! {
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, isize>(),
+                    edge_set.spec_setsteph_wf(),
                     it@.0 <= edge_seq.len(),
                     it@.1 == edge_seq,
                     edge_seq.map(|i: int, e: WeightedEdge<V, isize>| e@).to_set() == edges@,
@@ -158,6 +159,7 @@ verus! {
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, isize>(),
+                    edges.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, isize>| e@).to_set() == wa_view,
@@ -201,6 +203,7 @@ assert forall |t: (V::V, V::V, isize)| #[trigger] wa_view.contains(t) implies ed
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, isize>(),
+                    neighbors.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, isize>| e@).to_set() == wa_view,
@@ -249,6 +252,7 @@ assert forall |p: (V::V, isize)| (exists |w: isize| #![trigger wa_view.contains(
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, isize>(),
+                    neighbors.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, isize>| e@).to_set() == wa_view,
@@ -329,6 +333,7 @@ proof { assert(wa_seq.take(it@.0 as int).drop_last() =~= wa_seq.take((it@.0 - 1)
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, isize>(),
+                    edges.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, isize>| e@).to_set() == wa_view,
@@ -374,6 +379,7 @@ assert forall |t: (V::V, V::V, isize)| #[trigger] wa_view.contains(t) && t.2 > t
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, isize>(),
+                    edges.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, isize>| e@).to_set() == wa_view,

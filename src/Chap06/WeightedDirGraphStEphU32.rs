@@ -112,6 +112,7 @@ verus! {
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, u32>(),
+                    edge_set.spec_setsteph_wf(),
                     it@.0 <= edge_seq.len(),
                     it@.1 == edge_seq,
                     edge_seq.map(|i: int, e: WeightedEdge<V, u32>| e@).to_set() == edges@,
@@ -158,6 +159,7 @@ verus! {
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, u32>(),
+                    edges.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, u32>| e@).to_set() == wa_view,
@@ -201,6 +203,7 @@ verus! {
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, u32>(),
+                    neighbors.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, u32>| e@).to_set() == wa_view,
@@ -249,6 +252,7 @@ verus! {
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, u32>(),
+                    neighbors.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, u32>| e@).to_set() == wa_view,
@@ -330,6 +334,7 @@ verus! {
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, u32>(),
+                    edges.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, u32>| e@).to_set() == wa_view,
@@ -375,6 +380,7 @@ verus! {
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, u32>(),
+                    edges.spec_setsteph_wf(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, u32>| e@).to_set() == wa_view,

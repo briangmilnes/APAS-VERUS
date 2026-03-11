@@ -184,6 +184,7 @@ pub mod LabUnDirGraphMtEph {
                 valid_key_type_for_lab_graph::<V, L>(),
                 self@.V.contains(v@),
             ensures
+                ng.spec_setsteph_wf(),
                 ng@ == self.spec_ng(v@),
                 ng@ <= self@.V;
     }
@@ -193,16 +194,18 @@ pub mod LabUnDirGraphMtEph {
 
     /// Parallel edge filtering for neighbors using set split.
     fn ng_par<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static>(
-        g: &LabUnDirGraphMtEph<V, L>, 
-        v: V, 
+        g: &LabUnDirGraphMtEph<V, L>,
+        v: V,
         edges: SetStEph<LabEdge<V, L>>
     ) -> (neighbors: SetStEph<V>)
         requires
             valid_key_type::<V>(),
             valid_key_type_LabEdge::<V, L>(),
             spec_labgraphview_wf(g@),
+            edges.spec_setsteph_wf(),
             edges@ <= g@.A,
-        ensures 
+        ensures
+            neighbors.spec_setsteph_wf(),
             neighbors@ == g.spec_ng_from_set(v@, edges@),
             neighbors@ <= g.spec_ng(v@)
         decreases edges@.len()
@@ -315,11 +318,11 @@ pub mod LabUnDirGraphMtEph {
             let g_right = g.clone_plus();
             
             let f1 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_left.spec_ng_from_set(v_left@, left_edges@)
+                ensures out.spec_setsteph_wf(), out@ == g_left.spec_ng_from_set(v_left@, left_edges@)
             { ng_par(&g_left, v_left, left_edges) };
-            
+
             let f2 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_right.spec_ng_from_set(v_right@, right_edges@)
+                ensures out.spec_setsteph_wf(), out@ == g_right.spec_ng_from_set(v_right@, right_edges@)
             { ng_par(&g_right, v_right, right_edges) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
@@ -397,17 +400,18 @@ pub mod LabUnDirGraphMtEph {
                 invariant
                     valid_key_type_LabEdge::<V, L>(),
                     valid_key_type_Edge::<V>(),
+                    edges.spec_setsteph_wf(),
                     it@.0 <= le_seq.len(),
                     it@.1 == le_seq,
                     le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
-                    forall |e: (V::V, V::V)| edges@.contains(e) == 
+                    forall |e: (V::V, V::V)| edges@.contains(e) ==
                         (exists |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 && le_seq[i]@.0 == e.0 && le_seq[i]@.1 == e.1),
                 decreases le_seq.len() - it@.0,
             {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |e: (V::V, V::V)| edges@.contains(e) implies 
+                            assert forall |e: (V::V, V::V)| edges@.contains(e) implies
                                 (exists |l: L::V| #![trigger le_view.contains((e.0, e.1, l))] le_view.contains((e.0, e.1, l))) by {
                                 if edges@.contains(e) {
                                     let i = choose |i: int| #![trigger le_seq[i]] 0 <= i < le_seq.len() && le_seq[i]@.0 == e.0 && le_seq[i]@.1 == e.1;

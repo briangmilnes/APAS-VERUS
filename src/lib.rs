@@ -298,7 +298,7 @@ pub mod Chap05 {
     pub mod KleeneStPer;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap06 {
     pub mod DirGraphStEph;
     pub mod UnDirGraphStEph;

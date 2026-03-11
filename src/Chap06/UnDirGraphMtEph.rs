@@ -141,11 +141,13 @@ pub mod UnDirGraphMtEph {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn sizeV(&self) -> (n: N)
+            requires spec_graphview_wf(self@), valid_key_type_for_graph::<V>()
             ensures n == self@.V.len();
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn sizeE(&self) -> (n: N)
+            requires spec_graphview_wf(self@), valid_key_type_for_graph::<V>()
             ensures n == self@.A.len();
 
         /// - APAS: Work Θ(1), Span Θ(1)
@@ -171,7 +173,8 @@ pub mod UnDirGraphMtEph {
                 spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
-            ensures 
+            ensures
+                neighbors.spec_setsteph_wf(),
                 neighbors@ == self.spec_ng(v@),
                 neighbors@ <= self@.V;
 
@@ -188,7 +191,8 @@ pub mod UnDirGraphMtEph {
                 spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 u_set@ <= self@.V,
-            ensures 
+            ensures
+                neighbors.spec_setsteph_wf(),
                 neighbors@ == self.spec_ng_of_vertices(u_set@),
                 neighbors@ <= self@.V;
 
@@ -219,7 +223,8 @@ pub mod UnDirGraphMtEph {
             valid_key_type::<Edge<V>>(),
             spec_graphview_wf(g@),
             edges@ <= g@.A,
-        ensures 
+        ensures
+            neighbors.spec_setsteph_wf(),
             neighbors@ == g.spec_ng_from_set(v@, edges@),
             neighbors@ <= g.spec_ng(v@)
         decreases edges@.len()
@@ -295,11 +300,11 @@ pub mod UnDirGraphMtEph {
             let g_right = g.clone_plus();
             
             let f1 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_left.spec_ng_from_set(v_left@, left_edges@)
+                ensures out.spec_setsteph_wf(), out@ == g_left.spec_ng_from_set(v_left@, left_edges@)
             { ng_par(&g_left, v_left, left_edges) };
-            
+
             let f2 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_right.spec_ng_from_set(v_right@, right_edges@)
+                ensures out.spec_setsteph_wf(), out@ == g_right.spec_ng_from_set(v_right@, right_edges@)
             { ng_par(&g_right, v_right, right_edges) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
@@ -318,7 +323,8 @@ pub mod UnDirGraphMtEph {
             valid_key_type::<Edge<V>>(),
             spec_graphview_wf(g@),
             verts@ <= g@.V,
-        ensures 
+        ensures
+            neighbors.spec_setsteph_wf(),
             neighbors@ == g.spec_ng_of_vertices_from_set(verts@),
             neighbors@ <= g@.V
         decreases verts@.len()
@@ -364,11 +370,11 @@ pub mod UnDirGraphMtEph {
             let g_right = g.clone_plus();
             
             let f1 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_left.spec_ng_of_vertices_from_set(left_verts@)
+                ensures out.spec_setsteph_wf(), out@ == g_left.spec_ng_of_vertices_from_set(left_verts@)
             { ng_of_vertices_par(&g_left, left_verts) };
-            
+
             let f2 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_right.spec_ng_of_vertices_from_set(right_verts@)
+                ensures out.spec_setsteph_wf(), out@ == g_right.spec_ng_of_vertices_from_set(right_verts@)
             { ng_of_vertices_par(&g_right, right_verts) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);

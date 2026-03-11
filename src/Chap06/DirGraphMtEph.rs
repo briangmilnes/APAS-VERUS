@@ -129,11 +129,13 @@ pub mod DirGraphMtEph {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn sizeV(&self) -> (n: N)
+            requires spec_graphview_wf(self@), valid_key_type_for_graph::<V>()
             ensures n == self@.V.len();
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn sizeA(&self) -> (n: N)
+            requires spec_graphview_wf(self@), valid_key_type_for_graph::<V>()
             ensures n == self@.A.len();
 
         /// - APAS: Work Θ(1), Span Θ(1)
@@ -173,7 +175,8 @@ pub mod DirGraphMtEph {
                 spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
-            ensures 
+            ensures
+                out_neighbors.spec_setsteph_wf(),
                 out_neighbors@ == self.spec_n_plus(v@),
                 out_neighbors@ <= self@.V;
 
@@ -207,7 +210,8 @@ pub mod DirGraphMtEph {
                 spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
-            ensures 
+            ensures
+                in_neighbors.spec_setsteph_wf(),
                 in_neighbors@ == self.spec_n_minus(v@),
                 in_neighbors@ <= self@.V;
 
@@ -233,7 +237,8 @@ pub mod DirGraphMtEph {
                 spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
-            ensures 
+            ensures
+                neighbors.spec_setsteph_wf(),
                 neighbors@ == self.spec_ng(v@),
                 neighbors@ <= self@.V;
 
@@ -271,7 +276,8 @@ pub mod DirGraphMtEph {
                 spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 u_set@ <= self@.V,
-            ensures 
+            ensures
+                out_neighbors.spec_setsteph_wf(),
                 out_neighbors@ == self.spec_n_plus_of_vertices(u_set@),
                 out_neighbors@ <= self@.V;
 
@@ -294,7 +300,8 @@ pub mod DirGraphMtEph {
                 spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 u_set@ <= self@.V,
-            ensures 
+            ensures
+                in_neighbors.spec_setsteph_wf(),
                 in_neighbors@ == self.spec_n_minus_of_vertices(u_set@),
                 in_neighbors@ <= self@.V;
 
@@ -317,7 +324,8 @@ pub mod DirGraphMtEph {
                 spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 u_set@ <= self@.V,
-            ensures 
+            ensures
+                neighbors.spec_setsteph_wf(),
                 neighbors@ == self.spec_ng_of_vertices(u_set@),
                 neighbors@ <= self@.V;
     }
@@ -326,14 +334,15 @@ pub mod DirGraphMtEph {
     //		9. impls
 
     /// Parallel arc filtering for out-neighbors using set split.
-    fn n_plus_par<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>) 
+    fn n_plus_par<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>)
                                                      -> (out_neighbors: SetStEph<V>)
         requires
             valid_key_type::<V>(),
             valid_key_type::<Edge<V>>(),
             spec_graphview_wf(g@),
             arcs@ <= g@.A,
-        ensures 
+        ensures
+            out_neighbors.spec_setsteph_wf(),
             out_neighbors@ == g.spec_n_plus_from_set(v@, arcs@),
             out_neighbors@ <= g.spec_n_plus(v@)
         decreases arcs@.len()
@@ -359,11 +368,11 @@ pub mod DirGraphMtEph {
             let g_right = g.clone_plus();
             
             let f1 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_left.spec_n_plus_from_set(v_left@, left_arcs@)
+                ensures out.spec_setsteph_wf(), out@ == g_left.spec_n_plus_from_set(v_left@, left_arcs@)
             { n_plus_par(&g_left, v_left, left_arcs) };
-            
+
             let f2 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_right.spec_n_plus_from_set(v_right@, right_arcs@)
+                ensures out.spec_setsteph_wf(), out@ == g_right.spec_n_plus_from_set(v_right@, right_arcs@)
             { n_plus_par(&g_right, v_right, right_arcs) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
@@ -373,14 +382,15 @@ pub mod DirGraphMtEph {
     }
 
     /// Parallel arc filtering for in-neighbors using set split.
-    fn n_minus_par<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>) 
+    fn n_minus_par<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>)
                                                       -> (in_neighbors: SetStEph<V>)
         requires
             valid_key_type::<V>(),
             valid_key_type::<Edge<V>>(),
             spec_graphview_wf(g@),
             arcs@ <= g@.A,
-        ensures 
+        ensures
+            in_neighbors.spec_setsteph_wf(),
             in_neighbors@ == g.spec_n_minus_from_set(v@, arcs@),
             in_neighbors@ <= g.spec_n_minus(v@)
         decreases arcs@.len()
@@ -406,11 +416,11 @@ pub mod DirGraphMtEph {
             let g_right = g.clone_plus();
             
             let f1 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_left.spec_n_minus_from_set(v_left@, left_arcs@)
+                ensures out.spec_setsteph_wf(), out@ == g_left.spec_n_minus_from_set(v_left@, left_arcs@)
             { n_minus_par(&g_left, v_left, left_arcs) };
-            
+
             let f2 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_right.spec_n_minus_from_set(v_right@, right_arcs@)
+                ensures out.spec_setsteph_wf(), out@ == g_right.spec_n_minus_from_set(v_right@, right_arcs@)
             { n_minus_par(&g_right, v_right, right_arcs) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
@@ -424,12 +434,13 @@ pub mod DirGraphMtEph {
         g: &DirGraphMtEph<V>,
         verts: SetStEph<V>,
     ) -> (out_neighbors: SetStEph<V>)
-        requires 
+        requires
             valid_key_type::<V>(),
             valid_key_type::<Edge<V>>(),
             spec_graphview_wf(g@),
             verts@ <= g@.V,
-        ensures 
+        ensures
+            out_neighbors.spec_setsteph_wf(),
             out_neighbors@ == g.spec_n_plus_of_vertices_from_set(verts@),
             out_neighbors@ <= g@.V
         decreases verts@.len()
@@ -448,13 +459,13 @@ pub mod DirGraphMtEph {
             let (left_verts, right_verts) = verts.split(mid);
             let g_left  = g.clone_plus();
             let g_right = g.clone_plus();
-            
+
             let f1 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_left.spec_n_plus_of_vertices_from_set(left_verts@)
+                ensures out.spec_setsteph_wf(), out@ == g_left.spec_n_plus_of_vertices_from_set(left_verts@)
             { n_plus_of_vertices_par(&g_left, left_verts) };
-            
+
             let f2 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_right.spec_n_plus_of_vertices_from_set(right_verts@)
+                ensures out.spec_setsteph_wf(), out@ == g_right.spec_n_plus_of_vertices_from_set(right_verts@)
             { n_plus_of_vertices_par(&g_right, right_verts) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
@@ -491,12 +502,13 @@ pub mod DirGraphMtEph {
         g: &DirGraphMtEph<V>,
         verts: SetStEph<V>,
     ) -> (in_neighbors: SetStEph<V>)
-        requires 
+        requires
             valid_key_type::<V>(),
             valid_key_type::<Edge<V>>(),
             spec_graphview_wf(g@),
             verts@ <= g@.V,
-        ensures 
+        ensures
+            in_neighbors.spec_setsteph_wf(),
             in_neighbors@ == g.spec_n_minus_of_vertices_from_set(verts@),
             in_neighbors@ <= g@.V
         decreases verts@.len()
@@ -515,13 +527,13 @@ pub mod DirGraphMtEph {
             let (left_verts, right_verts) = verts.split(mid);
             let g_left  = g.clone_plus();
             let g_right = g.clone_plus();
-            
+
             let f1 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_left.spec_n_minus_of_vertices_from_set(left_verts@)
+                ensures out.spec_setsteph_wf(), out@ == g_left.spec_n_minus_of_vertices_from_set(left_verts@)
             { n_minus_of_vertices_par(&g_left, left_verts) };
-            
+
             let f2 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_right.spec_n_minus_of_vertices_from_set(right_verts@)
+                ensures out.spec_setsteph_wf(), out@ == g_right.spec_n_minus_of_vertices_from_set(right_verts@)
             { n_minus_of_vertices_par(&g_right, right_verts) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
@@ -558,12 +570,13 @@ pub mod DirGraphMtEph {
         g: &DirGraphMtEph<V>,
         verts: SetStEph<V>,
     ) -> (neighbors: SetStEph<V>)
-        requires 
+        requires
             valid_key_type::<V>(),
             valid_key_type::<Edge<V>>(),
             spec_graphview_wf(g@),
             verts@ <= g@.V,
-        ensures 
+        ensures
+            neighbors.spec_setsteph_wf(),
             neighbors@ == g.spec_ng_of_vertices_from_set(verts@),
             neighbors@ <= g@.V
         decreases verts@.len()
@@ -582,13 +595,13 @@ pub mod DirGraphMtEph {
             let (left_verts, right_verts) = verts.split(mid);
             let g_left  = g.clone_plus();
             let g_right = g.clone_plus();
-            
+
             let f1 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_left.spec_ng_of_vertices_from_set(left_verts@)
+                ensures out.spec_setsteph_wf(), out@ == g_left.spec_ng_of_vertices_from_set(left_verts@)
             { ng_of_vertices_par(&g_left, left_verts) };
-            
+
             let f2 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_right.spec_ng_of_vertices_from_set(right_verts@)
+                ensures out.spec_setsteph_wf(), out@ == g_right.spec_ng_of_vertices_from_set(right_verts@)
             { ng_of_vertices_par(&g_right, right_verts) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
