@@ -30,8 +30,8 @@ Proof Functions:
 Holes Found: 0 total
 
 Info: 3 total
-   MappingStEph.rs:592: info: accept() - accept hole
    SetStEph.rs:899: info: accept() - accept hole
+   MappingStEph.rs:592: info: accept() - accept hole
    SetMtEph.rs:991: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.

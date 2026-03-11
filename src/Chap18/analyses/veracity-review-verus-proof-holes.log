@@ -41,20 +41,20 @@ Proof Functions:
 Holes Found: 0 total
 
 Info: 10 total
-   ArraySeqMtPer.rs:1191: info: accept() - accept hole
-   ArraySeqStEph.rs:1057: info: accept() - accept hole
-   ArraySeqStPer.rs:1021: info: accept() - accept hole
-   LinkedListStEph.rs:878: info: accept() - accept hole
-   LinkedListStEph.rs:892: info: accept() - accept hole
    ArraySeq.rs:1463: info: external_accept_hole - external with accept hole comment
    ArraySeq.rs:1595: info: external_accept_hole - external with accept hole comment
    ArraySeq.rs:1622: info: accept() - accept hole
    LinkedListStPer.rs:861: info: accept() - accept hole
    LinkedListStPer.rs:875: info: accept() - accept hole
+   ArraySeqStPer.rs:1021: info: accept() - accept hole
+   LinkedListStEph.rs:878: info: accept() - accept hole
+   LinkedListStEph.rs:892: info: accept() - accept hole
+   ArraySeqMtPer.rs:1191: info: accept() - accept hole
+   ArraySeqStEph.rs:1057: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.
- accept hole
-   LinkedListStPer.rs:861: info: accept() - accept hole
-   LinkedListStPer.rs:875: info: accept() - accept hole
+ - accept hole
+   ArraySeqMtPer.rs:1191: info: accept() - accept hole
+   ArraySeqStEph.rs:1057: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.

@@ -25,7 +25,9 @@ Checking 2 files...
 /home/milnes/projects/APAS-VERUS/src/Chap02/FibonacciHFScheduler.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap02/FibonacciHFScheduler.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap02/FibonacciHFScheduler.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap02/FibonacciHFScheduler.rs:1: info: [23] free fn type bounds: N/A
 /home/milnes/projects/APAS-VERUS/src/Chap02/FibonacciHFScheduler.rs:16: warning: [22] free spec fn spec_fib should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap02/FibonacciHFScheduler.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:1: info: [1] has mod declarations
@@ -45,11 +47,13 @@ Checking 2 files...
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:16: warning: [14] struct PoolState should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:16: warning: [14] struct PoolState should have impl Display outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:77: warning: [14] struct ExTaskState should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:77: warning: [14] struct ExTaskState should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 ════════════════════════════════════════════════════════════════
-Summary: 33 passed, 5 warnings in 2 files (checked 2 files)
+Summary: 35 passed, 7 warnings in 2 files (checked 2 files)
 ════════════════════════════════════════════════════════════════

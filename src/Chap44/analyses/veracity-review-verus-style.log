@@ -21,6 +21,8 @@ Checking 2 files...
 /home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:98: warning: [13] impl DocumentIndexTrait for DocumentIndex should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:310: warning: [13] impl QueryBuilderTrait for QueryBuilder should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:1: warning: [17] collection DocumentIndex should have an Iterator impl
@@ -46,8 +48,10 @@ Checking 2 files...
 /home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap44/Example44_1.rs:55: warning: [13] impl Default for TweetQueryExamples should be inside verus!
 
 ════════════════════════════════════════════════════════════════
-Summary: 28 passed, 8 warnings in 2 files (checked 2 files)
+Summary: 32 passed, 8 warnings in 2 files (checked 2 files)
 ════════════════════════════════════════════════════════════════

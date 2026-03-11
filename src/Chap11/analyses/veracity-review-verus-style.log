@@ -26,6 +26,8 @@ Checking 5 files...
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:1: info: [1] no mod declarations (ok for leaf modules)
@@ -45,6 +47,8 @@ Checking 5 files...
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerAllThreads.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerAllThreads.rs:1: info: [1] has mod declarations
@@ -64,6 +68,8 @@ Checking 5 files...
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerAllThreads.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerAllThreads.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerAllThreads.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerAllThreads.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerAllThreads.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:1: info: [1] no mod declarations (ok for leaf modules)
@@ -83,6 +89,8 @@ Checking 5 files...
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciStEph.rs:1: info: [1] has mod declarations
@@ -101,8 +109,10 @@ Checking 5 files...
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciStEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciStEph.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciStEph.rs:1: info: [23] free fn type bounds: N/A
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciStEph.rs:32: warning: [22] free spec fn spec_fib should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 ════════════════════════════════════════════════════════════════
-Summary: 84 passed, 1 warnings in 1 files (checked 5 files)
+Summary: 89 passed, 6 warnings in 5 files (checked 5 files)
 ════════════════════════════════════════════════════════════════

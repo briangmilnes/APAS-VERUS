@@ -24,6 +24,8 @@ Checking 3 files...
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:1: warning: [2] missing use vstd::prelude::* (should be before verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:32: warning: [15] impl PartialOrd should be inside verus! (for verification)
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:38: warning: [15] impl Ord should be inside verus! (for verification)
@@ -42,6 +44,8 @@ Checking 3 files...
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:63: warning: [12] trait DijkstraStEphI64Trait fn dijkstra should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:98: warning: [18] fn dijkstra should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:68: warning: [19] pq_entry_new return name 'r' could be more descriptive
@@ -64,6 +68,8 @@ Checking 3 files...
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:63: warning: [12] trait StackStEphTrait fn new should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:65: warning: [12] trait StackStEphTrait fn push should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:67: warning: [12] trait StackStEphTrait fn pop should have requires/ensures
@@ -78,5 +84,5 @@ Checking 3 files...
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:123: warning: [18] impl Default for StackStEph < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
 
 ════════════════════════════════════════════════════════════════
-Summary: 42 passed, 21 warnings in 3 files (checked 3 files)
+Summary: 48 passed, 21 warnings in 3 files (checked 3 files)
 ════════════════════════════════════════════════════════════════

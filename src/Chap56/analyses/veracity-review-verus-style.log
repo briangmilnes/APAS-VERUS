@@ -25,10 +25,12 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:41: warning: [12] trait AllPairsResultStEphF64Trait fn get_distance should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:47: warning: [12] trait AllPairsResultStEphF64Trait fn get_predecessor should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:53: warning: [12] trait AllPairsResultStEphF64Trait fn is_reachable should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:55: warning: [12] trait AllPairsResultStEphF64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:43: warning: [12] trait AllPairsResultStEphF64Trait fn get_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:49: warning: [12] trait AllPairsResultStEphF64Trait fn get_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:55: warning: [12] trait AllPairsResultStEphF64Trait fn is_reachable should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphF64.rs:57: warning: [12] trait AllPairsResultStEphF64Trait fn extract_path should have requires/ensures
 
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [1] has mod declarations
@@ -48,6 +50,8 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:1: info: [24] copyright line present
 
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [1] has mod declarations
@@ -66,10 +70,12 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:40: warning: [12] trait AllPairsResultStPerF64Trait fn get_distance should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:45: warning: [12] trait AllPairsResultStPerF64Trait fn get_predecessor should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:50: warning: [12] trait AllPairsResultStPerF64Trait fn is_reachable should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:52: warning: [12] trait AllPairsResultStPerF64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:42: warning: [12] trait AllPairsResultStPerF64Trait fn get_distance should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:47: warning: [12] trait AllPairsResultStPerF64Trait fn get_predecessor should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:52: warning: [12] trait AllPairsResultStPerF64Trait fn is_reachable should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerF64.rs:54: warning: [12] trait AllPairsResultStPerF64Trait fn extract_path should have requires/ensures
 
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [1] has mod declarations
@@ -89,6 +95,8 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:1: info: [24] copyright line present
 
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [1] has mod declarations
@@ -107,6 +115,8 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:32: warning: [12] trait Example56_1Trait fn example_path_weight_int should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:35: warning: [12] trait Example56_1Trait fn example_path_weight_float should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:38: warning: [12] trait Example56_1Trait fn example_negative_weights should have requires/ensures
@@ -128,6 +138,8 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:32: warning: [12] trait Example56_3Trait fn example_negative_cycle should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:35: warning: [12] trait Example56_3Trait fn example_undefined_shortest_path should have requires/ensures
 
@@ -148,6 +160,8 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:50: warning: [12] trait PathWeightUtilsStEphTrait fn path_weight_float should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:69: warning: [12] trait PathWeightUtilsStEphTrait fn validate_subpath_property_float should have requires/ensures
 
@@ -168,6 +182,8 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:54: warning: [12] trait PathWeightUtilsStPerTrait fn path_weight_float should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:66: warning: [12] trait PathWeightUtilsStPerTrait fn validate_subpath_property_float should have requires/ensures
 
@@ -188,7 +204,9 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:82: warning: [12] trait SSSPResultStEphF64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphF64.rs:84: warning: [12] trait SSSPResultStEphF64Trait fn extract_path should have requires/ensures
 
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [1] has mod declarations
@@ -208,6 +226,8 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:1: info: [24] copyright line present
 
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [1] has mod declarations
@@ -226,7 +246,9 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:98: warning: [12] trait SSSPResultStPerF64Trait fn extract_path should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerF64.rs:100: warning: [12] trait SSSPResultStPerF64Trait fn extract_path should have requires/ensures
 
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [1] has mod declarations
@@ -246,7 +268,9 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:1: info: [24] copyright line present
 
 ════════════════════════════════════════════════════════════════
-Summary: 196 passed, 19 warnings in 8 files (checked 12 files)
+Summary: 220 passed, 19 warnings in 8 files (checked 12 files)
 ════════════════════════════════════════════════════════════════

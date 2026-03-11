@@ -25,10 +25,12 @@ Checking 1 files...
 /home/milnes/projects/APAS-VERUS/src/Chap03/InsertionSortStEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap03/InsertionSortStEph.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap03/InsertionSortStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap03/InsertionSortStEph.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap03/InsertionSortStEph.rs:21: warning: [22] free spec fn sorted_prefix should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap03/InsertionSortStEph.rs:26: warning: [22] free spec fn cross_sorted should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap03/InsertionSortStEph.rs:30: warning: [22] free spec fn is_sorted should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap03/InsertionSortStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 ════════════════════════════════════════════════════════════════
-Summary: 16 passed, 3 warnings in 1 files (checked 1 files)
+Summary: 17 passed, 4 warnings in 1 files (checked 1 files)
 ════════════════════════════════════════════════════════════════

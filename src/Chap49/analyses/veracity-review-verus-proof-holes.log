@@ -39,7 +39,14 @@ Proof Functions:
 
 Holes Found: 4 total
    4 × external_body
-oof Functions:
+��═══════
+
+Modules:
+   4 clean (no holes)
+   4 holed (contains holes)
+   8 total
+
+Proof Functions:
    0 clean
    0 holed
    0 total

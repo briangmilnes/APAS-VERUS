@@ -25,9 +25,14 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:48: warning: [22] free spec fn spec_leq should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:54: warning: [22] free spec fn spec_kth should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:61: warning: [22] free spec fn spec_const_seq should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:61: warning: [23] free fn spec_const_seq param T has bounds `(none)` but trait OrderStatSelectMtEphTrait has `TotalOrder`
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:93: warning: [23] free fn lemma_const_seq_multiset param T has bounds `(none)` but trait OrderStatSelectMtEphTrait has `TotalOrder`
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:124: warning: [23] free fn parallel_three_way_partition param T has bounds `TotalOrder + Copy + Send + Sync + Eq + 'static` but trait OrderStatSelectMtEphTrait has `TotalOrder`
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:399: warning: [23] free fn select_inner param T has bounds `TotalOrder + Copy + Send + Sync + Eq + 'static` but trait OrderStatSelectMtEphTrait has `TotalOrder`
 
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:1: info: [1] has mod declarations
@@ -46,9 +51,14 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:48: warning: [22] free spec fn spec_leq should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:54: warning: [22] free spec fn spec_kth should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:61: warning: [22] free spec fn spec_const_seq should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:61: warning: [23] free fn spec_const_seq param T has bounds `(none)` but trait OrderStatSelectMtPerTrait has `TotalOrder`
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:93: warning: [23] free fn lemma_const_seq_multiset param T has bounds `(none)` but trait OrderStatSelectMtPerTrait has `TotalOrder`
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:124: warning: [23] free fn parallel_three_way_partition param T has bounds `TotalOrder + Copy + Send + Sync + Eq + 'static` but trait OrderStatSelectMtPerTrait has `TotalOrder`
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:399: warning: [23] free fn select_inner param T has bounds `TotalOrder + Copy + Send + Sync + Eq + 'static` but trait OrderStatSelectMtPerTrait has `TotalOrder`
 
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStEph.rs:1: info: [1] has mod declarations
@@ -67,8 +77,10 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStEph.rs:45: warning: [22] free spec fn spec_leq should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStEph.rs:51: warning: [22] free spec fn spec_kth should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStEph.rs:113: warning: [23] free fn select_inner param T has bounds `TotalOrder + Copy` but trait OrderStatSelectStEphTrait has `TotalOrder`
 
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStPer.rs:1: info: [1] has mod declarations
@@ -87,9 +99,11 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStPer.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStPer.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStPer.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStPer.rs:44: warning: [22] free spec fn spec_leq should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStPer.rs:50: warning: [22] free spec fn spec_kth should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectStPer.rs:112: warning: [23] free fn select_inner param T has bounds `TotalOrder + Copy` but trait OrderStatSelectStPerTrait has `TotalOrder`
 
 ════════════════════════════════════════════════════════════════
-Summary: 64 passed, 10 warnings in 4 files (checked 4 files)
+Summary: 68 passed, 20 warnings in 4 files (checked 4 files)
 ════════════════════════════════════════════════════════════════

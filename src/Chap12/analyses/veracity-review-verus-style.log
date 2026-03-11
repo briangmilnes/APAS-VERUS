@@ -25,8 +25,10 @@ Checking 3 files...
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:1: info: [23] free fn type bounds: N/A
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:54: warning: [12] trait SpinLockTrait fn with_lock should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:21: warning: [14] struct SpinLock should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_2.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_2.rs:1: info: [1] has mod declarations
@@ -45,7 +47,9 @@ Checking 3 files...
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_2.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_2.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_2.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_2.rs:1: info: [23] free fn type bounds: N/A
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_2.rs:22: warning: [12] trait FetchAddCasTrait fn fetch_add_cas should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_2.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:1: info: [1] has mod declarations
@@ -64,12 +68,14 @@ Checking 3 files...
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:1: info: [23] free fn type bounds: N/A
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:31: warning: [14] struct Node should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:31: warning: [14] struct Node should have impl Display outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:40: warning: [14] struct ConcurrentStackMt should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:40: warning: [14] struct ConcurrentStackMt should have impl Display outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:53: warning: [22] spec fn wf in trait ConcurrentStackMtTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 ════════════════════════════════════════════════════════════════
-Summary: 48 passed, 8 warnings in 3 files (checked 3 files)
+Summary: 51 passed, 11 warnings in 3 files (checked 3 files)
 ════════════════════════════════════════════════════════════════

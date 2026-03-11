@@ -20,6 +20,8 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:1: info: [16] Lit macro definitions at end of file
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:133: warning: [12] trait MatrixChainMtEphTrait fn new should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:134: warning: [12] trait MatrixChainMtEphTrait fn from_dimensions should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:135: warning: [12] trait MatrixChainMtEphTrait fn from_dim_pairs should have requires/ensures
@@ -47,14 +49,15 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:1: warning: [17] IntoIterator for MatrixChainMtEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:1: warning: [17] IntoIterator for MatrixChainMtEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:60: warning: [18] struct MatrixChainMtEphDimInv should come before view impls (expected type definitions before view impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:67: warning: [18] struct MatrixChainMtEphMemoInv should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:78: warning: [18] struct MatrixChainMtEphS should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:84: warning: [18] spec fn spec_multiply_cost should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:88: warning: [18] spec fn spec_dims_bounded should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:97: warning: [18] spec fn spec_costs_fit should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:107: warning: [18] spec fn spec_memo_correct should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:112: warning: [18] spec fn spec_chain_cost should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:132: warning: [18] trait MatrixChainMtEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:67: warning: [18] struct MatrixChainMtEphMemoInv should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:78: warning: [18] struct MatrixChainMtEphS should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:84: warning: [18] spec fn spec_multiply_cost should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:88: warning: [18] spec fn spec_dims_bounded should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:97: warning: [18] spec fn spec_costs_fit should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:107: warning: [18] spec fn spec_memo_correct should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:112: warning: [18] spec fn spec_chain_cost should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:132: warning: [18] trait MatrixChainMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:154: warning: [18] impl MatrixChainMtEphTrait for MatrixChainMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:348: warning: [19] eq return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:84: warning: [22] free spec fn spec_multiply_cost should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:88: warning: [22] free spec fn spec_dims_bounded should be an abstract signature in a trait with body in the impl
@@ -74,6 +77,8 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:1: info: [16] Lit macro definitions at end of file
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:161: warning: [12] trait MatrixChainMtPerTrait fn dimensions should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:166: warning: [12] trait MatrixChainMtPerTrait fn memo_size should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:383: warning: [13] impl IntoIterator for MatrixChainMtPerS should be inside verus!
@@ -90,14 +95,15 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:1: warning: [17] IntoIterator for MatrixChainMtPerS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:66: warning: [18] struct MatrixChainMtPerV should come before view impls (expected type definitions before view impls)
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:70: warning: [18] struct MatrixChainMtPerMemoInv should come before view impls (expected type definitions before view impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:81: warning: [18] struct MatrixChainMtPerS should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:86: warning: [18] impl View for MatrixChainMtPerS should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:94: warning: [18] spec fn spec_multiply_cost should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:98: warning: [18] spec fn spec_dims_bounded should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:107: warning: [18] spec fn spec_costs_fit should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:117: warning: [18] spec fn spec_memo_correct should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:122: warning: [18] spec fn spec_chain_cost should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:142: warning: [18] trait MatrixChainMtPerTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:81: warning: [18] struct MatrixChainMtPerS should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:86: warning: [18] impl View for MatrixChainMtPerS should come before top level coarse locking (expected view impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:94: warning: [18] spec fn spec_multiply_cost should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:98: warning: [18] spec fn spec_dims_bounded should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:107: warning: [18] spec fn spec_costs_fit should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:117: warning: [18] spec fn spec_memo_correct should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:122: warning: [18] spec fn spec_chain_cost should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:142: warning: [18] trait MatrixChainMtPerTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:196: warning: [18] impl MatrixChainMtPerTrait for MatrixChainMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:344: warning: [18] impl PartialEqSpecImpl for MatrixChainMtPerS should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:351: warning: [19] eq return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:94: warning: [22] free spec fn spec_multiply_cost should be an abstract signature in a trait with body in the impl
@@ -119,6 +125,8 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:1: info: [16] Lit macro definitions at end of file
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:409: warning: [13] impl IntoIterator for MatrixChainStEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:418: warning: [13] impl IntoIterator for MatrixChainStEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:427: warning: [13] impl IntoIterator for MatrixChainStEphS should be inside verus!
@@ -155,6 +163,8 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:1: info: [16] Lit macro definitions at end of file
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:378: warning: [13] impl IntoIterator for MatrixChainStPerS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:387: warning: [13] impl IntoIterator for MatrixChainStPerS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:48: warning: [14] struct MatrixDim should have impl Debug outside verus!
@@ -189,6 +199,7 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:71: warning: [12] trait OBSTMtEphTrait fn new should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:72: warning: [12] trait OBSTMtEphTrait fn from_keys_probs should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:73: warning: [12] trait OBSTMtEphTrait fn from_key_probs should have requires/ensures
@@ -217,14 +228,15 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: warning: [17] IntoIterator for OBSTMtEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: warning: [17] IntoIterator for OBSTMtEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:38: warning: [18] struct OptBSTMtEphKeysInv should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:39: warning: [18] impl RwLockPredicate for OptBSTMtEphKeysInv should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:39: warning: [18] impl RwLockPredicate for OptBSTMtEphKeysInv should come before derive impls in verus! (expected top level coarse locking before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:45: warning: [18] struct OptBSTMtEphMemoInv should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:46: warning: [18] impl RwLockPredicate for OptBSTMtEphMemoInv should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:46: warning: [18] impl RwLockPredicate for OptBSTMtEphMemoInv should come before derive impls in verus! (expected top level coarse locking before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:54: warning: [18] struct OBSTMtEphS should come before derive impls in verus! (expected type definitions before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:70: warning: [18] trait OBSTMtEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:86: warning: [18] fn parallel_min_reduction should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:109: warning: [18] fn obst_rec should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:153: warning: [18] impl OBSTMtEphTrait for OBSTMtEphS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:109: warning: [23] free fn obst_rec param T has bounds `MtVal + Send + Sync + 'static` but trait OBSTMtEphTrait has `MtVal`
 
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: info: [1] has mod declarations
@@ -239,6 +251,7 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:66: warning: [12] trait OBSTMtPerTrait fn new should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:67: warning: [12] trait OBSTMtPerTrait fn from_keys_probs should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:68: warning: [12] trait OBSTMtPerTrait fn from_key_probs should have requires/ensures
@@ -260,12 +273,13 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: warning: [17] IntoIterator for OBSTMtPerS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: warning: [17] IntoIterator for OBSTMtPerS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:40: warning: [18] struct OptBSTMtPerMemoInv should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:41: warning: [18] impl RwLockPredicate for OptBSTMtPerMemoInv should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:41: warning: [18] impl RwLockPredicate for OptBSTMtPerMemoInv should come before derive impls in verus! (expected top level coarse locking before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:49: warning: [18] struct OBSTMtPerS should come before derive impls in verus! (expected type definitions before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:65: warning: [18] trait OBSTMtPerTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:78: warning: [18] fn parallel_min_reduction should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:101: warning: [18] fn obst_rec should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:139: warning: [18] impl OBSTMtPerTrait for OBSTMtPerS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:101: warning: [23] free fn obst_rec param T has bounds `MtVal + Send + Sync + 'static` but trait OBSTMtPerTrait has `MtVal`
 
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [1] has mod declarations
@@ -280,6 +294,8 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:109: warning: [12] trait OBSTStEphTrait fn optimal_cost should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:250: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:259: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
@@ -318,6 +334,8 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:109: warning: [12] trait OBSTStPerTrait fn optimal_cost should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:221: warning: [13] impl IntoIterator for OBSTStPerS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:230: warning: [13] impl IntoIterator for OBSTStPerS should be inside verus!
@@ -342,5 +360,5 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:151: warning: [18] impl OBSTStPerTrait for OBSTStPerS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
 
 ════════════════════════════════════════════════════════════════
-Summary: 94 passed, 223 warnings in 8 files (checked 8 files)
+Summary: 108 passed, 227 warnings in 8 files (checked 8 files)
 ════════════════════════════════════════════════════════════════

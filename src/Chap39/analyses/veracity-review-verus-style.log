@@ -21,11 +21,13 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [15] Clone inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [16] Lit macro definitions at end of file
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [18] definition order correct
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:84: warning: [18] fn new_param_treap_arc should come before top level coarse locking (expected impls before top level coarse locking)
 
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [1] has mod declarations
@@ -45,6 +47,9 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:128: warning: [23] free fn minimum_inner param T has bounds `MtKey + 'static` but trait BSTSetTreapMtEphTrait has `MtKey`
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:144: warning: [23] free fn maximum_inner param T has bounds `MtKey + 'static` but trait BSTSetTreapMtEphTrait has `MtKey`
 
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [1] has mod declarations
@@ -60,10 +65,11 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: warning: [11] Set usage should have vstd::set::group_set_axioms in broadcast use
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:229: warning: [12] trait BSTTreapMtEphTrait fn height should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:231: warning: [12] trait BSTTreapMtEphTrait fn height should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:77: warning: [18] impl View for BSTTreapMtEph < T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:84: warning: [18] spec fn spec_bsttreapmteph_wf should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:84: warning: [18] spec fn spec_bsttreapmteph_link_wf should come before impls (expected spec fns before impls)
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:91: warning: [18] spec fn spec_contains_link should come before impls (expected spec fns before impls)
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:107: warning: [18] proof fn lemma_bst_decompose should come before impls (expected proof fns/broadcast groups before impls)
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:121: warning: [18] proof fn lemma_contains_left should come before impls (expected proof fns/broadcast groups before impls)
@@ -74,8 +80,28 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:179: warning: [18] proof fn lemma_wf_assemble_node should come before impls (expected proof fns/broadcast groups before impls)
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:191: warning: [18] trait LinkTrait should come before impls (expected traits before impls)
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:204: warning: [18] trait BSTTreapMtEphTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:84: warning: [22] free spec fn spec_bsttreapmteph_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:335: warning: [18] fn size_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:344: warning: [18] fn update should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:359: warning: [18] fn rotate_left should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:433: warning: [18] fn rotate_right should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:509: warning: [18] fn insert_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:614: warning: [18] fn delete_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:798: warning: [18] fn find_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:827: warning: [18] fn min_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:851: warning: [18] fn max_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:873: warning: [18] fn height_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:902: warning: [18] fn in_order_collect should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:916: warning: [18] fn pre_order_collect should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:928: warning: [18] impl BSTTreapMtEphTrait for BSTTreapMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1046: warning: [18] impl Default for BSTTreapMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:84: warning: [22] free spec fn spec_bsttreapmteph_link_wf should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:91: warning: [22] free spec fn spec_contains_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:84: warning: [23] free fn spec_bsttreapmteph_link_wf param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:300: warning: [23] free fn clone_link param T has bounds `StTInMtT + Ord + Clone` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:359: warning: [23] free fn rotate_left param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:433: warning: [23] free fn rotate_right param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:509: warning: [23] free fn insert_link param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:614: warning: [23] free fn delete_link param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
 
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [1] has mod declarations
@@ -94,8 +120,10 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:56: warning: [22] free spec fn spec_contains_link should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 63 passed, 17 warnings in 2 files (checked 4 files)
+Summary: 68 passed, 40 warnings in 4 files (checked 4 files)
 ════════════════════════════════════════════════════════════════

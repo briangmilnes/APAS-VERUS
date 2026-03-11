@@ -26,6 +26,8 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [24] copyright line present
 
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [1] has mod declarations
@@ -45,6 +47,8 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [24] copyright line present
 
 /home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [1] has mod declarations
@@ -64,6 +68,8 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [24] copyright line present
 
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [0] the user has reviewed this file and accepted its styling as is
@@ -85,6 +91,8 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:103: warning: [18] proof fn lemma_total_size_monotone should come before impls (expected proof fns/broadcast groups before impls)
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:114: warning: [18] proof fn lemma_heap_root_is_min should come before impls (expected proof fns/broadcast groups before impls)
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:175: warning: [18] proof fn lemma_rank_le_size should come before impls (expected proof fns/broadcast groups before impls)
@@ -110,6 +118,8 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [24] copyright line present
 
 /home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [1] has mod declarations
@@ -129,7 +139,9 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [24] copyright line present
 
 ════════════════════════════════════════════════════════════════
-Summary: 102 passed, 6 warnings in 1 files (checked 7 files)
+Summary: 114 passed, 6 warnings in 1 files (checked 7 files)
 ════════════════════════════════════════════════════════════════

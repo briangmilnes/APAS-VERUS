@@ -30,6 +30,8 @@ Checking 5 files...
 /home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:65: warning: [22] free spec fn in_star should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:70: warning: [22] free spec fn in_plus should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:75: warning: [22] free spec fn viewed should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:75: warning: [23] free fn viewed param T has bounds `View` but trait KleeneStPerTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS/src/Chap05/KleeneStPer.rs:1: warning: [24] copyright text present but wrong format; got `// Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 /home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: info: [1] has mod declarations
@@ -61,6 +63,15 @@ Checking 5 files...
 /home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:117: warning: [22] free spec fn is_functional_relation should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:121: warning: [22] free spec fn is_functional_set_at should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:135: warning: [22] spec fn spec_finite in trait MappingStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:102: warning: [23] free fn is_functional_set param X has bounds `(none)` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:102: warning: [23] free fn is_functional_set param Y has bounds `(none)` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:108: warning: [23] free fn is_functional_seq param X has bounds `View` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:108: warning: [23] free fn is_functional_seq param Y has bounds `View` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:112: warning: [23] free fn is_functional_seq_at param X has bounds `View` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:112: warning: [23] free fn is_functional_seq_at param Y has bounds `View` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:121: warning: [23] free fn is_functional_set_at param X has bounds `(none)` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:121: warning: [23] free fn is_functional_set_at param Y has bounds `(none)` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 /home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [1] has mod declarations
@@ -78,6 +89,7 @@ Checking 5 files...
 /home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: info: [23] free fn type bounds: N/A
 /home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:288: warning: [14] struct RelationStEphIter should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:288: warning: [14] struct RelationStEphIter should have impl Display outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:325: warning: [14] struct RelationStEphGhostIterator should have impl Debug outside verus!
@@ -87,6 +99,7 @@ Checking 5 files...
 /home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:325: warning: [18] struct RelationStEphGhostIterator should come before iterators (expected type definitions before iterators)
 /home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:378: warning: [18] impl View for RelationStEphGhostIterator < 'a , X , Y > should come before iterators (expected view impls before iterators)
 /home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:96: warning: [22] spec fn spec_finite in trait RelationStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap05/RelationStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [1] has mod declarations
@@ -104,18 +117,21 @@ Checking 5 files...
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:833: warning: [14] struct SetMtEphIter should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:833: warning: [14] struct SetMtEphIter should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:873: warning: [14] struct SetMtEphGhostIterator should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:873: warning: [14] struct SetMtEphGhostIterator should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:833: warning: [18] struct SetMtEphIter should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:837: warning: [18] impl View for SetMtEphIter < 'a , T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:842: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:873: warning: [18] struct SetMtEphGhostIterator should come before iterators (expected type definitions before iterators)
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:926: warning: [18] impl View for SetMtEphGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:856: warning: [14] struct SetMtEphIter should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:856: warning: [14] struct SetMtEphIter should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:896: warning: [14] struct SetMtEphGhostIterator should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:896: warning: [14] struct SetMtEphGhostIterator should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:856: warning: [18] struct SetMtEphIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:860: warning: [18] impl View for SetMtEphIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:865: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:896: warning: [18] struct SetMtEphGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:949: warning: [18] impl View for SetMtEphGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:97: warning: [22] free spec fn valid_key_type should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:127: warning: [22] spec fn spec_finite in trait SetMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:842: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:104: warning: [22] free spec fn spec_setmteph_wf_generic should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:136: warning: [22] spec fn spec_finite in trait SetMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:865: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:97: warning: [23] free fn valid_key_type param T has bounds `View + Clone + Eq` but trait SetMtEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: info: [1] has mod declarations
@@ -145,7 +161,9 @@ Checking 5 files...
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:92: warning: [22] free spec fn valid_key_type should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:99: warning: [22] free spec fn spec_setsteph_wf_generic should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:784: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:92: warning: [23] free fn valid_key_type param T has bounds `View + Clone + Eq` but trait SetStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:1: warning: [24] copyright text present but wrong format; got `// Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 ════════════════════════════════════════════════════════════════
-Summary: 75 passed, 53 warnings in 5 files (checked 5 files)
+Summary: 76 passed, 70 warnings in 5 files (checked 5 files)
 ════════════════════════════════════════════════════════════════

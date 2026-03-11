@@ -36,7 +36,10 @@ Checking 1 files...
 /home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:113: warning: [22] free spec fn valid_key_type should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:120: warning: [22] free spec fn spec_clamp should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:605: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:113: warning: [23] free fn valid_key_type param T has bounds `View + Clone + Eq` but trait MathSeqSTrait has `StT`
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:605: warning: [23] free fn iter_invariant param T has bounds `(none)` but trait MathSeqSTrait has `StT`
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 ════════════════════════════════════════════════════════════════
-Summary: 14 passed, 13 warnings in 1 files (checked 1 files)
+Summary: 14 passed, 16 warnings in 1 files (checked 1 files)
 ════════════════════════════════════════════════════════════════
