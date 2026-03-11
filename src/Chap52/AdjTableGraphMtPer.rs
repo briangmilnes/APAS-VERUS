@@ -70,42 +70,54 @@ broadcast use {
     // 8. traits
 
     pub trait AdjTableGraphMtPerTrait<V: StTInMtT + Ord + 'static> {
+        spec fn spec_adjtablegraphmtper_wf(&self) -> bool;
         spec fn spec_adj(&self) -> Map<<V as View>::V, Set<<V as View>::V>>;
         spec fn spec_num_edges(&self) -> nat;
 
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                          -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn num_vertices(&self)              -> N;
-        /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(log |V| × log |E|), Parallelism Θ(|E|/log |V|)
+        /// Work Theta(1), Span Theta(1)
+        fn empty() -> (out: Self)
+            ensures out.spec_adjtablegraphmtper_wf();
+        /// Work Theta(1), Span Theta(1)
+        fn num_vertices(&self) -> N
+            requires self.spec_adjtablegraphmtper_wf();
+        /// Work Theta(|V| + |E|), Span Theta(log |V| * log |E|)
         fn num_edges(&self) -> (m: N)
-            requires self.spec_num_edges() <= usize::MAX as nat
+            requires self.spec_adjtablegraphmtper_wf(), self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges();
-        /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
+        /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
         fn has_edge(&self, u: &V, v: &V) -> (found: B)
+            requires self.spec_adjtablegraphmtper_wf()
             ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));
-        /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
+        /// Work Theta(log |V|), Span Theta(log |V|)
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
+            requires self.spec_adjtablegraphmtper_wf()
             ensures
                 self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
                 !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();
-        /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
-        fn out_degree(&self, u: &V)         -> N;
-        /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
+        /// Work Theta(log |V|), Span Theta(log |V|)
+        fn out_degree(&self, u: &V) -> N
+            requires self.spec_adjtablegraphmtper_wf();
+        /// Work Theta(log |V|), Span Theta(log |V|)
         fn insert_vertex(&self, v: V) -> (updated: Self)
-            ensures updated.spec_adj().dom().contains(v@);
-        /// claude-4-sonet: Work Θ((|V| + |E|) log |V|), Span Θ(log² |V| + log |E|), Parallelism Θ(|E|/log |V|)
+            requires self.spec_adjtablegraphmtper_wf()
+            ensures updated.spec_adjtablegraphmtper_wf(), updated.spec_adj().dom().contains(v@);
+        /// Work Theta((|V| + |E|) log |V|), Span Theta(log^2 |V| + log |E|)
         fn delete_vertex(&self, v: &V) -> (updated: Self)
-            ensures !updated.spec_adj().dom().contains(v@);
-        /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
+            requires self.spec_adjtablegraphmtper_wf()
+            ensures updated.spec_adjtablegraphmtper_wf(), !updated.spec_adj().dom().contains(v@);
+        /// Work Theta(log |V|), Span Theta(log |V|)
         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
+            requires self.spec_adjtablegraphmtper_wf()
             ensures
+                updated.spec_adjtablegraphmtper_wf(),
                 updated.spec_adj().dom().contains(u@),
                 updated.spec_adj().dom().contains(v@),
                 updated.spec_adj()[u@].contains(v@);
-        /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
+        /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
+            requires self.spec_adjtablegraphmtper_wf()
             ensures
+                updated.spec_adjtablegraphmtper_wf(),
                 !updated.spec_adj().dom().contains(u@)
                     || !updated.spec_adj()[u@].contains(v@);
     }
@@ -113,6 +125,13 @@ broadcast use {
     // 9. impls
 
     impl<V: StTInMtT + Ord + 'static> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+        open spec fn spec_adjtablegraphmtper_wf(&self) -> bool {
+            forall|u: <V as View>::V, v: <V as View>::V|
+                self.spec_adj().dom().contains(u)
+                && #[trigger] self.spec_adj().index(u).contains(v)
+                ==> self.spec_adj().dom().contains(v)
+        }
+
         open spec fn spec_adj(&self) -> Map<<V as View>::V, Set<<V as View>::V>> {
             self.adj@
         }
@@ -121,7 +140,7 @@ broadcast use {
             spec_sum_adj_sizes(self.spec_adj())
         }
 
-        fn empty() -> Self {
+        fn empty() -> (out: Self) {
             AdjTableGraphMtPer {
                 adj: OrderedTableMtPer::empty(),
             }

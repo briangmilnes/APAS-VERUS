@@ -32,6 +32,8 @@ pub mod AllPairsResultStPerF64 {
     // 8. traits
 
     pub trait AllPairsResultStPerF64Trait: Sized {
+        spec fn spec_allpairsresultstperf64_wf(s: &AllPairsResultStPerF64) -> bool;
+
         spec fn spec_n(&self) -> usize;
 
         fn new(n: usize) -> (empty: Self)
@@ -55,16 +57,30 @@ pub mod AllPairsResultStPerF64 {
     // 9. impls
 
     impl AllPairsResultStPerF64Trait for AllPairsResultStPerF64 {
+        open spec fn spec_allpairsresultstperf64_wf(s: &AllPairsResultStPerF64) -> bool {
+            s.distances.spec_len() == s.n as nat
+            && s.predecessors.spec_len() == s.n as nat
+            && forall|r: int| #![trigger s.distances.spec_index(r)]
+                0 <= r < s.n ==> s.distances.spec_index(r).spec_len() == s.n as nat
+            && forall|r: int| #![trigger s.predecessors.spec_index(r)]
+                0 <= r < s.n ==> s.predecessors.spec_index(r).spec_len() == s.n as nat
+        }
+
         open spec fn spec_n(&self) -> usize { self.n }
 
         fn new(n: usize) -> (empty: Self)
+            ensures Self::spec_allpairsresultstperf64_wf(&empty),
         {
             let unreach = unreachable_dist();
             let zero = zero_dist();
             let mut dist_rows: Vec<ArraySeqStPerS<WrappedF64>> = Vec::new();
             let mut i: usize = 0;
             while i < n
-                invariant i <= n, dist_rows@.len() == i as int,
+                invariant
+                    i <= n,
+                    dist_rows@.len() == i as int,
+                    forall|r: int| #![trigger dist_rows@[r]]
+                        0 <= r < i ==> dist_rows@[r].spec_len() == n as nat,
                 decreases n - i,
             {
                 let mut row: Vec<WrappedF64> = Vec::new();
@@ -82,7 +98,11 @@ pub mod AllPairsResultStPerF64 {
             let mut pred_rows: Vec<ArraySeqStPerS<usize>> = Vec::new();
             let mut k: usize = 0;
             while k < n
-                invariant k <= n, pred_rows@.len() == k as int,
+                invariant
+                    k <= n,
+                    pred_rows@.len() == k as int,
+                    forall|r: int| #![trigger pred_rows@[r]]
+                        0 <= r < k ==> pred_rows@[r].spec_len() == n as nat,
                 decreases n - k,
             {
                 let mut prow: Vec<usize> = Vec::new();

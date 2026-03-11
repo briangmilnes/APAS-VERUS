@@ -74,6 +74,7 @@ broadcast use {
     // 8. traits
 
     pub trait AdjSeqGraphMtPerTrait: Sized {
+        spec fn spec_adjseqgraphmtper_wf(&self) -> bool;
         spec fn spec_num_vertices(&self) -> nat;
         spec fn spec_degree(&self, u: int) -> nat
             recommends 0 <= u < self.spec_num_vertices();
@@ -83,16 +84,19 @@ broadcast use {
         /// Work Theta(n), Span Theta(log n)
         fn new(n: N) -> (empty: Self)
             ensures
+                empty.spec_adjseqgraphmtper_wf(),
                 empty.spec_num_vertices() == n,
                 forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;
 
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: N)
+            requires self.spec_adjseqgraphmtper_wf()
             ensures n as nat == self.spec_num_vertices();
 
         /// Work Theta(n + m), Span Theta(lg n)
         fn num_edges(&self) -> (m: N)
             requires
+                self.spec_adjseqgraphmtper_wf(),
                 spec_sum_of(
                     self.spec_num_vertices() as int,
                     |i: int| self.spec_degree(i),
@@ -105,14 +109,14 @@ broadcast use {
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
         fn has_edge(&self, u: N, v: N) -> (found: B)
-            requires u < self.spec_num_vertices()
+            requires self.spec_adjseqgraphmtper_wf(), u < self.spec_num_vertices()
             ensures found == exists|j: int|
                 0 <= j < self.spec_degree(u as int)
                 && #[trigger] self.spec_neighbor(u as int, j) == v;
 
         /// Work Theta(1), Span Theta(1)
         fn out_neighbors(&self, u: N) -> (neighbors: &ArraySeqMtPerS<N>)
-            requires u < self.spec_num_vertices()
+            requires self.spec_adjseqgraphmtper_wf(), u < self.spec_num_vertices()
             ensures
                 neighbors.spec_len() == self.spec_degree(u as int),
                 forall|j: int| 0 <= j < neighbors.spec_len()
@@ -120,13 +124,20 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         fn out_degree(&self, u: N) -> (d: N)
-            requires u < self.spec_num_vertices()
+            requires self.spec_adjseqgraphmtper_wf(), u < self.spec_num_vertices()
             ensures d as nat == self.spec_degree(u as int);
     }
 
     // 9. impls
 
     impl AdjSeqGraphMtPerTrait for AdjSeqGraphMtPer {
+
+        open spec fn spec_adjseqgraphmtper_wf(&self) -> bool {
+            forall|u: int, j: int|
+                0 <= u < self.adj.spec_len()
+                && 0 <= j < self.adj.spec_index(u).spec_len()
+                ==> #[trigger] self.adj.spec_index(u).spec_index(j) < self.adj.spec_len()
+        }
 
         open spec fn spec_num_vertices(&self) -> nat {
             self.adj.spec_len()

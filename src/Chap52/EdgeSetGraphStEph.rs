@@ -46,42 +46,70 @@ broadcast use {
     // 8. traits
 
     pub trait EdgeSetGraphStEphTrait<V: StT + Ord> {
+        spec fn spec_edgesetgraphsteph_wf(&self) -> bool;
         spec fn spec_vertices(&self) -> Set<<V as View>::V>;
         spec fn spec_edges(&self) -> Set<(<V as View>::V, <V as View>::V)>;
         spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V>;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                                                                        -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn num_vertices(&self)                                                            -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn num_edges(&self)                                                               -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn vertices(&self)                                                                -> &AVLTreeSetStEph<V>;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn edges(&self)                                                                   -> &AVLTreeSetStEph<Pair<V, V>>;
-        /// claude-4-sonet: Work Θ(log |E|), Span Θ(log |E|), Parallelism Θ(1)
-        fn has_edge(&self, u: &V, v: &V)                                                  -> B;
-        /// claude-4-sonet: Work Θ(|E| log |V|), Span Θ(|E| log |V|), Parallelism Θ(1)
+
+        /// Work Theta(1), Span Theta(1)
+        fn empty() -> (out: Self)
+            ensures out.spec_edgesetgraphsteph_wf();
+        /// Work Theta(1), Span Theta(1)
+        fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self)
+            requires
+                forall|u: <V as View>::V, w: <V as View>::V|
+                    #[trigger] e@.contains((u, w))
+                    ==> v@.contains(u) && v@.contains(w),
+            ensures out.spec_edgesetgraphsteph_wf();
+        /// Work Theta(1), Span Theta(1)
+        fn num_vertices(&self) -> N
+            requires self.spec_edgesetgraphsteph_wf();
+        /// Work Theta(1), Span Theta(1)
+        fn num_edges(&self) -> N
+            requires self.spec_edgesetgraphsteph_wf();
+        /// Work Theta(1), Span Theta(1)
+        fn vertices(&self) -> &AVLTreeSetStEph<V>
+            requires self.spec_edgesetgraphsteph_wf();
+        /// Work Theta(1), Span Theta(1)
+        fn edges(&self) -> &AVLTreeSetStEph<Pair<V, V>>
+            requires self.spec_edgesetgraphsteph_wf();
+        /// Work Theta(log |E|), Span Theta(log |E|)
+        fn has_edge(&self, u: &V, v: &V) -> B
+            requires self.spec_edgesetgraphsteph_wf();
+        /// Work Theta(|E| log |V|), Span Theta(|E| log |V|)
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
+            requires self.spec_edgesetgraphsteph_wf()
             ensures neighbors@ == self.spec_out_neighbors(u@);
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1)
-        fn out_degree(&self, u: &V)                                                       -> N;
-        /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
-        fn insert_vertex(&mut self, v: V);
-        /// claude-4-sonet: Work Θ(|E| log |E|), Span Θ(|E| log |E|), Parallelism Θ(1)
+        /// Work Theta(|E|), Span Theta(|E|)
+        fn out_degree(&self, u: &V) -> N
+            requires self.spec_edgesetgraphsteph_wf();
+        /// Work Theta(log |V|), Span Theta(log |V|)
+        fn insert_vertex(&mut self, v: V)
+            requires old(self).spec_edgesetgraphsteph_wf()
+            ensures self.spec_edgesetgraphsteph_wf();
+        /// Work Theta(|E| log |E|), Span Theta(|E| log |E|)
         fn delete_vertex(&mut self, v: &V)
-            ensures !self.spec_vertices().contains(v@);
-        /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
-        fn insert_edge(&mut self, u: V, v: V);
-        /// claude-4-sonet: Work Θ(log |E|), Span Θ(log |E|), Parallelism Θ(1)
-        fn delete_edge(&mut self, u: &V, v: &V);
+            requires old(self).spec_edgesetgraphsteph_wf()
+            ensures self.spec_edgesetgraphsteph_wf(), !self.spec_vertices().contains(v@);
+        /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
+        fn insert_edge(&mut self, u: V, v: V)
+            requires old(self).spec_edgesetgraphsteph_wf()
+            ensures self.spec_edgesetgraphsteph_wf();
+        /// Work Theta(log |E|), Span Theta(log |E|)
+        fn delete_edge(&mut self, u: &V, v: &V)
+            requires old(self).spec_edgesetgraphsteph_wf()
+            ensures self.spec_edgesetgraphsteph_wf();
     }
 
     // 9. impls
 
     impl<V: StT + Ord> EdgeSetGraphStEphTrait<V> for EdgeSetGraphStEph<V> {
+        open spec fn spec_edgesetgraphsteph_wf(&self) -> bool {
+            forall|u: <V as View>::V, v: <V as View>::V|
+                #[trigger] self.spec_edges().contains((u, v))
+                ==> self.spec_vertices().contains(u) && self.spec_vertices().contains(v)
+        }
+
         open spec fn spec_vertices(&self) -> Set<<V as View>::V> {
             self.vertices@
         }
@@ -94,14 +122,14 @@ broadcast use {
             Set::new(|v: <V as View>::V| self.edges@.contains((u, v)))
         }
 
-        fn empty() -> Self {
+        fn empty() -> (out: Self) {
             EdgeSetGraphStEph {
                 vertices: AVLTreeSetStEph::empty(),
                 edges: AVLTreeSetStEph::empty(),
             }
         }
 
-        fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> Self {
+        fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self) {
             EdgeSetGraphStEph { vertices: v, edges: e }
         }
 

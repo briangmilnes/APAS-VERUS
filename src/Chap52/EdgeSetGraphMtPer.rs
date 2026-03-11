@@ -45,47 +45,75 @@ pub mod EdgeSetGraphMtPer {
     // 8. traits
 
     pub trait EdgeSetGraphMtPerTrait<V: StTInMtT + Ord + 'static> {
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                                                                        -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn num_vertices(&self)                                                            -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn num_edges(&self)                                                               -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn vertices(&self)                                                                -> &AVLTreeSetMtPer<V>;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn edges(&self)                                                                   -> &AVLTreeSetMtPer<Pair<V, V>>;
-        /// claude-4-sonet: Work Θ(log |E|), Span Θ(log |E|), Parallelism Θ(1)
-        fn has_edge(&self, u: &V, v: &V)                                                  -> B;
-        /// claude-4-sonet: Work Θ(|E| log |V|), Span Θ(log |E| × log |V|), Parallelism Θ(|E|/log |E|)
+        spec fn spec_edgesetgraphmtper_wf(&self) -> bool;
+
+        /// Work Theta(1), Span Theta(1)
+        fn empty() -> (out: Self)
+            ensures out.spec_edgesetgraphmtper_wf();
+        /// Work Theta(1), Span Theta(1)
+        fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self)
+            requires
+                forall|u: <V as View>::V, w: <V as View>::V|
+                    #[trigger] e@.contains((u, w))
+                    ==> v@.contains(u) && v@.contains(w),
+            ensures out.spec_edgesetgraphmtper_wf();
+        /// Work Theta(1), Span Theta(1)
+        fn num_vertices(&self) -> N
+            requires self.spec_edgesetgraphmtper_wf();
+        /// Work Theta(1), Span Theta(1)
+        fn num_edges(&self) -> N
+            requires self.spec_edgesetgraphmtper_wf();
+        /// Work Theta(1), Span Theta(1)
+        fn vertices(&self) -> &AVLTreeSetMtPer<V>
+            requires self.spec_edgesetgraphmtper_wf();
+        /// Work Theta(1), Span Theta(1)
+        fn edges(&self) -> &AVLTreeSetMtPer<Pair<V, V>>
+            requires self.spec_edgesetgraphmtper_wf();
+        /// Work Theta(log |E|), Span Theta(log |E|)
+        fn has_edge(&self, u: &V, v: &V) -> B
+            requires self.spec_edgesetgraphmtper_wf();
+        /// Work Theta(|E| log |V|), Span Theta(log |E| * log |V|)
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
+            requires self.spec_edgesetgraphmtper_wf()
             ensures neighbors@ == Set::new(|v: <V as View>::V| self.edges@.contains((u@, v)));
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(log |E|), Parallelism Θ(|E|/log |E|)
-        fn out_degree(&self, u: &V)                                                       -> N;
-        /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
-        fn insert_vertex(&self, v: V)                                                     -> Self;
-        /// claude-4-sonet: Work Θ(|E| log |V| + |E| log |E|), Span Θ(log |E| × log |V|), Parallelism Θ(|E|/log |E|)
+        /// Work Theta(|E|), Span Theta(log |E|)
+        fn out_degree(&self, u: &V) -> N
+            requires self.spec_edgesetgraphmtper_wf();
+        /// Work Theta(log |V|), Span Theta(log |V|)
+        fn insert_vertex(&self, v: V) -> (updated: Self)
+            requires self.spec_edgesetgraphmtper_wf()
+            ensures updated.spec_edgesetgraphmtper_wf();
+        /// Work Theta(|E| log |V| + |E| log |E|), Span Theta(log |E| * log |V|)
         fn delete_vertex(&self, v: &V) -> (updated: Self)
-            ensures !updated.vertices@.contains(v@);
-        /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
-        fn insert_edge(&self, u: V, v: V)                                                 -> Self;
-        /// claude-4-sonet: Work Θ(log |E|), Span Θ(log |E|), Parallelism Θ(1)
-        fn delete_edge(&self, u: &V, v: &V)                                               -> Self;
+            requires self.spec_edgesetgraphmtper_wf()
+            ensures updated.spec_edgesetgraphmtper_wf(), !updated.vertices@.contains(v@);
+        /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
+        fn insert_edge(&self, u: V, v: V) -> (updated: Self)
+            requires self.spec_edgesetgraphmtper_wf()
+            ensures updated.spec_edgesetgraphmtper_wf();
+        /// Work Theta(log |E|), Span Theta(log |E|)
+        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
+            requires self.spec_edgesetgraphmtper_wf()
+            ensures updated.spec_edgesetgraphmtper_wf();
     }
 
     // 9. impls
 
     impl<V: StTInMtT + Ord + 'static> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
-        fn empty() -> Self {
+        open spec fn spec_edgesetgraphmtper_wf(&self) -> bool {
+            forall|u: <V as View>::V, v: <V as View>::V|
+                #[trigger] self.edges@.contains((u, v))
+                ==> self.vertices@.contains(u) && self.vertices@.contains(v)
+        }
+
+        fn empty() -> (out: Self) {
             EdgeSetGraphMtPer {
                 vertices: AVLTreeSetMtPer::empty(),
                 edges: AVLTreeSetMtPer::empty(),
             }
         }
 
-        fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> Self {
+        fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self) {
             EdgeSetGraphMtPer { vertices: v, edges: e }
         }
 
@@ -145,7 +173,7 @@ pub mod EdgeSetGraphMtPer {
         /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to out_neighbors.
         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
 
-        fn insert_vertex(&self, v: V) -> Self {
+        fn insert_vertex(&self, v: V) -> (updated: Self) {
             EdgeSetGraphMtPer {
                 vertices: self.vertices.insert(v),
                 edges: self.edges.clone(),
@@ -167,7 +195,7 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
-        fn insert_edge(&self, u: V, v: V) -> Self {
+        fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             let new_vertices = self.vertices.insert(u.clone()).insert(v.clone());
             let new_edges = self.edges.insert(Pair(u, v));
             EdgeSetGraphMtPer {
@@ -176,7 +204,7 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
-        fn delete_edge(&self, u: &V, v: &V) -> Self {
+        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             EdgeSetGraphMtPer {
                 vertices: self.vertices.clone(),
                 edges: self.edges.delete(&Pair(u.clone(), v.clone())),

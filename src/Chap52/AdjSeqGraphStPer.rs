@@ -80,6 +80,7 @@ broadcast use {
     // 8. traits
 
     pub trait AdjSeqGraphStPerTrait: Sized {
+        spec fn spec_adjseqgraphstper_wf(&self) -> bool;
         spec fn spec_num_vertices(&self) -> nat;
         spec fn spec_degree(&self, u: int) -> nat
             recommends 0 <= u < self.spec_num_vertices();
@@ -89,12 +90,19 @@ broadcast use {
         /// Work Theta(n), Span Theta(n)
         fn new(n: N) -> (empty: Self)
             ensures
+                empty.spec_adjseqgraphstper_wf(),
                 empty.spec_num_vertices() == n,
                 forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;
 
         /// Work Theta(1), Span Theta(1)
         fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<N>>) -> (constructed: Self)
+            requires
+                forall|u: int, j: int|
+                    0 <= u < adj.spec_len()
+                    && 0 <= j < adj.spec_index(u).spec_len()
+                    ==> #[trigger] adj.spec_index(u).spec_index(j) < adj.spec_len(),
             ensures
+                constructed.spec_adjseqgraphstper_wf(),
                 constructed.spec_num_vertices() == adj.spec_len(),
                 forall|i: int| 0 <= i < adj.spec_len() ==>
                     #[trigger] constructed.spec_degree(i) == adj.spec_index(i).spec_len(),
@@ -104,11 +112,13 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: N)
+            requires self.spec_adjseqgraphstper_wf()
             ensures n as nat == self.spec_num_vertices();
 
         /// Work Theta(n + m), Span Theta(n + m)
         fn num_edges(&self) -> (m: N)
             requires
+                self.spec_adjseqgraphstper_wf(),
                 spec_sum_of(
                     self.spec_num_vertices() as int,
                     |i: int| self.spec_degree(i),
@@ -121,14 +131,14 @@ broadcast use {
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
         fn has_edge(&self, u: N, v: N) -> (found: B)
-            requires u < self.spec_num_vertices()
+            requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures found == exists|j: int|
                 0 <= j < self.spec_degree(u as int)
                 && #[trigger] self.spec_neighbor(u as int, j) == v;
 
         /// Work Theta(1), Span Theta(1)
         fn out_neighbors(&self, u: N) -> (neighbors: &ArraySeqStPerS<N>)
-            requires u < self.spec_num_vertices()
+            requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures
                 neighbors.spec_len() == self.spec_degree(u as int),
                 forall|j: int| 0 <= j < neighbors.spec_len()
@@ -136,15 +146,17 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         fn out_degree(&self, u: N) -> (d: N)
-            requires u < self.spec_num_vertices()
+            requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures d as nat == self.spec_degree(u as int);
 
         /// Work Theta(n + deg(u)), Span Theta(n + deg(u))
         fn insert_edge(&self, u: N, v: N) -> (updated: Self)
             requires
+                self.spec_adjseqgraphstper_wf(),
                 u < self.spec_num_vertices(),
                 v < self.spec_num_vertices(),
             ensures
+                updated.spec_adjseqgraphstper_wf(),
                 updated.spec_num_vertices() == self.spec_num_vertices(),
                 forall|i: int| 0 <= i < self.spec_num_vertices() && i != u as int
                     ==> #[trigger] updated.spec_degree(i) == self.spec_degree(i),
@@ -158,8 +170,9 @@ broadcast use {
 
         /// Work Theta(n + deg(u)), Span Theta(n + deg(u))
         fn delete_edge(&self, u: N, v: N) -> (updated: Self)
-            requires u < self.spec_num_vertices()
+            requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures
+                updated.spec_adjseqgraphstper_wf(),
                 updated.spec_num_vertices() == self.spec_num_vertices(),
                 forall|i: int| 0 <= i < self.spec_num_vertices() && i != u as int
                     ==> #[trigger] updated.spec_degree(i) == self.spec_degree(i),
@@ -175,6 +188,13 @@ broadcast use {
     // 9. impls
 
     impl AdjSeqGraphStPerTrait for AdjSeqGraphStPer {
+
+        open spec fn spec_adjseqgraphstper_wf(&self) -> bool {
+            forall|u: int, j: int|
+                0 <= u < self.adj.spec_len()
+                && 0 <= j < self.adj.spec_index(u).spec_len()
+                ==> #[trigger] self.adj.spec_index(u).spec_index(j) < self.adj.spec_len()
+        }
 
         open spec fn spec_num_vertices(&self) -> nat {
             self.adj.spec_len()
@@ -404,9 +424,12 @@ broadcast use {
                     deg_u as nat == src_u.spec_len(),
                     forall|k: int| 0 <= k < nvec@.len() as int
                         ==> #[trigger] nvec@[k] != v,
+                    self.spec_adjseqgraphstper_wf(),
+                    forall|k: int| 0 <= k < nvec@.len() as int
+                        ==> nvec@[k] < self.adj.spec_len(),
                 decreases deg_u - j
             {
-                let neighbor = *src_u.nth(j);
+                let neighbor = *self.adj.nth(u).nth(j);
                 if neighbor != v {
                     nvec.push(neighbor);
                 }
@@ -453,6 +476,16 @@ broadcast use {
                 },
                 n_v,
             );
+
+            assert forall|u2: int, j2: int|
+                0 <= u2 < result_adj.spec_len()
+                && 0 <= j2 < result_adj.spec_index(u2).spec_len()
+            implies #[trigger] result_adj.spec_index(u2).spec_index(j2) < result_adj.spec_len()
+            by {
+                if u2 != u as int {
+                    assert(result_adj.spec_index(u2).spec_index(j2) == self.adj.spec_index(u2).spec_index(j2));
+                }
+            }
 
             AdjSeqGraphStPer { adj: result_adj }
         }

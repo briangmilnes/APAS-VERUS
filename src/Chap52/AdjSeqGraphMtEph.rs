@@ -77,6 +77,7 @@ broadcast use {
     // 8. traits
 
     pub trait AdjSeqGraphMtEphTrait: Sized {
+        spec fn spec_adjseqgraphmteph_wf(&self) -> bool;
         spec fn spec_num_vertices(&self) -> nat;
         spec fn spec_degree(&self, u: int) -> nat
             recommends 0 <= u < self.spec_num_vertices();
@@ -86,16 +87,19 @@ broadcast use {
         /// Work Theta(n), Span Theta(1)
         fn new(n: N) -> (empty: Self)
             ensures
+                empty.spec_adjseqgraphmteph_wf(),
                 empty.spec_num_vertices() == n,
                 forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;
 
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: N)
+            requires self.spec_adjseqgraphmteph_wf()
             ensures n as nat == self.spec_num_vertices();
 
         /// Work Theta(n + m), Span Theta(lg n)
         fn num_edges(&self) -> (m: N)
             requires
+                self.spec_adjseqgraphmteph_wf(),
                 spec_sum_of(
                     self.spec_num_vertices() as int,
                     |i: int| self.spec_degree(i),
@@ -108,14 +112,14 @@ broadcast use {
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
         fn has_edge(&self, u: N, v: N) -> (found: B)
-            requires u < self.spec_num_vertices()
+            requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()
             ensures found == exists|j: int|
                 0 <= j < self.spec_degree(u as int)
                 && #[trigger] self.spec_neighbor(u as int, j) == v;
 
         /// Work Theta(1), Span Theta(1)
         fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtEphS<N>)
-            requires u < self.spec_num_vertices()
+            requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()
             ensures
                 neighbors.spec_len() == self.spec_degree(u as int),
                 forall|j: int| 0 <= j < neighbors.spec_len()
@@ -123,15 +127,17 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         fn out_degree(&self, u: N) -> (d: N)
-            requires u < self.spec_num_vertices()
+            requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()
             ensures d as nat == self.spec_degree(u as int);
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
         fn set_edge(&mut self, u: N, v: N, exists: B)
             requires
+                old(self).spec_adjseqgraphmteph_wf(),
                 u < old(self).spec_num_vertices(),
                 v < old(self).spec_num_vertices(),
             ensures
+                self.spec_adjseqgraphmteph_wf(),
                 self.spec_num_vertices() == old(self).spec_num_vertices(),
                 forall|i: int| 0 <= i < old(self).spec_num_vertices() && i != u as int
                     ==> #[trigger] self.spec_degree(i) == old(self).spec_degree(i),
@@ -150,6 +156,13 @@ broadcast use {
     // 9. impls
 
     impl AdjSeqGraphMtEphTrait for AdjSeqGraphMtEph {
+
+        open spec fn spec_adjseqgraphmteph_wf(&self) -> bool {
+            forall|u: int, j: int|
+                0 <= u < self.adj.spec_len()
+                && 0 <= j < self.adj.spec_index(u).spec_len()
+                ==> #[trigger] self.adj.spec_index(u).spec_index(j) < self.adj.spec_len()
+        }
 
         open spec fn spec_num_vertices(&self) -> nat {
             self.adj.spec_len()
@@ -250,6 +263,7 @@ broadcast use {
         fn set_edge(&mut self, u: N, v: N, exists: B) {
             let ghost old_degree = self.spec_degree(u as int);
             let ghost old_neighbors_view = Seq::new(old_degree, |j: int| self.spec_neighbor(u as int, j));
+            let ghost adj_len = self.adj.spec_len();
 
             if exists {
                 let old_len = self.adj.nth(u).length();
@@ -286,6 +300,10 @@ broadcast use {
                             new_vec@.len() == j as int,
                             forall|k: int| 0 <= k < j
                                 ==> #[trigger] new_vec@[k] == self.spec_neighbor(u as int, k),
+                            adj_len == self.adj.spec_len(),
+                            old(self).spec_adjseqgraphmteph_wf(),
+                            forall|k: int| 0 <= k < new_vec@.len() as int
+                                ==> new_vec@[k] < adj_len,
                         decreases old_len - j
                     {
                         new_vec.push(*self.adj.nth(u).nth(j));
@@ -296,6 +314,15 @@ broadcast use {
                     let _ = self.adj.set(u, new_neighbors);
                     assert(self.spec_degree(u as int) == old_len as nat + 1);
                     assert(self.spec_neighbor(u as int, old_len as int) == v);
+                    assert forall|u2: int, j2: int|
+                        0 <= u2 < self.adj.spec_len()
+                        && 0 <= j2 < self.adj.spec_index(u2).spec_len()
+                    implies #[trigger] self.adj.spec_index(u2).spec_index(j2) < self.adj.spec_len()
+                    by {
+                        if u2 != u as int {
+                            assert(self.adj.spec_index(u2) == old(self).adj.spec_index(u2));
+                        }
+                    }
                 }
             } else {
                 let old_len = self.adj.nth(u).length();
@@ -308,6 +335,10 @@ broadcast use {
                         old_len as nat == self.spec_degree(u as int),
                         forall|k: int| 0 <= k < new_vec@.len() as int
                             ==> #[trigger] new_vec@[k] != v,
+                        adj_len == self.adj.spec_len(),
+                        old(self).spec_adjseqgraphmteph_wf(),
+                        forall|k: int| 0 <= k < new_vec@.len() as int
+                            ==> new_vec@[k] < adj_len,
                     decreases old_len - j
                 {
                     let neighbor = *self.adj.nth(u).nth(j);
@@ -318,6 +349,15 @@ broadcast use {
                 }
                 let new_neighbors = ArraySeqMtEphS::from_vec(new_vec);
                 let _ = self.adj.set(u, new_neighbors);
+                assert forall|u2: int, j2: int|
+                    0 <= u2 < self.adj.spec_len()
+                    && 0 <= j2 < self.adj.spec_index(u2).spec_len()
+                implies #[trigger] self.adj.spec_index(u2).spec_index(j2) < self.adj.spec_len()
+                by {
+                    if u2 != u as int {
+                        assert(self.adj.spec_index(u2) == old(self).adj.spec_index(u2));
+                    }
+                }
             }
         }
     }
