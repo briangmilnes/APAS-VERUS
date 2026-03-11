@@ -14,9 +14,10 @@
 //	8. traits
 //	9. impls
 //	10. iterators
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	11. top level coarse locking
+//	12. derive impls in verus!
+//	13. macros
+//	14. derive impls outside verus!
 
 //		1. module
 
@@ -43,6 +44,7 @@ verus! {
         vstd::pervasive::strictly_cloned,
         vstd::laws_eq::*,
     };
+    use vstd::rwlock::*;
     use crate::vstdplus::accept::accept;
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
@@ -969,7 +971,116 @@ verus! {
     }
 
 
-    //		11. derive impls in verus!
+    //		11. top level coarse locking
+
+    pub struct SetMtEphInv;
+
+    impl<T: StT + Hash> RwLockPredicate<SetMtEph<T>> for SetMtEphInv {
+        open spec fn inv(self, v: SetMtEph<T>) -> bool {
+            v@.finite() && valid_key_type::<T>()
+        }
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct LockedSetMtEph<T: StT + Hash> {
+        pub(crate) locked_set: RwLock<SetMtEph<T>, SetMtEphInv>,
+        pub(crate) ghost_locked_set: Ghost<Set<<T as View>::V>>,
+    }
+
+    impl<T: StT + Hash> LockedSetMtEph<T> {
+        pub proof fn type_invariant(&self)
+            ensures
+                self@.finite(),
+                valid_key_type::<T>(),
+        {
+            assume(self@.finite());
+            assume(valid_key_type::<T>());
+        }
+    }
+
+    impl<T: StT + Hash> View for LockedSetMtEph<T> {
+        type V = Set<<T as View>::V>;
+        closed spec fn view(&self) -> Self::V {
+            self.ghost_locked_set@
+        }
+    }
+
+    pub trait LockedSetMtEphTrait<T: StT + Hash>
+        : View<V = Set<<T as View>::V>> + Sized
+    {
+        fn empty() -> (s: Self)
+            requires valid_key_type::<T>()
+            ensures s@.finite(), s@ == Set::<<T as View>::V>::empty();
+
+        fn size(&self) -> (size: N)
+            ensures size == self@.len();
+
+        fn mem(&self, x: T) -> (contains: B)
+            ensures contains == self@.contains(x@);
+
+        fn insert(&mut self, x: T) -> (r: std::result::Result<bool, ()>)
+            ensures
+                self@.finite(),
+                self@ == old(self)@.insert(x@),
+                r is Ok ==> r.unwrap() == !old(self)@.contains(x@);
+
+        fn choose(&self) -> (element: T)
+            requires self@.len() > 0
+            ensures self@.contains(element@);
+    }
+
+    impl<T: StT + Hash> LockedSetMtEphTrait<T> for LockedSetMtEph<T> {
+        fn empty() -> (s: Self) {
+            let inner = SetMtEph::empty();
+            let ghost view = inner@;
+            LockedSetMtEph {
+                locked_set: RwLock::new(inner, Ghost(SetMtEphInv)),
+                ghost_locked_set: Ghost(view),
+            }
+        }
+
+        fn size(&self) -> (size: N) {
+            let read_handle = self.locked_set.acquire_read();
+            let inner = read_handle.borrow();
+            proof { assume(inner@ == self@); }
+            let size = inner.size();
+            proof { assume(size == self@.len()); }
+            read_handle.release_read();
+            size
+        }
+
+        fn mem(&self, x: T) -> (contains: B) {
+            let read_handle = self.locked_set.acquire_read();
+            let inner = read_handle.borrow();
+            proof { assume(inner@ == self@); }
+            let contains = inner.mem(&x);
+            proof { assume(contains == self@.contains(x@)); }
+            read_handle.release_read();
+            contains
+        }
+
+        fn insert(&mut self, x: T) -> (r: std::result::Result<bool, ()>) {
+            let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+            proof { assume(self.ghost_locked_set@ == locked_val@); }
+            let inserted = locked_val.insert(x);
+            let ghost new_val = locked_val@;
+            self.ghost_locked_set = Ghost(new_val);
+            write_handle.release_write(locked_val);
+            Ok(inserted)
+        }
+
+        fn choose(&self) -> (element: T) {
+            let read_handle = self.locked_set.acquire_read();
+            let inner = read_handle.borrow();
+            proof { assume(inner@ == self@); }
+            let element = inner.choose();
+            proof { assume(self@.contains(element@)); }
+            read_handle.release_read();
+            element
+        }
+    }
+
+    //		12. derive impls in verus!
 
     impl<T: StT + Hash> Clone for SetMtEph<T> {
         fn clone(&self) -> (clone: Self)
@@ -996,7 +1107,7 @@ verus! {
   } // verus!
 
 
-    //		12. macros
+    //		13. macros
 
     #[macro_export]
     macro_rules! SetMtLit {
@@ -1011,7 +1122,7 @@ verus! {
     }
 
 
-    //		13. derive impls outside verus!
+    //		14. derive impls outside verus!
 
     impl<T: StT + Hash> std::fmt::Display for SetMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {

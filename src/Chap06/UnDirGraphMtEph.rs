@@ -14,9 +14,10 @@
 //	6. spec fns
 //	8. traits
 //	9. impls
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	11. top level coarse locking
+//	12. derive impls in verus!
+//	13. macros
+//	14. derive impls outside verus!
 
 //		1. module
 
@@ -41,6 +42,7 @@ pub mod UnDirGraphMtEph {
 
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
+    use vstd::rwlock::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
@@ -205,208 +207,41 @@ pub mod UnDirGraphMtEph {
         /// - APAS: Work Θ(|E|), Span Θ(log |E|) — parallel
         /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(log |E|) — calls ng
         fn degree(&self, v: &V) -> (n: N)
-            requires 
+            requires
                 spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures n == self.spec_ng(v@).len();
+
+        /// Parallel edge filtering for neighbors using set split.
+        fn ng_par(&self, v: V, edges: SetStEph<Edge<V>>) -> (neighbors: SetStEph<V>)
+            requires
+                valid_key_type::<V>(),
+                valid_key_type::<Edge<V>>(),
+                spec_graphview_wf(self@),
+                edges@ <= self@.A,
+            ensures
+                neighbors.spec_setsteph_wf(),
+                neighbors@ == self.spec_ng_from_set(v@, edges@),
+                neighbors@ <= self.spec_ng(v@)
+            decreases edges@.len();
+
+        /// Parallel neighbors over a set of vertices using set split.
+        fn ng_of_vertices_par(&self, verts: SetStEph<V>) -> (neighbors: SetStEph<V>)
+            requires
+                valid_key_type::<V>(),
+                valid_key_type::<Edge<V>>(),
+                spec_graphview_wf(self@),
+                verts@ <= self@.V,
+            ensures
+                neighbors.spec_setsteph_wf(),
+                neighbors@ == self.spec_ng_of_vertices_from_set(verts@),
+                neighbors@ <= self@.V
+            decreases verts@.len();
     }
 
 
     //		9. impls
-
-    /// Parallel edge filtering for neighbors using set split.
-    fn ng_par<V: StTInMtT + Hash + 'static>(g: &UnDirGraphMtEph<V>, v: V, edges: SetStEph<Edge<V>>) 
-                                                  -> (neighbors: SetStEph<V>)
-        requires
-            valid_key_type::<V>(),
-            valid_key_type::<Edge<V>>(),
-            spec_graphview_wf(g@),
-            edges@ <= g@.A,
-        ensures
-            neighbors.spec_setsteph_wf(),
-            neighbors@ == g.spec_ng_from_set(v@, edges@),
-            neighbors@ <= g.spec_ng(v@)
-        decreases edges@.len()
-    {
-        let n = edges.size();
-        if n == 0 {
-            proof {
-                assert forall |w: V::V| !(edges@.contains((v@, w)) || edges@.contains((w, v@))) by {}
-                assert(g.spec_ng_from_set(v@, edges@) =~= Set::empty());
-            }
-            SetStEph::empty()
-        }
-        else if n == 1 {
-            let Edge(a, b) = edges.choose();
-            proof {
-                // Establish that edges@ is exactly the singleton {(a@, b@)}
-                assert(edges@.len() == 1);
-                assert(edges@.contains((a@, b@)));
-                // Any element in edges@ must equal (a@, b@) since len == 1
-                assert forall |e: (V::V, V::V)| edges@.contains(e) implies e == (a@, b@) by {
-                    if edges@.contains(e) && e != (a@, b@) {
-                        let s_minus = edges@.remove((a@, b@));
-                        assert(s_minus.contains(e));
-                        assert(edges@.len() == s_minus.len() + 1);
-                    }
-                }
-                assert(edges@ =~= Set::empty().insert((a@, b@)));
-            }
-            // spec_ng_from_set returns {w : (v@,w) in edges@ or (w,v@) in edges@}
-            // With edges@ = {(a@, b@)}: contains(v@, w) iff (v@,w) == (a@,b@), contains(w,v@) iff (w,v@) == (a@,b@)
-            if feq(&a, &v) {
-                proof {
-                    // a@ == v@
-                    // (v@, w) == (a@, b@) iff w == b@ (since v@ == a@)
-                    // (w, v@) == (a@, b@) iff w == a@ and v@ == b@, i.e., w == a@ == v@ == b@, which only adds b@ to result
-                    assert forall |w: V::V| g.spec_ng_from_set(v@, edges@).contains(w) <==> w == b@ by {
-                        // Forward: if w is in the result, then (v@, w) or (w, v@) is in edges@
-                        // Since edges@ = {(a@, b@)}:
-                        //   (v@, w) in edges@ iff (v@, w) == (a@, b@) iff v@ == a@ (true) && w == b@
-                        //   (w, v@) in edges@ iff (w, v@) == (a@, b@) iff w == a@ == v@ && v@ == b@
-                        // So w == b@ or (w == v@ && v@ == b@). Second case means w == b@.
-                    }
-                    assert(g.spec_ng_from_set(v@, edges@) =~= Set::empty().insert(b@));
-                }
-                SetStEph::singleton(b.clone_plus())
-            } else if feq(&b, &v) {
-                proof {
-                    // a@ != v@ and b@ == v@
-                    // (v@, w) == (a@, b@) iff v@ == a@ (false), so never matches
-                    // (w, v@) == (a@, b@) iff w == a@ and v@ == b@ (true), so w == a@
-                    assert forall |w: V::V| g.spec_ng_from_set(v@, edges@).contains(w) <==> w == a@ by {}
-                    assert(g.spec_ng_from_set(v@, edges@) =~= Set::empty().insert(a@));
-                }
-                SetStEph::singleton(a.clone_plus())
-            } else {
-                proof {
-                    // a@ != v@ and b@ != v@
-                    // (v@, w) == (a@, b@) requires v@ == a@ (false)
-                    // (w, v@) == (a@, b@) requires v@ == b@ (false)
-                    // So no w satisfies the condition
-                    assert forall |w: V::V| !g.spec_ng_from_set(v@, edges@).contains(w) by {}
-                    assert(g.spec_ng_from_set(v@, edges@) =~= Set::empty());
-                }
-                SetStEph::empty()
-            }
-        }
-        else {
-            let mid = n / 2;
-            let (left_edges, right_edges) = edges.split(mid);
-            let v_left  = v.clone_plus();
-            let v_right = v.clone_plus();
-            let g_left  = g.clone_plus();
-            let g_right = g.clone_plus();
-            
-            let f1 = move || -> (out: SetStEph<V>)
-                ensures out.spec_setsteph_wf(), out@ == g_left.spec_ng_from_set(v_left@, left_edges@)
-            { ng_par(&g_left, v_left, left_edges) };
-
-            let f2 = move || -> (out: SetStEph<V>)
-                ensures out.spec_setsteph_wf(), out@ == g_right.spec_ng_from_set(v_right@, right_edges@)
-            { ng_par(&g_right, v_right, right_edges) };
-            
-            let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
-            
-            left_neighbors.union(&right_neighbors)
-        }
-    }
-
-    /// Parallel neighbors over a set of vertices using set split.
-    fn ng_of_vertices_par<V: StTInMtT + Hash + 'static>(
-        g: &UnDirGraphMtEph<V>,
-        verts: SetStEph<V>,
-    ) -> (neighbors: SetStEph<V>)
-        requires 
-            valid_key_type::<V>(),
-            valid_key_type::<Edge<V>>(),
-            spec_graphview_wf(g@),
-            verts@ <= g@.V,
-        ensures
-            neighbors.spec_setsteph_wf(),
-            neighbors@ == g.spec_ng_of_vertices_from_set(verts@),
-            neighbors@ <= g@.V
-        decreases verts@.len()
-    {
-        let n = verts.size();
-        if n == 0 {
-            SetStEph::empty()
-        }
-        else if n == 1 {
-            let u = verts.choose();
-            let neighbors = g.ng(&u);
-            proof {
-                // When size == 1, verts@ is a singleton containing u@
-                assert(verts@.len() == 1);
-                assert(verts@.contains(u@));
-                // Prove verts@ == {u@} by showing any element in verts@ equals u@
-                assert forall |v_any: V::V| verts@.contains(v_any) implies v_any == u@ by {
-                    // Use finite cardinality: if len == 1 and both u@ and v_any are in the set,
-                    // and they're different, then len >= 2, contradiction
-                    if verts@.contains(v_any) && v_any != u@ {
-                        let s_minus_u = verts@.remove(u@);
-                        assert(s_minus_u.contains(v_any));
-                        assert(verts@.len() == s_minus_u.len() + 1);
-                        // s_minus_u contains v_any, so s_minus_u.len() >= 1
-                        // Therefore verts@.len() >= 2, but we know verts@.len() == 1, contradiction
-                    }
-                }
-                assert(verts@ =~= Set::empty().insert(u@));
-                assert forall |w: V::V| g.spec_ng_of_vertices_from_set(verts@).contains(w)
-                    <==> g.spec_ng(u@).contains(w) by {
-                    if g.spec_ng_of_vertices_from_set(verts@).contains(w) {
-                        let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && g.spec_ng(v).contains(w);
-                        assert(v_wit == u@);
-                    }
-                }
-            }
-            neighbors
-        }
-        else {
-            let mid = n / 2;
-            let (left_verts, right_verts) = verts.split(mid);
-            let g_left  = g.clone_plus();
-            let g_right = g.clone_plus();
-            
-            let f1 = move || -> (out: SetStEph<V>)
-                ensures out.spec_setsteph_wf(), out@ == g_left.spec_ng_of_vertices_from_set(left_verts@)
-            { ng_of_vertices_par(&g_left, left_verts) };
-
-            let f2 = move || -> (out: SetStEph<V>)
-                ensures out.spec_setsteph_wf(), out@ == g_right.spec_ng_of_vertices_from_set(right_verts@)
-            { ng_of_vertices_par(&g_right, right_verts) };
-            
-            let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
-            
-            let neighbors = left_neighbors.union(&right_neighbors);
-            proof {
-                assert(verts@ =~= left_verts@.union(right_verts@));
-                assert forall |w: V::V| #![trigger neighbors@.contains(w)] g.spec_ng_of_vertices_from_set(verts@).contains(w)
-                    <==> neighbors@.contains(w) by {
-                    if g.spec_ng_of_vertices_from_set(verts@).contains(w) {
-                        let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && g.spec_ng(v).contains(w);
-                        assert(left_verts@.contains(v_wit) || right_verts@.contains(v_wit));
-                        if left_verts@.contains(v_wit) {
-                            assert(g.spec_ng_of_vertices_from_set(left_verts@).contains(w));
-                        } else {
-                            assert(g.spec_ng_of_vertices_from_set(right_verts@).contains(w));
-                        }
-                    }
-                    if neighbors@.contains(w) {
-                        if left_neighbors@.contains(w) {
-                            let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && g.spec_ng(v).contains(w);
-                            assert(verts@.contains(v_wit));
-                        } else {
-                            let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && g.spec_ng(v).contains(w);
-                            assert(verts@.contains(v_wit));
-                        }
-                    }
-                }
-            }
-            neighbors
-        }
-    }
 
     impl<V: StTInMtT + Hash + 'static> UnDirGraphMtEphTrait<V> for UnDirGraphMtEph<V> {
         fn empty() -> (g: UnDirGraphMtEph<V>) {
@@ -434,19 +269,162 @@ pub mod UnDirGraphMtEph {
 
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let edges = self.E.clone();
-            ng_par(self, v.clone_plus(), edges)
+            self.ng_par(v.clone_plus(), edges)
         }
 
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
-            ng_of_vertices_par(self, u_set.clone())
+            self.ng_of_vertices_par(u_set.clone())
         }
 
-        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { 
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) {
             feq(&e.0, v) || feq(&e.1, v)
         }
 
-        fn degree(&self, v: &V) -> (n: N) { 
-            self.ng(v).size() 
+        fn degree(&self, v: &V) -> (n: N) {
+            self.ng(v).size()
+        }
+
+        fn ng_par(&self, v: V, edges: SetStEph<Edge<V>>) -> (neighbors: SetStEph<V>)
+            decreases edges@.len()
+        {
+            let n = edges.size();
+            if n == 0 {
+                proof {
+                    assert forall |w: V::V| !(edges@.contains((v@, w)) || edges@.contains((w, v@))) by {}
+                    assert(self.spec_ng_from_set(v@, edges@) =~= Set::empty());
+                }
+                SetStEph::empty()
+            }
+            else if n == 1 {
+                let Edge(a, b) = edges.choose();
+                proof {
+                    assert(edges@.len() == 1);
+                    assert(edges@.contains((a@, b@)));
+                    assert forall |e: (V::V, V::V)| edges@.contains(e) implies e == (a@, b@) by {
+                        if edges@.contains(e) && e != (a@, b@) {
+                            let s_minus = edges@.remove((a@, b@));
+                            assert(s_minus.contains(e));
+                            assert(edges@.len() == s_minus.len() + 1);
+                        }
+                    }
+                    assert(edges@ =~= Set::empty().insert((a@, b@)));
+                }
+                if feq(&a, &v) {
+                    proof {
+                        assert forall |w: V::V| self.spec_ng_from_set(v@, edges@).contains(w) <==> w == b@ by {}
+                        assert(self.spec_ng_from_set(v@, edges@) =~= Set::empty().insert(b@));
+                    }
+                    SetStEph::singleton(b.clone_plus())
+                } else if feq(&b, &v) {
+                    proof {
+                        assert forall |w: V::V| self.spec_ng_from_set(v@, edges@).contains(w) <==> w == a@ by {}
+                        assert(self.spec_ng_from_set(v@, edges@) =~= Set::empty().insert(a@));
+                    }
+                    SetStEph::singleton(a.clone_plus())
+                } else {
+                    proof {
+                        assert forall |w: V::V| !self.spec_ng_from_set(v@, edges@).contains(w) by {}
+                        assert(self.spec_ng_from_set(v@, edges@) =~= Set::empty());
+                    }
+                    SetStEph::empty()
+                }
+            }
+            else {
+                let mid = n / 2;
+                let (left_edges, right_edges) = edges.split(mid);
+                let v_left  = v.clone_plus();
+                let v_right = v.clone_plus();
+                let g_left  = self.clone_plus();
+                let g_right = self.clone_plus();
+
+                let f1 = move || -> (out: SetStEph<V>)
+                    ensures out.spec_setsteph_wf(), out@ == g_left.spec_ng_from_set(v_left@, left_edges@)
+                { g_left.ng_par(v_left, left_edges) };
+
+                let f2 = move || -> (out: SetStEph<V>)
+                    ensures out.spec_setsteph_wf(), out@ == g_right.spec_ng_from_set(v_right@, right_edges@)
+                { g_right.ng_par(v_right, right_edges) };
+
+                let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
+
+                left_neighbors.union(&right_neighbors)
+            }
+        }
+
+        fn ng_of_vertices_par(&self, verts: SetStEph<V>) -> (neighbors: SetStEph<V>)
+            decreases verts@.len()
+        {
+            let n = verts.size();
+            if n == 0 {
+                SetStEph::empty()
+            }
+            else if n == 1 {
+                let u = verts.choose();
+                let neighbors = self.ng(&u);
+                proof {
+                    assert(verts@.len() == 1);
+                    assert(verts@.contains(u@));
+                    assert forall |v_any: V::V| verts@.contains(v_any) implies v_any == u@ by {
+                        if verts@.contains(v_any) && v_any != u@ {
+                            let s_minus_u = verts@.remove(u@);
+                            assert(s_minus_u.contains(v_any));
+                            assert(verts@.len() == s_minus_u.len() + 1);
+                        }
+                    }
+                    assert(verts@ =~= Set::empty().insert(u@));
+                    assert forall |w: V::V| self.spec_ng_of_vertices_from_set(verts@).contains(w)
+                        <==> self.spec_ng(u@).contains(w) by {
+                        if self.spec_ng_of_vertices_from_set(verts@).contains(w) {
+                            let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && self.spec_ng(v).contains(w);
+                            assert(v_wit == u@);
+                        }
+                    }
+                }
+                neighbors
+            }
+            else {
+                let mid = n / 2;
+                let (left_verts, right_verts) = verts.split(mid);
+                let g_left  = self.clone_plus();
+                let g_right = self.clone_plus();
+
+                let f1 = move || -> (out: SetStEph<V>)
+                    ensures out.spec_setsteph_wf(), out@ == g_left.spec_ng_of_vertices_from_set(left_verts@)
+                { g_left.ng_of_vertices_par(left_verts) };
+
+                let f2 = move || -> (out: SetStEph<V>)
+                    ensures out.spec_setsteph_wf(), out@ == g_right.spec_ng_of_vertices_from_set(right_verts@)
+                { g_right.ng_of_vertices_par(right_verts) };
+
+                let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
+
+                let neighbors = left_neighbors.union(&right_neighbors);
+                proof {
+                    assert(verts@ =~= left_verts@.union(right_verts@));
+                    assert forall |w: V::V| #![trigger neighbors@.contains(w)] self.spec_ng_of_vertices_from_set(verts@).contains(w)
+                        <==> neighbors@.contains(w) by {
+                        if self.spec_ng_of_vertices_from_set(verts@).contains(w) {
+                            let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && self.spec_ng(v).contains(w);
+                            assert(left_verts@.contains(v_wit) || right_verts@.contains(v_wit));
+                            if left_verts@.contains(v_wit) {
+                                assert(self.spec_ng_of_vertices_from_set(left_verts@).contains(w));
+                            } else {
+                                assert(self.spec_ng_of_vertices_from_set(right_verts@).contains(w));
+                            }
+                        }
+                        if neighbors@.contains(w) {
+                            if left_neighbors@.contains(w) {
+                                let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && self.spec_ng(v).contains(w);
+                                assert(verts@.contains(v_wit));
+                            } else {
+                                let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && self.spec_ng(v).contains(w);
+                                assert(verts@.contains(v_wit));
+                            }
+                        }
+                    }
+                }
+                neighbors
+            }
         }
     }
 
@@ -470,7 +448,171 @@ pub mod UnDirGraphMtEph {
         }
     }
 
-    //		11. derive impls in verus!
+    //		11. top level coarse locking
+
+    pub struct UnDirGraphMtEphInv;
+
+    impl<V: StTInMtT + Hash + 'static> RwLockPredicate<UnDirGraphMtEph<V>> for UnDirGraphMtEphInv {
+        open spec fn inv(self, v: UnDirGraphMtEph<V>) -> bool {
+            spec_graphview_wf(v@) && valid_key_type_for_graph::<V>()
+        }
+    }
+
+    #[verifier::reject_recursive_types(V)]
+    pub struct LockedUnDirGraphMtEph<V: StTInMtT + Hash + 'static> {
+        pub(crate) locked_graph: RwLock<UnDirGraphMtEph<V>, UnDirGraphMtEphInv>,
+        pub(crate) ghost_locked_graph: Ghost<GraphView<<V as View>::V>>,
+    }
+
+    impl<V: StTInMtT + Hash + 'static> LockedUnDirGraphMtEph<V> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            spec_graphview_wf(self.ghost_locked_graph@)
+        }
+
+        pub closed spec fn spec_ghost_locked_graph(self) -> GraphView<<V as View>::V> {
+            self.ghost_locked_graph@
+        }
+    }
+
+    impl<V: StTInMtT + Hash + 'static> View for LockedUnDirGraphMtEph<V> {
+        type V = GraphView<<V as View>::V>;
+        open spec fn view(&self) -> Self::V { self.spec_ghost_locked_graph() }
+    }
+
+    pub trait LockedUnDirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
+        spec fn spec_lockedundirgraphmteph_wf(&self) -> bool;
+
+        fn new(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (s: Self)
+            requires
+                valid_key_type_for_graph::<V>(),
+                V@.finite(),
+                E@.finite(),
+                forall |u: V::V, w: V::V|
+                    #[trigger] E@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),
+            ensures
+                s.spec_lockedundirgraphmteph_wf(),
+                s@.V == V@,
+                s@.A == E@;
+
+        fn vertices(&self) -> (v: SetStEph<V>)
+            requires self.spec_lockedundirgraphmteph_wf()
+            ensures v@ == self@.V;
+
+        fn edges(&self) -> (e: SetStEph<Edge<V>>)
+            requires self.spec_lockedundirgraphmteph_wf()
+            ensures e@ == self@.A;
+
+        fn sizeV(&self) -> (n: N)
+            requires self.spec_lockedundirgraphmteph_wf()
+            ensures n == self@.V.len();
+
+        fn sizeE(&self) -> (n: N)
+            requires self.spec_lockedundirgraphmteph_wf()
+            ensures n == self@.A.len();
+
+        fn neighbor(&self, u: &V, v: &V) -> (b: B)
+            requires
+                self.spec_lockedundirgraphmteph_wf(),
+                self@.V.contains(u@),
+                self@.V.contains(v@),
+            ensures b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)));
+
+        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
+            requires
+                self.spec_lockedundirgraphmteph_wf(),
+                self@.V.contains(v@),
+            ensures
+                neighbors.spec_setsteph_wf(),
+                neighbors@ <= self@.V;
+
+        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)
+            requires
+                self.spec_lockedundirgraphmteph_wf(),
+                u_set@ <= self@.V,
+            ensures
+                neighbors.spec_setsteph_wf(),
+                neighbors@ <= self@.V;
+    }
+
+    impl<V: StTInMtT + Hash + 'static> LockedUnDirGraphMtEphTrait<V> for LockedUnDirGraphMtEph<V> {
+        open spec fn spec_lockedundirgraphmteph_wf(&self) -> bool {
+            spec_graphview_wf(self@)
+        }
+
+        fn new(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (s: Self) {
+            let g = UnDirGraphMtEph::from_sets(V, E);
+            let ghost gv = g@;
+            LockedUnDirGraphMtEph {
+                locked_graph: RwLock::new(g, Ghost(UnDirGraphMtEphInv)),
+                ghost_locked_graph: Ghost(gv),
+            }
+        }
+
+        fn vertices(&self) -> (v: SetStEph<V>) {
+            let read_handle = self.locked_graph.acquire_read();
+            let v = read_handle.borrow().V.clone();
+            proof { assume(v@ == self@.V); }
+            read_handle.release_read();
+            v
+        }
+
+        fn edges(&self) -> (e: SetStEph<Edge<V>>) {
+            let read_handle = self.locked_graph.acquire_read();
+            let e = read_handle.borrow().E.clone();
+            proof { assume(e@ == self@.A); }
+            read_handle.release_read();
+            e
+        }
+
+        fn sizeV(&self) -> (n: N) {
+            let read_handle = self.locked_graph.acquire_read();
+            let n = read_handle.borrow().sizeV();
+            proof { assume(n == self@.V.len()); }
+            read_handle.release_read();
+            n
+        }
+
+        fn sizeE(&self) -> (n: N) {
+            let read_handle = self.locked_graph.acquire_read();
+            let n = read_handle.borrow().sizeE();
+            proof { assume(n == self@.A.len()); }
+            read_handle.release_read();
+            n
+        }
+
+        fn neighbor(&self, u: &V, v: &V) -> (b: B) {
+            let read_handle = self.locked_graph.acquire_read();
+            let inner = read_handle.borrow();
+            proof { assume(inner@ == self@); }
+            let b = inner.neighbor(u, v);
+            proof { assume(b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)))); }
+            read_handle.release_read();
+            b
+        }
+
+        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
+            let read_handle = self.locked_graph.acquire_read();
+            let inner = read_handle.borrow();
+            proof { assume(inner@ == self@); }
+            let neighbors = inner.ng(v);
+            proof { assume(neighbors@ <= self@.V); }
+            read_handle.release_read();
+            neighbors
+        }
+
+        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
+            let read_handle = self.locked_graph.acquire_read();
+            let inner = read_handle.borrow();
+            proof { assume(inner@ == self@); }
+            let neighbors = inner.ng_of_vertices(u_set);
+            proof { assume(neighbors@ <= self@.V); }
+            read_handle.release_read();
+            neighbors
+        }
+    }
+
+    //		12. derive impls in verus!
 
     impl<V: StTInMtT + Hash + 'static> Clone for UnDirGraphMtEph<V> {
         fn clone(&self) -> (cloned: Self)
@@ -500,23 +642,7 @@ pub mod UnDirGraphMtEph {
     } // verus!
 
 
-    //		13. derive impls outside verus!
-
-    impl<V: StTInMtT + Hash + 'static> Debug for UnDirGraphMtEph<V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            f.debug_struct("UnDirGraphMtEph")
-                .field("V", &self.V)
-                .field("E", &self.E)
-                .finish()
-        }
-    }
-
-    impl<V: StTInMtT + Hash + 'static> Display for UnDirGraphMtEph<V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} E={:?}", self.V, self.E) }
-    }
-
-
-    //		12. macros
+    //		13. macros
 
     #[macro_export]
     macro_rules! UnDirGraphMtEphLit {
@@ -534,5 +660,21 @@ pub mod UnDirGraphMtEph {
             };
             < $crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::UnDirGraphMtEph<_> as $crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::UnDirGraphMtEphTrait<_> >::from_sets(__V, __E)
         }};
+    }
+
+
+    //		14. derive impls outside verus!
+
+    impl<V: StTInMtT + Hash + 'static> Debug for UnDirGraphMtEph<V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            f.debug_struct("UnDirGraphMtEph")
+                .field("V", &self.V)
+                .field("E", &self.E)
+                .finish()
+        }
+    }
+
+    impl<V: StTInMtT + Hash + 'static> Display for UnDirGraphMtEph<V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} E={:?}", self.V, self.E) }
     }
 }

@@ -14,9 +14,10 @@
 //	6. spec fns
 //	8. traits
 //	9. impls
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	11. top level coarse locking
+//	12. derive impls in verus!
+//	13. macros
+//	14. derive impls outside verus!
 
 //		1. module
 
@@ -38,6 +39,7 @@ pub mod LabDirGraphMtEph {
 
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
+    use vstd::rwlock::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::seq_set::*;
@@ -215,259 +217,36 @@ pub mod LabDirGraphMtEph {
                 n_minus.spec_setsteph_wf(),
                 n_minus@ == self.spec_n_minus(v@),
                 n_minus@ <= self@.V;
+
+        /// Parallel out-neighbor arc filtering using set split.
+        fn n_plus_par(&self, v: V, arcs: SetStEph<LabEdge<V, L>>) -> (n_plus: SetStEph<V>)
+            requires
+                valid_key_type::<V>(),
+                valid_key_type_LabEdge::<V, L>(),
+                spec_labgraphview_wf(self@),
+                arcs@ <= self@.A,
+            ensures
+                n_plus.spec_setsteph_wf(),
+                n_plus@ == self.spec_n_plus_from_set(v@, arcs@),
+                n_plus@ <= self.spec_n_plus(v@)
+            decreases arcs@.len();
+
+        /// Parallel in-neighbor arc filtering using set split.
+        fn n_minus_par(&self, v: V, arcs: SetStEph<LabEdge<V, L>>) -> (n_minus: SetStEph<V>)
+            requires
+                valid_key_type::<V>(),
+                valid_key_type_LabEdge::<V, L>(),
+                spec_labgraphview_wf(self@),
+                arcs@ <= self@.A,
+            ensures
+                n_minus.spec_setsteph_wf(),
+                n_minus@ == self.spec_n_minus_from_set(v@, arcs@),
+                n_minus@ <= self.spec_n_minus(v@)
+            decreases arcs@.len();
     }
 
 
     //		9. impls
-
-    /// out-neighbors: Parallel arc filtering using set split.
-    fn n_plus_par<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(
-        g: &LabDirGraphMtEph<V, L>, 
-        v: V, 
-        arcs: SetStEph<LabEdge<V, L>>
-    ) -> (n_plus: SetStEph<V>)
-        requires
-            valid_key_type::<V>(),
-            valid_key_type_LabEdge::<V, L>(),
-            spec_labgraphview_wf(g@),
-            arcs@ <= g@.A,
-        ensures
-            n_plus.spec_setsteph_wf(),
-            n_plus@ == g.spec_n_plus_from_set(v@, arcs@),
-            n_plus@ <= g.spec_n_plus(v@)
-        decreases arcs@.len()
-    {
-        let n = arcs.size();
-        if n == 0 {
-            proof {
-                assert(g.spec_n_plus_from_set(v@, arcs@) =~= Set::empty());
-            }
-            SetStEph::empty()
-        }
-        else if n == 1 {
-            let LabEdge(from, to, label) = arcs.choose();
-            // arcs@ contains (from@, to@, label@)
-            if feq(&from, &v) {
-                proof {
-                    // from@ == v@ by feq correctness
-                    // arcs@ contains (v@, to@, label@)
-                    // spec_n_plus_from_set(v@, arcs@) = {w | exists l. arcs@.contains((v@, w, l))}
-                    // Since arcs@.len() == 1 and contains (v@, to@, label@), the only w is to@
-                    
-                    assert forall |w: V::V| #![trigger Set::empty().insert(to@).contains(w)] Set::empty().insert(to@).contains(w) implies 
-                        g.spec_n_plus_from_set(v@, arcs@).contains(w) by {
-                        assert(arcs@.contains((from@, to@, label@)));
-                    }
-                    assert forall |w: V::V| #![trigger Set::empty().insert(to@).contains(w)] g.spec_n_plus_from_set(v@, arcs@).contains(w) implies
-                        Set::empty().insert(to@).contains(w) by {
-                        let l = choose |l: L::V| arcs@.contains((v@, w, l));
-                        assert(arcs@.remove((from@, to@, label@)).len() == 0);
-                        if (v@, w, l) != (from@, to@, label@) {
-                            assert(arcs@.remove((from@, to@, label@)).contains((v@, w, l)));
-                        }
-                    }
-                    assert(Set::empty().insert(to@) =~= g.spec_n_plus_from_set(v@, arcs@));
-                }
-                SetStEph::singleton(to.clone_plus())
-            } else {
-                proof {
-                    // from@ != v@ by feq correctness
-                    assert forall |w: V::V| g.spec_n_plus_from_set(v@, arcs@).contains(w) implies false by {
-                        let l = choose |l: L::V| arcs@.contains((v@, w, l));
-                        assert(arcs@.remove((from@, to@, label@)).len() == 0);
-                        if (v@, w, l) != (from@, to@, label@) {
-                            assert(arcs@.remove((from@, to@, label@)).contains((v@, w, l)));
-                        }
-                        // So (v@, w, l) == (from@, to@, label@), meaning v@ == from@
-                        // But from@ != v@, contradiction
-                    }
-                    assert(g.spec_n_plus_from_set(v@, arcs@) =~= Set::empty());
-                }
-                SetStEph::empty()
-            }
-        }
-        else {
-            let mid = n / 2;
-            let (left_arcs, right_arcs) = arcs.split(mid);
-            let v_left  = v.clone_plus();
-            let v_right = v.clone_plus();
-            let g_left  = g.clone_plus();
-            let g_right = g.clone_plus();
-            
-            let f1 = move || -> (out: SetStEph<V>)
-                ensures out.spec_setsteph_wf(), out@ == g_left.spec_n_plus_from_set(v_left@, left_arcs@)
-            { n_plus_par(&g_left, v_left, left_arcs) };
-
-            let f2 = move || -> (out: SetStEph<V>)
-                ensures out.spec_setsteph_wf(), out@ == g_right.spec_n_plus_from_set(v_right@, right_arcs@)
-            { n_plus_par(&g_right, v_right, right_arcs) };
-            
-            let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
-            
-            proof {
-                // Prove subset in one direction
-                assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] left_neighbors@.union(right_neighbors@).contains(w) implies
-                    g.spec_n_plus_from_set(v@, arcs@).contains(w) by {
-                    if left_neighbors@.contains(w) {
-                        let l = choose |l: L::V| left_arcs@.contains((v@, w, l));
-                        assert(arcs@.contains((v@, w, l)));
-                    } else {
-                        let l = choose |l: L::V| right_arcs@.contains((v@, w, l));
-                        assert(arcs@.contains((v@, w, l)));
-                    }
-                }
-                
-                // Prove subset in other direction
-                assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] g.spec_n_plus_from_set(v@, arcs@).contains(w) implies
-                    left_neighbors@.union(right_neighbors@).contains(w) by {
-                    let l = choose |l: L::V| arcs@.contains((v@, w, l));
-                    if left_arcs@.contains((v@, w, l)) {
-                        assert(left_neighbors@.contains(w));
-                    } else {
-                        assert(right_arcs@.contains((v@, w, l)));
-                        assert(right_neighbors@.contains(w));
-                    }
-                }
-                
-                assert(left_neighbors@.union(right_neighbors@) =~= g.spec_n_plus_from_set(v@, arcs@));
-            }
-            
-            left_neighbors.union(&right_neighbors)
-        }
-    }
-
-    /// in-neighbors: Parallel arc filtering using set split.
-    fn n_minus_par<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(
-        g: &LabDirGraphMtEph<V, L>, 
-        v: V, 
-        arcs: SetStEph<LabEdge<V, L>>
-    ) -> (n_minus: SetStEph<V>)
-        requires
-            valid_key_type::<V>(),
-            valid_key_type_LabEdge::<V, L>(),
-            spec_labgraphview_wf(g@),
-            arcs@ <= g@.A,
-        ensures
-            n_minus.spec_setsteph_wf(),
-            n_minus@ == g.spec_n_minus_from_set(v@, arcs@),
-            n_minus@ <= g.spec_n_minus(v@)
-        decreases arcs@.len()
-    {
-        let n = arcs.size();
-        if n == 0 {
-            proof {
-                assert(g.spec_n_minus_from_set(v@, arcs@) =~= Set::empty());
-            }
-            SetStEph::empty()
-        }
-        else if n == 1 {
-            let LabEdge(from, to, label) = arcs.choose();
-            // arcs@ contains (from@, to@, label@)
-            if feq(&to, &v) {
-                proof {
-                    // to@ == v@ by feq correctness
-                    // arcs@ contains (from@, v@, label@)
-                    // spec_n_minus_from_set(v@, arcs@) = {u | exists l. arcs@.contains((u, v@, l))}
-                    // Since arcs@.len() == 1 and contains (from@, v@, label@), the only u is from@
-                    
-                    // Prove: singleton(from)@ == spec_n_minus_from_set(v@, arcs@)
-                    assert forall |u: V::V| #![trigger Set::empty().insert(from@).contains(u)] Set::empty().insert(from@).contains(u) implies 
-                        g.spec_n_minus_from_set(v@, arcs@).contains(u) by {
-                        // u == from@, and arcs contains (from@, v@, label@)
-                        assert(arcs@.contains((from@, to@, label@)));
-                    }
-                    assert forall |u: V::V| #![trigger Set::empty().insert(from@).contains(u)] g.spec_n_minus_from_set(v@, arcs@).contains(u) implies
-                        Set::empty().insert(from@).contains(u) by {
-                        // exists l such that arcs@ contains (u, v@, l)
-                        let l = choose |l: L::V| arcs@.contains((u, v@, l));
-                        // arcs@.len() == 1 and arcs@.contains((from@, to@, label@))
-                        // arcs@.contains((u, v@, l)) and len==1 implies (u, v@, l) == (from@, to@, label@)
-                        // Use set length 1 + contains property
-                        assert(arcs@.remove((from@, to@, label@)).len() == 0);
-                        if (u, v@, l) != (from@, to@, label@) {
-                            assert(arcs@.remove((from@, to@, label@)).contains((u, v@, l)));
-                        }
-                    }
-                    assert(Set::empty().insert(from@) =~= g.spec_n_minus_from_set(v@, arcs@));
-                }
-                SetStEph::singleton(from.clone_plus())
-            } else {
-                proof {
-                    // to@ != v@ by feq correctness
-                    // arcs@ contains (from@, to@, label@)
-                    // spec_n_minus_from_set(v@, arcs@) = {u | exists l. arcs@.contains((u, v@, l))}
-                    // Since arcs@ has only (from@, to@, label@) and to@ != v@, no u satisfies the condition
-                    
-                    assert forall |u: V::V| g.spec_n_minus_from_set(v@, arcs@).contains(u) implies false by {
-                        let l = choose |l: L::V| arcs@.contains((u, v@, l));
-                        // arcs@.len() == 1 and contains (from@, to@, label@)
-                        // arcs@.contains((u, v@, l)) and len==1 implies (u, v@, l) == (from@, to@, label@)
-                        assert(arcs@.remove((from@, to@, label@)).len() == 0);
-                        if (u, v@, l) != (from@, to@, label@) {
-                            assert(arcs@.remove((from@, to@, label@)).contains((u, v@, l)));
-                        }
-                        // So (u, v@, l) == (from@, to@, label@), meaning v@ == to@
-                        // But to@ != v@, contradiction
-                    }
-                    assert(g.spec_n_minus_from_set(v@, arcs@) =~= Set::empty());
-                }
-                SetStEph::empty()
-            }
-        }
-        else {
-            let mid = n / 2;
-            let (left_arcs, right_arcs) = arcs.split(mid);
-            let v_left  = v.clone_plus();
-            let v_right = v.clone_plus();
-            let g_left  = g.clone_plus();
-            let g_right = g.clone_plus();
-            
-            let f1 = move || -> (out: SetStEph<V>)
-                ensures out.spec_setsteph_wf(), out@ == g_left.spec_n_minus_from_set(v_left@, left_arcs@)
-            { n_minus_par(&g_left, v_left, left_arcs) };
-
-            let f2 = move || -> (out: SetStEph<V>)
-                ensures out.spec_setsteph_wf(), out@ == g_right.spec_n_minus_from_set(v_right@, right_arcs@)
-            { n_minus_par(&g_right, v_right, right_arcs) };
-            
-            let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
-            
-            proof {
-                // Prove: left_neighbors.union(right_neighbors)@ == spec_n_minus_from_set(v@, arcs@)
-                // We know: left_arcs@.union(right_arcs@) == arcs@
-                // And: left_neighbors@ == spec_n_minus_from_set(v@, left_arcs@)
-                //      right_neighbors@ == spec_n_minus_from_set(v@, right_arcs@)
-                
-                // Prove subset in one direction
-                assert forall |u: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(u)] left_neighbors@.union(right_neighbors@).contains(u) implies
-                    g.spec_n_minus_from_set(v@, arcs@).contains(u) by {
-                    if left_neighbors@.contains(u) {
-                        let l = choose |l: L::V| left_arcs@.contains((u, v@, l));
-                        assert(arcs@.contains((u, v@, l)));
-                    } else {
-                        let l = choose |l: L::V| right_arcs@.contains((u, v@, l));
-                        assert(arcs@.contains((u, v@, l)));
-                    }
-                }
-                
-                // Prove subset in other direction
-                assert forall |u: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(u)] g.spec_n_minus_from_set(v@, arcs@).contains(u) implies
-                    left_neighbors@.union(right_neighbors@).contains(u) by {
-                    let l = choose |l: L::V| arcs@.contains((u, v@, l));
-                    if left_arcs@.contains((u, v@, l)) {
-                        assert(left_neighbors@.contains(u));
-                    } else {
-                        assert(right_arcs@.contains((u, v@, l)));
-                        assert(right_neighbors@.contains(u));
-                    }
-                }
-                
-                assert(left_neighbors@.union(right_neighbors@) =~= g.spec_n_minus_from_set(v@, arcs@));
-            }
-            
-            left_neighbors.union(&right_neighbors)
-        }
-    }
 
     impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LabDirGraphMtEphTrait<V, L>
         for LabDirGraphMtEph<V, L>
@@ -627,13 +406,187 @@ pub mod LabDirGraphMtEph {
         /// out-neighbors
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
             let arcs = self.labeled_arcs.clone();
-            n_plus_par(self, v.clone_plus(), arcs)
+            self.n_plus_par(v.clone_plus(), arcs)
         }
 
         /// in-neighbors
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
             let arcs = self.labeled_arcs.clone();
-            n_minus_par(self, v.clone_plus(), arcs)
+            self.n_minus_par(v.clone_plus(), arcs)
+        }
+
+        fn n_plus_par(&self, v: V, arcs: SetStEph<LabEdge<V, L>>) -> (n_plus: SetStEph<V>)
+            decreases arcs@.len()
+        {
+            let n = arcs.size();
+            if n == 0 {
+                proof { assert(self.spec_n_plus_from_set(v@, arcs@) =~= Set::empty()); }
+                SetStEph::empty()
+            }
+            else if n == 1 {
+                let LabEdge(from, to, label) = arcs.choose();
+                if feq(&from, &v) {
+                    proof {
+                        assert forall |w: V::V| #![trigger Set::empty().insert(to@).contains(w)] Set::empty().insert(to@).contains(w) implies
+                            self.spec_n_plus_from_set(v@, arcs@).contains(w) by {
+                            assert(arcs@.contains((from@, to@, label@)));
+                        }
+                        assert forall |w: V::V| #![trigger Set::empty().insert(to@).contains(w)] self.spec_n_plus_from_set(v@, arcs@).contains(w) implies
+                            Set::empty().insert(to@).contains(w) by {
+                            let l = choose |l: L::V| arcs@.contains((v@, w, l));
+                            assert(arcs@.remove((from@, to@, label@)).len() == 0);
+                            if (v@, w, l) != (from@, to@, label@) {
+                                assert(arcs@.remove((from@, to@, label@)).contains((v@, w, l)));
+                            }
+                        }
+                        assert(Set::empty().insert(to@) =~= self.spec_n_plus_from_set(v@, arcs@));
+                    }
+                    SetStEph::singleton(to.clone_plus())
+                } else {
+                    proof {
+                        assert forall |w: V::V| self.spec_n_plus_from_set(v@, arcs@).contains(w) implies false by {
+                            let l = choose |l: L::V| arcs@.contains((v@, w, l));
+                            assert(arcs@.remove((from@, to@, label@)).len() == 0);
+                            if (v@, w, l) != (from@, to@, label@) {
+                                assert(arcs@.remove((from@, to@, label@)).contains((v@, w, l)));
+                            }
+                        }
+                        assert(self.spec_n_plus_from_set(v@, arcs@) =~= Set::empty());
+                    }
+                    SetStEph::empty()
+                }
+            }
+            else {
+                let mid = n / 2;
+                let (left_arcs, right_arcs) = arcs.split(mid);
+                let v_left  = v.clone_plus();
+                let v_right = v.clone_plus();
+                let g_left  = self.clone_plus();
+                let g_right = self.clone_plus();
+
+                let f1 = move || -> (out: SetStEph<V>)
+                    ensures out.spec_setsteph_wf(), out@ == g_left.spec_n_plus_from_set(v_left@, left_arcs@)
+                { g_left.n_plus_par(v_left, left_arcs) };
+
+                let f2 = move || -> (out: SetStEph<V>)
+                    ensures out.spec_setsteph_wf(), out@ == g_right.spec_n_plus_from_set(v_right@, right_arcs@)
+                { g_right.n_plus_par(v_right, right_arcs) };
+
+                let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
+
+                proof {
+                    assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] left_neighbors@.union(right_neighbors@).contains(w) implies
+                        self.spec_n_plus_from_set(v@, arcs@).contains(w) by {
+                        if left_neighbors@.contains(w) {
+                            let l = choose |l: L::V| left_arcs@.contains((v@, w, l));
+                            assert(arcs@.contains((v@, w, l)));
+                        } else {
+                            let l = choose |l: L::V| right_arcs@.contains((v@, w, l));
+                            assert(arcs@.contains((v@, w, l)));
+                        }
+                    }
+                    assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] self.spec_n_plus_from_set(v@, arcs@).contains(w) implies
+                        left_neighbors@.union(right_neighbors@).contains(w) by {
+                        let l = choose |l: L::V| arcs@.contains((v@, w, l));
+                        if left_arcs@.contains((v@, w, l)) {
+                            assert(left_neighbors@.contains(w));
+                        } else {
+                            assert(right_arcs@.contains((v@, w, l)));
+                            assert(right_neighbors@.contains(w));
+                        }
+                    }
+                    assert(left_neighbors@.union(right_neighbors@) =~= self.spec_n_plus_from_set(v@, arcs@));
+                }
+
+                left_neighbors.union(&right_neighbors)
+            }
+        }
+
+        fn n_minus_par(&self, v: V, arcs: SetStEph<LabEdge<V, L>>) -> (n_minus: SetStEph<V>)
+            decreases arcs@.len()
+        {
+            let n = arcs.size();
+            if n == 0 {
+                proof { assert(self.spec_n_minus_from_set(v@, arcs@) =~= Set::empty()); }
+                SetStEph::empty()
+            }
+            else if n == 1 {
+                let LabEdge(from, to, label) = arcs.choose();
+                if feq(&to, &v) {
+                    proof {
+                        assert forall |u: V::V| #![trigger Set::empty().insert(from@).contains(u)] Set::empty().insert(from@).contains(u) implies
+                            self.spec_n_minus_from_set(v@, arcs@).contains(u) by {
+                            assert(arcs@.contains((from@, to@, label@)));
+                        }
+                        assert forall |u: V::V| #![trigger Set::empty().insert(from@).contains(u)] self.spec_n_minus_from_set(v@, arcs@).contains(u) implies
+                            Set::empty().insert(from@).contains(u) by {
+                            let l = choose |l: L::V| arcs@.contains((u, v@, l));
+                            assert(arcs@.remove((from@, to@, label@)).len() == 0);
+                            if (u, v@, l) != (from@, to@, label@) {
+                                assert(arcs@.remove((from@, to@, label@)).contains((u, v@, l)));
+                            }
+                        }
+                        assert(Set::empty().insert(from@) =~= self.spec_n_minus_from_set(v@, arcs@));
+                    }
+                    SetStEph::singleton(from.clone_plus())
+                } else {
+                    proof {
+                        assert forall |u: V::V| self.spec_n_minus_from_set(v@, arcs@).contains(u) implies false by {
+                            let l = choose |l: L::V| arcs@.contains((u, v@, l));
+                            assert(arcs@.remove((from@, to@, label@)).len() == 0);
+                            if (u, v@, l) != (from@, to@, label@) {
+                                assert(arcs@.remove((from@, to@, label@)).contains((u, v@, l)));
+                            }
+                        }
+                        assert(self.spec_n_minus_from_set(v@, arcs@) =~= Set::empty());
+                    }
+                    SetStEph::empty()
+                }
+            }
+            else {
+                let mid = n / 2;
+                let (left_arcs, right_arcs) = arcs.split(mid);
+                let v_left  = v.clone_plus();
+                let v_right = v.clone_plus();
+                let g_left  = self.clone_plus();
+                let g_right = self.clone_plus();
+
+                let f1 = move || -> (out: SetStEph<V>)
+                    ensures out.spec_setsteph_wf(), out@ == g_left.spec_n_minus_from_set(v_left@, left_arcs@)
+                { g_left.n_minus_par(v_left, left_arcs) };
+
+                let f2 = move || -> (out: SetStEph<V>)
+                    ensures out.spec_setsteph_wf(), out@ == g_right.spec_n_minus_from_set(v_right@, right_arcs@)
+                { g_right.n_minus_par(v_right, right_arcs) };
+
+                let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
+
+                proof {
+                    assert forall |u: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(u)] left_neighbors@.union(right_neighbors@).contains(u) implies
+                        self.spec_n_minus_from_set(v@, arcs@).contains(u) by {
+                        if left_neighbors@.contains(u) {
+                            let l = choose |l: L::V| left_arcs@.contains((u, v@, l));
+                            assert(arcs@.contains((u, v@, l)));
+                        } else {
+                            let l = choose |l: L::V| right_arcs@.contains((u, v@, l));
+                            assert(arcs@.contains((u, v@, l)));
+                        }
+                    }
+                    assert forall |u: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(u)] self.spec_n_minus_from_set(v@, arcs@).contains(u) implies
+                        left_neighbors@.union(right_neighbors@).contains(u) by {
+                        let l = choose |l: L::V| arcs@.contains((u, v@, l));
+                        if left_arcs@.contains((u, v@, l)) {
+                            assert(left_neighbors@.contains(u));
+                        } else {
+                            assert(right_arcs@.contains((u, v@, l)));
+                            assert(right_neighbors@.contains(u));
+                        }
+                    }
+                    assert(left_neighbors@.union(right_neighbors@) =~= self.spec_n_minus_from_set(v@, arcs@));
+                }
+
+                left_neighbors.union(&right_neighbors)
+            }
         }
     }
 
@@ -651,7 +604,148 @@ pub mod LabDirGraphMtEph {
         }
     }
 
-    //		11. derive impls in verus!
+    //		11. top level coarse locking
+
+    pub struct LabDirGraphMtEphInv;
+
+    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> RwLockPredicate<LabDirGraphMtEph<V, L>> for LabDirGraphMtEphInv {
+        open spec fn inv(self, v: LabDirGraphMtEph<V, L>) -> bool {
+            spec_labgraphview_wf(v@) && valid_key_type_for_lab_graph::<V, L>()
+        }
+    }
+
+    #[verifier::reject_recursive_types(V)]
+    #[verifier::reject_recursive_types(L)]
+    pub struct LockedLabDirGraphMtEph<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> {
+        pub(crate) locked_graph: RwLock<LabDirGraphMtEph<V, L>, LabDirGraphMtEphInv>,
+        pub(crate) ghost_locked_graph: Ghost<LabGraphView<<V as View>::V, <L as View>::V>>,
+    }
+
+    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LockedLabDirGraphMtEph<V, L> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            spec_labgraphview_wf(self.ghost_locked_graph@)
+        }
+
+        pub closed spec fn spec_ghost_locked_graph(self) -> LabGraphView<<V as View>::V, <L as View>::V> {
+            self.ghost_locked_graph@
+        }
+    }
+
+    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> View for LockedLabDirGraphMtEph<V, L> {
+        type V = LabGraphView<<V as View>::V, <L as View>::V>;
+        open spec fn view(&self) -> Self::V { self.spec_ghost_locked_graph() }
+    }
+
+    pub trait LockedLabDirGraphMtEphTrait<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>
+        : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized
+    {
+        spec fn spec_lockedlabdirgraphmteph_wf(&self) -> bool;
+
+        fn new(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (s: Self)
+            requires
+                valid_key_type_for_lab_graph::<V, L>(),
+                vertices@.finite(),
+                labeled_arcs@.finite(),
+                forall |u: V::V, w: V::V, l: L::V|
+                    #[trigger] labeled_arcs@.contains((u, w, l)) ==> vertices@.contains(u) && vertices@.contains(w),
+            ensures
+                s.spec_lockedlabdirgraphmteph_wf(),
+                s@.V == vertices@,
+                s@.A == labeled_arcs@;
+
+        fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>)
+            requires old(self).spec_lockedlabdirgraphmteph_wf()
+            ensures
+                self.spec_lockedlabdirgraphmteph_wf(),
+                match r {
+                    Ok(_) => self@.V == old(self)@.V.insert(v@) && self@.A == old(self)@.A,
+                    Err(_) => self@ == old(self)@,
+                };
+
+        fn add_labeled_arc(&mut self, from: V, to: V, label: L) -> (r: std::result::Result<(), ()>)
+            requires old(self).spec_lockedlabdirgraphmteph_wf()
+            ensures
+                self.spec_lockedlabdirgraphmteph_wf(),
+                match r {
+                    Ok(_) => self@.V == old(self)@.V.insert(from@).insert(to@)
+                          && self@.A == old(self)@.A.insert((from@, to@, label@)),
+                    Err(_) => self@ == old(self)@,
+                };
+
+        fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)
+            requires
+                self.spec_lockedlabdirgraphmteph_wf(),
+                self@.V.contains(v@),
+            ensures
+                n_plus.spec_setsteph_wf(),
+                n_plus@ <= self@.V;
+
+        fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)
+            requires
+                self.spec_lockedlabdirgraphmteph_wf(),
+                self@.V.contains(v@),
+            ensures
+                n_minus.spec_setsteph_wf(),
+                n_minus@ <= self@.V;
+    }
+
+    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LockedLabDirGraphMtEphTrait<V, L> for LockedLabDirGraphMtEph<V, L> {
+        open spec fn spec_lockedlabdirgraphmteph_wf(&self) -> bool {
+            spec_labgraphview_wf(self@)
+        }
+
+        fn new(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (s: Self) {
+            let g = LabDirGraphMtEph::from_vertices_and_labeled_arcs(vertices, labeled_arcs);
+            let ghost gv = g@;
+            LockedLabDirGraphMtEph {
+                locked_graph: RwLock::new(g, Ghost(LabDirGraphMtEphInv)),
+                ghost_locked_graph: Ghost(gv),
+            }
+        }
+
+        fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>) {
+            let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
+            proof { assume(self.ghost_locked_graph@ == locked_val@); }
+            locked_val.add_vertex(v);
+            let ghost new_val = locked_val@;
+            self.ghost_locked_graph = Ghost(new_val);
+            write_handle.release_write(locked_val);
+            Ok(())
+        }
+
+        fn add_labeled_arc(&mut self, from: V, to: V, label: L) -> (r: std::result::Result<(), ()>) {
+            let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
+            proof { assume(self.ghost_locked_graph@ == locked_val@); }
+            locked_val.add_labeled_arc(from, to, label);
+            let ghost new_val = locked_val@;
+            self.ghost_locked_graph = Ghost(new_val);
+            write_handle.release_write(locked_val);
+            Ok(())
+        }
+
+        fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
+            let read_handle = self.locked_graph.acquire_read();
+            let inner = read_handle.borrow();
+            proof { assume(inner@ == self@); }
+            let n_plus = inner.n_plus(v);
+            proof { assume(n_plus@ <= self@.V); }
+            read_handle.release_read();
+            n_plus
+        }
+
+        fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
+            let read_handle = self.locked_graph.acquire_read();
+            let inner = read_handle.borrow();
+            proof { assume(inner@ == self@); }
+            let n_minus = inner.n_minus(v);
+            proof { assume(n_minus@ <= self@.V); }
+            read_handle.release_read();
+            n_minus
+        }
+    }
+
+    //		12. derive impls in verus!
 
     impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> Clone for LabDirGraphMtEph<V, L> {
         fn clone(&self) -> (cloned: Self)
@@ -664,7 +758,22 @@ pub mod LabDirGraphMtEph {
     } // verus!
 
 
-    //		13. derive impls outside verus!
+    //		13. macros
+
+    #[macro_export]
+    macro_rules! LabDirGraphMtEphLit {
+        () => {{
+            < $crate::Chap06::LabDirGraphMtEph::LabDirGraphMtEph::LabDirGraphMtEph<_, _> as $crate::Chap06::LabDirGraphMtEph::LabDirGraphMtEph::LabDirGraphMtEphTrait<_, _> >::empty()
+        }};
+        ( V: [ $( $v:expr ),* $(,)? ], A: [ $( ($from:expr, $to:expr, $label:expr) ),* $(,)? ] ) => {{
+            let vertices = $crate::SetLit![ $( $v ),* ];
+            let labeled_arcs = $crate::SetLit![ $( $crate::Types::Types::LabEdge($from, $to, $label) ),* ];
+            < $crate::Chap06::LabDirGraphMtEph::LabDirGraphMtEph::LabDirGraphMtEph<_, _> as $crate::Chap06::LabDirGraphMtEph::LabDirGraphMtEph::LabDirGraphMtEphTrait<_, _> >::from_vertices_and_labeled_arcs(vertices, labeled_arcs)
+        }};
+    }
+
+
+    //		14. derive impls outside verus!
 
     impl<V: StTInMtT + Hash, L: StTInMtT + Hash> Display for LabDirGraphMtEph<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
@@ -680,20 +789,5 @@ pub mod LabDirGraphMtEph {
                 self.vertices, self.labeled_arcs
             )
         }
-    }
-
-
-    //		12. macros
-
-    #[macro_export]
-    macro_rules! LabDirGraphMtEphLit {
-        () => {{
-            < $crate::Chap06::LabDirGraphMtEph::LabDirGraphMtEph::LabDirGraphMtEph<_, _> as $crate::Chap06::LabDirGraphMtEph::LabDirGraphMtEph::LabDirGraphMtEphTrait<_, _> >::empty()
-        }};
-        ( V: [ $( $v:expr ),* $(,)? ], A: [ $( ($from:expr, $to:expr, $label:expr) ),* $(,)? ] ) => {{
-            let vertices = $crate::SetLit![ $( $v ),* ];
-            let labeled_arcs = $crate::SetLit![ $( $crate::Types::Types::LabEdge($from, $to, $label) ),* ];
-            < $crate::Chap06::LabDirGraphMtEph::LabDirGraphMtEph::LabDirGraphMtEph<_, _> as $crate::Chap06::LabDirGraphMtEph::LabDirGraphMtEph::LabDirGraphMtEphTrait<_, _> >::from_vertices_and_labeled_arcs(vertices, labeled_arcs)
-        }};
     }
 }
