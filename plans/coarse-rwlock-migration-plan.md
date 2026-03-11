@@ -115,9 +115,23 @@ These wrap BSTs in a Set interface. Each delegates to its BST counterpart.
 | 35 | 52 | AdjTableGraphMtPer.rs | AdjTableGraphStPer.rs | |
 | 36 | 52 | EdgeSetGraphMtPer.rs | EdgeSetGraphStPer.rs | |
 
-## 3-Agent Work Split
+## 4-Agent Work Split
 
 Split by chapter so agents never touch the same files. No merge conflicts possible.
+
+### Agent 1: Chap05/06 (5 files)
+
+Foundation collections. All Phase 3 (pure external_body). High uniformity within
+the graph group — once DirGraphMtEph is done, the other three follow the same
+pattern.
+
+| # | Phase | File | Notes |
+|---|-------|------|-------|
+| 1 | 3 | SetMtEph.rs | Chap05, fundamental |
+| 2 | 3 | DirGraphMtEph.rs | Chap06, template for 3-4 |
+| 3 | 3 | UnDirGraphMtEph.rs | Chap06, follows #2 |
+| 4 | 3 | LabDirGraphMtEph.rs | Chap06, follows #2 |
+| 5 | 3 | LabUnDirGraphMtEph.rs | Chap06, follows #2 |
 
 ### Agent 2: Chap37 (11 files)
 
@@ -139,7 +153,7 @@ refactoring. BSTSet wrappers depend on the underlying BST being done first.
 | 10 | 3 | BSTSetRBMtEph.rs | After #4 done |
 | 11 | 3 | AVLTreeSeqMtPer.rs | Standalone |
 
-### Agent 3: Chap39/41/42/43 (12 files)
+### Agent 3: Chap39/41/42/43 (10 files)
 
 Trees, sets, and tables. BSTTreapMtEph and AVLTreeSetMtEph need Arc downgrade.
 Chap43 tables have the most external_body methods (OrderedTableMtEph has 16+).
@@ -157,29 +171,24 @@ Chap43 tables have the most external_body methods (OrderedTableMtEph has 16+).
 | 9 | 3 | OrderedSetMtEph.rs | Standalone |
 | 10 | 3 | AugOrderedTableMtEph.rs | Augmented table |
 
-### Agent 4: Chap05/06/18/19/52 (13 files)
+### Agent 4: Chap18/19/52 (10 files)
 
-Foundation collections and graph representations. All Phase 3 (pure external_body).
-High uniformity within each chapter group — once the first graph or sequence file
+Sequences and graph representations. All Phase 3 (pure external_body). High
+uniformity within each chapter group — once the first sequence or graph file
 is done, the rest follow the same pattern.
 
 | # | Phase | File | Notes |
 |---|-------|------|-------|
-| 1 | 3 | SetMtEph.rs | Chap05, fundamental |
-| 2 | 3 | DirGraphMtEph.rs | Chap06, template for 3-5 |
-| 3 | 3 | UnDirGraphMtEph.rs | Chap06, follows #2 |
-| 4 | 3 | LabDirGraphMtEph.rs | Chap06, follows #2 |
-| 5 | 3 | LabUnDirGraphMtEph.rs | Chap06, follows #2 |
-| 6 | 3 | ArraySeqMtEph.rs | Chap18, complex ninject |
-| 7 | 3 | ArraySeqMtPer.rs | Chap18 |
-| 8 | 3 | ArraySeqMtEph.rs | Chap19, extended seqs |
-| 9 | 3 | ArraySeqMtEphSlice.rs | Chap19, slice variant |
-| 10 | 3 | AdjSeqGraphMtEph.rs | Chap52, template for 11-15 |
-| 11 | 3 | AdjSeqGraphMtPer.rs | Chap52, follows #10 |
-| 12 | 3 | AdjMatrixGraphMtEph.rs | Chap52 |
-| 13 | 3 | AdjMatrixGraphMtPer.rs | Chap52 |
-| 14 | 3 | AdjTableGraphMtPer.rs | Chap52 |
-| 15 | 3 | EdgeSetGraphMtPer.rs | Chap52 |
+| 1 | 3 | ArraySeqMtEph.rs | Chap18, complex ninject |
+| 2 | 3 | ArraySeqMtPer.rs | Chap18 |
+| 3 | 3 | ArraySeqMtEph.rs | Chap19, extended seqs |
+| 4 | 3 | ArraySeqMtEphSlice.rs | Chap19, slice variant |
+| 5 | 3 | AdjSeqGraphMtEph.rs | Chap52, template for 6-10 |
+| 6 | 3 | AdjSeqGraphMtPer.rs | Chap52, follows #5 |
+| 7 | 3 | AdjMatrixGraphMtEph.rs | Chap52 |
+| 8 | 3 | AdjMatrixGraphMtPer.rs | Chap52 |
+| 9 | 3 | AdjTableGraphMtPer.rs | Chap52 |
+| 10 | 3 | EdgeSetGraphMtPer.rs | Chap52 |
 
 ### Merge Risk
 
@@ -193,11 +202,12 @@ but since no two agents touch the same file, merges are trivially clean.
 
 ### Load Balance
 
-| Agent | Files | Phase 1 | Phase 2 | Phase 3 | Complexity |
-|-------|-------|---------|---------|---------|------------|
-| 2 | 11 | 3 | 2 | 6 | High (refactor existing RwLock) |
-| 3 | 12 | 0 | 2 | 8 | High (Chap43 tables are large) |
-| 4 | 15 | 0 | 0 | 15 | Medium (uniform patterns, batch) |
+| Agent | Chapters | Files | Phase 1 | Phase 2 | Phase 3 | Complexity |
+|-------|----------|-------|---------|---------|---------|------------|
+| 1 | 05/06 | 5 | 0 | 0 | 5 | Low (uniform graph pattern) |
+| 2 | 37 | 11 | 3 | 2 | 6 | High (refactor existing RwLock) |
+| 3 | 39/41/42/43 | 10 | 0 | 2 | 8 | High (Chap43 tables are large) |
+| 4 | 18/19/52 | 10 | 0 | 0 | 10 | Medium (uniform patterns, batch) |
 
 ## Summary
 
