@@ -25,23 +25,43 @@ pub mod ConnectivityStEph {
     use crate::SetLit;
 
     verus! {
-        pub trait ConnectivityStEphTrait {
-            /// Count connected components using star contraction
-            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-            fn count_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N;
 
-            /// Find connected components using star contraction
-            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-            fn connected_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>);
+    // 4. type definitions
 
-            /// Count components using higher-order function approach
-            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-            fn count_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N;
+    /// Namespace struct for trait impl.
+    pub struct ConnectivityStEph;
 
-            /// Find components using higher-order function approach
-            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-            fn connected_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>);
-        }
+    // 6. spec fns
+
+    /// Well-formedness for connectivity algorithm input.
+    pub open spec fn spec_connectivitysteph_wf<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> bool {
+        spec_graphview_wf(graph@)
+    }
+
+    // 8. traits
+
+    pub trait ConnectivityStEphTrait {
+        /// Count connected components using star contraction.
+        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        fn count_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N
+            requires spec_connectivitysteph_wf(graph);
+
+        /// Find connected components using star contraction.
+        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        fn connected_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
+            requires spec_connectivitysteph_wf(graph);
+
+        /// Count components using higher-order function approach.
+        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        fn count_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N
+            requires spec_connectivitysteph_wf(graph);
+
+        /// Find components using higher-order function approach.
+        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        fn connected_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
+            requires spec_connectivitysteph_wf(graph);
+    }
+
     } // verus!
 
     #[cfg(not(verus_keep_ghost))]

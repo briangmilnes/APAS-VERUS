@@ -10,56 +10,74 @@ pub mod TSPApproxStEph {
 
     use vstd::prelude::*;
 
-    verus! {
-        proof fn _tsp_approx_st_eph_verified() {}
-    }
+    use std::collections::HashMap;
+    use std::hash::Hash;
+    use crate::vstdplus::float::float::WrappedF64;
+    use crate::Chap05::SetStEph::SetStEph::*;
+    use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
+    use crate::Types::Types::*;
 
     #[cfg(not(verus_keep_ghost))]
-    use std::collections::HashMap;
-    #[cfg(not(verus_keep_ghost))]
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::{HashSetWithViewPlus, HashSetWithViewPlusTrait};
-    use std::hash::Hash;
     #[cfg(not(verus_keep_ghost))]
     use std::vec::Vec;
-    use crate::vstdplus::float::float::WrappedF64;
     #[cfg(not(verus_keep_ghost))]
     use crate::vstdplus::float::float::zero_dist;
     #[cfg(not(verus_keep_ghost))]
-    use crate::Chap05::SetStEph::SetStEph::*;
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
-    #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Types::Types::*;
 
     #[cfg(not(verus_keep_ghost))]
     pub type T<V> = LabUnDirGraphStEph<V, WrappedF64>;
 
-    #[cfg(not(verus_keep_ghost))]
-    pub trait TSPApproxStEphTrait {
-        /// Compute Euler tour of a tree
-        /// APAS: Work O(|V|), Span O(|V|)
-        fn euler_tour<V: StT + Hash + Ord>(tree: &LabUnDirGraphStEph<V, WrappedF64>, start: V) -> Vec<V>;
+    verus! {
 
-        /// Shortcut Euler tour to avoid revisiting vertices
+    // 4. type definitions
+
+    /// Namespace struct for trait impl.
+    pub struct TSPApproxStEph;
+
+    // 6. spec fns
+
+    /// Well-formedness for sequential TSP approximation algorithm input.
+    pub open spec fn spec_tspapproxsteph_wf<V: StT + Hash>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
+        spec_labgraphview_wf(graph@)
+    }
+
+    // 8. traits
+
+    pub trait TSPApproxStEphTrait {
+        /// Compute Euler tour of a tree.
+        /// APAS: Work O(|V|), Span O(|V|)
+        fn euler_tour<V: StT + Hash + Ord>(
+            graph: &LabUnDirGraphStEph<V, WrappedF64>,
+            start: &V,
+            tree_edges: &SetStEph<LabEdge<V, WrappedF64>>,
+        ) -> Vec<V>
+            requires spec_tspapproxsteph_wf(graph);
+
+        /// Shortcut Euler tour to avoid revisiting vertices.
         /// APAS: Work O(|V|), Span O(|V|)
         fn shortcut_tour<V: StT + Hash + Ord>(euler_tour: &[V]) -> Vec<V>;
 
-        /// Compute total weight of a tour
+        /// Compute total weight of a tour.
         /// APAS: Work O(|V|), Span O(|V|)
         fn tour_weight<V: StT + Hash + Ord>(
+            graph: &LabUnDirGraphStEph<V, WrappedF64>,
             tour: &[V],
-            distances: &HashMap<(V, V), WrappedF64>,
-        ) -> WrappedF64;
+        ) -> WrappedF64
+            requires spec_tspapproxsteph_wf(graph);
 
-        /// 2-approximation algorithm for metric TSP
+        /// 2-approximation algorithm for metric TSP.
         /// APAS: Work O(|V|² log |V|), Span O(|V|² log |V|)
         fn approx_metric_tsp<V: StT + Hash + Ord>(
-            distances: &HashMap<(V, V), WrappedF64>,
-            vertices: &SetStEph<V>,
-        ) -> Vec<V>;
+            graph: &LabUnDirGraphStEph<V, WrappedF64>,
+            spanning_tree: &SetStEph<LabEdge<V, WrappedF64>>,
+            start: &V,
+        ) -> (Vec<V>, WrappedF64)
+            requires spec_tspapproxsteph_wf(graph);
     }
+
+    } // verus!
 
     /// Euler Tour of a Tree
     ///

@@ -19,11 +19,28 @@ pub mod StarPartitionStEph {
     use crate::SetLit;
 
     verus! {
-        pub trait StarPartitionStEphTrait {
-            /// Sequential star partition using greedy selection
-            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-            fn sequential_star_partition<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>);
-        }
+
+    // 4. type definitions
+
+    /// Namespace struct for trait impl.
+    pub struct StarPartitionStEph;
+
+    // 6. spec fns
+
+    /// Well-formedness for star partition algorithm input.
+    pub open spec fn spec_starpartitionsteph_wf<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> bool {
+        spec_graphview_wf(graph@)
+    }
+
+    // 8. traits
+
+    pub trait StarPartitionStEphTrait {
+        /// Sequential star partition using greedy selection.
+        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        fn sequential_star_partition<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
+            requires spec_starpartitionsteph_wf(graph);
+    }
+
     } // verus!
 
     #[cfg(not(verus_keep_ghost))]

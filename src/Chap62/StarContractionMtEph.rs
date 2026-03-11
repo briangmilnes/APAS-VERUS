@@ -25,19 +25,37 @@ pub mod StarContractionMtEph {
     use crate::{ParaPair, SetLit};
 
     verus! {
-        pub trait StarContractionMtEphTrait {
-            /// Parallel star contraction higher-order function
-            /// APAS: Work O((n + m) lg n), Span O(lg² n)
-            fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R
-            where
-                V: StT + MtT + Hash + Ord + 'static,
-                F: Fn(&SetStEph<V>) -> R,
-                G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R;
 
-            /// Contract graph to just vertices (no edges)
-            /// APAS: Work O((n + m) lg n), Span O(lg² n)
-            fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<V>;
-        }
+    // 4. type definitions
+
+    /// Namespace struct for trait impl.
+    pub struct StarContractionMtEph;
+
+    // 6. spec fns
+
+    /// Well-formedness for parallel star contraction algorithm input.
+    pub open spec fn spec_starcontractionmteph_wf<V: StT + MtT + Hash>(graph: &UnDirGraphMtEph<V>) -> bool {
+        spec_graphview_wf(graph@)
+    }
+
+    // 8. traits
+
+    pub trait StarContractionMtEphTrait {
+        /// Parallel star contraction higher-order function.
+        /// APAS: Work O((n + m) lg n), Span O(lg^2 n)
+        fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R
+        where
+            V: StT + MtT + Hash + Ord + 'static,
+            F: Fn(&SetStEph<V>) -> R,
+            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R
+        requires spec_starcontractionmteph_wf(graph);
+
+        /// Contract graph to just vertices (no edges).
+        /// APAS: Work O((n + m) lg n), Span O(lg^2 n)
+        fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<V>
+            requires spec_starcontractionmteph_wf(graph);
+    }
+
     } // verus!
 
     #[cfg(not(verus_keep_ghost))]

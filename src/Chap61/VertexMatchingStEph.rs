@@ -20,15 +20,33 @@ pub mod VertexMatchingStEph {
     use crate::SetLit;
 
     verus! {
-        pub trait VertexMatchingStEphTrait {
-            /// Greedy vertex matching algorithm
-            /// APAS: Work Θ(|E|), Span Θ(|E|)
-            fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>;
 
-            /// Sequential version of parallel matching
-            /// APAS: Work Θ(|E|), Span Θ(|E|)
-            fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>>;
-        }
+    // 4. type definitions
+
+    /// Namespace struct for trait impl.
+    pub struct VertexMatchingStEph;
+
+    // 6. spec fns
+
+    /// Well-formedness for vertex matching algorithm input.
+    pub open spec fn spec_vertexmatchingsteph_wf<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> bool {
+        spec_graphview_wf(graph@)
+    }
+
+    // 8. traits
+
+    pub trait VertexMatchingStEphTrait {
+        /// Greedy vertex matching algorithm.
+        /// APAS: Work O(|E|), Span O(|E|)
+        fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>
+            requires spec_vertexmatchingsteph_wf(graph);
+
+        /// Sequential version of parallel matching.
+        /// APAS: Work O(|E|), Span O(|E|)
+        fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>>
+            requires spec_vertexmatchingsteph_wf(graph);
+    }
+
     } // verus!
 
     /// Algorithm 61.3: Greedy Vertex Matching
