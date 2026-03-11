@@ -32,44 +32,58 @@ pub mod AllPairsResultStPerF64 {
     // 8. traits
 
     pub trait AllPairsResultStPerF64Trait: Sized {
-        spec fn spec_allpairsresultstperf64_wf(s: &AllPairsResultStPerF64) -> bool;
+        spec fn spec_allpairsresultstperf64_wf(&self) -> bool;
 
         spec fn spec_n(&self) -> usize;
 
         fn new(n: usize) -> (empty: Self)
-            ensures empty.spec_n() == n;
+            ensures
+                empty.spec_allpairsresultstperf64_wf(),
+                empty.spec_n() == n;
 
-        fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64);
+        fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+            requires self.spec_allpairsresultstperf64_wf();
 
         fn set_distance(self, u: usize, v: usize, dist: WrappedF64) -> (updated: Self)
-            ensures updated.spec_n() == self.spec_n();
+            requires self.spec_allpairsresultstperf64_wf(),
+            ensures
+                updated.spec_allpairsresultstperf64_wf(),
+                updated.spec_n() == self.spec_n();
 
-        fn get_predecessor(&self, u: usize, v: usize) -> (predecessor: Option<usize>);
+        fn get_predecessor(&self, u: usize, v: usize) -> (predecessor: Option<usize>)
+            requires self.spec_allpairsresultstperf64_wf();
 
         fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self)
-            ensures updated.spec_n() == self.spec_n();
+            requires self.spec_allpairsresultstperf64_wf(),
+            ensures
+                updated.spec_allpairsresultstperf64_wf(),
+                updated.spec_n() == self.spec_n();
 
-        fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool);
+        fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool)
+            requires self.spec_allpairsresultstperf64_wf();
 
-        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);
+        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
+            requires self.spec_allpairsresultstperf64_wf();
     }
 
     // 9. impls
 
     impl AllPairsResultStPerF64Trait for AllPairsResultStPerF64 {
-        open spec fn spec_allpairsresultstperf64_wf(s: &AllPairsResultStPerF64) -> bool {
-            s.distances.spec_len() == s.n as nat
-            && s.predecessors.spec_len() == s.n as nat
-            && forall|r: int| #![trigger s.distances.spec_index(r)]
-                0 <= r < s.n ==> s.distances.spec_index(r).spec_len() == s.n as nat
-            && forall|r: int| #![trigger s.predecessors.spec_index(r)]
-                0 <= r < s.n ==> s.predecessors.spec_index(r).spec_len() == s.n as nat
+        open spec fn spec_allpairsresultstperf64_wf(&self) -> bool {
+            self.distances.spec_len() == self.n as nat
+            && self.predecessors.spec_len() == self.n as nat
+            && forall|r: int|
+                #![trigger self.distances.spec_index(r)]
+                #![trigger self.predecessors.spec_index(r)]
+                0 <= r < self.n ==> (
+                    self.distances.spec_index(r).spec_len() == self.n as nat
+                    && self.predecessors.spec_index(r).spec_len() == self.n as nat
+                )
         }
 
         open spec fn spec_n(&self) -> usize { self.n }
 
         fn new(n: usize) -> (empty: Self)
-            ensures Self::spec_allpairsresultstperf64_wf(&empty),
         {
             let unreach = unreachable_dist();
             let zero = zero_dist();
@@ -138,13 +152,25 @@ pub mod AllPairsResultStPerF64 {
         fn set_distance(self, u: usize, v: usize, dist: WrappedF64) -> (updated: Self)
         {
             if u >= self.distances.seq.len() || v >= self.n { return self; }
+            let ghost old_distances = self.distances;
+            let ghost n = self.n;
+            assert(self.distances.spec_index(u as int).spec_len() == n as nat);
             let mut row_vec = self.distances.seq[u].seq.clone();
             if v < row_vec.len() {
                 row_vec.set(v, dist);
             }
             let updated_row = ArraySeqStPerS { seq: row_vec };
+            assert(updated_row.spec_len() == n as nat);
             let mut dist_vec = self.distances.seq;
             dist_vec.set(u, updated_row);
+            assert forall|r: int| 0 <= r < n
+                implies #[trigger] dist_vec@[r].spec_len() == n as nat
+            by {
+                if r == u as int {
+                } else {
+                    assert(dist_vec@[r] == old_distances.spec_index(r));
+                }
+            };
             AllPairsResultStPerF64 {
                 distances: ArraySeqStPerS { seq: dist_vec },
                 predecessors: self.predecessors,
@@ -167,13 +193,25 @@ pub mod AllPairsResultStPerF64 {
         fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self)
         {
             if u >= self.predecessors.seq.len() || v >= self.n { return self; }
+            let ghost old_predecessors = self.predecessors;
+            let ghost n = self.n;
+            assert(self.predecessors.spec_index(u as int).spec_len() == n as nat);
             let mut row_vec = self.predecessors.seq[u].seq.clone();
             if v < row_vec.len() {
                 row_vec.set(v, pred);
             }
             let updated_row = ArraySeqStPerS { seq: row_vec };
+            assert(updated_row.spec_len() == n as nat);
             let mut pred_vec = self.predecessors.seq;
             pred_vec.set(u, updated_row);
+            assert forall|r: int| 0 <= r < n
+                implies #[trigger] pred_vec@[r].spec_len() == n as nat
+            by {
+                if r == u as int {
+                } else {
+                    assert(pred_vec@[r] == old_predecessors.spec_index(r));
+                }
+            };
             AllPairsResultStPerF64 {
                 distances: self.distances,
                 predecessors: ArraySeqStPerS { seq: pred_vec },

@@ -50,7 +50,7 @@ broadcast use {
     // 8. traits
 
     pub trait SSSPResultStPerF64Trait: Sized {
-        spec fn spec_ssspresultstperf64_wf(s: &SSSPResultStPerF64) -> bool;
+        spec fn spec_ssspresultstperf64_wf(&self) -> bool;
 
         spec fn spec_distances(&self) -> Seq<WrappedF64>;
 
@@ -61,17 +61,21 @@ broadcast use {
         fn new(n: usize, source: usize) -> (empty: Self)
             requires source < n,
             ensures
+                empty.spec_ssspresultstperf64_wf(),
                 empty.spec_distances().len() == n,
                 empty.spec_predecessors().len() == n,
                 empty.spec_source() == source;
 
         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+            requires self.spec_ssspresultstperf64_wf(),
             ensures
                 v >= self.spec_distances().len() ==> dist@ == UNREACHABLE_SPEC(),
                 v < self.spec_distances().len() ==> dist == self.spec_distances()[v as int];
 
         fn set_distance(self, v: usize, dist: WrappedF64) -> (updated: Self)
+            requires self.spec_ssspresultstperf64_wf(),
             ensures
+                updated.spec_ssspresultstperf64_wf(),
                 updated.spec_distances().len() == self.spec_distances().len(),
                 v < self.spec_distances().len() ==> updated.spec_distances() =~= self.spec_distances().update(v as int, dist),
                 v >= self.spec_distances().len() ==> updated.spec_distances() =~= self.spec_distances(),
@@ -79,13 +83,16 @@ broadcast use {
                 updated.spec_source() == self.spec_source();
 
         fn get_predecessor(&self, v: usize) -> (predecessor: Option<usize>)
+            requires self.spec_ssspresultstperf64_wf(),
             ensures
                 v >= self.spec_predecessors().len() ==> predecessor is None,
                 v < self.spec_predecessors().len() && self.spec_predecessors()[v as int] == NO_PREDECESSOR ==> predecessor is None,
                 v < self.spec_predecessors().len() && self.spec_predecessors()[v as int] != NO_PREDECESSOR ==> predecessor == Some(self.spec_predecessors()[v as int]);
 
         fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self)
+            requires self.spec_ssspresultstperf64_wf(),
             ensures
+                updated.spec_ssspresultstperf64_wf(),
                 updated.spec_predecessors().len() == self.spec_predecessors().len(),
                 v < self.spec_predecessors().len() ==> updated.spec_predecessors() =~= self.spec_predecessors().update(v as int, pred),
                 v >= self.spec_predecessors().len() ==> updated.spec_predecessors() =~= self.spec_predecessors(),
@@ -93,19 +100,21 @@ broadcast use {
                 updated.spec_source() == self.spec_source();
 
         fn is_reachable(&self, v: usize) -> (reachable: bool)
+            requires self.spec_ssspresultstperf64_wf(),
             ensures
                 v >= self.spec_distances().len() ==> !reachable,
                 v < self.spec_distances().len() ==> reachable == self.spec_distances()[v as int].spec_is_finite();
 
-        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);
+        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
+            requires self.spec_ssspresultstperf64_wf();
     }
 
     // 9. impls
 
     impl SSSPResultStPerF64Trait for SSSPResultStPerF64 {
-        open spec fn spec_ssspresultstperf64_wf(s: &SSSPResultStPerF64) -> bool {
-            s.distances.seq@.len() == s.predecessors.seq@.len()
-            && s.source < s.distances.seq@.len()
+        open spec fn spec_ssspresultstperf64_wf(&self) -> bool {
+            self.distances.seq@.len() == self.predecessors.seq@.len()
+            && self.source < self.distances.seq@.len()
         }
 
         open spec fn spec_distances(&self) -> Seq<WrappedF64> { self.distances.seq@ }

@@ -9,15 +9,10 @@ Your CLAUDE.md should cause you to read them in all planning and hopefully bug f
 Fix trigger warnings as they occur using the rules.
 Your src/Chap*/analyses files have been updated.
 
-We are going to work on bringing the code base up to
-     src/standards/multi_struct_standard.rs
-and  src/standards/spec_wf_standard.rs.
-
 
 Read the plan in plans/wf-and-multi-struct-update-plan.md.
-
-You have been asigned to work in Chap  52, 53, 56, 57, 58, 59
-and only in those chapters.
+Work on only your chapters in the plan.
 Double check their structure against the standards. 
+
 Propose a plan of work.
 

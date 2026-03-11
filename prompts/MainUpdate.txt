@@ -8,6 +8,9 @@ You are working src/Chap39 the Treaps and only this chapter.
 Read src/standards/* and apply them in your proposed work.
 Fix trigger warnings as they occur using the rules.
 
+We are working on wf spec updates according to the new specs.
+
+
 Check verusification state, the hole checker log and style logs are up to date.
 Does the chapter say these are multithreaded?
 Review the verusification, specification and holes on this chapter in
