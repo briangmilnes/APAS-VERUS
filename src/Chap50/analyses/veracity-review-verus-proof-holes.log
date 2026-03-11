@@ -183,8 +183,9 @@ Holes Found: 61 total
 Errors: 2 total (2 assume in eq/clone (Verus workaround))
 
 Info: 3 total
-   MatrixChainStPer.rs:339: info: accept() - accept hole
    MatrixChainMtPer.rs:338: info: accept() - accept hole
    MatrixChainStEph.rs:370: info: accept() - accept hole
- MatrixChainMtPer.rs:338: info: accept() - accept hole
+   MatrixChainStPer.rs:339: info: accept() - accept hole
+le
    MatrixChainStEph.rs:370: info: accept() - accept hole
+   MatrixChainStPer.rs:339: info: accept() - accept hole

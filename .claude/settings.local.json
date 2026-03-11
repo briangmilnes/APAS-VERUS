@@ -65,6 +65,20 @@
       "WebSearch",
       "Bash(do:*)",
       "Bash(find:*)",
+      "Bash(for *)",
+      "Bash(for:*)",
+      "Bash(sed *)",
+      "Bash(sed:*)",
+      "Bash(*| head *)",
+      "Bash(*| tail *)",
+      "Bash(*|head *)",
+      "Bash(*|tail *)",
+      "Bash(*&& git *)",
+      "Bash(*&& cargo *)",
+      "Bash(*&& scripts/*)",
+      "Bash(*; git *)",
+      "Bash(*; do *)",
+      "Bash(while *)",
       "WebFetch(domain:)"
     ]
   }

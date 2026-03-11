@@ -90,11 +90,7 @@ Proof Functions:
 
 Holes Found: 10 total
    10 × assume()
-��════════
-
-Modules:
-   2 clean (no holes)
-   1 holed (contains holes)
+es)
    3 total
 
 Proof Functions:

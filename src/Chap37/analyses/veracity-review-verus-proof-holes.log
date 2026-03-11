@@ -261,11 +261,7 @@ Holes Found: 46 total
    39 × external_body
 
 Errors: 9 total (9 assume in eq/clone (Verus workaround))
-tal
-
-Proof Functions:
-   12 clean
-   0 holed
+holed
    12 total
 
 Holes Found: 46 total
