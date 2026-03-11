@@ -56,6 +56,9 @@
       "Grep(~/projects/**)",
       "Read(~/.claude/**)",
       "Read(~/projects/**)",
+      "Edit(/tmp/**)",
+      "Glob(/tmp/**)",
+      "Grep(/tmp/**)",
       "Read(/tmp/**)",
       "WebFetch(domain:verus-lang.github.io)",
       "Write(~/.claude/**)",
@@ -78,6 +81,8 @@
       "Bash(*&& scripts/*)",
       "Bash(*; git *)",
       "Bash(*; do *)",
+      "Bash(*> /tmp/*)",
+      "Bash(*>> /tmp/*)",
       "Bash(while *)",
       "WebFetch(domain:)"
     ]

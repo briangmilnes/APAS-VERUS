@@ -143,7 +143,7 @@ minor). You bring:
 - **No Python scripts.** All reusable tools must be Rust. Need explicit permission for even
   throwaway Python.
 - **No Perl.** Never use Perl for any purpose — no `perl -e`, no `perl -i`, no Perl one-liners.
-- Plans and proposed work tables go in `plans/` directory on disk.
+- Plans and proposed work tables go in `${cwd}/plans/`, not in `~/.claude`.
 
 ---
 
