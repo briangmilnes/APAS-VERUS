@@ -211,34 +211,34 @@
 ✓ BSTRBStEph.rs
    1 clean proof function
 ❌ BSTSetAVLMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetAVLMtEph.rs:376: external_body - #[verifier::external_body]
-       377 |         fn next(&mut self) -> (next: Option<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetAVLMtEph.rs:401: external_body - #[verifier::external_body]
+       402 |         fn next(&mut self) -> (next: Option<T>)
    Holes: 1 total
       1 × external_body
 ❌ BSTSetBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:262: external_body - #[verifier::external_body]
-       263 |         fn next(&mut self) -> (next: Option<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:287: external_body - #[verifier::external_body]
+       288 |         fn next(&mut self) -> (next: Option<T>)
    Holes: 1 total
       1 × external_body
 ❌ BSTSetPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:318: external_body - #[verifier::external_body]
-       319 |         fn next(&mut self) -> (next: Option<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:343: external_body - #[verifier::external_body]
+       344 |         fn next(&mut self) -> (next: Option<T>)
    Holes: 1 total
       1 × external_body
 ❌ BSTSetRBMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:346: external_body - #[verifier::external_body]
-       347 |         fn next(&mut self) -> (next: Option<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:371: external_body - #[verifier::external_body]
+       372 |         fn next(&mut self) -> (next: Option<T>)
    Holes: 1 total
       1 × external_body
 ❌ BSTSetSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:347: external_body - #[verifier::external_body]
-       348 |         fn next(&mut self) -> (next: Option<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:372: external_body - #[verifier::external_body]
+       373 |         fn next(&mut self) -> (next: Option<T>)
    Holes: 1 total
       1 × external_body
 ✓ BSTSplayMtEph.rs
 ❌ BSTSplayStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayStEph.rs:456: external_body - #[verifier::external_body]
-       457 |         fn clone(&self) -> (copy: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayStEph.rs:471: external_body - #[verifier::external_body]
+       472 |         fn clone(&self) -> (copy: Self)
    Holes: 1 total
       1 × external_body
 
@@ -261,8 +261,7 @@ Holes Found: 46 total
    39 × external_body
 
 Errors: 9 total (9 assume in eq/clone (Verus workaround))
-s)
-   19 total
+9 total
 
 Proof Functions:
    12 clean

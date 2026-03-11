@@ -135,10 +135,10 @@ Info: 18 total
    LeftistHeapPQ.rs:1150: info: accept() - accept hole
    LeftistHeapPQ.rs:1162: info: accept() - accept hole
    LeftistHeapPQ.rs:1172: info: accept() - accept hole
+   UnsortedListPQ.rs:660: info: accept() - accept hole
    HeapsortExample.rs:98: info: accept() - accept hole
    HeapsortExample.rs:113: info: accept() - accept hole
-   UnsortedListPQ.rs:660: info: accept() - accept hole
  accept() - accept hole
+   UnsortedListPQ.rs:660: info: accept() - accept hole
    HeapsortExample.rs:98: info: accept() - accept hole
    HeapsortExample.rs:113: info: accept() - accept hole
-   UnsortedListPQ.rs:660: info: accept() - accept hole
