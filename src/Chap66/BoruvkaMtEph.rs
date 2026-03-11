@@ -56,6 +56,13 @@ pub mod BoruvkaMtEph {
 
     impl<V: Eq + Copy> Eq for LabeledEdge<V> {}
 
+    // 5. view impls
+
+    impl<V: StTInMtT + Ord + 'static> View for LabeledEdge<V> {
+        type V = Self;
+        open spec fn view(&self) -> Self { *self }
+    }
+
     // 6. spec fns
 
     /// All edge weights are finite.
@@ -63,65 +70,58 @@ pub mod BoruvkaMtEph {
         forall|e: LabeledEdge<V>| edges.contains(e) ==> e.2.spec_is_finite()
     }
 
-    /// Well-formedness for parallel Borůvka MST algorithm input.
-    pub open spec fn spec_boruvkamteph_wf<V: View<V = V> + Copy>(
-        edges: Set<LabeledEdge<V>>,
-    ) -> bool {
-        spec_all_weights_finite(edges)
-    }
-
     // 8. traits
 
     pub trait BoruvkaMtEphTrait {
-            /// Find vertex bridges for parallel Borůvka's algorithm.
-            /// APAS: Work O(|E|), Span O(lg |E|)
-            fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
-                edges: Arc<Vec<LabeledEdge<V>>>,
-                start: usize,
-                end: usize,
-            ) -> HashMap<V, (V, WrappedF64, usize)>;
-
-            /// Parallel bridge-based star partition.
-            /// APAS: Work O(|V| + |E|), Span O(lg |V|)
-            fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
-                vertices_vec: Vec<V>,
-                bridges: HashMap<V, (V, WrappedF64, usize)>,
-                seed: u64,
-                round: usize,
-            ) -> (SetStEph<V>, HashMap<V, (V, WrappedF64, usize)>);
-
-            /// Parallel Borůvka's MST algorithm.
-            /// APAS: Work O(m log n), Span O(log² n)
-            fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
-                vertices_vec: Vec<V>,
-                edges_vec: Vec<LabeledEdge<V>>,
-                mst_labels: SetStEph<usize>,
-                seed: u64,
-                round: usize,
-            ) -> SetStEph<usize>;
-
-            /// Parallel Borůvka's MST with random seed.
-            /// APAS: Work O(m log n), Span O(log² n)
-            fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
-                vertices: &SetStEph<V>,
-                edges: &SetStEph<LabeledEdge<V>>,
-                seed: u64,
-            ) -> SetStEph<usize>
-                requires spec_boruvkamteph_wf(edges@);
-
-            /// Compute total weight of MST.
-            /// APAS: Work O(m), Span O(1)
-            fn mst_weight<V: StT + Hash>(
-                edges: &SetStEph<LabeledEdge<V>>,
-                mst_labels: &SetStEph<usize>,
-            ) -> WrappedF64;
+        /// Well-formedness for parallel Borůvka MST algorithm input.
+        open spec fn spec_boruvkamteph_wf<V: View<V = V> + Copy>(
+            edges: Set<LabeledEdge<V>>,
+        ) -> bool {
+            spec_all_weights_finite(edges)
         }
 
-    // 5. view impls
+        /// Find vertex bridges for parallel Borůvka's algorithm.
+        /// APAS: Work O(|E|), Span O(lg |E|)
+        fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
+            edges: Arc<Vec<LabeledEdge<V>>>,
+            start: usize,
+            end: usize,
+        ) -> HashMap<V, (V, WrappedF64, usize)>;
 
-    impl<V: StTInMtT + Ord + 'static> View for LabeledEdge<V> {
-        type V = Self;
-        open spec fn view(&self) -> Self { *self }
+        /// Parallel bridge-based star partition.
+        /// APAS: Work O(|V| + |E|), Span O(lg |V|)
+        fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
+            vertices_vec: Vec<V>,
+            bridges: HashMap<V, (V, WrappedF64, usize)>,
+            seed: u64,
+            round: usize,
+        ) -> (SetStEph<V>, HashMap<V, (V, WrappedF64, usize)>);
+
+        /// Parallel Borůvka's MST algorithm.
+        /// APAS: Work O(m log n), Span O(log² n)
+        fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
+            vertices_vec: Vec<V>,
+            edges_vec: Vec<LabeledEdge<V>>,
+            mst_labels: SetStEph<usize>,
+            seed: u64,
+            round: usize,
+        ) -> SetStEph<usize>;
+
+        /// Parallel Borůvka's MST with random seed.
+        /// APAS: Work O(m log n), Span O(log² n)
+        fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
+            vertices: &SetStEph<V>,
+            edges: &SetStEph<LabeledEdge<V>>,
+            seed: u64,
+        ) -> SetStEph<usize>
+            requires Self::spec_boruvkamteph_wf(edges@);
+
+        /// Compute total weight of MST.
+        /// APAS: Work O(m), Span O(1)
+        fn mst_weight<V: StT + Hash>(
+            edges: &SetStEph<LabeledEdge<V>>,
+            mst_labels: &SetStEph<usize>,
+        ) -> WrappedF64;
     }
 
     } // verus!

@@ -26,16 +26,14 @@ pub mod StarContractionStEph {
     /// Namespace struct for trait impl.
     pub struct StarContractionStEph;
 
-    // 6. spec fns
-
-    /// Well-formedness for star contraction algorithm input.
-    pub open spec fn spec_starcontractionsteph_wf<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> bool {
-        spec_graphview_wf(graph@)
-    }
-
     // 8. traits
 
     pub trait StarContractionStEphTrait {
+        /// Well-formedness for star contraction algorithm input.
+        open spec fn spec_starcontractionsteph_wf<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> bool {
+            spec_graphview_wf(graph@)
+        }
+
         /// Sequential star contraction higher-order function.
         /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
         fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R
@@ -43,12 +41,12 @@ pub mod StarContractionStEph {
             V: StT + Hash + Ord,
             F: Fn(&SetStEph<V>) -> R,
             G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R
-        requires spec_starcontractionsteph_wf(graph);
+        requires Self::spec_starcontractionsteph_wf(graph);
 
         /// Contract graph to just vertices (no edges).
         /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
         fn contract_to_vertices<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>
-            requires spec_starcontractionsteph_wf(graph);
+            requires Self::spec_starcontractionsteph_wf(graph);
     }
 
     } // verus!

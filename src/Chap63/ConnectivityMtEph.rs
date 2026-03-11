@@ -36,20 +36,18 @@ pub mod ConnectivityMtEph {
     /// Namespace struct for trait impl.
     pub struct ConnectivityMtEph;
 
-    // 6. spec fns
-
-    /// Well-formedness for parallel connectivity algorithm input.
-    pub open spec fn spec_connectivitymteph_wf<V: StT + MtT + Hash>(graph: &UnDirGraphMtEph<V>) -> bool {
-        spec_graphview_wf(graph@)
-    }
-
     // 8. traits
 
     pub trait ConnectivityMtEphTrait {
+        /// Well-formedness for parallel connectivity algorithm input.
+        open spec fn spec_connectivitymteph_wf<V: StT + MtT + Hash>(graph: &UnDirGraphMtEph<V>) -> bool {
+            spec_graphview_wf(graph@)
+        }
+
         /// Count connected components using parallel star contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
         fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
-            requires spec_connectivitymteph_wf(graph);
+            requires Self::spec_connectivitymteph_wf(graph);
 
         /// Find connected components using parallel star contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
@@ -57,12 +55,12 @@ pub mod ConnectivityMtEph {
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
         ) -> (SetStEph<V>, HashMap<V, V>)
-            requires spec_connectivitymteph_wf(graph);
+            requires Self::spec_connectivitymteph_wf(graph);
 
         /// Count components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
         fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
-            requires spec_connectivitymteph_wf(graph);
+            requires Self::spec_connectivitymteph_wf(graph);
 
         /// Find components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
@@ -70,7 +68,7 @@ pub mod ConnectivityMtEph {
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
         ) -> (SetStEph<V>, HashMap<V, V>)
-            requires spec_connectivitymteph_wf(graph);
+            requires Self::spec_connectivitymteph_wf(graph);
     }
 
     } // verus!

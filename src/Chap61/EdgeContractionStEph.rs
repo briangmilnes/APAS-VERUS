@@ -30,28 +30,26 @@ pub mod EdgeContractionStEph {
     /// Namespace struct for trait impl.
     pub struct EdgeContractionStEph;
 
-    // 6. spec fns
-
-    /// Well-formedness for edge contraction algorithm input.
-    pub open spec fn spec_edgecontractionsteph_wf<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> bool {
-        spec_graphview_wf(graph@)
-    }
-
     // 8. traits
 
     pub trait EdgeContractionStEphTrait {
+        /// Well-formedness for edge contraction algorithm input.
+        open spec fn spec_edgecontractionsteph_wf<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> bool {
+            spec_graphview_wf(graph@)
+        }
+
         /// Sequential edge contraction algorithm.
         /// APAS: Work O(|E|), Span O(|E|)
         fn edge_contract<V: StT + Hash + Ord>(
             graph: &UnDirGraphStEph<V>,
             matching: &SetStEph<Edge<V>>,
         ) -> UnDirGraphStEph<V>
-            requires spec_edgecontractionsteph_wf(graph);
+            requires Self::spec_edgecontractionsteph_wf(graph);
 
         /// Single round of sequential edge contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         fn contract_round<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V>
-            requires spec_edgecontractionsteph_wf(graph);
+            requires Self::spec_edgecontractionsteph_wf(graph);
     }
 
     } // verus!

@@ -1,83 +1,83 @@
 ❌ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:211: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:211: external_body - #[verifier::external_body]
        212 |             fn insert(&self, element: T) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:225: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:225: external_body - #[verifier::external_body]
        226 |             fn delete_min(&self) -> (Self, Option<T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:237: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:237: external_body - #[verifier::external_body]
        238 |             fn meld(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:267: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:267: external_body - #[verifier::external_body]
        268 |             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:292: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:292: external_body - #[verifier::external_body]
        293 |             fn delete_max(&self) -> (Self, Option<T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:303: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:303: external_body - #[verifier::external_body]
        304 |             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:316: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:316: external_body - #[verifier::external_body]
        317 |             fn contains(&self, element: &T) -> bool {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:330: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:330: external_body - #[verifier::external_body]
        331 |             fn remove(&self, element: &T) -> (Self, bool) {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:342: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:342: external_body - #[verifier::external_body]
        343 |             fn range(&self, min_val: &T, max_val: &T) -> AVLTreeSeqStPerS<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:356: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:356: external_body - #[verifier::external_body]
        357 |             fn from_vec(elements: Vec<T>) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:365: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:365: external_body - #[verifier::external_body]
        366 |             fn to_vec(&self) -> Vec<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:374: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:374: external_body - #[verifier::external_body]
        375 |             fn to_sorted_vec(&self) -> Vec<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:379: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:379: external_body - #[verifier::external_body]
        380 |             fn is_sorted(&self) -> bool {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:392: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:392: external_body - #[verifier::external_body]
        393 |             fn height(&self) -> usize {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:401: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:401: external_body - #[verifier::external_body]
        402 |             fn split(&self, element: &T) -> (Self, bool, Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:420: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:420: external_body - #[verifier::external_body]
        421 |             fn join(left: &Self, right: &Self) -> Self { left.meld(right) }
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:424: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:424: external - #[verifier::external]
        425 |         impl<T: StT + Ord + TotalOrder> Default for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:429: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:429: external - #[verifier::external]
        430 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:480: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:480: info: accept() - accept hole
    Holes: 18 total
       16 × external_body
       2 × external
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 ℹ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:531: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:540: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:561: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:575: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:605: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:617: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:664: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:766: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:786: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:801: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:531: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:540: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:561: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:575: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:605: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:617: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:664: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:766: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:786: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:801: info: accept() - accept hole
    Info: 10 total
    1 clean proof function
 ❌ Example45_2.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:43: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/Example45_2.rs:43: external - #[verifier::external]
         44 |         impl Example45_2Trait for Example45_2 {
    Holes: 1 total
       1 × external
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:137: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/HeapsortExample.rs:137: external - #[verifier::external]
        138 |         impl<T: StT + Ord + TotalOrder> HeapsortComparisonTrait<T> for HeapsortComparison<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:98: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:113: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/HeapsortExample.rs:98: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/HeapsortExample.rs:113: info: accept() - accept hole
    Holes: 1 total
       1 × external
    Info: 2 total
    Proof functions: 1 total (1 clean, 0 holed)
 ℹ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1130: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1150: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1162: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1172: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1130: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1150: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1162: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1172: info: accept() - accept hole
    Info: 4 total
    4 clean proof functions
 ❌ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1039: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/SortedListPQ.rs:1039: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1034 |             fn clone(&self) -> (cloned: Self)
             ...
       1037 |                 let cloned = SortedListPQ { elements: self.elements.clone() };
@@ -87,14 +87,14 @@
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:645: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/UnsortedListPQ.rs:645: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        640 |             fn clone(&self) -> (cloned: Self)
             ...
        643 |                 let cloned = UnsortedListPQ { elements: self.elements.clone() };
        644 |                 proof {
        646 |                     lemma_seq_map_cloned_view_eq(
        647 |                         self.elements.seq@,
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:660: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/UnsortedListPQ.rs:660: info: accept() - accept hole
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
@@ -120,6 +120,7 @@ Holes Found: 20 total
 Errors: 2 total (2 assume in eq/clone (Verus workaround))
 
 Info: 18 total
+   BalancedTreePQ.rs:480: info: accept() - accept hole
    BinaryHeapPQ.rs:531: info: accept() - accept hole
    BinaryHeapPQ.rs:540: info: accept() - accept hole
    BinaryHeapPQ.rs:561: info: accept() - accept hole
@@ -130,7 +131,6 @@ Info: 18 total
    BinaryHeapPQ.rs:766: info: accept() - accept hole
    BinaryHeapPQ.rs:786: info: accept() - accept hole
    BinaryHeapPQ.rs:801: info: accept() - accept hole
-   BalancedTreePQ.rs:480: info: accept() - accept hole
    HeapsortExample.rs:98: info: accept() - accept hole
    HeapsortExample.rs:113: info: accept() - accept hole
    LeftistHeapPQ.rs:1130: info: accept() - accept hole
@@ -138,5 +138,7 @@ Info: 18 total
    LeftistHeapPQ.rs:1162: info: accept() - accept hole
    LeftistHeapPQ.rs:1172: info: accept() - accept hole
    UnsortedListPQ.rs:660: info: accept() - accept hole
-PQ.rs:1172: info: accept() - accept hole
+: accept() - accept hole
+   LeftistHeapPQ.rs:1162: info: accept() - accept hole
+   LeftistHeapPQ.rs:1172: info: accept() - accept hole
    UnsortedListPQ.rs:660: info: accept() - accept hole

@@ -50,23 +50,21 @@ pub mod PrimStEph {
         open spec fn view(&self) -> Self { *self }
     }
 
-    // 6. spec fns
-
-    /// Well-formedness for sequential Prim MST algorithm input.
-    pub open spec fn spec_primsteph_wf<V: StT + Hash>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
-        spec_labgraphview_wf(graph@)
-    }
-
     // 8. traits
 
     pub trait PrimStEphTrait {
+        /// Well-formedness for sequential Prim MST algorithm input.
+        open spec fn spec_primsteph_wf<V: StT + Hash>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
+            spec_labgraphview_wf(graph@)
+        }
+
         /// Prim's MST algorithm.
         /// APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
         fn prim_mst<V: StT + Hash + Ord>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             start: V,
         ) -> SetStEph<LabEdge<V, WrappedF64>>
-            requires spec_primsteph_wf(graph);
+            requires Self::spec_primsteph_wf(graph);
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)

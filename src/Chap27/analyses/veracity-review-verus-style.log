@@ -1,117 +1,117 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS/src/Chap27/
-Codebase: /home/milnes/projects/APAS-VERUS
+Path: /home/milnes/projects/APAS-VERUS-agent4/src/Chap27/
+Codebase: /home/milnes/projects/APAS-VERUS-agent4
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS/src/Chap27/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent4/src/Chap27/analyses/veracity-review-verus-style.log
 
 Checking 4 files...
 
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:49: warning: [23] free fn lemma_fold_left_monoid param T has bounds `(none)` but trait ReduceContractMtEphTrait has `StTInMtT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:62: warning: [23] free fn lemma_fold_left_pair param T has bounds `(none)` but trait ReduceContractMtEphTrait has `StTInMtT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:73: warning: [23] free fn lemma_fold_left_singleton param T has bounds `(none)` but trait ReduceContractMtEphTrait has `StTInMtT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:83: warning: [23] free fn lemma_contraction_even param T has bounds `(none)` but trait ReduceContractMtEphTrait has `StTInMtT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:175: warning: [23] free fn contract_parallel param T has bounds `StTInMtT + Clone + 'static` but trait ReduceContractMtEphTrait has `StTInMtT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:49: warning: [23] free fn lemma_fold_left_monoid param T has bounds `(none)` but trait ReduceContractMtEphTrait has `StTInMtT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:62: warning: [23] free fn lemma_fold_left_pair param T has bounds `(none)` but trait ReduceContractMtEphTrait has `StTInMtT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:73: warning: [23] free fn lemma_fold_left_singleton param T has bounds `(none)` but trait ReduceContractMtEphTrait has `StTInMtT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:83: warning: [23] free fn lemma_contraction_even param T has bounds `(none)` but trait ReduceContractMtEphTrait has `StTInMtT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractMtEph.rs:175: warning: [23] free fn contract_parallel param T has bounds `StTInMtT + Clone + 'static` but trait ReduceContractMtEphTrait has `StTInMtT`
 
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:44: warning: [23] free fn lemma_fold_left_monoid param T has bounds `(none)` but trait ReduceContractStEphTrait has `StT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:60: warning: [23] free fn lemma_fold_left_pair param T has bounds `(none)` but trait ReduceContractStEphTrait has `StT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:76: warning: [23] free fn lemma_fold_left_singleton param T has bounds `(none)` but trait ReduceContractStEphTrait has `StT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:88: warning: [23] free fn lemma_contraction_even param T has bounds `(none)` but trait ReduceContractStEphTrait has `StT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:44: warning: [23] free fn lemma_fold_left_monoid param T has bounds `(none)` but trait ReduceContractStEphTrait has `StT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:60: warning: [23] free fn lemma_fold_left_pair param T has bounds `(none)` but trait ReduceContractStEphTrait has `StT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:76: warning: [23] free fn lemma_fold_left_singleton param T has bounds `(none)` but trait ReduceContractStEphTrait has `StT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ReduceContractStEph.rs:88: warning: [23] free fn lemma_contraction_even param T has bounds `(none)` but trait ReduceContractStEphTrait has `StT`
 
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:48: warning: [23] free fn lemma_fold_left_monoid param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:62: warning: [23] free fn lemma_fold_left_pair param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:73: warning: [23] free fn lemma_fold_left_singleton param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:83: warning: [23] free fn lemma_contraction_even param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:149: warning: [23] free fn lemma_prefix_contraction param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:169: warning: [23] free fn lemma_expand_even param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:189: warning: [23] free fn lemma_expand_odd param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:205: warning: [23] free fn lemma_expand_odd_tail param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:48: warning: [23] free fn lemma_fold_left_monoid param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:62: warning: [23] free fn lemma_fold_left_pair param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:73: warning: [23] free fn lemma_fold_left_singleton param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:83: warning: [23] free fn lemma_contraction_even param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:149: warning: [23] free fn lemma_prefix_contraction param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:169: warning: [23] free fn lemma_expand_even param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:189: warning: [23] free fn lemma_expand_odd param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractMtEph.rs:205: warning: [23] free fn lemma_expand_odd_tail param T has bounds `(none)` but trait ScanContractMtEphTrait has `StTInMtT`
 
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:42: warning: [23] free fn lemma_fold_left_monoid param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:56: warning: [23] free fn lemma_fold_left_pair param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:67: warning: [23] free fn lemma_fold_left_singleton param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:77: warning: [23] free fn lemma_contraction_even param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:143: warning: [23] free fn lemma_prefix_contraction param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:163: warning: [23] free fn lemma_expand_even param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:183: warning: [23] free fn lemma_expand_odd param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:199: warning: [23] free fn lemma_expand_odd_tail param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:42: warning: [23] free fn lemma_fold_left_monoid param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:56: warning: [23] free fn lemma_fold_left_pair param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:67: warning: [23] free fn lemma_fold_left_singleton param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:77: warning: [23] free fn lemma_contraction_even param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:143: warning: [23] free fn lemma_prefix_contraction param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:163: warning: [23] free fn lemma_expand_even param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:183: warning: [23] free fn lemma_expand_odd param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap27/ScanContractStEph.rs:199: warning: [23] free fn lemma_expand_odd_tail param T has bounds `(none)` but trait ScanContractStEphTrait has `StT`
 
 ════════════════════════════════════════════════════════════════
 Summary: 72 passed, 25 warnings in 4 files (checked 4 files)

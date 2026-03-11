@@ -26,25 +26,23 @@ pub mod VertexMatchingStEph {
     /// Namespace struct for trait impl.
     pub struct VertexMatchingStEph;
 
-    // 6. spec fns
-
-    /// Well-formedness for vertex matching algorithm input.
-    pub open spec fn spec_vertexmatchingsteph_wf<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> bool {
-        spec_graphview_wf(graph@)
-    }
-
     // 8. traits
 
     pub trait VertexMatchingStEphTrait {
+        /// Well-formedness for vertex matching algorithm input.
+        open spec fn spec_vertexmatchingsteph_wf<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> bool {
+            spec_graphview_wf(graph@)
+        }
+
         /// Greedy vertex matching algorithm.
         /// APAS: Work O(|E|), Span O(|E|)
         fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>
-            requires spec_vertexmatchingsteph_wf(graph);
+            requires Self::spec_vertexmatchingsteph_wf(graph);
 
         /// Sequential version of parallel matching.
         /// APAS: Work O(|E|), Span O(|E|)
         fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>>
-            requires spec_vertexmatchingsteph_wf(graph);
+            requires Self::spec_vertexmatchingsteph_wf(graph);
     }
 
     } // verus!
