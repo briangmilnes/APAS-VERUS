@@ -3,10 +3,7 @@
 //! Tests for BSTSetSplayMtEph.
 
 use apas_verus::BSTSetSplayMtEphLit;
-use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::*;
-use apas_verus::Chap37::BSTSplayMtEph::BSTSplayMtEph::*;
-use apas_verus::Types::Types::*;
 
 #[test]
 fn test_bstsetsplaymtephlit_macro_functionality() {
@@ -38,9 +35,9 @@ fn test_singleton() {
 #[test]
 fn test_insert_and_contains() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(5);
-    set.insert(3);
-    set.insert(7);
+    set.insert(5).unwrap();
+    set.insert(3).unwrap();
+    set.insert(7).unwrap();
     assert_eq!(set.size(), 3);
     assert!(set.contains(&5));
     assert!(set.contains(&3));
@@ -50,9 +47,9 @@ fn test_insert_and_contains() {
 #[test]
 fn test_delete() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(5);
-    set.insert(3);
-    set.insert(7);
+    set.insert(5).unwrap();
+    set.insert(3).unwrap();
+    set.insert(7).unwrap();
     set.delete(&3);
     assert_eq!(set.size(), 2);
     assert!(!set.contains(&3));
@@ -61,11 +58,11 @@ fn test_delete() {
 #[test]
 fn test_minimum_maximum() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(5);
-    set.insert(3);
-    set.insert(7);
-    set.insert(1);
-    set.insert(9);
+    set.insert(5).unwrap();
+    set.insert(3).unwrap();
+    set.insert(7).unwrap();
+    set.insert(1).unwrap();
+    set.insert(9).unwrap();
     assert_eq!(set.minimum(), Some(1));
     assert_eq!(set.maximum(), Some(9));
 }
@@ -73,11 +70,11 @@ fn test_minimum_maximum() {
 #[test]
 fn test_union() {
     let mut set1 = BSTSetSplayMtEph::empty();
-    set1.insert(1);
-    set1.insert(2);
+    set1.insert(1).unwrap();
+    set1.insert(2).unwrap();
     let mut set2 = BSTSetSplayMtEph::empty();
-    set2.insert(2);
-    set2.insert(3);
+    set2.insert(2).unwrap();
+    set2.insert(3).unwrap();
     let union = set1.union(&set2);
     assert_eq!(union.size(), 3);
     assert!(union.contains(&1));
@@ -88,13 +85,13 @@ fn test_union() {
 #[test]
 fn test_intersection() {
     let mut set1 = BSTSetSplayMtEph::empty();
-    set1.insert(1);
-    set1.insert(2);
-    set1.insert(3);
+    set1.insert(1).unwrap();
+    set1.insert(2).unwrap();
+    set1.insert(3).unwrap();
     let mut set2 = BSTSetSplayMtEph::empty();
-    set2.insert(2);
-    set2.insert(3);
-    set2.insert(4);
+    set2.insert(2).unwrap();
+    set2.insert(3).unwrap();
+    set2.insert(4).unwrap();
     let inter = set1.intersection(&set2);
     assert_eq!(inter.size(), 2);
     assert!(inter.contains(&2));
@@ -104,11 +101,11 @@ fn test_intersection() {
 #[test]
 fn test_difference() {
     let mut set1 = BSTSetSplayMtEph::empty();
-    set1.insert(1);
-    set1.insert(2);
-    set1.insert(3);
+    set1.insert(1).unwrap();
+    set1.insert(2).unwrap();
+    set1.insert(3).unwrap();
     let mut set2 = BSTSetSplayMtEph::empty();
-    set2.insert(2);
+    set2.insert(2).unwrap();
     let diff = set1.difference(&set2);
     assert_eq!(diff.size(), 2);
     assert!(diff.contains(&1));
@@ -118,10 +115,10 @@ fn test_difference() {
 #[test]
 fn test_split() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(1);
-    set.insert(3);
-    set.insert(5);
-    set.insert(7);
+    set.insert(1).unwrap();
+    set.insert(3).unwrap();
+    set.insert(5).unwrap();
+    set.insert(7).unwrap();
     let (left, found, right) = set.split(&5);
     assert!(found);
     assert_eq!(left.size(), 2);
@@ -132,7 +129,7 @@ fn test_split() {
 fn test_filter() {
     let mut set = BSTSetSplayMtEph::empty();
     for i in 1..=10 {
-        set.insert(i);
+        set.insert(i).unwrap();
     }
     let evens = set.filter(|x| x % 2 == 0);
     assert_eq!(evens.size(), 5);
@@ -143,9 +140,9 @@ fn test_filter() {
 #[test]
 fn test_reduce() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(1);
-    set.insert(2);
-    set.insert(3);
+    set.insert(1).unwrap();
+    set.insert(2).unwrap();
+    set.insert(3).unwrap();
     let sum = set.reduce(|a, b| a + b, 0);
     assert_eq!(sum, 6);
 }
@@ -153,10 +150,10 @@ fn test_reduce() {
 #[test]
 fn test_iter_in_order() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(5);
-    set.insert(3);
-    set.insert(7);
-    set.insert(1);
+    set.insert(5).unwrap();
+    set.insert(3).unwrap();
+    set.insert(7).unwrap();
+    set.insert(1).unwrap();
     let seq = set.iter_in_order();
     assert_eq!(seq.length(), 4);
     assert_eq!(*seq.nth(0), 1);
@@ -169,7 +166,7 @@ fn test_iter_in_order() {
 fn test_large_set() {
     let mut set = BSTSetSplayMtEph::empty();
     for i in 0..100 {
-        set.insert(i);
+        set.insert(i).unwrap();
     }
     assert_eq!(set.size(), 100);
     assert_eq!(set.minimum(), Some(0));
@@ -180,7 +177,7 @@ fn test_large_set() {
 fn test_delete_multiple() {
     let mut set = BSTSetSplayMtEph::empty();
     for i in 0..10 {
-        set.insert(i);
+        set.insert(i).unwrap();
     }
     set.delete(&5);
     set.delete(&3);
@@ -192,9 +189,9 @@ fn test_delete_multiple() {
 #[test]
 fn test_duplicate_insert() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(5);
-    set.insert(5);
-    set.insert(5);
+    set.insert(5).unwrap();
+    set.insert(5).unwrap();
+    set.insert(5).unwrap();
     assert_eq!(set.size(), 1);
 }
 
@@ -202,7 +199,7 @@ fn test_duplicate_insert() {
 fn test_balanced_after_inserts() {
     let mut set = BSTSetSplayMtEph::empty();
     for i in 1..=100 {
-        set.insert(i);
+        set.insert(i).unwrap();
     }
     // Splay tree should stay functional
     assert_eq!(set.size(), 100);
@@ -212,7 +209,7 @@ fn test_balanced_after_inserts() {
 #[test]
 fn test_union_empty() {
     let mut set1 = BSTSetSplayMtEph::empty();
-    set1.insert(1);
+    set1.insert(1).unwrap();
     let set2 = BSTSetSplayMtEph::empty();
     let union = set1.union(&set2);
     assert_eq!(union.size(), 1);
@@ -221,11 +218,11 @@ fn test_union_empty() {
 #[test]
 fn test_intersection_disjoint() {
     let mut set1 = BSTSetSplayMtEph::empty();
-    set1.insert(1);
-    set1.insert(2);
+    set1.insert(1).unwrap();
+    set1.insert(2).unwrap();
     let mut set2 = BSTSetSplayMtEph::empty();
-    set2.insert(3);
-    set2.insert(4);
+    set2.insert(3).unwrap();
+    set2.insert(4).unwrap();
     let inter = set1.intersection(&set2);
     assert_eq!(inter.size(), 0);
 }
@@ -233,10 +230,10 @@ fn test_intersection_disjoint() {
 #[test]
 fn test_negative_numbers() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(-5);
-    set.insert(-3);
-    set.insert(-7);
-    set.insert(0);
+    set.insert(-5).unwrap();
+    set.insert(-3).unwrap();
+    set.insert(-7).unwrap();
+    set.insert(0).unwrap();
     assert_eq!(set.minimum(), Some(-7));
     assert_eq!(set.maximum(), Some(0));
 }
@@ -244,11 +241,11 @@ fn test_negative_numbers() {
 #[test]
 fn test_join_pair() {
     let mut left = BSTSetSplayMtEph::empty();
-    left.insert(1);
-    left.insert(2);
+    left.insert(1).unwrap();
+    left.insert(2).unwrap();
     let mut right = BSTSetSplayMtEph::empty();
-    right.insert(5);
-    right.insert(6);
+    right.insert(5).unwrap();
+    right.insert(6).unwrap();
     let joined = BSTSetSplayMtEph::join_pair(left, right);
     assert_eq!(joined.size(), 4);
 }
@@ -256,12 +253,12 @@ fn test_join_pair() {
 #[test]
 fn test_join_m() {
     let mut left = BSTSetSplayMtEph::empty();
-    left.insert(1);
-    left.insert(2);
+    left.insert(1).unwrap();
+    left.insert(2).unwrap();
 
     let mut right = BSTSetSplayMtEph::empty();
-    right.insert(6);
-    right.insert(7);
+    right.insert(6).unwrap();
+    right.insert(7).unwrap();
 
     let joined = BSTSetSplayMtEph::join_m(left, 5, right);
     assert_eq!(joined.size(), 5);
@@ -276,8 +273,8 @@ fn test_join_m() {
 fn test_join_m_with_empty() {
     let empty = BSTSetSplayMtEph::empty();
     let mut right = BSTSetSplayMtEph::empty();
-    right.insert(6);
-    right.insert(7);
+    right.insert(6).unwrap();
+    right.insert(7).unwrap();
 
     let joined = BSTSetSplayMtEph::join_m(empty, 5, right);
     assert_eq!(joined.size(), 3);
@@ -289,9 +286,9 @@ fn test_join_m_with_empty() {
 #[test]
 fn test_as_tree() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(5);
-    set.insert(3);
-    set.insert(7);
+    set.insert(5).unwrap();
+    set.insert(3).unwrap();
+    set.insert(7).unwrap();
 
     let tree = set.as_tree();
     assert_eq!(tree.size(), 3);
@@ -314,7 +311,7 @@ fn test_trait_impl_singleton() {
 #[test]
 fn test_trait_impl_contains() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(10);
+    set.insert(10).unwrap();
     assert!(<BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::contains(
         &set, &10
     ));
@@ -323,7 +320,7 @@ fn test_trait_impl_contains() {
 #[test]
 fn test_trait_impl_find() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(20);
+    set.insert(20).unwrap();
     assert_eq!(
         <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::find(&set, &20),
         Some(20)
@@ -333,9 +330,9 @@ fn test_trait_impl_find() {
 #[test]
 fn test_trait_impl_minimum() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(5);
-    set.insert(3);
-    set.insert(7);
+    set.insert(5).unwrap();
+    set.insert(3).unwrap();
+    set.insert(7).unwrap();
     assert_eq!(
         <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::minimum(&set),
         Some(3)
@@ -345,9 +342,9 @@ fn test_trait_impl_minimum() {
 #[test]
 fn test_trait_impl_maximum() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(5);
-    set.insert(3);
-    set.insert(7);
+    set.insert(5).unwrap();
+    set.insert(3).unwrap();
+    set.insert(7).unwrap();
     assert_eq!(
         <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::maximum(&set),
         Some(7)
@@ -357,15 +354,15 @@ fn test_trait_impl_maximum() {
 #[test]
 fn test_trait_impl_insert() {
     let mut set = BSTSetSplayMtEph::empty();
-    <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::insert(&mut set, 15);
+    <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::insert(&mut set, 15).unwrap();
     assert_eq!(set.size(), 1);
 }
 
 #[test]
 fn test_trait_impl_delete() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(10);
-    set.insert(20);
+    set.insert(10).unwrap();
+    set.insert(20).unwrap();
     <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::delete(&mut set, &10);
     assert_eq!(set.size(), 1);
     assert!(!set.contains(&10));
@@ -374,9 +371,9 @@ fn test_trait_impl_delete() {
 #[test]
 fn test_trait_impl_union() {
     let mut set1 = BSTSetSplayMtEph::empty();
-    set1.insert(1);
+    set1.insert(1).unwrap();
     let mut set2 = BSTSetSplayMtEph::empty();
-    set2.insert(2);
+    set2.insert(2).unwrap();
 
     let result = <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::union(&set1, &set2);
     assert_eq!(result.size(), 2);
@@ -385,11 +382,11 @@ fn test_trait_impl_union() {
 #[test]
 fn test_trait_impl_intersection() {
     let mut set1 = BSTSetSplayMtEph::empty();
-    set1.insert(1);
-    set1.insert(2);
+    set1.insert(1).unwrap();
+    set1.insert(2).unwrap();
     let mut set2 = BSTSetSplayMtEph::empty();
-    set2.insert(2);
-    set2.insert(3);
+    set2.insert(2).unwrap();
+    set2.insert(3).unwrap();
 
     let result = <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::intersection(&set1, &set2);
     assert_eq!(result.size(), 1);
@@ -399,10 +396,10 @@ fn test_trait_impl_intersection() {
 #[test]
 fn test_trait_impl_difference() {
     let mut set1 = BSTSetSplayMtEph::empty();
-    set1.insert(1);
-    set1.insert(2);
+    set1.insert(1).unwrap();
+    set1.insert(2).unwrap();
     let mut set2 = BSTSetSplayMtEph::empty();
-    set2.insert(2);
+    set2.insert(2).unwrap();
 
     let result = <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::difference(&set1, &set2);
     assert_eq!(result.size(), 1);
@@ -412,9 +409,9 @@ fn test_trait_impl_difference() {
 #[test]
 fn test_trait_impl_split() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(1);
-    set.insert(5);
-    set.insert(10);
+    set.insert(1).unwrap();
+    set.insert(5).unwrap();
+    set.insert(10).unwrap();
 
     let (left, found, right) = <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::split(&set, &5);
     assert!(found);
@@ -425,9 +422,9 @@ fn test_trait_impl_split() {
 #[test]
 fn test_trait_impl_join_pair() {
     let mut left = BSTSetSplayMtEph::empty();
-    left.insert(1);
+    left.insert(1).unwrap();
     let mut right = BSTSetSplayMtEph::empty();
-    right.insert(5);
+    right.insert(5).unwrap();
 
     let result = <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::join_pair(left, right);
     assert_eq!(result.size(), 2);
@@ -436,9 +433,9 @@ fn test_trait_impl_join_pair() {
 #[test]
 fn test_trait_impl_join_m() {
     let mut left = BSTSetSplayMtEph::empty();
-    left.insert(1);
+    left.insert(1).unwrap();
     let mut right = BSTSetSplayMtEph::empty();
-    right.insert(5);
+    right.insert(5).unwrap();
 
     let result = <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::join_m(left, 3, right);
     assert_eq!(result.size(), 3);
@@ -448,9 +445,9 @@ fn test_trait_impl_join_m() {
 #[test]
 fn test_trait_impl_filter() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(1);
-    set.insert(2);
-    set.insert(3);
+    set.insert(1).unwrap();
+    set.insert(2).unwrap();
+    set.insert(3).unwrap();
 
     let result = <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::filter(&set, |x| x % 2 == 1);
     assert_eq!(result.size(), 2);
@@ -459,9 +456,9 @@ fn test_trait_impl_filter() {
 #[test]
 fn test_trait_impl_reduce() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(1);
-    set.insert(2);
-    set.insert(3);
+    set.insert(1).unwrap();
+    set.insert(2).unwrap();
+    set.insert(3).unwrap();
 
     let sum = <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::reduce(&set, |a, b| a + b, 0);
     assert_eq!(sum, 6);
@@ -470,9 +467,9 @@ fn test_trait_impl_reduce() {
 #[test]
 fn test_trait_impl_iter_in_order() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(3);
-    set.insert(1);
-    set.insert(2);
+    set.insert(3).unwrap();
+    set.insert(1).unwrap();
+    set.insert(2).unwrap();
 
     let seq = <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::iter_in_order(&set);
     assert_eq!(seq.length(), 3);
@@ -481,7 +478,7 @@ fn test_trait_impl_iter_in_order() {
 #[test]
 fn test_trait_impl_as_tree() {
     let mut set = BSTSetSplayMtEph::empty();
-    set.insert(5);
+    set.insert(5).unwrap();
 
     let tree = <BSTSetSplayMtEph<i32> as BSTSetSplayMtEphTrait<i32>>::as_tree(&set);
     assert_eq!(tree.size(), 1);

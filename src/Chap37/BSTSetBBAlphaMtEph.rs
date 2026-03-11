@@ -14,7 +14,6 @@ pub mod BSTSetBBAlphaMtEph {
 
     verus! {
 
-    #[derive(Clone)]
     pub struct BSTSetBBAlphaMtEph<T: StTInMtT + Ord> {
         tree: BSTBBAlphaMtEph<T>,
     }
@@ -80,7 +79,7 @@ pub mod BSTSetBBAlphaMtEph {
         fn maximum(&self) -> (max: Option<T>)
             requires self.spec_bstsetbbalphamteph_wf()
             ensures true;
-        fn insert(&mut self, value: T)
+        fn insert(&mut self, value: T) -> (r: Result<(), ()>)
             requires old(self).spec_bstsetbbalphamteph_wf()
             ensures self.spec_bstsetbbalphamteph_wf();
         fn delete(&mut self, target: &T)
@@ -125,14 +124,26 @@ pub mod BSTSetBBAlphaMtEph {
         tree.in_order().iter().cloned().collect()
     }
     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> BSTBBAlphaMtEph<T> {
-        let tree = BSTBBAlphaMtEph::new();
-        for value in values { tree.insert(value); }
+        let mut tree = BSTBBAlphaMtEph::new();
+        for value in values {
+            let _ = tree.insert(value);
+        }
         tree
     }
-    fn from_sorted_iter<T: StTInMtT + Ord, I: IntoIterator<Item = T>>(values: I) -> BSTSetBBAlphaMtEph<T> {
-        let tree = BSTBBAlphaMtEph::new();
-        for value in values { tree.insert(value); }
+
+    fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> BSTSetBBAlphaMtEph<T>
+    where
+        I: IntoIterator<Item = T>,
+    {
+        let mut tree = BSTBBAlphaMtEph::new();
+        for value in values {
+            let _ = tree.insert(value);
+        }
         BSTSetBBAlphaMtEph { tree }
+    }
+
+    fn copy_set<T: StTInMtT + Ord>(set: &BSTSetBBAlphaMtEph<T>) -> BSTSetBBAlphaMtEph<T> {
+        from_sorted_iter(values_vec(&set.tree))
     }
 
     impl<T: StTInMtT + Ord> BSTSetBBAlphaMtEphTrait<T> for BSTSetBBAlphaMtEph<T> {
@@ -147,8 +158,8 @@ pub mod BSTSetBBAlphaMtEph {
         }
 
         fn singleton(value: T) -> Self {
-            let tree = BSTBBAlphaMtEph::new();
-            tree.insert(value);
+            let mut tree = BSTBBAlphaMtEph::new();
+            let _ = tree.insert(value);
             Self { tree }
         }
 
@@ -164,7 +175,7 @@ pub mod BSTSetBBAlphaMtEph {
 
         fn maximum(&self) -> Option<T> { self.tree.maximum() }
 
-        fn insert(&mut self, value: T) { self.tree.insert(value); }
+        fn insert(&mut self, value: T) -> (r: Result<(), ()>) { self.tree.insert(value) }
 
         fn delete(&mut self, target: &T) {
             if !self.contains(target) {
@@ -422,7 +433,7 @@ pub mod BSTSetBBAlphaMtEph {
         };
         ( $( $x:expr ),* $(,)? ) => {{
             let mut __set = < $crate::Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph<_> as $crate::Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait<_> >::empty();
-            $( __set.insert($x); )*
+            $( let _ = __set.insert($x); )*
             __set
         }};
     }

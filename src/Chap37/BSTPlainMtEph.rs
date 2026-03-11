@@ -1,78 +1,40 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
-//! Ephemeral binary search tree with vstd::rwlock for verified multi-threaded access.
-//! Verusified: BST ordering flows through the lock invariant — no external_body.
+//! Ephemeral binary search tree with coarse RwLock for multi-threaded access.
+//! Layer 1 (verified algorithms on BalBinTree) in sections 7/9.
+//! Layer 2 (locked wrapper with ghost shadow) in section 11.
 
 //  Table of Contents
 //  1. module
 //  2. imports
-//  4. type definitions
-//  8. traits
 //  9. impls
-//  12. macros
-//  13. derive impls outside verus!
+//  11. top level coarse locking
+//  13. macros
+//  14. derive impls outside verus!
 
 // 1. module
 
 #[allow(non_shorthand_field_patterns)]
 pub mod BSTPlainMtEph {
 
+    use core::marker::PhantomData;
+
     use vstd::prelude::*;
+    use vstd::rwlock::{ReadHandle, RwLock, RwLockPredicate, WriteHandle};
+
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
 
     verus! {
 
     // 2. imports
 
-    use vstd::rwlock::{RwLock, RwLockPredicate, ReadHandle, WriteHandle};
-    use core::marker::PhantomData;
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
-    // 4. type definitions
-
-    /// Lock invariant: the stored tree satisfies BST ordering.
-    /// Because `inv` is `open` and ignores `self`, Verus can resolve
-    /// `lock.inv(tree) == tree.tree_is_bst()` without knowing `lock.pred()`.
-    pub struct BSTPlainMtEphInv<T> {
-        _phantom: PhantomData<T>,
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTPlainMtEph<T: TotalOrder> {
-        root: RwLock<BalBinTree<T>, BSTPlainMtEphInv<T>>,
-    }
-
-    // 8. traits
-
-    pub trait BSTPlainMtEphTrait<T: TotalOrder>: Sized {
-        spec fn spec_bstplainmteph_wf(&self) -> bool;
-
-        fn new() -> (tree: Self)
-            ensures tree.spec_bstplainmteph_wf();
-        fn insert(&self, value: T)
-            requires self.spec_bstplainmteph_wf();
-        fn contains(&self, target: &T) -> (found: bool)
-            requires self.spec_bstplainmteph_wf();
-        fn size(&self) -> (n: usize)
-            requires self.spec_bstplainmteph_wf();
-        fn is_empty(&self) -> (b: bool)
-            requires self.spec_bstplainmteph_wf();
-        fn height(&self) -> (h: usize)
-            requires self.spec_bstplainmteph_wf();
-    }
-
     // 9. impls
 
-    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BSTPlainMtEphInv<T> {
-        open spec fn inv(self, tree: BalBinTree<T>) -> bool {
-            tree.tree_is_bst()
-                && tree.spec_size() <= usize::MAX
-                && tree.spec_height() <= usize::MAX
-        }
-    }
-
-    // Verified BST operations (same proofs as BSTPlainStEph).
+    // Verified BST insert (Layer 1).
 
     fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)
         requires node.tree_is_bst(),
@@ -242,88 +204,229 @@ pub mod BSTPlainMtEph {
         }
     }
 
-    // Public API: lock operations are fully verified through vstd::rwlock.
+    // 11. top level coarse locking
+
+    /// Lock predicate: the inner tree satisfies BST ordering and fits in usize.
+    pub struct BSTPlainMtEphInv<T> {
+        _phantom: PhantomData<T>,
+    }
+
+    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BSTPlainMtEphInv<T> {
+        open spec fn inv(self, tree: BalBinTree<T>) -> bool {
+            tree.tree_is_bst()
+                && tree.spec_size() <= usize::MAX
+                && tree.spec_height() <= usize::MAX
+        }
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTPlainMtEph<T: TotalOrder> {
+        pub(crate) root: RwLock<BalBinTree<T>, BSTPlainMtEphInv<T>>,
+        pub(crate) ghost_root: Ghost<BalBinTree<T>>,
+    }
+
+    impl<T: TotalOrder> BSTPlainMtEph<T> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            self.ghost_root@.tree_is_bst()
+            && self.ghost_root@.spec_size() <= usize::MAX
+            && self.ghost_root@.spec_height() <= usize::MAX
+        }
+
+        pub closed spec fn spec_ghost_root(self) -> BalBinTree<T> {
+            self.ghost_root@
+        }
+    }
+
+    impl<T: TotalOrder> View for BSTPlainMtEph<T> {
+        type V = BalBinTree<T>;
+        open spec fn view(&self) -> BalBinTree<T> { self.spec_ghost_root() }
+    }
+
+    pub trait BSTPlainMtEphTrait<T: TotalOrder>: Sized + View<V = BalBinTree<T>> {
+        spec fn spec_bstplainmteph_wf(&self) -> bool;
+
+        fn new() -> (tree: Self)
+            ensures tree.spec_bstplainmteph_wf(),
+                    tree@.is_leaf();
+
+        fn insert(&mut self, value: T) -> (r: Result<(), ()>)
+            requires old(self).spec_bstplainmteph_wf(),
+            ensures self.spec_bstplainmteph_wf(),
+                    match r {
+                        Ok(_) => self@.tree_contains(value)
+                            && forall|x: T| #![auto] self@.tree_contains(x) <==>
+                                (old(self)@.tree_contains(x) || x == value),
+                        Err(_) => self@ == old(self)@,
+                    };
+
+        fn contains(&self, target: &T) -> (found: bool)
+            requires self.spec_bstplainmteph_wf(),
+            ensures found == self@.tree_contains(*target);
+
+        fn size(&self) -> (n: usize)
+            requires self.spec_bstplainmteph_wf(),
+            ensures n as nat == self@.spec_size();
+
+        fn is_empty(&self) -> (b: bool)
+            requires self.spec_bstplainmteph_wf(),
+            ensures b == (self@ is Leaf);
+
+        fn height(&self) -> (h: usize)
+            requires self.spec_bstplainmteph_wf(),
+            ensures h as nat == self@.spec_height();
+
+        fn find(&self, target: &T) -> (found: Option<T>) where T: Clone + Eq
+            ensures true;
+        fn minimum(&self) -> (min: Option<T>) where T: Clone + Eq
+            ensures true;
+        fn maximum(&self) -> (max: Option<T>) where T: Clone + Eq
+            ensures true;
+        fn in_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
+            ensures true;
+        fn pre_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
+            ensures true;
+    }
 
     impl<T: TotalOrder> BSTPlainMtEphTrait<T> for BSTPlainMtEph<T> {
         open spec fn spec_bstplainmteph_wf(&self) -> bool {
-            true
+            self@.tree_is_bst()
+            && self@.spec_size() <= usize::MAX
+            && self@.spec_height() <= usize::MAX
         }
 
-        pub fn new() -> (tree: Self)
-        {
+        fn new() -> (tree: Self) {
             BSTPlainMtEph {
                 root: RwLock::new(
                     BalBinTree::Leaf,
                     Ghost(BSTPlainMtEphInv { _phantom: PhantomData }),
                 ),
+                ghost_root: Ghost(BalBinTree::Leaf),
             }
         }
 
-        pub fn insert(&self, value: T)
-        {
+        // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
+        fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
             let (tree, write_handle) = self.root.acquire_write();
+            proof { assume(self.ghost_root@ == tree); }
             let current_size = tree.size();
             let current_height = tree.height();
             if current_size < usize::MAX && current_height < usize::MAX {
                 let new_tree = insert_node(tree, value);
                 proof {
-                    assert(tree.spec_size() <= usize::MAX);
-                    assert(new_tree.spec_size() <= tree.spec_size() + 1);
-                    assert(tree.spec_size() + 1 <= usize::MAX);
                     assert(new_tree.spec_size() <= usize::MAX);
-                    assert(tree.spec_height() <= usize::MAX);
-                    assert(new_tree.spec_height() <= tree.spec_height() + 1);
-                    assert(tree.spec_height() + 1 <= usize::MAX);
                     assert(new_tree.spec_height() <= usize::MAX);
                 }
+                let ghost new_root = new_tree;
+                self.ghost_root = Ghost(new_root);
                 write_handle.release_write(new_tree);
+                Ok(())
             } else {
                 write_handle.release_write(tree);
+                Err(())
             }
         }
 
-        pub fn contains(&self, target: &T) -> (found: bool)
-        {
+        // Reader: assume return value matches ghost.
+        fn contains(&self, target: &T) -> (found: bool) {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let found = contains_node(tree_ref, target);
+            proof { assume(found == self@.tree_contains(*target)); }
             read_handle.release_read();
             found
         }
 
-        pub fn is_empty(&self) -> (b: bool)
-        {
-            let read_handle = self.root.acquire_read();
-            let tree_ref = read_handle.borrow();
-            let b = tree_ref.is_leaf();
-            read_handle.release_read();
-            b
-        }
-
-        pub fn size(&self) -> (n: usize)
-        {
+        // Reader: assume return value matches ghost.
+        fn size(&self) -> (n: usize) {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             assert(tree_ref.spec_size() <= usize::MAX);
             let n = tree_ref.size();
+            proof { assume(n as nat == self@.spec_size()); }
             read_handle.release_read();
             n
         }
 
-        pub fn height(&self) -> (h: usize)
-        {
+        // Predicate: assume return predicate matches spec predicate.
+        fn is_empty(&self) -> (b: bool) {
+            let read_handle = self.root.acquire_read();
+            let tree_ref = read_handle.borrow();
+            let b = tree_ref.is_leaf();
+            proof { assume(b == (self@ is Leaf)); }
+            read_handle.release_read();
+            b
+        }
+
+        // Reader: assume return value matches ghost.
+        fn height(&self) -> (h: usize) {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             assert(tree_ref.spec_height() <= usize::MAX);
             let h = tree_ref.height();
+            proof { assume(h as nat == self@.spec_height()); }
             read_handle.release_read();
             h
+        }
+
+        fn find(&self, target: &T) -> Option<T> where T: Clone + Eq {
+            let read_handle = self.root.acquire_read();
+            let tree_ref = read_handle.borrow();
+            let found = find_node(tree_ref, target).cloned();
+            read_handle.release_read();
+            found
+        }
+
+        fn minimum(&self) -> Option<T> where T: Clone + Eq {
+            let read_handle = self.root.acquire_read();
+            let tree_ref = read_handle.borrow();
+            let min = min_node(tree_ref).cloned();
+            read_handle.release_read();
+            min
+        }
+
+        fn maximum(&self) -> Option<T> where T: Clone + Eq {
+            let read_handle = self.root.acquire_read();
+            let tree_ref = read_handle.borrow();
+            let max = max_node(tree_ref).cloned();
+            read_handle.release_read();
+            max
+        }
+
+        fn in_order(&self) -> ArraySeqStPerS<T> where T: Clone + Eq {
+            let read_handle = self.root.acquire_read();
+            let tree_ref = read_handle.borrow();
+            let out = tree_ref.in_order();
+            read_handle.release_read();
+            ArraySeqStPerS::from_vec(out)
+        }
+
+        fn pre_order(&self) -> ArraySeqStPerS<T> where T: Clone + Eq {
+            let read_handle = self.root.acquire_read();
+            let tree_ref = read_handle.borrow();
+            let out = tree_ref.pre_order();
+            read_handle.release_read();
+            ArraySeqStPerS::from_vec(out)
         }
     }
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    // 13. macros
+
+    #[macro_export]
+    macro_rules! BSTPlainMtEphLit {
+        () => {
+            < $crate::Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph<_> >::new()
+        };
+        ( $( $x:expr ),* $(,)? ) => {{
+            let mut __tree = < $crate::Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph<_> >::new();
+            $( let _ = __tree.insert($x); )*
+            __tree
+        }};
+    }
+
+    // 14. derive impls outside verus!
 
     impl<T> std::fmt::Debug for BSTPlainMtEphInv<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -347,16 +450,5 @@ pub mod BSTPlainMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "BSTPlainMtEph(size={})", self.size())
         }
-    }
-
-    // 12. macros
-
-    #[macro_export]
-    macro_rules! BSTPlainMtEphLit {
-        () => { $crate::Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph::new() };
-        ($($x:expr),+ $(,)?) => {{
-            let __tree = $crate::Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph::new();
-            __tree
-        }};
     }
 } // mod

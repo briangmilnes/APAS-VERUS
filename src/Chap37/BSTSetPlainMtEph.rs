@@ -14,7 +14,6 @@ pub mod BSTSetPlainMtEph {
 
     verus! {
 
-    #[derive(Clone)]
     pub struct BSTSetPlainMtEph<T: StTInMtT + Ord> {
         tree: BSTPlainMtEph<T>,
     }
@@ -80,7 +79,7 @@ pub mod BSTSetPlainMtEph {
         fn maximum(&self) -> (max: Option<T>)
             requires self.spec_bstsetplainmteph_wf()
             ensures true;
-        fn insert(&mut self, value: T)
+        fn insert(&mut self, value: T) -> (r: Result<(), ()>)
             requires old(self).spec_bstsetplainmteph_wf()
             ensures self.spec_bstsetplainmteph_wf();
         fn delete(&mut self, target: &T)
@@ -125,14 +124,26 @@ pub mod BSTSetPlainMtEph {
         tree.in_order().iter().cloned().collect()
     }
     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> BSTPlainMtEph<T> {
-        let tree = BSTPlainMtEph::new();
-        for value in values { tree.insert(value); }
+        let mut tree = BSTPlainMtEph::new();
+        for value in values {
+            let _ = tree.insert(value);
+        }
         tree
     }
-    fn from_sorted_iter<T: StTInMtT + Ord, I: IntoIterator<Item = T>>(values: I) -> BSTSetPlainMtEph<T> {
-        let tree = BSTPlainMtEph::new();
-        for value in values { tree.insert(value); }
+
+    fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> BSTSetPlainMtEph<T>
+    where
+        I: IntoIterator<Item = T>,
+    {
+        let mut tree = BSTPlainMtEph::new();
+        for value in values {
+            let _ = tree.insert(value);
+        }
         BSTSetPlainMtEph { tree }
+    }
+
+    fn copy_set<T: StTInMtT + Ord>(set: &BSTSetPlainMtEph<T>) -> BSTSetPlainMtEph<T> {
+        from_sorted_iter(values_vec(&set.tree))
     }
 
     impl<T: StTInMtT + Ord> BSTSetPlainMtEphTrait<T> for BSTSetPlainMtEph<T> {
@@ -147,8 +158,8 @@ pub mod BSTSetPlainMtEph {
         }
 
         fn singleton(value: T) -> Self {
-            let tree = BSTPlainMtEph::new();
-            tree.insert(value);
+            let mut tree = BSTPlainMtEph::new();
+            let _ = tree.insert(value);
             Self { tree }
         }
 
@@ -164,7 +175,7 @@ pub mod BSTSetPlainMtEph {
 
         fn maximum(&self) -> Option<T> { self.tree.maximum() }
 
-        fn insert(&mut self, value: T) { self.tree.insert(value); }
+        fn insert(&mut self, value: T) -> (r: Result<(), ()>) { self.tree.insert(value) }
 
         fn delete(&mut self, target: &T) {
             if !self.contains(target) {
@@ -183,10 +194,10 @@ pub mod BSTSetPlainMtEph {
         fn union(&self, other: &Self) -> Self {
             // Parallel divide-and-conquer using split/join
             if self.is_empty() {
-                return other.clone();
+                return copy_set(other);
             }
             if other.is_empty() {
-                return self.clone();
+                return copy_set(self);
             }
             
             let pivot = if self.size() <= other.size() {
@@ -245,7 +256,7 @@ pub mod BSTSetPlainMtEph {
                 return Self::empty();
             }
             if other.is_empty() {
-                return self.clone();
+                return copy_set(self);
             }
             
             let pivot = if self.size() <= other.size() {
@@ -478,7 +489,7 @@ pub mod BSTSetPlainMtEph {
         };
         ( $( $x:expr ),* $(,)? ) => {{
             let mut __set = < $crate::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEph<_> as $crate::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait<_> >::empty();
-            $( __set.insert($x); )*
+            $( let _ = __set.insert($x); )*
             __set
         }};
     }
