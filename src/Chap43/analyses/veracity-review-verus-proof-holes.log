@@ -212,7 +212,7 @@
        251 |                 assume(self.base_set.spec_avltreesetstper_wf());
        253 |             }
        254 |             OrderedSetStPer {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:267: assume() - proof { assume(seq.spec_well_formed()); }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:267: assume() - proof { assume(seq.spec_avltreeseqstper_wf()); }
        264 |         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             ...
        265 |             ensures constructed@.finite()
@@ -399,7 +399,7 @@
        498 |         fn select_key(&self, i: usize) -> (key: Option<K>)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:512: external_body - #[verifier::external_body]
        513 |         fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:551: assume() - proof { assume(entries.spec_well_formed()); }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:551: assume() - proof { assume(entries.spec_avltreeseqstper_wf()); }
        546 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
             ...
        549 |         ensures table@.dom().finite()
@@ -432,15 +432,7 @@ Holes Found: 142 total
 
 Info: 1 total
    OrderedTableStPer.rs:710: info: accept() - accept hole
-
-Proof Functions:
-   4 clean
-   0 holed
-   4 total
-
-Holes Found: 142 total
-   18 × assume()
-   124 × external_body
+4 × external_body
 
 Info: 1 total
    OrderedTableStPer.rs:710: info: accept() - accept hole

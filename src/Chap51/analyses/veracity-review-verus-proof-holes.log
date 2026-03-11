@@ -133,6 +133,6 @@ Holes Found: 8 total
    8 × external_body
 
 Errors: 10 total (8 assume in eq/clone (Verus workaround), 2 dummy RwLockPredicate)
-nal_body
+l_body
 
 Errors: 10 total (8 assume in eq/clone (Verus workaround), 2 dummy RwLockPredicate)

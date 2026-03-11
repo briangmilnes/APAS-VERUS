@@ -85,7 +85,7 @@
        497 |             };
        499 |             tree
        500 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:503: assume() - proof { assume(self.spec_well_formed()); }
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:503: assume() - proof { assume(self.spec_avltreeseqmtper_wf()); }
        501 | 
        502 |         fn values_in_order(&self) -> (values: Vec<T>) {
        504 |             let mut out: Vec<T> = Vec::new();
@@ -261,7 +261,7 @@ Holes Found: 46 total
    39 × external_body
 
 Errors: 9 total (9 assume in eq/clone (Verus workaround))
-9 total
+tal
 
 Proof Functions:
    12 clean

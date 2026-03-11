@@ -28,18 +28,18 @@ Checking 20 files...
 /home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:84: warning: [22] free spec fn valid_key_type_for_graph should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:93: warning: [22] spec fn spec_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:94: warning: [22] spec fn spec_arcs in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:155: warning: [22] spec fn spec_n_plus in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:161: warning: [22] spec fn spec_n_plus_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:189: warning: [22] spec fn spec_n_minus in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:195: warning: [22] spec fn spec_n_minus_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:223: warning: [22] spec fn spec_ng in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:240: warning: [22] spec fn spec_degree in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:255: warning: [22] spec fn spec_n_plus_of_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:261: warning: [22] spec fn spec_n_plus_of_vertices_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:278: warning: [22] spec fn spec_n_minus_of_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:284: warning: [22] spec fn spec_n_minus_of_vertices_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:301: warning: [22] spec fn spec_ng_of_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:307: warning: [22] spec fn spec_ng_of_vertices_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:157: warning: [22] spec fn spec_n_plus in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:163: warning: [22] spec fn spec_n_plus_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:192: warning: [22] spec fn spec_n_minus in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:198: warning: [22] spec fn spec_n_minus_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:227: warning: [22] spec fn spec_ng in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:245: warning: [22] spec fn spec_degree in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:260: warning: [22] spec fn spec_n_plus_of_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:266: warning: [22] spec fn spec_n_plus_of_vertices_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:284: warning: [22] spec fn spec_n_minus_of_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:290: warning: [22] spec fn spec_n_minus_of_vertices_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:308: warning: [22] spec fn spec_ng_of_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:314: warning: [22] spec fn spec_ng_of_vertices_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [1] has mod declarations
@@ -184,8 +184,8 @@ Checking 20 files...
 /home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:93: warning: [22] spec fn spec_edges in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:95: warning: [22] spec fn spec_ng_from_set in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:103: warning: [22] spec fn spec_ng_of_vertices_from_set in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:161: warning: [22] spec fn spec_ng in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:178: warning: [22] spec fn spec_ng_of_vertices in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:163: warning: [22] spec fn spec_ng in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:181: warning: [22] spec fn spec_ng_of_vertices in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [1] has mod declarations
