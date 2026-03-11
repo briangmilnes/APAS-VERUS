@@ -59,23 +59,39 @@ broadcast use {
 
     // 8. traits
 
-    pub trait StackStEphTrait<T: StT>: Sized {
-        fn new() -> (empty: Self);
+    pub trait StackStEphTrait<T: StT>: View<V = Seq<T>> + Sized {
+        spec fn spec_stacksteph_wf(&self) -> bool;
 
-        fn push(&mut self, item: T);
+        fn new() -> (empty: Self)
+            ensures empty.spec_stacksteph_wf();
 
-        fn pop(&mut self) -> (popped: Option<T>);
+        fn push(&mut self, item: T)
+            requires
+                old(self).spec_stacksteph_wf(),
+                old(self)@.len() < usize::MAX as int,
+            ensures self.spec_stacksteph_wf();
 
-        fn peek(&self) -> (top: Option<&T>);
+        fn pop(&mut self) -> (popped: Option<T>)
+            requires old(self).spec_stacksteph_wf()
+            ensures self.spec_stacksteph_wf();
 
-        fn is_empty(&self) -> (is_empty: bool);
+        fn peek(&self) -> (top: Option<&T>)
+            requires self.spec_stacksteph_wf();
 
-        fn size(&self) -> (count: N);
+        fn is_empty(&self) -> (is_empty: bool)
+            requires self.spec_stacksteph_wf();
+
+        fn size(&self) -> (count: N)
+            requires self.spec_stacksteph_wf();
     }
 
     // 9. impls
 
     impl<T: StT> StackStEphTrait<T> for StackStEph<T> {
+        open spec fn spec_stacksteph_wf(&self) -> bool {
+            self@.len() <= usize::MAX as int
+        }
+
         fn new() -> (empty: Self)
             ensures empty@ == Seq::<T>::empty(),
         { StackStEph { elements: Vec::new() } }

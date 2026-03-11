@@ -22,15 +22,27 @@ pub mod PQMinStPer {
         pub parent: Option<AVLTreeSetStPer<Pair<V, V>>>, // (child, parent)
     }
 
+    // 6. spec fns
+
+    pub open spec fn spec_pqminstper_wf_generic<V: StT + Ord, P: StT + Ord>(
+        s: &PQMinResult<V, P>,
+    ) -> bool {
+        s.visited@.finite() && s.priorities@.finite()
+    }
+
     // 8. traits
     pub trait PQMinStPerTrait<V: StT + Ord, P: StT + Ord> {
+        spec fn spec_pqminstper_wf(&self) -> bool;
+
         /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
         /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
         fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF)                         -> (search: PQMinResult<V, P>)
         where
             G: Fn(&V) -> AVLTreeSetStPer<V>,
             PF: Fn(&V) -> P,
-            ensures search.visited@.contains(source@);
+            ensures
+                spec_pqminstper_wf_generic(&search),
+                search.visited@.contains(source@);
 
         /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
         /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
@@ -38,12 +50,18 @@ pub mod PQMinStPer {
         where
             G: Fn(&V) -> AVLTreeSetStPer<V>,
             PF: Fn(&V) -> P,
-            ensures sources@.subset_of(search.visited@);
+            ensures
+                spec_pqminstper_wf_generic(&search),
+                sources@.subset_of(search.visited@);
     }
 
     // 9. impls
 
     impl<V: StT + Ord, P: StT + Ord> PQMinStPerTrait<V, P> for PQMinResult<V, P> {
+        open spec fn spec_pqminstper_wf(&self) -> bool {
+            spec_pqminstper_wf_generic(self)
+        }
+
         fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF) -> (search: PQMinResult<V, P>)
         where G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P,
         { pq_min(graph, source, priority_fn) }
@@ -60,7 +78,9 @@ pub mod PQMinStPer {
     where
         G: Fn(&V) -> AVLTreeSetStPer<V>,
         PF: Fn(&V) -> P,
-        ensures search.visited@.contains(source@),
+        ensures
+            spec_pqminstper_wf_generic(&search),
+            search.visited@.contains(source@),
     {
         let sources = AVLTreeSetStPer::singleton(source);
         pq_min_multi(graph, sources, priority_fn)
@@ -135,7 +155,9 @@ pub mod PQMinStPer {
     where
         G: Fn(&V) -> AVLTreeSetStPer<V>,
         PF: Fn(&V) -> P,
-        ensures sources@.subset_of(search.visited@),
+        ensures
+            spec_pqminstper_wf_generic(&search),
+            sources@.subset_of(search.visited@),
     {
         let mut initial_frontier = AVLTreeSetStPer::empty();
         let sources_seq = sources.to_seq();

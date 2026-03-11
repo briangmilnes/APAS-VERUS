@@ -33,46 +33,58 @@ pub mod AllPairsResultStEphF64 {
     // 8. traits
 
     pub trait AllPairsResultStEphF64Trait: Sized {
-        spec fn spec_allpairsresultstephf64_wf(s: &AllPairsResultStEphF64) -> bool;
+        spec fn spec_allpairsresultstephf64_wf(&self) -> bool;
 
         spec fn spec_n(&self) -> usize;
 
         fn new(n: usize) -> (empty: Self)
-            ensures empty.spec_n() == n;
+            ensures
+                empty.spec_allpairsresultstephf64_wf(),
+                empty.spec_n() == n;
 
-        fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64);
+        fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+            requires self.spec_allpairsresultstephf64_wf();
 
         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+            requires old(self).spec_allpairsresultstephf64_wf(),
             ensures
+                self.spec_allpairsresultstephf64_wf(),
                 self.spec_n() == old(self).spec_n();
 
-        fn get_predecessor(&self, u: usize, v: usize) -> (predecessor: Option<usize>);
+        fn get_predecessor(&self, u: usize, v: usize) -> (predecessor: Option<usize>)
+            requires self.spec_allpairsresultstephf64_wf();
 
         fn set_predecessor(&mut self, u: usize, v: usize, pred: usize)
+            requires old(self).spec_allpairsresultstephf64_wf(),
             ensures
+                self.spec_allpairsresultstephf64_wf(),
                 self.spec_n() == old(self).spec_n();
 
-        fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool);
+        fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool)
+            requires self.spec_allpairsresultstephf64_wf();
 
-        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);
+        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
+            requires self.spec_allpairsresultstephf64_wf();
     }
 
     // 9. impls
 
     impl AllPairsResultStEphF64Trait for AllPairsResultStEphF64 {
-        open spec fn spec_allpairsresultstephf64_wf(s: &AllPairsResultStEphF64) -> bool {
-            s.distances.spec_len() == s.n as nat
-            && s.predecessors.spec_len() == s.n as nat
-            && forall|r: int| #![trigger s.distances.spec_index(r)]
-                0 <= r < s.n ==> s.distances.spec_index(r).spec_len() == s.n as nat
-            && forall|r: int| #![trigger s.predecessors.spec_index(r)]
-                0 <= r < s.n ==> s.predecessors.spec_index(r).spec_len() == s.n as nat
+        open spec fn spec_allpairsresultstephf64_wf(&self) -> bool {
+            self.distances.spec_len() == self.n as nat
+            && self.predecessors.spec_len() == self.n as nat
+            && forall|r: int|
+                #![trigger self.distances.spec_index(r)]
+                #![trigger self.predecessors.spec_index(r)]
+                0 <= r < self.n ==> (
+                    self.distances.spec_index(r).spec_len() == self.n as nat
+                    && self.predecessors.spec_index(r).spec_len() == self.n as nat
+                )
         }
 
         open spec fn spec_n(&self) -> usize { self.n }
 
         fn new(n: usize) -> (empty: Self)
-            ensures Self::spec_allpairsresultstephf64_wf(&empty),
         {
             let unreach = unreachable_dist();
             let zero = zero_dist();
@@ -147,9 +159,20 @@ pub mod AllPairsResultStEphF64 {
             if u < self.distances.length() {
                 let row_ref = self.distances.nth(u);
                 if v < row_ref.length() {
+                    let ghost old_distances = self.distances;
+                    let ghost n = self.n;
                     let mut row = row_ref.clone();
                     let _ = row.set(v, dist);
+                    assert(row.spec_len() == n as nat);
                     let _ = self.distances.set(u, row);
+                    assert forall|r: int| 0 <= r < n
+                        implies #[trigger] self.distances.spec_index(r).spec_len() == n as nat
+                    by {
+                        if r == u as int {
+                        } else {
+                            assert(self.distances.spec_index(r) == old_distances.spec_index(r));
+                        }
+                    };
                 }
             }
         }
@@ -171,9 +194,20 @@ pub mod AllPairsResultStEphF64 {
             if u < self.predecessors.length() {
                 let row_ref = self.predecessors.nth(u);
                 if v < row_ref.length() {
+                    let ghost old_predecessors = self.predecessors;
+                    let ghost n = self.n;
                     let mut row = row_ref.clone();
                     let _ = row.set(v, pred);
+                    assert(row.spec_len() == n as nat);
                     let _ = self.predecessors.set(u, row);
+                    assert forall|r: int| 0 <= r < n
+                        implies #[trigger] self.predecessors.spec_index(r).spec_len() == n as nat
+                    by {
+                        if r == u as int {
+                        } else {
+                            assert(self.predecessors.spec_index(r) == old_predecessors.spec_index(r));
+                        }
+                    };
                 }
             }
         }
