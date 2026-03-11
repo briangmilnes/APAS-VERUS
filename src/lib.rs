@@ -328,7 +328,7 @@ pub mod Chap06 {
     // Use per-type variants above instead.
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap11 {
     pub mod FibonacciStEph;
     pub mod FibonacciMtPerAllThreads;
@@ -337,19 +337,19 @@ pub mod Chap11 {
     pub mod FibonacciMtEphRecomputes;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap12 {
     pub mod Exercise12_1;
     pub mod Exercise12_2;
     pub mod Exercise12_5;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap17 {
     pub mod MathSeq;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "wf")))]
+#[cfg(not(any(feature = "experiments_only")))]
 pub mod Chap18 {
     pub mod ArraySeq;
     pub mod ArraySeqStPer;
@@ -360,7 +360,7 @@ pub mod Chap18 {
     pub mod ArraySeqMtPer;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "wf")))]
+#[cfg(not(any(feature = "experiments_only")))]
 pub mod Chap19 {
     pub mod ArraySeqStPer;
     pub mod ArraySeqStEph;
