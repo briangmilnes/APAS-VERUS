@@ -22,21 +22,21 @@
 //!
 //! Reference: src/Chap05/SetStEph.rs (the only chapter file with all 14 sections).
 //  Table of Contents
-//  1. module
-//  2. imports
-//  3. broadcast use
-//  4. type definitions
-//  5. view impls
-//  6. spec fns
-//  7. proof fns/broadcast groups
-//  8. traits
-//  9. impls
-//  10. iterators
-//  11. top level coarse locking
-//  12. derive impls in verus!
-//  13. macros
-//  14. derive impls outside verus!
-// 1. module
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+//	10. iterators
+//	11. top level coarse locking
+//	12. derive impls in verus!
+//	13. macros
+//	14. derive impls outside verus!
+//		1. module
 pub mod table_of_contents_standard {
 
     use std::fmt::{Debug, Display, Formatter};
@@ -45,19 +45,19 @@ pub mod table_of_contents_standard {
 
     verus! {
 
-    // 2. imports
+    //		2. imports
     //
     // use std::... first, then vstd, then crate modules.
     // Verus-only imports go behind #[cfg(verus_keep_ghost)].
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    // 3. broadcast use
+    //		3. broadcast use
     //
     // Import broadcast groups so their lemmas fire automatically.
     broadcast use vstd::seq::group_seq_axioms;
 
-    // 4. type definitions
+    //		4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct ExampleS<T> {
@@ -78,7 +78,7 @@ pub mod table_of_contents_standard {
         pub phantom: core::marker::PhantomData<&'a T>,
     }
 
-    // 5. view impls
+    //		5. view impls
     //
     // View maps the concrete type to its abstract spec type.
     impl<T> View for ExampleS<T> {
@@ -107,7 +107,7 @@ pub mod table_of_contents_standard {
         }
     }
 
-    // 6. spec fns
+    //		6. spec fns
     //
     // Spec functions can have LOOSER bounds than the trait (section 8).
     // Here: T: View (spec-only). The trait requires T: View + Copy + PartialEq.
@@ -126,7 +126,7 @@ pub mod table_of_contents_standard {
         0 <= it@.0 <= it@.1.len()
     }
 
-    // 7. proof fns/broadcast groups
+    //		7. proof fns/broadcast groups
     //
     // Lemmas and broadcast groups. Proof fns are spec/proof mode only.
     /// View length is always non-negative.
@@ -140,7 +140,7 @@ pub mod table_of_contents_standard {
         lemma_view_len_nat,
     }
 
-    // 8. traits
+    //		8. traits
     //
     // Traits have the full exec bounds needed by their methods.
     // Spec functions in traits are abstract (no body) or open.
@@ -175,7 +175,7 @@ pub mod table_of_contents_standard {
         ;
     }
 
-    // 9. impls
+    //		9. impls
     impl<T: View + Copy + PartialEq> ExampleTrait<T> for ExampleS<T> {
         open spec fn spec_len(&self) -> nat {
             self@.len()
@@ -233,7 +233,7 @@ pub mod table_of_contents_standard {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    // 10. iterators
+    //		10. iterators
     //
     // Iterator trait impls. Type definitions and views are in sections 4-5.
 
@@ -349,7 +349,7 @@ pub mod table_of_contents_standard {
         }
     }
 
-    // 11. top level coarse locking
+    //		11. top level coarse locking
     //
     // Mt modules only. Contains the complete Layer 2 locking wrapper:
     // Inv struct, RwLockPredicate impl, Locked struct, type_invariant
@@ -358,7 +358,7 @@ pub mod table_of_contents_standard {
     // do not use coarse locking.
     // See: src/standards/toplevel_coarse_rwlocks_for_mt_modules.rs
 
-    // 12. derive impls in verus!
+    //		12. derive impls in verus!
     //
     // Clone, PartialEq, Eq go inside verus! so they can have ensures.
     impl<T: Clone> Clone for ExampleS<T> {
@@ -381,7 +381,7 @@ pub mod table_of_contents_standard {
 
     } // verus!
 
-    // 13. macros
+    //		13. macros
     //
     // macro_rules! goes outside verus!, inside the pub mod.
     // Use $crate for fully qualified paths so the macro works from any crate.
@@ -399,7 +399,7 @@ pub mod table_of_contents_standard {
         }};
     }
 
-    // 14. derive impls outside verus!
+    //		14. derive impls outside verus!
     //
     // Display and Debug go outside verus!, inside the pub mod.
 
