@@ -1,483 +1,525 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent4/src/Chap06/
-Codebase: /home/milnes/projects/APAS-VERUS-agent4
+Path: /home/milnes/projects/APAS-VERUS/src/Chap06/
+Codebase: /home/milnes/projects/APAS-VERUS
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent4/src/Chap06/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap06/analyses/veracity-review-verus-style.log
 
 Checking 20 files...
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [17] Iterator<DirGraphMtEph>, IntoIterator<DirGraphMtEph>, runtime test exists, proof test exists
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:84: warning: [22] free spec fn valid_key_type_for_graph should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:93: warning: [22] spec fn spec_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:94: warning: [22] spec fn spec_arcs in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:157: warning: [22] spec fn spec_n_plus in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:163: warning: [22] spec fn spec_n_plus_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:192: warning: [22] spec fn spec_n_minus in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:198: warning: [22] spec fn spec_n_minus_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:227: warning: [22] spec fn spec_ng in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:245: warning: [22] spec fn spec_degree in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:260: warning: [22] spec fn spec_n_plus_of_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:266: warning: [22] spec fn spec_n_plus_of_vertices_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:284: warning: [22] spec fn spec_n_minus_of_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:290: warning: [22] spec fn spec_n_minus_of_vertices_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:308: warning: [22] spec fn spec_ng_of_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:314: warning: [22] spec fn spec_ng_of_vertices_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:84: warning: [23] free fn valid_key_type_for_graph param V has bounds `StTInMtT + Hash` but trait DirGraphMtEphTrait has `StTInMtT + Hash + 'static`
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [17] Iterator<DirGraphMtEph>, IntoIterator<DirGraphMtEph>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:696: warning: [14] struct DirGraphMtEphInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:696: warning: [14] struct DirGraphMtEphInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:705: warning: [14] struct LockedDirGraphMtEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:705: warning: [14] struct LockedDirGraphMtEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:696: warning: [18] struct DirGraphMtEphInv should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:705: warning: [18] struct LockedDirGraphMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:710: warning: [18] impl LockedDirGraphMtEph < V > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:721: warning: [18] impl View for LockedDirGraphMtEph < V > should come before top level coarse locking (expected view impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:726: warning: [18] trait LockedDirGraphMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:815: warning: [18] impl LockedDirGraphMtEphTrait for LockedDirGraphMtEph < V > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:86: warning: [22] free spec fn valid_key_type_for_graph should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:95: warning: [22] spec fn spec_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:96: warning: [22] spec fn spec_arcs in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:159: warning: [22] spec fn spec_n_plus in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:165: warning: [22] spec fn spec_n_plus_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:194: warning: [22] spec fn spec_n_minus in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:200: warning: [22] spec fn spec_n_minus_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:229: warning: [22] spec fn spec_ng in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:247: warning: [22] spec fn spec_degree in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:262: warning: [22] spec fn spec_n_plus_of_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:268: warning: [22] spec fn spec_n_plus_of_vertices_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:286: warning: [22] spec fn spec_n_minus_of_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:292: warning: [22] spec fn spec_n_minus_of_vertices_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:310: warning: [22] spec fn spec_ng_of_vertices in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:316: warning: [22] spec fn spec_ng_of_vertices_from_set in trait DirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:86: warning: [23] free fn valid_key_type_for_graph param V has bounds `StTInMtT + Hash` but trait DirGraphMtEphTrait has `StTInMtT + Hash + 'static`
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [17] Iterator<DirGraphStEph>, IntoIterator<DirGraphStEph>, runtime test exists, proof test exists
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:564: warning: [14] struct DirGraphVertexIterView should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:564: warning: [14] struct DirGraphVertexIterView should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:572: warning: [14] struct DirGraphArcIterView should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:572: warning: [14] struct DirGraphArcIterView should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:564: warning: [18] struct DirGraphVertexIterView should come before iterators (expected type definitions before iterators)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:572: warning: [18] struct DirGraphArcIterView should come before iterators (expected type definitions before iterators)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:78: warning: [22] spec fn spec_n_plus in trait DirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:82: warning: [22] spec fn spec_n_minus in trait DirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:86: warning: [22] spec fn spec_ng in trait DirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:90: warning: [22] spec fn spec_degree in trait DirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:94: warning: [22] spec fn spec_n_plus_of_vertices in trait DirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:100: warning: [22] spec fn spec_n_minus_of_vertices in trait DirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:106: warning: [22] spec fn spec_ng_of_vertices in trait DirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [17] Iterator<DirGraphStEph>, IntoIterator<DirGraphStEph>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:564: warning: [14] struct DirGraphVertexIterView should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:564: warning: [14] struct DirGraphVertexIterView should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:572: warning: [14] struct DirGraphArcIterView should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:572: warning: [14] struct DirGraphArcIterView should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:564: warning: [18] struct DirGraphVertexIterView should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:572: warning: [18] struct DirGraphArcIterView should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:78: warning: [22] spec fn spec_n_plus in trait DirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:82: warning: [22] spec fn spec_n_minus in trait DirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:86: warning: [22] spec fn spec_ng in trait DirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:90: warning: [22] spec fn spec_degree in trait DirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:94: warning: [22] spec fn spec_n_plus_of_vertices in trait DirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:100: warning: [22] spec fn spec_n_minus_of_vertices in trait DirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:106: warning: [22] spec fn spec_ng_of_vertices in trait DirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [14] Display, Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [17] Iterator<LabDirGraphMtEph>, IntoIterator<LabDirGraphMtEph>, runtime test exists, proof test exists
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:82: warning: [22] free spec fn valid_key_type_for_lab_graph should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:92: warning: [22] spec fn spec_vertices in trait LabDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:93: warning: [22] spec fn spec_labeled_arcs in trait LabDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:165: warning: [22] spec fn spec_n_plus in trait LabDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:171: warning: [22] spec fn spec_n_plus_from_set in trait LabDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:179: warning: [22] spec fn spec_n_minus in trait LabDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:185: warning: [22] spec fn spec_n_minus_from_set in trait LabDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:82: warning: [23] free fn valid_key_type_for_lab_graph param V has bounds `StTInMtT + Hash` but trait LabDirGraphMtEphTrait has `StTInMtT + Hash + 'static`
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:82: warning: [23] free fn valid_key_type_for_lab_graph param L has bounds `StTInMtT + Hash` but trait LabDirGraphMtEphTrait has `StTInMtT + Hash + 'static`
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: info: [17] Iterator<LabDirGraphMtEph>, IntoIterator<LabDirGraphMtEph>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:609: warning: [14] struct LabDirGraphMtEphInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:609: warning: [14] struct LabDirGraphMtEphInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:619: warning: [14] struct LockedLabDirGraphMtEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:619: warning: [14] struct LockedLabDirGraphMtEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:609: warning: [18] struct LabDirGraphMtEphInv should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:619: warning: [18] struct LockedLabDirGraphMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:624: warning: [18] impl LockedLabDirGraphMtEph < V , L > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:635: warning: [18] impl View for LockedLabDirGraphMtEph < V , L > should come before top level coarse locking (expected view impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:640: warning: [18] trait LockedLabDirGraphMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:693: warning: [18] impl LockedLabDirGraphMtEphTrait for LockedLabDirGraphMtEph < V , L > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:657: warning: [19] add_vertex return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:666: warning: [19] add_labeled_arc return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:707: warning: [19] add_vertex return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:717: warning: [19] add_labeled_arc return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:84: warning: [22] free spec fn valid_key_type_for_lab_graph should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:94: warning: [22] spec fn spec_vertices in trait LabDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:95: warning: [22] spec fn spec_labeled_arcs in trait LabDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:167: warning: [22] spec fn spec_n_plus in trait LabDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:173: warning: [22] spec fn spec_n_plus_from_set in trait LabDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:181: warning: [22] spec fn spec_n_minus in trait LabDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:187: warning: [22] spec fn spec_n_minus_from_set in trait LabDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:84: warning: [23] free fn valid_key_type_for_lab_graph param V has bounds `StTInMtT + Hash` but trait LabDirGraphMtEphTrait has `StTInMtT + Hash + 'static`
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:84: warning: [23] free fn valid_key_type_for_lab_graph param L has bounds `StTInMtT + Hash` but trait LabDirGraphMtEphTrait has `StTInMtT + Hash + 'static`
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [14] Display, Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [17] Iterator<LabDirGraphStEph>, IntoIterator<LabDirGraphStEph>, runtime test exists, proof test exists
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:48: warning: [22] spec fn spec_finite in trait LabDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:52: warning: [22] spec fn spec_n_plus in trait LabDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:58: warning: [22] spec fn spec_n_minus in trait LabDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:64: warning: [22] spec fn spec_arcs in trait LabDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [17] Iterator<LabDirGraphStEph>, IntoIterator<LabDirGraphStEph>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:48: warning: [22] spec fn spec_finite in trait LabDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:52: warning: [22] spec fn spec_n_plus in trait LabDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:58: warning: [22] spec fn spec_n_minus in trait LabDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:64: warning: [22] spec fn spec_arcs in trait LabDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [14] Display, Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [17] Iterator<LabUnDirGraphMtEph>, IntoIterator<LabUnDirGraphMtEph>, runtime test exists, proof test exists
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:82: warning: [22] free spec fn valid_key_type_for_lab_graph should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:92: warning: [22] spec fn spec_vertices in trait LabUnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:93: warning: [22] spec fn spec_labeled_edges in trait LabUnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:95: warning: [22] spec fn spec_ng_from_set in trait LabUnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:173: warning: [22] spec fn spec_ng in trait LabUnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:82: warning: [23] free fn valid_key_type_for_lab_graph param V has bounds `StTInMtT + Hash + Ord` but trait LabUnDirGraphMtEphTrait has `StTInMtT + Hash + Ord + 'static`
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:82: warning: [23] free fn valid_key_type_for_lab_graph param L has bounds `StTInMtT + Hash` but trait LabUnDirGraphMtEphTrait has `StTInMtT + Hash + 'static`
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [17] Iterator<LabUnDirGraphMtEph>, IntoIterator<LabUnDirGraphMtEph>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:566: warning: [14] struct LabUnDirGraphMtEphInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:566: warning: [14] struct LabUnDirGraphMtEphInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:576: warning: [14] struct LockedLabUnDirGraphMtEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:576: warning: [14] struct LockedLabUnDirGraphMtEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:566: warning: [18] struct LabUnDirGraphMtEphInv should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:576: warning: [18] struct LockedLabUnDirGraphMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:581: warning: [18] impl LockedLabUnDirGraphMtEph < V , L > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:592: warning: [18] impl View for LockedLabUnDirGraphMtEph < V , L > should come before top level coarse locking (expected view impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:599: warning: [18] trait LockedLabUnDirGraphMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:642: warning: [18] impl LockedLabUnDirGraphMtEphTrait for LockedLabUnDirGraphMtEph < V , L > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:632: warning: [19] add_vertex return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:638: warning: [19] add_labeled_edge return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:715: warning: [19] add_vertex return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:725: warning: [19] add_labeled_edge return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:84: warning: [22] free spec fn valid_key_type_for_lab_graph should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:94: warning: [22] spec fn spec_vertices in trait LabUnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:95: warning: [22] spec fn spec_labeled_edges in trait LabUnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:97: warning: [22] spec fn spec_ng_from_set in trait LabUnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:175: warning: [22] spec fn spec_ng in trait LabUnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:84: warning: [23] free fn valid_key_type_for_lab_graph param V has bounds `StTInMtT + Hash + Ord` but trait LabUnDirGraphMtEphTrait has `StTInMtT + Hash + Ord + 'static`
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:84: warning: [23] free fn valid_key_type_for_lab_graph param L has bounds `StTInMtT + Hash` but trait LabUnDirGraphMtEphTrait has `StTInMtT + Hash + 'static`
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [14] Display, Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [17] Iterator<LabUnDirGraphStEph>, IntoIterator<LabUnDirGraphStEph>, runtime test exists, proof test exists
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:49: warning: [22] spec fn spec_finite in trait LabUnDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:53: warning: [22] spec fn spec_ng in trait LabUnDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:60: warning: [22] spec fn spec_edges in trait LabUnDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [17] Iterator<LabUnDirGraphStEph>, IntoIterator<LabUnDirGraphStEph>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:49: warning: [22] spec fn spec_finite in trait LabUnDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:53: warning: [22] spec fn spec_ng in trait LabUnDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:60: warning: [22] spec fn spec_edges in trait LabUnDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [17] Iterator<UnDirGraphMtEph>, IntoIterator<UnDirGraphMtEph>, runtime test exists, proof test exists
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:83: warning: [22] free spec fn valid_key_type_for_graph should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:92: warning: [22] spec fn spec_vertices in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:93: warning: [22] spec fn spec_edges in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:95: warning: [22] spec fn spec_ng_from_set in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:103: warning: [22] spec fn spec_ng_of_vertices_from_set in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:163: warning: [22] spec fn spec_ng in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:181: warning: [22] spec fn spec_ng_of_vertices in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:83: warning: [23] free fn valid_key_type_for_graph param V has bounds `StTInMtT + Hash` but trait UnDirGraphMtEphTrait has `StTInMtT + Hash + 'static`
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [17] Iterator<UnDirGraphMtEph>, IntoIterator<UnDirGraphMtEph>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:453: warning: [14] struct UnDirGraphMtEphInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:453: warning: [14] struct UnDirGraphMtEphInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:462: warning: [14] struct LockedUnDirGraphMtEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:462: warning: [14] struct LockedUnDirGraphMtEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:453: warning: [18] struct UnDirGraphMtEphInv should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:462: warning: [18] struct LockedUnDirGraphMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:467: warning: [18] impl LockedUnDirGraphMtEph < V > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:478: warning: [18] impl View for LockedUnDirGraphMtEph < V > should come before top level coarse locking (expected view impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:483: warning: [18] trait LockedUnDirGraphMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:538: warning: [18] impl LockedUnDirGraphMtEphTrait for LockedUnDirGraphMtEph < V > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:85: warning: [22] free spec fn valid_key_type_for_graph should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:94: warning: [22] spec fn spec_vertices in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:95: warning: [22] spec fn spec_edges in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:97: warning: [22] spec fn spec_ng_from_set in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:105: warning: [22] spec fn spec_ng_of_vertices_from_set in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:165: warning: [22] spec fn spec_ng in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:183: warning: [22] spec fn spec_ng_of_vertices in trait UnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:85: warning: [23] free fn valid_key_type_for_graph param V has bounds `StTInMtT + Hash` but trait UnDirGraphMtEphTrait has `StTInMtT + Hash + 'static`
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [17] Iterator<UnDirGraphStEph>, IntoIterator<UnDirGraphStEph>, runtime test exists, proof test exists
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:76: warning: [22] spec fn spec_ng in trait UnDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:82: warning: [22] spec fn spec_ng_of_vertices in trait UnDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:88: warning: [22] spec fn spec_degree in trait UnDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [17] Iterator<UnDirGraphStEph>, IntoIterator<UnDirGraphStEph>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:76: warning: [22] spec fn spec_ng in trait UnDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:82: warning: [22] spec fn spec_ng_of_vertices in trait UnDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:88: warning: [22] spec fn spec_degree in trait UnDirGraphStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: warning: [17] collection WeightedDirGraphStEphI128 should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphI128Trait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI128.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: warning: [17] collection WeightedDirGraphStEphI128 should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphI128Trait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI128.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: warning: [17] collection WeightedDirGraphStEphI16 should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphI16Trait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI16.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: warning: [17] collection WeightedDirGraphStEphI16 should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphI16Trait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI16.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: warning: [17] collection WeightedDirGraphStEphI32 should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphI32Trait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI32.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: warning: [17] collection WeightedDirGraphStEphI32 should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphI32Trait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI32.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: warning: [17] collection WeightedDirGraphStEphI64 should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphI64Trait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI64.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: warning: [17] collection WeightedDirGraphStEphI64 should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphI64Trait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI64.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: warning: [17] collection WeightedDirGraphStEphI8 should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphI8Trait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphI8.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: warning: [17] collection WeightedDirGraphStEphI8 should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphI8Trait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphI8.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: warning: [17] collection WeightedDirGraphStEphIsize should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphIsizeTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphIsize.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: warning: [17] collection WeightedDirGraphStEphIsize should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphIsizeTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphIsize.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: warning: [17] collection WeightedDirGraphStEphU128 should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphU128Trait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU128.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: warning: [17] collection WeightedDirGraphStEphU128 should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphU128Trait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU128.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: warning: [17] collection WeightedDirGraphStEphU16 should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphU16Trait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU16.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: warning: [17] collection WeightedDirGraphStEphU16 should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphU16Trait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU16.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: warning: [17] collection WeightedDirGraphStEphU32 should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphU32Trait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU32.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: warning: [17] collection WeightedDirGraphStEphU32 should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphU32Trait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU32.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: warning: [17] collection WeightedDirGraphStEphU64 should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphU64Trait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU64.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: warning: [17] collection WeightedDirGraphStEphU64 should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphU64Trait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU64.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: warning: [17] collection WeightedDirGraphStEphU8 should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphU8Trait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphU8.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: warning: [17] collection WeightedDirGraphStEphU8 should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphU8Trait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphU8.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: warning: [17] collection WeightedDirGraphStEphUsize should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphUsizeTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/WeightedDirGraphStEphUsize.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: warning: [17] collection WeightedDirGraphStEphUsize should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:38: warning: [22] spec fn spec_total_weight in trait WeightedDirGraphStEphUsizeTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap06/WeightedDirGraphStEphUsize.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 ════════════════════════════════════════════════════════════════
-Summary: 323 passed, 107 warnings in 20 files (checked 20 files)
+Summary: 317 passed, 155 warnings in 20 files (checked 20 files)
 ════════════════════════════════════════════════════════════════

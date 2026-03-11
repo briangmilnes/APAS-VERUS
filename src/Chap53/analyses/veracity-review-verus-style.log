@@ -1,128 +1,128 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent4/src/Chap53/
-Codebase: /home/milnes/projects/APAS-VERUS-agent4
+Path: /home/milnes/projects/APAS-VERUS/src/Chap53/
+Codebase: /home/milnes/projects/APAS-VERUS
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent4/src/Chap53/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap53/analyses/veracity-review-verus-style.log
 
 Checking 5 files...
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: warning: [17] collection SearchResult should have an Iterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: warning: [17] collection SearchResult should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent4/rust_verify_test/tests/Chap53/ProveGraphSearchMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: warning: [17] collection SearchResult should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: warning: [17] collection SearchResult should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap53/ProveGraphSearchMtPer.rs
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: warning: [17] collection SearchResult should have an Iterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: warning: [17] collection SearchResult should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent4/rust_verify_test/tests/Chap53/ProveGraphSearchStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: warning: [17] collection SearchResult should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: warning: [17] collection SearchResult should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap53/ProveGraphSearchStEph.rs
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: warning: [17] collection SearchResult should have an Iterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: warning: [17] collection SearchResult should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent4/rust_verify_test/tests/Chap53/ProveGraphSearchStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: warning: [17] collection SearchResult should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: warning: [17] collection SearchResult should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap53/ProveGraphSearchStPer.rs
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: warning: [17] collection PQMinResult should have an Iterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: warning: [17] collection PQMinResult should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent4/rust_verify_test/tests/Chap53/ProvePQMinStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: warning: [17] collection PQMinResult should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: warning: [17] collection PQMinResult should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap53/ProvePQMinStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:22: warning: [22] free spec fn spec_pqminsteph_wf_generic should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: warning: [17] collection PQMinResult should have an Iterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: warning: [17] collection PQMinResult should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent4/rust_verify_test/tests/Chap53/ProvePQMinStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: warning: [17] collection PQMinResult should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: warning: [17] collection PQMinResult should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap53/ProvePQMinStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:27: warning: [22] free spec fn spec_pqminstper_wf_generic should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 90 passed, 15 warnings in 5 files (checked 5 files)
+Summary: 88 passed, 17 warnings in 5 files (checked 5 files)
 ════════════════════════════════════════════════════════════════

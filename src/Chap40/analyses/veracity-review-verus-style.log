@@ -1,82 +1,82 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent4/src/Chap40/
-Codebase: /home/milnes/projects/APAS-VERUS-agent4
+Path: /home/milnes/projects/APAS-VERUS/src/Chap40/
+Codebase: /home/milnes/projects/APAS-VERUS
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent4/src/Chap40/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS/src/Chap40/analyses/veracity-review-verus-style.log
 
 Checking 3 files...
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:204: warning: [12] trait NodeTrait fn new should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:61: warning: [14] struct Lnk should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:61: warning: [14] struct Lnk should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:844: warning: [18] impl PartialEqSpecImpl for BSTKeyValueStEph < K , V > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:75: warning: [22] free spec fn spec_content_link should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:87: warning: [22] free spec fn spec_node_count_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:204: warning: [12] trait NodeTrait fn new should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:61: warning: [14] struct Lnk should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:61: warning: [14] struct Lnk should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:844: warning: [18] impl PartialEqSpecImpl for BSTKeyValueStEph < K , V > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:75: warning: [22] free spec fn spec_content_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:87: warning: [22] free spec fn spec_node_count_link should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:110: warning: [12] trait NodeTrait fn new should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:65: warning: [14] struct Lnk should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:65: warning: [14] struct Lnk should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:890: warning: [18] impl PartialEqSpecImpl for BSTReducedStEph < K , V , R , Op > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:110: warning: [12] trait NodeTrait fn new should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:65: warning: [14] struct Lnk should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:65: warning: [14] struct Lnk should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:890: warning: [18] impl PartialEqSpecImpl for BSTReducedStEph < K , V , R , Op > should come before derive impls in verus! (expected impls before derive impls in verus!)
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:139: warning: [12] trait NodeTrait fn new should have requires/ensures
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:53: warning: [14] struct Lnk should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:53: warning: [14] struct Lnk should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:863: warning: [18] impl PartialEqSpecImpl for BSTSizeStEph < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [15] Clone, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:139: warning: [12] trait NodeTrait fn new should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:53: warning: [14] struct Lnk should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:53: warning: [14] struct Lnk should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:863: warning: [18] impl PartialEqSpecImpl for BSTSizeStEph < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
 
 ════════════════════════════════════════════════════════════════
 Summary: 50 passed, 14 warnings in 3 files (checked 3 files)

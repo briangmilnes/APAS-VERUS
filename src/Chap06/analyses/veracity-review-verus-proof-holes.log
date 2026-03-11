@@ -1,10 +1,367 @@
-✓ DirGraphMtEph.rs
+❌ DirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:832: assume() - proof { assume(v@ == self@.V); }
+       829 |         fn vertices(&self) -> (v: SetStEph<V>) {
+            ...
+       830 |             let read_handle = self.locked_graph.acquire_read();
+       831 |             let v = read_handle.borrow().V.clone();
+       833 |             read_handle.release_read();
+       834 |             v
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:840: assume() - proof { assume(a@ == self@.A); }
+       837 |         fn arcs(&self) -> (a: SetStEph<Edge<V>>) {
+            ...
+       838 |             let read_handle = self.locked_graph.acquire_read();
+       839 |             let a = read_handle.borrow().A.clone();
+       841 |             read_handle.release_read();
+       842 |             a
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:848: assume() - proof { assume(n == self@.V.len()); }
+       845 |         fn sizeV(&self) -> (n: N) {
+            ...
+       846 |             let read_handle = self.locked_graph.acquire_read();
+       847 |             let n = read_handle.borrow().sizeV();
+       849 |             read_handle.release_read();
+       850 |             n
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:856: assume() - proof { assume(n == self@.A.len()); }
+       853 |         fn sizeA(&self) -> (n: N) {
+            ...
+       854 |             let read_handle = self.locked_graph.acquire_read();
+       855 |             let n = read_handle.borrow().sizeA();
+       857 |             read_handle.release_read();
+       858 |             n
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:864: assume() - proof { assume(inner@ == self@); }
+       861 |         fn neighbor(&self, u: &V, v: &V) -> (b: B) {
+            ...
+       862 |             let read_handle = self.locked_graph.acquire_read();
+       863 |             let inner = read_handle.borrow();
+       865 |             let b = inner.neighbor(u, v);
+       866 |             proof { assume(b == self@.A.contains((u@, v@))); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:866: assume() - proof { assume(b == self@.A.contains((u@, v@))); }
+       861 |         fn neighbor(&self, u: &V, v: &V) -> (b: B) {
+            ...
+       864 |             proof { assume(inner@ == self@); }
+       865 |             let b = inner.neighbor(u, v);
+       867 |             read_handle.release_read();
+       868 |             b
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:874: assume() - proof { assume(inner@ == self@); }
+       871 |         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>) {
+            ...
+       872 |             let read_handle = self.locked_graph.acquire_read();
+       873 |             let inner = read_handle.borrow();
+       875 |             let out_neighbors = inner.n_plus(v);
+       876 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:877: assume() - assume(out_neighbors@ == Set::new(|w: V::V| self@.A.contains
+       871 |         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>) {
+            ...
+       875 |             let out_neighbors = inner.n_plus(v);
+       876 |             proof {
+       878 |                 assume(out_neighbors@ <= self@.V);
+       879 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:878: assume() - assume(out_neighbors@ <= self@.V);
+       871 |         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>) {
+            ...
+       876 |             proof {
+       877 |                 assume(out_neighbors@ == Set::new(|w: V::V| self@.A.contains((v@, w))));
+       879 |             }
+       880 |             read_handle.release_read();
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:887: assume() - proof { assume(inner@ == self@); }
+       884 |         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>) {
+            ...
+       885 |             let read_handle = self.locked_graph.acquire_read();
+       886 |             let inner = read_handle.borrow();
+       888 |             let in_neighbors = inner.n_minus(v);
+       889 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:890: assume() - assume(in_neighbors@ == Set::new(|u: V::V| self@.A.contains(
+       884 |         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>) {
+            ...
+       888 |             let in_neighbors = inner.n_minus(v);
+       889 |             proof {
+       891 |                 assume(in_neighbors@ <= self@.V);
+       892 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:891: assume() - assume(in_neighbors@ <= self@.V);
+       884 |         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>) {
+            ...
+       889 |             proof {
+       890 |                 assume(in_neighbors@ == Set::new(|u: V::V| self@.A.contains((u, v@))));
+       892 |             }
+       893 |             read_handle.release_read();
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:900: assume() - proof { assume(inner@ == self@); }
+       897 |         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
+            ...
+       898 |             let read_handle = self.locked_graph.acquire_read();
+       899 |             let inner = read_handle.borrow();
+       901 |             let neighbors = inner.ng(v);
+       902 |             proof { assume(neighbors@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:902: assume() - proof { assume(neighbors@ <= self@.V); }
+       897 |         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
+            ...
+       900 |             proof { assume(inner@ == self@); }
+       901 |             let neighbors = inner.ng(v);
+       903 |             read_handle.release_read();
+       904 |             neighbors
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:910: assume() - proof { assume(inner@ == self@); }
+       907 |         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>) {
+            ...
+       908 |             let read_handle = self.locked_graph.acquire_read();
+       909 |             let inner = read_handle.borrow();
+       911 |             let out_neighbors = inner.n_plus_of_vertices(u_set);
+       912 |             proof { assume(out_neighbors@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:912: assume() - proof { assume(out_neighbors@ <= self@.V); }
+       907 |         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>) {
+            ...
+       910 |             proof { assume(inner@ == self@); }
+       911 |             let out_neighbors = inner.n_plus_of_vertices(u_set);
+       913 |             read_handle.release_read();
+       914 |             out_neighbors
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:920: assume() - proof { assume(inner@ == self@); }
+       917 |         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>) {
+            ...
+       918 |             let read_handle = self.locked_graph.acquire_read();
+       919 |             let inner = read_handle.borrow();
+       921 |             let in_neighbors = inner.n_minus_of_vertices(u_set);
+       922 |             proof { assume(in_neighbors@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:922: assume() - proof { assume(in_neighbors@ <= self@.V); }
+       917 |         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>) {
+            ...
+       920 |             proof { assume(inner@ == self@); }
+       921 |             let in_neighbors = inner.n_minus_of_vertices(u_set);
+       923 |             read_handle.release_read();
+       924 |             in_neighbors
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:930: assume() - proof { assume(inner@ == self@); }
+       927 |         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
+            ...
+       928 |             let read_handle = self.locked_graph.acquire_read();
+       929 |             let inner = read_handle.borrow();
+       931 |             let neighbors = inner.ng_of_vertices(u_set);
+       932 |             proof { assume(neighbors@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:932: assume() - proof { assume(neighbors@ <= self@.V); }
+       927 |         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
+            ...
+       930 |             proof { assume(inner@ == self@); }
+       931 |             let neighbors = inner.ng_of_vertices(u_set);
+       933 |             read_handle.release_read();
+       934 |             neighbors
+   Holes: 20 total
+      20 × assume()
 ✓ DirGraphStEph.rs
-✓ LabDirGraphMtEph.rs
+❌ LabDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:709: assume() - proof { assume(self.ghost_locked_graph@ == locked_val@); }
+       707 |         fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>) {
+       708 |             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
+       710 |             locked_val.add_vertex(v);
+       711 |             let ghost new_val = locked_val@;
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:719: assume() - proof { assume(self.ghost_locked_graph@ == locked_val@); }
+       717 |         fn add_labeled_arc(&mut self, from: V, to: V, label: L) -> (r: std::result::Result<(), ()>) {
+       718 |             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
+       720 |             locked_val.add_labeled_arc(from, to, label);
+       721 |             let ghost new_val = locked_val@;
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:730: assume() - proof { assume(inner@ == self@); }
+       727 |         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
+            ...
+       728 |             let read_handle = self.locked_graph.acquire_read();
+       729 |             let inner = read_handle.borrow();
+       731 |             let n_plus = inner.n_plus(v);
+       732 |             proof { assume(n_plus@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:732: assume() - proof { assume(n_plus@ <= self@.V); }
+       727 |         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
+            ...
+       730 |             proof { assume(inner@ == self@); }
+       731 |             let n_plus = inner.n_plus(v);
+       733 |             read_handle.release_read();
+       734 |             n_plus
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:740: assume() - proof { assume(inner@ == self@); }
+       737 |         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
+            ...
+       738 |             let read_handle = self.locked_graph.acquire_read();
+       739 |             let inner = read_handle.borrow();
+       741 |             let n_minus = inner.n_minus(v);
+       742 |             proof { assume(n_minus@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:742: assume() - proof { assume(n_minus@ <= self@.V); }
+       737 |         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
+            ...
+       740 |             proof { assume(inner@ == self@); }
+       741 |             let n_minus = inner.n_minus(v);
+       743 |             read_handle.release_read();
+       744 |             n_minus
+   Holes: 6 total
+      6 × assume()
 ✓ LabDirGraphStEph.rs
-✓ LabUnDirGraphMtEph.rs
+❌ LabUnDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:587: assume() - assume(spec_labgraphview_wf(self@));
+       582 |         pub proof fn type_invariant(&self)
+            ...
+       585 |                 valid_key_type_for_lab_graph::<V, L>(),
+       586 |         {
+       588 |             assume(valid_key_type_for_lab_graph::<V, L>());
+       589 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:588: assume() - assume(valid_key_type_for_lab_graph::<V, L>());
+       582 |         pub proof fn type_invariant(&self)
+            ...
+       586 |         {
+       587 |             assume(spec_labgraphview_wf(self@));
+       589 |         }
+       590 |     }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:657: assume() - proof { assume(inner@ == self@); }
+       654 |         fn vertices(&self) -> (v: SetStEph<V>) {
+            ...
+       655 |             let read_handle = self.locked_graph.acquire_read();
+       656 |             let inner = read_handle.borrow();
+       658 |             let v = inner.vertices().clone();
+       659 |             proof { assume(v@ == self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:659: assume() - proof { assume(v@ == self@.V); }
+       654 |         fn vertices(&self) -> (v: SetStEph<V>) {
+            ...
+       657 |             proof { assume(inner@ == self@); }
+       658 |             let v = inner.vertices().clone();
+       660 |             read_handle.release_read();
+       661 |             v
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:667: assume() - proof { assume(inner@ == self@); }
+       664 |         fn labeled_edges(&self) -> (e: SetStEph<LabEdge<V, L>>) {
+            ...
+       665 |             let read_handle = self.locked_graph.acquire_read();
+       666 |             let inner = read_handle.borrow();
+       668 |             let e = inner.labeled_edges().clone();
+       669 |             proof { assume(e@ == self@.A); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:669: assume() - proof { assume(e@ == self@.A); }
+       664 |         fn labeled_edges(&self) -> (e: SetStEph<LabEdge<V, L>>) {
+            ...
+       667 |             proof { assume(inner@ == self@); }
+       668 |             let e = inner.labeled_edges().clone();
+       670 |             read_handle.release_read();
+       671 |             e
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:677: assume() - proof { assume(inner@ == self@); }
+       674 |         fn edges(&self) -> (edges: SetStEph<Edge<V>>) {
+            ...
+       675 |             let read_handle = self.locked_graph.acquire_read();
+       676 |             let inner = read_handle.borrow();
+       678 |             let edges = inner.edges();
+       679 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:680: assume() - assume(forall |u: V::V, w: V::V| edges@.contains((u, w)) ==
+       674 |         fn edges(&self) -> (edges: SetStEph<Edge<V>>) {
+            ...
+       678 |             let edges = inner.edges();
+       679 |             proof {
+       681 |                     (exists |l: L::V| #![trigger self@.A.contains((u, w, l))] self@.A.contains((u, w, l))));
+       682 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:690: assume() - proof { assume(inner@ == self@); }
+       687 |         fn has_edge(&self, v1: V, v2: V) -> (b: bool) {
+            ...
+       688 |             let read_handle = self.locked_graph.acquire_read();
+       689 |             let inner = read_handle.borrow();
+       691 |             let b = inner.has_edge(&v1, &v2);
+       692 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:693: assume() - assume(b == (exists |l: L::V|
+       687 |         fn has_edge(&self, v1: V, v2: V) -> (b: bool) {
+            ...
+       691 |             let b = inner.has_edge(&v1, &v2);
+       692 |             proof {
+       694 |                     #![trigger self@.A.contains((v1@, v2@, l))]
+       695 |                     #![trigger self@.A.contains((v2@, v1@, l))]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:705: assume() - proof { assume(inner@ == self@); }
+       702 |         fn ng(&self, v: V) -> (ng: SetStEph<V>) {
+            ...
+       703 |             let read_handle = self.locked_graph.acquire_read();
+       704 |             let inner = read_handle.borrow();
+       706 |             let ng = inner.ng(&v);
+       707 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:708: assume() - assume(ng.spec_setsteph_wf());
+       702 |         fn ng(&self, v: V) -> (ng: SetStEph<V>) {
+            ...
+       706 |             let ng = inner.ng(&v);
+       707 |             proof {
+       709 |                 assume(ng@ <= self@.V);
+       710 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:709: assume() - assume(ng@ <= self@.V);
+       702 |         fn ng(&self, v: V) -> (ng: SetStEph<V>) {
+            ...
+       707 |             proof {
+       708 |                 assume(ng.spec_setsteph_wf());
+       710 |             }
+       711 |             read_handle.release_read();
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:717: assume() - proof { assume(self.ghost_locked_graph@ == locked_val@); }
+       715 |         fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>) {
+       716 |             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
+       718 |             locked_val.add_vertex(v);
+       719 |             let ghost new_val = locked_val@;
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:727: assume() - proof { assume(self.ghost_locked_graph@ == locked_val@); }
+       725 |         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) -> (r: std::result::Result<(), ()>) {
+       726 |             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
+       728 |             locked_val.add_labeled_edge(v1, v2, label);
+       729 |             let ghost new_val = locked_val@;
+   Holes: 15 total
+      15 × assume()
 ✓ LabUnDirGraphStEph.rs
-✓ UnDirGraphMtEph.rs
+❌ UnDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:555: assume() - proof { assume(v@ == self@.V); }
+       552 |         fn vertices(&self) -> (v: SetStEph<V>) {
+            ...
+       553 |             let read_handle = self.locked_graph.acquire_read();
+       554 |             let v = read_handle.borrow().V.clone();
+       556 |             read_handle.release_read();
+       557 |             v
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:563: assume() - proof { assume(e@ == self@.A); }
+       560 |         fn edges(&self) -> (e: SetStEph<Edge<V>>) {
+            ...
+       561 |             let read_handle = self.locked_graph.acquire_read();
+       562 |             let e = read_handle.borrow().E.clone();
+       564 |             read_handle.release_read();
+       565 |             e
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:571: assume() - proof { assume(n == self@.V.len()); }
+       568 |         fn sizeV(&self) -> (n: N) {
+            ...
+       569 |             let read_handle = self.locked_graph.acquire_read();
+       570 |             let n = read_handle.borrow().sizeV();
+       572 |             read_handle.release_read();
+       573 |             n
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:579: assume() - proof { assume(n == self@.A.len()); }
+       576 |         fn sizeE(&self) -> (n: N) {
+            ...
+       577 |             let read_handle = self.locked_graph.acquire_read();
+       578 |             let n = read_handle.borrow().sizeE();
+       580 |             read_handle.release_read();
+       581 |             n
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:587: assume() - proof { assume(inner@ == self@); }
+       584 |         fn neighbor(&self, u: &V, v: &V) -> (b: B) {
+            ...
+       585 |             let read_handle = self.locked_graph.acquire_read();
+       586 |             let inner = read_handle.borrow();
+       588 |             let b = inner.neighbor(u, v);
+       589 |             proof { assume(b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)))); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:589: assume() - proof { assume(b == (self@.A.contains((u@, v@)) || self@.A.c
+       584 |         fn neighbor(&self, u: &V, v: &V) -> (b: B) {
+            ...
+       587 |             proof { assume(inner@ == self@); }
+       588 |             let b = inner.neighbor(u, v);
+       590 |             read_handle.release_read();
+       591 |             b
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:597: assume() - proof { assume(inner@ == self@); }
+       594 |         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
+            ...
+       595 |             let read_handle = self.locked_graph.acquire_read();
+       596 |             let inner = read_handle.borrow();
+       598 |             let neighbors = inner.ng(v);
+       599 |             proof { assume(neighbors@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:599: assume() - proof { assume(neighbors@ <= self@.V); }
+       594 |         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
+            ...
+       597 |             proof { assume(inner@ == self@); }
+       598 |             let neighbors = inner.ng(v);
+       600 |             read_handle.release_read();
+       601 |             neighbors
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:607: assume() - proof { assume(inner@ == self@); }
+       604 |         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
+            ...
+       605 |             let read_handle = self.locked_graph.acquire_read();
+       606 |             let inner = read_handle.borrow();
+       608 |             let neighbors = inner.ng_of_vertices(u_set);
+       609 |             proof { assume(neighbors@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:609: assume() - proof { assume(neighbors@ <= self@.V); }
+       604 |         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
+            ...
+       607 |             proof { assume(inner@ == self@); }
+       608 |             let neighbors = inner.ng_of_vertices(u_set);
+       610 |             read_handle.release_read();
+       611 |             neighbors
+   Holes: 10 total
+      10 × assume()
 ✓ UnDirGraphStEph.rs
 ✓ WeightedDirGraphStEphI128.rs
 ✓ WeightedDirGraphStEphI16.rs
@@ -24,8 +381,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   20 clean (no holes)
-   0 holed (contains holes)
+   16 clean (no holes)
+   4 holed (contains holes)
    20 total
 
 Proof Functions:
@@ -33,11 +390,16 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 0 total
+Holes Found: 51 total
+   51 × assume()
+ holes)
+   4 holed (contains holes)
+   20 total
 
-🎉 No proof holes or warnings found! All proofs are complete.
-otal
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
 
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
+Holes Found: 51 total
+   51 × assume()
