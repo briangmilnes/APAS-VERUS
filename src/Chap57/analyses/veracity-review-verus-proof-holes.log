@@ -20,7 +20,14 @@ Table of Contents:
 =================================================================
 
 ✓ DijkstraStEphF64.rs
-✓ DijkstraStEphI64.rs
+❌ DijkstraStEphI64.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphI64.rs:68: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
+        63 |         fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64;
+            ...
+        66 |     // 9. impls
+        67 | 
+        69 |         ensures r.dist == dist, r.vertex == vertex,
+        70 |     {
 ✓ StackStEph.rs
 
 =================================================================
@@ -48,8 +55,8 @@ StackStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   2 clean (no holes, no errors; 66%)
+   1 holed (holes or errors, 33%)
    3 total
 
 Proof Functions:
@@ -58,8 +65,8 @@ Proof Functions:
    0 total
 
 Function Specs:
-   19 exec fns with complete spec (requires+ensures) (82%)
-   0 exec fns missing spec (0%)
+   18 exec fns with complete spec (requires+ensures) (78%)
+   1 exec fns missing spec (4%)
    4 proof/spec fns clean (17%)
    0 proof/spec fns with holes (0%)
    23 total fns
@@ -67,14 +74,15 @@ Function Specs:
 
 Holes Found: 0 total
 
-🎉 No proof holes or warnings found! All proofs are complete.
+🎉 No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 09:48:37 -07:00
-Ended:     2026-03-12 09:48:37 -07:00
-Duration:  7ms
+Started:   2026-03-12 10:17:02 -07:00
+Ended:     2026-03-12 10:17:02 -07:00
+Duration:  5ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
+c/Chap57/analyses/veracity-review-verus-proof-holes.log
