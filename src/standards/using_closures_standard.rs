@@ -10,6 +10,12 @@
 //! - Pattern B: Inline closure with requires+ensures inside a call.
 //! - Pattern C: Ghost spec_fn companion for spec-level reasoning.
 //!
+//! CRITICAL RULE: Never assume or accept a closure's requires/ensures.
+//! If a function body needs `f.requires((...))` to hold, that obligation
+//! must be lifted into the function's own `requires` clause so callers
+//! prove it. Writing `assume(f.requires(...))` or `accept(f.requires(...))`
+
+//!
 //! References:
 //! - src/Chap18/ArraySeqStEph.rs (tabulate)
 //! - src/Chap18/ArraySeqStPer.rs (filter with Ghost spec_fn)

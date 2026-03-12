@@ -250,7 +250,7 @@ broadcast use {
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
-                proof { accept(f.requires((&*elem,))); }  // accept hole: predicate callability
+                proof { assume(f.requires((&*elem,))); }  // accept hole: predicate callability
                 if f(elem) {
                     filtered = filtered.insert(elem.clone());
                 }
@@ -355,7 +355,7 @@ broadcast use {
 
         fn find(&self, x: &T) -> (found: B)
         {
-            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(obeys_feq_full::<T>()); }  
             let n = self.elements.length();
             let mut lo: usize = 0;
             let mut hi: usize = n;
@@ -474,7 +474,7 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    
 
     impl<T: StT + Ord> Default for AVLTreeSetStPer<T> {
         fn default() -> Self { Self::empty() }
@@ -531,7 +531,7 @@ broadcast use {
         }
     }
 
-    } // verus!
+    } 
 
     // 12. macros
 

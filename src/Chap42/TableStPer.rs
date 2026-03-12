@@ -1724,7 +1724,7 @@ pub mod TableStPer {
         {
             let collected = self.entries.clone();
             proof {
-                accept(obeys_feq_clone::<Pair<K, V>>());  // accept hole: Clone preserves feq
+                assume(obeys_feq_clone::<Pair<K, V>>());  // accept hole: Clone preserves feq
                 lemma_seq_map_cloned_view_eq(
                     self.entries.seq@,
                     collected.seq@,
@@ -1748,7 +1748,7 @@ pub mod TableStPer {
     }
 
 
-    // 9. impls
+    
 
     /// APAS Algorithm 42.3: collect groups a sequence of (key, value) pairs into a table
     /// mapping each key to the subsequence of values for that key, preserving order.

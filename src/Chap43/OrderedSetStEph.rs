@@ -251,7 +251,7 @@ broadcast use {
             let result = AVLTreeSeqStPerS::from_vec(elements);
             proof {
                 // T::clone preserves View (StT bound); from_vec maps values through View.
-                accept(result@ =~= eph_seq@);  // accept hole: clone/view bridging
+                assume(result@ =~= eph_seq@);  // accept hole: clone/view bridging
             }
             result
         }
@@ -479,7 +479,7 @@ broadcast use {
         }
     }
 
-    // 10. iterators
+    
 
     impl<T: StT + Ord> OrderedSetStEph<T> {
         /// Returns an iterator over the set elements in sorted order.

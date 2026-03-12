@@ -482,7 +482,7 @@ pub mod ArraySetStEph {
 
         fn find(&self, x: &T) -> (found: B)
         {
-            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(obeys_feq_full::<T>()); }  
             let n = self.elements.length();
             let mut i: usize = 0;
             while i < n
@@ -513,7 +513,7 @@ pub mod ArraySetStEph {
 
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
         {
-            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(obeys_feq_full::<T>()); }  
             let ghost old_view = self.elements@;
             let mut result_vec: Vec<T> = Vec::new();
             let ghost mut rv_views: Seq<<T as View>::V> = Seq::empty();
@@ -536,7 +536,7 @@ pub mod ArraySetStEph {
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
-                proof { accept(f.requires((&*elem,))); }  // accept hole: predicate callability
+                proof { assume(f.requires((&*elem,))); }  
                 if f(elem) {
                     let cloned_elem = elem.clone();
                     proof {
@@ -546,8 +546,8 @@ pub mod ArraySetStEph {
                     let ghost cv = cloned_elem@;
                     result_vec.push(cloned_elem);
                     proof {
-                        // cv not in rv_views because cv = old_view[i] and old_view has no dups
-                        // and rv_views elements are all in subrange(0, i) which excludes index i.
+                        
+                        
                         assert(!rv_views.contains(cv)) by {
                             if rv_views.contains(cv) {
                                 let k = choose|k: int| 0 <= k < rv_views.len() && rv_views[k] == cv;
@@ -700,7 +700,7 @@ pub mod ArraySetStEph {
 
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
-            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(obeys_feq_full::<T>()); }  
             let ghost old_view = self.elements@;
             let ghost other_set = other@;
             let mut result_vec: Vec<T> = Vec::new();
@@ -780,7 +780,7 @@ pub mod ArraySetStEph {
 
         fn union(&self, other: &Self) -> (combined: Self)
         {
-            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(obeys_feq_full::<T>()); }  
             let ghost self_view = self.elements@;
             let ghost other_view = other.elements@;
             let ghost self_set = self@;
@@ -789,7 +789,7 @@ pub mod ArraySetStEph {
             let mut result_vec: Vec<T> = Vec::new();
             let ghost mut rv_views: Seq<<T as View>::V> = Seq::empty();
 
-            // Phase 1: copy all of self's elements.
+            
             let mut i: usize = 0;
             while i < self_len
                 invariant
@@ -821,7 +821,7 @@ pub mod ArraySetStEph {
                 assert(self_view.subrange(0, self_len as int) =~= self_view);
             }
 
-            // Phase 2: add other's elements not in self.
+            
             let mut j: usize = 0;
             while j < other_len
                 invariant
@@ -1013,7 +1013,7 @@ pub mod ArraySetStEph {
         fn insert(&mut self, x: T)
         {
             if !self.find(&x) {
-                proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+                proof { assume(obeys_feq_full::<T>()); }  
                 let ghost old_view = self.elements@;
                 let ghost x_view = x@;
                 let n = self.elements.length();
@@ -1081,7 +1081,7 @@ pub mod ArraySetStEph {
     }
 
 
-    // 11. derive impls in verus!
+    
 
     impl<T: StT + Ord> Default for ArraySetStEph<T> {
         fn default() -> Self { Self::empty() }
@@ -1146,7 +1146,7 @@ pub mod ArraySetStEph {
         }
     }
 
-    } // verus!
+    } 
 
     // 12. macros
 

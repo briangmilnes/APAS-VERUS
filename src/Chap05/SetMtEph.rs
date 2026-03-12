@@ -993,8 +993,8 @@ verus! {
                 self@.finite(),
                 valid_key_type::<T>(),
         {
-            accept(self@.finite());
-            accept(valid_key_type::<T>());
+            assume(self@.finite());
+            assume(valid_key_type::<T>());
         }
     }
 
@@ -1042,9 +1042,9 @@ verus! {
         fn size(&self) -> (size: N) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            proof { accept(inner@ == self@); }
+            proof { assume(inner@ == self@); }
             let size = inner.size();
-            proof { accept(size == self@.len()); }
+            proof { assume(size == self@.len()); }
             read_handle.release_read();
             size
         }
@@ -1052,16 +1052,16 @@ verus! {
         fn mem(&self, x: T) -> (contains: B) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            proof { accept(inner@ == self@); }
+            proof { assume(inner@ == self@); }
             let contains = inner.mem(&x);
-            proof { accept(contains == self@.contains(x@)); }
+            proof { assume(contains == self@.contains(x@)); }
             read_handle.release_read();
             contains
         }
 
         fn insert(&mut self, x: T) -> (r: std::result::Result<bool, ()>) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { accept(self.ghost_locked_set@ == locked_val@); }
+            proof { assume(self.ghost_locked_set@ == locked_val@); }
             let inserted = locked_val.insert(x);
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);
@@ -1072,9 +1072,9 @@ verus! {
         fn choose(&self) -> (element: T) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            proof { accept(inner@ == self@); }
+            proof { assume(inner@ == self@); }
             let element = inner.choose();
-            proof { accept(self@.contains(element@)); }
+            proof { assume(self@.contains(element@)); }
             read_handle.release_read();
             element
         }

@@ -69,7 +69,7 @@ pub mod GraphSearchStEph {
                 }
                 let first_ref = seq.nth(0);
                 let first = first_ref.clone();
-                proof { accept(first@ == first_ref@); }  // accept hole: V::clone external_body
+                proof { assume(first@ == first_ref@); }  // accept hole: V::clone external_body
                 assert(frontier@.contains(first@));
                 let result = AVLTreeSetStEph::singleton(first);
                 assert(result@.subset_of(frontier@)) by {
@@ -93,7 +93,7 @@ pub mod GraphSearchStEph {
         graph_search_multi(graph, sources, strategy)
     }
 
-    /// Recursive graph exploration helper (Algorithm 53.1 loop body).
+    
     #[verifier::external_body]
     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
         graph: &G,

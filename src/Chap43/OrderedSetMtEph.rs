@@ -57,7 +57,7 @@ pub mod OrderedSetMtEph {
         ensures s@ == inner@, s@.finite()
     {
         let ghost view = inner@;
-        proof { accept(view.finite()); }
+        proof { assume(view.finite()); }
         OrderedSetMtEph {
             locked_set: RwLock::new(inner, Ghost(OrderedSetMtEphInv)),
             ghost_locked_set: Ghost(view),
@@ -166,8 +166,8 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let count = inner.size();
-            proof { accept(count == self@.len()); }
-            proof { accept(self@.finite()); }
+            proof { assume(count == self@.len()); }
+            proof { assume(self@.finite()); }
             read_handle.release_read();
             count
         }
@@ -184,7 +184,7 @@ pub mod OrderedSetMtEph {
         fn singleton(x: T) -> (tree: Self) {
             let inner = OrderedSetStEph::singleton(x);
             let ghost view = inner@;
-            proof { accept(view.finite()); }
+            proof { assume(view.finite()); }
             OrderedSetMtEph {
                 locked_set: RwLock::new(inner, Ghost(OrderedSetMtEphInv)),
                 ghost_locked_set: Ghost(view),
@@ -195,14 +195,14 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let found = inner.find(x);
-            proof { accept(found == self@.contains(x@)); }
+            proof { assume(found == self@.contains(x@)); }
             read_handle.release_read();
             found
         }
 
         fn insert(&mut self, x: T) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { accept(self.ghost_locked_set@ == locked_val@); }
+            proof { assume(self.ghost_locked_set@ == locked_val@); }
             locked_val.insert(x);
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);
@@ -211,7 +211,7 @@ pub mod OrderedSetMtEph {
 
         fn delete(&mut self, x: &T) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { accept(self.ghost_locked_set@ == locked_val@); }
+            proof { assume(self.ghost_locked_set@ == locked_val@); }
             locked_val.delete(x);
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);
@@ -231,11 +231,11 @@ pub mod OrderedSetMtEph {
             let other_inner = other_read.borrow().clone();
             other_read.release_read();
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { accept(self.ghost_locked_set@ == locked_val@); }
+            proof { assume(self.ghost_locked_set@ == locked_val@); }
             locked_val.intersection(&other_inner);
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);
-            proof { accept(self@ == old(self)@.intersect(other@)); }
+            proof { assume(self@ == old(self)@.intersect(other@)); }
             write_handle.release_write(locked_val);
         }
 
@@ -244,11 +244,11 @@ pub mod OrderedSetMtEph {
             let other_inner = other_read.borrow().clone();
             other_read.release_read();
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { accept(self.ghost_locked_set@ == locked_val@); }
+            proof { assume(self.ghost_locked_set@ == locked_val@); }
             locked_val.union(&other_inner);
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);
-            proof { accept(self@ == old(self)@.union(other@)); }
+            proof { assume(self@ == old(self)@.union(other@)); }
             write_handle.release_write(locked_val);
         }
 
@@ -257,11 +257,11 @@ pub mod OrderedSetMtEph {
             let other_inner = other_read.borrow().clone();
             other_read.release_read();
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { accept(self.ghost_locked_set@ == locked_val@); }
+            proof { assume(self.ghost_locked_set@ == locked_val@); }
             locked_val.difference(&other_inner);
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);
-            proof { accept(self@ == old(self)@.difference(other@)); }
+            proof { assume(self@ == old(self)@.difference(other@)); }
             write_handle.release_write(locked_val);
         }
 
@@ -296,7 +296,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let first = inner.first();
-            proof { accept(self@.finite()); }
+            proof { assume(self@.finite()); }
             read_handle.release_read();
             first
         }
@@ -305,7 +305,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let last = inner.last();
-            proof { accept(self@.finite()); }
+            proof { assume(self@.finite()); }
             read_handle.release_read();
             last
         }
@@ -314,7 +314,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let predecessor = inner.previous(k);
-            proof { accept(self@.finite()); }
+            proof { assume(self@.finite()); }
             read_handle.release_read();
             predecessor
         }
@@ -323,18 +323,18 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let successor = inner.next(k);
-            proof { accept(self@.finite()); }
+            proof { assume(self@.finite()); }
             read_handle.release_read();
             successor
         }
 
         fn split(&mut self, k: &T) -> (split: (Self, B, Self)) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { accept(self.ghost_locked_set@ == locked_val@); }
+            proof { assume(self.ghost_locked_set@ == locked_val@); }
             let (left, found, right) = locked_val.split(k);
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);
-            proof { accept(self@.finite()); }
+            proof { assume(self@.finite()); }
             write_handle.release_write(locked_val);
             (from_st(left), found, from_st(right))
         }
@@ -347,7 +347,7 @@ pub mod OrderedSetMtEph {
             locked_val.join(other_inner);
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);
-            proof { accept(self@.finite()); }
+            proof { assume(self@.finite()); }
             write_handle.release_write(locked_val);
         }
 
@@ -355,7 +355,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let range = inner.get_range(k1, k2);
-            proof { accept(self@.finite()); }
+            proof { assume(self@.finite()); }
             read_handle.release_read();
             from_st(range)
         }
@@ -364,7 +364,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let rank = inner.rank(k);
-            proof { accept(self@.finite()); }
+            proof { assume(self@.finite()); }
             read_handle.release_read();
             rank
         }
@@ -373,18 +373,18 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let selected = inner.select(i);
-            proof { accept(self@.finite()); }
+            proof { assume(self@.finite()); }
             read_handle.release_read();
             selected
         }
 
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self)) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { accept(self.ghost_locked_set@ == locked_val@); }
+            proof { assume(self.ghost_locked_set@ == locked_val@); }
             let (left, right) = locked_val.split_rank(i);
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);
-            proof { accept(self@.finite()); }
+            proof { assume(self@.finite()); }
             write_handle.release_write(locked_val);
             (from_st(left), from_st(right))
         }

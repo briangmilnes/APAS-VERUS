@@ -29,6 +29,13 @@
 //!
 //! Eq: marker trait, no body, no assumes. Just `impl<T: Eq + View> Eq for MyType<T> {}`.
 //!
+//! CRITICAL RULE: assume() and accept() for Clone, PartialEq, and Eq bridges
+
+//! They must NEVER appear in algorithmic code (trait methods, helper functions,
+//! proof functions, etc.). If algorithmic code needs these properties, it must
+//! obtain them through the ensures clauses of clone() and eq(), not by assuming
+//! or accepting them directly.
+//!
 //! Section ordering within section 12:
 //! 1. Clone
 //! 2. PartialEq

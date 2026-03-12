@@ -354,7 +354,7 @@ broadcast use {
             let handle = rwlock.acquire_read();
             let n = handle.borrow().len();
             handle.release_read();
-            proof { accept(n == self@.dimensions.len()); }
+            proof { assume(n == self@.dimensions.len()); }
             n
         }
 

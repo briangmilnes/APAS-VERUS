@@ -318,7 +318,7 @@ pub mod BSTBBAlphaMtEph {
         // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
         fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
             let (tree, write_handle) = self.root.acquire_write();
-            proof { accept(self.ghost_root@ == tree); }
+            proof { assume(self.ghost_root@ == tree); }
             let current_size = tree.size();
             let current_height = tree.height();
             if current_size < usize::MAX && current_height < usize::MAX {
@@ -342,7 +342,7 @@ pub mod BSTBBAlphaMtEph {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let found = contains_node(tree_ref, target);
-            proof { accept(found == self@.tree_contains(*target)); }
+            proof { assume(found == self@.tree_contains(*target)); }
             read_handle.release_read();
             found
         }
@@ -353,7 +353,7 @@ pub mod BSTBBAlphaMtEph {
             let tree_ref = read_handle.borrow();
             assert(tree_ref.spec_size() <= usize::MAX);
             let n = tree_ref.size();
-            proof { accept(n as nat == self@.spec_size()); }
+            proof { assume(n as nat == self@.spec_size()); }
             read_handle.release_read();
             n
         }
@@ -363,7 +363,7 @@ pub mod BSTBBAlphaMtEph {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let b = tree_ref.is_leaf();
-            proof { accept(b == (self@ is Leaf)); }
+            proof { assume(b == (self@ is Leaf)); }
             read_handle.release_read();
             b
         }
@@ -374,7 +374,7 @@ pub mod BSTBBAlphaMtEph {
             let tree_ref = read_handle.borrow();
             assert(tree_ref.spec_height() <= usize::MAX);
             let h = tree_ref.height();
-            proof { accept(h as nat == self@.spec_height()); }
+            proof { assume(h as nat == self@.spec_height()); }
             read_handle.release_read();
             h
         }

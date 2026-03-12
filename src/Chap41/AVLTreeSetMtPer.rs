@@ -461,7 +461,7 @@ broadcast use {
         fn delete(&self, x: &T) -> (updated: Self)
             ensures updated@ == self@.remove(x@), updated@.finite()
         {
-            // Unconditionally use parallel filter
+            
             let x_clone = x.clone();
             self.filter(move |v| v != &x_clone)
         }
@@ -476,13 +476,13 @@ broadcast use {
             let mut vals = self.elements.values_in_order();
             vals.push(x);
 
-            // Unconditionally use parallel from_seq
+            
             Self::from_seq(AVLTreeSeqMtPerS::from_vec(vals))
         }
     }
 
 
-    // 11. derive impls in verus!
+    
 
     impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtPer<T> {
         fn default() -> Self { Self::empty() }

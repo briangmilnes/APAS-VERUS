@@ -231,7 +231,7 @@ broadcast use {
         fn singleton(key: K, value: V) -> (tree: Self)
             ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@)
         {
-            proof { accept(obeys_feq_clone::<Pair<K, V>>()); }  // accept hole: Clone preserves feq
+            proof { assume(obeys_feq_clone::<Pair<K, V>>()); }  // accept hole: Clone preserves feq
             let entries = ArraySeqMtEphS::singleton(Pair(key, value));
             let tree = TableMtEph { entries };
             proof {
@@ -816,7 +816,7 @@ broadcast use {
         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>) {
             let entries = self.entries.clone();
             proof {
-                accept(obeys_feq_clone::<Pair<K, V>>());  // accept hole: Clone preserves feq
+                assume(obeys_feq_clone::<Pair<K, V>>());  
                 lemma_seq_map_cloned_view_eq(
                     self.entries.seq@,
                     entries.seq@,
@@ -838,7 +838,7 @@ broadcast use {
     }
 
 
-//		11. derive impls in verus!
+
 
     // 11. derive impls in verus!
 

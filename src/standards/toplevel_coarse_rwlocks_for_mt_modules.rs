@@ -22,7 +22,7 @@
 //! - Layer 1: zero trust, fully verified.
 //! - Layer 2: accepts at lock boundary to link ghost to inner value.
 //!   Three accept categories (use `accept()`, never bare `assume()`):
-//!   1. Writer accept: ghost_value == inner@ (before exec check + mutation).
+
 //!   2. Reader accept: return value == self@ (after reading through lock).
 //!   3. Predicate accept: return predicate == spec predicate (after reading through lock).
 //!

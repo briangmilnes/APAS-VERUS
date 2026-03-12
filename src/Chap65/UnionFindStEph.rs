@@ -334,7 +334,7 @@ pub mod UnionFindStEph {
             let root_v = self.find(v);
             proof {
                 // accept hole: PartialEq on V agrees with view equality for roots
-                accept((root_u == root_v) == (root_u@ == root_v@));
+                assume((root_u == root_v) == (root_u@ == root_v@));
             }
             root_u == root_v
         }

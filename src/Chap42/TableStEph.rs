@@ -1649,7 +1649,7 @@ broadcast use {
         fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>) {
             let entries = self.entries.clone();
             proof {
-                accept(obeys_feq_clone::<Pair<K, V>>());  // accept hole: Clone preserves feq
+                assume(obeys_feq_clone::<Pair<K, V>>());  // accept hole: Clone preserves feq
                 lemma_seq_map_cloned_view_eq(
                     self.entries.seq@,
                     entries.seq@,
@@ -1673,7 +1673,7 @@ broadcast use {
     }
 
 
-    //		11. derive impls in verus!
+    
 
     // 11. derive impls in verus!
 

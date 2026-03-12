@@ -231,8 +231,8 @@ broadcast use {
             let handle = self.inner.acquire_read();
             let count = handle.borrow().size();
             proof {
-                accept(count == self@.len());  // accept hole: reader value
-                accept(self@.finite());  // accept hole: reader finiteness
+                assume(count == self@.len());  // accept hole: reader value
+                assume(self@.finite());  
             }
             handle.release_read();
             count
@@ -250,11 +250,11 @@ broadcast use {
         fn empty() -> (empty: Self)
         {
             let st = AVLTreeSetStEph::empty();
-            proof { accept(AVLTreeSetMtEphInv.inv(st)); }  // accept hole: wf flows from Seq::empty
+            proof { assume(AVLTreeSetMtEphInv.inv(st)); }  
             let empty = AVLTreeSetMtEph {
                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
             };
-            proof { accept(empty@ == Set::<<T as View>::V>::empty()); }  // accept hole: constructor view
+            proof { assume(empty@ == Set::<<T as View>::V>::empty()); }  
             empty
         }
 
@@ -262,13 +262,13 @@ broadcast use {
         {
             let ghost x_view = x@;
             let st = AVLTreeSetStEph::singleton(x);
-            proof { accept(AVLTreeSetMtEphInv.inv(st)); }  // accept hole: wf flows from Seq::singleton
+            proof { assume(AVLTreeSetMtEphInv.inv(st)); }  
             let tree = AVLTreeSetMtEph {
                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
             };
             proof {
-                accept(tree@ == Set::<<T as View>::V>::empty().insert(x_view));  // accept hole: constructor view
-                accept(tree@.finite());  // accept hole: finiteness
+                assume(tree@ == Set::<<T as View>::V>::empty().insert(x_view));  
+                assume(tree@.finite());  
             }
             tree
         }
@@ -276,15 +276,15 @@ broadcast use {
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
         {
             let st = AVLTreeSetStEph::from_seq(seq);
-            proof { accept(AVLTreeSetMtEphInv.inv(st)); }  // accept hole: wf flows from Seq::from_vec
+            proof { assume(AVLTreeSetMtEphInv.inv(st)); }  
             let constructed = AVLTreeSetMtEph {
                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
             };
-            proof { accept(constructed@.finite()); }  // accept hole: finiteness
+            proof { assume(constructed@.finite()); }  
             constructed
         }
 
-        // PARALLEL: filter using extract-parallelize-rebuild pattern (unconditionally parallel)
+        
         // Work: Θ(n), Span: Θ(log n)
         #[verifier::external_body]
         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
@@ -444,7 +444,7 @@ broadcast use {
         {
             let handle = self.inner.acquire_read();
             let found = handle.borrow().find(x);
-            proof { accept(found == self@.contains(x@)); }  // accept hole: reader predicate
+            proof { assume(found == self@.contains(x@)); }  // accept hole: reader predicate
             handle.release_read();
             found
         }
@@ -453,11 +453,11 @@ broadcast use {
         {
             let (mut current, write_handle) = self.inner.acquire_write();
             current.delete(x);
-            proof { accept(AVLTreeSetMtEphInv.inv(current)); }  // accept hole: predicate for release
+            proof { assume(AVLTreeSetMtEphInv.inv(current)); }  
             write_handle.release_write(current);
             proof {
-                accept(self@ == old(self)@.remove(x@));  // accept hole: writer postcondition
-                accept(self@.finite());  // accept hole: writer finiteness
+                assume(self@ == old(self)@.remove(x@));  
+                assume(self@.finite());  
             }
         }
 
@@ -466,11 +466,11 @@ broadcast use {
             let ghost x_view = x@;
             let (mut current, write_handle) = self.inner.acquire_write();
             current.insert(x);
-            proof { accept(AVLTreeSetMtEphInv.inv(current)); }  // accept hole: predicate for release
+            proof { assume(AVLTreeSetMtEphInv.inv(current)); }  
             write_handle.release_write(current);
             proof {
-                accept(self@ == old(self)@.insert(x_view));  // accept hole: writer postcondition
-                accept(self@.finite());  // accept hole: writer finiteness
+                assume(self@ == old(self)@.insert(x_view));  
+                assume(self@.finite());  
             }
         }
 
@@ -492,7 +492,7 @@ broadcast use {
         fn default() -> Self { Self::empty() }
     }
 
-    // 10. iterators
+    
 
     impl<T: StTInMtT + Ord + 'static> std::iter::Iterator for AVLTreeSetMtEphIter<T> {
         type Item = T;

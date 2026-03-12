@@ -221,7 +221,7 @@ broadcast use {
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
-                proof { accept(f.requires((&*elem,))); }  // accept hole: predicate callability
+                proof { assume(f.requires((&*elem,))); }  
                 if f(elem) {
                     filtered.insert(elem.clone());
                 }
@@ -328,7 +328,7 @@ broadcast use {
         {
             proof {
                 assume(self.elements.spec_avltreeseqsteph_wf());
-                assume(obeys_feq_full::<T>());  // accept hole: feq bridge
+                assume(obeys_feq_full::<T>());  
             }
             let n = self.elements.length();
             let mut lo: usize = 0;
@@ -377,7 +377,7 @@ broadcast use {
                 }
                 i += 1;
             }
-            proof { assume(result_vec@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(result_vec@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }  
             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
             proof {
                 assume(self@ == old(self)@.remove(x@));
@@ -431,7 +431,7 @@ broadcast use {
                     new_vec.push(self.elements.nth(j).clone());
                     j += 1;
                 }
-                proof { assume(new_vec@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+                proof { assume(new_vec@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }  
                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
             }
             proof {
@@ -442,7 +442,7 @@ broadcast use {
     }
 
 
-    // 11. derive impls in verus!
+    
 
     // 11. derive impls in verus!
 

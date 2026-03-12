@@ -530,7 +530,7 @@ pub mod BinaryHeapPQ {
                     elements: ArraySeqStPerS::empty(),
                 };
                 // accept hole: Empty seq@ maps to empty multiset.
-                proof { accept(pq@.to_multiset() =~= Multiset::empty()); }
+                proof { assume(pq@.to_multiset() =~= Multiset::empty()); }
                 pq
             }
 
@@ -539,7 +539,7 @@ pub mod BinaryHeapPQ {
                     elements: ArraySeqStPerS::singleton(element),
                 };
                 // accept hole: Single-element seq@ maps to singleton multiset.
-                proof { accept(pq@.to_multiset() =~= Multiset::empty().insert(element@)); }
+                proof { assume(pq@.to_multiset() =~= Multiset::empty().insert(element@)); }
                 pq
             }
 
@@ -560,7 +560,7 @@ pub mod BinaryHeapPQ {
 
                 let pq = BinaryHeapPQ { elements: heapified };
                 // accept hole: bubble_up is a permutation; multiset preserved.
-                proof { accept(pq@.to_multiset() =~= self@.to_multiset().insert(element@)); }
+                proof { assume(pq@.to_multiset() =~= self@.to_multiset().insert(element@)); }
                 pq
             }
 
@@ -574,7 +574,7 @@ pub mod BinaryHeapPQ {
                     let empty_pq = Self::empty();
                     // accept hole: Single-element removal yields empty multiset + element.
                     proof {
-                        accept(self@.to_multiset() =~=
+                        assume(self@.to_multiset() =~=
                             empty_pq@.to_multiset().insert(min_element@));
                     }
                     return (empty_pq, Some(min_element));
@@ -604,7 +604,7 @@ pub mod BinaryHeapPQ {
                 let new_pq = BinaryHeapPQ { elements: heapified };
                 // accept hole: Rebuild removes min and bubble_down is a permutation.
                 proof {
-                    accept(self@.to_multiset() =~=
+                    assume(self@.to_multiset() =~=
                         new_pq@.to_multiset().insert(min_element@));
                 }
                 (new_pq, Some(min_element))
@@ -616,7 +616,7 @@ pub mod BinaryHeapPQ {
 
                 let pq = BinaryHeapPQ { elements: heapified };
                 // accept hole: heapify is a permutation of the concatenation.
-                proof { accept(pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset())); }
+                proof { assume(pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset())); }
                 pq
             }
 
@@ -663,7 +663,7 @@ pub mod BinaryHeapPQ {
                 }
 
                 // accept hole: Proving sortedness requires heap property invariant (task #8).
-                proof { accept(Self::spec_sorted(result.seq@)); }
+                proof { assume(Self::spec_sorted(result.seq@)); }
                 result
             }
 
@@ -765,7 +765,7 @@ pub mod BinaryHeapPQ {
                     result.push(elem);
                 }
                 // accept hole: Vec elements are clones of sorted ArraySeqStPerS elements.
-                proof { accept(Self::spec_sorted(result@)); }
+                proof { assume(Self::spec_sorted(result@)); }
                 result
             }
         }

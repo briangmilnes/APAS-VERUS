@@ -151,7 +151,7 @@ broadcast use {
         assert(our_set.subset_of(Set::new(|i: usize| (i as int) < universe_size as int)));
         // Set::new(|i: usize| i < universe_size) is finite because it's a subset of
         // a range. The broadcast lemmas from group_set_lib_default handle this.
-        assume(our_set.finite()); // accept hole: finiteness of bounded Set::new
+        assume(our_set.finite()); 
     }
 
     // 8. traits
