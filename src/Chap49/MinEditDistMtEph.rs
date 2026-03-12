@@ -164,6 +164,7 @@ pub mod MinEditDistMtEph {
     fn clone_arc_memo<T: MtVal>(
         s: &MinEditDistMtEphS<T>,
     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtEphMemoInv>>)
+        requires true,
         ensures cloned.pred() == s.memo.pred(),
     {
         clone_arc_rwlock(&s.memo)

@@ -23,17 +23,17 @@ Table of Contents:
    3 clean proof functions
 ✓ DivConReduceStPer.rs
 ❌ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:508: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:508: error: external_body - #[verifier::external_body]
        509 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:526: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:526: error: external_body - #[verifier::external_body]
        527 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
    Holes: 2 total
       2 × external_body
    Proof functions: 4 total (4 clean, 0 holed)
 ❌ ETSPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:483: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPStEph.rs:483: error: external_body - #[verifier::external_body]
        484 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPStEph.rs:501: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPStEph.rs:501: error: external_body - #[verifier::external_body]
        502 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
    Holes: 2 total
       2 × external_body
@@ -106,12 +106,9 @@ Holes Found: 4 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 10:17:01 -07:00
-Ended:     2026-03-12 10:17:01 -07:00
-Duration:  36ms
+Started:   2026-03-12 10:37:06 -07:00
+Ended:     2026-03-12 10:37:06 -07:00
+Duration:  27ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
-    2026-03-12 10:17:01 -07:00
-Duration:  36ms
-
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log

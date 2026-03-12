@@ -20,53 +20,53 @@ Table of Contents:
 =================================================================
 
 ❌ MinEditDistMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtEph.rs:174: error: external_body - #[verifier::external_body]
-       175 |     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtEph.rs:164: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
-       154 |     fn new_arc_memo(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:175: error: external_body - #[verifier::external_body]
+       176 |     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:167: warning: requires_true - requires true — vacuous precondition
+       164 |     fn clone_arc_memo<T: MtVal>(
             ...
-       162 | 
-       163 |     /// Clone Arc memo (reference count increment).
        165 |         s: &MinEditDistMtEphS<T>,
        166 |     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtEphMemoInv>>)
+       168 |         ensures cloned.pred() == s.memo.pred(),
+       169 |     {
    Holes: 1 total
       1 × external_body
 ❌ MinEditDistMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtPer.rs:147: error: external_body - #[verifier::external_body]
-       148 |     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/MinEditDistMtPer.rs:137: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
-       127 |     fn new_arc_memo(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:148: error: external_body - #[verifier::external_body]
+       149 |     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:140: warning: requires_true - requires true — vacuous precondition
+       137 |     fn clone_arc_memo<T: MtVal>(
             ...
-       135 | 
-       136 |     /// Clone Arc memo (reference count increment).
        138 |         s: &MinEditDistMtPerS<T>,
        139 |     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>)
+       141 |         ensures cloned.pred() == s.memo.pred(),
+       142 |     {
    Holes: 1 total
       1 × external_body
 ✓ MinEditDistStEph.rs
 ✓ MinEditDistStPer.rs
 ❌ SubsetSumMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtEph.rs:151: error: external_body - #[verifier::external_body]
-       152 |     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtEph.rs:141: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
-       131 |     fn new_arc_memo(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:152: error: external_body - #[verifier::external_body]
+       153 |     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:144: warning: requires_true - requires true — vacuous precondition
+       141 |     fn clone_arc_memo<T: MtVal>(
             ...
-       139 | 
-       140 |     /// Clone Arc memo (reference count increment).
        142 |         s: &SubsetSumMtEphS<T>,
        143 |     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtEphMemoInv>>)
+       145 |         ensures cloned.pred() == s.memo.pred(),
+       146 |     {
    Holes: 1 total
       1 × external_body
 ❌ SubsetSumMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtPer.rs:138: error: external_body - #[verifier::external_body]
-       139 |     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap49/SubsetSumMtPer.rs:128: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
-       118 |     fn new_arc_memo(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:139: error: external_body - #[verifier::external_body]
+       140 |     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:131: warning: requires_true - requires true — vacuous precondition
+       128 |     fn clone_arc_memo<T: MtVal>(
             ...
-       126 | 
-       127 |     /// Clone Arc memo (reference count increment).
        129 |         s: &SubsetSumMtPerS<T>,
        130 |     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>)
+       132 |         ensures cloned.pred() == s.memo.pred(),
+       133 |     {
    Holes: 1 total
       1 × external_body
 ✓ SubsetSumStEph.rs
@@ -117,8 +117,8 @@ Proof Functions:
    0 total
 
 Function Specs:
-   128 exec fns with complete spec (requires+ensures) (75%)
-   4 exec fns missing spec (2%)
+   132 exec fns with complete spec (requires+ensures) (77%)
+   0 exec fns missing spec (0%)
    38 proof/spec fns clean (22%)
    0 proof/spec fns with holes (0%)
    170 total fns
@@ -131,9 +131,9 @@ Holes Found: 4 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 10:17:01 -07:00
-Ended:     2026-03-12 10:17:01 -07:00
-Duration:  16ms
+Started:   2026-03-12 10:37:06 -07:00
+Ended:     2026-03-12 10:37:06 -07:00
+Duration:  18ms
 
 Full output: src/Chap49/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap49/analyses/veracity-review-verus-proof-holes.log
+t: src/Chap49/analyses/veracity-review-verus-proof-holes.log

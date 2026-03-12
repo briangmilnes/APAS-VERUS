@@ -20,8 +20,8 @@ Table of Contents:
 =================================================================
 
 ℹ MathSeq.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap17/MathSeq.rs:711: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap17/MathSeq.rs:723: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap17/MathSeq.rs:711: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap17/MathSeq.rs:723: info: accept()
    Info: 2 total
 
 =================================================================
@@ -70,12 +70,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 10:17:01 -07:00
-Ended:     2026-03-12 10:17:01 -07:00
+Started:   2026-03-12 10:37:06 -07:00
+Ended:     2026-03-12 10:37:06 -07:00
 Duration:  7ms
 
 Full output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
-
-Duration:  7ms
-
-Full output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
+us-proof-holes.log
