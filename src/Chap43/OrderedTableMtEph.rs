@@ -182,13 +182,16 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn singleton(k: K, v: V) -> (tree: Self)
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablemteph_wf()
         {
-            OrderedTableMtEph {
-                base_table: TableMtEph::singleton(k, v),
+            let base = TableMtEph::singleton(k, v);
+            let tree = OrderedTableMtEph { base_table: base };
+            proof {
+                assert(tree@ =~= Map::<K::V, V::V>::empty().insert(k@, v@));
+                lemma_entries_to_map_finite::<K::V, V::V>(tree.base_table.entries@);
             }
+            tree
         }
 
         fn find(&self, k: &K) -> (found: Option<V>) {

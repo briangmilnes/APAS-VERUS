@@ -56,7 +56,12 @@ Table of Contents:
       2 × external
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
-ℹ BinaryHeapPQ.rs
+❌ BinaryHeapPQ.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:247: warning: requires_true - requires true — vacuous precondition
+       245 | 
+       246 |         fn parent(i: usize) -> (parent_idx: usize)
+       248 |             ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
+       249 |         {
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:533: info: accept()
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:542: info: accept()
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:563: info: accept()
@@ -68,7 +73,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:788: info: accept()
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:803: info: accept()
    Info: 10 total
-   1 clean proof function
+   Proof functions: 1 total (1 clean, 0 holed)
 ❌ Example45_2.rs
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap45/Example45_2.rs:43: error: external - #[verifier::external]
         44 |         impl Example45_2Trait for Example45_2 {
@@ -89,13 +94,18 @@ Table of Contents:
       1 × external
    Info: 2 total
    Proof functions: 1 total (1 clean, 0 holed)
-ℹ LeftistHeapPQ.rs
+❌ LeftistHeapPQ.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:85: warning: requires_true - requires true — vacuous precondition
+        83 |         /// Exec comparison with spec ensures connecting to TotalOrder::le.
+        84 |         fn total_order_le<T: StT + Ord + TotalOrder>(a: &T, b: &T) -> (le: bool)
+        86 |             ensures le <==> TotalOrder::le(*a, *b)
+        87 |         {
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1131: info: accept()
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1151: info: accept()
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1163: info: accept()
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1173: info: accept()
    Info: 4 total
-   4 clean proof functions
+   Proof functions: 4 total (4 clean, 0 holed)
 ℹ SortedListPQ.rs
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap45/SortedListPQ.rs:1039: info: accept()
    Info: 1 total
@@ -164,12 +174,12 @@ Holes Found: 17 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 06:34:14 -07:00
-Ended:     2026-03-12 06:34:14 -07:00
-Duration:  39ms
+Started:   2026-03-12 10:37:06 -07:00
+Ended:     2026-03-12 10:37:06 -07:00
+Duration:  43ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
-0
-Duration:  39ms
+07:00
+Duration:  43ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log

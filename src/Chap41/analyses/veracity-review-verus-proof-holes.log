@@ -22,7 +22,7 @@ Table of Contents:
 ❌ AVLTreeSetMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:206: error: external_body - #[verifier::external_body]
        207 |         pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:225: error: trivial_spec_wf - spec fn spec_avltreesetmteph_wf — trivial body { true } or { true; }, consider real well-formedness spec
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:225: error: trivial_spec_wf - spec fn spec_avltreesetmteph_wf — trivial body { true } or { true; }, needs // accept hole
        215 |         open spec fn inv(self, v: AVLTreeSetStEph<T>) -> bool {
             ...
        223 |     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
@@ -434,24 +434,24 @@ Table of Contents:
        139 |     fn example_41_3_from_seq_demonstration_impl()
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap41/Example41_3.rs:187: error: external_body - #[verifier::external_body]
        188 |     fn additional_set_operations_impl()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/Example41_3.rs:244: error: fn_missing_requires_ensures - fn example_41_1_array_set — exec fn should have requires and ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/Example41_3.rs:244: error: fn_missing_ensures - fn example_41_1_array_set — exec fn should have ensures
        236 |         fn demonstrate_set_operations() {
             ...
        242 |     }
        243 | 
        245 |     pub fn example_41_1_avl_set() { example_41_1_avl_set_impl(); }
        246 |     pub fn example_41_3_from_seq_demonstration() { example_41_3_from_seq_demonstration_impl(); }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/Example41_3.rs:245: error: fn_missing_requires_ensures - fn example_41_1_avl_set — exec fn should have requires and ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/Example41_3.rs:245: error: fn_missing_ensures - fn example_41_1_avl_set — exec fn should have ensures
        243 | 
        244 |     pub fn example_41_1_array_set() { example_41_1_array_set_impl(); }
        246 |     pub fn example_41_3_from_seq_demonstration() { example_41_3_from_seq_demonstration_impl(); }
        247 |     pub fn additional_set_operations() { additional_set_operations_impl(); }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/Example41_3.rs:246: error: fn_missing_requires_ensures - fn example_41_3_from_seq_demonstration — exec fn should have requires and ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/Example41_3.rs:246: error: fn_missing_ensures - fn example_41_3_from_seq_demonstration — exec fn should have ensures
        244 |     pub fn example_41_1_array_set() { example_41_1_array_set_impl(); }
        245 |     pub fn example_41_1_avl_set() { example_41_1_avl_set_impl(); }
        247 |     pub fn additional_set_operations() { additional_set_operations_impl(); }
        248 | 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/Example41_3.rs:247: error: fn_missing_requires_ensures - fn additional_set_operations — exec fn should have requires and ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/Example41_3.rs:247: error: fn_missing_ensures - fn additional_set_operations — exec fn should have ensures
        245 |     pub fn example_41_1_avl_set() { example_41_1_avl_set_impl(); }
        246 |     pub fn example_41_3_from_seq_demonstration() { example_41_3_from_seq_demonstration_impl(); }
        248 | 
@@ -518,15 +518,15 @@ Holes Found: 62 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 06:34:14 -07:00
-Ended:     2026-03-12 06:34:14 -07:00
+Started:   2026-03-12 10:37:06 -07:00
+Ended:     2026-03-12 10:37:06 -07:00
 Duration:  38ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
 ====================
 
-Started:   2026-03-12 06:34:14 -07:00
-Ended:     2026-03-12 06:34:14 -07:00
+Started:   2026-03-12 10:37:06 -07:00
+Ended:     2026-03-12 10:37:06 -07:00
 Duration:  38ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log

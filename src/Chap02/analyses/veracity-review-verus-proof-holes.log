@@ -82,9 +82,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 06:34:13 -07:00
-Ended:     2026-03-12 06:34:13 -07:00
-Duration:  6ms
+Started:   2026-03-12 10:37:05 -07:00
+Ended:     2026-03-12 10:37:06 -07:00
+Duration:  8ms
 
 Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
+ty-review-verus-proof-holes.log

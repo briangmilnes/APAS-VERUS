@@ -29,7 +29,7 @@ Table of Contents:
    Info: 6 total
 ✓ Exercise12_2.rs
 ❌ Exercise12_5.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap12/Exercise12_5.rs:53: error: trivial_spec_wf - spec fn wf — trivial body { true } or { true; }, consider real well-formedness spec
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap12/Exercise12_5.rs:53: error: trivial_spec_wf - spec fn wf — trivial body { true } or { true; }, needs // accept hole
         51 | pub trait ConcurrentStackMtTrait<T: Send>: Sized {
         52 |     /// Spec: the stack is always well-formed after construction.
         54 | 
@@ -99,12 +99,12 @@ Holes Found: 1 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 06:34:13 -07:00
-Ended:     2026-03-12 06:34:13 -07:00
-Duration:  3ms
+Started:   2026-03-12 10:37:06 -07:00
+Ended:     2026-03-12 10:37:06 -07:00
+Duration:  2ms
 
 Full output: src/Chap12/analyses/veracity-review-verus-proof-holes.log
- 06:34:13 -07:00
-Duration:  3ms
+ 10:37:06 -07:00
+Duration:  2ms
 
 Full output: src/Chap12/analyses/veracity-review-verus-proof-holes.log

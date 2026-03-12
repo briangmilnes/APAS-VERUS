@@ -734,7 +734,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTSplayMtEph.rs:635: info: accept()
    Info: 5 total
 ❌ BSTSplayStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTSplayStEph.rs:429: error: trivial_spec_wf - spec fn spec_bstsplaysteph_wf — trivial body { true } or { true; }, consider real well-formedness spec
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTSplayStEph.rs:429: error: trivial_spec_wf - spec fn spec_bstsplaysteph_wf — trivial body { true } or { true; }, needs // accept hole
        427 |         open spec fn spec_height(self) -> nat { spec_height_link(&self.root) }
        428 |         open spec fn spec_contains(self, value: T) -> bool { spec_contains_link(&self.root, value) }
        430 | 
@@ -905,15 +905,15 @@ Holes Found: 39 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 06:34:14 -07:00
-Ended:     2026-03-12 06:34:14 -07:00
-Duration:  97ms
+Started:   2026-03-12 10:37:06 -07:00
+Ended:     2026-03-12 10:37:06 -07:00
+Duration:  103ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
-====================
+=============
 
-Started:   2026-03-12 06:34:14 -07:00
-Ended:     2026-03-12 06:34:14 -07:00
-Duration:  97ms
+Started:   2026-03-12 10:37:06 -07:00
+Ended:     2026-03-12 10:37:06 -07:00
+Duration:  103ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
