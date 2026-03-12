@@ -11,6 +11,7 @@ pub mod BSTSetRBMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::BSTRBMtEph::BSTRBMtEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -376,7 +377,6 @@ pub mod BSTSetRBMtEph {
     impl<T: StTInMtT + Ord> std::iter::Iterator for BSTSetRBMtEphIter<T> {
         type Item = T;
 
-        #[verifier::external_body]
         fn next(&mut self) -> (next: Option<T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
@@ -400,6 +400,7 @@ pub mod BSTSetRBMtEph {
             } else {
                 let item = self.snapshot[self.pos].clone();
                 self.pos += 1;
+                proof { accept(item == old(self)@.1[old(self)@.0]); }  // accept hole: Clone preserves value
                 Some(item)
             }
         }

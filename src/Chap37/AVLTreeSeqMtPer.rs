@@ -516,13 +516,12 @@ pub mod AVLTreeSeqMtPer {
 
     impl<T: StTInMtT> Iterator for AVLTreeSeqMtPerIter<T> {
         type Item = T;
-        #[verifier::external_body]
         fn next(&mut self) -> (next: Option<Self::Item>)
             ensures true,
         {
             if self.index < self.values.len() {
                 let val = self.values[self.index].clone();
-                self.index += 1;
+                self.index = self.index + 1;
                 Some(val)
             } else {
                 None
@@ -564,13 +563,14 @@ pub mod AVLTreeSeqMtPer {
     }
 
     impl<T: StTInMtT> Clone for AVLTreeSeqMtPerS<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (copy: Self)
             ensures copy@ == self@,
         {
-            AVLTreeSeqMtPerS {
+            let copy = AVLTreeSeqMtPerS {
                 root: self.root.clone(),
-            }
+            };
+            proof { accept(copy@ == self@); }  // accept hole: Arc::clone external_body
+            copy
         }
     }
 

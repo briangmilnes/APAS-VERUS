@@ -33,6 +33,7 @@ pub mod AVLTreeSetMtEph {
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::ParaPair;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     // NOTE: This type does NOT implement Ord (unlike AVLTreeSetMtPer) because no caller requires it.
@@ -225,11 +226,14 @@ broadcast use {
             true
         }
 
-        #[verifier::external_body]
         fn size(&self) -> (count: usize)
         {
             let handle = self.inner.acquire_read();
             let count = handle.borrow().size();
+            proof {
+                accept(count == self@.len());  // accept hole: reader value
+                accept(self@.finite());  // accept hole: reader finiteness
+            }
             handle.release_read();
             count
         }
@@ -243,28 +247,41 @@ broadcast use {
             seq
         }
 
-        #[verifier::external_body]
         fn empty() -> (empty: Self)
         {
-            AVLTreeSetMtEph {
-                inner: new_arc_rwlock(AVLTreeSetStEph::empty(), Ghost(AVLTreeSetMtEphInv)),
-            }
+            let st = AVLTreeSetStEph::empty();
+            proof { accept(AVLTreeSetMtEphInv.inv(st)); }  // accept hole: wf flows from Seq::empty
+            let empty = AVLTreeSetMtEph {
+                inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
+            };
+            proof { accept(empty@ == Set::<<T as View>::V>::empty()); }  // accept hole: constructor view
+            empty
         }
 
-        #[verifier::external_body]
         fn singleton(x: T) -> (tree: Self)
         {
-            AVLTreeSetMtEph {
-                inner: new_arc_rwlock(AVLTreeSetStEph::singleton(x), Ghost(AVLTreeSetMtEphInv)),
+            let ghost x_view = x@;
+            let st = AVLTreeSetStEph::singleton(x);
+            proof { accept(AVLTreeSetMtEphInv.inv(st)); }  // accept hole: wf flows from Seq::singleton
+            let tree = AVLTreeSetMtEph {
+                inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
+            };
+            proof {
+                accept(tree@ == Set::<<T as View>::V>::empty().insert(x_view));  // accept hole: constructor view
+                accept(tree@.finite());  // accept hole: finiteness
             }
+            tree
         }
 
-        #[verifier::external_body]
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
         {
-            AVLTreeSetMtEph {
-                inner: new_arc_rwlock(AVLTreeSetStEph::from_seq(seq), Ghost(AVLTreeSetMtEphInv)),
-            }
+            let st = AVLTreeSetStEph::from_seq(seq);
+            proof { accept(AVLTreeSetMtEphInv.inv(st)); }  // accept hole: wf flows from Seq::from_vec
+            let constructed = AVLTreeSetMtEph {
+                inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
+            };
+            proof { accept(constructed@.finite()); }  // accept hole: finiteness
+            constructed
         }
 
         // PARALLEL: filter using extract-parallelize-rebuild pattern (unconditionally parallel)
@@ -423,29 +440,38 @@ broadcast use {
             Self::from_seq(AVLTreeSeqStEphS::from_vec(merged))
         }
 
-        #[verifier::external_body]
         fn find(&self, x: &T) -> (found: B)
         {
             let handle = self.inner.acquire_read();
             let found = handle.borrow().find(x);
+            proof { accept(found == self@.contains(x@)); }  // accept hole: reader predicate
             handle.release_read();
             found
         }
 
-        #[verifier::external_body]
         fn delete(&mut self, x: &T)
         {
             let (mut current, write_handle) = self.inner.acquire_write();
             current.delete(x);
+            proof { accept(AVLTreeSetMtEphInv.inv(current)); }  // accept hole: predicate for release
             write_handle.release_write(current);
+            proof {
+                accept(self@ == old(self)@.remove(x@));  // accept hole: writer postcondition
+                accept(self@.finite());  // accept hole: writer finiteness
+            }
         }
 
-        #[verifier::external_body]
         fn insert(&mut self, x: T)
         {
+            let ghost x_view = x@;
             let (mut current, write_handle) = self.inner.acquire_write();
             current.insert(x);
+            proof { accept(AVLTreeSetMtEphInv.inv(current)); }  // accept hole: predicate for release
             write_handle.release_write(current);
+            proof {
+                accept(self@ == old(self)@.insert(x_view));  // accept hole: writer postcondition
+                accept(self@.finite());  // accept hole: writer finiteness
+            }
         }
 
         #[verifier::external_body]
@@ -471,7 +497,6 @@ broadcast use {
     impl<T: StTInMtT + Ord + 'static> std::iter::Iterator for AVLTreeSetMtEphIter<T> {
         type Item = T;
 
-        #[verifier::external_body]
         fn next(&mut self) -> (next: Option<T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
@@ -494,7 +519,8 @@ broadcast use {
                 None
             } else {
                 let item = self.snapshot[self.pos].clone();
-                self.pos += 1;
+                self.pos = self.pos + 1;
+                proof { accept(item == old(self)@.1[old(self)@.0]); }  // accept hole: Clone preserves value
                 Some(item)
             }
         }
@@ -555,13 +581,14 @@ broadcast use {
     // 11. derive impls in verus!
 
     impl<T: StTInMtT + Ord + 'static> Clone for AVLTreeSetMtEph<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
-            AVLTreeSetMtEph {
+            let cloned = AVLTreeSetMtEph {
                 inner: clone_arc_rwlock(&self.inner),
-            }
+            };
+            proof { accept(cloned@ == self@); }  // accept hole: Arc::clone
+            cloned
         }
     }
 

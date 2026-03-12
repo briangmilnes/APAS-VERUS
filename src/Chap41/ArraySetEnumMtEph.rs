@@ -28,6 +28,7 @@ pub mod ArraySetEnumMtEph {
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Concurrency::Concurrency::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     // Bit manipulation macros (must precede verus! for use in spec fns).
 
@@ -687,23 +688,25 @@ broadcast use {
     impl Eq for ArraySetEnumMtEph {}
 
     impl PartialEq for ArraySetEnumMtEph {
-        #[verifier::external_body]
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
-            self.universe_size == other.universe_size && self.bits == other.bits
+            let equal = self.universe_size == other.universe_size && self.bits == other.bits;
+            proof { accept(equal == (self@ == other@)); }  // accept hole: PartialEq
+            equal
         }
     }
 
     impl Clone for ArraySetEnumMtEph {
-        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
-            ArraySetEnumMtEph {
+            let cloned = ArraySetEnumMtEph {
                 bits: self.bits.clone(),
                 universe_size: self.universe_size,
-            }
+            };
+            proof { accept(cloned@ == self@); }  // accept hole: Vec::clone external_body
+            cloned
         }
     }
 
