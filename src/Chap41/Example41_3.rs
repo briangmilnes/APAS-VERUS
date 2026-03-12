@@ -241,10 +241,18 @@ pub mod Example41_3 {
         }
     }
 
-    pub fn example_41_1_array_set() { example_41_1_array_set_impl(); }
-    pub fn example_41_1_avl_set() { example_41_1_avl_set_impl(); }
-    pub fn example_41_3_from_seq_demonstration() { example_41_3_from_seq_demonstration_impl(); }
-    pub fn additional_set_operations() { additional_set_operations_impl(); }
+    pub fn example_41_1_array_set()
+        requires true, ensures true,
+    { example_41_1_array_set_impl(); }
+    pub fn example_41_1_avl_set()
+        requires true, ensures true,
+    { example_41_1_avl_set_impl(); }
+    pub fn example_41_3_from_seq_demonstration()
+        requires true, ensures true,
+    { example_41_3_from_seq_demonstration_impl(); }
+    pub fn additional_set_operations()
+        requires true, ensures true,
+    { additional_set_operations_impl(); }
 
     } // verus!
 }

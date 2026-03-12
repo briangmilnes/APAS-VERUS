@@ -121,10 +121,16 @@ pub mod BSTSetPlainMtEph {
             ensures it@.0 == 0, bstsetplainmteph_iter_invariant(&it);
     }
 
-    fn values_vec<T: StTInMtT + Ord>(tree: &BSTPlainMtEph<T>) -> Vec<T> {
+    fn values_vec<T: StTInMtT + Ord>(tree: &BSTPlainMtEph<T>) -> (values: Vec<T>)
+        requires true,
+        ensures true,
+    {
         tree.in_order().iter().cloned().collect()
     }
-    fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> BSTPlainMtEph<T> {
+    fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTPlainMtEph<T>)
+        requires true,
+        ensures true,
+    {
         let mut tree = BSTPlainMtEph::new();
         for value in values {
             let _ = tree.insert(value);
@@ -132,9 +138,11 @@ pub mod BSTSetPlainMtEph {
         tree
     }
 
-    fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> BSTSetPlainMtEph<T>
+    fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetPlainMtEph<T>)
     where
         I: IntoIterator<Item = T>,
+        requires true,
+        ensures true,
     {
         let mut tree = BSTPlainMtEph::new();
         for value in values {
@@ -143,7 +151,10 @@ pub mod BSTSetPlainMtEph {
         BSTSetPlainMtEph { tree }
     }
 
-    fn copy_set<T: StTInMtT + Ord>(set: &BSTSetPlainMtEph<T>) -> BSTSetPlainMtEph<T> {
+    fn copy_set<T: StTInMtT + Ord>(set: &BSTSetPlainMtEph<T>) -> (out: BSTSetPlainMtEph<T>)
+        requires true,
+        ensures true,
+    {
         from_sorted_iter(values_vec(&set.tree))
     }
 

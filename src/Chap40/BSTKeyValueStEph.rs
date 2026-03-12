@@ -362,6 +362,7 @@ pub mod BSTKeyValueStEph {
 
 
     fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (cloned: Link<K, V>)
+        requires true,
         ensures
             spec_content_link(&cloned) == spec_content_link(link),
             spec_node_count_link(&cloned) == spec_node_count_link(link),
@@ -482,6 +483,11 @@ pub mod BSTKeyValueStEph {
     }
 
     fn compare_kv_links<K: StT + Ord, V: StT>(a: &Link<K, V>, b: &Link<K, V>) -> (equal: bool)
+        requires true,
+        ensures
+            (a is None && b is None) ==> equal,
+            (a is Some && b is None) ==> !equal,
+            (a is None && b is Some) ==> !equal,
         decreases *a,
     {
         match (a, b) {

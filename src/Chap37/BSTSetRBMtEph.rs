@@ -121,7 +121,10 @@ pub mod BSTSetRBMtEph {
             ensures it@.0 == 0, bstsetrbmteph_iter_invariant(&it);
     }
 
-    fn values_vec<T: StTInMtT + Ord>(tree: &BSTRBMtEph<T>) -> Vec<T> {
+    fn values_vec<T: StTInMtT + Ord>(tree: &BSTRBMtEph<T>) -> (values: Vec<T>)
+        requires true,
+        ensures true,
+    {
         tree.in_order().iter().cloned().collect()
     }
 
@@ -133,7 +136,10 @@ pub mod BSTSetRBMtEph {
         from_sorted_iter(values)
     }
 
-    fn from_sorted_iter<T: StTInMtT + Ord, I: IntoIterator<Item = T>>(values: I) -> BSTSetRBMtEph<T> {
+    fn from_sorted_iter<T: StTInMtT + Ord, I: IntoIterator<Item = T>>(values: I) -> (set: BSTSetRBMtEph<T>)
+        requires true,
+        ensures true,
+    {
         let mut tree = BSTRBMtEph::new();
         for value in values {
             let _ = tree.insert(value);

@@ -197,6 +197,7 @@ pub mod AVLTreeSeqStPer {
     // 9. impls
 
     fn height_fn<T: StT>(n: &Link<T>) -> (h: N)
+        requires true,
         ensures h as nat == spec_cached_height(n),
     {
         match n {
@@ -206,6 +207,7 @@ pub mod AVLTreeSeqStPer {
     }
 
     fn size_fn<T: StT>(n: &Link<T>) -> (sz: N)
+        requires true,
         ensures sz as nat == spec_cached_size(n),
     {
         match n {
