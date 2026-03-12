@@ -59,16 +59,18 @@ broadcast use {
         spec fn spec_orderedtablesteph_wf(&self) -> bool;
 
         fn size(&self) -> (count: usize)
+            requires self.spec_orderedtablesteph_wf(),
             ensures count == self@.dom().len(), self@.dom().finite();
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty();
         fn singleton(k: K, v: V) -> (tree: Self)
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite();
         fn find(&self, k: &K) -> (found: Option<V>)
-            requires obeys_view_eq::<K>(), obeys_feq_full::<V>();
+            requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>();
         fn lookup(&self, k: &K) -> (value: Option<V>)
-            requires obeys_view_eq::<K>(), obeys_feq_full::<V>();
+            requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>();
         fn is_empty(&self) -> (is_empty: B)
+            requires self.spec_orderedtablesteph_wf(),
             ensures is_empty == self@.dom().is_empty();
         fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
             requires
@@ -188,7 +190,6 @@ broadcast use {
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite()
         {
-            proof { assume(self.base_table.spec_tablesteph_wf()); }
             let r = self.base_table.size();
             proof {
                 assert(self@ =~= self.base_table@);
@@ -215,7 +216,6 @@ broadcast use {
         }
 
         fn find(&self, k: &K) -> (found: Option<V>) {
-            proof { assume(self.base_table.spec_tablesteph_wf()); }
             self.base_table.find(k)
         }
 

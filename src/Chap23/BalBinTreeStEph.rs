@@ -325,7 +325,9 @@ pub mod BalBinTreeStEph {
 
     // Trait impl: delegates recursive specs to inherent methods.
     impl<T> BalBinTreeTrait<T> for BalBinTree<T> {
-        open spec fn spec_balbintreesteph_wf(&self) -> bool { true }
+        open spec fn spec_balbintreesteph_wf(&self) -> bool {
+            (self is Leaf) == (self.spec_size() == 0)
+        }
         open spec fn spec_size(self) -> nat { BalBinTree::spec_size(self) }
         open spec fn spec_height(self) -> nat { BalBinTree::spec_height(self) }
         open spec fn spec_in_order(self) -> Seq<T> { BalBinTree::spec_in_order(self) }
@@ -803,6 +805,7 @@ pub mod BalBinTreeStEph {
 
 
     fn clone_tree<T: Clone>(t: &BalBinTree<T>) -> (c: BalBinTree<T>)
+        requires true,
         ensures c == *t
         decreases t,
     {

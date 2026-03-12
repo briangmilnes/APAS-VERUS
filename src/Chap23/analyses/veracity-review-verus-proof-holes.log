@@ -19,44 +19,19 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ BalBinTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:328: error: trivial_spec_wf - spec fn spec_balbintreesteph_wf — trivial body { true } or { true; }, consider real well-formedness spec
-       315 |         pub open spec fn spec_post_order(self) -> Seq<T>
-            ...
-       326 |     // Trait impl: delegates recursive specs to inherent methods.
-       327 |     impl<T> BalBinTreeTrait<T> for BalBinTree<T> {
-       329 |         open spec fn spec_size(self) -> nat { BalBinTree::spec_size(self) }
-       330 |         open spec fn spec_height(self) -> nat { BalBinTree::spec_height(self) }
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:805: error: fn_missing_requires - fn clone_tree — exec fn should have requires
-       795 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       803 | 
-       804 | 
-       806 |         ensures c == *t
-       807 |         decreases t,
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:784: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:799: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:817: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:838: info: accept()
-   Holes: 1 total
-      1 × trivial spec*wf { true }
+ℹ BalBinTreeStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/BalBinTreeStEph.rs:786: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/BalBinTreeStEph.rs:801: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/BalBinTreeStEph.rs:820: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/BalBinTreeStEph.rs:841: info: accept()
    Info: 4 total
-   Proof functions: 2 total (2 clean, 0 holed)
-❌ PrimTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:359: error: trivial_spec_wf - spec fn spec_primtreeseqstper_wf — trivial body { true } or { true; }, consider real well-formedness spec
-       353 |         open spec fn spec_index(&self, i: int) -> T {
-            ...
-       357 | 
-       358 |     impl<T> PrimTreeSeqStTrait<T> for PrimTreeSeqStS<T> {
-       360 | 
-       361 |         fn empty() -> (empty_seq: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:875: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:885: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:901: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:917: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:922: info: accept()
-   Holes: 1 total
-      1 × trivial spec*wf { true }
+   2 clean proof functions
+ℹ PrimTreeSeqStPer.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/PrimTreeSeqStPer.rs:879: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/PrimTreeSeqStPer.rs:889: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/PrimTreeSeqStPer.rs:905: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/PrimTreeSeqStPer.rs:921: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/PrimTreeSeqStPer.rs:926: info: accept()
    Info: 5 total
 
 =================================================================
@@ -82,8 +57,8 @@ PrimTreeSeqStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   0 clean (no holes, no errors; 0%)
-   2 holed (holes or errors, 100%)
+   2 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    2 total
 
 Proof Functions:
@@ -92,25 +67,26 @@ Proof Functions:
    2 total
 
 Function Specs:
-   68 exec fns with complete spec (requires+ensures) (46%)
-   1 exec fns missing spec (0%)
+   69 exec fns with complete spec (requires+ensures) (47%)
+   0 exec fns missing spec (0%)
    77 proof/spec fns clean (52%)
    0 proof/spec fns with holes (0%)
    146 total fns
 
 
-Holes Found: 2 total
-   2 × trivial spec*wf { true } (100%)
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-11 17:58:44 -07:00
-Ended:     2026-03-11 17:58:44 -07:00
-Duration:  15ms
+Started:   2026-03-11 19:30:45 -07:00
+Ended:     2026-03-11 19:30:45 -07:00
+Duration:  19ms
 
 Full output: src/Chap23/analyses/veracity-review-verus-proof-holes.log
-  15ms
+Duration:  19ms
 
 Full output: src/Chap23/analyses/veracity-review-verus-proof-holes.log

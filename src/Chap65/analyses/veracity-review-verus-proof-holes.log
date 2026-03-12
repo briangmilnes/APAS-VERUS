@@ -22,70 +22,70 @@ Table of Contents:
 ✓ KruskalStEph.rs
 ✓ PrimStEph.rs
 ❌ UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:215: error: assume() - assume(self.spec_unionfindsteph_wf());
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap65/UnionFindStEph.rs:215: error: assume() - assume(self.spec_unionfindsteph_wf());
        207 |         fn insert(&mut self, v: V) {
             ...
        213 |                     self.roots = self.roots.insert(v@, v@);
        214 |                     // accept hole: wf maintenance for insert — elements uniqueness and domain coverage
        216 |                 }
        217 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:246: error: assume() - assume(steps < elem_count);
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap65/UnionFindStEph.rs:246: error: assume() - assume(steps < elem_count);
        222 |         fn find(&mut self, v: &V) -> (root: V) {
             ...
        244 |                 proof {
        245 |                     // accept hole: acyclicity — each step visits a new element
        247 |                     steps = steps + 1;
        248 |                 }
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:276: error: assume() - assume(compress_steps < elem_count);
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap65/UnionFindStEph.rs:276: error: assume() - assume(compress_steps < elem_count);
        222 |         fn find(&mut self, v: &V) -> (root: V) {
             ...
        274 |                 proof {
        275 |                     // accept hole: acyclicity — each compression step visits a new element
        277 |                     compress_steps = compress_steps + 1;
        278 |                     // accept hole: wf is maintained after path compression
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:279: error: assume() - assume(self.spec_unionfindsteph_wf());
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap65/UnionFindStEph.rs:279: error: assume() - assume(self.spec_unionfindsteph_wf());
        222 |         fn find(&mut self, v: &V) -> (root: V) {
             ...
        277 |                     compress_steps = compress_steps + 1;
        278 |                     // accept hole: wf is maintained after path compression
        280 |                     // accept hole: compressed node is in domain
        281 |                     assume(self.parent@.contains_key(current@));
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:281: error: assume() - assume(self.parent@.contains_key(current@));
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap65/UnionFindStEph.rs:281: error: assume() - assume(self.parent@.contains_key(current@));
        222 |         fn find(&mut self, v: &V) -> (root: V) {
             ...
        279 |                     assume(self.spec_unionfindsteph_wf());
        280 |                     // accept hole: compressed node is in domain
        282 |                 }
        283 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:287: error: assume() - assume(root@ == old(self).roots[v@]);
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap65/UnionFindStEph.rs:287: error: assume() - assume(root@ == old(self).roots[v@]);
        222 |         fn find(&mut self, v: &V) -> (root: V) {
             ...
        285 |             proof {
        286 |                 // accept hole: root matches the ghost canonical root
        288 |             }
        289 | 
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:336: error: assume() - assume(self.spec_unionfindsteph_wf());
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap65/UnionFindStEph.rs:336: error: assume() - assume(self.spec_unionfindsteph_wf());
        294 |         fn union(&mut self, u: &V, v: &V) {
             ...
        334 |                     );
        335 |                     // accept hole: wf maintained after union
        337 |                     // accept hole: ensures clause on merged roots
        338 |                     assume(
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:338: error: assume() - assume(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap65/UnionFindStEph.rs:338: error: assume() - assume(
        294 |         fn union(&mut self, u: &V, v: &V) {
             ...
        336 |                     assume(self.spec_unionfindsteph_wf());
        337 |                     // accept hole: ensures clause on merged roots
        339 |                         forall|x: <V as View>::V| #[trigger] self.roots.contains_key(x) ==> {
        340 |                             let or_u = old(self).roots[u@];
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:360: error: assume() - assume((root_u == root_v) == (root_u@ == root_v@));
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap65/UnionFindStEph.rs:360: error: assume() - assume((root_u == root_v) == (root_u@ == root_v@));
        354 |         fn equals(&mut self, u: &V, v: &V) -> (same: B) {
             ...
        358 |             proof {
        359 |                 // accept hole: PartialEq on V agrees with view equality for roots
        361 |             }
        362 |             root_u == root_v
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:385: error: assume() - assume(self.spec_unionfindsteph_wf());
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap65/UnionFindStEph.rs:385: error: assume() - assume(self.spec_unionfindsteph_wf());
        366 |         fn num_sets(&mut self) -> (count: usize) {
             ...
        383 |                 proof {
@@ -144,12 +144,9 @@ Holes Found: 10 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-11 17:58:45 -07:00
-Ended:     2026-03-11 17:58:45 -07:00
-Duration:  6ms
+Started:   2026-03-11 19:30:47 -07:00
+Ended:     2026-03-11 19:30:47 -07:00
+Duration:  7ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-ded:     2026-03-11 17:58:45 -07:00
-Duration:  6ms
-
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

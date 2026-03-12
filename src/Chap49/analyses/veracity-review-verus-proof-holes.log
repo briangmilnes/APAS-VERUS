@@ -20,9 +20,9 @@ Table of Contents:
 =================================================================
 
 ❌ MinEditDistMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:174: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:174: error: external_body - #[verifier::external_body]
        175 |     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:164: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtEph.rs:164: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
        154 |     fn new_arc_memo(
             ...
        162 | 
@@ -32,9 +32,9 @@ Table of Contents:
    Holes: 1 total
       1 × external_body
 ❌ MinEditDistMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:147: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:147: error: external_body - #[verifier::external_body]
        148 |     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:137: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/MinEditDistMtPer.rs:137: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
        127 |     fn new_arc_memo(
             ...
        135 | 
@@ -46,9 +46,9 @@ Table of Contents:
 ✓ MinEditDistStEph.rs
 ✓ MinEditDistStPer.rs
 ❌ SubsetSumMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:151: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:151: error: external_body - #[verifier::external_body]
        152 |     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:141: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtEph.rs:141: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
        131 |     fn new_arc_memo(
             ...
        139 | 
@@ -58,9 +58,9 @@ Table of Contents:
    Holes: 1 total
       1 × external_body
 ❌ SubsetSumMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:138: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:138: error: external_body - #[verifier::external_body]
        139 |     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:128: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap49/SubsetSumMtPer.rs:128: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
        118 |     fn new_arc_memo(
             ...
        126 | 
@@ -131,9 +131,12 @@ Holes Found: 4 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-11 17:58:45 -07:00
-Ended:     2026-03-11 17:58:45 -07:00
-Duration:  18ms
+Started:   2026-03-11 19:30:46 -07:00
+Ended:     2026-03-11 19:30:46 -07:00
+Duration:  28ms
 
 Full output: src/Chap49/analyses/veracity-review-verus-proof-holes.log
-/Chap49/analyses/veracity-review-verus-proof-holes.log
+6-03-11 19:30:46 -07:00
+Duration:  28ms
+
+Full output: src/Chap49/analyses/veracity-review-verus-proof-holes.log
