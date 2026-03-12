@@ -33,6 +33,9 @@ Key rules:
 - Read partial_eq_eq_clone_standard.rs and toplevel_coarse_rwlocks_for_mt_modules.rs.
 - Run scripts/holes.sh on your chapters to verify hole counts before and after.
 - Prove what can be proved. Accept only what the standards say to accept.
+- WARNING: Do NOT add accept() anywhere except the patterns defined in the standards
+  (lock-boundary, eq/clone). Misplaced accepts defeat the proof. When in doubt, leave
+  it as assume and flag it for review.
 - Start with the small chapters (1-6 above) for quick wins, then tackle the big ones.
 - Run scripts/validate.sh after changes. Show full output.
 
