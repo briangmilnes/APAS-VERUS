@@ -26,7 +26,7 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    3 clean proof functions
 ℹ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/AdjMatrixGraphStPer.rs:478: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:478: info: accept()
    Info: 1 total
    3 clean proof functions
 ✓ AdjSeqGraphMtEph.rs
@@ -36,7 +36,7 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
 ℹ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/AdjSeqGraphStPer.rs:514: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:514: info: accept()
    Info: 1 total
    2 clean proof functions
 ✓ AdjTableGraphMtPer.rs
@@ -44,7 +44,7 @@ Table of Contents:
    1 clean proof function
 ✓ AdjTableGraphStPer.rs
 ❌ EdgeSetGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/EdgeSetGraphMtPer.rs:135: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:135: error: external_body - #[verifier::external_body]
        136 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
    Holes: 1 total
       1 × external_body
@@ -122,9 +122,9 @@ Holes Found: 1 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-11 19:30:46 -07:00
-Ended:     2026-03-11 19:30:46 -07:00
-Duration:  76ms
+Started:   2026-03-11 19:50:45 -07:00
+Ended:     2026-03-11 19:50:45 -07:00
+Duration:  41ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
