@@ -1,16 +1,22 @@
 # PROVE BIG OR GO HOME — Proof Hole Reduction Plan
 
-Baseline: 482 holes (72 assume, 394 external_body, 4 external, 12 trivial wf).
-3658 verified, 0 errors. 25 clean chapters, 12 holed.
+Baseline: 456 holes (55 assume, 385 external_body, 4 external, 12 trivial wf).
+3670 verified, 0 errors. 25 clean chapters, 21 holed.
 
 ## Progress
 
-Round 1: Converted 85 lock-boundary assumes and 37 eq/clone assumes to `accept()`.
-New standards: `partial_eq_eq_clone_standard.rs`, updated `toplevel_coarse_rwlocks_for_mt_modules.rs`.
+| Round | Holes | assume | ext_body | triv wf | Clean Ch | Verified |
+|-------|-------|--------|----------|---------|----------|----------|
+| 0 | 637 | 186 | 430 | 17 | 18 | 3632 |
+| 1 | 552 | 101 | 430 | 17 | 20 | 3632 |
+| 2 | 482 | 72 | 394 | 12 | 25 | 3658 |
+| 3 | 456 | 55 | 385 | 12 | 25 | 3670 |
+| Target | <200 | <30 | <300 | 0 | 30+ | 3700+ |
 
-Round 2 (4-agent merge): Agents proved holes across their assigned chapters.
-Newly clean: Chap03, Chap06, Chap21, Chap23, Chap28, Chap56.
-Verified: 3632 → 3658 (+26). Holes: 552 → 482 (-70). Clean chapters: 20 → 25 (+5).
+Round 1: Converted lock-boundary + eq/clone assumes to accept().
+Round 2: Agents proved holes; Chap03/06/21/23/28/56 went clean.
+Round 3: Agent3 proved Chap65 UnionFind (0 holes). Agent4 reduced Chap43/47.
+  Agent3 removed 9 external_body in Chap50 (57→48). Chap44/65 now clean.
 
 ## Strategy
 
@@ -30,12 +36,12 @@ Three work categories, in priority order:
 
 | # | Chap | Holes | Files | Status |
 |---|------|-------|-------|--------|
-| 1 | 43 | 127 | 11 | Blocked (internal deps) |
+| 1 | 43 | 126 | 11 | Blocked (internal deps) |
 | 2 | 37 | 120 | 19 | Blocked (internal deps) |
-| 3 | 41 | 85 | 7 | Blocked (internal deps) |
-| 4 | 50 | 57 | 8 | Clean deps — actionable |
+| 3 | 41 | 69 | 7 | Blocked (internal deps) |
+| 4 | 50 | 48 | 8 | Clean deps — actionable |
 | 5 | 39 | 43 | 4 | Blocked (internal deps) |
-| 6 | 47 | 40 | 9 | Blocked (internal deps) |
+| 6 | 47 | 39 | 9 | Blocked (internal deps) |
 | 7 | 38 | 33 | 2 | Blocked (internal deps) |
 | 8 | 53 | 22 | 5 | Blocked (internal deps) |
 | 9 | 45 | 18 | 7 | Blocked (internal deps) |
@@ -64,26 +70,26 @@ Near-clean (1-7 holes, clean deps — actionable now):
 | 1 | Chap50/MatrixChainMtEph.rs | 15 |
 | 2 | Chap50/OptBinSearchTreeMtEph.rs | 15 |
 | 3 | Chap50/OptBinSearchTreeMtPer.rs | 12 |
-| 4 | Chap50/MatrixChainMtPer.rs | 8 |
-| 5 | Chap50/OptBinSearchTreeStEph.rs | 4 |
-| 6 | Chap50/OptBinSearchTreeStPer.rs | 3 |
-| 7 | Chap66/BoruvkaStEph.rs | 3 |
-| 8 | Chap40/BSTSizeStEph.rs | 2 |
-| 9 | Chap26/ETSPMtEph.rs | 2 |
-| 10 | Chap26/ETSPStEph.rs | 2 |
-| 11 | Chap47/ParaHashTableStEph.rs | 2 |
-| 12 | Chap57/DijkstraStEphI64.rs | 1 |
-| 13 | Chap18/LinkedListStPer.rs | 1 |
-| 14 | Chap19/ArraySeqMtEph.rs | 1 |
-| 15 | Chap18/LinkedListStEph.rs | 1 |
-| 16 | Chap18/ArraySeq.rs | 1 |
-| 17 | Chap19/ArraySeqStEph.rs | 1 |
-| 18 | Chap18/ArraySeqStPer.rs | 1 |
-| 19 | Chap12/Exercise12_5.rs | 1 |
-| 20 | Chap18/ArraySeqStEph.rs | 1 |
-| 21 | Chap18/ArraySeqMtEph.rs | 1 |
+| 4 | Chap50/MatrixChainMtPer.rs | 4 |
+| 5 | Chap66/BoruvkaStEph.rs | 3 |
+| 6 | Chap40/BSTSizeStEph.rs | 2 |
+| 7 | Chap26/ETSPMtEph.rs | 2 |
+| 8 | Chap26/ETSPStEph.rs | 2 |
+| 9 | Chap18/ArraySeqMtEph.rs | 1 |
+| 10 | Chap18/ArraySeqStPer.rs | 1 |
+| 11 | Chap18/ArraySeqStEph.rs | 1 |
+| 12 | Chap18/ArraySeq.rs | 1 |
+| 13 | Chap50/OptBinSearchTreeStEph.rs | 1 |
+| 14 | Chap18/ArraySeqMtPer.rs | 1 |
+| 15 | Chap12/Exercise12_5.rs | 1 |
+| 16 | Chap50/OptBinSearchTreeStPer.rs | 1 |
+| 17 | Chap47/ParaHashTableStEph.rs | 1 |
+| 18 | Chap18/LinkedListStEph.rs | 1 |
+| 19 | Chap19/ArraySeqStEph.rs | 1 |
+| 20 | Chap18/LinkedListStPer.rs | 1 |
+| 21 | Chap57/DijkstraStEphI64.rs | 1 |
 | 22 | Chap19/ArraySeqStPer.rs | 1 |
-| 23 | Chap18/ArraySeqMtPer.rs | 1 |
+| 23 | Chap19/ArraySeqMtEph.rs | 1 |
 
 ## 4-Agent Work Split
 
@@ -102,36 +108,25 @@ Priority: Chap18 → Chap19 → Chap12 → Chap57 → Chap52 → Chap55.
 
 Continue coarse RwLock migration for remaining Mt files. Prove BSTSizeStEph (2 holes).
 Chap40 (6 holes) has clean deps — start there. Chap37/39/41/42 have internal deps.
-Total: 271 holes but most are external_body that become accepts via migration.
+Total: 255 holes but most are external_body that become accepts via migration.
 
 Priority: Chap40 → Chap37 → Chap42 → Chap39 → Chap41.
 
 ### Agent 3: DP + Graph Algorithms (Chap26/50/53/66)
 
-Chap50 (57 holes) is the big target — all in section 4.2 with clean deps.
+Chap50 (48 holes) is the big target — all in section 4.2 with clean deps.
 Chap26 (4 holes) and Chap66 (3 holes) also have clean deps.
 Chap53 (22 holes) has internal deps.
-Total: 86 holes across 25 files.
+Total: 77 holes across 25 files.
 
-Priority: Chap26 → Chap66 → Chap50 (St first, then Mt) → Chap53.
+Priority: Chap26 → Chap66 → Chap50 (Mt wrappers now) → Chap53.
 
 ### Agent 4: Tables + Priority Queues (Chap38/43/45/47/49/51)
 
 Chap45 (18 holes) — BinaryHeapPQ has trivial spec_wf. Write real invariants.
-Chap47 (40 holes), Chap43 (127 holes) — large Mt chapters needing coarse RwLock migration.
+Chap47 (39 holes), Chap43 (126 holes) — large Mt chapters needing coarse RwLock migration.
 Chap38 (33 holes) — per-node locking, genuinely hard.
 Chap49 (8 holes), Chap51 (8 holes) — internal deps.
-Total: 108 holes across 39 files.
+Total: 107 holes across 39 files.
 
-Priority: Chap45 → Chap47 → Chap42 → Chap43 → Chap49 → Chap51 → Chap38.
-
-## Scoreboard
-
-| Metric | Round 0 | Round 1 | Round 2 | Target |
-|--------|---------|---------|---------|--------|
-| Total holes | 637 | 552 | 482 | <200 |
-| assume() | 186 | 101 | 72 | <30 |
-| external_body | 430 | 430 | 394 | <300 |
-| trivial wf | 17 | 17 | 12 | 0 |
-| Clean chapters | 18 | 20 | 25 | 30+ |
-| Verified fns | 3632 | 3632 | 3658 | 3700+ |
+Priority: Chap45 → Chap47 → Chap43 → Chap49 → Chap51 → Chap38.

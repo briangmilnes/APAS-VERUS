@@ -134,20 +134,20 @@ Checking 11 files...
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: warning: [11] Seq usage should have vstd::seq::group_seq_axioms in broadcast use
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:654: warning: [13] impl Default for OrderedSetStEph should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:498: warning: [14] struct OrderedSetStEphIter should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:498: warning: [14] struct OrderedSetStEphIter should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:546: warning: [14] struct OrderedSetStEphGhostIterator should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:546: warning: [14] struct OrderedSetStEphGhostIterator should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:658: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:655: warning: [13] impl Default for OrderedSetStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:499: warning: [14] struct OrderedSetStEphIter should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:499: warning: [14] struct OrderedSetStEphIter should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:547: warning: [14] struct OrderedSetStEphGhostIterator should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:547: warning: [14] struct OrderedSetStEphGhostIterator should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:659: warning: [15] impl PartialEq should be inside verus! (for verification)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap43/ProveOrderedSetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:498: warning: [18] struct OrderedSetStEphIter should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:504: warning: [18] impl View for OrderedSetStEphIter < 'a , T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:509: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:546: warning: [18] struct OrderedSetStEphGhostIterator should come before iterators (expected type definitions before iterators)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:552: warning: [18] impl View for OrderedSetStEphGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:630: warning: [18] fn from_sorted_elements should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:509: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:499: warning: [18] struct OrderedSetStEphIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:505: warning: [18] impl View for OrderedSetStEphIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:510: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:547: warning: [18] struct OrderedSetStEphGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:553: warning: [18] impl View for OrderedSetStEphGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:631: warning: [18] fn from_sorted_elements should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:510: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1: info: [1] has mod declarations

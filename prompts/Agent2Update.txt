@@ -5,17 +5,15 @@ Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs.
 
 Read src/standards/* and apply them in your proposed work.
-Your CLAUDE.md should cause you to read them in all planning and hopefully bug fixing.
 Fix trigger warnings as they occur using the rules.
-Your src/Chap*/analyses files have been updated.
 
 We are working on plans/PBOGH.md — PROVE BIG OR GO HOME.
 Read it. You are Agent 2: BST + Collections.
 
-Current state: 3658 verified, 482 holes, 25 clean chapters.
+Current state: 3670 verified, 456 holes, 25 clean chapters.
 
 Your chapters: Chap37, Chap39, Chap40, Chap41, Chap42.
-Total: 271 holes across 37 files. Most are external_body that become accepts via
+Total: 255 holes across 37 files. Most are external_body that become accepts via
 coarse RwLock migration.
 
 Section 4.2 target files in your chapters (clean deps):
@@ -23,23 +21,22 @@ Section 4.2 target files in your chapters (clean deps):
 
 Chap37/39/41/42 have internal deps — they unblock each other as you clean them.
 
-Priority order:
-1. Chap40 (6 holes, 3 files) — BSTSizeStEph has 2 real proof holes. Clean deps.
-2. Chap37 (120 holes, 19 files) — finish coarse RwLock migration for BSTSet wrappers.
-3. Chap42 (17 holes, 4 files) — Table Mt wrappers.
-4. Chap39 (43 holes, 4 files) — Treap Mt coarse RwLock migration.
-5. Chap41 (85 holes, 7 files) — AVLTreeSet + ArraySetEnum migration.
+Priority: Chap40 → Chap37 → Chap42 → Chap39 → Chap41.
 
 Also read plans/coarse-rwlock-migration-plan.md for the RwLock migration details.
 
 Key rules:
-- Use accept() (not assume) for eq/clone/lock-boundary holes per the new standards.
-- Read partial_eq_eq_clone_standard.rs and toplevel_coarse_rwlocks_for_mt_modules.rs.
-- Run scripts/holes.sh on your chapters to verify hole counts before and after.
-- Prove what can be proved. Accept only what the standards say to accept.
 - WARNING: Do NOT add accept() anywhere except the patterns defined in the standards
   (lock-boundary, eq/clone). Misplaced accepts defeat the proof. When in doubt, leave
   it as assume and flag it for review.
 - Run scripts/validate.sh after changes. Show full output.
+- Run scripts/holes.sh on your chapters to verify hole counts before and after.
+
+REPORTING: Before committing, write plans/AGENT2.md with:
+  1. What you changed and why.
+  2. Holes closed (file, hole type, how resolved).
+  3. Blockers — anything you could not fix and why.
+  4. Verified count, hole count for your chapters.
+This file is how the merge coordinator tracks your progress.
 
 Propose a plan of work.

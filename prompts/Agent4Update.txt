@@ -5,45 +5,37 @@ Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs.
 
 Read src/standards/* and apply them in your proposed work.
-Your CLAUDE.md should cause you to read them in all planning and hopefully bug fixing.
 Fix trigger warnings as they occur using the rules.
-Your src/Chap*/analyses files have been updated.
 
 We are working on plans/PBOGH.md — PROVE BIG OR GO HOME.
 Read it. You are Agent 4: Tables + Priority Queues.
 
-Current state: 3658 verified, 482 holes, 25 clean chapters.
+Current state: 3670 verified, 456 holes, 25 clean chapters.
 
 Your chapters: Chap38, Chap43, Chap45, Chap47, Chap49, Chap51.
-Total: 108 holes across 39 files.
+Total: 107 holes across 39 files.
 
 Section 4.2 target files in your chapters (clean deps):
-  Chap47/ParaHashTableStEph.rs (2 holes)
+  Chap47/ParaHashTableStEph.rs (1 hole).
 
 Other chapters have internal deps — they unblock each other as you clean them.
 
-Priority order:
-1. Chap45 (18 holes, 7 files) — BinaryHeapPQ has trivial spec_wf { true }. Write real
-   invariants (heap ordering, capacity bounds). SortedListPQ, UnsortedListPQ also need work.
-2. Chap47 (40 holes, 9 files) — ParaHashTableStEph has 2 holes with clean deps.
-   Hash tables need coarse RwLock migration.
-3. Chap43 (127 holes, 11 files) — OrderedTable, largest chapter. Mostly external_body
-   Mt wrappers. Needs coarse RwLock migration.
-4. Chap42 (17 holes, 4 files) — Table Mt wrappers.
-5. Chap49 (8 holes, 8 files) — internal deps.
-6. Chap51 (8 holes, 8 files) — internal deps.
-7. Chap38 (33 holes, 2 files) — per-node locking, genuinely hard. Do last.
+Priority: Chap45 → Chap47 → Chap43 → Chap49 → Chap51 → Chap38.
 
 Also read plans/coarse-rwlock-migration-plan.md for the RwLock migration details.
 
 Key rules:
-- Use accept() (not assume) for eq/clone/lock-boundary holes per the new standards.
-- Read partial_eq_eq_clone_standard.rs and toplevel_coarse_rwlocks_for_mt_modules.rs.
-- Run scripts/holes.sh on your chapters to verify hole counts before and after.
-- Prove what can be proved. Accept only what the standards say to accept.
 - WARNING: Do NOT add accept() anywhere except the patterns defined in the standards
   (lock-boundary, eq/clone). Misplaced accepts defeat the proof. When in doubt, leave
   it as assume and flag it for review.
 - Run scripts/validate.sh after changes. Show full output.
+- Run scripts/holes.sh on your chapters to verify hole counts before and after.
+
+REPORTING: Before committing, write plans/AGENT4.md with:
+  1. What you changed and why.
+  2. Holes closed (file, hole type, how resolved).
+  3. Blockers — anything you could not fix and why.
+  4. Verified count, hole count for your chapters.
+This file is how the merge coordinator tracks your progress.
 
 Propose a plan of work.

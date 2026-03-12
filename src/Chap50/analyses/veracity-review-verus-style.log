@@ -81,8 +81,8 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:161: warning: [12] trait MatrixChainMtPerTrait fn dimensions should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:166: warning: [12] trait MatrixChainMtPerTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:383: warning: [13] impl IntoIterator for MatrixChainMtPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:397: warning: [13] impl IntoIterator for MatrixChainMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:391: warning: [13] impl IntoIterator for MatrixChainMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:405: warning: [13] impl IntoIterator for MatrixChainMtPerS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:53: warning: [14] struct MatrixDim should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:66: warning: [14] struct MatrixChainMtPerV should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:66: warning: [14] struct MatrixChainMtPerV should have impl Display outside verus!
@@ -104,8 +104,8 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:122: warning: [18] spec fn spec_chain_cost should come before top level coarse locking (expected spec fns before top level coarse locking)
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:142: warning: [18] trait MatrixChainMtPerTrait should come before top level coarse locking (expected traits before top level coarse locking)
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:196: warning: [18] impl MatrixChainMtPerTrait for MatrixChainMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:344: warning: [18] impl PartialEqSpecImpl for MatrixChainMtPerS should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:351: warning: [19] eq return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:349: warning: [18] impl PartialEqSpecImpl for MatrixChainMtPerS should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:355: warning: [19] eq return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:94: warning: [22] free spec fn spec_multiply_cost should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:98: warning: [22] free spec fn spec_dims_bounded should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:107: warning: [22] free spec fn spec_costs_fit should be an abstract signature in a trait with body in the impl
@@ -297,13 +297,13 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:116: warning: [12] trait OBSTStEphTrait fn optimal_cost should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:257: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:266: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:275: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:264: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:273: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:282: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:83: warning: [14] struct OBSTStEphV should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:83: warning: [14] struct OBSTStEphV should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:294: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:306: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:301: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:313: warning: [15] impl PartialEq should be inside verus! (for verification)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] collection KeyProb should have an Iterator impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] collection KeyProb has IntoIterator impl but it should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] collection OBSTStEphS should have an Iterator impl
@@ -337,12 +337,12 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:116: warning: [12] trait OBSTStPerTrait fn optimal_cost should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:228: warning: [13] impl IntoIterator for OBSTStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:237: warning: [13] impl IntoIterator for OBSTStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:235: warning: [13] impl IntoIterator for OBSTStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:244: warning: [13] impl IntoIterator for OBSTStPerS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:83: warning: [14] struct OBSTStPerV should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:83: warning: [14] struct OBSTStPerV should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:256: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:268: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:263: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:275: warning: [15] impl PartialEq should be inside verus! (for verification)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] collection KeyProb should have an Iterator impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] collection KeyProb has IntoIterator impl but it should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] collection OBSTStPerS should have an Iterator impl
