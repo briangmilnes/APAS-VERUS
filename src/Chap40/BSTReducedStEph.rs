@@ -371,6 +371,7 @@ pub mod BSTReducedStEph {
     }
 
     fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (cloned: Link<K, V, R>)
+        requires true,
         ensures
             Lnk::spec_content_link(&cloned) == Lnk::spec_content_link(link),
             Lnk::spec_size_link(&cloned) == Lnk::spec_size_link(link),
@@ -471,6 +472,11 @@ pub mod BSTReducedStEph {
     }
 
     fn compare_reduced_links<K: StT + Ord, V: StT, R: StT>(a: &Link<K, V, R>, b: &Link<K, V, R>) -> (equal: bool)
+        requires true,
+        ensures
+            (a is None && b is None) ==> equal,
+            (a is Some && b is None) ==> !equal,
+            (a is None && b is Some) ==> !equal,
         decreases *a,
     {
         match (a, b) {

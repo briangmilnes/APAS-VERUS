@@ -182,6 +182,10 @@ pub mod BSTPlainMtEph {
     }
 
     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
+        requires true,
+        ensures
+            (node is Leaf) ==> min is None,
+            (node is Node) ==> min is Some,
         decreases node.spec_size(),
     {
         match node {
@@ -194,6 +198,10 @@ pub mod BSTPlainMtEph {
     }
 
     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
+        requires true,
+        ensures
+            (node is Leaf) ==> max is None,
+            (node is Node) ==> max is Some,
         decreases node.spec_size(),
     {
         match node {

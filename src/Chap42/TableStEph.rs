@@ -1662,6 +1662,7 @@ broadcast use {
     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
         entries: Vec<Pair<K, V>>,
     ) -> (cloned: TableStEph<K, V>)
+        requires true,
         ensures cloned@.dom().finite()
     {
         let seq = ArraySeqStEphS::from_vec(entries);
