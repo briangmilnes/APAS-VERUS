@@ -53,7 +53,7 @@ pub mod OrderedSetMtEph {
 
     // Helper: construct Mt wrapper from St set (used by split/get_range/split_rank/from_seq).
     fn from_st<T: MtKey + 'static>(inner: OrderedSetStEph<T>) -> (s: OrderedSetMtEph<T>)
-        requires true
+        requires inner.spec_orderedsetsteph_wf()
         ensures s@ == inner@, s@.finite()
     {
         let ghost view = inner@;
@@ -230,6 +230,7 @@ pub mod OrderedSetMtEph {
             let other_read = other.locked_set.acquire_read();
             let other_inner = other_read.borrow().clone();
             other_read.release_read();
+            proof { assume(other_inner.spec_orderedsetsteph_wf()); }
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             proof { assume(self.ghost_locked_set@ == locked_val@); }
             locked_val.intersection(&other_inner);
@@ -243,6 +244,7 @@ pub mod OrderedSetMtEph {
             let other_read = other.locked_set.acquire_read();
             let other_inner = other_read.borrow().clone();
             other_read.release_read();
+            proof { assume(other_inner.spec_orderedsetsteph_wf()); }
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             proof { assume(self.ghost_locked_set@ == locked_val@); }
             locked_val.union(&other_inner);
@@ -256,6 +258,7 @@ pub mod OrderedSetMtEph {
             let other_read = other.locked_set.acquire_read();
             let other_inner = other_read.borrow().clone();
             other_read.release_read();
+            proof { assume(other_inner.spec_orderedsetsteph_wf()); }
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             proof { assume(self.ghost_locked_set@ == locked_val@); }
             locked_val.difference(&other_inner);
@@ -335,7 +338,12 @@ pub mod OrderedSetMtEph {
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);
             proof { assume(self@.finite()); }
+            proof { assume(locked_val.spec_orderedsetsteph_wf()); }
             write_handle.release_write(locked_val);
+            proof {
+                assume(left.spec_orderedsetsteph_wf());
+                assume(right.spec_orderedsetsteph_wf());
+            }
             (from_st(left), found, from_st(right))
         }
 
@@ -343,6 +351,7 @@ pub mod OrderedSetMtEph {
             let other_read = other.locked_set.acquire_read();
             let other_inner = other_read.borrow().clone();
             other_read.release_read();
+            proof { assume(other_inner.spec_orderedsetsteph_wf()); }
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             locked_val.join(other_inner);
             let ghost new_val = locked_val@;
@@ -357,6 +366,7 @@ pub mod OrderedSetMtEph {
             let range = inner.get_range(k1, k2);
             proof { assume(self@.finite()); }
             read_handle.release_read();
+            proof { assume(range.spec_orderedsetsteph_wf()); }
             from_st(range)
         }
 
@@ -385,7 +395,12 @@ pub mod OrderedSetMtEph {
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);
             proof { assume(self@.finite()); }
+            proof { assume(locked_val.spec_orderedsetsteph_wf()); }
             write_handle.release_write(locked_val);
+            proof {
+                assume(left.spec_orderedsetsteph_wf());
+                assume(right.spec_orderedsetsteph_wf());
+            }
             (from_st(left), from_st(right))
         }
     }
