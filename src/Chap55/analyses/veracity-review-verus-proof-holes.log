@@ -24,17 +24,35 @@ Table of Contents:
 ✓ DFSStEph.rs
 ✓ DFSStPer.rs
 ❌ SCCStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap55/SCCStEph.rs:149: warning: requires_true - requires true — vacuous precondition
-       147 |     /// Runtime check that all neighbor indices are valid vertex indices.
-       148 |     fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (valid: bool)
-       150 |         ensures valid ==> spec_toposortsteph_wf(graph),
-       151 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:48: error: fn_missing_ensures - fn compute_finish_order — exec fn should have ensures
+        37 |         fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (components: AVLTreeSeqStEphS<AVLTreeSetStEph<N>>)
+            ...
+        46 | 
+        47 |     /// Computes the finish order for SCC (decreasing finish times).
+        49 |         requires spec_toposortsteph_wf(graph),
+        50 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:147: error: fn_missing_requires - fn check_wf_adj_list_eph — exec fn should have requires
+        85 |     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<N>>)
+            ...
+       145 | 
+       146 |     /// Runtime check that all neighbor indices are valid vertex indices.
+       148 |         ensures valid ==> spec_toposortsteph_wf(graph),
+       149 |     {
 ❌ SCCStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap55/SCCStPer.rs:204: warning: requires_true - requires true — vacuous precondition
-       202 |     /// Runtime check that all neighbor indices are valid vertex indices.
-       203 |     fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (valid: bool)
-       205 |         ensures valid ==> spec_toposortstper_wf(graph),
-       206 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:97: error: fn_missing_ensures - fn compute_finish_order — exec fn should have ensures
+        46 |     fn dfs_finish_order(
+            ...
+        95 | 
+        96 |     /// Computes the finish order for SCC (decreasing finish times).
+        98 |         requires spec_toposortstper_wf(graph),
+        99 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:202: error: fn_missing_requires - fn check_wf_adj_list_per — exec fn should have requires
+       142 |     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<N>>)
+            ...
+       200 | 
+       201 |     /// Runtime check that all neighbor indices are valid vertex indices.
+       203 |         ensures valid ==> spec_toposortstper_wf(graph),
+       204 |     {
 ✓ TopoSortStEph.rs
    1 clean proof function
 ✓ TopoSortStPer.rs
@@ -74,8 +92,8 @@ TopoSortStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   8 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   6 clean (no holes, no errors; 75%)
+   2 holed (holes or errors, 25%)
    8 total
 
 Proof Functions:
@@ -84,8 +102,8 @@ Proof Functions:
    1 total
 
 Function Specs:
-   35 exec fns with complete spec (requires+ensures) (64%)
-   0 exec fns missing spec (0%)
+   31 exec fns with complete spec (requires+ensures) (57%)
+   4 exec fns missing spec (7%)
    19 proof/spec fns clean (35%)
    0 proof/spec fns with holes (0%)
    54 total fns
@@ -99,8 +117,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 13:32:24 -07:00
-Ended:     2026-03-12 13:32:24 -07:00
-Duration:  14ms
+Started:   2026-03-12 14:29:38 -07:00
+Ended:     2026-03-12 14:29:38 -07:00
+Duration:  16ms
 
+Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log

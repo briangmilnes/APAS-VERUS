@@ -23,6 +23,7 @@ pub mod GraphSearchStEph {
     // 8. traits
     pub trait SelectionStrategy<V: StT + Ord> {
         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, B))
+            requires frontier.spec_avltreesetsteph_wf(),
             ensures selected.0@.subset_of(frontier@);
     }
 
