@@ -19,46 +19,22 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:455: error: trivial_spec_wf - spec fn spec_arrayseqmteph_wf — trivial body { true } or { true; }, consider real well-formedness spec
-       439 |         fn deflate<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (deflated: Self)
-            ...
-       453 | 
-       454 |     impl<T> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
-       456 | 
-       457 |         open spec fn spec_len(&self) -> nat {
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1429: info: accept()
-   Holes: 1 total
-      1 × trivial spec*wf { true }
-   Info: 1 total
-   Proof functions: 6 total (6 clean, 0 holed)
+ℹ ArraySeqMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqMtEph.rs:455: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqMtEph.rs:1429: info: accept()
+   Info: 2 total
+   6 clean proof functions
 ✓ ArraySeqMtEphSlice.rs
-❌ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:422: error: trivial_spec_wf - spec fn spec_arrayseqsteph_wf — trivial body { true } or { true; }, consider real well-formedness spec
-       404 |         fn deflate<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (deflated: Self)
-            ...
-       420 | 
-       421 |     impl<T> ArraySeqStEphTrait<T> for ArraySeqStEphS<T> {
-       423 | 
-       424 |         open spec fn spec_len(&self) -> nat {
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1142: info: accept()
-   Holes: 1 total
-      1 × trivial spec*wf { true }
-   Info: 1 total
-   Proof functions: 4 total (4 clean, 0 holed)
-❌ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:409: error: trivial_spec_wf - spec fn spec_arrayseqstper_wf — trivial body { true } or { true; }, consider real well-formedness spec
-       391 |         fn deflate<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (deflated: Self)
-            ...
-       407 | 
-       408 |     impl<T> ArraySeqStPerTrait<T> for ArraySeqStPerS<T> {
-       410 | 
-       411 |         open spec fn spec_len(&self) -> nat {
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1143: info: accept()
-   Holes: 1 total
-      1 × trivial spec*wf { true }
-   Info: 1 total
-   Proof functions: 3 total (3 clean, 0 holed)
+ℹ ArraySeqStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqStEph.rs:422: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqStEph.rs:1142: info: accept()
+   Info: 2 total
+   4 clean proof functions
+ℹ ArraySeqStPer.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqStPer.rs:409: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqStPer.rs:1143: info: accept()
+   Info: 2 total
+   3 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -87,8 +63,8 @@ ArraySeqStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 25%)
-   3 holed (holes or errors, 75%)
+   4 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    4 total
 
 Proof Functions:
@@ -104,16 +80,17 @@ Function Specs:
    266 total fns
 
 
-Holes Found: 3 total
-   3 × trivial spec*wf { true } (100%)
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 05:28:56 -07:00
-Ended:     2026-03-12 05:28:56 -07:00
-Duration:  45ms
+Started:   2026-03-12 06:34:14 -07:00
+Ended:     2026-03-12 06:34:14 -07:00
+Duration:  38ms
 
 Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
+tput: src/Chap19/analyses/veracity-review-verus-proof-holes.log

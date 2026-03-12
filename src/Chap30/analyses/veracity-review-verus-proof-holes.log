@@ -20,17 +20,17 @@ Table of Contents:
 =================================================================
 
 ℹ Probability.rs
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:49: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:63: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:72: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:80: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:103: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:110: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:117: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:124: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:130: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:138: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:145: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap30/Probability.rs:49: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap30/Probability.rs:63: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap30/Probability.rs:72: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap30/Probability.rs:80: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap30/Probability.rs:103: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap30/Probability.rs:110: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap30/Probability.rs:117: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap30/Probability.rs:124: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap30/Probability.rs:130: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap30/Probability.rs:138: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap30/Probability.rs:145: info: external_body_accept_hole
    Info: 11 total
 
 =================================================================
@@ -79,9 +79,12 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 05:28:56 -07:00
-Ended:     2026-03-12 05:28:56 -07:00
-Duration:  3ms
+Started:   2026-03-12 06:34:14 -07:00
+Ended:     2026-03-12 06:34:14 -07:00
+Duration:  1ms
 
 Full output: src/Chap30/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap30/analyses/veracity-review-verus-proof-holes.log
+6:34:14 -07:00
+Duration:  1ms
+
+Full output: src/Chap30/analyses/veracity-review-verus-proof-holes.log

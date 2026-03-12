@@ -30,6 +30,7 @@ pub mod AugOrderedTableMtEph {
     use crate::Concurrency::Concurrency::*;
     use crate::{OrderedTableMtEphLit, ParaPair};
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -601,12 +602,13 @@ broadcast use {
     // 11. derive impls in verus!
 
     impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> Clone for AugOrderedTableMtEph<K, V, F> {
-        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
+            let base = self.base_table.clone();
+            proof { accept(base@ == self.base_table@); }
             Self {
-                base_table: self.base_table.clone(),
+                base_table: base,
                 cached_reduction: self.cached_reduction.clone(),
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),

@@ -20,77 +20,77 @@ Table of Contents:
 =================================================================
 
 ❌ BottomUpDPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:162: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:162: error: external_body - #[verifier::external_body]
        163 |         fn med_bottom_up_parallel(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:270: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:270: info: accept()
    Holes: 1 total
       1 × external_body
    Info: 1 total
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ BottomUpDPMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:147: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:147: error: external_body - #[verifier::external_body]
        148 |         fn med_bottom_up_parallel(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:255: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:255: info: accept()
    Holes: 1 total
       1 × external_body
    Info: 1 total
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ BottomUpDPStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:181: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:181: error: external_body - #[verifier::external_body]
        182 |         fn med_bottom_up(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:349: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:349: info: accept()
    Holes: 1 total
       1 × external_body
    Info: 1 total
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ BottomUpDPStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:167: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:167: error: external_body - #[verifier::external_body]
        168 |         fn med_bottom_up(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:335: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:335: info: accept()
    Holes: 1 total
       1 × external_body
    Info: 1 total
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ TopDownDPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:171: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:171: error: external_body - #[verifier::external_body]
        172 |         fn med_memoized_concurrent(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:180: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:180: error: external_body - #[verifier::external_body]
        181 |         fn med_memoized_parallel(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:116: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:116: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
        102 |         fn med_memoized_parallel(&mut self) -> (distance: usize)
             ...
        114 |     /// cannot constrain map contents. Ghost fields carry context for documentation.
        115 |     impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtEphInv {
        117 |     }
        118 | 
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:228: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:228: info: accept()
    Holes: 2 total
       2 × external_body
    Info: 1 total
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ TopDownDPMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:145: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:145: error: external_body - #[verifier::external_body]
        146 |         fn med_memoized_concurrent(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:154: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:154: error: external_body - #[verifier::external_body]
        155 |         fn med_memoized_parallel(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:94: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:94: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         86 |         fn med_memoized_parallel(&self) -> (distance: usize)
             ...
         92 |     /// cannot constrain map contents. Ghost fields carry context for documentation.
         93 |     impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtPerInv {
         95 |     }
         96 | 
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:202: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:202: info: accept()
    Holes: 2 total
       2 × external_body
    Info: 1 total
    Proof functions: 2 total (2 clean, 0 holed)
 ℹ TopDownDPStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:360: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:360: info: accept()
    Info: 1 total
    3 clean proof functions
 ℹ TopDownDPStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:334: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:334: info: accept()
    Info: 1 total
    3 clean proof functions
 
@@ -153,13 +153,9 @@ Holes Found: 8 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 05:28:57 -07:00
-Ended:     2026-03-12 05:28:57 -07:00
-Duration:  26ms
+Started:   2026-03-12 06:34:14 -07:00
+Ended:     2026-03-12 06:34:14 -07:00
+Duration:  21ms
 
 Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
-ted:   2026-03-12 05:28:57 -07:00
-Ended:     2026-03-12 05:28:57 -07:00
-Duration:  26ms
-
-Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
