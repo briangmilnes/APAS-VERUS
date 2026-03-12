@@ -124,20 +124,21 @@ Checking 9 files...
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [14] Debug, Display outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [18] definition order correct
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:59: warning: [12] trait EntryTrait fn new should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:62: warning: [12] trait EntryTrait fn insert should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:65: warning: [12] trait EntryTrait fn lookup should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:68: warning: [12] trait EntryTrait fn delete should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:68: warning: [12] trait EntryTrait fn new should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:71: warning: [12] trait EntryTrait fn insert should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:74: warning: [12] trait EntryTrait fn lookup should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:77: warning: [12] trait EntryTrait fn delete should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: warning: [17] collection HashTable should have an Iterator impl
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: warning: [17] collection HashTable should have an IntoIterator impl
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap47/ProveParaHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:56: warning: [20] trait EntryTrait is defined but has no impl
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:72: warning: [20] trait ParaHashTableStEphTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:65: warning: [18] trait EntryTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:81: warning: [18] trait ParaHashTableStEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:65: warning: [20] trait EntryTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:81: warning: [20] trait ParaHashTableStEphTrait is defined but has no impl
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:48: warning: [22] free spec fn spec_hashtable_wf should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:
@@ -181,9 +182,9 @@ Checking 9 files...
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:56: warning: [22] free spec fn spec_chain_to_map should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:103: warning: [23] free fn chain_insert param Key has bounds `PartialEq` but trait ChainListTrait has `(none)`
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:136: warning: [23] free fn chain_lookup param Key has bounds `PartialEq` but trait ChainListTrait has `(none)`
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:136: warning: [23] free fn chain_lookup param Value has bounds `Clone` but trait ChainListTrait has `(none)`
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:157: warning: [23] free fn chain_delete param Key has bounds `PartialEq` but trait ChainListTrait has `(none)`
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:137: warning: [23] free fn chain_lookup param Key has bounds `PartialEq` but trait ChainListTrait has `(none)`
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:137: warning: [23] free fn chain_lookup param Value has bounds `Clone` but trait ChainListTrait has `(none)`
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:159: warning: [23] free fn chain_delete param Key has bounds `PartialEq` but trait ChainListTrait has `(none)`
 
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [1] has mod declarations
@@ -207,5 +208,5 @@ Checking 9 files...
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [24] copyright line present
 
 ════════════════════════════════════════════════════════════════
-Summary: 163 passed, 17 warnings in 4 files (checked 9 files)
+Summary: 162 passed, 19 warnings in 4 files (checked 9 files)
 ════════════════════════════════════════════════════════════════

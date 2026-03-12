@@ -61,7 +61,7 @@ pub mod BSTTreapMtEph {
         root: Arc<RwLock<Link<T>, BSTTreapMtEphInv>>,
     }
 
-    pub type BSTreeTreap<T: StTInMtT + Ord + IsLtTransitive> = BSTTreapMtEph<T>;
+    pub type BSTreeTreap<T> = BSTTreapMtEph<T>;
 
     pub struct Lnk;
 

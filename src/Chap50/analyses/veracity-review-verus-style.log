@@ -296,14 +296,14 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:109: warning: [12] trait OBSTStEphTrait fn optimal_cost should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:250: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:259: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:268: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:76: warning: [14] struct OBSTStEphV should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:76: warning: [14] struct OBSTStEphV should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:287: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:299: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:116: warning: [12] trait OBSTStEphTrait fn optimal_cost should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:257: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:266: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:275: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:83: warning: [14] struct OBSTStEphV should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:83: warning: [14] struct OBSTStEphV should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:294: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:306: warning: [15] impl PartialEq should be inside verus! (for verification)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] collection KeyProb should have an Iterator impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] collection KeyProb has IntoIterator impl but it should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] collection OBSTStEphS should have an Iterator impl
@@ -314,12 +314,12 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] IntoIterator for OBSTStEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] IntoIterator for OBSTStEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] IntoIterator for OBSTStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:59: warning: [18] struct OBSTStEphS should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:76: warning: [18] struct OBSTStEphV should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:81: warning: [18] impl View for OBSTStEphS < T > should come before derive impls in verus! (expected view impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:92: warning: [18] trait OBSTStEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:141: warning: [18] fn obst_rec_st_eph should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:168: warning: [18] impl OBSTStEphTrait for OBSTStEphS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:63: warning: [18] struct OBSTStEphS should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:83: warning: [18] struct OBSTStEphV should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:88: warning: [18] impl View for OBSTStEphS < T > should come before derive impls in verus! (expected view impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:99: warning: [18] trait OBSTStEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:148: warning: [18] fn obst_rec_st_eph should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:175: warning: [18] impl OBSTStEphTrait for OBSTStEphS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
 
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [1] has mod declarations
@@ -336,13 +336,13 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:109: warning: [12] trait OBSTStPerTrait fn optimal_cost should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:221: warning: [13] impl IntoIterator for OBSTStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:230: warning: [13] impl IntoIterator for OBSTStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:76: warning: [14] struct OBSTStPerV should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:76: warning: [14] struct OBSTStPerV should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:249: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:261: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:116: warning: [12] trait OBSTStPerTrait fn optimal_cost should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:228: warning: [13] impl IntoIterator for OBSTStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:237: warning: [13] impl IntoIterator for OBSTStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:83: warning: [14] struct OBSTStPerV should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:83: warning: [14] struct OBSTStPerV should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:256: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:268: warning: [15] impl PartialEq should be inside verus! (for verification)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] collection KeyProb should have an Iterator impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] collection KeyProb has IntoIterator impl but it should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] collection OBSTStPerS should have an Iterator impl
@@ -352,12 +352,12 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap50/ProveOptBinSearchTreeStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] IntoIterator for OBSTStPerS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] IntoIterator for OBSTStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:59: warning: [18] struct OBSTStPerS should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:76: warning: [18] struct OBSTStPerV should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:81: warning: [18] impl View for OBSTStPerS < T > should come before derive impls in verus! (expected view impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:92: warning: [18] trait OBSTStPerTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:124: warning: [18] fn obst_rec_st_per should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:151: warning: [18] impl OBSTStPerTrait for OBSTStPerS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:63: warning: [18] struct OBSTStPerS should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:83: warning: [18] struct OBSTStPerV should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:88: warning: [18] impl View for OBSTStPerS < T > should come before derive impls in verus! (expected view impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:99: warning: [18] trait OBSTStPerTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:131: warning: [18] fn obst_rec_st_per should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:158: warning: [18] impl OBSTStPerTrait for OBSTStPerS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
 
 ════════════════════════════════════════════════════════════════
 Summary: 108 passed, 227 warnings in 8 files (checked 8 files)

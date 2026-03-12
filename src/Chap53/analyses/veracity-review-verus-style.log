@@ -37,7 +37,7 @@ Checking 5 files...
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [3] has verus! macro
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [4] no std imports (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [12] all trait fns have specs
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [13] trait impls inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:1: info: [14] Debug, Display outside verus!

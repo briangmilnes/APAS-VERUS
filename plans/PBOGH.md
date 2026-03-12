@@ -1,19 +1,21 @@
 # PROVE BIG OR GO HOME — Proof Hole Reduction Plan
 
-Baseline: 552 holes (101 assume, 430 external_body, 4 external, 17 trivial wf).
-3632 verified, 0 errors. 18 clean chapters, 28 holed.
+Baseline: 482 holes (72 assume, 394 external_body, 4 external, 12 trivial wf).
+3658 verified, 0 errors. 25 clean chapters, 12 holed.
 
-## What Just Happened
+## Progress
 
-Converted 85 lock-boundary assumes and 37 eq/clone assumes to `accept()`.
+Round 1: Converted 85 lock-boundary assumes and 37 eq/clone assumes to `accept()`.
 New standards: `partial_eq_eq_clone_standard.rs`, updated `toplevel_coarse_rwlocks_for_mt_modules.rs`.
-Chap05 is now 0 holes. Chap06 dropped from 53 to 2.
+
+Round 2 (4-agent merge): Agents proved holes across their assigned chapters.
+Newly clean: Chap03, Chap06, Chap21, Chap23, Chap28, Chap56.
+Verified: 3632 → 3658 (+26). Holes: 552 → 482 (-70). Clean chapters: 20 → 25 (+5).
 
 ## Strategy
 
 **Section 4.2 drives everything.** Only files whose dependencies are already clean can
-be worked on. Fixing a file may unblock downstream files. The critical path runs bottom-up
-through foundation chapters.
+be worked on. Fixing a file may unblock downstream files.
 
 Three work categories, in priority order:
 
@@ -24,151 +26,112 @@ Three work categories, in priority order:
 3. **Prove** — algorithmic assumes (loop invariants, termination, correctness). Hard work,
    highest value.
 
-## Phase 1: Quick Wins (accept + trivial specs)
+## Remaining Holed Chapters (by holes)
 
-Low effort, high hole reduction. Unblocks Phase 2.
+| # | Chap | Holes | Files | Status |
+|---|------|-------|-------|--------|
+| 1 | 43 | 127 | 11 | Blocked (internal deps) |
+| 2 | 37 | 120 | 19 | Blocked (internal deps) |
+| 3 | 41 | 85 | 7 | Blocked (internal deps) |
+| 4 | 50 | 57 | 8 | Clean deps — actionable |
+| 5 | 39 | 43 | 4 | Blocked (internal deps) |
+| 6 | 47 | 40 | 9 | Blocked (internal deps) |
+| 7 | 38 | 33 | 2 | Blocked (internal deps) |
+| 8 | 53 | 22 | 5 | Blocked (internal deps) |
+| 9 | 45 | 18 | 7 | Blocked (internal deps) |
+| 10 | 42 | 17 | 4 | Blocked (internal deps) |
+| 11 | 49 | 8 | 8 | Blocked (internal deps) |
+| 12 | 51 | 8 | 8 | Blocked (internal deps) |
 
-### 1a. Remaining lock-boundary + eq/clone assumes
+Near-clean (1-7 holes, clean deps — actionable now):
 
-Already done for Chap05/06/37. Remaining Mt files in the coarse RwLock migration plan
-(Chap39/41/42/43/18/19/52) will gain these accepts as they get migrated. No separate
-work item — the migration plan handles it.
+| # | Chap | Holes | Files | Status |
+|---|------|-------|-------|--------|
+| 1 | 18 | 7 | 7 | Clean deps — actionable |
+| 2 | 40 | 6 | 3 | Clean deps — actionable |
+| 3 | 55 | 4 | 8 | Clean deps — actionable |
+| 4 | 26 | 4 | 8 | Clean deps — actionable |
+| 5 | 19 | 3 | 4 | Clean deps — actionable |
+| 6 | 66 | 3 | 2 | Clean deps — actionable |
+| 7 | 52 | 1 | 14 | Clean deps — actionable |
+| 8 | 12 | 1 | 3 | Clean deps — actionable |
+| 9 | 57 | 1 | 3 | Clean deps — actionable |
 
-### 1b. Trivial spec_wf { true } (17 holes)
+## Section 4.2 Next Target Files (clean deps only, by holes)
 
-These are placeholder wf predicates returning `true`. Write real invariants.
-
-| # | File | What to fix |
-|---|------|-------------|
-| 1 | Chap45/BinaryHeapPQ.rs | Heap ordering, capacity |
-| 2 | Others TBD from hole log | Scan for `trivial spec*wf` |
-
-### 1c. Missing requires (from error list)
-
-| # | File | What to fix |
-|---|------|-------------|
-| 1 | Chap03/InsertionSortStEph.rs | Add requires to insertion_sort |
-
-## Phase 2: Foundation Files (clean deps, actionable now)
-
-These files appear in section 4.2 — their dependencies are already clean.
-
-### Tier A: Chap50 — Dynamic Programming (61 holes, 8 files)
-
-Biggest single chapter. All external_body in Mt files wrapping memoization.
-
-| # | File | Holes | Type | Action |
-|---|------|-------|------|--------|
-| 1 | OptBinSearchTreeMtEph.rs | 15 | external_body | Coarse RwLock migration or accept |
-| 2 | MatrixChainMtEph.rs | 15 | external_body | Coarse RwLock migration or accept |
-| 3 | OptBinSearchTreeMtPer.rs | 12 | external_body | Coarse RwLock migration or accept |
-| 4 | MatrixChainMtPer.rs | 8 | external_body | Coarse RwLock migration or accept |
-| 5 | OptBinSearchTreeStEph.rs | 6 | external_body | Real proof work (St algorithms) |
-| 6 | OptBinSearchTreeStPer.rs | 5 | external_body | Real proof work (St algorithms) |
-
-Note: Chap50 Mt files use Arc<RwLock> for shared memo tables (genuine concurrent
-writers). They follow the HFScheduler pattern, NOT the coarse RwLock pattern. The
-external_body methods wrap thread-unsafe memo lookups. Strategy: verify the St
-counterparts first, then assess whether the Mt wrappers can be tightened.
-
-### Tier B: Chap65 — Union-Find (10 holes, 1 file)
-
-| # | File | Holes | Type | Action |
-|---|------|-------|------|--------|
-| 1 | UnionFindStEph.rs | 10 | assume | Real proof: loop invariants, termination, path compression |
-
-This is genuine proof engineering. Assumes cover:
-- `spec_unionfindsteph_wf()` maintenance through mutations
-- `steps < elem_count` termination bounds
-- `root == old(self).roots[v]` path compression correctness
-High difficulty, high value — UnionFind is a foundation for Chap65/66 graph algorithms.
-
-### Tier C: Small Files (1-3 holes each, clean deps)
-
-| # | File | Holes | Type | Action |
-|---|------|-------|------|--------|
-| 1 | Chap47/ParaHashTableStEph.rs | 3 | mixed | Audit assumes |
-| 2 | Chap66/BoruvkaStEph.rs | 3 | external_body | Prove or accept |
-| 3 | Chap45/BinaryHeapPQ.rs | 3 | trivial wf | Write real spec_wf |
-| 4 | Chap40/BSTSizeStEph.rs | 2 | assume | Prove |
-| 5 | Chap06/DirGraphStEph.rs | 2 | mixed | Prove |
-| 6 | Chap26/ETSPStEph.rs | 2 | external_body | Prove or accept |
-| 7 | Chap26/ETSPMtEph.rs | 2 | external_body | Accept (Mt wrapper) |
-| 8 | Chap21/Exercise21_7.rs | 2 | mixed | Prove |
-| 9 | Chap23/BalBinTreeStEph.rs | 2 | mixed | Prove |
-| 10 | Chap18/ArraySeqMtEph.rs | 2 | mixed | Accept (Mt wrapper) |
-
-### Tier D: Single-Hole Files (1 hole each, clean deps)
-
-| # | File | Action |
-|---|------|--------|
-| 1 | Chap18/LinkedListStEph.rs | Prove or accept |
-| 2 | Chap18/ArraySeqMtPer.rs | Accept (Mt wrapper) |
-| 3 | Chap18/ArraySeqStEph.rs | Prove |
-| 4 | Chap18/ArraySeqStPer.rs | Prove |
-| 5 | Chap18/ArraySeq.rs | Prove |
-| 6 | Chap18/LinkedListStPer.rs | Prove or accept |
-| 7 | Chap19/ArraySeqStPer.rs | Prove |
-| 8 | Chap19/ArraySeqStEph.rs | Prove |
-| 9 | Chap19/ArraySeqMtEph.rs | Accept (Mt wrapper) |
-| 10 | Chap21/Algorithm21_5.rs | Prove |
-| 11 | Chap21/Exercise21_8.rs | Prove |
-| 12 | Chap23/PrimTreeSeqStPer.rs | Prove or accept |
-| 13 | Chap12/Exercise12_5.rs | Prove |
-| 14 | Chap03/InsertionSortStEph.rs | Add missing requires |
-
-## Phase 3: Blocked Chapters (need Phase 2 first)
-
-These chapters have holes but depend on holed modules. They become actionable as
-Phase 2 cleans their dependencies.
-
-| # | Chap | Holes | Blocked by | Action when unblocked |
-|---|------|-------|------------|----------------------|
-| 1 | 43 | 144 | Chap42/43 internal | Coarse RwLock migration + prove St |
-| 2 | 37 | 128 | Chap37 internal | Most already migrated, finish BSTSet wrappers |
-| 3 | 41 | 97 | Chap41 internal | Coarse RwLock migration + prove St |
-| 4 | 47 | 45 | Chap47 internal | Prove hash table algorithms |
-| 5 | 39 | 43 | Chap39 internal | Coarse RwLock migration |
-| 6 | 38 | 33 | Chap38 internal | Per-node locking, genuinely hard |
-| 7 | 45 | 27 | Chap45 internal | Priority queue proofs |
-| 8 | 53 | 23 | Chap53 internal | Graph search algorithms |
-| 9 | 42 | 22 | Chap42 internal | Hash table Mt wrappers |
-| 10 | 28 | 8 | Chap18/19 sequences | Prove after sequences clean |
-| 11 | 49 | 8 | Chap49 internal | Memoization DP |
-| 12 | 56 | 7 | Chap19 sequences | SSSP after sequences clean |
-| 13 | 55 | 4 | Chap55 internal | Prove |
+| # | File | Holes |
+|---|------|-------|
+| 1 | Chap50/MatrixChainMtEph.rs | 15 |
+| 2 | Chap50/OptBinSearchTreeMtEph.rs | 15 |
+| 3 | Chap50/OptBinSearchTreeMtPer.rs | 12 |
+| 4 | Chap50/MatrixChainMtPer.rs | 8 |
+| 5 | Chap50/OptBinSearchTreeStEph.rs | 4 |
+| 6 | Chap50/OptBinSearchTreeStPer.rs | 3 |
+| 7 | Chap66/BoruvkaStEph.rs | 3 |
+| 8 | Chap40/BSTSizeStEph.rs | 2 |
+| 9 | Chap26/ETSPMtEph.rs | 2 |
+| 10 | Chap26/ETSPStEph.rs | 2 |
+| 11 | Chap47/ParaHashTableStEph.rs | 2 |
+| 12 | Chap57/DijkstraStEphI64.rs | 1 |
+| 13 | Chap18/LinkedListStPer.rs | 1 |
+| 14 | Chap19/ArraySeqMtEph.rs | 1 |
+| 15 | Chap18/LinkedListStEph.rs | 1 |
+| 16 | Chap18/ArraySeq.rs | 1 |
+| 17 | Chap19/ArraySeqStEph.rs | 1 |
+| 18 | Chap18/ArraySeqStPer.rs | 1 |
+| 19 | Chap12/Exercise12_5.rs | 1 |
+| 20 | Chap18/ArraySeqStEph.rs | 1 |
+| 21 | Chap18/ArraySeqMtEph.rs | 1 |
+| 22 | Chap19/ArraySeqStPer.rs | 1 |
+| 23 | Chap18/ArraySeqMtPer.rs | 1 |
 
 ## 4-Agent Work Split
 
 Split by dependency chains. Agents work bottom-up within their assignment.
+Focus on near-clean chapters first (quick wins to get more chapters to 0).
 
-### Agent 1: Foundation Sequences + Downstream (Chap18/19/28/56)
+### Agent 1: Foundation Sequences (Chap18/19) + Near-Clean (Chap12/52/55/57)
 
-Fix the sequence holes first (Chap18: 8, Chap19: 3). This unblocks Chap28 (8)
-and Chap56 (7). Total: 26 holes across 4 chapters.
+Chap18 (7 holes) and Chap19 (3 holes) are nearly clean — each file has 1 hole.
+Chap12 (1), Chap52 (1), Chap55 (4), Chap57 (1) are also near-clean with clean deps.
+Total: 17 holes across 39 files. Getting these to 0 adds 6 more clean chapters.
+
+Priority: Chap18 → Chap19 → Chap12 → Chap57 → Chap52 → Chap55.
 
 ### Agent 2: BST + Collections (Chap37/39/40/41/42)
 
-Continue coarse RwLock migration for remaining Mt files. Prove BSTSizeStEph.
-Total: 296 holes but most are external_body that become accepts via migration.
+Continue coarse RwLock migration for remaining Mt files. Prove BSTSizeStEph (2 holes).
+Chap40 (6 holes) has clean deps — start there. Chap37/39/41/42 have internal deps.
+Total: 271 holes but most are external_body that become accepts via migration.
 
-### Agent 3: DP + Graph Algorithms (Chap50/53/65/66)
+Priority: Chap40 → Chap37 → Chap42 → Chap39 → Chap41.
 
-UnionFindStEph (10 real proof holes) is the flagship. Chap50 needs St verification
-before Mt can be tightened. Total: 97 holes.
+### Agent 3: DP + Graph Algorithms (Chap26/50/53/66)
 
-### Agent 4: Small Chapters + Tables (Chap03/06/12/21/23/26/43/45/47)
+Chap50 (57 holes) is the big target — all in section 4.2 with clean deps.
+Chap26 (4 holes) and Chap66 (3 holes) also have clean deps.
+Chap53 (22 holes) has internal deps.
+Total: 86 holes across 25 files.
 
-Many small wins. BinaryHeapPQ trivial wf, InsertionSort missing requires, exercises.
-Chap43/47 are large but mostly external_body Mt wrappers. Total: 133 holes.
+Priority: Chap26 → Chap66 → Chap50 (St first, then Mt) → Chap53.
+
+### Agent 4: Tables + Priority Queues (Chap38/43/45/47/49/51)
+
+Chap45 (18 holes) — BinaryHeapPQ has trivial spec_wf. Write real invariants.
+Chap47 (40 holes), Chap43 (127 holes) — large Mt chapters needing coarse RwLock migration.
+Chap38 (33 holes) — per-node locking, genuinely hard.
+Chap49 (8 holes), Chap51 (8 holes) — internal deps.
+Total: 108 holes across 39 files.
+
+Priority: Chap45 → Chap47 → Chap42 → Chap43 → Chap49 → Chap51 → Chap38.
 
 ## Scoreboard
 
-| Metric | Before | After Accept | Target |
-|--------|--------|--------------|--------|
-| Total holes | 637 | 552 | <200 |
-| assume() | 186 | 101 | <30 |
-| external_body | 430 | 430 | <300 |
-| trivial wf | 17 | 17 | 0 |
-| Clean chapters | 18 | 20 | 30+ |
-| Verified fns | 3632 | 3632 | 3700+ |
+| Metric | Round 0 | Round 1 | Round 2 | Target |
+|--------|---------|---------|---------|--------|
+| Total holes | 637 | 552 | 482 | <200 |
+| assume() | 186 | 101 | 72 | <30 |
+| external_body | 430 | 430 | 394 | <300 |
+| trivial wf | 17 | 17 | 12 | 0 |
+| Clean chapters | 18 | 20 | 25 | 30+ |
+| Verified fns | 3632 | 3632 | 3658 | 3700+ |

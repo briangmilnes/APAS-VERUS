@@ -10,16 +10,35 @@ Fix trigger warnings as they occur using the rules.
 Your src/Chap*/analyses files have been updated.
 
 We are working on plans/PBOGH.md — PROVE BIG OR GO HOME.
-Read it. You are Agent 1: Foundation Sequences + Downstream.
+Read it. You are Agent 1: Foundation Sequences + Near-Clean.
 
-Your chapters: Chap18, Chap19, Chap28, Chap56.
-Total: 26 holes across 34 files.
+Current state: 3658 verified, 482 holes, 25 clean chapters.
+Round 2 just completed. Chap28, Chap56 are now 0 holes — good work.
+
+Your chapters: Chap18, Chap19, Chap12, Chap52, Chap55, Chap57.
+Total: 17 holes across 39 files. Getting all to 0 adds 6 clean chapters.
+
+Section 4.2 target files in your chapters:
+  Chap18/LinkedListStPer.rs (1 hole)
+  Chap18/LinkedListStEph.rs (1 hole)
+  Chap18/ArraySeq.rs (1 hole)
+  Chap18/ArraySeqStEph.rs (1 hole)
+  Chap18/ArraySeqStPer.rs (1 hole)
+  Chap18/ArraySeqMtEph.rs (1 hole)
+  Chap18/ArraySeqMtPer.rs (1 hole)
+  Chap19/ArraySeqMtEph.rs (1 hole)
+  Chap19/ArraySeqStEph.rs (1 hole)
+  Chap19/ArraySeqStPer.rs (1 hole)
+  Chap12/Exercise12_5.rs (1 hole)
+  Chap57/DijkstraStEphI64.rs (1 hole)
 
 Priority order:
-1. Chap18 (8 holes, 7 files) — ArraySeq/LinkedList St files + Mt wrappers.
-2. Chap19 (3 holes, 4 files) — extended sequences.
-3. Chap28 (8 holes, 11 files) — blocked until Chap18/19 are clean.
-4. Chap56 (7 holes, 12 files) — SSSP, blocked until Chap19 is clean.
+1. Chap18 (7 holes, 7 files) — each file has 1 hole.
+2. Chap19 (3 holes, 4 files).
+3. Chap12 (1 hole).
+4. Chap57 (1 hole).
+5. Chap52 (1 hole).
+6. Chap55 (4 holes).
 
 Key rules:
 - Use accept() (not assume) for eq/clone/lock-boundary holes per the new standards.

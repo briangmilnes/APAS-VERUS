@@ -12,17 +12,23 @@ Your src/Chap*/analyses files have been updated.
 We are working on plans/PBOGH.md — PROVE BIG OR GO HOME.
 Read it. You are Agent 2: BST + Collections.
 
+Current state: 3658 verified, 482 holes, 25 clean chapters.
+
 Your chapters: Chap37, Chap39, Chap40, Chap41, Chap42.
-Total: 296 holes across 37 files. Most are external_body that become accepts via
+Total: 271 holes across 37 files. Most are external_body that become accepts via
 coarse RwLock migration.
 
+Section 4.2 target files in your chapters (clean deps):
+  Chap40/BSTSizeStEph.rs (2 holes) — start here, provable assumes.
+
+Chap37/39/41/42 have internal deps — they unblock each other as you clean them.
+
 Priority order:
-1. Chap37 (128 holes, 19 files) — finish coarse RwLock migration for BSTSet wrappers.
-   Core BST files already migrated. BSTSet*MtEph wrappers + AVLTreeSeqMtPer remain.
-2. Chap40 (6 holes, 3 files) — BSTSizeStEph has 2 real proof holes.
-3. Chap39 (43 holes, 4 files) — Treap Mt coarse RwLock migration.
-4. Chap41 (97 holes, 7 files) — AVLTreeSet + ArraySetEnum migration.
-5. Chap42 (22 holes, 4 files) — Table Mt wrappers.
+1. Chap40 (6 holes, 3 files) — BSTSizeStEph has 2 real proof holes. Clean deps.
+2. Chap37 (120 holes, 19 files) — finish coarse RwLock migration for BSTSet wrappers.
+3. Chap42 (17 holes, 4 files) — Table Mt wrappers.
+4. Chap39 (43 holes, 4 files) — Treap Mt coarse RwLock migration.
+5. Chap41 (85 holes, 7 files) — AVLTreeSet + ArraySetEnum migration.
 
 Also read plans/coarse-rwlock-migration-plan.md for the RwLock migration details.
 

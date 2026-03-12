@@ -67,15 +67,21 @@ Checking 3 files...
 /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [14] no Debug/Display impls (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [18] verus! block empty (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [18] definition order correct
 /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
 /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [23] free fn type bounds: N/A
 /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:32: warning: [14] struct UnionFindStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:32: warning: [14] struct UnionFindStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:41: warning: [14] struct UnionFindStEphV should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:41: warning: [14] struct UnionFindStEphV should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: warning: [17] collection UnionFindStEph should have an Iterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: warning: [17] collection UnionFindStEph should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap65/ProveUnionFindStEph.rs
 
 ════════════════════════════════════════════════════════════════
-Summary: 50 passed, 12 warnings in 2 files (checked 3 files)
+Summary: 49 passed, 19 warnings in 3 files (checked 3 files)
 ════════════════════════════════════════════════════════════════
