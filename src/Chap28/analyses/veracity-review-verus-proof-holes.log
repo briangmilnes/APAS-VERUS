@@ -21,20 +21,76 @@ Table of Contents:
 
 ✓ MCSSSpec.rs
    10 clean proof functions
-✓ MaxContigSubSumBruteStEph.rs
-✓ MaxContigSubSumDivConMtEph.rs
-✓ MaxContigSubSumDivConOptMtEph.rs
-✓ MaxContigSubSumDivConOptStEph.rs
-   1 clean proof function
-✓ MaxContigSubSumDivConStEph.rs
-   1 clean proof function
-✓ MaxContigSubSumIterStEph.rs
-   2 clean proof functions
+❌ MaxContigSubSumBruteStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:69: error: fn_missing_requires - fn max_with_neginf — exec fn should have requires
+        53 |         fn max_contig_sub_sum_brute(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
+            ...
+        67 |     /// - APAS: Work Θ(1), Span Θ(1)
+        68 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        70 |         ensures
+        71 |             max == spec_max_opt_i32(a, b),
+❌ MaxContigSubSumDivConMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:61: error: fn_missing_requires - fn max_with_neginf — exec fn should have requires
+        48 |         fn max_contig_sub_sum_divcon_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)
+            ...
+        59 |     //		9. impls
+        60 | 
+        62 |         ensures max == spec_max_opt_i32(a, b),
+        63 |     {
+❌ MaxContigSubSumDivConOptMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:67: error: fn_missing_requires - fn max_with_neginf — exec fn should have requires
+        54 |         fn max_contig_sub_sum_divcon_opt_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)
+            ...
+        65 |     //		9. impls
+        66 | 
+        68 |         ensures max == spec_max_opt_i32(a, b),
+        69 |     {
+❌ MaxContigSubSumDivConOptStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:277: error: fn_missing_requires - fn max_with_neginf — exec fn should have requires
+       263 |         fn max_contig_sub_sum_divcon_opt(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
+            ...
+       275 |     // ─── 3. exec functions ───
+       276 | 
+       278 |         ensures max == spec_max_opt_i32(a, b),
+       279 |     {
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ MaxContigSubSumDivConStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:168: error: fn_missing_requires - fn max_with_neginf — exec fn should have requires
+       154 |         fn max_contig_sub_sum_divcon(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
+            ...
+       166 |     // ─── 3. exec functions ───
+       167 | 
+       169 |         ensures max == spec_max_opt_i32(a, b),
+       170 |     {
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ MaxContigSubSumIterStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:147: error: fn_missing_requires - fn max_with_neginf — exec fn should have requires
+       133 |         fn max_contig_sub_sum_iter(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
+            ...
+       145 |     /// - APAS: Work Θ(1), Span Θ(1)
+       146 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+       148 |         ensures max == spec_max_opt_i32(a, b),
+       149 |     {
+   Proof functions: 2 total (2 clean, 0 holed)
 ✓ MaxContigSubSumOptMtEph.rs
 ✓ MaxContigSubSumOptStEph.rs
    1 clean proof function
-✓ MaxContigSubSumReducedMcsseStEph.rs
-✓ MaxContigSubSumReducedStEph.rs
+❌ MaxContigSubSumReducedMcsseStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:68: error: fn_missing_requires - fn max_with_neginf — exec fn should have requires
+        52 |         fn max_contig_sub_sum_reduced_mcsse(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
+            ...
+        66 |     /// - APAS: Work Θ(1), Span Θ(1)
+        67 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        69 |         ensures max == spec_max_opt_i32(a, b),
+        70 |     {
+❌ MaxContigSubSumReducedStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:65: error: fn_missing_requires - fn max_with_neginf — exec fn should have requires
+        49 |         fn max_contig_sub_sum_reduced(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
+            ...
+        63 |     /// - APAS: Work Θ(1), Span Θ(1)
+        64 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        66 |         ensures max == spec_max_opt_i32(a, b),
+        67 |     {
 
 =================================================================
 2. Depends Upon
@@ -77,8 +133,8 @@ MaxContigSubSumReducedStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   11 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   3 clean (no holes, no errors; 27%)
+   8 holed (holes or errors, 72%)
    11 total
 
 Proof Functions:
@@ -87,8 +143,8 @@ Proof Functions:
    15 total
 
 Function Specs:
-   34 exec fns with complete spec (requires+ensures) (51%)
-   0 exec fns missing spec (0%)
+   26 exec fns with complete spec (requires+ensures) (39%)
+   8 exec fns missing spec (12%)
    32 proof/spec fns clean (48%)
    0 proof/spec fns with holes (0%)
    66 total fns
@@ -96,14 +152,18 @@ Function Specs:
 
 Holes Found: 0 total
 
-🎉 No proof holes or warnings found! All proofs are complete.
+🎉 No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-11 19:27:38 -07:00
-Ended:     2026-03-11 19:27:38 -07:00
-Duration:  24ms
+Started:   2026-03-11 19:29:05 -07:00
+Ended:     2026-03-11 19:29:05 -07:00
+Duration:  23ms
+
+Full output: src/Chap28/analyses/veracity-review-verus-proof-holes.log
+5 -07:00
+Duration:  23ms
 
 Full output: src/Chap28/analyses/veracity-review-verus-proof-holes.log

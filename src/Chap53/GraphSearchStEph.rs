@@ -7,6 +7,7 @@ pub mod GraphSearchStEph {
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -56,14 +57,28 @@ pub mod GraphSearchStEph {
     }
 
     impl<V: StT + Ord> SelectionStrategy<V> for SelectOne {
-        #[verifier::external_body]
         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, B)) {
             if frontier.size() == 0 {
                 (AVLTreeSetStEph::empty(), false)
             } else {
                 let seq = frontier.to_seq();
-                let first = seq.nth(0).clone();
-                (AVLTreeSetStEph::singleton(first), false)
+                assert(seq@.len() > 0) by {
+                    if seq@.len() == 0 {
+                        assert(seq@.to_set() =~= Set::empty());
+                    }
+                }
+                let first_ref = seq.nth(0);
+                let first = first_ref.clone();
+                proof { accept(first@ == first_ref@); }  // accept hole: V::clone external_body
+                assert(frontier@.contains(first@));
+                let result = AVLTreeSetStEph::singleton(first);
+                assert(result@.subset_of(frontier@)) by {
+                    assert forall|a: <V as View>::V| result@.contains(a)
+                        implies frontier@.contains(a) by {
+                        assert(result@ == Set::<<V as View>::V>::empty().insert(first@));
+                    }
+                }
+                (result, false)
             }
         }
     }

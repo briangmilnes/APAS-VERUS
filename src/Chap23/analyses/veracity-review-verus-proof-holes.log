@@ -20,41 +20,41 @@ Table of Contents:
 =================================================================
 
 ❌ BalBinTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:328: error: trivial_spec_wf - spec fn spec_balbintreesteph_wf — trivial body { true } or { true; }, consider real well-formedness spec
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap23/BalBinTreeStEph.rs:328: error: trivial_spec_wf - spec fn spec_balbintreesteph_wf — trivial body { true } or { true; }, consider real well-formedness spec
        315 |         pub open spec fn spec_post_order(self) -> Seq<T>
             ...
        326 |     // Trait impl: delegates recursive specs to inherent methods.
        327 |     impl<T> BalBinTreeTrait<T> for BalBinTree<T> {
        329 |         open spec fn spec_size(self) -> nat { BalBinTree::spec_size(self) }
        330 |         open spec fn spec_height(self) -> nat { BalBinTree::spec_height(self) }
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:805: error: fn_missing_requires - fn clone_tree — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap23/BalBinTreeStEph.rs:805: error: fn_missing_requires - fn clone_tree — exec fn should have requires
        795 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        803 | 
        804 | 
        806 |         ensures c == *t
        807 |         decreases t,
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:784: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:799: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:817: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:838: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap23/BalBinTreeStEph.rs:784: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap23/BalBinTreeStEph.rs:799: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap23/BalBinTreeStEph.rs:817: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap23/BalBinTreeStEph.rs:838: info: accept()
    Holes: 1 total
       1 × trivial spec*wf { true }
    Info: 4 total
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ PrimTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:359: error: trivial_spec_wf - spec fn spec_primtreeseqstper_wf — trivial body { true } or { true; }, consider real well-formedness spec
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap23/PrimTreeSeqStPer.rs:359: error: trivial_spec_wf - spec fn spec_primtreeseqstper_wf — trivial body { true } or { true; }, consider real well-formedness spec
        353 |         open spec fn spec_index(&self, i: int) -> T {
             ...
        357 | 
        358 |     impl<T> PrimTreeSeqStTrait<T> for PrimTreeSeqStS<T> {
        360 | 
        361 |         fn empty() -> (empty_seq: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:875: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:885: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:901: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:917: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:922: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap23/PrimTreeSeqStPer.rs:875: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap23/PrimTreeSeqStPer.rs:885: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap23/PrimTreeSeqStPer.rs:901: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap23/PrimTreeSeqStPer.rs:917: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap23/PrimTreeSeqStPer.rs:922: info: accept()
    Holes: 1 total
       1 × trivial spec*wf { true }
    Info: 5 total
@@ -106,11 +106,12 @@ Holes Found: 2 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-11 17:58:44 -07:00
-Ended:     2026-03-11 17:58:44 -07:00
-Duration:  15ms
+Started:   2026-03-11 19:29:05 -07:00
+Ended:     2026-03-11 19:29:05 -07:00
+Duration:  20ms
 
 Full output: src/Chap23/analyses/veracity-review-verus-proof-holes.log
-  15ms
+00
+Duration:  20ms
 
 Full output: src/Chap23/analyses/veracity-review-verus-proof-holes.log

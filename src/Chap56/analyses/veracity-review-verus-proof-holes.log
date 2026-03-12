@@ -23,17 +23,35 @@ Table of Contents:
 ✓ AllPairsResultStEphI64.rs
 ✓ AllPairsResultStPerF64.rs
 ✓ AllPairsResultStPerI64.rs
-ℹ Example56_1.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_1.rs:43: info: external_accept_hole
-   Info: 1 total
-ℹ Example56_3.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_3.rs:40: info: external_accept_hole
-   Info: 1 total
+❌ Example56_1.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:47: error: external_body - #[verifier::external_body]
+        48 |     fn example_path_weight_int() {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:66: error: external_body - #[verifier::external_body]
+        67 |     fn example_path_weight_float() {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:94: error: external_body - #[verifier::external_body]
+        95 |     fn example_negative_weights() {
+   Holes: 3 total
+      3 × external_body
+❌ Example56_3.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:45: error: external_body - #[verifier::external_body]
+        46 |     fn example_negative_cycle() {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:79: error: external_body - #[verifier::external_body]
+        80 |     fn example_undefined_shortest_path() {
+   Holes: 2 total
+      2 × external_body
 ✓ PathWeightUtilsStEph.rs
 ✓ PathWeightUtilsStPer.rs
-✓ SSSPResultStEphF64.rs
+❌ SSSPResultStEphF64.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStEphF64.rs:162: error: external_body - #[verifier::external_body]
+       163 |         fn is_reachable(&self, v: usize) -> (b: bool) {
+   Holes: 1 total
+      1 × external_body
 ✓ SSSPResultStEphI64.rs
-✓ SSSPResultStPerF64.rs
+❌ SSSPResultStPerF64.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/SSSPResultStPerF64.rs:190: error: external_body - #[verifier::external_body]
+       191 |         fn is_reachable(&self, v: usize) -> (reachable: bool) {
+   Holes: 1 total
+      1 × external_body
 ✓ SSSPResultStPerI64.rs
 
 =================================================================
@@ -79,8 +97,8 @@ SSSPResultStPerI64.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   12 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   8 clean (no holes, no errors; 66%)
+   4 holed (holes or errors, 33%)
    12 total
 
 Proof Functions:
@@ -96,16 +114,18 @@ Function Specs:
    219 total fns
 
 
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
+Holes Found: 7 total
+   7 × external_body (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-11 19:27:38 -07:00
-Ended:     2026-03-11 19:27:38 -07:00
+Started:   2026-03-11 19:29:05 -07:00
+Ended:     2026-03-11 19:29:05 -07:00
+Duration:  27ms
+
+Full output: src/Chap56/analyses/veracity-review-verus-proof-holes.log
 Duration:  27ms
 
 Full output: src/Chap56/analyses/veracity-review-verus-proof-holes.log
