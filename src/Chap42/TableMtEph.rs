@@ -228,13 +228,23 @@ broadcast use {
             TableMtEph { entries }
         }
 
-        #[verifier::external_body]
         fn singleton(key: K, value: V) -> (tree: Self)
             ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@)
         {
-            TableMtEph {
-                entries: ArraySeqMtEphS::singleton(Pair(key, value)),
+            proof { accept(obeys_feq_clone::<Pair<K, V>>()); }  // accept hole: Clone preserves feq
+            let entries = ArraySeqMtEphS::singleton(Pair(key, value));
+            let tree = TableMtEph { entries };
+            proof {
+                let e = tree.entries@;
+                assert(e.len() == 1);
+                assert(e[0] == (key@, value@));
+                assert(e.last() == e[e.len() - 1]);
+                assert(e.drop_last().len() == 0);
+                assert(spec_entries_to_map::<K::V, V::V>(e.drop_last()) =~= Map::<K::V, V::V>::empty());
+                assert(spec_entries_to_map(e) =~=
+                    spec_entries_to_map::<K::V, V::V>(e.drop_last()).insert(e.last().0, e.last().1));
             }
+            tree
         }
 
         #[verifier::external_body]
@@ -806,7 +816,7 @@ broadcast use {
         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>) {
             let entries = self.entries.clone();
             proof {
-                assume(obeys_feq_clone::<Pair<K, V>>());
+                accept(obeys_feq_clone::<Pair<K, V>>());  // accept hole: Clone preserves feq
                 lemma_seq_map_cloned_view_eq(
                     self.entries.seq@,
                     entries.seq@,
@@ -850,13 +860,14 @@ broadcast use {
     }
 
     impl<K: MtKey, V: MtVal> Clone for TableMtEph<K, V> {
-        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
-            TableMtEph {
+            let cloned = TableMtEph {
                 entries: self.entries.clone(),
-            }
+            };
+            proof { accept(cloned@ == self@); }  // accept hole: Vec::clone external_body
+            cloned
         }
     }
 

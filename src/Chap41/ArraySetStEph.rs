@@ -420,7 +420,7 @@ pub mod ArraySetStEph {
         {
             let seq = self.elements.clone();
             proof {
-                assume(obeys_feq_clone::<T>());
+                accept(obeys_feq_clone::<T>());  // accept hole: Clone preserves feq
                 lemma_seq_map_cloned_view_eq(
                     self.elements.seq@,
                     seq.seq@,

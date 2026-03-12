@@ -22,99 +22,75 @@ Table of Contents:
 ✓ Example42_1.rs
    1 clean proof function
 ❌ TableMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:216: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:216: error: external_body - #[verifier::external_body]
        217 |         fn size(&self) -> (count: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:231: error: external_body - #[verifier::external_body]
-       232 |         fn singleton(key: K, value: V) -> (tree: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:240: error: external_body - #[verifier::external_body]
-       241 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:274: error: external_body - #[verifier::external_body]
-       275 |         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:333: error: external_body - #[verifier::external_body]
-       334 |         fn map<F: Fn(&V) -> V + Send + Sync + 'static>(&mut self, f: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:387: error: external_body - #[verifier::external_body]
-       388 |         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&mut self, f: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:439: error: external_body - #[verifier::external_body]
-       440 |         fn intersection<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:467: error: external_body - #[verifier::external_body]
-       468 |         fn union<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:511: error: external_body - #[verifier::external_body]
-       512 |         fn difference(&mut self, other: &Self)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:545: error: external_body - #[verifier::external_body]
-       546 |         fn find(&self, key: &K) -> (found: Option<V>)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:570: error: external_body - #[verifier::external_body]
-       571 |         fn delete(&mut self, key: &K)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:623: error: external_body - #[verifier::external_body]
-       624 |         fn insert<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, key: K, value: V, combine: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:702: error: external_body - #[verifier::external_body]
-       703 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:754: error: external_body - #[verifier::external_body]
-       755 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:809: error: assume() - assume(obeys_feq_clone::<Pair<K, V>>());
-       806 |         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:250: error: external_body - #[verifier::external_body]
+       251 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:284: error: external_body - #[verifier::external_body]
+       285 |         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:343: error: external_body - #[verifier::external_body]
+       344 |         fn map<F: Fn(&V) -> V + Send + Sync + 'static>(&mut self, f: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:397: error: external_body - #[verifier::external_body]
+       398 |         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&mut self, f: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:449: error: external_body - #[verifier::external_body]
+       450 |         fn intersection<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:477: error: external_body - #[verifier::external_body]
+       478 |         fn union<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:521: error: external_body - #[verifier::external_body]
+       522 |         fn difference(&mut self, other: &Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:555: error: external_body - #[verifier::external_body]
+       556 |         fn find(&self, key: &K) -> (found: Option<V>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:580: error: external_body - #[verifier::external_body]
+       581 |         fn delete(&mut self, key: &K)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:633: error: external_body - #[verifier::external_body]
+       634 |         fn insert<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, key: K, value: V, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:712: error: external_body - #[verifier::external_body]
+       713 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:764: error: external_body - #[verifier::external_body]
+       765 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:829: error: fn_missing_requires - fn from_sorted_entries — exec fn should have requires
+       816 |         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>) {
             ...
-       807 |             let entries = self.entries.clone();
-       808 |             proof {
-       810 |                 lemma_seq_map_cloned_view_eq(
-       811 |                     self.entries.seq@,
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:853: error: external_body - #[verifier::external_body]
-       854 |         fn clone(&self) -> (cloned: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:819: error: fn_missing_requires - fn from_sorted_entries — exec fn should have requires
-       806 |         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>) {
-            ...
-       817 |     }
-       818 | 
-       820 |         ensures constructed@.dom().finite()
-       821 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:847: info: accept()
-   Holes: 16 total
-      1 × assume()
-      15 × external_body
-   Info: 1 total
+       827 |     }
+       828 | 
+       830 |         ensures constructed@.dom().finite()
+       831 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:234: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:819: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:857: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:869: info: accept()
+   Holes: 13 total
+      13 × external_body
+   Info: 4 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ TableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1652: error: assume() - assume(obeys_feq_clone::<Pair<K, V>>());
-      1649 |         fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>) {
-            ...
-      1650 |             let entries = self.entries.clone();
-      1651 |             proof {
-      1653 |                 lemma_seq_map_cloned_view_eq(
-      1654 |                     self.entries.seq@,
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1662: error: fn_missing_requires - fn from_sorted_entries — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1662: error: fn_missing_requires - fn from_sorted_entries — exec fn should have requires
       1649 |         fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>) {
             ...
       1660 |     }
       1661 | 
       1663 |         entries: Vec<Pair<K, V>>,
       1664 |     ) -> (cloned: TableStEph<K, V>)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1698: info: accept()
-   Holes: 1 total
-      1 × assume()
-   Info: 1 total
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1652: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1698: info: accept()
+   Info: 2 total
    Proof functions: 8 total (8 clean, 0 holed)
 ❌ TableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1727: error: assume() - assume(obeys_feq_clone::<Pair<K, V>>());
-      1723 |         fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
-            ...
-      1725 |             let collected = self.entries.clone();
-      1726 |             proof {
-      1728 |                 lemma_seq_map_cloned_view_eq(
-      1729 |                     self.entries.seq@,
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1754: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1754: error: external_body - #[verifier::external_body]
       1755 |     pub fn collect_by_key<K: StT + Ord + Eq, V: StT>(
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1737: error: fn_missing_requires - fn from_sorted_entries — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1737: error: fn_missing_requires - fn from_sorted_entries — exec fn should have requires
       1723 |         fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
             ...
       1735 |     }
       1736 | 
       1738 |         entries: Vec<Pair<K, V>>,
       1739 |     ) -> (cloned: TableStPer<K, V>)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1799: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1810: info: accept()
-   Holes: 2 total
-      1 × assume()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1727: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1799: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1810: info: accept()
+   Holes: 1 total
       1 × external_body
-   Info: 2 total
+   Info: 3 total
    Proof functions: 8 total (8 clean, 0 holed)
 
 =================================================================
@@ -161,17 +137,15 @@ Function Specs:
    150 total fns
 
 
-Holes Found: 19 total
-   3 × assume() (15%)
-   16 × external_body (84%)
+Holes Found: 14 total
+   14 × external_body (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-11 19:50:45 -07:00
-Ended:     2026-03-11 19:50:45 -07:00
-Duration:  48ms
+Started:   2026-03-11 19:34:35 -07:00
+Ended:     2026-03-11 19:34:35 -07:00
+Duration:  52ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap42/analyses/veracity-review-verus-proof-holes.log

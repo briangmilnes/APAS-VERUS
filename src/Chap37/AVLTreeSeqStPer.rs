@@ -540,13 +540,14 @@ pub mod AVLTreeSeqStPer {
     }
 
     impl<T: StT> Clone for AVLTreeSeqStPerS<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (copy: Self)
             ensures copy@ == self@,
         {
-            AVLTreeSeqStPerS {
+            let copy = AVLTreeSeqStPerS {
                 root: self.root.clone(),
-            }
+            };
+            proof { accept(copy@ == self@); }  // accept hole: Arc::clone external_body
+            copy
         }
     }
 

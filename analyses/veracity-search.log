@@ -1,17 +1,9 @@
-Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: tokenized_state_machine
+Pattern: fn.*subset.*finite\|fn.*finite.*subset
 Searching: /home/milnes/projects/verus/source/vstd
-Searching: /home/milnes/projects/VerusCodebases
-Files: 12661, Functions: 165756, Matches: 2
-
-[31m/home/milnes/projects/VerusCodebases/verus/source/state_machines_macros/src/lib.rs:72: [0m
-#[proc_macro]
-[38;5;22mpub fn tokenized_state_machine(input: TokenStream) -> TokenStream[0m
-
-[31m/home/milnes/projects/VerusCodebases/verus/source/state_machines_macros/src/lib.rs:79: [0m
-#[proc_macro]
-[38;5;22mpub fn tokenized_state_machine_vstd(input: TokenStream) -> TokenStream[0m
+Searching: /home/milnes/projects/verus/source/vstd
+Files: 204, Functions: 4950, Matches: 0
 
