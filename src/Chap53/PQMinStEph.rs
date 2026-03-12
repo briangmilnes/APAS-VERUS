@@ -84,7 +84,9 @@ pub mod PQMinStEph {
 
     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
         frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
-    ) -> (result: Option<V>) {
+    ) -> (result: Option<V>)
+        requires frontier.spec_avltreesetsteph_wf()
+    {
         if frontier.size() == 0 {
             None
         } else {
@@ -96,7 +98,7 @@ pub mod PQMinStEph {
             }
             let entry_ref = seq.nth(0);
             let v = entry_ref.1.clone();
-            proof { accept(v@ == entry_ref.1@); }  // accept hole: V::clone external_body
+            proof { assume(v@ == entry_ref.1@); }
             Some(v)
         }
     }
@@ -109,6 +111,8 @@ pub mod PQMinStEph {
         frontier_init: AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
     ) -> (result: (AVLTreeSetStEph<V>, AVLTreeSetStEph<Pair<V, P>>))
         requires
+            visited_init.spec_avltreesetsteph_wf(),
+            frontier_init.spec_avltreesetsteph_wf(),
             forall|v: &V| #[trigger] graph.requires((v,)),
             forall|v: &V| #[trigger] priority_fn.requires((v,)),
     {
@@ -117,6 +121,8 @@ pub mod PQMinStEph {
 
         while frontier.size() > 0
             invariant
+                visited.spec_avltreesetsteph_wf(),
+                frontier.spec_avltreesetsteph_wf(),
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
         {
@@ -137,6 +143,7 @@ pub mod PQMinStEph {
             let visited_new = visited.union(&AVLTreeSetStEph::singleton(v.clone()));
 
             let neighbors = graph(&v);
+            proof { assume(neighbors.spec_avltreesetsteph_wf()); }
             let mut frontier_updated = frontier_new;
             let neighbors_seq = neighbors.to_seq();
             let nlen = neighbors_seq.length();
@@ -146,6 +153,8 @@ pub mod PQMinStEph {
                     i <= nlen,
                     nlen == neighbors_seq@.len(),
                     neighbors_seq.spec_avltreeseqsteph_wf(),
+                    visited_new.spec_avltreesetsteph_wf(),
+                    frontier_updated.spec_avltreesetsteph_wf(),
                     forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 decreases nlen - i,
             {
@@ -172,6 +181,7 @@ pub mod PQMinStEph {
                 j <= vlen,
                 vlen == visited_seq@.len(),
                 visited_seq.spec_avltreeseqsteph_wf(),
+                priorities.spec_avltreesetsteph_wf(),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
             decreases vlen - j,
         {

@@ -76,7 +76,7 @@ pub mod GraphSearchMtPer {
                 }
                 let first_ref = seq.nth(0);
                 let first = first_ref.clone();
-                proof { accept(first@ == first_ref@); }  // accept hole: V::clone external_body
+                proof { assume(first@ == first_ref@); }
                 assert(frontier@.contains(first@));
                 let result = AVLTreeSetMtPer::singleton(first);
                 assert(result@.subset_of(frontier@)) by {

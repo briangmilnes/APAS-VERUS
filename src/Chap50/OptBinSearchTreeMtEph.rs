@@ -269,7 +269,7 @@ broadcast use {
                 let keys_arc = self.keys.clone();
                 let rwlock = arc_deref(&keys_arc);
                 let (mut keys, write_handle) = rwlock.acquire_write();
-                proof { accept(index < keys@.len()); }
+                proof { assume(index < keys@.len()); }
                 keys.set(index, key_prob);
                 write_handle.release_write(keys);
             }
@@ -285,7 +285,7 @@ broadcast use {
                 let keys_arc = self.keys.clone();
                 let rwlock = arc_deref(&keys_arc);
                 let (mut keys, write_handle) = rwlock.acquire_write();
-                proof { accept(index < keys@.len()); }
+                proof { assume(index < keys@.len()); }
                 let new_kp = KeyProb { key: keys[index].key.clone(), prob };
                 keys.set(index, new_kp);
                 write_handle.release_write(keys);

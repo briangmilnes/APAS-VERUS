@@ -235,11 +235,11 @@ broadcast use {
             let rwlock = arc_deref(&self.dimensions);
             let handle = rwlock.acquire_read();
             let dims = handle.borrow();
-            proof { accept(i < dims@.len() && k < dims@.len() && j < dims@.len()); }
+            proof { assume(i < dims@.len() && k < dims@.len() && j < dims@.len()); }
             let left_rows = dims[i].rows;
             let split_cols = dims[k].cols;
             let right_cols = dims[j].cols;
-            proof { accept((left_rows as nat) * (split_cols as nat) <= usize::MAX as nat
+            proof { assume((left_rows as nat) * (split_cols as nat) <= usize::MAX as nat
                 && (left_rows as nat) * (split_cols as nat) * (right_cols as nat) <= usize::MAX as nat); }
             handle.release_read();
             left_rows * split_cols * right_cols
@@ -337,7 +337,7 @@ broadcast use {
                 let dims_arc = self.dimensions.clone();
                 let rwlock = arc_deref(&dims_arc);
                 let (mut dims, write_handle) = rwlock.acquire_write();
-                proof { accept(index < dims@.len()); }
+                proof { assume(index < dims@.len()); }
                 dims.set(index, dim);
                 write_handle.release_write(dims);
             }
@@ -354,7 +354,7 @@ broadcast use {
                 let dims_arc = self.dimensions.clone();
                 let rwlock = arc_deref(&dims_arc);
                 let (mut dims, write_handle) = rwlock.acquire_write();
-                proof { accept(index < dims@.len()); }
+                proof { assume(index < dims@.len()); }
                 dims.set(index, dim);
                 write_handle.release_write(dims);
             }
