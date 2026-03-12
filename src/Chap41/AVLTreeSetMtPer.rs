@@ -427,7 +427,7 @@ broadcast use {
         {
             proof {
                 assume(self.elements.spec_avltreeseqmtper_wf());
-                accept(obeys_feq_full::<T>());  // accept hole: feq bridge
+                assume(obeys_feq_full::<T>());  // accept hole: feq bridge
             }
             let n = self.elements.length();
             let mut lo: usize = 0;

@@ -168,7 +168,7 @@ broadcast use {
         fn singleton(x: T) -> (tree: Self)
         {
             let ghost x_view = x@;
-            proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
             let mut v: Vec<T> = Vec::new();
             v.push(x);
             let ghost v_view = v@;
@@ -328,7 +328,7 @@ broadcast use {
         {
             proof {
                 assume(self.elements.spec_avltreeseqsteph_wf());
-                accept(obeys_feq_full::<T>());  // accept hole: feq bridge
+                assume(obeys_feq_full::<T>());  // accept hole: feq bridge
             }
             let n = self.elements.length();
             let mut lo: usize = 0;
@@ -377,7 +377,7 @@ broadcast use {
                 }
                 i += 1;
             }
-            proof { assume(result_vec@.len() < usize::MAX); accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(result_vec@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
             proof {
                 assume(self@ == old(self)@.remove(x@));
@@ -431,7 +431,7 @@ broadcast use {
                     new_vec.push(self.elements.nth(j).clone());
                     j += 1;
                 }
-                proof { assume(new_vec@.len() < usize::MAX); accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+                proof { assume(new_vec@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
             }
             proof {

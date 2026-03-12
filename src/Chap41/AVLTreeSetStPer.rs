@@ -355,7 +355,7 @@ broadcast use {
 
         fn find(&self, x: &T) -> (found: B)
         {
-            proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
             let n = self.elements.length();
             let mut lo: usize = 0;
             let mut hi: usize = n;

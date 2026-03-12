@@ -420,7 +420,7 @@ pub mod ArraySetStEph {
         {
             let seq = self.elements.clone();
             proof {
-                accept(obeys_feq_clone::<T>());  // accept hole: Clone preserves feq
+                assume(obeys_feq_clone::<T>());  // accept hole: Clone preserves feq
                 lemma_seq_map_cloned_view_eq(
                     self.elements.seq@,
                     seq.seq@,
@@ -482,7 +482,7 @@ pub mod ArraySetStEph {
 
         fn find(&self, x: &T) -> (found: B)
         {
-            proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
             let n = self.elements.length();
             let mut i: usize = 0;
             while i < n
@@ -513,7 +513,7 @@ pub mod ArraySetStEph {
 
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
         {
-            proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
             let ghost old_view = self.elements@;
             let mut result_vec: Vec<T> = Vec::new();
             let ghost mut rv_views: Seq<<T as View>::V> = Seq::empty();
@@ -620,7 +620,7 @@ pub mod ArraySetStEph {
 
         fn intersection(&self, other: &Self) -> (common: Self)
         {
-            proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
             let ghost old_view = self.elements@;
             let ghost other_set = other@;
             let mut result_vec: Vec<T> = Vec::new();
@@ -700,7 +700,7 @@ pub mod ArraySetStEph {
 
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
-            proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
             let ghost old_view = self.elements@;
             let ghost other_set = other@;
             let mut result_vec: Vec<T> = Vec::new();
@@ -780,7 +780,7 @@ pub mod ArraySetStEph {
 
         fn union(&self, other: &Self) -> (combined: Self)
         {
-            proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
             let ghost self_view = self.elements@;
             let ghost other_view = other.elements@;
             let ghost self_set = self@;
@@ -936,7 +936,7 @@ pub mod ArraySetStEph {
 
         fn delete(&mut self, x: &T)
         {
-            proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
             let ghost old_view = self.elements@;
             let ghost x_view = x@;
             let mut result_vec: Vec<T> = Vec::new();
@@ -1013,7 +1013,7 @@ pub mod ArraySetStEph {
         fn insert(&mut self, x: T)
         {
             if !self.find(&x) {
-                proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+                proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
                 let ghost old_view = self.elements@;
                 let ghost x_view = x@;
                 let n = self.elements.length();
