@@ -28,6 +28,9 @@ Key rules:
 - WARNING: Do NOT add accept() anywhere except the patterns defined in the standards
   (lock-boundary, eq/clone). Misplaced accepts defeat the proof. When in doubt, leave
   it as assume and flag it for review.
+- NEVER write `requires true`. Per spec_wf_standard.rs: every &self method requires
+  self.spec_<module>_wf(). Every &mut self method requires old(self).spec_<module>_wf().
+  Every Self output ensures out.spec_<module>_wf(). Read the standard.
 - Run scripts/validate.sh after changes. Show full output.
 - Run scripts/holes.sh on your chapters to verify hole counts before and after.
 

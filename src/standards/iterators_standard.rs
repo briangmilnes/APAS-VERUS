@@ -21,6 +21,12 @@
 //! 10. IntoIterator for &Self (section 10)
 //!
 //! Optional: IntoIterator for Self (consuming pattern).
+//!
+//! Note on iter_mut: some modules have `iter_mut` or `into_iter_mut` methods left
+//! over from early development. These cannot be verified until Verus supports
+//! prophetic iterators (mutable borrows yielded from iterators). Leave them as-is
+//! — do not delete, do not try to verify, do not add specs. They will be revisited
+//! when prophetic iterator support lands in Verus.
 // 1. module
 pub mod iterators_standard {
 

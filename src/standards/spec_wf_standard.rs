@@ -54,6 +54,28 @@
 //! 5. `&mut self` methods use `old(self).spec_<mod>_wf()` in requires,
 //!    `self.spec_<mod>_wf()` in ensures.
 //!
+//! 6. Trivially-true wf for Vec-only wrappers.
+//!
+//!    Some types are thin wrappers around a single `Vec<T>` with no additional
+//!    exec fields — e.g., `struct ArraySeqStEphS<T> { pub seq: Vec<T> }`. These
+//!    types have no structural invariant beyond what Rust's type system guarantees:
+//!    a `Vec<T>` is always a valid sequence. There is no ordering constraint, no
+//!    capacity relationship, no index bound to maintain.
+//!
+//!    For these types, `spec_wf { true }` is the correct body. Do not invent a
+//!    synthetic invariant (like `self@.len() <= usize::MAX`) just to avoid `true`.
+//!    The wf convention still applies — declare it abstract in the trait, open in
+//!    the impl — so that callers uniformly write `requires self.spec_X_wf()`. If
+//!    the type later gains a field that introduces a real invariant, the wf body
+//!    changes but all call sites already carry the precondition.
+//!
+//!    Types that DO need a non-trivial wf: any struct with multiple fields whose
+//!    relationship must be maintained (e.g., `distances.len() == predecessors.len()`),
+//!    types with ordering invariants (heaps, sorted lists, BSTs), or types with
+//!    domain constraints (capacity bounds, non-empty guarantees).
+//!
+//!    The `VecWrapper` example below demonstrates the trivially-true pattern.
+//!
 //! Reference implementation: `src/Chap05/SetStEph.rs`.
 //! Experiment: `src/experiments/generic_specs_to_prevent_cycles.rs`.
 
@@ -150,6 +172,50 @@ pub mod spec_wf_standard {
 
         fn flatten(nested: &Container<Container<T>>) -> (out: Container<Container<T>>) {
             Container { data: Vec::new() }
+        }
+    }
+
+    // Trivially-true wf for a Vec-only wrapper (rule 6).
+
+    pub struct VecWrapper<T> {
+        pub seq: Vec<T>,
+    }
+
+    impl<T> View for VecWrapper<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.seq@ }
+    }
+
+    pub trait VecWrapperTrait<T> : View<V = Seq<T>> + Sized {
+        /// Abstract wf — trivially true for a Vec-only wrapper.
+        spec fn spec_vecwrapper_wf(&self) -> bool;
+
+        fn empty() -> (out: Self)
+            ensures out.spec_vecwrapper_wf(), out@.len() == 0;
+
+        fn len(&self) -> (n: usize)
+            requires self.spec_vecwrapper_wf()
+            ensures n == self@.len();
+
+        fn push(&mut self, x: T)
+            requires old(self).spec_vecwrapper_wf()
+            ensures self.spec_vecwrapper_wf(), self@.len() == old(self)@.len() + 1;
+    }
+
+    impl<T> VecWrapperTrait<T> for VecWrapper<T> {
+        /// Trivially true: Vec<T> has no structural invariant to express.
+        open spec fn spec_vecwrapper_wf(&self) -> bool { true }
+
+        fn empty() -> (out: Self) {
+            VecWrapper { seq: Vec::new() }
+        }
+
+        fn len(&self) -> (n: usize) {
+            self.seq.len()
+        }
+
+        fn push(&mut self, x: T) {
+            self.seq.push(x);
         }
     }
 
