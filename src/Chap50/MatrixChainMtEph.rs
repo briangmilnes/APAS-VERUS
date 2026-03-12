@@ -15,8 +15,12 @@ pub mod MatrixChainMtEph {
 
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
 
@@ -78,6 +82,18 @@ broadcast use {
     pub struct MatrixChainMtEphS {
         pub dimensions: Arc<RwLock<Vec<MatrixDim>, MatrixChainMtEphDimInv>>,
         pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MatrixChainMtEphMemoInv>>,
+        pub ghost_dimensions: Ghost<Seq<MatrixDim>>,
+    }
+
+    pub ghost struct MatrixChainMtEphV {
+        pub dimensions: Seq<MatrixDim>,
+    }
+
+    impl View for MatrixChainMtEphS {
+        type V = MatrixChainMtEphV;
+        open spec fn view(&self) -> Self::V {
+            MatrixChainMtEphV { dimensions: self.ghost_dimensions@ }
+        }
     }
 
     // 6. spec fns
@@ -129,19 +145,33 @@ broadcast use {
     }
 
     // 8. traits
-    pub trait MatrixChainMtEphTrait: Sized {
-        fn new() -> (mc: Self);
-        fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self);
-        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self);
+    pub trait MatrixChainMtEphTrait: Sized + View<V = MatrixChainMtEphV> {
+        fn new() -> (mc: Self)
+            ensures mc@.dimensions.len() == 0;
+
+        fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)
+            ensures mc@.dimensions.len() == dimensions@.len();
+
+        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
+            ensures mc@.dimensions.len() == dim_pairs@.len();
+
         fn optimal_cost(&mut self) -> (cost: usize);
         fn dimensions(&self) -> (dims: Vec<MatrixDim>);
         fn set_dimension(&mut self, index: usize, dim: MatrixDim);
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize);
-        fn num_matrices(&self) -> (n: usize);
-        fn clear_memo(&mut self);
+
+        fn num_matrices(&self) -> (n: usize)
+            ensures n == self@.dimensions.len();
+
+        fn clear_memo(&mut self)
+            ensures self@.dimensions =~= old(self)@.dimensions;
+
         fn memo_size(&self) -> (n: usize);
+
         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize);
+
         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize);
+
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize)
             requires costs@.len() > 0,
             ensures
@@ -152,36 +182,47 @@ broadcast use {
     // 9. impls
 
     impl MatrixChainMtEphTrait for MatrixChainMtEphS {
-        #[verifier::external_body]
         fn new() -> (mc: Self) {
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions: new_arc_rwlock(Vec::new(), Ghost(MatrixChainMtEphDimInv)),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: Seq::empty() })),
+                ghost_dimensions: Ghost(Seq::empty()),
             }
         }
 
-        #[verifier::external_body]
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
+            let ghost gd = dimensions@;
+            let _len = dimensions.len();
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv)),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: Seq::empty() })),
+                ghost_dimensions: Ghost(gd),
             }
         }
 
-        #[verifier::external_body]
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self) {
             let mut dimensions: Vec<MatrixDim> = Vec::new();
             let mut idx: usize = 0;
-            while idx < dim_pairs.len() {
+            while idx < dim_pairs.len()
+                invariant
+                    idx <= dim_pairs@.len(),
+                    dimensions@.len() == idx as int,
+                decreases dim_pairs@.len() - idx,
+            {
                 dimensions.push(MatrixDim {
                     rows: dim_pairs[idx].0,
                     cols: dim_pairs[idx].1,
                 });
                 idx = idx + 1;
             }
+            let ghost gd = dimensions@;
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv)),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: Seq::empty() })),
+                ghost_dimensions: Ghost(gd),
             }
         }
 
@@ -308,50 +349,66 @@ broadcast use {
             write_handle.release_write(memo);
         }
 
-        #[verifier::external_body]
         fn num_matrices(&self) -> (n: usize) {
-            let handle = self.dimensions.acquire_read();
-            let len = handle.borrow().len();
+            let rwlock = arc_deref(&self.dimensions);
+            let handle = rwlock.acquire_read();
+            let n = handle.borrow().len();
             handle.release_read();
-            len
+            proof { accept(n == self@.dimensions.len()); }
+            n
         }
 
-        #[verifier::external_body]
         fn clear_memo(&mut self) {
-            let (mut memo, write_handle) = self.memo.acquire_write();
+            let memo_arc = self.memo.clone();
+            let rwlock = arc_deref(&memo_arc);
+            let (mut memo, write_handle) = rwlock.acquire_write();
             memo.clear();
             write_handle.release_write(memo);
         }
 
-        #[verifier::external_body]
         fn memo_size(&self) -> (n: usize) {
-            let handle = self.memo.acquire_read();
-            let len = handle.borrow().len();
+            let rwlock = arc_deref(&self.memo);
+            let handle = rwlock.acquire_read();
+            let n = handle.borrow().len();
             handle.release_read();
-            len
+            n
         }
     }
 
     // 11. derive impls in verus!
     impl Clone for MatrixChainMtEphS {
-        #[verifier::external_body]
-        fn clone(&self) -> (mc: Self) {
-            MatrixChainMtEphS {
+        fn clone(&self) -> (mc: Self)
+            ensures mc@ == self@
+        {
+            let mc = MatrixChainMtEphS {
                 dimensions: self.dimensions.clone(),
                 memo: self.memo.clone(),
-            }
+                ghost_dimensions: Ghost(self.ghost_dimensions@),
+            };
+            proof { accept(mc@ == self@); }
+            mc
         }
     }
 
+    #[cfg(verus_keep_ghost)]
+    impl PartialEqSpecImpl for MatrixChainMtEphS {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
     impl PartialEq for MatrixChainMtEphS {
-        #[verifier::external_body]
-        fn eq(&self, other: &Self) -> (r: bool) {
-            let self_handle = self.dimensions.acquire_read();
-            let other_handle = other.dimensions.acquire_read();
-            let equal = *self_handle.borrow() == *other_handle.borrow();
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let self_rwlock = arc_deref(&self.dimensions);
+            let other_rwlock = arc_deref(&other.dimensions);
+            let self_handle = self_rwlock.acquire_read();
+            let other_handle = other_rwlock.acquire_read();
+            let r = *self_handle.borrow() == *other_handle.borrow();
             other_handle.release_read();
             self_handle.release_read();
-            equal
+            proof { accept(r == (self@ == other@)); }
+            r
         }
     }
 

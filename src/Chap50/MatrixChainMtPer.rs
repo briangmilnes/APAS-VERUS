@@ -322,12 +322,12 @@ broadcast use {
             dims.len()
         }
 
-        #[verifier::external_body]
         fn memo_size(&self) -> (n: usize) {
-            let handle = self.memo.acquire_read();
-            let len = handle.borrow().len();
+            let rwlock = arc_deref(&self.memo);
+            let handle = rwlock.acquire_read();
+            let n = handle.borrow().len();
             handle.release_read();
-            len
+            n
         }
     }
 

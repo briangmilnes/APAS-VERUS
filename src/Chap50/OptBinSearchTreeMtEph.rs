@@ -16,10 +16,33 @@ pub mod OptBinSearchTreeMtEph {
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap30::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
+
+// Table of Contents
+// 1. module
+// 2. imports
+// 3. broadcast use
+// 4. type definitions
+// 5. view impls
+// 8. traits
+// 9. impls
+// 11. derive impls in verus!
+
+// 3. broadcast use
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    crate::Types::Types::group_Pair_axioms,
+    vstd::map::group_map_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+};
 
     // 4. type definitions
     #[verifier::reject_recursive_types(T)]
@@ -29,9 +52,12 @@ pub mod OptBinSearchTreeMtEph {
     }
 
     impl<T: MtVal> Clone for KeyProb<T> {
-        #[verifier::external_body]
-        fn clone(&self) -> Self {
-            KeyProb { key: self.key.clone(), prob: self.prob }
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned == *self
+        {
+            let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
+            proof { accept(cloned == *self); }
+            cloned
         }
     }
 
@@ -54,29 +80,48 @@ pub mod OptBinSearchTreeMtEph {
     pub struct OBSTMtEphS<T: MtVal> {
         pub keys: Arc<RwLock<Vec<KeyProb<T>>, OptBSTMtEphKeysInv>>,
         pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtEphMemoInv>>,
+        pub ghost_keys: Ghost<Seq<KeyProb<T>>>,
     }
 
-    impl<T: MtVal> Clone for OBSTMtEphS<T> {
-        #[verifier::external_body]
-        fn clone(&self) -> Self {
-            OBSTMtEphS {
-                keys: self.keys.clone(),
-                memo: self.memo.clone(),
-            }
+    // 5. view impls
+    #[verifier::reject_recursive_types(T)]
+    pub ghost struct OBSTMtEphV<T: MtVal> {
+        pub keys: Seq<KeyProb<T>>,
+    }
+
+    impl<T: MtVal> View for OBSTMtEphS<T> {
+        type V = OBSTMtEphV<T>;
+        open spec fn view(&self) -> Self::V {
+            OBSTMtEphV { keys: self.ghost_keys@ }
         }
     }
 
     // 8. traits
-    pub trait OBSTMtEphTrait<T: MtVal>: Sized {
-        fn new() -> (empty: Self);
-        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self);
-        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self);
+    pub trait OBSTMtEphTrait<T: MtVal>: Sized + View<V = OBSTMtEphV<T>> {
+        fn new() -> (empty: Self)
+            ensures empty@.keys.len() == 0;
+
+        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)
+            requires keys@.len() == probs@.len(),
+            ensures constructed@.keys.len() == keys@.len();
+
+        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)
+            ensures constructed@.keys =~= key_probs@;
+
         fn optimal_cost(&mut self) -> (cost: Probability) where T: Send + Sync + 'static;
+
         fn keys(&self) -> (keys: Vec<KeyProb<T>>);
+
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>);
+
         fn update_prob(&mut self, index: usize, prob: Probability);
-        fn num_keys(&self) -> (count: usize);
-        fn clear_memo(&mut self);
+
+        fn num_keys(&self) -> (count: usize)
+            ensures count == self@.keys.len();
+
+        fn clear_memo(&mut self)
+            ensures self@.keys =~= old(self)@.keys;
+
         fn memo_size(&self) -> (count: usize);
     }
 
@@ -151,31 +196,45 @@ pub mod OptBinSearchTreeMtEph {
     }
 
     impl<T: MtVal> OBSTMtEphTrait<T> for OBSTMtEphS<T> {
-        #[verifier::external_body]
         fn new() -> (empty: Self) {
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 keys: new_arc_rwlock(Vec::new(), Ghost(OptBSTMtEphKeysInv)),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
+                ghost_keys: Ghost(Seq::empty()),
             }
         }
 
-        #[verifier::external_body]
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self) {
-            let key_probs = keys
-                .into_iter()
-                .zip(probs)
-                .map(|(key, prob)| KeyProb { key, prob }).collect::<Vec<KeyProb<T>>>();
+            let mut key_probs: Vec<KeyProb<T>> = Vec::new();
+            let mut idx: usize = 0;
+            while idx < keys.len()
+                invariant
+                    idx <= keys@.len(),
+                    keys@.len() == probs@.len(),
+                    key_probs@.len() == idx as int,
+                decreases keys@.len() - idx,
+            {
+                key_probs.push(KeyProb { key: keys[idx].clone(), prob: probs[idx] });
+                idx += 1;
+            }
+            let ghost gk = key_probs@;
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv)),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
+                ghost_keys: Ghost(gk),
             }
         }
 
-        #[verifier::external_body]
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
+            let ghost gk = key_probs@;
+            let _len = key_probs.len();
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv)),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
+                ghost_keys: Ghost(gk),
             }
         }
 
@@ -228,40 +287,66 @@ pub mod OptBinSearchTreeMtEph {
             write_handle.release_write(memo);
         }
 
-        #[verifier::external_body]
         fn num_keys(&self) -> (count: usize) {
-            let handle = self.keys.acquire_read();
-            let len = handle.borrow().len();
+            let rwlock = arc_deref(&self.keys);
+            let handle = rwlock.acquire_read();
+            let count = handle.borrow().len();
             handle.release_read();
-            len
+            proof { accept(count == self@.keys.len()); }
+            count
         }
 
-        #[verifier::external_body]
         fn clear_memo(&mut self) {
-            let (mut memo, write_handle) = self.memo.acquire_write();
+            let memo_arc = self.memo.clone();
+            let rwlock = arc_deref(&memo_arc);
+            let (mut memo, write_handle) = rwlock.acquire_write();
             memo.clear();
             write_handle.release_write(memo);
         }
 
-        #[verifier::external_body]
         fn memo_size(&self) -> (count: usize) {
-            let handle = self.memo.acquire_read();
-            let len = handle.borrow().len();
+            let rwlock = arc_deref(&self.memo);
+            let handle = rwlock.acquire_read();
+            let count = handle.borrow().len();
             handle.release_read();
-            len
+            count
         }
     }
 
     // 11. derive impls in verus!
+    impl<T: MtVal> Clone for OBSTMtEphS<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            let cloned = OBSTMtEphS {
+                keys: self.keys.clone(),
+                memo: self.memo.clone(),
+                ghost_keys: Ghost(self.ghost_keys@),
+            };
+            proof { accept(cloned@ == self@); }
+            cloned
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: MtVal> PartialEqSpecImpl for OBSTMtEphS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
     impl<T: MtVal> PartialEq for OBSTMtEphS<T> {
-        #[verifier::external_body]
-        fn eq(&self, other: &Self) -> bool {
-            let self_handle = self.keys.acquire_read();
-            let other_handle = other.keys.acquire_read();
-            let count = *self_handle.borrow() == *other_handle.borrow();
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let self_rwlock = arc_deref(&self.keys);
+            let other_rwlock = arc_deref(&other.keys);
+            let self_handle = self_rwlock.acquire_read();
+            let other_handle = other_rwlock.acquire_read();
+            let r = *self_handle.borrow() == *other_handle.borrow();
             other_handle.release_read();
             self_handle.release_read();
-            count
+            proof { accept(r == (self@ == other@)); }
+            r
         }
     }
 
