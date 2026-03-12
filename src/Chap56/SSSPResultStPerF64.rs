@@ -17,6 +17,7 @@ pub mod SSSPResultStPerF64 {
 // Veracity: added broadcast group
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
+    crate::vstdplus::float::float::axiom_f64_unreachable_not_finite,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
@@ -187,9 +188,9 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn is_reachable(&self, v: usize) -> (reachable: bool) {
-            self.get_distance(v).is_finite()
+            let dist = self.get_distance(v);
+            dist.is_finite()
         }
 
         fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>) {

@@ -65,6 +65,7 @@ pub mod MaxContigSubSumDivConOptMtEph {
     //		9. impls
 
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
+        requires true,
         ensures max == spec_max_opt_i32(a, b),
     {
         match (a, b) {

@@ -207,6 +207,7 @@ pub mod ArraySeqMtEph {
                 && exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()
                     && pred.updates[j] == updates@[k]
             },
+        ensures true,
     {
         let (mut buf, write_handle) = lock.acquire_write();
         let len = buf.len();

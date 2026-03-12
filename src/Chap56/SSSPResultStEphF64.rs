@@ -17,9 +17,14 @@ pub mod SSSPResultStEphF64 {
     verus! {
 
     // Table of Contents
+    // 3. broadcast use
     // 4. type definitions
     // 8. traits
     // 9. impls
+
+    // 3. broadcast use
+
+    broadcast use crate::vstdplus::float::float::axiom_f64_unreachable_not_finite;
 
     // 4. type definitions
 
@@ -159,9 +164,9 @@ pub mod SSSPResultStEphF64 {
             }
         }
 
-        #[verifier::external_body]
         fn is_reachable(&self, v: usize) -> (b: bool) {
-            self.get_distance(v).is_finite()
+            let dist = self.get_distance(v);
+            dist.is_finite()
         }
 
         fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>) {
