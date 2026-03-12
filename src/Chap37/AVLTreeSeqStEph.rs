@@ -643,7 +643,7 @@ pub mod AVLTreeSeqStEph {
                 let left = clone_link(&node.left);
                 let right = clone_link(&node.right);
                 let new_value = node.value.clone_plus();
-                proof { accept(new_value@ == node.value@); }  // accept hole: T::clone view bridge
+                proof { assume(new_value@ == node.value@); }
                 Some(Box::new(AVLTreeNode {
                     value: new_value,
                     height: node.height,
