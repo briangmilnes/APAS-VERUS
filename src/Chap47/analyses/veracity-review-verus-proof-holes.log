@@ -86,21 +86,27 @@ Table of Contents:
 ❌ ParaHashTableStEph.rs
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ParaHashTableStEph.rs:55: error: external_body - #[verifier::external_body]
         56 |     fn compute_load_factor(num_elements: usize, current_size: usize) -> (lf: f64)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ParaHashTableStEph.rs:87: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ParaHashTableStEph.rs:86: error: fn_missing_requires - fn createTable — exec fn should have requires
+        77 |         fn delete(&mut self, key: &Key) -> (deleted: bool);
+            ...
+        84 |         /// - APAS: Work O(m), Span O(m) where m is initial size.
         85 |         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
-        86 |         fn createTable(hash_fn: H, initial_size: usize) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
-        88 |             ensures
-        89 |                 table.initial_size == initial_size,
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ParaHashTableStEph.rs:150: warning: requires_true - requires true — vacuous precondition
-       148 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
-       149 |         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
-       151 |             ensures m == &table.metrics,
-       152 |         { &table.metrics }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ParaHashTableStEph.rs:159: warning: requires_true - requires true — vacuous precondition
-       157 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads and one division.
-       158 |         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
-       160 |             ensures load_and_size.size == table.current_size,
-       161 |         {
+        87 |             ensures
+        88 |                 table.initial_size == initial_size,
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ParaHashTableStEph.rs:148: error: fn_missing_requires - fn metrics — exec fn should have requires
+       138 |         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
+            ...
+       146 |         /// - APAS: N/A — Verus-specific scaffolding.
+       147 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
+       149 |             ensures m == &table.metrics,
+       150 |         { &table.metrics }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ParaHashTableStEph.rs:156: error: fn_missing_requires - fn loadAndSize — exec fn should have requires
+       148 |         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
+            ...
+       154 |         /// - APAS: Work O(1), Span O(1).
+       155 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads and one division.
+       157 |             ensures load_and_size.size == table.current_size,
+       158 |         {
    Holes: 1 total
       1 × external_body
 ❌ QuadProbFlatHashTableStEph.rs
@@ -119,41 +125,41 @@ Table of Contents:
    Holes: 6 total
       6 × external_body
 ❌ StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:226: error: external_body - #[verifier::external_body]
-       227 |             fn insert(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: Key, value: Value) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:233: error: external_body - #[verifier::external_body]
-       234 |             fn lookup(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:240: error: external_body - #[verifier::external_body]
-       241 |             fn delete(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:247: error: external_body - #[verifier::external_body]
-       248 |             fn resize(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:286: error: external_body - #[verifier::external_body]
-       287 |             fn hash_index(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> usize {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:108: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:223: error: external_body - #[verifier::external_body]
+       224 |             fn insert(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:230: error: external_body - #[verifier::external_body]
+       231 |             fn lookup(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:237: error: external_body - #[verifier::external_body]
+       238 |             fn delete(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:244: error: external_body - #[verifier::external_body]
+       245 |             fn resize(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:283: error: external_body - #[verifier::external_body]
+       284 |             fn hash_index(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> usize {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:103: error: fn_missing_requires - fn chain_insert — exec fn should have requires
+        99 |             fn default() -> Self { ChainList { head: None } }
+            ...
+       101 | 
+       102 |         /// Inserts key-value into chain, updating if key exists, appending if not.
+       104 |             chain: Option<Box<Node<Key, Value>>>,
+       105 |             key: Key,
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:136: error: fn_missing_requires - fn chain_lookup — exec fn should have requires
        103 |         fn chain_insert<Key: PartialEq, Value>(
             ...
-       106 |             value: Value,
-       107 |         ) -> (out: Option<Box<Node<Key, Value>>>)
-       109 |             ensures
-       110 |                 out is Some,
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:141: warning: requires_true - requires true — vacuous precondition
-       137 |         fn chain_lookup<Key: PartialEq, Value: Clone>(
+       134 | 
+       135 |         /// Looks up key in chain, returning value if found.
+       137 |             chain: &Option<Box<Node<Key, Value>>>,
+       138 |             key: &Key,
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:157: error: fn_missing_requires - fn chain_delete — exec fn should have requires
+       136 |         fn chain_lookup<Key: PartialEq, Value: Clone>(
             ...
-       139 |             key: &Key,
-       140 |         ) -> (found: Option<Value>)
-       142 |             ensures
-       143 |                 chain is None ==> found is None,
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:163: warning: requires_true - requires true — vacuous precondition
-       159 |         fn chain_delete<Key: PartialEq, Value>(
-            ...
-       161 |             key: &Key,
-       162 |         ) -> (remaining_and_deleted: (Option<Box<Node<Key, Value>>>, bool))
-       164 |             ensures
-       165 |                 !remaining_and_deleted.1
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:307: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:324: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:341: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:355: info: accept()
+       155 | 
+       156 |         /// Removes first node matching key, returns updated chain and whether found.
+       158 |             chain: Option<Box<Node<Key, Value>>>,
+       159 |             key: &Key,
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:304: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:321: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:338: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:352: info: accept()
    Holes: 5 total
       5 × external_body
    Info: 4 total
@@ -220,8 +226,8 @@ Proof Functions:
    4 total
 
 Function Specs:
-   81 exec fns with complete spec (requires+ensures) (85%)
-   0 exec fns missing spec (0%)
+   75 exec fns with complete spec (requires+ensures) (78%)
+   6 exec fns missing spec (6%)
    14 proof/spec fns clean (14%)
    0 proof/spec fns with holes (0%)
    95 total fns
@@ -234,13 +240,13 @@ Holes Found: 39 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 10:37:06 -07:00
-Ended:     2026-03-12 10:37:06 -07:00
-Duration:  15ms
+Started:   2026-03-12 14:20:02 -07:00
+Ended:     2026-03-12 14:20:02 -07:00
+Duration:  28ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
-:06 -07:00
-Ended:     2026-03-12 10:37:06 -07:00
-Duration:  15ms
+ -07:00
+Ended:     2026-03-12 14:20:02 -07:00
+Duration:  28ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log

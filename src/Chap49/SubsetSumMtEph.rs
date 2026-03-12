@@ -141,7 +141,6 @@ pub mod SubsetSumMtEph {
     fn clone_arc_memo<T: MtVal>(
         s: &SubsetSumMtEphS<T>,
     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtEphMemoInv>>)
-        requires true,
         ensures cloned.pred() == s.memo.pred(),
     {
         clone_arc_rwlock(&s.memo)

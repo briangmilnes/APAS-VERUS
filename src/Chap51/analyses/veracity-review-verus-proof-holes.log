@@ -35,22 +35,14 @@ Table of Contents:
       1 × external_body
    Info: 1 total
    Proof functions: 2 total (2 clean, 0 holed)
-❌ BottomUpDPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:181: error: external_body - #[verifier::external_body]
-       182 |         fn med_bottom_up(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:349: info: accept()
-   Holes: 1 total
-      1 × external_body
+ℹ BottomUpDPStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:463: info: accept()
    Info: 1 total
-   Proof functions: 2 total (2 clean, 0 holed)
-❌ BottomUpDPStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:167: error: external_body - #[verifier::external_body]
-       168 |         fn med_bottom_up(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:335: info: accept()
-   Holes: 1 total
-      1 × external_body
+   2 clean proof functions
+ℹ BottomUpDPStPer.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:438: info: accept()
    Info: 1 total
-   Proof functions: 2 total (2 clean, 0 holed)
+   2 clean proof functions
 ❌ TopDownDPMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:171: error: external_body - #[verifier::external_body]
        172 |         fn med_memoized_concurrent(&mut self) -> (distance: usize) {
@@ -129,8 +121,8 @@ TopDownDPStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 25%)
-   6 holed (holes or errors, 75%)
+   4 clean (no holes, no errors; 50%)
+   4 holed (holes or errors, 50%)
    8 total
 
 Proof Functions:
@@ -146,19 +138,16 @@ Function Specs:
    292 total fns
 
 
-Holes Found: 8 total
-   8 × external_body (100%)
+Holes Found: 6 total
+   6 × external_body (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 10:37:06 -07:00
-Ended:     2026-03-12 10:37:06 -07:00
-Duration:  23ms
+Started:   2026-03-12 14:20:02 -07:00
+Ended:     2026-03-12 14:20:02 -07:00
+Duration:  44ms
 
 Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
-06 -07:00
-Duration:  23ms
-
-Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap51/analyses/veracity-review-verus-proof-holes.log

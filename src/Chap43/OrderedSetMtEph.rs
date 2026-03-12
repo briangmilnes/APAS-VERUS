@@ -53,7 +53,6 @@ pub mod OrderedSetMtEph {
 
     // Helper: construct Mt wrapper from St set (used by split/get_range/split_rank/from_seq).
     fn from_st<T: MtKey + 'static>(inner: OrderedSetStEph<T>) -> (s: OrderedSetMtEph<T>)
-        requires true
         ensures s@ == inner@, s@.finite()
     {
         let ghost view = inner@;

@@ -56,7 +56,6 @@ pub mod OrderedTableMtPer {
     fn from_st_table<K: MtKey + 'static, V: StTInMtT + Ord + 'static>(
         inner: OrderedTableStPer<K, V>,
     ) -> (s: OrderedTableMtPer<K, V>)
-        requires true
         ensures s@.dom().finite()
     {
         let ghost view = inner@;

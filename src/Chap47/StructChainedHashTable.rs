@@ -105,7 +105,6 @@ pub mod StructChainedHashTable {
             key: Key,
             value: Value,
         ) -> (out: Option<Box<Node<Key, Value>>>)
-            requires true,
             ensures
                 out is Some,
                 spec_chain_to_map(out).dom().contains(key),
@@ -138,7 +137,6 @@ pub mod StructChainedHashTable {
             chain: &Option<Box<Node<Key, Value>>>,
             key: &Key,
         ) -> (found: Option<Value>)
-            requires true,
             ensures
                 chain is None ==> found is None,
             decreases chain,
@@ -160,7 +158,6 @@ pub mod StructChainedHashTable {
             chain: Option<Box<Node<Key, Value>>>,
             key: &Key,
         ) -> (remaining_and_deleted: (Option<Box<Node<Key, Value>>>, bool))
-            requires true,
             ensures
                 !remaining_and_deleted.1
                     ==> spec_chain_to_map(remaining_and_deleted.0) == spec_chain_to_map(chain),

@@ -428,9 +428,10 @@ broadcast use {
             fn join(left: &Self, right: &Self) -> Self { left.meld(right) }
         }
 
-        #[verifier::external]
         impl<T: StT + Ord + TotalOrder> Default for BalancedTreePQ<T> {
-            fn default() -> Self { Self::empty() }
+            fn default() -> (d: Self)
+                ensures d@.len() == 0, d.spec_balancedtreepq_wf()
+            { Self::empty() }
         }
 
         #[verifier::external]
