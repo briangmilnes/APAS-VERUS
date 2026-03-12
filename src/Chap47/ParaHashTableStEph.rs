@@ -156,6 +156,7 @@ pub mod ParaHashTableStEph {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads and one division.
         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
+            requires true,
             ensures load_and_size.size == table.current_size,
         {
             let load_factor = compute_load_factor(table.num_elements, table.current_size);
