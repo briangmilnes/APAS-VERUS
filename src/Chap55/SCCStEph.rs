@@ -145,6 +145,7 @@ pub mod SCCStEph {
 
     /// Runtime check that all neighbor indices are valid vertex indices.
     fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (valid: bool)
+        requires true,
         ensures valid ==> spec_toposortsteph_wf(graph),
     {
         let n = graph.length();
