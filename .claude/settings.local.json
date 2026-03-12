@@ -97,6 +97,9 @@
       "Bash(*>> /tmp/*)",
       "Bash(while *)",
       "Bash((cd *))",
+      "Bash(for *$(*)* *)",
+      "Bash(for *$(*)* done)",
+      "Bash(for *$(*)*)",
       "WebFetch(domain:)"
     ]
   }
