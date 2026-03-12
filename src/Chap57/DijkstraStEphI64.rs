@@ -66,6 +66,7 @@ pub mod DijkstraStEphI64 {
     // 9. impls
 
     fn pq_entry_new(dist: i64, vertex: usize) -> (r: PQEntry)
+        requires true,
         ensures r.dist == dist, r.vertex == vertex,
     {
         PQEntry { dist, vertex }
