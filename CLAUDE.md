@@ -11,6 +11,10 @@ APAS-VERUS formally verifies all algorithms from "A Practical Approach to Data S
 (APAS, by Guy Blelloch) using Verus, a Rust verification framework. The primary objective
 is to get code to **verify (prove)** with Verus.
 
+- **Read `src/standards/*.rs` before writing or modifying any code.** These 15 files
+  define the project's patterns for modules, views, iterators, closures, eq/clone,
+  spec_wf, multi-struct types, RwLock predicates, and more. If you skip the standards,
+  you will write code that violates project conventions and has to be reverted.
 - Run `scripts/validate.sh` after making changes
 - Fix verification errors before moving on
 - Prefer verified code over unverified code, even if it requires restructuring
