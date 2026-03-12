@@ -6,7 +6,9 @@ alwaysApply: true
 
 # Accept Hole Rule
 
-Patterns that mark known verification gaps or expected failures must **not** be added unless the user explicitly instructs it.
+`accept()` is an APAS proof function (`crate::vstdplus::accept::accept`) that replaces
+`assume` for intentional, reviewed holes. Adding `accept()` without explicit user approval
+**hides real proof obligations and defeats the verification effort.**
 
 ## Covered patterns
 
@@ -17,14 +19,30 @@ Patterns that mark known verification gaps or expected failures must **not** be 
 
 ## Rule
 
-- **DO NOT** add these patterns proactively.
+- **DO NOT** add `accept()` or `// accept hole` proactively. EVER.
 - **DO NOT** add them to silence verification errors or proof-hole reports.
+- **DO NOT** "fix" a failing proof by adding `accept()`. That is not fixing — it is hiding.
 - **DO** add them only when the user explicitly says to (e.g., "add accept hole", "mark as accepted", "add APAS accept").
+- **When in doubt, leave the hole as-is and flag it for review.**
+
+## Allowed assume/accept patterns (no per-instance approval needed)
+
+These are the ONLY patterns that may exist without the user explicitly requesting each one:
+
+1. `assume` inside `PartialEq::eq` body (the eq/clone workaround).
+2. `assume` inside `Clone::clone` body (the eq/clone workaround).
+3. `assume(false); diverge()` in unreachable thread-join error arms.
+4. `external_body` at thread-spawn boundaries (not around algorithmic logic).
+
+Everything else requires explicit user approval per instance.
 
 ## Rationale
 
-These annotations document known gaps. Adding them without explicit approval can hide real issues or mask incomplete verification.
+These annotations document known gaps. Adding them without explicit approval hides real
+issues, masks incomplete verification, and makes the project's proof-hole counts meaningless.
+A proof hole flagged by Veracity is data. An `accept()` added by an agent is lost data.
 
 ## When the user asks
 
-If the user says "add accept hole", "mark as accepted", "APAS accept", or similar, add the requested annotation at the specified location.
+If the user says "add accept hole", "mark as accepted", "APAS accept", or similar, add
+the requested annotation at the specified location.

@@ -271,8 +271,20 @@ renames, structural changes, or when refreshing analysis baselines.
 
 **NEVER add `external_body`, `admit()`, or `assume(...)` without asking the user first.**
 
-The `accept hole` pattern and `// accept hole` comment must NOT be added proactively — only
-when the user explicitly requests it.
+**NEVER add `accept()` or `// accept hole` proactively.** `accept()` is an APAS proof
+function (`crate::vstdplus::accept::accept`) that replaces `assume` for intentional holes.
+Adding `accept()` without explicit user approval hides real proof obligations and defeats
+the verification effort. Do NOT use `accept()` to silence verification errors.
+
+The ONLY assume/accept patterns that may exist without per-instance user approval are:
+- `assume` inside `PartialEq::eq` body (the eq/clone workaround pattern).
+- `assume` inside `Clone::clone` body (the eq/clone workaround pattern).
+- `assume(false); diverge()` in unreachable thread-join error arms.
+- `external_body` at thread-spawn boundaries (not around algorithmic logic).
+
+Everything else — every `assume(...)`, every `accept(...)`, every `external_body` on
+algorithmic logic — requires the user to explicitly request it. When in doubt, leave the
+proof hole as-is and flag it for review. Do NOT "fix" a failing proof by adding accept.
 
 ### Search Locations ("The Usual Suspects")
 
