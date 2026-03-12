@@ -2,16 +2,38 @@ You are agent4 working in branch: ~/projects/APAS-VERUS-agent4/.
 Your worktree has been updated.
 Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
-REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
+REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs.
 
 Read src/standards/* and apply them in your proposed work.
 Your CLAUDE.md should cause you to read them in all planning and hopefully bug fixing.
 Fix trigger warnings as they occur using the rules.
 Your src/Chap*/analyses files have been updated.
 
-Read the plan in plans/wf-and-multi-struct-update-plan.md.
-Work on only your chapters in the plan.
-Double check their structure against the standards. 
+We are working on plans/PBOGH.md — PROVE BIG OR GO HOME.
+Read it. You are Agent 4: Small Chapters + Tables.
+
+Your chapters: Chap03, Chap06, Chap12, Chap21, Chap23, Chap26, Chap43, Chap45, Chap47.
+Total: 231 holes across 73 files. Many small wins plus two big Mt chapters.
+
+Priority order:
+1. Chap03 (1 hole) — InsertionSortStEph missing requires. Quick fix.
+2. Chap06 (2 holes) — DirGraphStEph, nearly clean already.
+3. Chap12 (1 hole) — Exercise12_5.
+4. Chap21 (4 holes) — Exercises.
+5. Chap23 (3 holes) — BalBinTreeStEph + PrimTreeSeqStPer.
+6. Chap26 (4 holes) — ETSP.
+7. Chap45 (27 holes) — BinaryHeapPQ has trivial spec_wf { true }, write real invariant.
+   SortedListPQ and UnsortedListPQ also need work.
+8. Chap47 (45 holes) — Hash tables, ParaHashTableStEph has 3 holes with clean deps.
+9. Chap43 (144 holes) — OrderedTable, largest chapter. Mostly external_body Mt wrappers.
+   Needs coarse RwLock migration per plans/coarse-rwlock-migration-plan.md.
+
+Key rules:
+- Use accept() (not assume) for eq/clone/lock-boundary holes per the new standards.
+- Read partial_eq_eq_clone_standard.rs and toplevel_coarse_rwlocks_for_mt_modules.rs.
+- Run scripts/holes.sh on your chapters to verify hole counts before and after.
+- Prove what can be proved. Accept only what the standards say to accept.
+- Start with the small chapters (1-6 above) for quick wins, then tackle the big ones.
+- Run scripts/validate.sh after changes. Show full output.
 
 Propose a plan of work.
-

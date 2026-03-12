@@ -2,17 +2,35 @@ You are agent3 working in branch: ~/projects/APAS-VERUS-agent3/.
 Your worktree has been updated.
 Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
-REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
+REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs.
 
 Read src/standards/* and apply them in your proposed work.
 Your CLAUDE.md should cause you to read them in all planning and hopefully bug fixing.
 Fix trigger warnings as they occur using the rules.
 Your src/Chap*/analyses files have been updated.
 
+We are working on plans/PBOGH.md — PROVE BIG OR GO HOME.
+Read it. You are Agent 3: DP + Graph Algorithms.
 
-Read the plan in plans/wf-and-multi-struct-update-plan.md.
-Work on only your chapters in the plan.
-Double check their structure against the standards. 
+Your chapters: Chap50, Chap53, Chap65, Chap66.
+Total: 97 holes across 18 files.
+
+Priority order:
+1. Chap65 (10 holes, 3 files) — UnionFindStEph is the flagship. 10 assumes covering
+   loop invariants, termination, path compression correctness. Real proof engineering.
+   This is the hardest and most valuable work in the plan.
+2. Chap66 (3 holes, 2 files) — BoruvkaStEph, depends on UnionFind being clean.
+3. Chap50 (61 holes, 8 files) — MatrixChain/OptBST. Verify St counterparts first,
+   then assess Mt wrappers. Note: Chap50 Mt files use Arc<RwLock> for shared memo
+   (genuine concurrent writers) — they follow the HFScheduler pattern, NOT coarse RwLock.
+4. Chap53 (23 holes, 5 files) — Graph search algorithms.
+
+Key rules:
+- Use accept() (not assume) for eq/clone/lock-boundary holes per the new standards.
+- Read partial_eq_eq_clone_standard.rs and toplevel_coarse_rwlocks_for_mt_modules.rs.
+- Run scripts/holes.sh on your chapters to verify hole counts before and after.
+- Prove what can be proved. Accept only what the standards say to accept.
+- Do NOT accept algorithmic assumes in UnionFindStEph — those must be proved.
+- Run scripts/validate.sh after changes. Show full output.
 
 Propose a plan of work.
-

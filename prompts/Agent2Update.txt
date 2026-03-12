@@ -2,15 +2,35 @@ You are agent2 working in branch: ~/projects/APAS-VERUS-agent2/.
 Your worktree has been updated.
 Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
-REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
+REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs.
 
 Read src/standards/* and apply them in your proposed work.
 Your CLAUDE.md should cause you to read them in all planning and hopefully bug fixing.
 Fix trigger warnings as they occur using the rules.
 Your src/Chap*/analyses files have been updated.
 
-We are working on plans/coarse-rwlock-migration-plan.md.
-Read it and work on only your chapters in the plan.
+We are working on plans/PBOGH.md — PROVE BIG OR GO HOME.
+Read it. You are Agent 2: BST + Collections.
 
-Double check their structure agains the standards. 
+Your chapters: Chap37, Chap39, Chap40, Chap41, Chap42.
+Total: 296 holes across 37 files. Most are external_body that become accepts via
+coarse RwLock migration.
+
+Priority order:
+1. Chap37 (128 holes, 19 files) — finish coarse RwLock migration for BSTSet wrappers.
+   Core BST files already migrated. BSTSet*MtEph wrappers + AVLTreeSeqMtPer remain.
+2. Chap40 (6 holes, 3 files) — BSTSizeStEph has 2 real proof holes.
+3. Chap39 (43 holes, 4 files) — Treap Mt coarse RwLock migration.
+4. Chap41 (97 holes, 7 files) — AVLTreeSet + ArraySetEnum migration.
+5. Chap42 (22 holes, 4 files) — Table Mt wrappers.
+
+Also read plans/coarse-rwlock-migration-plan.md for the RwLock migration details.
+
+Key rules:
+- Use accept() (not assume) for eq/clone/lock-boundary holes per the new standards.
+- Read partial_eq_eq_clone_standard.rs and toplevel_coarse_rwlocks_for_mt_modules.rs.
+- Run scripts/holes.sh on your chapters to verify hole counts before and after.
+- Prove what can be proved. Accept only what the standards say to accept.
+- Run scripts/validate.sh after changes. Show full output.
+
 Propose a plan of work.
