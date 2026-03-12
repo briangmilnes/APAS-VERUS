@@ -294,7 +294,7 @@ pub mod LinkedListStEph {
     //		9. impl BaseTrait for Struct
 
     impl<T> LinkedListStEphBaseTrait<T> for LinkedListStEphS<T> {
-        open spec fn spec_linkedliststeph_wf(&self) -> bool { true }
+        open spec fn spec_linkedliststeph_wf(&self) -> bool { true } // accept hole: Vec-backed, true is correct
 
         open spec fn spec_len(&self) -> nat {
             self.seq@.len()

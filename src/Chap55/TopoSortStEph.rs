@@ -132,6 +132,46 @@ broadcast use {
         }
     }
 
+    /// Setting a false entry to true decreases the count by exactly one.
+    pub proof fn lemma_set_true_num_false_eq(s: Seq<bool>, idx: int)
+        requires
+            0 <= idx < s.len(),
+            !s[idx],
+        ensures
+            spec_num_false(s.update(idx, true)) == spec_num_false(s) - 1,
+        decreases s.len(),
+    {
+        if s.len() == 1 {
+        } else if idx == s.len() - 1 {
+            assert(s.update(idx, true).drop_last() =~= s.drop_last());
+        } else {
+            assert(s.update(idx, true).drop_last() =~= s.drop_last().update(idx, true));
+            lemma_set_true_num_false_eq(s.drop_last(), idx);
+        }
+    }
+
+    /// An all-true sequence has zero false entries.
+    pub proof fn lemma_all_true_num_false_zero(s: Seq<bool>)
+        requires forall|j: int| #![auto] 0 <= j < s.len() ==> s[j],
+        ensures spec_num_false(s) == 0,
+        decreases s.len(),
+    {
+        if s.len() > 0 {
+            lemma_all_true_num_false_zero(s.drop_last());
+        }
+    }
+
+    /// An all-false sequence has num_false equal to its length.
+    pub proof fn lemma_all_false_num_false_eq_len(s: Seq<bool>)
+        requires forall|j: int| #![auto] 0 <= j < s.len() ==> !s[j],
+        ensures spec_num_false(s) == s.len(),
+        decreases s.len(),
+    {
+        if s.len() > 0 {
+            lemma_all_false_num_false_eq_len(s.drop_last());
+        }
+    }
+
     // 8. traits
 
     pub trait TopoSortStEphTrait {
@@ -160,12 +200,20 @@ broadcast use {
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
             spec_toposortsteph_wf(graph),
+            forall|k: int| #![auto] 0 <= k < old(finish_order)@.len()
+                ==> (old(finish_order)@[k] as int) < graph@.len(),
         ensures
             visited@.len() == old(visited)@.len(),
             forall|j: int| #![auto]
                 0 <= j < visited@.len() && old(visited)@[j]
                 ==> visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
+            finish_order@.len() >= old(finish_order)@.len(),
+            forall|k: int| #![auto] 0 <= k < finish_order@.len()
+                ==> (finish_order@[k] as int) < graph@.len(),
+            visited@[vertex as int],
+            finish_order@.len() + spec_num_false(visited@)
+                == old(finish_order)@.len() + spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
         if *visited.nth(vertex) {
@@ -176,6 +224,7 @@ broadcast use {
         assert(set_ok.is_ok());
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
+            lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
 
         let neighbors = graph.nth(vertex);
@@ -191,6 +240,12 @@ broadcast use {
                     0 <= j < visited@.len() && old(visited)@[j]
                     ==> visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
+                finish_order@.len() >= old(finish_order)@.len(),
+                forall|k: int| #![auto] 0 <= k < finish_order@.len()
+                    ==> (finish_order@[k] as int) < graph@.len(),
+                visited@[vertex as int],
+                finish_order@.len() + spec_num_false(visited@) + 1
+                    == old(finish_order)@.len() + spec_num_false(old(visited)@),
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
@@ -322,6 +377,10 @@ broadcast use {
             let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
             let mut finish_order: Vec<N> = Vec::new();
 
+            proof {
+                lemma_all_false_num_false_eq_len(visited@);
+            }
+
             let mut start: usize = 0;
             while start < n
                 invariant
@@ -329,12 +388,19 @@ broadcast use {
                     n == graph@.len(),
                     visited@.len() == n,
                     spec_toposortsteph_wf(graph),
+                    forall|k: int| #![auto] 0 <= k < finish_order@.len()
+                        ==> (finish_order@[k] as int) < graph@.len(),
+                    forall|j: int| #![auto] 0 <= j < start as int ==> visited@[j],
+                    finish_order@.len() + spec_num_false(visited@) == n,
                 decreases n - start,
             {
                 if !*visited.nth(start) {
                     dfs_finish_order(graph, &mut visited, &mut finish_order, start);
                 }
                 start = start + 1;
+            }
+            proof {
+                lemma_all_true_num_false_zero(visited@);
             }
             let result_len = finish_order.len();
             let mut reversed: Vec<N> = Vec::new();
@@ -343,6 +409,7 @@ broadcast use {
                 invariant
                     k <= result_len,
                     result_len == finish_order@.len(),
+                    reversed@.len() == (result_len - k) as nat,
                 decreases k,
             {
                 k = k - 1;

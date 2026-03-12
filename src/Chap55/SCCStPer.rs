@@ -9,7 +9,11 @@ pub mod SCCStPer {
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::{AVLTreeSeqStPerS, AVLTreeSeqStPerTrait};
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
-    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false};
+    use crate::Chap55::TopoSortStEph::TopoSortStEph::{
+        spec_num_false, lemma_set_true_decreases_num_false,
+        lemma_set_true_num_false_eq, lemma_all_true_num_false_zero,
+        lemma_all_false_num_false_eq_len,
+    };
     use crate::Chap55::TopoSortStPer::TopoSortStPer::spec_toposortstper_wf;
     use crate::Types::Types::*;
 
@@ -53,12 +57,20 @@ pub mod SCCStPer {
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
             spec_toposortstper_wf(graph),
+            forall|k: int| #![auto] 0 <= k < old(finish_order)@.len()
+                ==> (old(finish_order)@[k] as int) < graph@.len(),
         ensures
             visited@.len() == old(visited)@.len(),
             forall|j: int| #![auto]
                 0 <= j < visited@.len() && old(visited)@[j]
                 ==> visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
+            finish_order@.len() >= old(finish_order)@.len(),
+            forall|k: int| #![auto] 0 <= k < finish_order@.len()
+                ==> (finish_order@[k] as int) < graph@.len(),
+            visited@[vertex as int],
+            finish_order@.len() + spec_num_false(visited@)
+                == old(finish_order)@.len() + spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
         if visited[vertex] {
@@ -68,6 +80,7 @@ pub mod SCCStPer {
         visited.set(vertex, true);
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
+            lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
 
         let neighbors = graph.nth(vertex);
@@ -83,6 +96,12 @@ pub mod SCCStPer {
                     0 <= j < visited@.len() && old(visited)@[j]
                     ==> visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
+                finish_order@.len() >= old(finish_order)@.len(),
+                forall|k: int| #![auto] 0 <= k < finish_order@.len()
+                    ==> (finish_order@[k] as int) < graph@.len(),
+                visited@[vertex as int],
+                finish_order@.len() + spec_num_false(visited@) + 1
+                    == old(finish_order)@.len() + spec_num_false(old(visited)@),
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
@@ -94,19 +113,31 @@ pub mod SCCStPer {
     }
 
     /// Computes the finish order for SCC (decreasing finish times).
-    fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N>
+    fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: AVLTreeSeqStPerS<N>)
         requires spec_toposortstper_wf(graph),
+        ensures
+            result.spec_avltreeseqstper_wf(),
+            result@.len() == graph@.len(),
+            forall|i: int| #![auto] 0 <= i < result@.len()
+                ==> (result@[i] as int) < graph@.len(),
     {
         let n = graph.length();
         let mut visited: Vec<bool> = Vec::new();
         let mut finish_order: Vec<N> = Vec::new();
         let mut j: usize = 0;
         while j < n
-            invariant j <= n, visited@.len() == j as int,
+            invariant
+                j <= n,
+                visited@.len() == j as int,
+                forall|k: int| #![auto] 0 <= k < j as int ==> !visited@[k],
             decreases n - j,
         {
             visited.push(false);
             j = j + 1;
+        }
+
+        proof {
+            lemma_all_false_num_false_eq_len(visited@);
         }
 
         let mut start: usize = 0;
@@ -116,12 +147,19 @@ pub mod SCCStPer {
                 n == graph@.len(),
                 visited@.len() == n,
                 spec_toposortstper_wf(graph),
+                forall|k: int| #![auto] 0 <= k < finish_order@.len()
+                    ==> (finish_order@[k] as int) < graph@.len(),
+                forall|j: int| #![auto] 0 <= j < start as int ==> visited@[j],
+                finish_order@.len() + spec_num_false(visited@) == n,
             decreases n - start,
         {
             if !visited[start] {
                 dfs_finish_order(graph, &mut visited, &mut finish_order, start);
             }
             start = start + 1;
+        }
+        proof {
+            lemma_all_true_num_false_zero(visited@);
         }
         let result_len = finish_order.len();
         let mut reversed: Vec<N> = Vec::new();
@@ -130,6 +168,12 @@ pub mod SCCStPer {
             invariant
                 k <= result_len,
                 result_len == finish_order@.len(),
+                result_len == n,
+                forall|j: int| #![auto] 0 <= j < finish_order@.len()
+                    ==> (finish_order@[j] as int) < graph@.len(),
+                forall|j: int| #![auto] 0 <= j < reversed@.len()
+                    ==> (reversed@[j] as int) < graph@.len(),
+                reversed@.len() == (result_len - k) as nat,
             decreases k,
         {
             k = k - 1;
