@@ -50,7 +50,7 @@ pub struct ConcurrentStackMt<T: Send> {
 /// atomically at some point between its invocation and response.
 pub trait ConcurrentStackMtTrait<T: Send>: Sized {
     /// Spec: the stack is always well-formed after construction.
-    open spec fn wf(&self) -> bool { true }
+    open spec fn wf(&self) -> bool { true } // accept hole: Mutex<Vec>-backed, true is correct
     
     /// Create a new empty stack.
     /// - APAS: no cost spec.

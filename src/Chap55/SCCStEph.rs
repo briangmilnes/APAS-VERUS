@@ -11,7 +11,7 @@ pub mod SCCStEph {
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{
         spec_toposortsteph_wf, spec_num_false, lemma_set_true_decreases_num_false,
-        dfs_finish_order,
+        dfs_finish_order, lemma_all_true_num_false_zero, lemma_all_false_num_false_eq_len,
     };
     use crate::Types::Types::*;
 
@@ -45,12 +45,21 @@ pub mod SCCStEph {
     // 9. impls
 
     /// Computes the finish order for SCC (decreasing finish times).
-    fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N>
+    fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (result: AVLTreeSeqStEphS<N>)
         requires spec_toposortsteph_wf(graph),
+        ensures
+            result.spec_avltreeseqsteph_wf(),
+            result@.len() == graph@.len(),
+            forall|i: int| #![auto] 0 <= i < result@.len()
+                ==> (result@[i] as int) < graph@.len(),
     {
         let n = graph.length();
         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
         let mut finish_order: Vec<N> = Vec::new();
+
+        proof {
+            lemma_all_false_num_false_eq_len(visited@);
+        }
 
         let mut start: usize = 0;
         while start < n
@@ -59,12 +68,19 @@ pub mod SCCStEph {
                 n == graph@.len(),
                 visited@.len() == n,
                 spec_toposortsteph_wf(graph),
+                forall|k: int| #![auto] 0 <= k < finish_order@.len()
+                    ==> (finish_order@[k] as int) < graph@.len(),
+                forall|j: int| #![auto] 0 <= j < start as int ==> visited@[j],
+                finish_order@.len() + spec_num_false(visited@) == n,
             decreases n - start,
         {
             if !*visited.nth(start) {
                 dfs_finish_order(graph, &mut visited, &mut finish_order, start);
             }
             start = start + 1;
+        }
+        proof {
+            lemma_all_true_num_false_zero(visited@);
         }
         let result_len = finish_order.len();
         let mut reversed: Vec<N> = Vec::new();
@@ -73,6 +89,12 @@ pub mod SCCStEph {
             invariant
                 k <= result_len,
                 result_len == finish_order@.len(),
+                result_len == n,
+                forall|j: int| #![auto] 0 <= j < finish_order@.len()
+                    ==> (finish_order@[j] as int) < graph@.len(),
+                forall|j: int| #![auto] 0 <= j < reversed@.len()
+                    ==> (reversed@[j] as int) < graph@.len(),
+                reversed@.len() == (result_len - k) as nat,
             decreases k,
         {
             k = k - 1;

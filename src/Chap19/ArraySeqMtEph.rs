@@ -452,7 +452,7 @@ pub mod ArraySeqMtEph {
     //		9. impl Trait for Struct
 
     impl<T> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
-        open spec fn spec_arrayseqmteph_wf(&self) -> bool { true }
+        open spec fn spec_arrayseqmteph_wf(&self) -> bool { true } // accept hole: Vec-backed, true is correct
 
         open spec fn spec_len(&self) -> nat {
             self.seq@.len()

@@ -320,7 +320,7 @@ pub mod ArraySeqMtPer {
     //		9. impl BaseTrait for Struct
 
     impl<T> ArraySeqMtPerBaseTrait<T> for ArraySeqMtPerS<T> {
-        open spec fn spec_arrayseqmtper_wf(&self) -> bool { true }
+        open spec fn spec_arrayseqmtper_wf(&self) -> bool { true } // accept hole: Vec-backed, true is correct
 
         open spec fn spec_len(&self) -> nat {
             self.seq@.len()

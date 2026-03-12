@@ -19,99 +19,44 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ ArraySeq.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1465: error: fn_missing_requires_ensures - fn iter_mut — exec fn should have requires and ensures
-      1453 |         pub fn iter(&self) -> (it: ArraySeqIter<'_, T>)
-            ...
-      1463 |     #[verifier::external] // accept hole
-      1464 |     impl<T: View> ArraySeqS<T> {
-      1466 |     }
-      1467 | 
+ℹ ArraySeq.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1463: info: external_accept_hole
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1595: info: external_accept_hole
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1622: info: accept()
    Info: 3 total
-   Proof functions: 10 total (10 clean, 0 holed)
-❌ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:529: error: trivial_spec_wf - spec fn spec_arrayseqmteph_wf — trivial body { true } or { true; }, consider real well-formedness spec
-       517 |         fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
-            ...
-       527 | 
-       528 |     impl<T> ArraySeqMtEphBaseTrait<T> for ArraySeqMtEphS<T> {
-       530 | 
-       531 |         open spec fn spec_len(&self) -> nat {
+   10 clean proof functions
+ℹ ArraySeqMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:529: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:1586: info: accept()
-   Holes: 1 total
-      1 × trivial spec*wf { true }
-   Info: 1 total
-   Proof functions: 4 total (4 clean, 0 holed)
-❌ ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:323: error: trivial_spec_wf - spec fn spec_arrayseqmtper_wf — trivial body { true } or { true; }, consider real well-formedness spec
-       311 |         fn flatten(a: &ArraySeqMtPerS<ArraySeqMtPerS<T>>) -> (flattened: ArraySeqMtPerS<T>)
-            ...
-       321 | 
-       322 |     impl<T> ArraySeqMtPerBaseTrait<T> for ArraySeqMtPerS<T> {
-       324 | 
-       325 |         open spec fn spec_len(&self) -> nat {
+   Info: 2 total
+   4 clean proof functions
+ℹ ArraySeqMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:323: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:1191: info: accept()
-   Holes: 1 total
-      1 × trivial spec*wf { true }
-   Info: 1 total
-   Proof functions: 2 total (2 clean, 0 holed)
-❌ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs:354: error: trivial_spec_wf - spec fn spec_arrayseqsteph_wf — trivial body { true } or { true; }, consider real well-formedness spec
-       342 |         fn flatten(a: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> (flattened: ArraySeqStEphS<T>)
-            ...
-       352 | 
-       353 |     impl<T> ArraySeqStEphBaseTrait<T> for ArraySeqStEphS<T> {
-       355 |             true
-       356 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs:1057: info: accept()
-   Holes: 1 total
-      1 × trivial spec*wf { true }
-   Info: 1 total
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStPer.rs:348: error: trivial_spec_wf - spec fn spec_arrayseqstper_wf — trivial body { true } or { true; }, consider real well-formedness spec
-       336 |         fn flatten(a: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: ArraySeqStPerS<T>)
-            ...
-       346 | 
-       347 |     impl<T> ArraySeqStPerBaseTrait<T> for ArraySeqStPerS<T> {
-       349 | 
-       350 |         open spec fn spec_len(&self) -> nat {
+   Info: 2 total
+   2 clean proof functions
+ℹ ArraySeqStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs:354: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs:1055: info: accept()
+   Info: 2 total
+   1 clean proof function
+ℹ ArraySeqStPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStPer.rs:348: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStPer.rs:1021: info: accept()
-   Holes: 1 total
-      1 × trivial spec*wf { true }
-   Info: 1 total
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ LinkedListStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:297: error: trivial_spec_wf - spec fn spec_linkedliststeph_wf — trivial body { true } or { true; }, consider real well-formedness spec
-       278 |         fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (LinkedListStEphS<T>, T))
-            ...
-       295 | 
-       296 |     impl<T> LinkedListStEphBaseTrait<T> for LinkedListStEphS<T> {
-       298 | 
-       299 |         open spec fn spec_len(&self) -> nat {
+   Info: 2 total
+   1 clean proof function
+ℹ LinkedListStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:297: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:878: info: accept()
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:892: info: accept()
-   Holes: 1 total
-      1 × trivial spec*wf { true }
-   Info: 2 total
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ LinkedListStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:289: error: trivial_spec_wf - spec fn spec_linkedliststper_wf — trivial body { true } or { true; }, consider real well-formedness spec
-       270 |         fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (LinkedListStPerS<T>, T))
-            ...
-       287 | 
-       288 |     impl<T> LinkedListStPerBaseTrait<T> for LinkedListStPerS<T> {
-       290 | 
-       291 |         open spec fn spec_len(&self) -> nat {
+   Info: 3 total
+   1 clean proof function
+ℹ LinkedListStPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:289: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:861: info: accept()
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:875: info: accept()
-   Holes: 1 total
-      1 × trivial spec*wf { true }
-   Info: 2 total
-   Proof functions: 1 total (1 clean, 0 holed)
+   Info: 3 total
+   1 clean proof function
 
 =================================================================
 2. Depends Upon
@@ -146,8 +91,8 @@ LinkedListStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   0 clean (no holes, no errors; 0%)
-   7 holed (holes or errors, 100%)
+   7 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    7 total
 
 Proof Functions:
@@ -156,22 +101,23 @@ Proof Functions:
    20 total
 
 Function Specs:
-   337 exec fns with complete spec (requires+ensures) (66%)
-   1 exec fns missing spec (0%)
+   338 exec fns with complete spec (requires+ensures) (66%)
+   0 exec fns missing spec (0%)
    170 proof/spec fns clean (33%)
    0 proof/spec fns with holes (0%)
    508 total fns
 
 
-Holes Found: 6 total
-   6 × trivial spec*wf { true } (100%)
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 05:32:11 -07:00
-Ended:     2026-03-12 05:32:12 -07:00
-Duration:  98ms
+Started:   2026-03-12 13:32:20 -07:00
+Ended:     2026-03-12 13:32:20 -07:00
+Duration:  92ms
 
 Full output: src/Chap18/analyses/veracity-review-verus-proof-holes.log

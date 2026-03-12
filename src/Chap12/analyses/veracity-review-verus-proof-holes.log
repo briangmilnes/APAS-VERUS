@@ -28,14 +28,10 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:93: info: external_body_accept_hole
    Info: 6 total
 ✓ Exercise12_2.rs
-❌ Exercise12_5.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:53: error: trivial_spec_wf - spec fn wf — trivial body { true } or { true; }, consider real well-formedness spec
-        51 | pub trait ConcurrentStackMtTrait<T: Send>: Sized {
-        52 |     /// Spec: the stack is always well-formed after construction.
-        54 | 
-        55 |     /// Create a new empty stack.
+ℹ Exercise12_5.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:30: info: external_accept_hole
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:38: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:53: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:96: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:103: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:117: info: external_body_accept_hole
@@ -46,9 +42,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:124: info: unsafe_block_accept_hole
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:126: info: unsafe_block_accept_hole
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:161: info: unsafe_block_accept_hole
-   Holes: 1 total
-      1 × trivial spec*wf { true }
-   Info: 12 total
+   Info: 13 total
 
 =================================================================
 2. Depends Upon
@@ -75,8 +69,8 @@ Exercise12_5.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 66%)
-   1 holed (holes or errors, 33%)
+   3 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    3 total
 
 Proof Functions:
@@ -92,15 +86,16 @@ Function Specs:
    27 total fns
 
 
-Holes Found: 1 total
-   1 × trivial spec*wf { true } (100%)
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 05:32:13 -07:00
-Ended:     2026-03-12 05:32:13 -07:00
-Duration:  8ms
+Started:   2026-03-12 13:32:22 -07:00
+Ended:     2026-03-12 13:32:22 -07:00
+Duration:  3ms
 
 Full output: src/Chap12/analyses/veracity-review-verus-proof-holes.log
