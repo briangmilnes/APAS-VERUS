@@ -67,13 +67,17 @@ broadcast use {
     // 8. traits
 
     pub trait AVLTreeSetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
+        spec fn spec_avltreesetsteph_wf(&self) -> bool;
+
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
+            requires self.spec_avltreesetsteph_wf(),
             ensures count == self@.len(), self@.finite();
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
+            requires self.spec_avltreesetsteph_wf(),
             ensures
                 self@.finite(),
                 seq.spec_avltreeseqsteph_wf(),
@@ -82,42 +86,74 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty();
+            ensures
+                empty@ == Set::<<T as View>::V>::empty(),
+                empty.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite();
+            ensures
+                tree@ == Set::<<T as View>::V>::empty().insert(x@),
+                tree@.finite(),
+                tree.spec_avltreesetsteph_wf();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
-            ensures constructed@.finite();
+            ensures
+                constructed@.finite(),
+                constructed.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
-            ensures filtered@.finite(), filtered@.subset_of(self@);
+            requires self.spec_avltreesetsteph_wf(),
+            ensures
+                filtered@.finite(),
+                filtered@.subset_of(self@),
+                filtered.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn intersection(&self, other: &Self) -> (common: Self)
-            ensures common@ == self@.intersect(other@), common@.finite();
+            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),
+            ensures
+                common@ == self@.intersect(other@),
+                common@.finite(),
+                common.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn difference(&self, other: &Self) -> (remaining: Self)
-            ensures remaining@ == self@.difference(other@), remaining@.finite();
+            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),
+            ensures
+                remaining@ == self@.difference(other@),
+                remaining@.finite(),
+                remaining.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn union(&self, other: &Self) -> (combined: Self)
-            ensures combined@ == self@.union(other@), combined@.finite();
+            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),
+            ensures
+                combined@ == self@.union(other@),
+                combined@.finite(),
+                combined.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (found: B)
+            requires self.spec_avltreesetsteph_wf(),
             ensures found == self@.contains(x@);
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn delete(&mut self, x: &T)
-            ensures self@ == old(self)@.remove(x@), self@.finite();
+            requires old(self).spec_avltreesetsteph_wf(),
+            ensures
+                self@ == old(self)@.remove(x@),
+                self@.finite(),
+                self.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&mut self, x: T)
-            ensures self@ == old(self)@.insert(x@), self@.finite();
+            requires old(self).spec_avltreesetsteph_wf(),
+            ensures
+                self@ == old(self)@.insert(x@),
+                self@.finite(),
+                self.spec_avltreesetsteph_wf();
     }
 
 
@@ -134,9 +170,12 @@ broadcast use {
     // 9. impls
 
     impl<T: StT + Ord> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+        open spec fn spec_avltreesetsteph_wf(&self) -> bool {
+            self.elements.spec_avltreeseqsteph_wf()
+        }
+
         fn size(&self) -> (count: usize)
         {
-            proof { assume(self.elements.spec_avltreeseqsteph_wf()); }
             let r = self.elements.length();
             proof {
                 assume(r == self@.len());
@@ -197,6 +236,7 @@ broadcast use {
                     n as int == seq.spec_seq().len(),
                     i <= n,
                     constructed@.finite(),
+                    constructed.spec_avltreesetsteph_wf(),
                 decreases n - i,
             {
                 let elem = seq.nth(i).clone();
@@ -208,7 +248,6 @@ broadcast use {
 
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
         {
-            proof { assume(self.elements.spec_avltreeseqsteph_wf()); }
             let mut filtered = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
@@ -218,6 +257,7 @@ broadcast use {
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
                     filtered@.finite(),
+                    filtered.spec_avltreesetsteph_wf(),
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
@@ -235,16 +275,17 @@ broadcast use {
 
         fn intersection(&self, other: &Self) -> (common: Self)
         {
-            proof { assume(self.elements.spec_avltreeseqsteph_wf()); }
             let mut common = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
             while i < n
                 invariant
                     self.elements.spec_avltreeseqsteph_wf(),
+                    other.spec_avltreesetsteph_wf(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
                     common@.finite(),
+                    common.spec_avltreesetsteph_wf(),
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
@@ -261,16 +302,17 @@ broadcast use {
 
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
-            proof { assume(self.elements.spec_avltreeseqsteph_wf()); }
             let mut remaining = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
             while i < n
                 invariant
                     self.elements.spec_avltreeseqsteph_wf(),
+                    other.spec_avltreesetsteph_wf(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
                     remaining@.finite(),
+                    remaining.spec_avltreesetsteph_wf(),
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
@@ -287,10 +329,6 @@ broadcast use {
 
         fn union(&self, other: &Self) -> (combined: Self)
         {
-            proof {
-                assume(self.elements.spec_avltreeseqsteph_wf());
-                assume(other.elements.spec_avltreeseqsteph_wf());
-            }
             let mut combined = Self::empty();
             let self_len = self.elements.length();
             let mut i: usize = 0;
@@ -300,6 +338,7 @@ broadcast use {
                     self_len as int == self.elements.spec_seq().len(),
                     i <= self_len,
                     combined@.finite(),
+                    combined.spec_avltreesetsteph_wf(),
                 decreases self_len - i,
             {
                 combined.insert(self.elements.nth(i).clone());
@@ -313,6 +352,7 @@ broadcast use {
                     other_len as int == other.elements.spec_seq().len(),
                     j <= other_len,
                     combined@.finite(),
+                    combined.spec_avltreesetsteph_wf(),
                 decreases other_len - j,
             {
                 combined.insert(other.elements.nth(j).clone());
@@ -327,7 +367,6 @@ broadcast use {
         fn find(&self, x: &T) -> (found: B)
         {
             proof {
-                assume(self.elements.spec_avltreeseqsteph_wf());
                 accept(obeys_feq_full::<T>());  // accept hole: feq bridge
             }
             let n = self.elements.length();
@@ -360,7 +399,6 @@ broadcast use {
 
         fn delete(&mut self, x: &T)
         {
-            proof { assume(self.elements.spec_avltreeseqsteph_wf()); }
             let n = self.elements.length();
             let mut result_vec: Vec<T> = Vec::new();
             let mut i: usize = 0;
@@ -387,7 +425,6 @@ broadcast use {
 
         fn insert(&mut self, x: T)
         {
-            proof { assume(self.elements.spec_avltreeseqsteph_wf()); }
             let ghost x_view = x@;
             if !self.find(&x) {
                 let n = self.elements.length();

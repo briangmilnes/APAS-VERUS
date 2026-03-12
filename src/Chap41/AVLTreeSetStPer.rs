@@ -405,7 +405,6 @@ broadcast use {
             let updated = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(result_vec) };
             proof {
                 assume(updated@ == self@.remove(x@));
-                assume(updated.spec_avltreesetstper_wf());
                 vstd::seq_lib::seq_to_set_is_finite(updated.elements@);
             }
             updated
@@ -467,7 +466,6 @@ broadcast use {
             let updated = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(new_vec) };
             proof {
                 assume(updated@ == self@.insert(x_view));
-                assume(updated.spec_avltreesetstper_wf());
                 vstd::seq_lib::seq_to_set_is_finite(updated.elements@);
             }
             updated

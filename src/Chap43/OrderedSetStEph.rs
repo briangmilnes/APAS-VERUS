@@ -59,43 +59,76 @@ broadcast use {
         // Base set operations (ADT 41.1) - ephemeral semantics
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
+            requires self.spec_orderedsetsteph_wf(),
             ensures count == self@.len(), self@.finite();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_orderedsetsteph_wf();
+            ensures
+                empty@ == Set::<<T as View>::V>::empty(),
+                empty.spec_orderedsetsteph_wf();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_orderedsetsteph_wf();
+            ensures
+                tree@ == Set::<<T as View>::V>::empty().insert(x@),
+                tree@.finite(),
+                tree.spec_orderedsetsteph_wf();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (found: B)
+            requires self.spec_orderedsetsteph_wf(),
             ensures found == self@.contains(x@);
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&mut self, x: T)
-            ensures self@ == old(self)@.insert(x@), self@.finite();
+            requires old(self).spec_orderedsetsteph_wf(),
+            ensures
+                self@ == old(self)@.insert(x@),
+                self@.finite(),
+                self.spec_orderedsetsteph_wf();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn delete(&mut self, x: &T)
-            ensures self@ == old(self)@.remove(x@), self@.finite();
+            requires old(self).spec_orderedsetsteph_wf(),
+            ensures
+                self@ == old(self)@.remove(x@),
+                self@.finite(),
+                self.spec_orderedsetsteph_wf();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn filter<F: PredSt<T>>(&mut self, f: F)
-            ensures self@.finite();
+            requires old(self).spec_orderedsetsteph_wf(),
+            ensures
+                self@.finite(),
+                self.spec_orderedsetsteph_wf();
         /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn intersection(&mut self, other: &Self)
-            ensures self@ == old(self)@.intersect(other@), self@.finite();
+            requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
+            ensures
+                self@ == old(self)@.intersect(other@),
+                self@.finite(),
+                self.spec_orderedsetsteph_wf();
         /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn union(&mut self, other: &Self)
-            ensures self@ == old(self)@.union(other@), self@.finite();
+            requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
+            ensures
+                self@ == old(self)@.union(other@),
+                self@.finite(),
+                self.spec_orderedsetsteph_wf();
         /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn difference(&mut self, other: &Self)
-            ensures self@ == old(self)@.difference(other@), self@.finite();
+            requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
+            ensures
+                self@ == old(self)@.difference(other@),
+                self@.finite(),
+                self.spec_orderedsetsteph_wf();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
+            requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 seq@.to_set() =~= self@,
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
-            ensures constructed@.finite();
+            ensures
+                constructed@.finite(),
+                constructed.spec_orderedsetsteph_wf();
 
         // Ordering operations (ADT 43.1)
         /// ADT 43.1 first(A) = min[|A|]. Work Θ(log n), Span Θ(log n).
@@ -134,7 +167,8 @@ broadcast use {
                 split.0@.disjoint(split.2@);
         /// ADT 43.1 join(A1, A2) = A1 union A2. Work Θ(log(|left|+|right|)), Span Θ(log(|left|+|right|)).
         fn join(&mut self, other: Self)
-            ensures self@.finite();
+            requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
+            ensures self@.finite(), self.spec_orderedsetsteph_wf();
         /// ADT 43.1 getRange(A, k1, k2) = {k in A | k1 <= k <= k2}. Work Θ(log n), Span Θ(log n).
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
             ensures
@@ -168,15 +202,13 @@ broadcast use {
 
     impl<T: StT + Ord> OrderedSetStEphTrait<T> for OrderedSetStEph<T> {
         open spec fn spec_orderedsetsteph_wf(&self) -> bool {
-            self@.finite()
+            self.base_set.spec_avltreesetsteph_wf()
         }
 
         fn size(&self) -> (count: usize)
-            ensures count == self@.len(), self@.finite()
         { self.base_set.size() }
 
         fn empty() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_orderedsetsteph_wf()
         {
             OrderedSetStEph {
                 base_set: AVLTreeSetStEph::empty(),
@@ -184,7 +216,6 @@ broadcast use {
         }
 
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_orderedsetsteph_wf()
         {
             OrderedSetStEph {
                 base_set: AVLTreeSetStEph::singleton(x),
@@ -192,40 +223,33 @@ broadcast use {
         }
 
         fn find(&self, x: &T) -> (found: B)
-            ensures found == self@.contains(x@)
         { self.base_set.find(x) }
 
         fn insert(&mut self, x: T)
-            ensures self@ == old(self)@.insert(x@), self@.finite()
         { self.base_set.insert(x); }
 
         fn delete(&mut self, x: &T)
-            ensures self@ == old(self)@.remove(x@), self@.finite()
         { self.base_set.delete(x); }
 
         fn filter<F: PredSt<T>>(&mut self, f: F)
-            ensures self@.finite()
         {
             let found = self.base_set.filter(f);
             self.base_set = found;
         }
 
         fn intersection(&mut self, other: &Self)
-            ensures self@ == old(self)@.intersect(other@), self@.finite()
         {
             let found = self.base_set.intersection(&other.base_set);
             self.base_set = found;
         }
 
         fn union(&mut self, other: &Self)
-            ensures self@ == old(self)@.union(other@), self@.finite()
         {
             let found = self.base_set.union(&other.base_set);
             self.base_set = found;
         }
 
         fn difference(&mut self, other: &Self)
-            ensures self@ == old(self)@.difference(other@), self@.finite()
         {
             let found = self.base_set.difference(&other.base_set);
             self.base_set = found;
