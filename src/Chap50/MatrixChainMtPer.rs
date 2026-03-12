@@ -299,19 +299,20 @@ broadcast use {
             cost
         }
 
-        #[verifier::external_body]
         fn optimal_cost(&self) -> (cost: usize) {
-            if self.dimensions.len() <= 1 {
+            let dims = arc_deref(&self.dimensions);
+            if dims.len() <= 1 {
                 return 0;
             }
 
             {
-                let (mut memo, write_handle) = self.memo.acquire_write();
+                let rwlock = arc_deref(&self.memo);
+                let (mut memo, write_handle) = rwlock.acquire_write();
                 memo.clear();
                 write_handle.release_write(memo);
             }
 
-            let n = self.dimensions.len();
+            let n = dims.len();
             self.matrix_chain_rec(0, n - 1)
         }
 

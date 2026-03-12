@@ -19,19 +19,12 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ ArraySeq.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeq.rs:1465: error: fn_missing_requires_ensures - fn iter_mut — exec fn should have requires and ensures
-      1453 |         pub fn iter(&self) -> (it: ArraySeqIter<'_, T>)
-            ...
-      1463 |     #[verifier::external] // accept hole
-      1464 |     impl<T: View> ArraySeqS<T> {
-      1466 |     }
-      1467 | 
+ℹ ArraySeq.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeq.rs:1463: info: external_accept_hole
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeq.rs:1595: info: external_accept_hole
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeq.rs:1622: info: accept()
    Info: 3 total
-   Proof functions: 10 total (10 clean, 0 holed)
+   10 clean proof functions
 ❌ ArraySeqMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeqMtEph.rs:529: error: trivial_spec_wf - spec fn spec_arrayseqmteph_wf — trivial body { true } or { true; }, needs // accept hole
        517 |         fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
@@ -146,8 +139,8 @@ LinkedListStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   0 clean (no holes, no errors; 0%)
-   7 holed (holes or errors, 100%)
+   1 clean (no holes, no errors; 14%)
+   6 holed (holes or errors, 85%)
    7 total
 
 Proof Functions:
@@ -156,8 +149,8 @@ Proof Functions:
    20 total
 
 Function Specs:
-   337 exec fns with complete spec (requires+ensures) (66%)
-   1 exec fns missing spec (0%)
+   338 exec fns with complete spec (requires+ensures) (66%)
+   0 exec fns missing spec (0%)
    170 proof/spec fns clean (33%)
    0 proof/spec fns with holes (0%)
    508 total fns
@@ -170,12 +163,12 @@ Holes Found: 6 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 10:17:01 -07:00
-Ended:     2026-03-12 10:17:01 -07:00
-Duration:  117ms
+Started:   2026-03-12 14:09:03 -07:00
+Ended:     2026-03-12 14:09:03 -07:00
+Duration:  104ms
 
 Full output: src/Chap18/analyses/veracity-review-verus-proof-holes.log
 
-Duration:  117ms
+Duration:  104ms
 
 Full output: src/Chap18/analyses/veracity-review-verus-proof-holes.log

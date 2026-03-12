@@ -213,15 +213,16 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn optimal_cost(&self) -> (cost: Probability) where T: Send + Sync + 'static {
-            if self.keys.is_empty() { return Probability::zero(); }
+            let keys_ref = arc_deref(&self.keys);
+            if keys_ref.len() == 0 { return Probability::zero(); }
             {
-                let (mut memo, write_handle) = self.memo.acquire_write();
+                let rwlock = arc_deref(&self.memo);
+                let (mut memo, write_handle) = rwlock.acquire_write();
                 memo.clear();
                 write_handle.release_write(memo);
             }
-            let n = self.keys.len();
+            let n = keys_ref.len();
             obst_rec(self, 0, n)
         }
 

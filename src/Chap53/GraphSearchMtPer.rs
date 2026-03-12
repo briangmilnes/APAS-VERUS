@@ -12,6 +12,7 @@ pub mod GraphSearchMtPer {
     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerTrait;
     use crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -63,14 +64,28 @@ pub mod GraphSearchMtPer {
     }
 
     impl<V: StTInMtT + Ord + 'static> SelectionStrategy<V> for SelectOne {
-        #[verifier::external_body]
         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B)) {
             if frontier.size() == 0 {
                 (AVLTreeSetMtPer::empty(), false)
             } else {
                 let seq = frontier.to_seq();
-                let first = seq.nth(0).clone();
-                (AVLTreeSetMtPer::singleton(first), false)
+                assert(seq@.len() > 0) by {
+                    if seq@.len() == 0 {
+                        assert(seq@.to_set() =~= Set::empty());
+                    }
+                }
+                let first_ref = seq.nth(0);
+                let first = first_ref.clone();
+                proof { accept(first@ == first_ref@); }  // accept hole: V::clone external_body
+                assert(frontier@.contains(first@));
+                let result = AVLTreeSetMtPer::singleton(first);
+                assert(result@.subset_of(frontier@)) by {
+                    assert forall|a: <V as View>::V| result@.contains(a)
+                        implies frontier@.contains(a) by {
+                        assert(result@ == Set::<<V as View>::V>::empty().insert(first@));
+                    }
+                }
+                (result, false)
             }
         }
     }

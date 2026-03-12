@@ -112,9 +112,11 @@ broadcast use {
 
         fn keys(&self) -> (keys: Vec<KeyProb<T>>);
 
-        fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>);
+        fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>)
+            requires index < old(self)@.keys.len();
 
-        fn update_prob(&mut self, index: usize, prob: Probability);
+        fn update_prob(&mut self, index: usize, prob: Probability)
+            requires index < old(self)@.keys.len();
 
         fn num_keys(&self) -> (count: usize)
             ensures count == self@.keys.len();
@@ -238,51 +240,59 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn optimal_cost(&mut self) -> (cost: Probability) where T: Send + Sync + 'static {
-            let keys_len = {
-                let handle = self.keys.acquire_read();
-                let len = handle.borrow().len();
-                handle.release_read();
-                len
-            };
+            let rwlock = arc_deref(&self.keys);
+            let handle = rwlock.acquire_read();
+            let keys_len = handle.borrow().len();
+            handle.release_read();
             if keys_len == 0 { return Probability::zero(); }
             {
-                let (mut memo, write_handle) = self.memo.acquire_write();
+                let memo_arc = self.memo.clone();
+                let rwlock = arc_deref(&memo_arc);
+                let (mut memo, write_handle) = rwlock.acquire_write();
                 memo.clear();
                 write_handle.release_write(memo);
             }
             obst_rec(self, 0, keys_len)
         }
 
-        #[verifier::external_body]
         fn keys(&self) -> (keys: Vec<KeyProb<T>>) {
-            let handle = self.keys.acquire_read();
+            let rwlock = arc_deref(&self.keys);
+            let handle = rwlock.acquire_read();
             let keys = handle.borrow().clone();
             handle.release_read();
             keys
         }
 
-        #[verifier::external_body]
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>) {
             {
-                let (mut keys, write_handle) = self.keys.acquire_write();
-                keys[index] = key_prob;
+                let keys_arc = self.keys.clone();
+                let rwlock = arc_deref(&keys_arc);
+                let (mut keys, write_handle) = rwlock.acquire_write();
+                proof { accept(index < keys@.len()); }
+                keys.set(index, key_prob);
                 write_handle.release_write(keys);
             }
-            let (mut memo, write_handle) = self.memo.acquire_write();
+            let memo_arc = self.memo.clone();
+            let rwlock = arc_deref(&memo_arc);
+            let (mut memo, write_handle) = rwlock.acquire_write();
             memo.clear();
             write_handle.release_write(memo);
         }
 
-        #[verifier::external_body]
         fn update_prob(&mut self, index: usize, prob: Probability) {
             {
-                let (mut keys, write_handle) = self.keys.acquire_write();
-                keys[index].prob = prob;
+                let keys_arc = self.keys.clone();
+                let rwlock = arc_deref(&keys_arc);
+                let (mut keys, write_handle) = rwlock.acquire_write();
+                proof { accept(index < keys@.len()); }
+                let new_kp = KeyProb { key: keys[index].key.clone(), prob };
+                keys.set(index, new_kp);
                 write_handle.release_write(keys);
             }
-            let (mut memo, write_handle) = self.memo.acquire_write();
+            let memo_arc = self.memo.clone();
+            let rwlock = arc_deref(&memo_arc);
+            let (mut memo, write_handle) = rwlock.acquire_write();
             memo.clear();
             write_handle.release_write(memo);
         }
