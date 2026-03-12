@@ -208,7 +208,7 @@ broadcast use {
 // 9. impls
         impl<T: StT + Ord + TotalOrder> SortedListPQTrait<T> for SortedListPQ<T> {
             open spec fn spec_sortedlistpq_wf(&self) -> bool {
-                true
+                self@.len() <= usize::MAX as int
             }
 
             open spec fn spec_size(self) -> nat {

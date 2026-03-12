@@ -362,16 +362,24 @@ broadcast use {
                 }
             }
 
-            #[verifier::external_body]
             fn to_vec(&self) -> Vec<T> {
-                let mut result = Vec::new();
-                for i in 0..self.elements.length() {
+                let n = self.elements.length();
+                let mut result: Vec<T> = Vec::new();
+                let mut i: usize = 0;
+                while i < n
+                    invariant
+                        self.elements.spec_avltreeseqstper_wf(),
+                        n as nat == self.elements.spec_seq().len(),
+                        0 <= i <= n,
+                        result@.len() == i as int,
+                    decreases n - i,
+                {
                     result.push(self.elements.nth(i).clone());
+                    i = i + 1;
                 }
                 result
             }
 
-            #[verifier::external_body]
             fn to_sorted_vec(&self) -> Vec<T> {
                 self.to_vec()
             }
@@ -417,7 +425,6 @@ broadcast use {
                 (left, found, right)
             }
 
-            #[verifier::external_body]
             fn join(left: &Self, right: &Self) -> Self { left.meld(right) }
         }
 

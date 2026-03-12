@@ -356,7 +356,9 @@ pub mod PrimTreeSeqStPer {
     }
 
     impl<T> PrimTreeSeqStTrait<T> for PrimTreeSeqStS<T> {
-        open spec fn spec_primtreeseqstper_wf(&self) -> bool { true }
+        open spec fn spec_primtreeseqstper_wf(&self) -> bool {
+            self.seq@.len() <= usize::MAX as int
+        }
 
         fn empty() -> (empty_seq: Self)
         {
@@ -372,6 +374,7 @@ pub mod PrimTreeSeqStPer {
 
         fn from_vec(vec: Vec<T>) -> (seq: Self)
         {
+            proof { axiom_spec_len(&vec); }
             PrimTreeSeqStS { seq: vec }
         }
 
@@ -462,6 +465,7 @@ pub mod PrimTreeSeqStPer {
                     let mut combined = left.seq;
                     let mut right_vec = right.seq;
                     combined.append(&mut right_vec);
+                    proof { axiom_spec_len(&combined); }
                     PrimTreeSeqStS { seq: combined }
                 }
             }

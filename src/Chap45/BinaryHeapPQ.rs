@@ -244,6 +244,7 @@ pub mod BinaryHeapPQ {
         }
 
         fn parent(i: usize) -> (parent_idx: usize)
+            requires true,
             ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
         {
             if i == 0 { 0 } else { (i - 1) / 2 }
@@ -407,6 +408,7 @@ pub mod BinaryHeapPQ {
 
         fn is_heap<T: StT + Ord + TotalOrder>(elements: &ArraySeqStPerS<T>) -> (valid: bool)
             requires elements@.len() * 2 <= usize::MAX as int,
+            ensures true,
         {
             let n = elements.length();
             let mut valid = true;
@@ -482,7 +484,7 @@ pub mod BinaryHeapPQ {
 
         impl<T: StT + Ord + TotalOrder> BinaryHeapPQTrait<T> for BinaryHeapPQ<T> {
             open spec fn spec_binaryheappq_wf(&self) -> bool {
-                true
+                self@.len() * 2 <= usize::MAX as int
             }
 
             open spec fn spec_size(self) -> nat {

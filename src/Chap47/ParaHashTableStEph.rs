@@ -49,6 +49,15 @@ pub mod ParaHashTableStEph {
         table.table@.len() == table.current_size as int
     }
 
+    // 7. helpers
+
+    /// Load factor as f64; isolated because Verus does not support usize-to-f64 casts.
+    #[verifier::external_body]
+    fn compute_load_factor(num_elements: usize, current_size: usize) -> (lf: f64)
+    {
+        if current_size == 0 { 0.0 } else { num_elements as f64 / current_size as f64 }
+    }
+
     // 8. traits
 
     /// Trait for parametric nested hash tables.
@@ -75,6 +84,7 @@ pub mod ParaHashTableStEph {
         /// - APAS: Work O(m), Span O(m) where m is initial size.
         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
         fn createTable(hash_fn: H, initial_size: usize) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
+            requires true,
             ensures
                 table.initial_size == initial_size,
                 table.current_size == initial_size,
@@ -137,6 +147,7 @@ pub mod ParaHashTableStEph {
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
+            requires true,
             ensures m == &table.metrics,
         { &table.metrics }
 
@@ -144,15 +155,10 @@ pub mod ParaHashTableStEph {
         /// Load factor α = load/size = num_elements/size
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads and one division.
-        #[verifier::external_body]
         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
             ensures load_and_size.size == table.current_size,
         {
-            let load_factor = if table.current_size == 0 {
-                0.0
-            } else {
-                table.num_elements as f64 / table.current_size as f64
-            };
+            let load_factor = compute_load_factor(table.num_elements, table.current_size);
             LoadAndSize {
                 load: load_factor,
                 size: table.current_size,

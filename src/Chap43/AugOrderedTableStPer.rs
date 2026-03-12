@@ -78,6 +78,7 @@ broadcast use {
     ) -> (reduced: V)
     where
         F: Fn(&V, &V) -> V + Clone,
+        requires true,
         ensures base@.dom().finite(),
     {
         let pairs = base.collect();

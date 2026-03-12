@@ -83,10 +83,11 @@ pub mod ChainedHashTable {
             /// Looks up in the chain at the hashed bucket.
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — agrees with APAS; hashes then linear scan of chain.
-            fn lookup_chained(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value>
+            fn lookup_chained(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
                 requires
                     table.current_size > 0,
                     table.table@.len() == table.current_size as int,
+                ensures true,
             {
                 let index = Self::hash_index(table, key);
                 if index < table.table.len() {

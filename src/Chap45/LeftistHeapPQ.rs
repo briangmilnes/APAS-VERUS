@@ -82,6 +82,7 @@ broadcast use {
 
         /// Exec comparison with spec ensures connecting to TotalOrder::le.
         fn total_order_le<T: StT + Ord + TotalOrder>(a: &T, b: &T) -> (le: bool)
+            requires true,
             ensures le <==> TotalOrder::le(*a, *b)
         {
             match TotalOrder::cmp(a, b) {

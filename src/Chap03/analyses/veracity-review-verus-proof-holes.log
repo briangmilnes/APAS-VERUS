@@ -19,14 +19,7 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ InsertionSortStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap03/InsertionSortStEph.rs:37: error: fn_missing_requires - fn insertion_sort — exec fn should have requires
-        30 | pub open spec fn is_sorted<T: TotalOrder>(v: &[T]) -> bool {
-            ...
-        35 | /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS. Iterative in-place variant, same cost as the recursive prose version.
-        36 | #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-        38 |         ensures
-        39 |           sorted.len() == old(a).len(),
+✓ InsertionSortStEph.rs
 
 =================================================================
 2. Depends Upon
@@ -49,8 +42,8 @@ InsertionSortStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   0 clean (no holes, no errors; 0%)
-   1 holed (holes or errors, 100%)
+   1 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    1 total
 
 Proof Functions:
@@ -59,8 +52,8 @@ Proof Functions:
    0 total
 
 Function Specs:
-   0 exec fns with complete spec (requires+ensures) (0%)
-   1 exec fns missing spec (25%)
+   1 exec fns with complete spec (requires+ensures) (25%)
+   0 exec fns missing spec (0%)
    3 proof/spec fns clean (75%)
    0 proof/spec fns with holes (0%)
    4 total fns
@@ -68,14 +61,14 @@ Function Specs:
 
 Holes Found: 0 total
 
-🎉 No proof holes found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-11 19:29:04 -07:00
-Ended:     2026-03-11 19:29:04 -07:00
+Started:   2026-03-11 19:30:45 -07:00
+Ended:     2026-03-11 19:30:45 -07:00
 Duration:  2ms
 
 Full output: src/Chap03/analyses/veracity-review-verus-proof-holes.log

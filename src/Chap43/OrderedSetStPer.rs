@@ -59,6 +59,7 @@ broadcast use {
         // Base set operations (ADT 41.1) - delegated
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
+            requires self.spec_orderedsetstper_wf(),
             ensures count == self@.len(), self@.finite();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
@@ -68,25 +69,32 @@ broadcast use {
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_orderedsetstper_wf();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (found: B)
+            requires self.spec_orderedsetstper_wf(),
             ensures found == self@.contains(x@);
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&self, x: T) -> (updated: Self)
-            ensures updated@ == self@.insert(x@), updated@.finite();
+            requires self.spec_orderedsetstper_wf(),
+            ensures updated@ == self@.insert(x@), updated@.finite(), updated.spec_orderedsetstper_wf();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn delete(&self, x: &T) -> (updated: Self)
-            ensures updated@ == self@.remove(x@), updated@.finite();
+            requires self.spec_orderedsetstper_wf(),
+            ensures updated@ == self@.remove(x@), updated@.finite(), updated.spec_orderedsetstper_wf();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
-            ensures filtered@.finite(), filtered@.subset_of(self@);
+            requires self.spec_orderedsetstper_wf(),
+            ensures filtered@.finite(), filtered@.subset_of(self@), filtered.spec_orderedsetstper_wf();
         /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn intersection(&self, other: &Self) -> (common: Self)
-            ensures common@ == self@.intersect(other@), common@.finite();
+            requires self.spec_orderedsetstper_wf(), other.spec_orderedsetstper_wf(),
+            ensures common@ == self@.intersect(other@), common@.finite(), common.spec_orderedsetstper_wf();
         /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn union(&self, other: &Self) -> (combined: Self)
-            ensures combined@ == self@.union(other@), combined@.finite();
+            requires self.spec_orderedsetstper_wf(), other.spec_orderedsetstper_wf(),
+            ensures combined@ == self@.union(other@), combined@.finite(), combined.spec_orderedsetstper_wf();
         /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn difference(&self, other: &Self) -> (remaining: Self)
-            ensures remaining@ == self@.difference(other@), remaining@.finite();
+            requires self.spec_orderedsetstper_wf(), other.spec_orderedsetstper_wf(),
+            ensures remaining@ == self@.difference(other@), remaining@.finite(), remaining.spec_orderedsetstper_wf();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
             ensures
@@ -95,7 +103,8 @@ broadcast use {
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
-            ensures constructed@.finite();
+            requires seq.spec_avltreeseqstper_wf(),
+            ensures constructed@.finite(), constructed.spec_orderedsetstper_wf();
 
         // Ordering operations (ADT 43.1)
         /// ADT 43.1 first(A) = min[|A|]. Work Θ(log n), Span Θ(log n).
@@ -133,6 +142,7 @@ broadcast use {
                 split.0@.disjoint(split.2@);
         /// ADT 43.1 join(A1, A2) = A1 union A2. Work Θ(log(|left|+|right|)), Span Θ(log(|left|+|right|)).
         fn join(left: &Self, right: &Self) -> (joined: Self)
+            requires left.spec_orderedsetstper_wf(), right.spec_orderedsetstper_wf(),
             ensures joined@ == left@.union(right@), joined@.finite();
         /// ADT 43.1 getRange(A, k1, k2) = {k in A | k1 <= k <= k2}. Work Θ(log n), Span Θ(log n).
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
@@ -172,7 +182,6 @@ broadcast use {
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         {
-            proof { assume(self.base_set.spec_avltreesetstper_wf()); }
             self.base_set.size()
         }
 
@@ -195,14 +204,12 @@ broadcast use {
         fn find(&self, x: &T) -> (found: B)
             ensures found == self@.contains(x@)
         {
-            proof { assume(self.base_set.spec_avltreesetstper_wf()); }
             self.base_set.find(x)
         }
 
         fn insert(&self, x: T) -> (updated: Self)
             ensures updated@ == self@.insert(x@), updated@.finite()
         {
-            proof { assume(self.base_set.spec_avltreesetstper_wf()); }
             OrderedSetStPer {
                 base_set: self.base_set.insert(x),
             }
@@ -211,7 +218,6 @@ broadcast use {
         fn delete(&self, x: &T) -> (updated: Self)
             ensures updated@ == self@.remove(x@), updated@.finite()
         {
-            proof { assume(self.base_set.spec_avltreesetstper_wf()); }
             OrderedSetStPer {
                 base_set: self.base_set.delete(x),
             }
@@ -220,7 +226,6 @@ broadcast use {
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
             ensures filtered@.finite(), filtered@.subset_of(self@)
         {
-            proof { assume(self.base_set.spec_avltreesetstper_wf()); }
             OrderedSetStPer {
                 base_set: self.base_set.filter(f),
             }
@@ -229,10 +234,6 @@ broadcast use {
         fn intersection(&self, other: &Self) -> (common: Self)
             ensures common@ == self@.intersect(other@), common@.finite()
         {
-            proof {
-                assume(self.base_set.spec_avltreesetstper_wf());
-                assume(other.base_set.spec_avltreesetstper_wf());
-            }
             OrderedSetStPer {
                 base_set: self.base_set.intersection(&other.base_set),
             }
@@ -241,10 +242,6 @@ broadcast use {
         fn union(&self, other: &Self) -> (combined: Self)
             ensures combined@ == self@.union(other@), combined@.finite()
         {
-            proof {
-                assume(self.base_set.spec_avltreesetstper_wf());
-                assume(other.base_set.spec_avltreesetstper_wf());
-            }
             OrderedSetStPer {
                 base_set: self.base_set.union(&other.base_set),
             }
@@ -253,10 +250,6 @@ broadcast use {
         fn difference(&self, other: &Self) -> (remaining: Self)
             ensures remaining@ == self@.difference(other@), remaining@.finite()
         {
-            proof {
-                assume(self.base_set.spec_avltreesetstper_wf());
-                assume(other.base_set.spec_avltreesetstper_wf());
-            }
             OrderedSetStPer {
                 base_set: self.base_set.difference(&other.base_set),
             }
@@ -270,7 +263,6 @@ broadcast use {
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             ensures constructed@.finite()
         {
-            proof { assume(seq.spec_avltreeseqstper_wf()); }
             OrderedSetStPer {
                 base_set: AVLTreeSetStPer::from_seq(seq),
             }

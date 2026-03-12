@@ -546,9 +546,9 @@ pub mod OrderedTableStPer {
     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
     ) -> (table: OrderedTableStPer<K, V>)
+        requires entries.spec_avltreeseqstper_wf(),
         ensures table@.dom().finite()
     {
-        proof { assume(entries.spec_avltreeseqstper_wf()); }
         let len = entries.length();
         let mut elements: Vec<Pair<K, V>> = Vec::new();
         let mut i: usize = 0;

@@ -117,26 +117,28 @@ broadcast use {
         spec fn spec_augorderedtablesteph_wf(&self) -> bool;
 
         fn size(&self) -> (count: usize)
+            requires self.spec_augorderedtablesteph_wf(),
             ensures count == self@.dom().len(), self@.dom().finite();
         fn empty(reducer: F, identity: V) -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty();
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
             ensures tree@.dom().finite();
         fn find(&self, k: &K) -> (found: Option<V>)
-            requires obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
                     None => !self@.contains_key(k@),
                 };
         fn lookup(&self, k: &K) -> (value: Option<V>)
-            requires obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
                 match value {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
                     None => !self@.contains_key(k@),
                 };
         fn is_empty(&self) -> (is_empty: B)
+            requires self.spec_augorderedtablesteph_wf(),
             ensures is_empty == self@.dom().is_empty(), self@.dom().finite();
         fn insert<G: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: G)
             requires
