@@ -1,13 +1,13 @@
 
  21 Feb 2026
 
-2) Suss out how to get comments up to normal English standards.
-8) Clean up types, pair, concurrency.
-14) Check my total order and partial orders against updates to vstd.
-15) Deep_view review.
-16) Get the derives in use where they now work.
-17) Do I need obeys_feq_clone 277 times? Why not obeys_feq_full?
-
+1) Clean up types, pair, concurrency.
+2) Deep_view review.
+3) Get the derives in use where they now work.
+4) Where have we turned clean tail recursion into loops that does not match APAS?
+5) Check orders against vstd for generics, minimize vstdplus.
+6) Check partial eq, eq against vstd for generics, minimize vstdplus.
+7) Check clone against vstd for generics, minimize vstdplus.
 
 Review:
 
@@ -32,21 +32,15 @@ src/Chap35/analyses/veracity-review-verus-proof-holes.log - clean.
 src/Chap44/analyses/veracity-review-verus-proof-holes.log - clean 
 src/Chap36/analyses/veracity-review-verus-proof-holes.log - clean
 
-in process:
-src/Chap45/analyses/veracity-review-verus-proof-holes.log  - PQs agent1 
-src/Chap39/analyses/veracity-review-verus-proof-holes.log - Treaps - agent2 
-
-
-Stalled: 
-
-src/Chap37/analyses/veracity-review-verus-proof-holes.log - all the trees Main. 
+Unknown: 
+src/Chap45/analyses/veracity-review-verus-proof-holes.log  - PQs 
+src/Chap39/analyses/veracity-review-verus-proof-holes.log - Treaps 
+src/Chap37/analyses/veracity-review-verus-proof-holes.log - 
 src/Chap40/analyses/veracity-review-verus-proof-holes.log - Key value - 
 src/Chap53/analyses/veracity-review-verus-proof-holes.log - Graph Search/PQ - 
-
 src/Chap41/analyses/veracity-review-verus-proof-holes.log - AVL -
 src/Chap42/analyses/veracity-review-verus-proof-holes.log - 
 src/Chap43/analyses/veracity-review-verus-proof-holes.log - AugOrderedTables, bad.
-
 src/Chap47/analyses/veracity-review-verus-proof-holes.log - Hashtables.
 src/Chap49/analyses/veracity-review-verus-proof-holes.log 
 src/Chap50/analyses/veracity-review-verus-proof-holes.log - Tables.  Arc<RwLock>
@@ -54,11 +48,6 @@ src/Chap51/analyses/veracity-review-verus-proof-holes.log -
 src/Chap52/analyses/veracity-review-verus-proof-holes.log - 
 src/Chap54/analyses/veracity-review-verus-proof-holes.log - 
 src/Chap56/analyses/veracity-review-verus-proof-holes.log - 
-
-
-22 unfinished: 
-
-
 src/Chap38/analyses/veracity-review-verus-proof-holes.log - started
 src/Chap55/analyses/veracity-review-verus-proof-holes.log - DFS, SCCD, not fully verusified.
 src/Chap57/analyses/veracity-review-verus-proof-holes.log - Dijsktra, not fully verusified.

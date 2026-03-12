@@ -26,8 +26,8 @@ Round 4: Agents added spec_wf + fn_missing_spec across many chapters (+67 verifi
 
 ## Strategy
 
-**Section 4.2 drives everything.** Only files whose dependencies are already clean can
-be worked on. Fixing a file may unblock downstream files.
+**All 22 holed chapters have clean deps — every chapter is actionable.** Nothing is
+permanently blocked. Prioritize by impact and proof difficulty, not by imagined blockers.
 
 **CRITICAL: Do not convert assume to accept without explicit user approval.**
 Round 4 taught us this the hard way. The strategy categories below are updated:
@@ -45,21 +45,21 @@ Round 4 taught us this the hard way. The strategy categories below are updated:
 
 | # | Chap | Holes | Files | Status |
 |---|------|-------|-------|--------|
-| 1 | 43 | 132 | 11 | Blocked (internal deps) |
-| 2 | 41 | 98 | 7 | Blocked (internal deps) |
-| 3 | 37 | 66 | 19 | Blocked (internal deps) |
+| 1 | 43 | 132 | 11 | Clean deps — actionable |
+| 2 | 41 | 98 | 7 | Clean deps — actionable |
+| 3 | 37 | 66 | 19 | Clean deps — actionable |
 | 4 | 06 | 51 | 20 | Clean deps — actionable |
-| 5 | 47 | 39 | 9 | Blocked (internal deps) |
-| 6 | 39 | 38 | 4 | Blocked (internal deps) |
-| 7 | 38 | 33 | 2 | Blocked (internal deps) |
-| 8 | 45 | 26 | 7 | Blocked (internal deps) |
-| 9 | 53 | 23 | 5 | Blocked (internal deps) |
+| 5 | 47 | 39 | 9 | Clean deps — actionable |
+| 6 | 39 | 38 | 4 | Clean deps — actionable |
+| 7 | 38 | 33 | 2 | Clean deps — actionable |
+| 8 | 45 | 26 | 7 | Clean deps — actionable |
+| 9 | 53 | 23 | 5 | Clean deps — actionable |
 | 10 | 50 | 22 | 8 | Clean deps — actionable |
-| 11 | 42 | 18 | 4 | Blocked (internal deps) |
+| 11 | 42 | 18 | 4 | Clean deps — actionable |
 | 12 | 05 | 9 | 5 | Clean deps — actionable |
-| 13 | 51 | 8 | 8 | Blocked (internal deps) |
+| 13 | 51 | 8 | 8 | Clean deps — actionable |
 | 14 | 18 | 6 | 7 | Clean deps — actionable |
-| 15 | 49 | 4 | 8 | Blocked (internal deps) |
+| 15 | 49 | 4 | 8 | Clean deps — actionable |
 | 16 | 26 | 4 | 8 | Clean deps — actionable |
 | 17 | 66 | 3 | 2 | Clean deps — actionable |
 | 18 | 19 | 3 | 4 | Clean deps — actionable |

@@ -22,6 +22,10 @@ is to get code to **verify (prove)** with Verus.
   parallel. Do not replace threaded code with sequential loops to satisfy the verifier.
 - **Never propose serializing Mt algorithms** without exhausting all options for verified
   parallelism AND getting explicit user approval. The default is **no**.
+- **Nothing is permanently blocked.** We can prove ALL of APAS-VERUS. Do not label any
+  chapter, file, or proof obligation as "permanently" unverifiable. If a proof is hard,
+  say it is hard — not that it is impossible. Every `assume`, every `external_body` on
+  algorithmic logic, every weak spec is a target, not a fixture.
 
 ### Abbreviations
 
@@ -55,6 +59,14 @@ minor). You bring:
 - **Minimality.** The best proof is the shortest one. 20 assert lines means something is
   structurally wrong.
 - **No hand-waving.** Every `assume` is a hole. Every `admit` is a debt.
+- **Do the proof work.** Your job is to prove, not to catalog reasons you didn't. A weak
+  spec is a proof obligation, not an observation. An `external_body` on algorithmic logic
+  is a target, not a fixture. Do not label holes "permanent", do not label chapters
+  "blocked", do not write "assess difficulty" when you mean "skip". Read the code, read
+  the error, write the proof. If the proof is hard, try harder — search vstd, write
+  intermediate lemmas, decompose the obligation. Only stop when you've genuinely exhausted
+  your ideas, and then say what you tried and where you got stuck, not that the task is
+  impossible.
 
 ### Algorithms Expertise
 - Understand work/span analysis, cost semantics, sequential vs parallel design.
@@ -143,7 +155,9 @@ minor). You bring:
 - **Tables referencing source files** must include a **Chap** column (just the number, e.g. `36`)
   and a **File** column (full file name, e.g. `QuickSortStEph.rs`).
 - **Table cells max 40 characters.** Abbreviate, drop redundant words, or use footnotes.
-- **Show module filenames** (e.g., `src/ChapNN/File.rs`) when providing info about modules.
+- **Qualify every function/type reference with chapter and file.** Many names are duplicated
+  across modules (`insert`, `find`, `spec_wf`, `new`, etc.). Always say which file you mean.
+  Bad: "Fixed `insert`." Good: "Fixed `insert` in `src/Chap41/ArraySetStEph.rs`."
 - **No Python scripts.** All reusable tools must be Rust. Need explicit permission for even
   throwaway Python.
 - **No Perl.** Never use Perl for any purpose — no `perl -e`, no `perl -i`, no Perl one-liners.

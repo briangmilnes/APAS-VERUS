@@ -39,11 +39,11 @@
 11. Chap38/BSTParaStEph.rs — 7 assumes on cmp ordering lemmas
 12. Chap47 hash table algorithms — 38 ext_body on algorithmic code
 
-### Permanent Holes (cannot fix)
+### Hard Holes (not yet solved)
 
-- Chap45/BalancedTreePQ.rs — 15 holes (BTreeSet not verified by Verus)
-- Chap49 Mt files — 4 ext_body (Arc+RwLock + recursion, by design)
-- Chap38/BSTParaMtEph.rs — 19 ext_body (fine-grained concurrent BST)
+- Chap45/BalancedTreePQ.rs — 15 holes (BTreeSet not yet specified in Verus)
+- Chap49 Mt files — 4 ext_body (Arc+RwLock + recursion, needs proof strategy)
+- Chap38/BSTParaMtEph.rs — 19 ext_body (fine-grained concurrent BST, needs proof strategy)
 
 ## Expected Impact
 

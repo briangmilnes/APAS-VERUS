@@ -1,15 +1,16 @@
 ---
-description: Show file names (ChapNN, vstdplus/, experiments) when providing module info
+description: Always qualify function/type names with chapter and file — many names are duplicated across modules
 alwaysApply: true
 ---
 
-# Show Module Filenames
+# Qualify All Function and Type References
 
-When providing information about modules — functions, summaries, tables, analyses — **always include the file path** so the user can locate it.
+This codebase has many functions with the same name in different chapters and files
+(e.g., `insert`, `find`, `spec_wf`, `clone`, `new`). When mentioning any function,
+type, trait, or spec fn, **always include the chapter and file** so the reader knows
+exactly which one you mean.
 
 ## Format
-
-Use paths like:
 
 - `src/ChapNN/ModuleName.rs` — chapter modules
 - `src/vstdplus/module.rs` — vstdplus
@@ -17,13 +18,23 @@ Use paths like:
 
 ## When to Apply
 
+- Mentioning any function, type, trait, or spec fn by name
 - Summarizing what a module does
 - Listing functions, types, or proof holes
-- Describing changes or fixes
+- Describing changes, fixes, or proof work
 - Tables of modules, errors, or status
+- Plans, reports, and agent output
 
-## Example
+## Examples
 
-**Bad:** "The predicate is in BstParaWf."
+**Bad:** "Fixed `insert` to add a requires clause."
 
-**Good:** "The predicate is in `src/Chap38/BSTParaStEph.rs` (BstParaWf)."
+**Good:** "Fixed `insert` in `src/Chap41/ArraySetStEph.rs` to add a requires clause."
+
+**Bad:** "The `spec_wf` predicate needs a real body."
+
+**Good:** "The `spec_arrayseqsteph_wf` predicate in `src/Chap18/ArraySeqStEph.rs` needs a real body."
+
+**Bad:** "The assumes in `find` are lock-boundary."
+
+**Good:** "The assumes in `find` (`src/Chap05/SetMtEph.rs`) are lock-boundary."
