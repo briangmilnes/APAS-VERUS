@@ -250,7 +250,7 @@ broadcast use {
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
-                proof { assume(f.requires((&*elem,))); }
+                proof { accept(f.requires((&*elem,))); }  // accept hole: predicate callability
                 if f(elem) {
                     filtered = filtered.insert(elem.clone());
                 }
@@ -355,7 +355,7 @@ broadcast use {
 
         fn find(&self, x: &T) -> (found: B)
         {
-            proof { assume(obeys_feq_full::<T>()); }
+            proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
             let n = self.elements.length();
             let mut lo: usize = 0;
             let mut hi: usize = n;

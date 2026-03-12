@@ -382,7 +382,7 @@ pub mod BSTReducedStEph {
             Some(node) => {
                 let k = node.key.clone();
                 let v = node.value.clone();
-                proof { assume(k == node.key && v == node.value); } // clone bridge, cf. PartialEq pattern
+                proof { accept(k == node.key && v == node.value); } // accept hole: Clone bridge
                 Some(Box::new(Node {
                     key: k,
                     value: v,

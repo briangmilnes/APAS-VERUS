@@ -1195,7 +1195,7 @@ pub mod AVLTreeSeq {
         {
             assume(spec_avltreeseq_wf(self.root));
             assume(spec_avltreeseq_wf(other.root));
-            assume(obeys_feq_full::<T>());
+            proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
             assume(spec_avltreeseq_cached_size(&self.root) < usize::MAX);
             assume(spec_avltreeseq_cached_size(&other.root) < usize::MAX);
             let equal = compare_trees(&self.root, &other.root);

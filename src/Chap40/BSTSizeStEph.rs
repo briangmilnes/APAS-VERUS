@@ -818,7 +818,7 @@ pub mod BSTSizeStEph {
             None => None,
             Some(node) => {
                 let k = node.key.clone();
-                proof { assume(k == node.key); } // clone bridge, cf. PartialEq pattern
+                proof { accept(k == node.key); } // accept hole: Clone bridge
                 Some(Box::new(Node {
                     key: k,
                     priority: node.priority,
