@@ -34,12 +34,19 @@ Table of Contents:
        328 |         fn set_dimension(&mut self, index: usize, dim: MatrixDim) {
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:339: error: external_body - #[verifier::external_body]
        340 |         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:357: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:357: error: assume() - proof { assume(n == self@.dimensions.len()); }
+       352 |         fn num_matrices(&self) -> (n: usize) {
+            ...
+       355 |             let n = handle.borrow().len();
+       356 |             handle.release_read();
+       358 |             n
+       359 |         }
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:388: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:410: info: accept()
-   Holes: 7 total
+   Holes: 8 total
+      1 × assume()
       7 × external_body
-   Info: 3 total
+   Info: 2 total
 ❌ MatrixChainMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:244: error: external_body - #[verifier::external_body]
        245 |         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
@@ -162,19 +169,20 @@ Function Specs:
    230 total fns
 
 
-Holes Found: 21 total
-   21 × external_body (100%)
+Holes Found: 22 total
+   1 × assume() (4%)
+   21 × external_body (95%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 10:59:08 -07:00
-Ended:     2026-03-12 10:59:08 -07:00
+Started:   2026-03-12 12:35:35 -07:00
+Ended:     2026-03-12 12:35:35 -07:00
 Duration:  24ms
 
 Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log
-ded:     2026-03-12 10:59:08 -07:00
+
 Duration:  24ms
 
 Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log

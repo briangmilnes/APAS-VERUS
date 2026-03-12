@@ -276,15 +276,36 @@ function (`crate::vstdplus::accept::accept`) that replaces `assume` for intentio
 Adding `accept()` without explicit user approval hides real proof obligations and defeats
 the verification effort. Do NOT use `accept()` to silence verification errors.
 
+**DO NOT CONVERT `assume()` TO `accept()`.** If you see an `assume(...)` in existing code,
+LEAVE IT ALONE. The user will decide when and whether to promote assumes to accepts. An
+agent that mass-converts assumes to accepts is destroying 30 minutes of human time per
+cleanup round. Don't be that agent.
+
+**DO NOT `assume` or `accept` closure requires/ensures.** If a function body needs
+`f.requires((...))` to hold, that obligation MUST be lifted into the function's own
+`requires` clause so callers prove it. Writing `assume(f.requires(...))` or
+`accept(f.requires(...))` in algorithmic code is always wrong — it vaporizes the proof
+obligation instead of propagating it. Read `src/standards/using_closures_standard.rs`.
+
+**DO NOT `assume` or `accept` eq/clone properties in algorithmic code.** The assume/accept
+for Clone, PartialEq, and Eq bridges may ONLY appear inside `Clone::clone` and
+`PartialEq::eq` bodies — nowhere else. If algorithmic code needs these properties, it
+obtains them through the `ensures` clauses of `clone()` and `eq()`, not by assuming them.
+Read `src/standards/partial_eq_eq_clone_standard.rs`.
+
 The ONLY assume/accept patterns that may exist without per-instance user approval are:
 - `assume` inside `PartialEq::eq` body (the eq/clone workaround pattern).
 - `assume` inside `Clone::clone` body (the eq/clone workaround pattern).
 - `assume(false); diverge()` in unreachable thread-join error arms.
 - `external_body` at thread-spawn boundaries (not around algorithmic logic).
 
+That's it. Four patterns. Nothing else.
+
 Everything else — every `assume(...)`, every `accept(...)`, every `external_body` on
 algorithmic logic — requires the user to explicitly request it. When in doubt, leave the
 proof hole as-is and flag it for review. Do NOT "fix" a failing proof by adding accept.
+Do NOT "clean up" assumes by converting them to accepts. Do NOT sprinkle accepts around
+like confetti at a parade. The human has to clean up after you and it is not fun.
 
 ### Search Locations ("The Usual Suspects")
 

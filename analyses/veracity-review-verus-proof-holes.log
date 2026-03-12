@@ -45,86 +45,456 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:592: info: accept()
    Info: 1 total
 ✓ src/Chap05/RelationStEph.rs
-ℹ src/Chap05/SetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:996: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:997: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1045: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1047: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1055: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1057: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1064: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1075: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1077: info: accept()
+❌ src/Chap05/SetMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:996: error: assume() - assume(self@.finite());
+       991 |         pub proof fn type_invariant(&self)
+            ...
+       994 |                 valid_key_type::<T>(),
+       995 |         {
+       997 |             assume(valid_key_type::<T>());
+       998 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:997: error: assume() - assume(valid_key_type::<T>());
+       991 |         pub proof fn type_invariant(&self)
+            ...
+       995 |         {
+       996 |             assume(self@.finite());
+       998 |         }
+       999 |     }
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1045: error: assume() - proof { assume(inner@ == self@); }
+      1042 |         fn size(&self) -> (size: N) {
+            ...
+      1043 |             let read_handle = self.locked_set.acquire_read();
+      1044 |             let inner = read_handle.borrow();
+      1046 |             let size = inner.size();
+      1047 |             proof { assume(size == self@.len()); }
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1047: error: assume() - proof { assume(size == self@.len()); }
+      1042 |         fn size(&self) -> (size: N) {
+            ...
+      1045 |             proof { assume(inner@ == self@); }
+      1046 |             let size = inner.size();
+      1048 |             read_handle.release_read();
+      1049 |             size
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1055: error: assume() - proof { assume(inner@ == self@); }
+      1052 |         fn mem(&self, x: T) -> (contains: B) {
+            ...
+      1053 |             let read_handle = self.locked_set.acquire_read();
+      1054 |             let inner = read_handle.borrow();
+      1056 |             let contains = inner.mem(&x);
+      1057 |             proof { assume(contains == self@.contains(x@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1057: error: assume() - proof { assume(contains == self@.contains(x@)); }
+      1052 |         fn mem(&self, x: T) -> (contains: B) {
+            ...
+      1055 |             proof { assume(inner@ == self@); }
+      1056 |             let contains = inner.mem(&x);
+      1058 |             read_handle.release_read();
+      1059 |             contains
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1064: error: assume() - proof { assume(self.ghost_locked_set@ == locked_val@); }
+      1062 |         fn insert(&mut self, x: T) -> (r: std::result::Result<bool, ()>) {
+      1063 |             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+      1065 |             let inserted = locked_val.insert(x);
+      1066 |             let ghost new_val = locked_val@;
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1075: error: assume() - proof { assume(inner@ == self@); }
+      1072 |         fn choose(&self) -> (element: T) {
+            ...
+      1073 |             let read_handle = self.locked_set.acquire_read();
+      1074 |             let inner = read_handle.borrow();
+      1076 |             let element = inner.choose();
+      1077 |             proof { assume(self@.contains(element@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1077: error: assume() - proof { assume(self@.contains(element@)); }
+      1072 |         fn choose(&self) -> (element: T) {
+            ...
+      1075 |             proof { assume(inner@ == self@); }
+      1076 |             let element = inner.choose();
+      1078 |             read_handle.release_read();
+      1079 |             element
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:991: error: proof_fn_with_holes - proof fn type_invariant — contains assume/external_body/admit, needs proof
+       979 |         open spec fn inv(self, v: SetMtEph<T>) -> bool {
+            ...
+       989 | 
+       990 |     impl<T: StT + Hash> LockedSetMtEph<T> {
+       992 |             ensures
+       993 |                 self@.finite(),
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1102: info: accept()
-   Info: 10 total
-   2 clean proof functions
+   Holes: 9 total
+      9 × assume()
+   Info: 1 total
+   Proof functions: 2 total (1 clean, 1 holed)
 ℹ src/Chap05/SetStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:899: info: accept()
    Info: 1 total
    1 clean proof function
-ℹ src/Chap06/DirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:833: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:841: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:849: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:857: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:865: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:867: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:875: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:878: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:879: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:888: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:891: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:892: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:901: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:903: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:911: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:913: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:921: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:923: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:931: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:933: info: accept()
-   Info: 20 total
+❌ src/Chap06/DirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:833: error: assume() - proof { assume(v@ == self@.V); }
+       830 |         fn vertices(&self) -> (v: SetStEph<V>) {
+            ...
+       831 |             let read_handle = self.locked_graph.acquire_read();
+       832 |             let v = read_handle.borrow().V.clone();
+       834 |             read_handle.release_read();
+       835 |             v
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:841: error: assume() - proof { assume(a@ == self@.A); }
+       838 |         fn arcs(&self) -> (a: SetStEph<Edge<V>>) {
+            ...
+       839 |             let read_handle = self.locked_graph.acquire_read();
+       840 |             let a = read_handle.borrow().A.clone();
+       842 |             read_handle.release_read();
+       843 |             a
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:849: error: assume() - proof { assume(n == self@.V.len()); }
+       846 |         fn sizeV(&self) -> (n: N) {
+            ...
+       847 |             let read_handle = self.locked_graph.acquire_read();
+       848 |             let n = read_handle.borrow().sizeV();
+       850 |             read_handle.release_read();
+       851 |             n
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:857: error: assume() - proof { assume(n == self@.A.len()); }
+       854 |         fn sizeA(&self) -> (n: N) {
+            ...
+       855 |             let read_handle = self.locked_graph.acquire_read();
+       856 |             let n = read_handle.borrow().sizeA();
+       858 |             read_handle.release_read();
+       859 |             n
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:865: error: assume() - proof { assume(inner@ == self@); }
+       862 |         fn neighbor(&self, u: &V, v: &V) -> (b: B) {
+            ...
+       863 |             let read_handle = self.locked_graph.acquire_read();
+       864 |             let inner = read_handle.borrow();
+       866 |             let b = inner.neighbor(u, v);
+       867 |             proof { assume(b == self@.A.contains((u@, v@))); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:867: error: assume() - proof { assume(b == self@.A.contains((u@, v@))); }
+       862 |         fn neighbor(&self, u: &V, v: &V) -> (b: B) {
+            ...
+       865 |             proof { assume(inner@ == self@); }
+       866 |             let b = inner.neighbor(u, v);
+       868 |             read_handle.release_read();
+       869 |             b
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:875: error: assume() - proof { assume(inner@ == self@); }
+       872 |         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>) {
+            ...
+       873 |             let read_handle = self.locked_graph.acquire_read();
+       874 |             let inner = read_handle.borrow();
+       876 |             let out_neighbors = inner.n_plus(v);
+       877 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:878: error: assume() - assume(out_neighbors@ == Set::new(|w: V::V| self@.A.contains
+       872 |         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>) {
+            ...
+       876 |             let out_neighbors = inner.n_plus(v);
+       877 |             proof {
+       879 |                 assume(out_neighbors@ <= self@.V);
+       880 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:879: error: assume() - assume(out_neighbors@ <= self@.V);
+       872 |         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>) {
+            ...
+       877 |             proof {
+       878 |                 assume(out_neighbors@ == Set::new(|w: V::V| self@.A.contains((v@, w))));
+       880 |             }
+       881 |             read_handle.release_read();
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:888: error: assume() - proof { assume(inner@ == self@); }
+       885 |         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>) {
+            ...
+       886 |             let read_handle = self.locked_graph.acquire_read();
+       887 |             let inner = read_handle.borrow();
+       889 |             let in_neighbors = inner.n_minus(v);
+       890 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:891: error: assume() - assume(in_neighbors@ == Set::new(|u: V::V| self@.A.contains(
+       885 |         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>) {
+            ...
+       889 |             let in_neighbors = inner.n_minus(v);
+       890 |             proof {
+       892 |                 assume(in_neighbors@ <= self@.V);
+       893 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:892: error: assume() - assume(in_neighbors@ <= self@.V);
+       885 |         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>) {
+            ...
+       890 |             proof {
+       891 |                 assume(in_neighbors@ == Set::new(|u: V::V| self@.A.contains((u, v@))));
+       893 |             }
+       894 |             read_handle.release_read();
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:901: error: assume() - proof { assume(inner@ == self@); }
+       898 |         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
+            ...
+       899 |             let read_handle = self.locked_graph.acquire_read();
+       900 |             let inner = read_handle.borrow();
+       902 |             let neighbors = inner.ng(v);
+       903 |             proof { assume(neighbors@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:903: error: assume() - proof { assume(neighbors@ <= self@.V); }
+       898 |         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
+            ...
+       901 |             proof { assume(inner@ == self@); }
+       902 |             let neighbors = inner.ng(v);
+       904 |             read_handle.release_read();
+       905 |             neighbors
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:911: error: assume() - proof { assume(inner@ == self@); }
+       908 |         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>) {
+            ...
+       909 |             let read_handle = self.locked_graph.acquire_read();
+       910 |             let inner = read_handle.borrow();
+       912 |             let out_neighbors = inner.n_plus_of_vertices(u_set);
+       913 |             proof { assume(out_neighbors@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:913: error: assume() - proof { assume(out_neighbors@ <= self@.V); }
+       908 |         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>) {
+            ...
+       911 |             proof { assume(inner@ == self@); }
+       912 |             let out_neighbors = inner.n_plus_of_vertices(u_set);
+       914 |             read_handle.release_read();
+       915 |             out_neighbors
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:921: error: assume() - proof { assume(inner@ == self@); }
+       918 |         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>) {
+            ...
+       919 |             let read_handle = self.locked_graph.acquire_read();
+       920 |             let inner = read_handle.borrow();
+       922 |             let in_neighbors = inner.n_minus_of_vertices(u_set);
+       923 |             proof { assume(in_neighbors@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:923: error: assume() - proof { assume(in_neighbors@ <= self@.V); }
+       918 |         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>) {
+            ...
+       921 |             proof { assume(inner@ == self@); }
+       922 |             let in_neighbors = inner.n_minus_of_vertices(u_set);
+       924 |             read_handle.release_read();
+       925 |             in_neighbors
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:931: error: assume() - proof { assume(inner@ == self@); }
+       928 |         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
+            ...
+       929 |             let read_handle = self.locked_graph.acquire_read();
+       930 |             let inner = read_handle.borrow();
+       932 |             let neighbors = inner.ng_of_vertices(u_set);
+       933 |             proof { assume(neighbors@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:933: error: assume() - proof { assume(neighbors@ <= self@.V); }
+       928 |         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
+            ...
+       931 |             proof { assume(inner@ == self@); }
+       932 |             let neighbors = inner.ng_of_vertices(u_set);
+       934 |             read_handle.release_read();
+       935 |             neighbors
+   Holes: 20 total
+      20 × assume()
 ✓ src/Chap06/DirGraphStEph.rs
-ℹ src/Chap06/LabDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:710: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:720: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:731: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:733: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:741: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:743: info: accept()
-   Info: 6 total
+❌ src/Chap06/LabDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:710: error: assume() - proof { assume(self.ghost_locked_graph@ == locked_val@); }
+       708 |         fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>) {
+       709 |             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
+       711 |             locked_val.add_vertex(v);
+       712 |             let ghost new_val = locked_val@;
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:720: error: assume() - proof { assume(self.ghost_locked_graph@ == locked_val@); }
+       718 |         fn add_labeled_arc(&mut self, from: V, to: V, label: L) -> (r: std::result::Result<(), ()>) {
+       719 |             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
+       721 |             locked_val.add_labeled_arc(from, to, label);
+       722 |             let ghost new_val = locked_val@;
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:731: error: assume() - proof { assume(inner@ == self@); }
+       728 |         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
+            ...
+       729 |             let read_handle = self.locked_graph.acquire_read();
+       730 |             let inner = read_handle.borrow();
+       732 |             let n_plus = inner.n_plus(v);
+       733 |             proof { assume(n_plus@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:733: error: assume() - proof { assume(n_plus@ <= self@.V); }
+       728 |         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
+            ...
+       731 |             proof { assume(inner@ == self@); }
+       732 |             let n_plus = inner.n_plus(v);
+       734 |             read_handle.release_read();
+       735 |             n_plus
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:741: error: assume() - proof { assume(inner@ == self@); }
+       738 |         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
+            ...
+       739 |             let read_handle = self.locked_graph.acquire_read();
+       740 |             let inner = read_handle.borrow();
+       742 |             let n_minus = inner.n_minus(v);
+       743 |             proof { assume(n_minus@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:743: error: assume() - proof { assume(n_minus@ <= self@.V); }
+       738 |         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
+            ...
+       741 |             proof { assume(inner@ == self@); }
+       742 |             let n_minus = inner.n_minus(v);
+       744 |             read_handle.release_read();
+       745 |             n_minus
+   Holes: 6 total
+      6 × assume()
 ✓ src/Chap06/LabDirGraphStEph.rs
-ℹ src/Chap06/LabUnDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:588: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:589: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:658: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:660: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:668: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:670: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:678: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:681: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:691: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:694: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:706: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:709: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:710: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:718: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:728: info: accept()
-   Info: 15 total
-   1 clean proof function
+❌ src/Chap06/LabUnDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:588: error: assume() - assume(spec_labgraphview_wf(self@));
+       583 |         pub proof fn type_invariant(&self)
+            ...
+       586 |                 valid_key_type_for_lab_graph::<V, L>(),
+       587 |         {
+       589 |             assume(valid_key_type_for_lab_graph::<V, L>());
+       590 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:589: error: assume() - assume(valid_key_type_for_lab_graph::<V, L>());
+       583 |         pub proof fn type_invariant(&self)
+            ...
+       587 |         {
+       588 |             assume(spec_labgraphview_wf(self@));
+       590 |         }
+       591 |     }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:658: error: assume() - proof { assume(inner@ == self@); }
+       655 |         fn vertices(&self) -> (v: SetStEph<V>) {
+            ...
+       656 |             let read_handle = self.locked_graph.acquire_read();
+       657 |             let inner = read_handle.borrow();
+       659 |             let v = inner.vertices().clone();
+       660 |             proof { assume(v@ == self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:660: error: assume() - proof { assume(v@ == self@.V); }
+       655 |         fn vertices(&self) -> (v: SetStEph<V>) {
+            ...
+       658 |             proof { assume(inner@ == self@); }
+       659 |             let v = inner.vertices().clone();
+       661 |             read_handle.release_read();
+       662 |             v
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:668: error: assume() - proof { assume(inner@ == self@); }
+       665 |         fn labeled_edges(&self) -> (e: SetStEph<LabEdge<V, L>>) {
+            ...
+       666 |             let read_handle = self.locked_graph.acquire_read();
+       667 |             let inner = read_handle.borrow();
+       669 |             let e = inner.labeled_edges().clone();
+       670 |             proof { assume(e@ == self@.A); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:670: error: assume() - proof { assume(e@ == self@.A); }
+       665 |         fn labeled_edges(&self) -> (e: SetStEph<LabEdge<V, L>>) {
+            ...
+       668 |             proof { assume(inner@ == self@); }
+       669 |             let e = inner.labeled_edges().clone();
+       671 |             read_handle.release_read();
+       672 |             e
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:678: error: assume() - proof { assume(inner@ == self@); }
+       675 |         fn edges(&self) -> (edges: SetStEph<Edge<V>>) {
+            ...
+       676 |             let read_handle = self.locked_graph.acquire_read();
+       677 |             let inner = read_handle.borrow();
+       679 |             let edges = inner.edges();
+       680 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:681: error: assume() - assume(forall |u: V::V, w: V::V| edges@.contains((u, w)) ==
+       675 |         fn edges(&self) -> (edges: SetStEph<Edge<V>>) {
+            ...
+       679 |             let edges = inner.edges();
+       680 |             proof {
+       682 |                     (exists |l: L::V| #![trigger self@.A.contains((u, w, l))] self@.A.contains((u, w, l))));
+       683 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:691: error: assume() - proof { assume(inner@ == self@); }
+       688 |         fn has_edge(&self, v1: V, v2: V) -> (b: bool) {
+            ...
+       689 |             let read_handle = self.locked_graph.acquire_read();
+       690 |             let inner = read_handle.borrow();
+       692 |             let b = inner.has_edge(&v1, &v2);
+       693 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:694: error: assume() - assume(b == (exists |l: L::V|
+       688 |         fn has_edge(&self, v1: V, v2: V) -> (b: bool) {
+            ...
+       692 |             let b = inner.has_edge(&v1, &v2);
+       693 |             proof {
+       695 |                     #![trigger self@.A.contains((v1@, v2@, l))]
+       696 |                     #![trigger self@.A.contains((v2@, v1@, l))]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:706: error: assume() - proof { assume(inner@ == self@); }
+       703 |         fn ng(&self, v: V) -> (ng: SetStEph<V>) {
+            ...
+       704 |             let read_handle = self.locked_graph.acquire_read();
+       705 |             let inner = read_handle.borrow();
+       707 |             let ng = inner.ng(&v);
+       708 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:709: error: assume() - assume(ng.spec_setsteph_wf());
+       703 |         fn ng(&self, v: V) -> (ng: SetStEph<V>) {
+            ...
+       707 |             let ng = inner.ng(&v);
+       708 |             proof {
+       710 |                 assume(ng@ <= self@.V);
+       711 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:710: error: assume() - assume(ng@ <= self@.V);
+       703 |         fn ng(&self, v: V) -> (ng: SetStEph<V>) {
+            ...
+       708 |             proof {
+       709 |                 assume(ng.spec_setsteph_wf());
+       711 |             }
+       712 |             read_handle.release_read();
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:718: error: assume() - proof { assume(self.ghost_locked_graph@ == locked_val@); }
+       716 |         fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>) {
+       717 |             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
+       719 |             locked_val.add_vertex(v);
+       720 |             let ghost new_val = locked_val@;
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:728: error: assume() - proof { assume(self.ghost_locked_graph@ == locked_val@); }
+       726 |         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) -> (r: std::result::Result<(), ()>) {
+       727 |             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
+       729 |             locked_val.add_labeled_edge(v1, v2, label);
+       730 |             let ghost new_val = locked_val@;
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:583: error: proof_fn_with_holes - proof fn type_invariant — contains assume/external_body/admit, needs proof
+       570 |         open spec fn inv(self, v: LabUnDirGraphMtEph<V, L>) -> bool {
+            ...
+       581 | 
+       582 |     impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LockedLabUnDirGraphMtEph<V, L> {
+       584 |             ensures
+       585 |                 spec_labgraphview_wf(self@),
+   Holes: 15 total
+      15 × assume()
+   Proof functions: 1 total (0 clean, 1 holed)
 ✓ src/Chap06/LabUnDirGraphStEph.rs
-ℹ src/Chap06/UnDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:556: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:564: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:572: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:580: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:588: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:590: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:598: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:600: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:608: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:610: info: accept()
-   Info: 10 total
+❌ src/Chap06/UnDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:556: error: assume() - proof { assume(v@ == self@.V); }
+       553 |         fn vertices(&self) -> (v: SetStEph<V>) {
+            ...
+       554 |             let read_handle = self.locked_graph.acquire_read();
+       555 |             let v = read_handle.borrow().V.clone();
+       557 |             read_handle.release_read();
+       558 |             v
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:564: error: assume() - proof { assume(e@ == self@.A); }
+       561 |         fn edges(&self) -> (e: SetStEph<Edge<V>>) {
+            ...
+       562 |             let read_handle = self.locked_graph.acquire_read();
+       563 |             let e = read_handle.borrow().E.clone();
+       565 |             read_handle.release_read();
+       566 |             e
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:572: error: assume() - proof { assume(n == self@.V.len()); }
+       569 |         fn sizeV(&self) -> (n: N) {
+            ...
+       570 |             let read_handle = self.locked_graph.acquire_read();
+       571 |             let n = read_handle.borrow().sizeV();
+       573 |             read_handle.release_read();
+       574 |             n
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:580: error: assume() - proof { assume(n == self@.A.len()); }
+       577 |         fn sizeE(&self) -> (n: N) {
+            ...
+       578 |             let read_handle = self.locked_graph.acquire_read();
+       579 |             let n = read_handle.borrow().sizeE();
+       581 |             read_handle.release_read();
+       582 |             n
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:588: error: assume() - proof { assume(inner@ == self@); }
+       585 |         fn neighbor(&self, u: &V, v: &V) -> (b: B) {
+            ...
+       586 |             let read_handle = self.locked_graph.acquire_read();
+       587 |             let inner = read_handle.borrow();
+       589 |             let b = inner.neighbor(u, v);
+       590 |             proof { assume(b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)))); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:590: error: assume() - proof { assume(b == (self@.A.contains((u@, v@)) || self@.A.c
+       585 |         fn neighbor(&self, u: &V, v: &V) -> (b: B) {
+            ...
+       588 |             proof { assume(inner@ == self@); }
+       589 |             let b = inner.neighbor(u, v);
+       591 |             read_handle.release_read();
+       592 |             b
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:598: error: assume() - proof { assume(inner@ == self@); }
+       595 |         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
+            ...
+       596 |             let read_handle = self.locked_graph.acquire_read();
+       597 |             let inner = read_handle.borrow();
+       599 |             let neighbors = inner.ng(v);
+       600 |             proof { assume(neighbors@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:600: error: assume() - proof { assume(neighbors@ <= self@.V); }
+       595 |         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
+            ...
+       598 |             proof { assume(inner@ == self@); }
+       599 |             let neighbors = inner.ng(v);
+       601 |             read_handle.release_read();
+       602 |             neighbors
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:608: error: assume() - proof { assume(inner@ == self@); }
+       605 |         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
+            ...
+       606 |             let read_handle = self.locked_graph.acquire_read();
+       607 |             let inner = read_handle.borrow();
+       609 |             let neighbors = inner.ng_of_vertices(u_set);
+       610 |             proof { assume(neighbors@ <= self@.V); }
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:610: error: assume() - proof { assume(neighbors@ <= self@.V); }
+       605 |         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
+            ...
+       608 |             proof { assume(inner@ == self@); }
+       609 |             let neighbors = inner.ng_of_vertices(u_set);
+       611 |             read_handle.release_read();
+       612 |             neighbors
+   Holes: 10 total
+      10 × assume()
 ✓ src/Chap06/UnDirGraphStEph.rs
 ✓ src/Chap06/WeightedDirGraphStEphI128.rs
 ✓ src/Chap06/WeightedDirGraphStEphI16.rs
@@ -703,6 +1073,39 @@ Table of Contents:
    Info: 2 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ src/Chap37/BSTAVLMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:506: error: assume() - proof { assume(self.ghost_root@ == tree); }
+       504 |         fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
+       505 |             let (tree, write_handle) = self.root.acquire_write();
+       507 |             let current_size = tree.size();
+       508 |             let current_height = tree.height();
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:530: error: assume() - proof { assume(found == self@.tree_contains(*target)); }
+       526 |         fn contains(&self, target: &T) -> (found: bool) {
+            ...
+       528 |             let tree_ref = read_handle.borrow();
+       529 |             let found = contains_node(tree_ref, target);
+       531 |             read_handle.release_read();
+       532 |             found
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:541: error: assume() - proof { assume(n as nat == self@.spec_size()); }
+       536 |         fn size(&self) -> (n: usize) {
+            ...
+       539 |             assert(tree_ref.spec_size() <= usize::MAX);
+       540 |             let n = tree_ref.size();
+       542 |             read_handle.release_read();
+       543 |             n
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:551: error: assume() - proof { assume(b == (self@ is Leaf)); }
+       547 |         fn is_empty(&self) -> (b: bool) {
+            ...
+       549 |             let tree_ref = read_handle.borrow();
+       550 |             let b = tree_ref.is_leaf();
+       552 |             read_handle.release_read();
+       553 |             b
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:562: error: assume() - proof { assume(h as nat == self@.spec_height()); }
+       557 |         fn height(&self) -> (h: usize) {
+            ...
+       560 |             assert(tree_ref.spec_height() <= usize::MAX);
+       561 |             let h = tree_ref.height();
+       563 |             read_handle.release_read();
+       564 |             h
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:371: warning: requires_true - requires true — vacuous precondition
        369 | 
        370 |     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
@@ -713,16 +1116,45 @@ Table of Contents:
        386 |     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
        388 |         ensures
        389 |             (node is Leaf) ==> max is None,
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:506: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:530: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:541: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:551: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:562: info: accept()
-   Info: 5 total
+   Holes: 5 total
+      5 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ✓ src/Chap37/BSTAVLStEph.rs
    2 clean proof functions
 ❌ src/Chap37/BSTBBAlphaMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:321: error: assume() - proof { assume(self.ghost_root@ == tree); }
+       319 |         fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
+       320 |             let (tree, write_handle) = self.root.acquire_write();
+       322 |             let current_size = tree.size();
+       323 |             let current_height = tree.height();
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:345: error: assume() - proof { assume(found == self@.tree_contains(*target)); }
+       341 |         fn contains(&self, target: &T) -> (found: bool) {
+            ...
+       343 |             let tree_ref = read_handle.borrow();
+       344 |             let found = contains_node(tree_ref, target);
+       346 |             read_handle.release_read();
+       347 |             found
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:356: error: assume() - proof { assume(n as nat == self@.spec_size()); }
+       351 |         fn size(&self) -> (n: usize) {
+            ...
+       354 |             assert(tree_ref.spec_size() <= usize::MAX);
+       355 |             let n = tree_ref.size();
+       357 |             read_handle.release_read();
+       358 |             n
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:366: error: assume() - proof { assume(b == (self@ is Leaf)); }
+       362 |         fn is_empty(&self) -> (b: bool) {
+            ...
+       364 |             let tree_ref = read_handle.borrow();
+       365 |             let b = tree_ref.is_leaf();
+       367 |             read_handle.release_read();
+       368 |             b
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:377: error: assume() - proof { assume(h as nat == self@.spec_height()); }
+       372 |         fn height(&self) -> (h: usize) {
+            ...
+       375 |             assert(tree_ref.spec_height() <= usize::MAX);
+       376 |             let h = tree_ref.height();
+       378 |             read_handle.release_read();
+       379 |             h
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:186: warning: requires_true - requires true — vacuous precondition
        184 | 
        185 |     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
@@ -733,14 +1165,43 @@ Table of Contents:
        201 |     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
        203 |         ensures
        204 |             (node is Leaf) ==> max is None,
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:321: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:345: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:356: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:366: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:377: info: accept()
-   Info: 5 total
+   Holes: 5 total
+      5 × assume()
 ✓ src/Chap37/BSTBBAlphaStEph.rs
 ❌ src/Chap37/BSTPlainMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:320: error: assume() - proof { assume(self.ghost_root@ == tree); }
+       318 |         fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
+       319 |             let (tree, write_handle) = self.root.acquire_write();
+       321 |             let current_size = tree.size();
+       322 |             let current_height = tree.height();
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:344: error: assume() - proof { assume(found == self@.tree_contains(*target)); }
+       340 |         fn contains(&self, target: &T) -> (found: bool) {
+            ...
+       342 |             let tree_ref = read_handle.borrow();
+       343 |             let found = contains_node(tree_ref, target);
+       345 |             read_handle.release_read();
+       346 |             found
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:355: error: assume() - proof { assume(n as nat == self@.spec_size()); }
+       350 |         fn size(&self) -> (n: usize) {
+            ...
+       353 |             assert(tree_ref.spec_size() <= usize::MAX);
+       354 |             let n = tree_ref.size();
+       356 |             read_handle.release_read();
+       357 |             n
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:365: error: assume() - proof { assume(b == (self@ is Leaf)); }
+       361 |         fn is_empty(&self) -> (b: bool) {
+            ...
+       363 |             let tree_ref = read_handle.borrow();
+       364 |             let b = tree_ref.is_leaf();
+       366 |             read_handle.release_read();
+       367 |             b
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:376: error: assume() - proof { assume(h as nat == self@.spec_height()); }
+       371 |         fn height(&self) -> (h: usize) {
+            ...
+       374 |             assert(tree_ref.spec_height() <= usize::MAX);
+       375 |             let h = tree_ref.height();
+       377 |             read_handle.release_read();
+       378 |             h
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:185: warning: requires_true - requires true — vacuous precondition
        183 | 
        184 |     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
@@ -751,15 +1212,44 @@ Table of Contents:
        200 |     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
        202 |         ensures
        203 |             (node is Leaf) ==> max is None,
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:320: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:344: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:355: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:365: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:376: info: accept()
-   Info: 5 total
+   Holes: 5 total
+      5 × assume()
 ✓ src/Chap37/BSTPlainStEph.rs
    3 clean proof functions
 ❌ src/Chap37/BSTRBMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:631: error: assume() - proof { assume(self.ghost_root@ == current); }
+       629 |         fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
+       630 |             let (mut current, write_handle) = self.root.acquire_write();
+       632 |             let sz = compute_link_spec_size(&current);
+       633 |             if sz < usize::MAX {
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:652: error: assume() - proof { assume(found == link_contains(self@, *target)); }
+       649 |         fn contains(&self, target: &T) -> (found: B) {
+            ...
+       650 |             let handle = self.root.acquire_read();
+       651 |             let found = find_link(handle.borrow(), target).is_some();
+       653 |             handle.release_read();
+       654 |             found
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:661: error: assume() - proof { assume(n as nat == link_spec_size(self@)); }
+       658 |         fn size(&self) -> (n: N) {
+            ...
+       659 |             let handle = self.root.acquire_read();
+       660 |             let n = size_link(handle.borrow());
+       662 |             handle.release_read();
+       663 |             n
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:670: error: assume() - proof { assume(b == (self@ is None)); }
+       667 |         fn is_empty(&self) -> (b: B) {
+            ...
+       668 |             let handle = self.root.acquire_read();
+       669 |             let b = handle.borrow().is_none();
+       671 |             handle.release_read();
+       672 |             b
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:679: error: assume() - proof { assume(h as nat == link_height(self@)); }
+       676 |         fn height(&self) -> (h: N) {
+            ...
+       677 |             let handle = self.root.acquire_read();
+       678 |             let h = height_rec(handle.borrow());
+       680 |             handle.release_read();
+       681 |             h
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:100: warning: requires_true - requires true — vacuous precondition
         98 | 
         99 |     fn new_node<T: StTInMtT + Ord>(key: T) -> (node: Node<T>)
@@ -864,12 +1354,8 @@ Table of Contents:
        490 |     fn height_rec<T: StTInMtT + Ord>(link: &Link<T>) -> (h: N)
        492 |         ensures
        493 |             (link is None) ==> h == 0,
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:631: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:652: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:661: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:670: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:679: info: accept()
-   Info: 5 total
+   Holes: 5 total
+      5 × assume()
 ✓ src/Chap37/BSTRBStEph.rs
    1 clean proof function
 ❌ src/Chap37/BSTSetAVLMtEph.rs
@@ -986,6 +1472,39 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:407: info: accept()
    Info: 1 total
 ❌ src/Chap37/BSTSplayMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:632: error: assume() - proof { assume(self.ghost_root@ == current); }
+       630 |         fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
+       631 |             let (mut current, write_handle) = self.root.acquire_write();
+       633 |             let sz = compute_link_spec_size(&current);
+       634 |             if sz < usize::MAX {
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:650: error: assume() - proof { assume(found == link_contains(self@, *target)); }
+       647 |         fn contains(&self, target: &T) -> (found: B) {
+            ...
+       648 |             let handle = self.root.acquire_read();
+       649 |             let found = find_link(handle.borrow(), target).is_some();
+       651 |             handle.release_read();
+       652 |             found
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:659: error: assume() - proof { assume(n as nat == link_spec_size(self@)); }
+       656 |         fn size(&self) -> (n: N) {
+            ...
+       657 |             let handle = self.root.acquire_read();
+       658 |             let n = size_link(handle.borrow());
+       660 |             handle.release_read();
+       661 |             n
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:668: error: assume() - proof { assume(b == (self@ is None)); }
+       665 |         fn is_empty(&self) -> (b: B) {
+            ...
+       666 |             let handle = self.root.acquire_read();
+       667 |             let b = handle.borrow().is_none();
+       669 |             handle.release_read();
+       670 |             b
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:677: error: assume() - proof { assume(h as nat == link_height(self@)); }
+       674 |         fn height(&self) -> (h: N) {
+            ...
+       675 |             let handle = self.root.acquire_read();
+       676 |             let h = height_rec(handle.borrow());
+       678 |             handle.release_read();
+       679 |             h
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:93: warning: requires_true - requires true — vacuous precondition
         91 | 
         92 |     fn new_node<T: StTInMtT + Ord>(key: T) -> (node: Node<T>)
@@ -1075,12 +1594,8 @@ Table of Contents:
        491 |     fn height_rec<T: StTInMtT + Ord>(link: &Link<T>) -> (h: N)
        493 |         ensures
        494 |             (link is None) ==> h == 0,
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:632: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:650: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:659: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:668: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:677: info: accept()
-   Info: 5 total
+   Holes: 5 total
+      5 × assume()
 ❌ src/Chap37/BSTSplayStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayStEph.rs:446: error: trivial_spec_wf - spec fn spec_bstsplaysteph_wf — trivial body { true } or { true; }, needs // accept hole
        444 |         open spec fn spec_height(self) -> nat { spec_height_link(&self.root) }
@@ -1464,8 +1979,71 @@ Table of Contents:
        224 |         // Unit Inv: no ghost↔exec fields to link. Trivially well-formed.
        226 |             true
        227 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:234: error: assume() - assume(count == self@.len());  // accept hole: reader value
+       229 |         fn size(&self) -> (count: usize)
+            ...
+       232 |             let count = handle.borrow().size();
+       233 |             proof {
+       235 |                 assume(self@.finite());
+       236 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:235: error: assume() - assume(self@.finite());
+       229 |         fn size(&self) -> (count: usize)
+            ...
+       233 |             proof {
+       234 |                 assume(count == self@.len());  // accept hole: reader value
+       236 |             }
+       237 |             handle.release_read();
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:241: error: external_body - #[verifier::external_body]
        242 |         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:253: error: assume() - proof { assume(AVLTreeSetMtEphInv.inv(st)); }
+       250 |         fn empty() -> (empty: Self)
+            ...
+       251 |         {
+       252 |             let st = AVLTreeSetStEph::empty();
+       254 |             let empty = AVLTreeSetMtEph {
+       255 |                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:257: error: assume() - proof { assume(empty@ == Set::<<T as View>::V>::empty()); }
+       250 |         fn empty() -> (empty: Self)
+            ...
+       255 |                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
+       256 |             };
+       258 |             empty
+       259 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:265: error: assume() - proof { assume(AVLTreeSetMtEphInv.inv(st)); }
+       261 |         fn singleton(x: T) -> (tree: Self)
+            ...
+       263 |             let ghost x_view = x@;
+       264 |             let st = AVLTreeSetStEph::singleton(x);
+       266 |             let tree = AVLTreeSetMtEph {
+       267 |                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:270: error: assume() - assume(tree@ == Set::<<T as View>::V>::empty().insert(x_view
+       261 |         fn singleton(x: T) -> (tree: Self)
+            ...
+       268 |             };
+       269 |             proof {
+       271 |                 assume(tree@.finite());
+       272 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:271: error: assume() - assume(tree@.finite());
+       261 |         fn singleton(x: T) -> (tree: Self)
+            ...
+       269 |             proof {
+       270 |                 assume(tree@ == Set::<<T as View>::V>::empty().insert(x_view));
+       272 |             }
+       273 |             tree
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:279: error: assume() - proof { assume(AVLTreeSetMtEphInv.inv(st)); }
+       276 |         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
+            ...
+       277 |         {
+       278 |             let st = AVLTreeSetStEph::from_seq(seq);
+       280 |             let constructed = AVLTreeSetMtEph {
+       281 |                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:283: error: assume() - proof { assume(constructed@.finite()); }
+       276 |         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
+            ...
+       281 |                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
+       282 |             };
+       284 |             constructed
+       285 |         }
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:289: error: external_body - #[verifier::external_body]
        290 |         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:336: error: external_body - #[verifier::external_body]
@@ -1474,6 +2052,55 @@ Table of Contents:
        400 |         fn difference(&self, other: &Self) -> (remaining: Self)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:409: error: external_body - #[verifier::external_body]
        410 |         fn union(&self, other: &Self) -> (combined: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:447: error: assume() - proof { assume(found == self@.contains(x@)); }  // accept ho
+       443 |         fn find(&self, x: &T) -> (found: B)
+            ...
+       445 |             let handle = self.inner.acquire_read();
+       446 |             let found = handle.borrow().find(x);
+       448 |             handle.release_read();
+       449 |             found
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:456: error: assume() - proof { assume(AVLTreeSetMtEphInv.inv(current)); }
+       452 |         fn delete(&mut self, x: &T)
+            ...
+       454 |             let (mut current, write_handle) = self.inner.acquire_write();
+       455 |             current.delete(x);
+       457 |             write_handle.release_write(current);
+       458 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:459: error: assume() - assume(self@ == old(self)@.remove(x@));
+       452 |         fn delete(&mut self, x: &T)
+            ...
+       457 |             write_handle.release_write(current);
+       458 |             proof {
+       460 |                 assume(self@.finite());
+       461 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:460: error: assume() - assume(self@.finite());
+       452 |         fn delete(&mut self, x: &T)
+            ...
+       458 |             proof {
+       459 |                 assume(self@ == old(self)@.remove(x@));
+       461 |             }
+       462 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:469: error: assume() - proof { assume(AVLTreeSetMtEphInv.inv(current)); }
+       464 |         fn insert(&mut self, x: T)
+            ...
+       467 |             let (mut current, write_handle) = self.inner.acquire_write();
+       468 |             current.insert(x);
+       470 |             write_handle.release_write(current);
+       471 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:472: error: assume() - assume(self@ == old(self)@.insert(x_view));
+       464 |         fn insert(&mut self, x: T)
+            ...
+       470 |             write_handle.release_write(current);
+       471 |             proof {
+       473 |                 assume(self@.finite());
+       474 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:473: error: assume() - assume(self@.finite());
+       464 |         fn insert(&mut self, x: T)
+            ...
+       471 |             proof {
+       472 |                 assume(self@ == old(self)@.insert(x_view));
+       474 |             }
+       475 |         }
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:477: error: external_body - #[verifier::external_body]
        478 |         fn iter(&self) -> (it: AVLTreeSetMtEphIter<T>)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:303: error: fn_missing_requires_ensures - fn parallel_filter — exec fn should have requires and ensures
@@ -1490,28 +2117,13 @@ Table of Contents:
        361 | 
        363 |                 let n = self_vals.len();
        364 |                 if n == 0 {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:234: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:235: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:253: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:257: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:265: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:270: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:271: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:279: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:283: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:447: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:456: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:459: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:460: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:469: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:472: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:473: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:523: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:590: info: accept()
-   Holes: 8 total
+   Holes: 24 total
+      16 × assume()
       7 × external_body
       1 × trivial spec*wf { true }
-   Info: 18 total
+   Info: 2 total
 ❌ src/Chap41/AVLTreeSetMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:145: error: assume() - proof { assume(self.elements.spec_avltreeseqmtper_wf()); }
        143 |         fn size(&self) -> (count: usize)
@@ -1547,8 +2159,15 @@ Table of Contents:
             ...
        427 |         {
        428 |             proof {
-       430 |                 accept(obeys_feq_full::<T>());  // accept hole: feq bridge
+       430 |                 assume(obeys_feq_full::<T>());  // accept hole: feq bridge
        431 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:430: error: assume() - assume(obeys_feq_full::<T>());  // accept hole: feq bridge
+       426 |         fn find(&self, x: &T) -> (found: B)
+            ...
+       428 |             proof {
+       429 |                 assume(self.elements.spec_avltreeseqmtper_wf());
+       431 |             }
+       432 |             let n = self.elements.length();
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:456: error: assume() - proof { assume(!self@.contains(x@)); }
        426 |         fn find(&self, x: &T) -> (found: B)
             ...
@@ -1567,13 +2186,12 @@ Table of Contents:
        200 | 
        202 |                 let n = vals.len();
        203 |                 if n <= 1 {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:430: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:523: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:570: info: accept()
-   Holes: 12 total
-      5 × assume()
+   Holes: 13 total
+      6 × assume()
       7 × external_body
-   Info: 3 total
+   Info: 2 total
 ❌ src/Chap41/AVLTreeSetStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:139: error: assume() - proof { assume(self.elements.spec_avltreeseqsteph_wf()); }
        137 |         fn size(&self) -> (count: usize)
@@ -1594,6 +2212,13 @@ Table of Contents:
        153 |                 assert(seq@ =~= self.elements@);
        155 |             }
        156 |             seq
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:171: error: assume() - proof { assume(obeys_feq_full::<T>()); }  // accept hole: fe
+       168 |         fn singleton(x: T) -> (tree: Self)
+            ...
+       169 |         {
+       170 |             let ghost x_view = x@;
+       172 |             let mut v: Vec<T> = Vec::new();
+       173 |             v.push(x);
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:190: error: assume() - proof { assume(seq.spec_avltreeseqsteph_wf()); }
        188 |         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
        189 |         {
@@ -1604,6 +2229,13 @@ Table of Contents:
        210 |         {
        212 |             let mut filtered = Self::empty();
        213 |             let n = self.elements.length();
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:224: error: assume() - proof { assume(f.requires((&*elem,))); }
+       209 |         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
+            ...
+       222 |             {
+       223 |                 let elem = self.elements.nth(i);
+       225 |                 if f(elem) {
+       226 |                     filtered.insert(elem.clone());
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:231: error: assume() - assume(filtered@.subset_of(self@));
        209 |         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
             ...
@@ -1661,8 +2293,15 @@ Table of Contents:
             ...
        328 |         {
        329 |             proof {
-       331 |                 accept(obeys_feq_full::<T>());  // accept hole: feq bridge
+       331 |                 assume(obeys_feq_full::<T>());
        332 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:331: error: assume() - assume(obeys_feq_full::<T>());
+       327 |         fn find(&self, x: &T) -> (found: B)
+            ...
+       329 |             proof {
+       330 |                 assume(self.elements.spec_avltreeseqsteph_wf());
+       332 |             }
+       333 |             let n = self.elements.length();
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:357: error: assume() - proof { assume(!self@.contains(x@)); }
        327 |         fn find(&self, x: &T) -> (found: B)
             ...
@@ -1675,7 +2314,14 @@ Table of Contents:
        362 |         {
        364 |             let n = self.elements.length();
        365 |             let mut result_vec: Vec<T> = Vec::new();
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:380: error: assume() - proof { assume(result_vec@.len() < usize::MAX); accept(obeys
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:380: error: assume() - proof { assume(result_vec@.len() < usize::MAX); assume(obeys
+       361 |         fn delete(&mut self, x: &T)
+            ...
+       378 |                 i += 1;
+       379 |             }
+       381 |             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
+       382 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:380: error: assume() - proof { assume(result_vec@.len() < usize::MAX); assume(obeys
        361 |         fn delete(&mut self, x: &T)
             ...
        378 |                 i += 1;
@@ -1694,7 +2340,14 @@ Table of Contents:
        389 |         {
        391 |             let ghost x_view = x@;
        392 |             if !self.find(&x) {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:434: error: assume() - proof { assume(new_vec@.len() < usize::MAX); accept(obeys_fe
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:434: error: assume() - proof { assume(new_vec@.len() < usize::MAX); assume(obeys_fe
+       388 |         fn insert(&mut self, x: T)
+            ...
+       432 |                     j += 1;
+       433 |                 }
+       435 |                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
+       436 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:434: error: assume() - proof { assume(new_vec@.len() < usize::MAX); assume(obeys_fe
        388 |         fn insert(&mut self, x: T)
             ...
        432 |                     j += 1;
@@ -1708,18 +2361,13 @@ Table of Contents:
        437 |             proof {
        439 |                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
        440 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:171: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:224: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:331: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:380: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:434: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:466: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:467: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:489: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:499: info: accept()
-   Holes: 21 total
-      21 × assume()
-   Info: 9 total
+   Holes: 26 total
+      26 × assume()
+   Info: 4 total
 ❌ src/Chap41/AVLTreeSetStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:167: error: assume() - assume(r == self@.len());
        163 |         fn size(&self) -> (count: usize)
@@ -1728,6 +2376,13 @@ Table of Contents:
        166 |             proof {
        168 |                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
        169 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:253: error: assume() - proof { assume(f.requires((&*elem,))); }  // accept hole: pr
+       238 |         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
+            ...
+       251 |             {
+       252 |                 let elem = self.elements.nth(i);
+       254 |                 if f(elem) {
+       255 |                     filtered = filtered.insert(elem.clone());
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:260: error: assume() - assume(filtered@.subset_of(self@));
        238 |         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
             ...
@@ -1756,6 +2411,11 @@ Table of Contents:
        350 |             proof {
        352 |             }
        353 |             combined
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:358: error: assume() - proof { assume(obeys_feq_full::<T>()); }
+       356 |         fn find(&self, x: &T) -> (found: B)
+       357 |         {
+       359 |             let n = self.elements.length();
+       360 |             let mut lo: usize = 0;
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:383: error: assume() - proof { assume(!self@.contains(x@)); }
        356 |         fn find(&self, x: &T) -> (found: B)
             ...
@@ -1805,17 +2465,15 @@ Table of Contents:
        469 |                 assume(updated@ == self@.insert(x_view));
        471 |                 vstd::seq_lib::seq_to_set_is_finite(updated.elements@);
        472 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:253: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:358: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:494: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:495: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:517: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:529: info: accept()
-   Holes: 12 total
-      12 × assume()
-   Info: 6 total
+   Holes: 14 total
+      14 × assume()
+   Info: 4 total
 ❌ src/Chap41/ArraySetEnumMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:154: error: assume() - assume(our_set.finite()); // accept hole: finiteness of boun
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:154: error: assume() - assume(our_set.finite());
        140 |     proof fn lemma_view_finite(bits: Seq<u64>, universe_size: usize)
             ...
        152 |         // Set::new(|i: usize| i < universe_size) is finite because it's a subset of
@@ -1844,22 +2502,66 @@ Table of Contents:
       4 × external_body
    Info: 2 total
    Proof functions: 6 total (5 clean, 1 holed)
-ℹ src/Chap41/ArraySetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:423: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:485: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:516: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:539: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:623: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:703: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:783: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:939: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1016: info: accept()
+❌ src/Chap41/ArraySetStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:423: error: assume() - assume(obeys_feq_clone::<T>());  // accept hole: Clone prese
+       419 |         fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
+            ...
+       421 |             let seq = self.elements.clone();
+       422 |             proof {
+       424 |                 lemma_seq_map_cloned_view_eq(
+       425 |                     self.elements.seq@,
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:485: error: assume() - proof { assume(obeys_feq_full::<T>()); }
+       483 |         fn find(&self, x: &T) -> (found: B)
+       484 |         {
+       486 |             let n = self.elements.length();
+       487 |             let mut i: usize = 0;
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:516: error: assume() - proof { assume(obeys_feq_full::<T>()); }
+       514 |         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
+       515 |         {
+       517 |             let ghost old_view = self.elements@;
+       518 |             let mut result_vec: Vec<T> = Vec::new();
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:539: error: assume() - proof { assume(f.requires((&*elem,))); }
+       514 |         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
+            ...
+       537 |             {
+       538 |                 let elem = self.elements.nth(i);
+       540 |                 if f(elem) {
+       541 |                     let cloned_elem = elem.clone();
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:623: error: assume() - proof { assume(obeys_feq_full::<T>()); }  // accept hole: fe
+       621 |         fn intersection(&self, other: &Self) -> (common: Self)
+       622 |         {
+       624 |             let ghost old_view = self.elements@;
+       625 |             let ghost other_set = other@;
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:703: error: assume() - proof { assume(obeys_feq_full::<T>()); }
+       701 |         fn difference(&self, other: &Self) -> (remaining: Self)
+       702 |         {
+       704 |             let ghost old_view = self.elements@;
+       705 |             let ghost other_set = other@;
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:783: error: assume() - proof { assume(obeys_feq_full::<T>()); }
+       781 |         fn union(&self, other: &Self) -> (combined: Self)
+       782 |         {
+       784 |             let ghost self_view = self.elements@;
+       785 |             let ghost other_view = other.elements@;
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:939: error: assume() - proof { assume(obeys_feq_full::<T>()); }  // accept hole: fe
+       937 |         fn delete(&mut self, x: &T)
+       938 |         {
+       940 |             let ghost old_view = self.elements@;
+       941 |             let ghost x_view = x@;
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1016: error: assume() - proof { assume(obeys_feq_full::<T>()); }
+      1013 |         fn insert(&mut self, x: T)
+            ...
+      1014 |         {
+      1015 |             if !self.find(&x) {
+      1017 |                 let ghost old_view = self.elements@;
+      1018 |                 let ghost x_view = x@;
 /home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1103: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1104: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1126: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1139: info: accept()
-   Info: 13 total
-   7 clean proof functions
+   Holes: 9 total
+      9 × assume()
+   Info: 4 total
+   Proof functions: 7 total (7 clean, 0 holed)
 ❌ src/Chap41/Example41_3.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:32: error: external_body - #[verifier::external_body]
         33 |     fn example_41_1_array_set_impl()
@@ -1896,6 +2598,13 @@ Table of Contents:
 ❌ src/Chap42/TableMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:216: error: external_body - #[verifier::external_body]
        217 |         fn size(&self) -> (count: usize)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:234: error: assume() - proof { assume(obeys_feq_clone::<Pair<K, V>>()); }  // accep
+       231 |         fn singleton(key: K, value: V) -> (tree: Self)
+            ...
+       232 |             ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@)
+       233 |         {
+       235 |             let entries = ArraySeqMtEphS::singleton(Pair(key, value));
+       236 |             let tree = TableMtEph { entries };
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:250: error: external_body - #[verifier::external_body]
        251 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:284: error: external_body - #[verifier::external_body]
@@ -1920,20 +2629,33 @@ Table of Contents:
        713 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:764: error: external_body - #[verifier::external_body]
        765 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:819: error: assume() - assume(obeys_feq_clone::<Pair<K, V>>());
+       816 |         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>) {
+            ...
+       817 |             let entries = self.entries.clone();
+       818 |             proof {
+       820 |                 lemma_seq_map_cloned_view_eq(
+       821 |                     self.entries.seq@,
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:830: warning: requires_true - requires true — vacuous precondition
        828 | 
        829 |     pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (constructed: TableMtEph<K, V>)
        831 |         ensures constructed@.dom().finite()
        832 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:234: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:819: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:858: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:870: info: accept()
-   Holes: 13 total
+   Holes: 15 total
+      2 × assume()
       13 × external_body
-   Info: 4 total
+   Info: 2 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ src/Chap42/TableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1652: error: assume() - assume(obeys_feq_clone::<Pair<K, V>>());  // accept hole: Cl
+      1649 |         fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>) {
+            ...
+      1650 |             let entries = self.entries.clone();
+      1651 |             proof {
+      1653 |                 lemma_seq_map_cloned_view_eq(
+      1654 |                     self.entries.seq@,
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1665: warning: requires_true - requires true — vacuous precondition
       1662 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
             ...
@@ -1941,11 +2663,19 @@ Table of Contents:
       1664 |     ) -> (cloned: TableStEph<K, V>)
       1666 |         ensures cloned@.dom().finite()
       1667 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1652: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1699: info: accept()
-   Info: 2 total
+   Holes: 1 total
+      1 × assume()
+   Info: 1 total
    Proof functions: 8 total (8 clean, 0 holed)
 ❌ src/Chap42/TableStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1727: error: assume() - assume(obeys_feq_clone::<Pair<K, V>>());  // accept hole: Cl
+      1723 |         fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
+            ...
+      1725 |             let collected = self.entries.clone();
+      1726 |             proof {
+      1728 |                 lemma_seq_map_cloned_view_eq(
+      1729 |                     self.entries.seq@,
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1755: error: external_body - #[verifier::external_body]
       1756 |     pub fn collect_by_key<K: StT + Ord + Eq, V: StT>(
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1740: warning: requires_true - requires true — vacuous precondition
@@ -1955,12 +2685,12 @@ Table of Contents:
       1739 |     ) -> (cloned: TableStPer<K, V>)
       1741 |         ensures cloned@.dom().finite()
       1742 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1727: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1800: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1811: info: accept()
-   Holes: 1 total
+   Holes: 2 total
+      1 × assume()
       1 × external_body
-   Info: 3 total
+   Info: 2 total
    Proof functions: 8 total (8 clean, 0 holed)
 ❌ src/Chap43/AugOrderedTableMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:65: error: external_body - #[verifier::external_body]
@@ -2018,46 +2748,195 @@ Table of Contents:
 ✓ src/Chap43/Example43_1.rs
    1 clean proof function
 ❌ src/Chap43/OrderedSetMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:60: error: assume() - proof { assume(view.finite()); }
+        55 |     fn from_st<T: MtKey + 'static>(inner: OrderedSetStEph<T>) -> (s: OrderedSetMtEph<T>)
+            ...
+        58 |     {
+        59 |         let ghost view = inner@;
+        61 |         OrderedSetMtEph {
+        62 |             locked_set: RwLock::new(inner, Ghost(OrderedSetMtEphInv)),
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:169: error: assume() - proof { assume(count == self@.len()); }
+       165 |         fn size(&self) -> (count: usize) {
+            ...
+       167 |             let inner = read_handle.borrow();
+       168 |             let count = inner.size();
+       170 |             proof { assume(self@.finite()); }
+       171 |             read_handle.release_read();
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:170: error: assume() - proof { assume(self@.finite()); }
+       165 |         fn size(&self) -> (count: usize) {
+            ...
+       168 |             let count = inner.size();
+       169 |             proof { assume(count == self@.len()); }
+       171 |             read_handle.release_read();
+       172 |             count
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:187: error: assume() - proof { assume(view.finite()); }
+       184 |         fn singleton(x: T) -> (tree: Self) {
+            ...
+       185 |             let inner = OrderedSetStEph::singleton(x);
+       186 |             let ghost view = inner@;
+       188 |             OrderedSetMtEph {
+       189 |                 locked_set: RwLock::new(inner, Ghost(OrderedSetMtEphInv)),
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:198: error: assume() - proof { assume(found == self@.contains(x@)); }
+       194 |         fn find(&self, x: &T) -> (found: B) {
+            ...
+       196 |             let inner = read_handle.borrow();
+       197 |             let found = inner.find(x);
+       199 |             read_handle.release_read();
+       200 |             found
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:205: error: assume() - proof { assume(self.ghost_locked_set@ == locked_val@); }
+       203 |         fn insert(&mut self, x: T) {
+       204 |             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+       206 |             locked_val.insert(x);
+       207 |             let ghost new_val = locked_val@;
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:214: error: assume() - proof { assume(self.ghost_locked_set@ == locked_val@); }
+       212 |         fn delete(&mut self, x: &T) {
+       213 |             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+       215 |             locked_val.delete(x);
+       216 |             let ghost new_val = locked_val@;
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:221: error: external_body - #[verifier::external_body]
        222 |         fn filter<F: PredMt<T>>(&mut self, f: F) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:234: error: assume() - proof { assume(self.ghost_locked_set@ == locked_val@); }
+       229 |         fn intersection(&mut self, other: &Self) {
+            ...
+       232 |             other_read.release_read();
+       233 |             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+       235 |             locked_val.intersection(&other_inner);
+       236 |             let ghost new_val = locked_val@;
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:238: error: assume() - proof { assume(self@ == old(self)@.intersect(other@)); }
+       229 |         fn intersection(&mut self, other: &Self) {
+            ...
+       236 |             let ghost new_val = locked_val@;
+       237 |             self.ghost_locked_set = Ghost(new_val);
+       239 |             write_handle.release_write(locked_val);
+       240 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:247: error: assume() - proof { assume(self.ghost_locked_set@ == locked_val@); }
+       242 |         fn union(&mut self, other: &Self) {
+            ...
+       245 |             other_read.release_read();
+       246 |             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+       248 |             locked_val.union(&other_inner);
+       249 |             let ghost new_val = locked_val@;
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:251: error: assume() - proof { assume(self@ == old(self)@.union(other@)); }
+       242 |         fn union(&mut self, other: &Self) {
+            ...
+       249 |             let ghost new_val = locked_val@;
+       250 |             self.ghost_locked_set = Ghost(new_val);
+       252 |             write_handle.release_write(locked_val);
+       253 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:260: error: assume() - proof { assume(self.ghost_locked_set@ == locked_val@); }
+       255 |         fn difference(&mut self, other: &Self) {
+            ...
+       258 |             other_read.release_read();
+       259 |             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+       261 |             locked_val.difference(&other_inner);
+       262 |             let ghost new_val = locked_val@;
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:264: error: assume() - proof { assume(self@ == old(self)@.difference(other@)); }
+       255 |         fn difference(&mut self, other: &Self) {
+            ...
+       262 |             let ghost new_val = locked_val@;
+       263 |             self.ghost_locked_set = Ghost(new_val);
+       265 |             write_handle.release_write(locked_val);
+       266 |         }
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:268: error: external_body - #[verifier::external_body]
        269 |         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>) {
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:285: error: external_body - #[verifier::external_body]
        286 |         fn from_seq(seq: ArraySeqStPerS<T>) -> (constructed: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:299: error: assume() - proof { assume(self@.finite()); }
+       295 |         fn first(&self) -> (first: Option<T>) {
+            ...
+       297 |             let inner = read_handle.borrow();
+       298 |             let first = inner.first();
+       300 |             read_handle.release_read();
+       301 |             first
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:308: error: assume() - proof { assume(self@.finite()); }
+       304 |         fn last(&self) -> (last: Option<T>) {
+            ...
+       306 |             let inner = read_handle.borrow();
+       307 |             let last = inner.last();
+       309 |             read_handle.release_read();
+       310 |             last
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:317: error: assume() - proof { assume(self@.finite()); }
+       313 |         fn previous(&self, k: &T) -> (predecessor: Option<T>) {
+            ...
+       315 |             let inner = read_handle.borrow();
+       316 |             let predecessor = inner.previous(k);
+       318 |             read_handle.release_read();
+       319 |             predecessor
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:326: error: assume() - proof { assume(self@.finite()); }
+       322 |         fn next(&self, k: &T) -> (successor: Option<T>) {
+            ...
+       324 |             let inner = read_handle.borrow();
+       325 |             let successor = inner.next(k);
+       327 |             read_handle.release_read();
+       328 |             successor
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:333: error: assume() - proof { assume(self.ghost_locked_set@ == locked_val@); }
+       331 |         fn split(&mut self, k: &T) -> (split: (Self, B, Self)) {
+       332 |             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+       334 |             let (left, found, right) = locked_val.split(k);
+       335 |             let ghost new_val = locked_val@;
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:337: error: assume() - proof { assume(self@.finite()); }
+       331 |         fn split(&mut self, k: &T) -> (split: (Self, B, Self)) {
+            ...
+       335 |             let ghost new_val = locked_val@;
+       336 |             self.ghost_locked_set = Ghost(new_val);
+       338 |             write_handle.release_write(locked_val);
+       339 |             (from_st(left), found, from_st(right))
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:350: error: assume() - proof { assume(self@.finite()); }
+       342 |         fn join(&mut self, other: Self) {
+            ...
+       348 |             let ghost new_val = locked_val@;
+       349 |             self.ghost_locked_set = Ghost(new_val);
+       351 |             write_handle.release_write(locked_val);
+       352 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:358: error: assume() - proof { assume(self@.finite()); }
+       354 |         fn get_range(&self, k1: &T, k2: &T) -> (range: Self) {
+            ...
+       356 |             let inner = read_handle.borrow();
+       357 |             let range = inner.get_range(k1, k2);
+       359 |             read_handle.release_read();
+       360 |             from_st(range)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:367: error: assume() - proof { assume(self@.finite()); }
+       363 |         fn rank(&self, k: &T) -> (rank: usize) {
+            ...
+       365 |             let inner = read_handle.borrow();
+       366 |             let rank = inner.rank(k);
+       368 |             read_handle.release_read();
+       369 |             rank
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:376: error: assume() - proof { assume(self@.finite()); }
+       372 |         fn select(&self, i: usize) -> (selected: Option<T>) {
+            ...
+       374 |             let inner = read_handle.borrow();
+       375 |             let selected = inner.select(i);
+       377 |             read_handle.release_read();
+       378 |             selected
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:383: error: assume() - proof { assume(self.ghost_locked_set@ == locked_val@); }
+       381 |         fn split_rank(&mut self, i: usize) -> (split: (Self, Self)) {
+       382 |             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+       384 |             let (left, right) = locked_val.split_rank(i);
+       385 |             let ghost new_val = locked_val@;
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:387: error: assume() - proof { assume(self@.finite()); }
+       381 |         fn split_rank(&mut self, i: usize) -> (split: (Self, Self)) {
+            ...
+       385 |             let ghost new_val = locked_val@;
+       386 |             self.ghost_locked_set = Ghost(new_val);
+       388 |             write_handle.release_write(locked_val);
+       389 |             (from_st(left), from_st(right))
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:56: warning: requires_true - requires true — vacuous precondition
         54 |     // Helper: construct Mt wrapper from St set (used by split/get_range/split_rank/from_seq).
         55 |     fn from_st<T: MtKey + 'static>(inner: OrderedSetStEph<T>) -> (s: OrderedSetMtEph<T>)
         57 |         ensures s@ == inner@, s@.finite()
         58 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:60: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:169: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:170: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:187: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:198: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:205: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:214: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:234: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:238: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:247: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:251: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:260: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:264: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:299: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:308: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:317: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:326: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:333: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:337: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:350: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:358: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:367: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:376: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:383: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:387: info: accept()
-   Holes: 3 total
+   Holes: 28 total
+      25 × assume()
       3 × external_body
-   Info: 25 total
 ❌ src/Chap43/OrderedSetStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:254: error: assume() - assume(result@ =~= eph_seq@);  // accept hole: clone/view br
+       234 |         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
+            ...
+       252 |             proof {
+       253 |                 // T::clone preserves View (StT bound); from_vec maps values through View.
+       255 |             }
+       256 |             result
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:259: error: external_body - #[verifier::external_body]
        260 |         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:274: error: external_body - #[verifier::external_body]
@@ -2086,10 +2965,9 @@ Table of Contents:
        607 |         fn into_iter(self) -> (it: Self::IntoIter)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:630: error: external_body - #[verifier::external_body]
        631 |     pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:254: info: accept()
-   Holes: 14 total
+   Holes: 15 total
+      1 × assume()
       14 × external_body
-   Info: 1 total
 ❌ src/Chap43/OrderedSetStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:271: error: external_body - #[verifier::external_body]
        272 |         fn first(&self) -> (first: Option<T>)
@@ -2155,6 +3033,48 @@ Table of Contents:
    Holes: 16 total
       16 × external_body
 ❌ src/Chap43/OrderedTableMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:64: error: assume() - assume(view.dom().finite());
+        56 |     fn from_st_table<K: MtKey + 'static, V: StTInMtT + Ord + 'static>(
+            ...
+        62 |         let ghost view = inner@;
+        63 |         proof {
+        65 |             assume(inner.spec_orderedtablestper_wf());
+        66 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:65: error: assume() - assume(inner.spec_orderedtablestper_wf());
+        56 |     fn from_st_table<K: MtKey + 'static, V: StTInMtT + Ord + 'static>(
+            ...
+        63 |         proof {
+        64 |             assume(view.dom().finite());
+        66 |         }
+        67 |         OrderedTableMtPer {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:156: error: assume() - proof { assume(inner.spec_orderedtablestper_wf()); }
+       153 |         fn size(&self) -> (count: usize) {
+            ...
+       154 |             let read_handle = self.locked_table.acquire_read();
+       155 |             let inner = read_handle.borrow();
+       157 |             let count = inner.size();
+       158 |             proof { assume(count == self@.dom().len()); }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:158: error: assume() - proof { assume(count == self@.dom().len()); }
+       153 |         fn size(&self) -> (count: usize) {
+            ...
+       156 |             proof { assume(inner.spec_orderedtablestper_wf()); }
+       157 |             let count = inner.size();
+       159 |             proof { assume(self@.dom().finite()); }
+       160 |             read_handle.release_read();
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:159: error: assume() - proof { assume(self@.dom().finite()); }
+       153 |         fn size(&self) -> (count: usize) {
+            ...
+       157 |             let count = inner.size();
+       158 |             proof { assume(count == self@.dom().len()); }
+       160 |             read_handle.release_read();
+       161 |             count
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:167: error: assume() - proof { assume(inner.spec_orderedtablestper_wf()); }
+       164 |         fn empty() -> (empty: Self) {
+            ...
+       165 |             let inner = OrderedTableStPer::empty();
+       166 |             let ghost view = inner@;
+       168 |             OrderedTableMtPer {
+       169 |                 locked_table: RwLock::new(inner, Ghost(OrderedTableMtPerInv)),
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:174: error: external_body - #[verifier::external_body]
        175 |         fn singleton(k: K, v: V) -> (tree: Self) {
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:180: error: external_body - #[verifier::external_body]
@@ -2169,8 +3089,64 @@ Table of Contents:
        221 |         fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self) {
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:234: error: external_body - #[verifier::external_body]
        235 |         fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (filtered: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:253: error: assume() - proof { assume(self@.dom().finite()); }
+       249 |         fn first_key(&self) -> (first: Option<K>) {
+            ...
+       251 |             let inner = read_handle.borrow();
+       252 |             let first = inner.first_key();
+       254 |             read_handle.release_read();
+       255 |             first
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:262: error: assume() - proof { assume(self@.dom().finite()); }
+       258 |         fn last_key(&self) -> (last: Option<K>) {
+            ...
+       260 |             let inner = read_handle.borrow();
+       261 |             let last = inner.last_key();
+       263 |             read_handle.release_read();
+       264 |             last
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:271: error: assume() - proof { assume(self@.dom().finite()); }
+       267 |         fn previous_key(&self, k: &K) -> (predecessor: Option<K>) {
+            ...
+       269 |             let inner = read_handle.borrow();
+       270 |             let predecessor = inner.previous_key(k);
+       272 |             read_handle.release_read();
+       273 |             predecessor
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:280: error: assume() - proof { assume(self@.dom().finite()); }
+       276 |         fn next_key(&self, k: &K) -> (successor: Option<K>) {
+            ...
+       278 |             let inner = read_handle.borrow();
+       279 |             let successor = inner.next_key(k);
+       281 |             read_handle.release_read();
+       282 |             successor
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:289: error: assume() - proof { assume(self@.dom().finite()); }
+       285 |         fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self)) {
+            ...
+       287 |             let inner = read_handle.borrow();
+       288 |             let (left, val, right) = inner.split_key(k);
+       290 |             read_handle.release_read();
+       291 |             (from_st_table(left), val, from_st_table(right))
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:294: error: external_body - #[verifier::external_body]
        295 |         fn join_key(&self, other: &Self) -> (joined: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:318: error: assume() - proof { assume(self@.dom().finite()); }
+       314 |         fn rank_key(&self, k: &K) -> (rank: usize) {
+            ...
+       316 |             let inner = read_handle.borrow();
+       317 |             let rank = inner.rank_key(k);
+       319 |             read_handle.release_read();
+       320 |             rank
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:327: error: assume() - proof { assume(self@.dom().finite()); }
+       323 |         fn select_key(&self, i: usize) -> (selected: Option<K>) {
+            ...
+       325 |             let inner = read_handle.borrow();
+       326 |             let selected = inner.select_key(i);
+       328 |             read_handle.release_read();
+       329 |             selected
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:336: error: assume() - proof { assume(self@.dom().finite()); }
+       332 |         fn split_rank_key(&self, i: usize) -> (split: (Self, Self)) {
+            ...
+       334 |             let inner = read_handle.borrow();
+       335 |             let (left, right) = inner.split_rank_key(i);
+       337 |             read_handle.release_read();
+       338 |             (from_st_table(left), from_st_table(right))
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:59: warning: requires_true - requires true — vacuous precondition
         56 |     fn from_st_table<K: MtKey + 'static, V: StTInMtT + Ord + 'static>(
             ...
@@ -2178,26 +3154,13 @@ Table of Contents:
         58 |     ) -> (s: OrderedTableMtPer<K, V>)
         60 |         ensures s@.dom().finite()
         61 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:64: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:65: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:156: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:158: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:159: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:167: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:253: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:262: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:271: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:280: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:289: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:318: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:327: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:336: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:350: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:354: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:355: info: accept()
-   Holes: 8 total
+   Holes: 22 total
+      14 × assume()
       8 × external_body
-   Info: 17 total
+   Info: 3 total
 ❌ src/Chap43/OrderedTableStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:209: error: external_body - #[verifier::external_body]
        210 |         fn singleton(k: K, v: V) -> (tree: Self)
@@ -2300,22 +3263,72 @@ Table of Contents:
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ src/Chap45/BinaryHeapPQ.rs
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:533: error: assume() - proof { assume(pq@.to_multiset() =~= Multiset::empty()); }
+       528 |             fn empty() -> (pq: Self) {
+            ...
+       531 |                 };
+       532 |                 // accept hole: Empty seq@ maps to empty multiset.
+       534 |                 pq
+       535 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:542: error: assume() - proof { assume(pq@.to_multiset() =~= Multiset::empty().inser
+       537 |             fn singleton(element: T) -> (pq: Self) {
+            ...
+       540 |                 };
+       541 |                 // accept hole: Single-element seq@ maps to singleton multiset.
+       543 |                 pq
+       544 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:563: error: assume() - proof { assume(pq@.to_multiset() =~= self@.to_multiset().ins
+       554 |             fn insert(&self, element: T) -> Self {
+            ...
+       561 |                 let pq = BinaryHeapPQ { elements: heapified };
+       562 |                 // accept hole: bubble_up is a permutation; multiset preserved.
+       564 |                 pq
+       565 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:577: error: assume() - assume(self@.to_multiset() =~=
+       567 |             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
+            ...
+       575 |                     // accept hole: Single-element removal yields empty multiset + element.
+       576 |                     proof {
+       578 |                             empty_pq@.to_multiset().insert(min_element@));
+       579 |                     }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:607: error: assume() - assume(self@.to_multiset() =~=
+       567 |             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
+            ...
+       605 |                 // accept hole: Rebuild removes min and bubble_down is a permutation.
+       606 |                 proof {
+       608 |                         new_pq@.to_multiset().insert(min_element@));
+       609 |                 }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:619: error: assume() - proof { assume(pq@.to_multiset() =~= self@.to_multiset().add
+       613 |             fn meld(&self, other: &Self) -> Self {
+            ...
+       617 |                 let pq = BinaryHeapPQ { elements: heapified };
+       618 |                 // accept hole: heapify is a permutation of the concatenation.
+       620 |                 pq
+       621 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:666: error: assume() - proof { assume(Self::spec_sorted(result.seq@)); }
+       647 |             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
+            ...
+       664 | 
+       665 |                 // accept hole: Proving sortedness requires heap property invariant (task #8).
+       667 |                 result
+       668 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:768: error: assume() - proof { assume(Self::spec_sorted(result@)); }
+       752 |             fn to_sorted_vec(&self) -> Vec<T> {
+            ...
+       766 |                 }
+       767 |                 // accept hole: Vec elements are clones of sorted ArraySeqStPerS elements.
+       769 |                 result
+       770 |             }
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:247: warning: requires_true - requires true — vacuous precondition
        245 | 
        246 |         fn parent(i: usize) -> (parent_idx: usize)
        248 |             ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
        249 |         {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:533: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:542: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:563: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:577: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:607: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:619: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:666: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:768: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:788: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:803: info: accept()
-   Info: 10 total
+   Holes: 8 total
+      8 × assume()
+   Info: 2 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ src/Chap45/Example45_2.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:43: error: external - #[verifier::external]
@@ -2578,12 +3591,19 @@ Table of Contents:
        328 |         fn set_dimension(&mut self, index: usize, dim: MatrixDim) {
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:339: error: external_body - #[verifier::external_body]
        340 |         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:357: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:357: error: assume() - proof { assume(n == self@.dimensions.len()); }
+       352 |         fn num_matrices(&self) -> (n: usize) {
+            ...
+       355 |             let n = handle.borrow().len();
+       356 |             handle.release_read();
+       358 |             n
+       359 |         }
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:388: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:410: info: accept()
-   Holes: 7 total
+   Holes: 8 total
+      1 × assume()
       7 × external_body
-   Info: 3 total
+   Info: 2 total
 ❌ src/Chap50/MatrixChainMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:244: error: external_body - #[verifier::external_body]
        245 |         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
@@ -2787,6 +3807,13 @@ Table of Contents:
    Holes: 2 total
       2 × external_body
 ❌ src/Chap53/GraphSearchStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:72: error: assume() - proof { assume(first@ == first_ref@); }  // accept hole: V::
+        60 |         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, B)) {
+            ...
+        70 |                 let first_ref = seq.nth(0);
+        71 |                 let first = first_ref.clone();
+        73 |                 assert(frontier@.contains(first@));
+        74 |                 let result = AVLTreeSetStEph::singleton(first);
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:97: error: external_body - #[verifier::external_body]
         98 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:86: error: fn_missing_requires - fn graph_search — exec fn should have requires
@@ -2810,10 +3837,9 @@ Table of Contents:
        163 |     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
        165 |     where
        166 |         G: Fn(&V) -> AVLTreeSetStEph<V>,
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:72: info: accept()
-   Holes: 1 total
+   Holes: 2 total
+      1 × assume()
       1 × external_body
-   Info: 1 total
 ❌ src/Chap53/GraphSearchStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:68: error: external_body - #[verifier::external_body]
         69 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B)) {
@@ -2960,9 +3986,16 @@ Table of Contents:
 ✓ src/Chap64/TSPApproxStEph.rs
 ✓ src/Chap65/KruskalStEph.rs
 ✓ src/Chap65/PrimStEph.rs
-ℹ src/Chap65/UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:337: info: accept()
-   Info: 1 total
+❌ src/Chap65/UnionFindStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:337: error: assume() - assume((root_u == root_v) == (root_u@ == root_v@));
+       331 |         fn equals(&mut self, u: &V, v: &V) -> (same: B) {
+            ...
+       335 |             proof {
+       336 |                 // accept hole: PartialEq on V agrees with view equality for roots
+       338 |             }
+       339 |             root_u == root_v
+   Holes: 1 total
+      1 × assume()
 ℹ src/Chap66/BoruvkaMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:52: info: accept()
    Info: 1 total
@@ -3095,11 +4128,11 @@ Chap37::BSTPlainMtEph  depends upon holed modules: Chap18::ArraySeqStPer
 Chap37::BSTPlainStEph  depends upon only clean modules
 Chap37::BSTRBMtEph  depends upon holed modules: Chap18::ArraySeqStPer
 Chap37::BSTRBStEph  depends upon only clean modules
-Chap37::BSTSetAVLMtEph  depends upon holed modules: Chap18::ArraySeqStPer
-Chap37::BSTSetBBAlphaMtEph  depends upon holed modules: Chap18::ArraySeqStPer
-Chap37::BSTSetPlainMtEph  depends upon holed modules: Chap18::ArraySeqStPer
-Chap37::BSTSetRBMtEph  depends upon holed modules: Chap18::ArraySeqStPer
-Chap37::BSTSetSplayMtEph  depends upon holed modules: Chap18::ArraySeqStPer
+Chap37::BSTSetAVLMtEph  depends upon holed modules: Chap18::ArraySeqStPer, Chap37::BSTAVLMtEph
+Chap37::BSTSetBBAlphaMtEph  depends upon holed modules: Chap18::ArraySeqStPer, Chap37::BSTBBAlphaMtEph
+Chap37::BSTSetPlainMtEph  depends upon holed modules: Chap18::ArraySeqStPer, Chap37::BSTPlainMtEph
+Chap37::BSTSetRBMtEph  depends upon holed modules: Chap18::ArraySeqStPer, Chap37::BSTRBMtEph
+Chap37::BSTSetSplayMtEph  depends upon holed modules: Chap18::ArraySeqStPer, Chap37::BSTSplayMtEph
 Chap37::BSTSplayMtEph  depends upon holed modules: Chap18::ArraySeqStPer
 Chap37::BSTSplayStEph  depends upon holed modules: Chap18::ArraySeqStPer
 Chap38::BSTParaMtEph  depends upon holed modules: Chap18::ArraySeqStPer
@@ -3117,28 +4150,28 @@ Chap41::AVLTreeSetStEph  depends upon holed modules: Chap37::AVLTreeSeqStEph
 Chap41::AVLTreeSetStPer  depends upon holed modules: Chap37::AVLTreeSeqStPer
 Chap41::ArraySetEnumMtEph  depends upon holed modules: Chap19::ArraySeqMtEph
 Chap41::ArraySetStEph  depends upon holed modules: Chap19::ArraySeqStEph
-Chap41::Example41_3  depends upon holed modules: Chap19::ArraySeqStEph, Chap41::AVLTreeSetStEph
-Chap42::Example42_1  depends upon holed modules: Chap42::TableMtEph, Chap42::TableStPer
-Chap42::TableMtEph  depends upon holed modules: Chap19::ArraySeqMtEph, Chap19::ArraySeqStEph
-Chap42::TableStEph  depends upon holed modules: Chap19::ArraySeqStEph
-Chap42::TableStPer  depends upon holed modules: Chap19::ArraySeqStEph, Chap19::ArraySeqStPer
-Chap43::AugOrderedTableMtEph  depends upon holed modules: Chap19::ArraySeqMtEph, Chap37::AVLTreeSeqStPer, Chap42::TableMtEph, Chap43::OrderedTableMtEph
-Chap43::AugOrderedTableStEph  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap43::OrderedTableStEph
-Chap43::AugOrderedTableStPer  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap42::TableStPer, Chap43::OrderedTableStPer
+Chap41::Example41_3  depends upon holed modules: Chap19::ArraySeqStEph, Chap41::AVLTreeSetStEph, Chap41::ArraySetStEph
+Chap42::Example42_1  depends upon holed modules: Chap41::ArraySetStEph, Chap42::TableMtEph, Chap42::TableStEph, Chap42::TableStPer
+Chap42::TableMtEph  depends upon holed modules: Chap19::ArraySeqMtEph, Chap19::ArraySeqStEph, Chap41::ArraySetStEph
+Chap42::TableStEph  depends upon holed modules: Chap19::ArraySeqStEph, Chap41::ArraySetStEph
+Chap42::TableStPer  depends upon holed modules: Chap19::ArraySeqStEph, Chap19::ArraySeqStPer, Chap41::ArraySetStEph
+Chap43::AugOrderedTableMtEph  depends upon holed modules: Chap19::ArraySeqMtEph, Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph, Chap43::OrderedTableMtEph
+Chap43::AugOrderedTableStEph  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStEph, Chap43::OrderedTableStEph
+Chap43::AugOrderedTableStPer  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStPer, Chap43::OrderedTableStPer
 Chap43::Example43_1  depends upon holed modules: Chap43::OrderedSetStPer
 Chap43::OrderedSetMtEph  depends upon holed modules: Chap18::ArraySeqStPer, Chap43::OrderedSetStEph
 Chap43::OrderedSetStEph  depends upon holed modules: Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqStPer, Chap41::AVLTreeSetStEph
 Chap43::OrderedSetStPer  depends upon holed modules: Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStPer, Chap41::AVLTreeSetStPer
-Chap43::OrderedTableMtEph  depends upon holed modules: Chap19::ArraySeqMtEph, Chap37::AVLTreeSeqStPer, Chap42::TableMtEph
+Chap43::OrderedTableMtEph  depends upon holed modules: Chap19::ArraySeqMtEph, Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph
 Chap43::OrderedTableMtPer  depends upon holed modules: Chap43::OrderedSetMtEph, Chap43::OrderedTableStPer
-Chap43::OrderedTableStEph  depends upon holed modules: Chap19::ArraySeqStEph, Chap37::AVLTreeSeqStPer
-Chap43::OrderedTableStPer  depends upon holed modules: Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStPer, Chap42::TableStPer
+Chap43::OrderedTableStEph  depends upon holed modules: Chap19::ArraySeqStEph, Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStEph
+Chap43::OrderedTableStPer  depends upon holed modules: Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStPer
 Chap44::DocumentIndex  depends upon holed modules: Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStPer, Chap41::AVLTreeSetStPer, Chap42::TableStPer
 Chap44::Example44_1  depends upon holed modules: Chap19::ArraySeqStPer
 Chap45::BalancedTreePQ  depends upon holed modules: Chap37::AVLTreeSeqStPer
 Chap45::BinaryHeapPQ  depends upon only clean modules
 Chap45::Example45_2  depends upon holed modules: Chap45::HeapsortExample
-Chap45::HeapsortExample  depends upon holed modules: Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStPer, Chap45::BalancedTreePQ
+Chap45::HeapsortExample  depends upon holed modules: Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStPer, Chap45::BalancedTreePQ, Chap45::BinaryHeapPQ
 Chap45::LeftistHeapPQ  depends upon holed modules: Chap19::ArraySeqStPer
 Chap45::SortedListPQ  depends upon holed modules: Chap19::ArraySeqStPer
 Chap45::UnsortedListPQ  depends upon holed modules: Chap19::ArraySeqStPer
@@ -3185,7 +4218,7 @@ Chap52::AdjSeqGraphStEph  depends upon holed modules: Chap19::ArraySeqStEph
 Chap52::AdjSeqGraphStPer  depends upon holed modules: Chap18::ArraySeqStPer
 Chap52::AdjTableGraphMtPer  depends upon holed modules: Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer
 Chap52::AdjTableGraphStEph  depends upon holed modules: Chap19::ArraySeqStEph, Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph
-Chap52::AdjTableGraphStPer  depends upon holed modules: Chap19::ArraySeqStEph, Chap41::AVLTreeSetStPer, Chap43::OrderedTableStPer
+Chap52::AdjTableGraphStPer  depends upon holed modules: Chap19::ArraySeqStEph, Chap41::AVLTreeSetStPer, Chap41::ArraySetStEph, Chap43::OrderedTableStPer
 Chap52::EdgeSetGraphMtPer  depends upon holed modules: Chap41::AVLTreeSetMtPer
 Chap52::EdgeSetGraphStEph  depends upon holed modules: Chap41::AVLTreeSetStEph
 Chap52::EdgeSetGraphStPer  depends upon holed modules: Chap41::AVLTreeSetStPer
@@ -3218,8 +4251,8 @@ Chap56::SSSPResultStEphF64  depends upon holed modules: Chap19::ArraySeqStEph, C
 Chap56::SSSPResultStEphI64  depends upon holed modules: Chap19::ArraySeqStEph, Chap19::ArraySeqStPer
 Chap56::SSSPResultStPerF64  depends upon holed modules: Chap19::ArraySeqStPer
 Chap56::SSSPResultStPerI64  depends upon holed modules: Chap19::ArraySeqStPer
-Chap57::DijkstraStEphF64  depends upon only clean modules
-Chap57::DijkstraStEphI64  depends upon only clean modules
+Chap57::DijkstraStEphF64  depends upon holed modules: Chap45::BinaryHeapPQ
+Chap57::DijkstraStEphI64  depends upon holed modules: Chap45::BinaryHeapPQ
 Chap57::StackStEph  depends upon only clean modules
 Chap58::BellmanFordStEphF64  depends upon only clean modules
 Chap58::BellmanFordStEphI64  depends upon only clean modules
@@ -3227,21 +4260,21 @@ Chap59::JohnsonMtEphF64  depends upon only clean modules
 Chap59::JohnsonMtEphI64  depends upon holed modules: Chap19::ArraySeqStEph
 Chap59::JohnsonStEphF64  depends upon only clean modules
 Chap59::JohnsonStEphI64  depends upon holed modules: Chap19::ArraySeqStEph
-Chap61::EdgeContractionMtEph  depends upon holed modules: Chap19::ArraySeqStEph
+Chap61::EdgeContractionMtEph  depends upon holed modules: Chap06::UnDirGraphMtEph, Chap19::ArraySeqStEph
 Chap61::EdgeContractionStEph  depends upon holed modules: Chap19::ArraySeqStEph
-Chap61::VertexMatchingMtEph  depends upon holed modules: Chap19::ArraySeqStEph
+Chap61::VertexMatchingMtEph  depends upon holed modules: Chap06::UnDirGraphMtEph, Chap19::ArraySeqStEph
 Chap61::VertexMatchingStEph  depends upon only clean modules
-Chap62::StarContractionMtEph  depends upon holed modules: Chap19::ArraySeqStEph
+Chap62::StarContractionMtEph  depends upon holed modules: Chap06::UnDirGraphMtEph, Chap19::ArraySeqStEph
 Chap62::StarContractionStEph  depends upon only clean modules
-Chap62::StarPartitionMtEph  depends upon only clean modules
+Chap62::StarPartitionMtEph  depends upon holed modules: Chap06::UnDirGraphMtEph
 Chap62::StarPartitionStEph  depends upon only clean modules
-Chap63::ConnectivityMtEph  depends upon holed modules: Chap19::ArraySeqStEph
+Chap63::ConnectivityMtEph  depends upon holed modules: Chap06::UnDirGraphMtEph, Chap19::ArraySeqStEph
 Chap63::ConnectivityStEph  depends upon only clean modules
-Chap64::SpanTreeMtEph  depends upon holed modules: Chap18::ArraySeqStPer
+Chap64::SpanTreeMtEph  depends upon holed modules: Chap06::UnDirGraphMtEph, Chap18::ArraySeqStPer
 Chap64::SpanTreeStEph  depends upon only clean modules
 Chap64::TSPApproxStEph  depends upon only clean modules
-Chap65::KruskalStEph  depends upon only clean modules
-Chap65::PrimStEph  depends upon only clean modules
+Chap65::KruskalStEph  depends upon holed modules: Chap65::UnionFindStEph
+Chap65::PrimStEph  depends upon holed modules: Chap45::BinaryHeapPQ
 Chap65::UnionFindStEph  depends upon only clean modules
 Chap66::BoruvkaMtEph  depends upon only clean modules
 Chap66::BoruvkaStEph  depends upon only clean modules
@@ -3357,11 +4390,11 @@ src/Chap37/BSTPlainMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer
 src/Chap37/BSTPlainStEph.rs  depends upon only clean modules
 src/Chap37/BSTRBMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer
 src/Chap37/BSTRBStEph.rs  depends upon only clean modules
-src/Chap37/BSTSetAVLMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer
-src/Chap37/BSTSetBBAlphaMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer
-src/Chap37/BSTSetPlainMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer
-src/Chap37/BSTSetRBMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer
-src/Chap37/BSTSetSplayMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer
+src/Chap37/BSTSetAVLMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer, Chap37::BSTAVLMtEph
+src/Chap37/BSTSetBBAlphaMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer, Chap37::BSTBBAlphaMtEph
+src/Chap37/BSTSetPlainMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer, Chap37::BSTPlainMtEph
+src/Chap37/BSTSetRBMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer, Chap37::BSTRBMtEph
+src/Chap37/BSTSetSplayMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer, Chap37::BSTSplayMtEph
 src/Chap37/BSTSplayMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer
 src/Chap37/BSTSplayStEph.rs  depends upon holed modules: Chap18::ArraySeqStPer
 src/Chap38/BSTParaMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer
@@ -3379,28 +4412,28 @@ src/Chap41/AVLTreeSetStEph.rs  depends upon holed modules: Chap37::AVLTreeSeqStE
 src/Chap41/AVLTreeSetStPer.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer
 src/Chap41/ArraySetEnumMtEph.rs  depends upon holed modules: Chap19::ArraySeqMtEph
 src/Chap41/ArraySetStEph.rs  depends upon holed modules: Chap19::ArraySeqStEph
-src/Chap41/Example41_3.rs  depends upon holed modules: Chap19::ArraySeqStEph, Chap41::AVLTreeSetStEph
-src/Chap42/Example42_1.rs  depends upon holed modules: Chap42::TableMtEph, Chap42::TableStPer
-src/Chap42/TableMtEph.rs  depends upon holed modules: Chap19::ArraySeqMtEph, Chap19::ArraySeqStEph
-src/Chap42/TableStEph.rs  depends upon holed modules: Chap19::ArraySeqStEph
-src/Chap42/TableStPer.rs  depends upon holed modules: Chap19::ArraySeqStEph, Chap19::ArraySeqStPer
-src/Chap43/AugOrderedTableMtEph.rs  depends upon holed modules: Chap19::ArraySeqMtEph, Chap37::AVLTreeSeqStPer, Chap42::TableMtEph, Chap43::OrderedTableMtEph
-src/Chap43/AugOrderedTableStEph.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap43::OrderedTableStEph
-src/Chap43/AugOrderedTableStPer.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap42::TableStPer, Chap43::OrderedTableStPer
+src/Chap41/Example41_3.rs  depends upon holed modules: Chap19::ArraySeqStEph, Chap41::AVLTreeSetStEph, Chap41::ArraySetStEph
+src/Chap42/Example42_1.rs  depends upon holed modules: Chap41::ArraySetStEph, Chap42::TableMtEph, Chap42::TableStEph, Chap42::TableStPer
+src/Chap42/TableMtEph.rs  depends upon holed modules: Chap19::ArraySeqMtEph, Chap19::ArraySeqStEph, Chap41::ArraySetStEph
+src/Chap42/TableStEph.rs  depends upon holed modules: Chap19::ArraySeqStEph, Chap41::ArraySetStEph
+src/Chap42/TableStPer.rs  depends upon holed modules: Chap19::ArraySeqStEph, Chap19::ArraySeqStPer, Chap41::ArraySetStEph
+src/Chap43/AugOrderedTableMtEph.rs  depends upon holed modules: Chap19::ArraySeqMtEph, Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph, Chap43::OrderedTableMtEph
+src/Chap43/AugOrderedTableStEph.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStEph, Chap43::OrderedTableStEph
+src/Chap43/AugOrderedTableStPer.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStPer, Chap43::OrderedTableStPer
 src/Chap43/Example43_1.rs  depends upon holed modules: Chap43::OrderedSetStPer
 src/Chap43/OrderedSetMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer, Chap43::OrderedSetStEph
 src/Chap43/OrderedSetStEph.rs  depends upon holed modules: Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqStPer, Chap41::AVLTreeSetStEph
 src/Chap43/OrderedSetStPer.rs  depends upon holed modules: Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStPer, Chap41::AVLTreeSetStPer
-src/Chap43/OrderedTableMtEph.rs  depends upon holed modules: Chap19::ArraySeqMtEph, Chap37::AVLTreeSeqStPer, Chap42::TableMtEph
+src/Chap43/OrderedTableMtEph.rs  depends upon holed modules: Chap19::ArraySeqMtEph, Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph
 src/Chap43/OrderedTableMtPer.rs  depends upon holed modules: Chap43::OrderedSetMtEph, Chap43::OrderedTableStPer
-src/Chap43/OrderedTableStEph.rs  depends upon holed modules: Chap19::ArraySeqStEph, Chap37::AVLTreeSeqStPer
-src/Chap43/OrderedTableStPer.rs  depends upon holed modules: Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStPer, Chap42::TableStPer
+src/Chap43/OrderedTableStEph.rs  depends upon holed modules: Chap19::ArraySeqStEph, Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStEph
+src/Chap43/OrderedTableStPer.rs  depends upon holed modules: Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStPer
 src/Chap44/DocumentIndex.rs  depends upon holed modules: Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStPer, Chap41::AVLTreeSetStPer, Chap42::TableStPer
 src/Chap44/Example44_1.rs  depends upon holed modules: Chap19::ArraySeqStPer
 src/Chap45/BalancedTreePQ.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer
 src/Chap45/BinaryHeapPQ.rs  depends upon only clean modules
 src/Chap45/Example45_2.rs  depends upon holed modules: Chap45::HeapsortExample
-src/Chap45/HeapsortExample.rs  depends upon holed modules: Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStPer, Chap45::BalancedTreePQ
+src/Chap45/HeapsortExample.rs  depends upon holed modules: Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStPer, Chap45::BalancedTreePQ, Chap45::BinaryHeapPQ
 src/Chap45/LeftistHeapPQ.rs  depends upon holed modules: Chap19::ArraySeqStPer
 src/Chap45/SortedListPQ.rs  depends upon holed modules: Chap19::ArraySeqStPer
 src/Chap45/UnsortedListPQ.rs  depends upon holed modules: Chap19::ArraySeqStPer
@@ -3447,7 +4480,7 @@ src/Chap52/AdjSeqGraphStEph.rs  depends upon holed modules: Chap19::ArraySeqStEp
 src/Chap52/AdjSeqGraphStPer.rs  depends upon holed modules: Chap18::ArraySeqStPer
 src/Chap52/AdjTableGraphMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer
 src/Chap52/AdjTableGraphStEph.rs  depends upon holed modules: Chap19::ArraySeqStEph, Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph
-src/Chap52/AdjTableGraphStPer.rs  depends upon holed modules: Chap19::ArraySeqStEph, Chap41::AVLTreeSetStPer, Chap43::OrderedTableStPer
+src/Chap52/AdjTableGraphStPer.rs  depends upon holed modules: Chap19::ArraySeqStEph, Chap41::AVLTreeSetStPer, Chap41::ArraySetStEph, Chap43::OrderedTableStPer
 src/Chap52/EdgeSetGraphMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer
 src/Chap52/EdgeSetGraphStEph.rs  depends upon holed modules: Chap41::AVLTreeSetStEph
 src/Chap52/EdgeSetGraphStPer.rs  depends upon holed modules: Chap41::AVLTreeSetStPer
@@ -3480,8 +4513,8 @@ src/Chap56/SSSPResultStEphF64.rs  depends upon holed modules: Chap19::ArraySeqSt
 src/Chap56/SSSPResultStEphI64.rs  depends upon holed modules: Chap19::ArraySeqStEph, Chap19::ArraySeqStPer
 src/Chap56/SSSPResultStPerF64.rs  depends upon holed modules: Chap19::ArraySeqStPer
 src/Chap56/SSSPResultStPerI64.rs  depends upon holed modules: Chap19::ArraySeqStPer
-src/Chap57/DijkstraStEphF64.rs  depends upon only clean modules
-src/Chap57/DijkstraStEphI64.rs  depends upon only clean modules
+src/Chap57/DijkstraStEphF64.rs  depends upon holed modules: Chap45::BinaryHeapPQ
+src/Chap57/DijkstraStEphI64.rs  depends upon holed modules: Chap45::BinaryHeapPQ
 src/Chap57/StackStEph.rs  depends upon only clean modules
 src/Chap58/BellmanFordStEphF64.rs  depends upon only clean modules
 src/Chap58/BellmanFordStEphI64.rs  depends upon only clean modules
@@ -3489,21 +4522,21 @@ src/Chap59/JohnsonMtEphF64.rs  depends upon only clean modules
 src/Chap59/JohnsonMtEphI64.rs  depends upon holed modules: Chap19::ArraySeqStEph
 src/Chap59/JohnsonStEphF64.rs  depends upon only clean modules
 src/Chap59/JohnsonStEphI64.rs  depends upon holed modules: Chap19::ArraySeqStEph
-src/Chap61/EdgeContractionMtEph.rs  depends upon holed modules: Chap19::ArraySeqStEph
+src/Chap61/EdgeContractionMtEph.rs  depends upon holed modules: Chap06::UnDirGraphMtEph, Chap19::ArraySeqStEph
 src/Chap61/EdgeContractionStEph.rs  depends upon holed modules: Chap19::ArraySeqStEph
-src/Chap61/VertexMatchingMtEph.rs  depends upon holed modules: Chap19::ArraySeqStEph
+src/Chap61/VertexMatchingMtEph.rs  depends upon holed modules: Chap06::UnDirGraphMtEph, Chap19::ArraySeqStEph
 src/Chap61/VertexMatchingStEph.rs  depends upon only clean modules
-src/Chap62/StarContractionMtEph.rs  depends upon holed modules: Chap19::ArraySeqStEph
+src/Chap62/StarContractionMtEph.rs  depends upon holed modules: Chap06::UnDirGraphMtEph, Chap19::ArraySeqStEph
 src/Chap62/StarContractionStEph.rs  depends upon only clean modules
-src/Chap62/StarPartitionMtEph.rs  depends upon only clean modules
+src/Chap62/StarPartitionMtEph.rs  depends upon holed modules: Chap06::UnDirGraphMtEph
 src/Chap62/StarPartitionStEph.rs  depends upon only clean modules
-src/Chap63/ConnectivityMtEph.rs  depends upon holed modules: Chap19::ArraySeqStEph
+src/Chap63/ConnectivityMtEph.rs  depends upon holed modules: Chap06::UnDirGraphMtEph, Chap19::ArraySeqStEph
 src/Chap63/ConnectivityStEph.rs  depends upon only clean modules
-src/Chap64/SpanTreeMtEph.rs  depends upon holed modules: Chap18::ArraySeqStPer
+src/Chap64/SpanTreeMtEph.rs  depends upon holed modules: Chap06::UnDirGraphMtEph, Chap18::ArraySeqStPer
 src/Chap64/SpanTreeStEph.rs  depends upon only clean modules
 src/Chap64/TSPApproxStEph.rs  depends upon only clean modules
-src/Chap65/KruskalStEph.rs  depends upon only clean modules
-src/Chap65/PrimStEph.rs  depends upon only clean modules
+src/Chap65/KruskalStEph.rs  depends upon holed modules: Chap65::UnionFindStEph
+src/Chap65/PrimStEph.rs  depends upon holed modules: Chap45::BinaryHeapPQ
 src/Chap65/UnionFindStEph.rs  depends upon only clean modules
 src/Chap66/BoruvkaMtEph.rs  depends upon only clean modules
 src/Chap66/BoruvkaStEph.rs  depends upon only clean modules
@@ -3515,28 +4548,28 @@ src/ParaPairs.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   180 clean (no holes, no errors; 70%)
-   77 holed (holes or errors, 29%)
+   166 clean (no holes, no errors; 64%)
+   91 holed (holes or errors, 35%)
    257 total
 
 Proof Functions:
-   299 clean (98%)
-   4 holed (1%)
+   297 clean (98%)
+   6 holed (1%)
    303 total
 
 Function Specs:
    5044 exec fns with complete spec (requires+ensures) (71%)
    20 exec fns missing spec (0%)
-   1994 proof/spec fns clean (28%)
-   4 proof/spec fns with holes (0%)
+   1992 proof/spec fns clean (28%)
+   6 proof/spec fns with holes (0%)
    7062 total fns
 
 
-Holes Found: 395 total
-   55 × assume() (13%)
-   324 × external_body (82%)
-   4 × external (1%)
-   12 × trivial spec*wf { true } (3%)
+Holes Found: 568 total
+   228 × assume() (40%)
+   324 × external_body (57%)
+   4 × external (0%)
+   12 × trivial spec*wf { true } (2%)
 
 =================================================================
 4. Proof Targets
@@ -3548,88 +4581,97 @@ Holes Found: 395 total
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap43  (92 holes, 11 files)
-   2  Chap41  (65 holes, 7 files)
-   3  Chap37  (41 holes, 19 files)
-   4  Chap47  (39 holes, 9 files)
-   5  Chap39  (38 holes, 4 files)
-   6  Chap38  (33 holes, 2 files)
-   7  Chap53  (22 holes, 5 files)
-   8  Chap50  (21 holes, 8 files)
-   9  Chap45  (18 holes, 7 files)
-   10  Chap42  (14 holes, 4 files)
-   11  Chap51  (8 holes, 8 files)
-   12  Chap18  (6 holes, 7 files)
-   13  Chap49  (4 holes, 8 files)
-   14  Chap26  (4 holes, 8 files)
-   15  Chap19  (3 holes, 4 files)
-   16  Chap66  (3 holes, 2 files)
-   17  Chap55  (2 holes, 8 files)
-   18  Chap52  (1 holes, 14 files)
-   19  Chap12  (1 holes, 3 files)
-   20  Chap57  (0 holes, 3 files)
-   21  Chap02  (0 holes, 2 files)
-   22  Chap03  (0 holes, 1 files)
-   23  Chap36  (0 holes, 3 files)
-   24  Chap54  (0 holes, 4 files)
-   25  Chap28  (0 holes, 11 files)
-   26  Concurrency  (0 holes, 1 files)
-   27  Chap40  (0 holes, 3 files)
-   28  Chap23  (0 holes, 2 files)
-   29  Chap35  (0 holes, 4 files)
-   30  Chap61  (0 holes, 4 files)
-   31  ParaPairs  (0 holes, 1 files)
-   32  Chap11  (0 holes, 5 files)
-   33  Chap65  (0 holes, 3 files)
-   34  Chap58  (0 holes, 2 files)
-   35  Chap30  (0 holes, 1 files)
-   36  Chap59  (0 holes, 4 files)
-   37  Chap56  (0 holes, 12 files)
-   38  Chap44  (0 holes, 2 files)
-   39  Chap62  (0 holes, 4 files)
-   40  Chap21  (0 holes, 12 files)
-   41  Chap63  (0 holes, 2 files)
-   42  Chap17  (0 holes, 1 files)
-   43  Chap06  (0 holes, 20 files)
-   44  Chap64  (0 holes, 3 files)
-   45  Chap05  (0 holes, 5 files)
-   46  Chap27  (0 holes, 4 files)
+   1  Chap43  (132 holes, 11 files)
+   2  Chap41  (98 holes, 7 files)
+   3  Chap37  (66 holes, 19 files)
+   4  Chap06  (51 holes, 20 files)
+   5  Chap47  (39 holes, 9 files)
+   6  Chap39  (38 holes, 4 files)
+   7  Chap38  (33 holes, 2 files)
+   8  Chap45  (26 holes, 7 files)
+   9  Chap53  (23 holes, 5 files)
+   10  Chap50  (22 holes, 8 files)
+   11  Chap42  (18 holes, 4 files)
+   12  Chap05  (9 holes, 5 files)
+   13  Chap51  (8 holes, 8 files)
+   14  Chap18  (6 holes, 7 files)
+   15  Chap49  (4 holes, 8 files)
+   16  Chap26  (4 holes, 8 files)
+   17  Chap66  (3 holes, 2 files)
+   18  Chap19  (3 holes, 4 files)
+   19  Chap55  (2 holes, 8 files)
+   20  Chap52  (1 holes, 14 files)
+   21  Chap65  (1 holes, 3 files)
+   22  Chap12  (1 holes, 3 files)
+   23  Chap23  (0 holes, 2 files)
+   24  Chap56  (0 holes, 12 files)
+   25  Chap27  (0 holes, 4 files)
+   26  Chap21  (0 holes, 12 files)
+   27  Chap02  (0 holes, 2 files)
+   28  Chap58  (0 holes, 2 files)
+   29  Concurrency  (0 holes, 1 files)
+   30  Chap35  (0 holes, 4 files)
+   31  Chap11  (0 holes, 5 files)
+   32  Chap62  (0 holes, 4 files)
+   33  Chap40  (0 holes, 3 files)
+   34  Chap59  (0 holes, 4 files)
+   35  Chap54  (0 holes, 4 files)
+   36  Chap64  (0 holes, 3 files)
+   37  Chap03  (0 holes, 1 files)
+   38  Chap63  (0 holes, 2 files)
+   39  Chap30  (0 holes, 1 files)
+   40  Chap44  (0 holes, 2 files)
+   41  Chap17  (0 holes, 1 files)
+   42  Chap36  (0 holes, 3 files)
+   43  Chap28  (0 holes, 11 files)
+   44  Chap57  (0 holes, 3 files)
+   45  ParaPairs  (0 holes, 1 files)
+   46  Chap61  (0 holes, 4 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
-   1  src/Chap50/MatrixChainMtEph.rs  (7 holes)
-   2  src/Chap50/OptBinSearchTreeMtEph.rs  (6 holes)
-   3  src/Chap66/BoruvkaStEph.rs  (3 holes)
-   4  src/Chap50/MatrixChainMtPer.rs  (3 holes)
-   5  src/Chap50/OptBinSearchTreeMtPer.rs  (3 holes)
-   6  src/Chap26/ETSPMtEph.rs  (2 holes)
-   7  src/Chap26/ETSPStEph.rs  (2 holes)
-   8  src/Chap19/ArraySeqMtEph.rs  (1 holes)
-   9  src/Chap18/LinkedListStPer.rs  (1 holes)
-   10  src/Chap47/ParaHashTableStEph.rs  (1 holes)
-   11  src/Chap18/ArraySeqStEph.rs  (1 holes)
-   12  src/Chap18/LinkedListStEph.rs  (1 holes)
-   13  src/Chap19/ArraySeqStPer.rs  (1 holes)
-   14  src/Chap50/OptBinSearchTreeStEph.rs  (1 holes)
-   15  src/Chap18/ArraySeqMtEph.rs  (1 holes)
-   16  src/Chap12/Exercise12_5.rs  (1 holes)
-   17  src/Chap19/ArraySeqStEph.rs  (1 holes)
-   18  src/Chap18/ArraySeqMtPer.rs  (1 holes)
-   19  src/Chap18/ArraySeqStPer.rs  (1 holes)
-   20  src/Chap50/OptBinSearchTreeStPer.rs  (1 holes)
+   1  src/Chap06/DirGraphMtEph.rs  (20 holes)
+   2  src/Chap06/LabUnDirGraphMtEph.rs  (15 holes)
+   3  src/Chap06/UnDirGraphMtEph.rs  (10 holes)
+   4  src/Chap05/SetMtEph.rs  (9 holes)
+   5  src/Chap50/MatrixChainMtEph.rs  (8 holes)
+   6  src/Chap45/BinaryHeapPQ.rs  (8 holes)
+   7  src/Chap50/OptBinSearchTreeMtEph.rs  (6 holes)
+   8  src/Chap06/LabDirGraphMtEph.rs  (6 holes)
+   9  src/Chap66/BoruvkaStEph.rs  (3 holes)
+   10  src/Chap50/MatrixChainMtPer.rs  (3 holes)
+   11  src/Chap50/OptBinSearchTreeMtPer.rs  (3 holes)
+   12  src/Chap26/ETSPMtEph.rs  (2 holes)
+   13  src/Chap26/ETSPStEph.rs  (2 holes)
+   14  src/Chap47/ParaHashTableStEph.rs  (1 holes)
+   15  src/Chap18/LinkedListStPer.rs  (1 holes)
+   16  src/Chap18/LinkedListStEph.rs  (1 holes)
+   17  src/Chap18/ArraySeqMtEph.rs  (1 holes)
+   18  src/Chap50/OptBinSearchTreeStPer.rs  (1 holes)
+   19  src/Chap19/ArraySeqMtEph.rs  (1 holes)
+   20  src/Chap19/ArraySeqStPer.rs  (1 holes)
+   21  src/Chap12/Exercise12_5.rs  (1 holes)
+   22  src/Chap65/UnionFindStEph.rs  (1 holes)
+   23  src/Chap18/ArraySeqStPer.rs  (1 holes)
+   24  src/Chap50/OptBinSearchTreeStEph.rs  (1 holes)
+   25  src/Chap18/ArraySeqStEph.rs  (1 holes)
+   26  src/Chap19/ArraySeqStEph.rs  (1 holes)
+   27  src/Chap18/ArraySeqMtPer.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
-   1  src/Chap50  (21 holes, 8 files)
-   2  src/Chap18  (6 holes, 7 files)
-   3  src/Chap26  (4 holes, 8 files)
-   4  src/Chap66  (3 holes, 2 files)
-   5  src/Chap19  (3 holes, 4 files)
-   6  src/Chap12  (1 holes, 3 files)
+   1  src/Chap06  (51 holes, 20 files)
+   2  src/Chap50  (22 holes, 8 files)
+   3  src/Chap05  (9 holes, 5 files)
+   4  src/Chap18  (6 holes, 7 files)
+   5  src/Chap26  (4 holes, 8 files)
+   6  src/Chap19  (3 holes, 4 files)
+   7  src/Chap66  (3 holes, 2 files)
+   8  src/Chap12  (1 holes, 3 files)
 
 =================================================================
 4.4. Not Verusified
@@ -3647,8 +4689,8 @@ Holes Found: 395 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 10:59:09 -07:00
-Ended:     2026-03-12 10:59:10 -07:00
-Duration:  1372ms
+Started:   2026-03-12 12:35:36 -07:00
+Ended:     2026-03-12 12:35:36 -07:00
+Duration:  901ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

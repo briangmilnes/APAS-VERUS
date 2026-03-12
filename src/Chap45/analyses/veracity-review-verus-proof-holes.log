@@ -57,22 +57,72 @@ Table of Contents:
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ BinaryHeapPQ.rs
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:533: error: assume() - proof { assume(pq@.to_multiset() =~= Multiset::empty()); }
+       528 |             fn empty() -> (pq: Self) {
+            ...
+       531 |                 };
+       532 |                 // accept hole: Empty seq@ maps to empty multiset.
+       534 |                 pq
+       535 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:542: error: assume() - proof { assume(pq@.to_multiset() =~= Multiset::empty().inser
+       537 |             fn singleton(element: T) -> (pq: Self) {
+            ...
+       540 |                 };
+       541 |                 // accept hole: Single-element seq@ maps to singleton multiset.
+       543 |                 pq
+       544 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:563: error: assume() - proof { assume(pq@.to_multiset() =~= self@.to_multiset().ins
+       554 |             fn insert(&self, element: T) -> Self {
+            ...
+       561 |                 let pq = BinaryHeapPQ { elements: heapified };
+       562 |                 // accept hole: bubble_up is a permutation; multiset preserved.
+       564 |                 pq
+       565 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:577: error: assume() - assume(self@.to_multiset() =~=
+       567 |             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
+            ...
+       575 |                     // accept hole: Single-element removal yields empty multiset + element.
+       576 |                     proof {
+       578 |                             empty_pq@.to_multiset().insert(min_element@));
+       579 |                     }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:607: error: assume() - assume(self@.to_multiset() =~=
+       567 |             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
+            ...
+       605 |                 // accept hole: Rebuild removes min and bubble_down is a permutation.
+       606 |                 proof {
+       608 |                         new_pq@.to_multiset().insert(min_element@));
+       609 |                 }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:619: error: assume() - proof { assume(pq@.to_multiset() =~= self@.to_multiset().add
+       613 |             fn meld(&self, other: &Self) -> Self {
+            ...
+       617 |                 let pq = BinaryHeapPQ { elements: heapified };
+       618 |                 // accept hole: heapify is a permutation of the concatenation.
+       620 |                 pq
+       621 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:666: error: assume() - proof { assume(Self::spec_sorted(result.seq@)); }
+       647 |             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
+            ...
+       664 | 
+       665 |                 // accept hole: Proving sortedness requires heap property invariant (task #8).
+       667 |                 result
+       668 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:768: error: assume() - proof { assume(Self::spec_sorted(result@)); }
+       752 |             fn to_sorted_vec(&self) -> Vec<T> {
+            ...
+       766 |                 }
+       767 |                 // accept hole: Vec elements are clones of sorted ArraySeqStPerS elements.
+       769 |                 result
+       770 |             }
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:247: warning: requires_true - requires true — vacuous precondition
        245 | 
        246 |         fn parent(i: usize) -> (parent_idx: usize)
        248 |             ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
        249 |         {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:533: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:542: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:563: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:577: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:607: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:619: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:666: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:768: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:788: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:803: info: accept()
-   Info: 10 total
+   Holes: 8 total
+      8 × assume()
+   Info: 2 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Example45_2.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:43: error: external - #[verifier::external]
@@ -149,8 +199,8 @@ UnsortedListPQ.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 57%)
-   3 holed (holes or errors, 42%)
+   3 clean (no holes, no errors; 42%)
+   4 holed (holes or errors, 57%)
    7 total
 
 Proof Functions:
@@ -166,20 +216,21 @@ Function Specs:
    358 total fns
 
 
-Holes Found: 17 total
-   13 × external_body (76%)
-   4 × external (23%)
+Holes Found: 25 total
+   8 × assume() (32%)
+   13 × external_body (52%)
+   4 × external (16%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 10:59:08 -07:00
-Ended:     2026-03-12 10:59:08 -07:00
-Duration:  40ms
+Started:   2026-03-12 12:35:35 -07:00
+Ended:     2026-03-12 12:35:35 -07:00
+Duration:  38ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
-12 10:59:08 -07:00
-Duration:  40ms
+  2026-03-12 12:35:35 -07:00
+Duration:  38ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log

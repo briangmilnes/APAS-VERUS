@@ -1,46 +1,55 @@
-# Agent 1 Report — PBOGH Round 4
+# Agent 1 — Round 5: Graphs + Foundation Near-Clean
 
-## Changes
+## READ FIRST
 
-| # | Chap | File | Change | Result |
-|---|------|------|--------|--------|
-| 1 | 57 | DijkstraStEphI64.rs | Added `requires true` to `pq_entry_new` | Error cleared, Chap57 fully clean |
-| 2 | 55 | SCCStEph.rs | Added `requires true` to `check_wf_adj_list_eph` | fn_missing_requires cleared |
-| 3 | 55 | SCCStPer.rs | Added `requires true` to `check_wf_adj_list_per` | fn_missing_requires cleared |
+Read CLAUDE.md sections on assume/accept BEFORE touching any code.
+**DO NOT convert assume() to accept(). DO NOT add accept() anywhere.**
+**DO NOT assume or accept closure requires/ensures in algorithmic code.**
+If you add a single unauthorized accept(), the human loses 30 minutes
+cleaning up after you. Don't.
 
-## Errors Cleared
+Read these standards files before starting:
+- `src/standards/using_closures_standard.rs`
+- `src/standards/partial_eq_eq_clone_standard.rs`
+- `src/standards/spec_wf_standard.rs`
 
-| # | Chap | File | Error Type | Resolution |
-|---|------|------|-----------|------------|
-| 1 | 57 | DijkstraStEphI64.rs | fn_missing_requires | Added `requires true` — no precondition needed |
-| 2 | 55 | SCCStEph.rs | fn_missing_requires | Added `requires true` to `check_wf_adj_list_eph` |
-| 3 | 55 | SCCStPer.rs | fn_missing_requires | Added `requires true` to `check_wf_adj_list_per` |
+## Assignment
 
-## Still Open (awaiting hole checker update for fn_missing_ensures)
+Chap05 (9 holes), Chap06 (51 holes), Chap18 (6 holes), Chap19 (3 holes).
+Total: 69 holes across 36 files.
 
-| # | Chap | File | Error | Note |
-|---|------|------|-------|------|
-| 1 | 55 | SCCStEph.rs | fn_missing_ensures on `compute_finish_order` | `ensures true` is bogus; real ensures needs proof work |
-| 2 | 55 | SCCStPer.rs | fn_missing_ensures on `compute_finish_order` | Same |
+## Priority
 
-## Chapters Status
+1. **Chap18** (6 holes) — all trivial_spec_wf `{ true }`. Vec-backed types where
+   `true` IS the correct wf. Add `// accept hole` comment to silence the checker.
+   This gets Chap18 to 0 holes.
 
-- **Chap57**: 3/3 modules clean, 0 holes, 0 errors. Fully clean.
-- **Chap55**: 6/8 modules clean, 0 holes, 2 fn_missing_ensures errors remaining.
+2. **Chap19** (3 holes) — same pattern as Chap18. Trivial wf on Vec-backed seqs.
+   Gets Chap19 to 0 holes.
 
-## Blockers
+3. **Chap06** (51 holes) — all assumes in MtEph graph files. These are coarse RwLock
+   lock-boundary assumes (`inner@ == self@`, result forwarding). The pattern is
+   `acquire_read → borrow → delegate to St method → assume result matches`.
+   DO NOT convert these to accept. Leave them as assume. Focus on:
+   - Proving `inner@ == self@` from the RwLock invariant if possible.
+   - If not provable, leave the assume and move on.
 
-| # | Chap | File | Issue | Why Blocked |
-|---|------|------|-------|-------------|
-| 1 | 18 | ArraySeq.rs | `iter_mut` fn_missing_requires_ensures | `#[verifier::external]`; `IterMut` has no vstd spec. Awaiting Bryan Parno's prophetic iterator. |
-| 2 | 52 | EdgeSetGraphMtPer.rs | `out_neighbors` external_body | `AVLTreeSetMtPer::filter` lacks `Ghost(spec_pred)` companion (Chap41 upstream API change needed). |
-| 3 | 18 | All 6 files | trivial_spec_wf `{ true }` | Vec-backed types — `true` is correct, no structural invariant. |
-| 4 | 19 | All 3 files | trivial_spec_wf `{ true }` | Same as Chap18. |
-| 5 | 12 | Exercise12_5.rs | trivial_spec_wf `{ true }` | Lock-free stack — no provable wf beyond `true`. |
+4. **Chap05/SetMtEph** (9 holes) — same lock-boundary pattern. `type_invariant`
+   proof fn has 2 assumes for finiteness + valid_key_type. Leave these unless you
+   can prove them from the RwLock invariant.
 
-## Summary
+## Rules
 
-- Verified: 3670, 0 errors
-- Errors fixed: 3 (across 3 files)
-- Chap57 now fully clean (was 1 error)
-- Remaining: 10 trivial_spec_wf (unfixable), 2 fn_missing_ensures (awaiting checker update), 1 external_body, 1 external
+- Run `scripts/validate.sh` after each file or small batch.
+- Show full output in response text.
+- DO NOT add assume, accept, admit, or external_body.
+- DO NOT convert existing assume to accept.
+- If a hole can't be closed, leave it and move on.
+- Commit to agent branch when done. Push.
+
+## Success Criteria
+
+- Chap18 and Chap19 reach 0 holes (trivial_wf accept-hole comments).
+- Chap06 hole count reduced (lock-boundary proves).
+- Zero new assumes or accepts introduced.
+- validate.sh: 0 errors. rtt.sh: all pass.

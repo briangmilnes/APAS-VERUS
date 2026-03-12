@@ -48,6 +48,13 @@ Table of Contents:
    Holes: 2 total
       2 × external_body
 ❌ GraphSearchStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:72: error: assume() - proof { assume(first@ == first_ref@); }  // accept hole: V::
+        60 |         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, B)) {
+            ...
+        70 |                 let first_ref = seq.nth(0);
+        71 |                 let first = first_ref.clone();
+        73 |                 assert(frontier@.contains(first@));
+        74 |                 let result = AVLTreeSetStEph::singleton(first);
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:97: error: external_body - #[verifier::external_body]
         98 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:86: error: fn_missing_requires - fn graph_search — exec fn should have requires
@@ -71,10 +78,9 @@ Table of Contents:
        163 |     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
        165 |     where
        166 |         G: Fn(&V) -> AVLTreeSetStEph<V>,
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:72: info: accept()
-   Holes: 1 total
+   Holes: 2 total
+      1 × assume()
       1 × external_body
-   Info: 1 total
 ❌ GraphSearchStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:68: error: external_body - #[verifier::external_body]
         69 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B)) {
@@ -182,19 +188,21 @@ Function Specs:
    65 total fns
 
 
-Holes Found: 11 total
-   11 × external_body (100%)
+Holes Found: 12 total
+   1 × assume() (8%)
+   11 × external_body (91%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 10:59:08 -07:00
-Ended:     2026-03-12 10:59:08 -07:00
+Started:   2026-03-12 12:35:35 -07:00
+Ended:     2026-03-12 12:35:35 -07:00
 Duration:  12ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
-0
+12 12:35:35 -07:00
+Ended:     2026-03-12 12:35:35 -07:00
 Duration:  12ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
