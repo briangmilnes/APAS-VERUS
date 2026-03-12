@@ -194,33 +194,38 @@ broadcast use {
     // 9. impls
 
     impl MatrixChainMtPerTrait for MatrixChainMtPerS {
-        #[verifier::external_body]
         fn new() -> (mc: Self) {
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions: Arc::new(Vec::new()),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtPerMemoInv { dims: Seq::empty() })),
             }
         }
 
-        #[verifier::external_body]
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions: Arc::new(dimensions),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtPerMemoInv { dims: Seq::empty() })),
             }
         }
 
-        #[verifier::external_body]
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self) {
             let mut dimensions: Vec<MatrixDim> = Vec::new();
             let mut idx: usize = 0;
-            while idx < dim_pairs.len() {
+            while idx < dim_pairs.len()
+                invariant
+                    idx <= dim_pairs@.len(),
+                    dimensions@.len() == idx as int,
+                decreases dim_pairs@.len() - idx,
+            {
                 dimensions.push(MatrixDim {
                     rows: dim_pairs[idx].0,
                     cols: dim_pairs[idx].1,
                 });
                 idx = idx + 1;
             }
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions: Arc::new(dimensions),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtPerMemoInv { dims: Seq::empty() })),
@@ -347,11 +352,14 @@ broadcast use {
     }
 
     impl PartialEq for MatrixChainMtPerS {
-        #[verifier::external_body]
         fn eq(&self, other: &Self) -> (r: bool)
             ensures r == (self@ == other@)
         {
-            self.dimensions == other.dimensions
+            let self_dims = arc_deref(&self.dimensions);
+            let other_dims = arc_deref(&other.dimensions);
+            let r = *self_dims == *other_dims;
+            proof { accept(r == (self@ == other@)); }  // accept hole: Vec::eq external_body
+            r
         }
     }
 
