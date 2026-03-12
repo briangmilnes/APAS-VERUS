@@ -1,3 +1,24 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap54/
+Full output: src/Chap54/analyses/veracity-review-verus-proof-holes.log
+
+Table of Contents:
+  1. File Holes
+  2. Depends Upon
+     2.1. By Module
+     2.2. By File
+  3. Summary of Holes
+  4. Proof Targets
+     4.1. Worst src/* Directories (all dirs, by holes)
+     4.2. Next Target Files (clean deps only, by holes)
+     4.3. Next Target Directories
+     4.4. Not Verusified
+     4.5. Not Verusified (clean deps only)
+  5. Started/Ended/Duration
+
+=================================================================
+1. File Holes
+=================================================================
+
 ✓ BFSMtEph.rs
    7 clean proof functions
 ✓ BFSMtPer.rs
@@ -7,32 +28,61 @@
 ✓ BFSStPer.rs
    4 clean proof functions
 
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+BFSMtEph  depends upon only clean modules
+BFSMtPer  depends upon only clean modules
+BFSStEph  depends upon only clean modules
+BFSStPer  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+BFSMtEph.rs  depends upon only clean modules
+BFSMtPer.rs  depends upon only clean modules
+BFSStEph.rs  depends upon only clean modules
+BFSStPer.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
 
 Modules:
-   4 clean (no holes)
-   0 holed (contains holes)
+   4 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    4 total
 
 Proof Functions:
-   22 clean
-   0 holed
+   22 clean (100%)
+   0 holed (0%)
    22 total
+
+Function Specs:
+   40 exec fns with complete spec (requires+ensures) (48%)
+   0 exec fns missing spec (0%)
+   42 proof/spec fns clean (51%)
+   0 proof/spec fns with holes (0%)
+   82 total fns
+
 
 Holes Found: 0 total
 
 🎉 No proof holes or warnings found! All proofs are complete.
-(no holes)
-   0 holed (contains holes)
-   4 total
 
-Proof Functions:
-   22 clean
-   0 holed
-   22 total
+=================================================================
+5. Started/Ended/Duration
+=================================================================
 
-Holes Found: 0 total
+Started:   2026-03-11 17:58:45 -07:00
+Ended:     2026-03-11 17:58:45 -07:00
+Duration:  19ms
 
-🎉 No proof holes or warnings found! All proofs are complete.
+Full output: src/Chap54/analyses/veracity-review-verus-proof-holes.log
+alyses/veracity-review-verus-proof-holes.log

@@ -1,40 +1,139 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap21/
+Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
+
+Table of Contents:
+  1. File Holes
+  2. Depends Upon
+     2.1. By Module
+     2.2. By File
+  3. Summary of Holes
+  4. Proof Targets
+     4.1. Worst src/* Directories (all dirs, by holes)
+     4.2. Next Target Files (clean deps only, by holes)
+     4.3. Next Target Directories
+     4.4. Not Verusified
+     4.5. Not Verusified (clean deps only)
+  5. Started/Ended/Duration
+
+=================================================================
+1. File Holes
+=================================================================
+
 ✓ Algorithm21_1.rs
    2 clean proof functions
 ✓ Algorithm21_2.rs
-✓ Algorithm21_5.rs
+❌ Algorithm21_5.rs
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:46: error: fn_missing_requires - fn primes_bf — exec fn should have requires
+        44 |     /// - APAS: Work Θ(n^{3/2}), Span Θ(lg n)
+        45 |     /// - Claude-Opus-4.6: Work Θ(n^{3/2}), Span Θ(n^{3/2}) — sequential StPer tabulate + filter.
+        47 |         ensures
+        48 |             n <= 2 ==> primes.spec_len() == 0,
 ✓ Algorithm21_6.rs
    1 clean proof function
 ✓ Exercise21_5.rs
    1 clean proof function
 ✓ Exercise21_6.rs
-✓ Exercise21_7.rs
-✓ Exercise21_8.rs
-   5 clean proof functions
+❌ Exercise21_7.rs
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:47: error: fn_missing_requires - fn is_even — exec fn should have requires
+        40 |     pub open spec fn spec_is_even(x: int) -> bool { x % 2 == 0     }
+            ...
+        45 |     /// - APAS: Work Θ(1), Span Θ(1)
+        46 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        48 |         ensures r == spec_is_even(*x as int)
+        49 |     { *x % 2 == 0 }
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:60: error: fn_missing_requires - fn is_vowel — exec fn should have requires
+        52 |     pub open spec fn spec_is_vowel(c: char) -> bool {
+            ...
+        58 |     /// - APAS: Work Θ(1), Span Θ(1)
+        59 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        61 |         ensures r == spec_is_vowel(*c)
+        62 |     {
+❌ Exercise21_8.rs
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:176: error: fn_missing_requires - fn is_prime — exec fn should have requires
+       164 |     pub fn is_divisible(n: N, i: N) -> (divides: B)
+            ...
+       174 |     /// - APAS: Work Θ(√n), Span Θ(lg n)
+       175 |     /// - Claude-Opus-4.6: Work Θ(√n), Span Θ(√n) — sequential StEph tabulate + filter.
+       177 |         ensures prime == spec_is_prime(n as int)
+       178 |     {
+   Proof functions: 5 total (5 clean, 0 holed)
 ✓ Exercise21_9.rs
    3 clean proof functions
 ✓ Problem21_1.rs
 ✓ Problem21_3.rs
 ✓ Problem21_4.rs
 
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+Algorithm21_1  depends upon only clean modules
+Algorithm21_2  depends upon only clean modules
+Algorithm21_5  depends upon only clean modules
+Algorithm21_6  depends upon only clean modules
+Exercise21_5  depends upon only clean modules
+Exercise21_6  depends upon only clean modules
+Exercise21_7  depends upon only clean modules
+Exercise21_8  depends upon only clean modules
+Exercise21_9  depends upon only clean modules
+Problem21_1  depends upon only clean modules
+Problem21_3  depends upon only clean modules
+Problem21_4  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+Algorithm21_1.rs  depends upon only clean modules
+Algorithm21_2.rs  depends upon only clean modules
+Algorithm21_5.rs  depends upon only clean modules
+Algorithm21_6.rs  depends upon only clean modules
+Exercise21_5.rs  depends upon only clean modules
+Exercise21_6.rs  depends upon only clean modules
+Exercise21_7.rs  depends upon only clean modules
+Exercise21_8.rs  depends upon only clean modules
+Exercise21_9.rs  depends upon only clean modules
+Problem21_1.rs  depends upon only clean modules
+Problem21_3.rs  depends upon only clean modules
+Problem21_4.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
 
 Modules:
-   12 clean (no holes)
-   0 holed (contains holes)
+   9 clean (no holes, no errors; 75%)
+   3 holed (holes or errors, 25%)
    12 total
 
 Proof Functions:
-   12 clean
-   0 holed
+   12 clean (100%)
+   0 holed (0%)
    12 total
 
+Function Specs:
+   11 exec fns with complete spec (requires+ensures) (33%)
+   4 exec fns missing spec (12%)
+   18 proof/spec fns clean (54%)
+   0 proof/spec fns with holes (0%)
+   33 total fns
+
+
 Holes Found: 0 total
 
-🎉 No proof holes or warnings found! All proofs are complete.
-otal
+🎉 No proof holes found! All proofs are complete.
 
-Holes Found: 0 total
+=================================================================
+5. Started/Ended/Duration
+=================================================================
 
-🎉 No proof holes or warnings found! All proofs are complete.
+Started:   2026-03-11 17:58:44 -07:00
+Ended:     2026-03-11 17:58:44 -07:00
+Duration:  11ms
+
+Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap21/analyses/veracity-review-verus-proof-holes.log

@@ -30,6 +30,8 @@ pub mod BSTSplayMtEph {
 
     // 2. imports
 
+    use crate::vstdplus::accept::accept;
+
     // (Arc kept for filter_parallel/reduce_parallel closure sharing.)
 
     // 4. type definitions
@@ -585,7 +587,7 @@ pub mod BSTSplayMtEph {
         // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
         fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
             let (mut current, write_handle) = self.root.acquire_write();
-            proof { assume(self.ghost_root@ == current); }
+            proof { accept(self.ghost_root@ == current); }
             let sz = compute_link_spec_size(&current);
             if sz < usize::MAX {
                 insert_link(&mut current, value);
@@ -603,7 +605,7 @@ pub mod BSTSplayMtEph {
         fn contains(&self, target: &T) -> (found: B) {
             let handle = self.root.acquire_read();
             let found = find_link(handle.borrow(), target).is_some();
-            proof { assume(found == link_contains(self@, *target)); }
+            proof { accept(found == link_contains(self@, *target)); }
             handle.release_read();
             found
         }
@@ -612,7 +614,7 @@ pub mod BSTSplayMtEph {
         fn size(&self) -> (n: N) {
             let handle = self.root.acquire_read();
             let n = size_link(handle.borrow());
-            proof { assume(n as nat == link_spec_size(self@)); }
+            proof { accept(n as nat == link_spec_size(self@)); }
             handle.release_read();
             n
         }
@@ -621,7 +623,7 @@ pub mod BSTSplayMtEph {
         fn is_empty(&self) -> (b: B) {
             let handle = self.root.acquire_read();
             let b = handle.borrow().is_none();
-            proof { assume(b == (self@ is None)); }
+            proof { accept(b == (self@ is None)); }
             handle.release_read();
             b
         }
@@ -630,7 +632,7 @@ pub mod BSTSplayMtEph {
         fn height(&self) -> (h: N) {
             let handle = self.root.acquire_read();
             let h = height_rec(handle.borrow());
-            proof { assume(h as nat == link_height(self@)); }
+            proof { accept(h as nat == link_height(self@)); }
             handle.release_read();
             h
         }

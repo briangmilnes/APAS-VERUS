@@ -31,6 +31,7 @@ pub mod BSTSizeStEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     // 4. type definitions
 
@@ -872,7 +873,7 @@ pub mod BSTSizeStEph {
             ensures equal == (self@ == other@)
         {
             let equal = compare_links(&self.root, &other.root);
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

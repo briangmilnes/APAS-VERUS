@@ -882,7 +882,7 @@ pub mod BSTParaStEph {
             ensures cloned@ == self@
         {
             let cloned = ParamBST { root: Arc::clone(&self.root) };
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }

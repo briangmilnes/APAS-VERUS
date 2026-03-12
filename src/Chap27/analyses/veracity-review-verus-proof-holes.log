@@ -1,3 +1,24 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap27/
+Full output: src/Chap27/analyses/veracity-review-verus-proof-holes.log
+
+Table of Contents:
+  1. File Holes
+  2. Depends Upon
+     2.1. By Module
+     2.2. By File
+  3. Summary of Holes
+  4. Proof Targets
+     4.1. Worst src/* Directories (all dirs, by holes)
+     4.2. Next Target Files (clean deps only, by holes)
+     4.3. Next Target Directories
+     4.4. Not Verusified
+     4.5. Not Verusified (clean deps only)
+  5. Started/Ended/Duration
+
+=================================================================
+1. File Holes
+=================================================================
+
 ✓ ReduceContractMtEph.rs
    4 clean proof functions
 ✓ ReduceContractStEph.rs
@@ -7,25 +28,61 @@
 ✓ ScanContractStEph.rs
    8 clean proof functions
 
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+ReduceContractMtEph  depends upon only clean modules
+ReduceContractStEph  depends upon only clean modules
+ScanContractMtEph  depends upon only clean modules
+ScanContractStEph  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+ReduceContractMtEph.rs  depends upon only clean modules
+ReduceContractStEph.rs  depends upon only clean modules
+ScanContractMtEph.rs  depends upon only clean modules
+ScanContractStEph.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
 
 Modules:
-   4 clean (no holes)
-   0 holed (contains holes)
+   4 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    4 total
 
 Proof Functions:
-   24 clean
-   0 holed
+   24 clean (100%)
+   0 holed (0%)
    24 total
 
+Function Specs:
+   13 exec fns with complete spec (requires+ensures) (35%)
+   0 exec fns missing spec (0%)
+   24 proof/spec fns clean (64%)
+   0 proof/spec fns with holes (0%)
+   37 total fns
+
+
 Holes Found: 0 total
 
 🎉 No proof holes or warnings found! All proofs are complete.
-otal
 
-Holes Found: 0 total
+=================================================================
+5. Started/Ended/Duration
+=================================================================
 
-🎉 No proof holes or warnings found! All proofs are complete.
+Started:   2026-03-11 17:58:44 -07:00
+Ended:     2026-03-11 17:58:44 -07:00
+Duration:  16ms
+
+Full output: src/Chap27/analyses/veracity-review-verus-proof-holes.log
+view-verus-proof-holes.log

@@ -1,64 +1,107 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap12/
+Full output: src/Chap12/analyses/veracity-review-verus-proof-holes.log
+
+Table of Contents:
+  1. File Holes
+  2. Depends Upon
+     2.1. By Module
+     2.2. By File
+  3. Summary of Holes
+  4. Proof Targets
+     4.1. Worst src/* Directories (all dirs, by holes)
+     4.2. Next Target Files (clean deps only, by holes)
+     4.3. Next Target Directories
+     4.4. Not Verusified
+     4.5. Not Verusified (clean deps only)
+  5. Started/Ended/Duration
+
+=================================================================
+1. File Holes
+=================================================================
+
 ℹ Exercise12_1.rs
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:20: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:60: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:68: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:76: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:81: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:93: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:20: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:60: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:68: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:76: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:81: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:93: info: external_body_accept_hole
    Info: 6 total
 ✓ Exercise12_2.rs
-ℹ Exercise12_5.rs
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:30: info: external_accept_hole - external with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:38: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:96: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:103: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:117: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:132: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:137: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:154: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:113: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:124: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:126: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:161: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
+❌ Exercise12_5.rs
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:53: error: trivial_spec_wf - spec fn wf — trivial body { true } or { true; }, consider real well-formedness spec
+        51 | pub trait ConcurrentStackMtTrait<T: Send>: Sized {
+        52 |     /// Spec: the stack is always well-formed after construction.
+        54 | 
+        55 |     /// Create a new empty stack.
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:30: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:38: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:96: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:103: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:117: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:132: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:137: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:154: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:113: info: unsafe_block_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:124: info: unsafe_block_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:126: info: unsafe_block_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:161: info: unsafe_block_accept_hole
+   Holes: 1 total
+      1 × trivial spec*wf { true }
    Info: 12 total
 
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+Exercise12_1  depends upon only clean modules
+Exercise12_2  depends upon only clean modules
+Exercise12_5  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+Exercise12_1.rs  depends upon only clean modules
+Exercise12_2.rs  depends upon only clean modules
+Exercise12_5.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
 
 Modules:
-   3 clean (no holes)
-   0 holed (contains holes)
+   2 clean (no holes, no errors; 66%)
+   1 holed (holes or errors, 33%)
    3 total
 
 Proof Functions:
-   0 clean
-   0 holed
+   0 clean (0%)
+   0 holed (0%)
    0 total
 
-Holes Found: 0 total
+Function Specs:
+   24 exec fns with complete spec (requires+ensures) (88%)
+   0 exec fns missing spec (0%)
+   3 proof/spec fns clean (11%)
+   0 proof/spec fns with holes (0%)
+   27 total fns
 
-Info: 18 total
-   Exercise12_1.rs:20: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_1.rs:60: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_1.rs:68: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_1.rs:76: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_1.rs:81: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_1.rs:93: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_5.rs:30: info: external_accept_hole - external with accept hole comment
-   Exercise12_5.rs:38: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_5.rs:96: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_5.rs:103: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_5.rs:117: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_5.rs:132: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_5.rs:137: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_5.rs:154: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_5.rs:113: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
-   Exercise12_5.rs:124: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
-   Exercise12_5.rs:126: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
-   Exercise12_5.rs:161: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
 
-🎉 No proof holes or warnings found! All proofs are complete.
-} with accept hole comment
+Holes Found: 1 total
+   1 × trivial spec*wf { true } (100%)
 
-🎉 No proof holes or warnings found! All proofs are complete.
+=================================================================
+5. Started/Ended/Duration
+=================================================================
+
+Started:   2026-03-11 17:58:44 -07:00
+Ended:     2026-03-11 17:58:44 -07:00
+Duration:  3ms
+
+Full output: src/Chap12/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap12/analyses/veracity-review-verus-proof-holes.log

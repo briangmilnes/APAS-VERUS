@@ -247,6 +247,7 @@ pub mod standards {
 //    pub mod arc_rwlock_coarse_standard;  // moved to attic/standards/
     pub mod spec_naming_convention;
     pub mod spec_wf_standard;
+    pub mod partial_eq_eq_clone_standard;
 }
 
 pub mod vstdplus {

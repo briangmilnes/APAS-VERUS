@@ -31,6 +31,7 @@ pub mod TopDownDPMtEph {
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     verus! {
@@ -224,7 +225,7 @@ pub mod TopDownDPMtEph {
             ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)
         {
             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-            proof { assume(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+            proof { accept(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
             r
         }
     }

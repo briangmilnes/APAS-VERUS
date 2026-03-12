@@ -20,20 +20,24 @@
 //!
 //! Trust profile:
 //! - Layer 1: zero trust, fully verified.
-//! - Layer 2: assumes at lock boundary to link ghost to inner value.
-//!   Three categories:
-//!   1. Writer assume: ghost_value == inner@ (before exec check + mutation).
-//!   2. Reader assume: return value == self@ (after reading through lock).
-//!   3. Predicate assume: return predicate == spec predicate (after reading through lock).
+//! - Layer 2: accepts at lock boundary to link ghost to inner value.
+//!   Three accept categories (use `accept()`, never bare `assume()`):
+//!   1. Writer accept: ghost_value == inner@ (before exec check + mutation).
+//!   2. Reader accept: return value == self@ (after reading through lock).
+//!   3. Predicate accept: return predicate == spec predicate (after reading through lock).
 //!
-//! What we get for free (no assumes):
+//! ONLY these three patterns may use `accept()` in a coarse RwLock Layer 2 impl.
+//! Any other assume/accept is a proof obligation that must be discharged, not accepted.
+//! Misclassifying an algorithmic assume as a lock-boundary accept defeats the proof.
+//!
+//! What we get for free (no accepts):
 //! - spec_countdown_wf (Layer 1 well-formedness) is guaranteed by two things:
 //!   1. new() constructs a valid inner value and the ghost shadow to match.
 //!   2. The RwLockPredicate enforces spec_countdown_wf on every release_write,
 //!      and guarantees it on every acquire_read/acquire_write.
-//! - So spec_x_wf flows from construction + the lock predicate — no assume needed.
+//! - So spec_x_wf flows from construction + the lock predicate — no accept needed.
 //!
-//! Why the assumes are necessary:
+//! Why the accepts are necessary:
 //! - The RwLockPredicate is frozen at construction — it constrains shape but can't
 //!   track a changing value.
 //! - type_invariant can't see inside the RwLock.
@@ -73,11 +77,13 @@
 //!
 //! References:
 //! - src/standards/hfscheduler_standard.rs (Arc<RwLock> + join for parallelism).
+//! - src/standards/partial_eq_eq_clone_standard.rs (accept patterns for derive impls).
 
 pub mod toplevel_coarse_rwlocks_for_mt_modules {
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -197,10 +203,10 @@ pub mod toplevel_coarse_rwlocks_for_mt_modules {
             }
         }
 
-        // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
+        // Writer accept: ghost == inner before exec-check + mutation.
         fn count_down(&mut self) -> (r: Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_count.acquire_write();
-            proof { assume(self.ghost_locked_count@ == locked_val@); }
+            proof { accept(self.ghost_locked_count@ == locked_val@); }
             if locked_val.count > 0 {
                 locked_val.count_down();
                 let ghost new_val = locked_val@;
@@ -213,20 +219,20 @@ pub mod toplevel_coarse_rwlocks_for_mt_modules {
             }
         }
 
-        // Reader: assume return value matches ghost.
+        // Reader accept: return value matches ghost.
         fn count(&self) -> (v: u64) {
             let read_handle = self.locked_count.acquire_read();
             let v = read_handle.borrow().count();
-            proof { assume(v as int == self@); }
+            proof { accept(v as int == self@); }
             read_handle.release_read();
             v
         }
 
-        // Reader: assume return predicate matches spec predicate.
+        // Reader accept: return predicate matches spec predicate.
         fn done(&self) -> (d: bool) {
             let read_handle = self.locked_count.acquire_read();
             let d = read_handle.borrow().done();
-            proof { assume(d == (self@ == 0)); }
+            proof { accept(d == (self@ == 0)); }
             read_handle.release_read();
             d
         }

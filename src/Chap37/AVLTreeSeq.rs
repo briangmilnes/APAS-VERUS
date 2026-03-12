@@ -31,6 +31,7 @@ pub mod AVLTreeSeq {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -1217,7 +1218,7 @@ pub mod AVLTreeSeq {
                 // By induction, root.clone()@ == root@
                 // So copy@ == self@
             }
-            assume(copy@ == self@);
+            proof { accept(copy@ == self@); }
             copy
         }
     }

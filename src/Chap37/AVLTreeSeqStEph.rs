@@ -42,6 +42,7 @@ pub mod AVLTreeSeqStEph {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{lemma_cloned_view_eq, obeys_feq_full};
@@ -990,7 +991,7 @@ pub mod AVLTreeSeqStEph {
             ensures equal == (self@ == other@)
         {
             let equal = compare_trees(&self.root, &other.root);
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

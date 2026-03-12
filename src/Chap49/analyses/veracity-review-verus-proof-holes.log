@@ -1,48 +1,139 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap49/
+Full output: src/Chap49/analyses/veracity-review-verus-proof-holes.log
+
+Table of Contents:
+  1. File Holes
+  2. Depends Upon
+     2.1. By Module
+     2.2. By File
+  3. Summary of Holes
+  4. Proof Targets
+     4.1. Worst src/* Directories (all dirs, by holes)
+     4.2. Next Target Files (clean deps only, by holes)
+     4.3. Next Target Directories
+     4.4. Not Verusified
+     4.5. Not Verusified (clean deps only)
+  5. Started/Ended/Duration
+
+=================================================================
+1. File Holes
+=================================================================
+
 ❌ MinEditDistMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:174: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:174: error: external_body - #[verifier::external_body]
        175 |     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:164: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
+       154 |     fn new_arc_memo(
+            ...
+       162 | 
+       163 |     /// Clone Arc memo (reference count increment).
+       165 |         s: &MinEditDistMtEphS<T>,
+       166 |     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtEphMemoInv>>)
    Holes: 1 total
       1 × external_body
 ❌ MinEditDistMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:147: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:147: error: external_body - #[verifier::external_body]
        148 |     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:137: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
+       127 |     fn new_arc_memo(
+            ...
+       135 | 
+       136 |     /// Clone Arc memo (reference count increment).
+       138 |         s: &MinEditDistMtPerS<T>,
+       139 |     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>)
    Holes: 1 total
       1 × external_body
 ✓ MinEditDistStEph.rs
 ✓ MinEditDistStPer.rs
 ❌ SubsetSumMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:151: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:151: error: external_body - #[verifier::external_body]
        152 |     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:141: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
+       131 |     fn new_arc_memo(
+            ...
+       139 | 
+       140 |     /// Clone Arc memo (reference count increment).
+       142 |         s: &SubsetSumMtEphS<T>,
+       143 |     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtEphMemoInv>>)
    Holes: 1 total
       1 × external_body
 ❌ SubsetSumMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:138: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:138: error: external_body - #[verifier::external_body]
        139 |     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:128: error: fn_missing_requires - fn clone_arc_memo — exec fn should have requires
+       118 |     fn new_arc_memo(
+            ...
+       126 | 
+       127 |     /// Clone Arc memo (reference count increment).
+       129 |         s: &SubsetSumMtPerS<T>,
+       130 |     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>)
    Holes: 1 total
       1 × external_body
 ✓ SubsetSumStEph.rs
 ✓ SubsetSumStPer.rs
 
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+MinEditDistMtEph  depends upon only clean modules
+MinEditDistMtPer  depends upon only clean modules
+MinEditDistStEph  depends upon only clean modules
+MinEditDistStPer  depends upon only clean modules
+SubsetSumMtEph  depends upon only clean modules
+SubsetSumMtPer  depends upon only clean modules
+SubsetSumStEph  depends upon only clean modules
+SubsetSumStPer  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+MinEditDistMtEph.rs  depends upon only clean modules
+MinEditDistMtPer.rs  depends upon only clean modules
+MinEditDistStEph.rs  depends upon only clean modules
+MinEditDistStPer.rs  depends upon only clean modules
+SubsetSumMtEph.rs  depends upon only clean modules
+SubsetSumMtPer.rs  depends upon only clean modules
+SubsetSumStEph.rs  depends upon only clean modules
+SubsetSumStPer.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
 
 Modules:
-   4 clean (no holes)
-   4 holed (contains holes)
+   4 clean (no holes, no errors; 50%)
+   4 holed (holes or errors, 50%)
    8 total
 
 Proof Functions:
-   0 clean
-   0 holed
+   0 clean (0%)
+   0 holed (0%)
    0 total
 
-Holes Found: 4 total
-   4 × external_body
-oof Functions:
-   0 clean
-   0 holed
-   0 total
+Function Specs:
+   128 exec fns with complete spec (requires+ensures) (75%)
+   4 exec fns missing spec (2%)
+   38 proof/spec fns clean (22%)
+   0 proof/spec fns with holes (0%)
+   170 total fns
+
 
 Holes Found: 4 total
-   4 × external_body
+   4 × external_body (100%)
+
+=================================================================
+5. Started/Ended/Duration
+=================================================================
+
+Started:   2026-03-11 17:58:45 -07:00
+Ended:     2026-03-11 17:58:45 -07:00
+Duration:  18ms
+
+Full output: src/Chap49/analyses/veracity-review-verus-proof-holes.log
+/Chap49/analyses/veracity-review-verus-proof-holes.log

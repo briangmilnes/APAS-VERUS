@@ -1,191 +1,240 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap50/
+Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log
+
+Table of Contents:
+  1. File Holes
+  2. Depends Upon
+     2.1. By Module
+     2.2. By File
+  3. Summary of Holes
+  4. Proof Targets
+     4.1. Worst src/* Directories (all dirs, by holes)
+     4.2. Next Target Files (clean deps only, by holes)
+     4.3. Next Target Directories
+     4.4. Not Verusified
+     4.5. Not Verusified (clean deps only)
+  5. Started/Ended/Duration
+
+=================================================================
+1. File Holes
+=================================================================
+
 ❌ MatrixChainMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:155: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:155: error: external_body - #[verifier::external_body]
        156 |         fn new() -> (mc: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:163: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:163: error: external_body - #[verifier::external_body]
        164 |         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:171: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:171: error: external_body - #[verifier::external_body]
        172 |         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:188: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:188: error: external_body - #[verifier::external_body]
        189 |         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:198: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:198: error: external_body - #[verifier::external_body]
        199 |         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:221: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:221: error: external_body - #[verifier::external_body]
        222 |         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:256: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:256: error: external_body - #[verifier::external_body]
        257 |         fn optimal_cost(&mut self) -> (cost: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:278: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:278: error: external_body - #[verifier::external_body]
        279 |         fn dimensions(&self) -> (dims: Vec<MatrixDim>) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:286: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:286: error: external_body - #[verifier::external_body]
        287 |         fn set_dimension(&mut self, index: usize, dim: MatrixDim) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:298: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:298: error: external_body - #[verifier::external_body]
        299 |         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:311: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:311: error: external_body - #[verifier::external_body]
        312 |         fn num_matrices(&self) -> (n: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:319: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:319: error: external_body - #[verifier::external_body]
        320 |         fn clear_memo(&mut self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:326: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:326: error: external_body - #[verifier::external_body]
        327 |         fn memo_size(&self) -> (n: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:337: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:337: error: external_body - #[verifier::external_body]
        338 |         fn clone(&self) -> (mc: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:347: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:347: error: external_body - #[verifier::external_body]
        348 |         fn eq(&self, other: &Self) -> (r: bool) {
    Holes: 15 total
       15 × external_body
 ❌ MatrixChainMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:197: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:197: error: external_body - #[verifier::external_body]
        198 |         fn new() -> (mc: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:205: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:205: error: external_body - #[verifier::external_body]
        206 |         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:213: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:213: error: external_body - #[verifier::external_body]
        214 |         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:239: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:239: error: external_body - #[verifier::external_body]
        240 |         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:262: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:262: error: external_body - #[verifier::external_body]
        263 |         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:297: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:297: error: external_body - #[verifier::external_body]
        298 |         fn optimal_cost(&self) -> (cost: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:320: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:320: error: external_body - #[verifier::external_body]
        321 |         fn memo_size(&self) -> (n: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:350: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:350: error: external_body - #[verifier::external_body]
        351 |         fn eq(&self, other: &Self) -> (r: bool)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:338: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:338: info: accept()
    Holes: 8 total
       8 × external_body
    Info: 1 total
-❌ MatrixChainStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:386: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       382 |         fn eq(&self, other: &Self) -> (r: bool)
-            ...
-       384 |         {
-       385 |             let r = self.dimensions == other.dimensions && self.memo == other.memo;
-       387 |             r
-       388 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:370: info: accept() - accept hole
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-   Info: 1 total
-❌ MatrixChainStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:355: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       351 |         fn eq(&self, other: &Self) -> (r: bool)
-            ...
-       353 |         {
-       354 |             let r = self.dimensions == other.dimensions && self.memo == other.memo;
-       356 |             r
-       357 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:339: info: accept() - accept hole
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-   Info: 1 total
+ℹ MatrixChainStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:370: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:386: info: accept()
+   Info: 2 total
+ℹ MatrixChainStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:339: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:355: info: accept()
+   Info: 2 total
 ❌ OptBinSearchTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:32: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:32: error: external_body - #[verifier::external_body]
         33 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:60: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:60: error: external_body - #[verifier::external_body]
         61 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:85: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:85: error: external_body - #[verifier::external_body]
         86 |     fn parallel_min_reduction<T: MtVal>(table: &OBSTMtEphS<T>, costs: Vec<Probability>) -> (cost: Probability) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:108: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:108: error: external_body - #[verifier::external_body]
        109 |     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> (cost: Probability) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:154: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:154: error: external_body - #[verifier::external_body]
        155 |         fn new() -> (empty: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:162: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:162: error: external_body - #[verifier::external_body]
        163 |         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:174: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:174: error: external_body - #[verifier::external_body]
        175 |         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:182: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:182: error: external_body - #[verifier::external_body]
        183 |         fn optimal_cost(&mut self) -> (cost: Probability) where T: Send + Sync + 'static {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:199: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:199: error: external_body - #[verifier::external_body]
        200 |         fn keys(&self) -> (keys: Vec<KeyProb<T>>) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:207: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:207: error: external_body - #[verifier::external_body]
        208 |         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:219: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:219: error: external_body - #[verifier::external_body]
        220 |         fn update_prob(&mut self, index: usize, prob: Probability) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:231: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:231: error: external_body - #[verifier::external_body]
        232 |         fn num_keys(&self) -> (count: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:239: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:239: error: external_body - #[verifier::external_body]
        240 |         fn clear_memo(&mut self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:246: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:246: error: external_body - #[verifier::external_body]
        247 |         fn memo_size(&self) -> (count: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:257: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:257: error: external_body - #[verifier::external_body]
        258 |         fn eq(&self, other: &Self) -> bool {
    Holes: 15 total
       15 × external_body
 ❌ OptBinSearchTreeMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:34: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:34: error: external_body - #[verifier::external_body]
         35 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:55: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:55: error: external_body - #[verifier::external_body]
         56 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:77: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:77: error: external_body - #[verifier::external_body]
         78 |     fn parallel_min_reduction<T: MtVal>(table: &OBSTMtPerS<T>, costs: Vec<Probability>) -> (cost: Probability) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:100: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:100: error: external_body - #[verifier::external_body]
        101 |     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtPerS<T>, i: usize, l: usize) -> (cost: Probability) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:140: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:140: error: external_body - #[verifier::external_body]
        141 |         fn new() -> (empty: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:148: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:148: error: external_body - #[verifier::external_body]
        149 |         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:160: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:160: error: external_body - #[verifier::external_body]
        161 |         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:168: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:168: error: external_body - #[verifier::external_body]
        169 |         fn optimal_cost(&self) -> (cost: Probability) where T: Send + Sync + 'static {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:180: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:180: error: external_body - #[verifier::external_body]
        181 |         fn keys(&self) -> (keys: &Arc<Vec<KeyProb<T>>>) { &self.keys }
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:183: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:183: error: external_body - #[verifier::external_body]
        184 |         fn num_keys(&self) -> (count: usize) { self.keys.len() }
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:186: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:186: error: external_body - #[verifier::external_body]
        187 |         fn memo_size(&self) -> (count: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:197: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:197: error: external_body - #[verifier::external_body]
        198 |         fn eq(&self, other: &Self) -> bool { self.keys == other.keys }
    Holes: 12 total
       12 × external_body
 ❌ OptBinSearchTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:51: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:51: error: external_body - #[verifier::external_body]
         52 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:65: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:65: error: external_body - #[verifier::external_body]
         66 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:140: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:140: error: external_body - #[verifier::external_body]
        141 |     fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (cost: Probability) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:177: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:177: error: external_body - #[verifier::external_body]
        178 |         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:199: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:199: error: external_body - #[verifier::external_body]
        200 |         fn optimal_cost(&mut self) -> (cost: Probability) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:218: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:218: error: external_body - #[verifier::external_body]
        219 |         fn update_prob(&mut self, index: usize, prob: Probability) {
    Holes: 6 total
       6 × external_body
 ❌ OptBinSearchTreeStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:51: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:51: error: external_body - #[verifier::external_body]
         52 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:65: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:65: error: external_body - #[verifier::external_body]
         66 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:123: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:123: error: external_body - #[verifier::external_body]
        124 |     fn obst_rec_st_per<T: StT>(s: &mut OBSTStPerS<T>, i: usize, l: usize) -> (cost: Probability) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:160: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:160: error: external_body - #[verifier::external_body]
        161 |         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:182: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:182: error: external_body - #[verifier::external_body]
        183 |         fn optimal_cost(&self) -> (cost: Probability) {
    Holes: 5 total
       5 × external_body
 
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+MatrixChainMtEph  depends upon only clean modules
+MatrixChainMtPer  depends upon only clean modules
+MatrixChainStEph  depends upon only clean modules
+MatrixChainStPer  depends upon only clean modules
+OptBinSearchTreeMtEph  depends upon only clean modules
+OptBinSearchTreeMtPer  depends upon only clean modules
+OptBinSearchTreeStEph  depends upon only clean modules
+OptBinSearchTreeStPer  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+MatrixChainMtEph.rs  depends upon only clean modules
+MatrixChainMtPer.rs  depends upon only clean modules
+MatrixChainStEph.rs  depends upon only clean modules
+MatrixChainStPer.rs  depends upon only clean modules
+OptBinSearchTreeMtEph.rs  depends upon only clean modules
+OptBinSearchTreeMtPer.rs  depends upon only clean modules
+OptBinSearchTreeStEph.rs  depends upon only clean modules
+OptBinSearchTreeStPer.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
 
 Modules:
-   2 clean (no holes)
-   6 holed (contains holes)
+   2 clean (no holes, no errors; 25%)
+   6 holed (holes or errors, 75%)
    8 total
 
 Proof Functions:
-   0 clean
-   0 holed
+   0 clean (0%)
+   0 holed (0%)
    0 total
 
+Function Specs:
+   180 exec fns with complete spec (requires+ensures) (81%)
+   0 exec fns missing spec (0%)
+   41 proof/spec fns clean (18%)
+   0 proof/spec fns with holes (0%)
+   221 total fns
+
+
 Holes Found: 61 total
-   61 × external_body
+   61 × external_body (100%)
 
-Errors: 2 total (2 assume in eq/clone (Verus workaround))
+=================================================================
+5. Started/Ended/Duration
+=================================================================
 
-Info: 3 total
-   MatrixChainMtPer.rs:338: info: accept() - accept hole
-   MatrixChainStEph.rs:370: info: accept() - accept hole
-   MatrixChainStPer.rs:339: info: accept() - accept hole
-le
-   MatrixChainStEph.rs:370: info: accept() - accept hole
-   MatrixChainStPer.rs:339: info: accept() - accept hole
+Started:   2026-03-11 17:58:45 -07:00
+Ended:     2026-03-11 17:58:45 -07:00
+Duration:  26ms
+
+Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log
+ded:     2026-03-11 17:58:45 -07:00
+Duration:  26ms
+
+Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log

@@ -24,6 +24,7 @@ pub mod AVLTreeSeqStPer {
     use vstd::prelude::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -533,7 +534,7 @@ pub mod AVLTreeSeqStPer {
             ensures equal == (self@ == other@)
         {
             let equal = compare_trees(&self.root, &other.root);
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

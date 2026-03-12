@@ -40,6 +40,7 @@ pub mod LabUnDirGraphMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
     use vstd::rwlock::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::seq_set::*;
@@ -584,8 +585,8 @@ pub mod LabUnDirGraphMtEph {
                 spec_labgraphview_wf(self@),
                 valid_key_type_for_lab_graph::<V, L>(),
         {
-            assume(spec_labgraphview_wf(self@));
-            assume(valid_key_type_for_lab_graph::<V, L>());
+            accept(spec_labgraphview_wf(self@));
+            accept(valid_key_type_for_lab_graph::<V, L>());
         }
     }
 
@@ -654,9 +655,9 @@ pub mod LabUnDirGraphMtEph {
         fn vertices(&self) -> (v: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let v = inner.vertices().clone();
-            proof { assume(v@ == self@.V); }
+            proof { accept(v@ == self@.V); }
             read_handle.release_read();
             v
         }
@@ -664,9 +665,9 @@ pub mod LabUnDirGraphMtEph {
         fn labeled_edges(&self) -> (e: SetStEph<LabEdge<V, L>>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let e = inner.labeled_edges().clone();
-            proof { assume(e@ == self@.A); }
+            proof { accept(e@ == self@.A); }
             read_handle.release_read();
             e
         }
@@ -674,10 +675,10 @@ pub mod LabUnDirGraphMtEph {
         fn edges(&self) -> (edges: SetStEph<Edge<V>>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let edges = inner.edges();
             proof {
-                assume(forall |u: V::V, w: V::V| edges@.contains((u, w)) ==
+                accept(forall |u: V::V, w: V::V| edges@.contains((u, w)) ==
                     (exists |l: L::V| #![trigger self@.A.contains((u, w, l))] self@.A.contains((u, w, l))));
             }
             read_handle.release_read();
@@ -687,10 +688,10 @@ pub mod LabUnDirGraphMtEph {
         fn has_edge(&self, v1: V, v2: V) -> (b: bool) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let b = inner.has_edge(&v1, &v2);
             proof {
-                assume(b == (exists |l: L::V|
+                accept(b == (exists |l: L::V|
                     #![trigger self@.A.contains((v1@, v2@, l))]
                     #![trigger self@.A.contains((v2@, v1@, l))]
                     self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l))));
@@ -702,11 +703,11 @@ pub mod LabUnDirGraphMtEph {
         fn ng(&self, v: V) -> (ng: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let ng = inner.ng(&v);
             proof {
-                assume(ng.spec_setsteph_wf());
-                assume(ng@ <= self@.V);
+                accept(ng.spec_setsteph_wf());
+                accept(ng@ <= self@.V);
             }
             read_handle.release_read();
             ng
@@ -714,7 +715,7 @@ pub mod LabUnDirGraphMtEph {
 
         fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
-            proof { assume(self.ghost_locked_graph@ == locked_val@); }
+            proof { accept(self.ghost_locked_graph@ == locked_val@); }
             locked_val.add_vertex(v);
             let ghost new_val = locked_val@;
             self.ghost_locked_graph = Ghost(new_val);
@@ -724,7 +725,7 @@ pub mod LabUnDirGraphMtEph {
 
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) -> (r: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
-            proof { assume(self.ghost_locked_graph@ == locked_val@); }
+            proof { accept(self.ghost_locked_graph@ == locked_val@); }
             locked_val.add_labeled_edge(v1, v2, label);
             let ghost new_val = locked_val@;
             self.ghost_locked_graph = Ghost(new_val);

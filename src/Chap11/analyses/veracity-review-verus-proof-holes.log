@@ -1,44 +1,97 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap11/
+Full output: src/Chap11/analyses/veracity-review-verus-proof-holes.log
+
+Table of Contents:
+  1. File Holes
+  2. Depends Upon
+     2.1. By Module
+     2.2. By File
+  3. Summary of Holes
+  4. Proof Targets
+     4.1. Worst src/* Directories (all dirs, by holes)
+     4.2. Next Target Files (clean deps only, by holes)
+     4.3. Next Target Directories
+     4.4. Not Verusified
+     4.5. Not Verusified (clean deps only)
+  5. Started/Ended/Duration
+
+=================================================================
+1. File Holes
+=================================================================
+
 ℹ FibonacciMtEph2Threads.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:156: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:164: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:156: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:164: info: accept()
    Info: 2 total
 ℹ FibonacciMtEphRecomputes.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:152: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:160: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:152: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:160: info: accept()
    Info: 2 total
 ✓ FibonacciMtPerAllThreads.rs
 ℹ FibonacciMtPerTSM.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:146: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:154: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:146: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:154: info: accept()
    Info: 2 total
 ✓ FibonacciStEph.rs
    3 clean proof functions
 
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+FibonacciMtEph2Threads  depends upon only clean modules
+FibonacciMtEphRecomputes  depends upon only clean modules
+FibonacciMtPerAllThreads  depends upon only clean modules
+FibonacciMtPerTSM  depends upon only clean modules
+FibonacciStEph  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+FibonacciMtEph2Threads.rs  depends upon only clean modules
+FibonacciMtEphRecomputes.rs  depends upon only clean modules
+FibonacciMtPerAllThreads.rs  depends upon only clean modules
+FibonacciMtPerTSM.rs  depends upon only clean modules
+FibonacciStEph.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
 
 Modules:
-   5 clean (no holes)
-   0 holed (contains holes)
+   5 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    5 total
 
 Proof Functions:
-   3 clean
-   0 holed
+   3 clean (100%)
+   0 holed (0%)
    3 total
+
+Function Specs:
+   6 exec fns with complete spec (requires+ensures) (60%)
+   0 exec fns missing spec (0%)
+   4 proof/spec fns clean (40%)
+   0 proof/spec fns with holes (0%)
+   10 total fns
+
 
 Holes Found: 0 total
 
-Info: 6 total
-   FibonacciMtPerTSM.rs:146: info: accept() - accept hole
-   FibonacciMtPerTSM.rs:154: info: accept() - accept hole
-   FibonacciMtEphRecomputes.rs:152: info: accept() - accept hole
-   FibonacciMtEphRecomputes.rs:160: info: accept() - accept hole
-   FibonacciMtEph2Threads.rs:156: info: accept() - accept hole
-   FibonacciMtEph2Threads.rs:164: info: accept() - accept hole
-
 🎉 No proof holes or warnings found! All proofs are complete.
-fo: accept() - accept hole
 
-🎉 No proof holes or warnings found! All proofs are complete.
+=================================================================
+5. Started/Ended/Duration
+=================================================================
+
+Started:   2026-03-11 17:58:44 -07:00
+Ended:     2026-03-11 17:58:44 -07:00
+Duration:  4ms
+
+Full output: src/Chap11/analyses/veracity-review-verus-proof-holes.log
+/Chap11/analyses/veracity-review-verus-proof-holes.log

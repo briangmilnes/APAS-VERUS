@@ -1,38 +1,89 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap66/
+Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
+
+Table of Contents:
+  1. File Holes
+  2. Depends Upon
+     2.1. By Module
+     2.2. By File
+  3. Summary of Holes
+  4. Proof Targets
+     4.1. Worst src/* Directories (all dirs, by holes)
+     4.2. Next Target Files (clean deps only, by holes)
+     4.3. Next Target Directories
+     4.4. Not Verusified
+     4.5. Not Verusified (clean deps only)
+  5. Started/Ended/Duration
+
+=================================================================
+1. File Holes
+=================================================================
+
 ℹ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:52: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:52: info: accept()
    Info: 1 total
 ❌ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:237: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:237: error: external_body - #[verifier::external_body]
        238 |         fn bridge_star_partition<V: StT + Hash + Ord>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:280: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:280: error: external_body - #[verifier::external_body]
        281 |         fn boruvka_mst<V: StT + Hash + Ord>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:329: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:329: error: external_body - #[verifier::external_body]
        330 |         fn boruvka_mst_with_seed<V: StT + Hash + Ord>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:71: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:71: info: accept()
    Holes: 3 total
       3 × external_body
    Info: 1 total
 
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+BoruvkaMtEph  depends upon only clean modules
+BoruvkaStEph  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+BoruvkaMtEph.rs  depends upon only clean modules
+BoruvkaStEph.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
 
 Modules:
-   1 clean (no holes)
-   1 holed (contains holes)
+   1 clean (no holes, no errors; 50%)
+   1 holed (holes or errors, 50%)
    2 total
 
 Proof Functions:
-   0 clean
-   0 holed
+   0 clean (0%)
+   0 holed (0%)
    0 total
 
-Holes Found: 3 total
-   3 × external_body
+Function Specs:
+   19 exec fns with complete spec (requires+ensures) (73%)
+   0 exec fns missing spec (0%)
+   7 proof/spec fns clean (26%)
+   0 proof/spec fns with holes (0%)
+   26 total fns
 
-Info: 2 total
-   BoruvkaStEph.rs:71: info: accept() - accept hole
-   BoruvkaMtEph.rs:52: info: accept() - accept hole
-tal
-   BoruvkaStEph.rs:71: info: accept() - accept hole
-   BoruvkaMtEph.rs:52: info: accept() - accept hole
+
+Holes Found: 3 total
+   3 × external_body (100%)
+
+=================================================================
+5. Started/Ended/Duration
+=================================================================
+
+Started:   2026-03-11 17:58:45 -07:00
+Ended:     2026-03-11 17:58:45 -07:00
+Duration:  8ms
+
+Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log

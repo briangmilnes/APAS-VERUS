@@ -463,8 +463,8 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             proof {
-                assume(self.elements.spec_avltreeseqsteph_wf());
-                assume(other.elements.spec_avltreeseqsteph_wf());
+                accept(self.elements.spec_avltreeseqsteph_wf());
+                accept(other.elements.spec_avltreeseqsteph_wf());
             }
             let equal = self.size() == other.size() && {
                 let n = self.elements.length();
@@ -486,7 +486,7 @@ broadcast use {
                 }
                 all_found
             };
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

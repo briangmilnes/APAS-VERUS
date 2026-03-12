@@ -40,6 +40,7 @@ pub mod LabDirGraphMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
     use vstd::rwlock::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::seq_set::*;
@@ -706,7 +707,7 @@ pub mod LabDirGraphMtEph {
 
         fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
-            proof { assume(self.ghost_locked_graph@ == locked_val@); }
+            proof { accept(self.ghost_locked_graph@ == locked_val@); }
             locked_val.add_vertex(v);
             let ghost new_val = locked_val@;
             self.ghost_locked_graph = Ghost(new_val);
@@ -716,7 +717,7 @@ pub mod LabDirGraphMtEph {
 
         fn add_labeled_arc(&mut self, from: V, to: V, label: L) -> (r: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
-            proof { assume(self.ghost_locked_graph@ == locked_val@); }
+            proof { accept(self.ghost_locked_graph@ == locked_val@); }
             locked_val.add_labeled_arc(from, to, label);
             let ghost new_val = locked_val@;
             self.ghost_locked_graph = Ghost(new_val);
@@ -727,9 +728,9 @@ pub mod LabDirGraphMtEph {
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let n_plus = inner.n_plus(v);
-            proof { assume(n_plus@ <= self@.V); }
+            proof { accept(n_plus@ <= self@.V); }
             read_handle.release_read();
             n_plus
         }
@@ -737,9 +738,9 @@ pub mod LabDirGraphMtEph {
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let n_minus = inner.n_minus(v);
-            proof { assume(n_minus@ <= self@.V); }
+            proof { accept(n_minus@ <= self@.V); }
             read_handle.release_read();
             n_minus
         }

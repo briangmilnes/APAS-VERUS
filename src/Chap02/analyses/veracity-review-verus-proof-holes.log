@@ -1,47 +1,93 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap02/
+Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
+
+Table of Contents:
+  1. File Holes
+  2. Depends Upon
+     2.1. By Module
+     2.2. By File
+  3. Summary of Holes
+  4. Proof Targets
+     4.1. Worst src/* Directories (all dirs, by holes)
+     4.2. Next Target Files (clean deps only, by holes)
+     4.3. Next Target Directories
+     4.4. Not Verusified
+     4.5. Not Verusified (clean deps only)
+  5. Started/Ended/Duration
+
+=================================================================
+1. File Holes
+=================================================================
+
 ✓ FibonacciHFScheduler.rs
    5 clean proof functions
 ℹ HFSchedulerMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:74: info: external_type_specification_accept_hole - external_type_specification with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:75: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:86: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:96: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:123: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:142: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:154: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:176: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:18: info: struct_outside_verus_accept_hole - struct PoolState — outside verus! with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole - enum TaskState — outside verus! with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:74: info: external_type_specification_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:75: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:86: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:96: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:123: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:142: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:154: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:176: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:18: info: struct_outside_verus_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole
    Info: 10 total
 
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+FibonacciHFScheduler  depends upon only clean modules
+HFSchedulerMtEph  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+FibonacciHFScheduler.rs  depends upon only clean modules
+HFSchedulerMtEph.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
 
 Modules:
-   2 clean (no holes)
-   0 holed (contains holes)
+   2 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    2 total
 
 Proof Functions:
-   5 clean
-   0 holed
+   5 clean (100%)
+   0 holed (0%)
    5 total
+
+Function Specs:
+   7 exec fns with complete spec (requires+ensures) (50%)
+   0 exec fns missing spec (0%)
+   7 proof/spec fns clean (50%)
+   0 proof/spec fns with holes (0%)
+   14 total fns
+
 
 Holes Found: 0 total
 
-Info: 10 total
-   HFSchedulerMtEph.rs:74: info: external_type_specification_accept_hole - external_type_specification with accept hole comment
-   HFSchedulerMtEph.rs:75: info: external_body_accept_hole - external_body with accept hole comment
-   HFSchedulerMtEph.rs:86: info: external_body_accept_hole - external_body with accept hole comment
-   HFSchedulerMtEph.rs:96: info: external_body_accept_hole - external_body with accept hole comment
-   HFSchedulerMtEph.rs:123: info: external_body_accept_hole - external_body with accept hole comment
-   HFSchedulerMtEph.rs:142: info: accept() - accept hole
-   HFSchedulerMtEph.rs:154: info: external_body_accept_hole - external_body with accept hole comment
-   HFSchedulerMtEph.rs:176: info: external_body_accept_hole - external_body with accept hole comment
-   HFSchedulerMtEph.rs:18: info: struct_outside_verus_accept_hole - struct PoolState — outside verus! with accept hole comment
-   HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole - enum TaskState — outside verus! with accept hole comment
-
 🎉 No proof holes or warnings found! All proofs are complete.
-   HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole - enum TaskState — outside verus! with accept hole comment
 
-🎉 No proof holes or warnings found! All proofs are complete.
+=================================================================
+5. Started/Ended/Duration
+=================================================================
+
+Started:   2026-03-11 17:58:44 -07:00
+Ended:     2026-03-11 17:58:44 -07:00
+Duration:  3ms
+
+Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
+
+Duration:  3ms
+
+Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log

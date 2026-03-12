@@ -30,6 +30,7 @@ pub mod BSTKeyValueStEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
@@ -853,7 +854,7 @@ pub mod BSTKeyValueStEph {
             ensures equal == (self@ == other@)
         {
             let equal = compare_kv_links(&self.root, &other.root) && self.size == other.size;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

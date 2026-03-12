@@ -27,6 +27,7 @@ pub mod BSTReducedStEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -899,7 +900,7 @@ pub mod BSTReducedStEph {
             ensures equal == (self@ == other@)
         {
             let equal = compare_reduced_links(&self.root, &other.root);
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

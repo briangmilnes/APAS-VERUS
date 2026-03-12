@@ -1,32 +1,125 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap55/
+Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
+
+Table of Contents:
+  1. File Holes
+  2. Depends Upon
+     2.1. By Module
+     2.2. By File
+  3. Summary of Holes
+  4. Proof Targets
+     4.1. Worst src/* Directories (all dirs, by holes)
+     4.2. Next Target Files (clean deps only, by holes)
+     4.3. Next Target Directories
+     4.4. Not Verusified
+     4.5. Not Verusified (clean deps only)
+  5. Started/Ended/Duration
+
+=================================================================
+1. File Holes
+=================================================================
+
 ✓ CycleDetectStEph.rs
 ✓ CycleDetectStPer.rs
 ✓ DFSStEph.rs
 ✓ DFSStPer.rs
-✓ SCCStEph.rs
-✓ SCCStPer.rs
+❌ SCCStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:48: error: fn_missing_ensures - fn compute_finish_order — exec fn should have ensures
+        37 |         fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (components: AVLTreeSeqStEphS<AVLTreeSetStEph<N>>)
+            ...
+        46 | 
+        47 |     /// Computes the finish order for SCC (decreasing finish times).
+        49 |         requires spec_toposortsteph_wf(graph),
+        50 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:147: error: fn_missing_requires - fn check_wf_adj_list_eph — exec fn should have requires
+        85 |     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<N>>)
+            ...
+       145 | 
+       146 |     /// Runtime check that all neighbor indices are valid vertex indices.
+       148 |         ensures valid ==> spec_toposortsteph_wf(graph),
+       149 |     {
+❌ SCCStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:97: error: fn_missing_ensures - fn compute_finish_order — exec fn should have ensures
+        46 |     fn dfs_finish_order(
+            ...
+        95 | 
+        96 |     /// Computes the finish order for SCC (decreasing finish times).
+        98 |         requires spec_toposortstper_wf(graph),
+        99 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:202: error: fn_missing_requires - fn check_wf_adj_list_per — exec fn should have requires
+       142 |     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<N>>)
+            ...
+       200 | 
+       201 |     /// Runtime check that all neighbor indices are valid vertex indices.
+       203 |         ensures valid ==> spec_toposortstper_wf(graph),
+       204 |     {
 ✓ TopoSortStEph.rs
    1 clean proof function
 ✓ TopoSortStPer.rs
 
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+CycleDetectStEph  depends upon only clean modules
+CycleDetectStPer  depends upon only clean modules
+DFSStEph  depends upon only clean modules
+DFSStPer  depends upon only clean modules
+SCCStEph  depends upon only clean modules
+SCCStPer  depends upon only clean modules
+TopoSortStEph  depends upon only clean modules
+TopoSortStPer  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+CycleDetectStEph.rs  depends upon only clean modules
+CycleDetectStPer.rs  depends upon only clean modules
+DFSStEph.rs  depends upon only clean modules
+DFSStPer.rs  depends upon only clean modules
+SCCStEph.rs  depends upon only clean modules
+SCCStPer.rs  depends upon only clean modules
+TopoSortStEph.rs  depends upon only clean modules
+TopoSortStPer.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
 
 Modules:
-   8 clean (no holes)
-   0 holed (contains holes)
+   6 clean (no holes, no errors; 75%)
+   2 holed (holes or errors, 25%)
    8 total
 
 Proof Functions:
-   1 clean
-   0 holed
+   1 clean (100%)
+   0 holed (0%)
    1 total
 
+Function Specs:
+   31 exec fns with complete spec (requires+ensures) (57%)
+   4 exec fns missing spec (7%)
+   19 proof/spec fns clean (35%)
+   0 proof/spec fns with holes (0%)
+   54 total fns
+
+
 Holes Found: 0 total
 
-🎉 No proof holes or warnings found! All proofs are complete.
-otal
+🎉 No proof holes found! All proofs are complete.
 
-Holes Found: 0 total
+=================================================================
+5. Started/Ended/Duration
+=================================================================
 
-🎉 No proof holes or warnings found! All proofs are complete.
+Started:   2026-03-11 17:58:45 -07:00
+Ended:     2026-03-11 17:58:45 -07:00
+Duration:  13ms
+
+Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log

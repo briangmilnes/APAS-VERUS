@@ -1036,7 +1036,7 @@ broadcast use {
             {
                 let cloned = SortedListPQ { elements: self.elements.clone() };
                 proof {
-                    assume(obeys_feq_clone::<T>());
+                    accept(obeys_feq_clone::<T>());
                     lemma_seq_map_cloned_view_eq(
                         self.elements.seq@,
                         cloned.elements.seq@,

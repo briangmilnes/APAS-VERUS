@@ -520,7 +520,7 @@ broadcast use {
                 }
                 all_found
             };
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

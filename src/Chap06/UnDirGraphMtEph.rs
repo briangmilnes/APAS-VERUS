@@ -43,6 +43,7 @@ pub mod UnDirGraphMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
     use vstd::rwlock::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
@@ -552,7 +553,7 @@ pub mod UnDirGraphMtEph {
         fn vertices(&self) -> (v: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let v = read_handle.borrow().V.clone();
-            proof { assume(v@ == self@.V); }
+            proof { accept(v@ == self@.V); }
             read_handle.release_read();
             v
         }
@@ -560,7 +561,7 @@ pub mod UnDirGraphMtEph {
         fn edges(&self) -> (e: SetStEph<Edge<V>>) {
             let read_handle = self.locked_graph.acquire_read();
             let e = read_handle.borrow().E.clone();
-            proof { assume(e@ == self@.A); }
+            proof { accept(e@ == self@.A); }
             read_handle.release_read();
             e
         }
@@ -568,7 +569,7 @@ pub mod UnDirGraphMtEph {
         fn sizeV(&self) -> (n: N) {
             let read_handle = self.locked_graph.acquire_read();
             let n = read_handle.borrow().sizeV();
-            proof { assume(n == self@.V.len()); }
+            proof { accept(n == self@.V.len()); }
             read_handle.release_read();
             n
         }
@@ -576,7 +577,7 @@ pub mod UnDirGraphMtEph {
         fn sizeE(&self) -> (n: N) {
             let read_handle = self.locked_graph.acquire_read();
             let n = read_handle.borrow().sizeE();
-            proof { assume(n == self@.A.len()); }
+            proof { accept(n == self@.A.len()); }
             read_handle.release_read();
             n
         }
@@ -584,9 +585,9 @@ pub mod UnDirGraphMtEph {
         fn neighbor(&self, u: &V, v: &V) -> (b: B) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let b = inner.neighbor(u, v);
-            proof { assume(b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)))); }
+            proof { accept(b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)))); }
             read_handle.release_read();
             b
         }
@@ -594,9 +595,9 @@ pub mod UnDirGraphMtEph {
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let neighbors = inner.ng(v);
-            proof { assume(neighbors@ <= self@.V); }
+            proof { accept(neighbors@ <= self@.V); }
             read_handle.release_read();
             neighbors
         }
@@ -604,9 +605,9 @@ pub mod UnDirGraphMtEph {
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let neighbors = inner.ng_of_vertices(u_set);
-            proof { assume(neighbors@ <= self@.V); }
+            proof { accept(neighbors@ <= self@.V); }
             read_handle.release_read();
             neighbors
         }

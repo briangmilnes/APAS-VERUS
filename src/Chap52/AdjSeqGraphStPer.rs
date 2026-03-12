@@ -11,6 +11,7 @@ pub mod AdjSeqGraphStPer {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -510,7 +511,7 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             let equal = self.adj == other.adj;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

@@ -27,6 +27,7 @@ pub mod BottomUpDPStPer {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
     // 4. type definitions
@@ -331,7 +332,7 @@ pub mod BottomUpDPStPer {
             ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)
         {
             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-            proof { assume(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+            proof { accept(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
             r
         }
     }

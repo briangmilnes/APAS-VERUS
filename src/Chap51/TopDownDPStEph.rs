@@ -29,6 +29,7 @@ pub mod TopDownDPStEph {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 
     verus! {
@@ -356,7 +357,7 @@ pub mod TopDownDPStEph {
             ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)
         {
             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-            proof { assume(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+            proof { accept(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
             r
         }
     }

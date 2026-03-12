@@ -1,146 +1,164 @@
-❌ BottomUpDPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:161: external_body - #[verifier::external_body]
-       162 |         fn med_bottom_up_parallel(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:269: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       265 |         fn eq(&self, other: &Self) -> (eq: bool)
-            ...
-       267 |         {
-       268 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       270 |             r
-       271 |         }
-   Holes: 1 total
-      1 × external_body
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-❌ BottomUpDPMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:146: external_body - #[verifier::external_body]
-       147 |         fn med_bottom_up_parallel(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:254: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       250 |         fn eq(&self, other: &Self) -> (eq: bool)
-            ...
-       252 |         {
-       253 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       255 |             r
-       256 |         }
-   Holes: 1 total
-      1 × external_body
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-❌ BottomUpDPStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:180: external_body - #[verifier::external_body]
-       181 |         fn med_bottom_up(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:348: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       344 |         fn eq(&self, other: &Self) -> (eq: bool)
-            ...
-       346 |         {
-       347 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       349 |             r
-       350 |         }
-   Holes: 1 total
-      1 × external_body
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-❌ BottomUpDPStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:166: external_body - #[verifier::external_body]
-       167 |         fn med_bottom_up(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:334: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       330 |         fn eq(&self, other: &Self) -> (eq: bool)
-            ...
-       332 |         {
-       333 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       335 |             r
-       336 |         }
-   Holes: 1 total
-      1 × external_body
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-❌ TopDownDPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:170: external_body - #[verifier::external_body]
-       171 |         fn med_memoized_concurrent(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:179: external_body - #[verifier::external_body]
-       180 |         fn med_memoized_parallel(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:115: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-       101 |         fn med_memoized_parallel(&mut self) -> (distance: usize)
-            ...
-       113 |     /// cannot constrain map contents. Ghost fields carry context for documentation.
-       114 |     impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtEphInv {
-       116 |     }
-       117 | 
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:227: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       223 |         fn eq(&self, other: &Self) -> (eq: bool)
-            ...
-       225 |         {
-       226 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       228 |             r
-       229 |         }
-   Holes: 2 total
-      2 × external_body
-   Errors: 2 total (1 assume in eq/clone (Verus workaround), 1 dummy RwLockPredicate)
-❌ TopDownDPMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:144: external_body - #[verifier::external_body]
-       145 |         fn med_memoized_concurrent(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:153: external_body - #[verifier::external_body]
-       154 |         fn med_memoized_parallel(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:93: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        85 |         fn med_memoized_parallel(&self) -> (distance: usize)
-            ...
-        91 |     /// cannot constrain map contents. Ghost fields carry context for documentation.
-        92 |     impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtPerInv {
-        94 |     }
-        95 | 
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:201: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       197 |         fn eq(&self, other: &Self) -> (eq: bool)
-            ...
-       199 |         {
-       200 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       202 |             r
-       203 |         }
-   Holes: 2 total
-      2 × external_body
-   Errors: 2 total (1 assume in eq/clone (Verus workaround), 1 dummy RwLockPredicate)
-❌ TopDownDPStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:359: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       355 |         fn eq(&self, other: &Self) -> (eq: bool)
-            ...
-       357 |         {
-       358 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       360 |             r
-       361 |         }
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ TopDownDPStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:333: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       329 |         fn eq(&self, other: &Self) -> (eq: bool)
-            ...
-       331 |         {
-       332 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       334 |             r
-       335 |         }
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-   Proof functions: 1 total (1 clean, 0 holed)
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap51/
+Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
 
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
+Table of Contents:
+  1. File Holes
+  2. Depends Upon
+     2.1. By Module
+     2.2. By File
+  3. Summary of Holes
+  4. Proof Targets
+     4.1. Worst src/* Directories (all dirs, by holes)
+     4.2. Next Target Files (clean deps only, by holes)
+     4.3. Next Target Directories
+     4.4. Not Verusified
+     4.5. Not Verusified (clean deps only)
+  5. Started/Ended/Duration
+
+=================================================================
+1. File Holes
+=================================================================
+
+❌ BottomUpDPMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:162: error: external_body - #[verifier::external_body]
+       163 |         fn med_bottom_up_parallel(&mut self) -> (distance: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:270: info: accept()
+   Holes: 1 total
+      1 × external_body
+   Info: 1 total
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ BottomUpDPMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:147: error: external_body - #[verifier::external_body]
+       148 |         fn med_bottom_up_parallel(&self) -> (distance: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:255: info: accept()
+   Holes: 1 total
+      1 × external_body
+   Info: 1 total
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ BottomUpDPStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:181: error: external_body - #[verifier::external_body]
+       182 |         fn med_bottom_up(&mut self) -> (distance: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:349: info: accept()
+   Holes: 1 total
+      1 × external_body
+   Info: 1 total
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ BottomUpDPStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:167: error: external_body - #[verifier::external_body]
+       168 |         fn med_bottom_up(&self) -> (distance: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:335: info: accept()
+   Holes: 1 total
+      1 × external_body
+   Info: 1 total
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ TopDownDPMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:171: error: external_body - #[verifier::external_body]
+       172 |         fn med_memoized_concurrent(&mut self) -> (distance: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:180: error: external_body - #[verifier::external_body]
+       181 |         fn med_memoized_parallel(&mut self) -> (distance: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:116: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+       102 |         fn med_memoized_parallel(&mut self) -> (distance: usize)
+            ...
+       114 |     /// cannot constrain map contents. Ghost fields carry context for documentation.
+       115 |     impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtEphInv {
+       117 |     }
+       118 | 
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:228: info: accept()
+   Holes: 2 total
+      2 × external_body
+   Info: 1 total
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ TopDownDPMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:145: error: external_body - #[verifier::external_body]
+       146 |         fn med_memoized_concurrent(&self) -> (distance: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:154: error: external_body - #[verifier::external_body]
+       155 |         fn med_memoized_parallel(&self) -> (distance: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:94: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+        86 |         fn med_memoized_parallel(&self) -> (distance: usize)
+            ...
+        92 |     /// cannot constrain map contents. Ghost fields carry context for documentation.
+        93 |     impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtPerInv {
+        95 |     }
+        96 | 
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:202: info: accept()
+   Holes: 2 total
+      2 × external_body
+   Info: 1 total
+   Proof functions: 2 total (2 clean, 0 holed)
+ℹ TopDownDPStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:360: info: accept()
+   Info: 1 total
+   3 clean proof functions
+ℹ TopDownDPStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:334: info: accept()
+   Info: 1 total
+   3 clean proof functions
+
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+BottomUpDPMtEph  depends upon only clean modules
+BottomUpDPMtPer  depends upon only clean modules
+BottomUpDPStEph  depends upon only clean modules
+BottomUpDPStPer  depends upon only clean modules
+TopDownDPMtEph  depends upon only clean modules
+TopDownDPMtPer  depends upon only clean modules
+TopDownDPStEph  depends upon only clean modules
+TopDownDPStPer  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+BottomUpDPMtEph.rs  depends upon only clean modules
+BottomUpDPMtPer.rs  depends upon only clean modules
+BottomUpDPStEph.rs  depends upon only clean modules
+BottomUpDPStPer.rs  depends upon only clean modules
+TopDownDPMtEph.rs  depends upon only clean modules
+TopDownDPMtPer.rs  depends upon only clean modules
+TopDownDPStEph.rs  depends upon only clean modules
+TopDownDPStPer.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
 
 Modules:
-   2 clean (no holes)
-   6 holed (contains holes)
+   2 clean (no holes, no errors; 25%)
+   6 holed (holes or errors, 75%)
    8 total
 
 Proof Functions:
-   2 clean
-   0 holed
-   2 total
+   18 clean (100%)
+   0 holed (0%)
+   18 total
+
+Function Specs:
+   156 exec fns with complete spec (requires+ensures) (53%)
+   0 exec fns missing spec (0%)
+   136 proof/spec fns clean (46%)
+   0 proof/spec fns with holes (0%)
+   292 total fns
+
 
 Holes Found: 8 total
-   8 × external_body
+   8 × external_body (100%)
 
-Errors: 10 total (8 assume in eq/clone (Verus workaround), 2 dummy RwLockPredicate)
-  8 total
+=================================================================
+5. Started/Ended/Duration
+=================================================================
 
-Proof Functions:
-   2 clean
-   0 holed
-   2 total
+Started:   2026-03-11 17:58:45 -07:00
+Ended:     2026-03-11 17:58:45 -07:00
+Duration:  21ms
 
-Holes Found: 8 total
-   8 × external_body
+Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
+45 -07:00
+Duration:  21ms
 
-Errors: 10 total (8 assume in eq/clone (Verus workaround), 2 dummy RwLockPredicate)
+Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log

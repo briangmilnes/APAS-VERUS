@@ -1,84 +1,156 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap40/
+Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
+
+Table of Contents:
+  1. File Holes
+  2. Depends Upon
+     2.1. By Module
+     2.2. By File
+  3. Summary of Holes
+  4. Proof Targets
+     4.1. Worst src/* Directories (all dirs, by holes)
+     4.2. Next Target Files (clean deps only, by holes)
+     4.3. Next Target Directories
+     4.4. Not Verusified
+     4.5. Not Verusified (clean deps only)
+  5. Started/Ended/Duration
+
+=================================================================
+1. File Holes
+=================================================================
+
 ❌ BSTKeyValueStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:374: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       363 |     fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (cloned: Link<K, V>)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:364: error: fn_missing_requires - fn clone_link — exec fn should have requires
+       356 |         fn filter_by_key_kvp(
             ...
-       372 |                 let k = node.key.clone();
-       373 |                 let v = node.value.clone();
-       375 |                 Some(Box::new(Node {
-       376 |                     key: k,
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:856: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       852 |         fn eq(&self, other: &Self) -> (equal: bool)
+       362 | 
+       363 | 
+       365 |         ensures
+       366 |             spec_content_link(&cloned) == spec_content_link(link),
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       364 |     fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (cloned: Link<K, V>)
             ...
-       854 |         {
-       855 |             let equal = compare_kv_links(&self.root, &other.root) && self.size == other.size;
-       857 |             equal
-       858 |         }
-   Errors: 2 total (2 assume in eq/clone (Verus workaround))
+       373 |                 let k = node.key.clone();
+       374 |                 let v = node.value.clone();
+       376 |                 Some(Box::new(Node {
+       377 |                     key: k,
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:484: error: fn_missing_requires_ensures - fn compare_kv_links — exec fn should have requires and ensures
+       472 |         fn new(key: K, value: V, priority: u64) -> (node: Self)
+            ...
+       482 |     }
+       483 | 
+       485 |         decreases *a,
+       486 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:857: info: accept()
+   Info: 1 total
    Proof functions: 7 total (7 clean, 0 holed)
 ❌ BSTReducedStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:384: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       372 |     fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (cloned: Link<K, V, R>)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:373: error: fn_missing_requires - fn clone_link — exec fn should have requires
+       360 |         open spec fn spec_content_link(link: &Link<K, V, R>) -> Map<K, V>
             ...
-       382 |                 let k = node.key.clone();
-       383 |                 let v = node.value.clone();
-       385 |                 Some(Box::new(Node {
-       386 |                     key: k,
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:902: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       898 |         fn eq(&self, other: &Self) -> (equal: bool)
+       371 |     }
+       372 | 
+       374 |         ensures
+       375 |             Lnk::spec_content_link(&cloned) == Lnk::spec_content_link(link),
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:385: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       373 |     fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (cloned: Link<K, V, R>)
             ...
-       900 |         {
-       901 |             let equal = compare_reduced_links(&self.root, &other.root);
-       903 |             equal
-       904 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:454: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:456: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:467: info: external_body_accept_hole - external_body with accept hole comment
-   Errors: 2 total (2 assume in eq/clone (Verus workaround))
-   Info: 3 total
+       383 |                 let k = node.key.clone();
+       384 |                 let v = node.value.clone();
+       386 |                 Some(Box::new(Node {
+       387 |                     key: k,
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:473: error: fn_missing_requires_ensures - fn compare_reduced_links — exec fn should have requires and ensures
+       470 |         fn lift(_value: &T) -> (lifted: usize) { 1 }
+            ...
+       471 |     }
+       472 | 
+       474 |         decreases *a,
+       475 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:455: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:457: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:468: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:903: info: accept()
+   Info: 4 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ BSTSizeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:820: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       809 |     fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:413: error: fn_missing_requires_ensures - fn compare_links — exec fn should have requires and ensures
+       395 |         fn new(key: T, priority: u64) -> (node: Self)
             ...
-       818 |             Some(node) => {
-       819 |                 let k = node.key.clone();
-       821 |                 Some(Box::new(Node {
-       822 |                     key: k,
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:875: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       871 |         fn eq(&self, other: &Self) -> (equal: bool)
+       411 |     }
+       412 | 
+       414 |         decreases *a,
+       415 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:810: error: fn_missing_requires - fn clone_link — exec fn should have requires
+       789 |         fn select_link(link: &Link<T>, rank: usize) -> Option<&T>
             ...
-       873 |         {
-       874 |             let equal = compare_links(&self.root, &other.root);
-       876 |             equal
-       877 |         }
-   Errors: 2 total (2 assume in eq/clone (Verus workaround))
+       808 |     // 11. derive impls in verus!
+       809 | 
+       811 |         ensures
+       812 |             Lnk::spec_content_link(&c) == Lnk::spec_content_link(link),
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:821: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       810 |     fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)
+            ...
+       819 |             Some(node) => {
+       820 |                 let k = node.key.clone();
+       822 |                 Some(Box::new(Node {
+       823 |                     key: k,
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:876: info: accept()
+   Info: 1 total
    Proof functions: 3 total (3 clean, 0 holed)
 
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+BSTKeyValueStEph  depends upon only clean modules
+BSTReducedStEph  depends upon only clean modules
+BSTSizeStEph  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+BSTKeyValueStEph.rs  depends upon only clean modules
+BSTReducedStEph.rs  depends upon only clean modules
+BSTSizeStEph.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
 
 Modules:
-   3 clean (no holes)
-   0 holed (contains holes)
+   0 clean (no holes, no errors; 0%)
+   3 holed (holes or errors, 100%)
    3 total
 
 Proof Functions:
-   11 clean
-   0 holed
+   11 clean (100%)
+   0 holed (0%)
    11 total
+
+Function Specs:
+   209 exec fns with complete spec (requires+ensures) (66%)
+   6 exec fns missing spec (1%)
+   101 proof/spec fns clean (31%)
+   0 proof/spec fns with holes (0%)
+   316 total fns
+
 
 Holes Found: 0 total
 
-Errors: 6 total (6 assume in eq/clone (Verus workaround))
-
-Info: 3 total
-   BSTReducedStEph.rs:454: info: external_body_accept_hole - external_body with accept hole comment
-   BSTReducedStEph.rs:456: info: external_body_accept_hole - external_body with accept hole comment
-   BSTReducedStEph.rs:467: info: external_body_accept_hole - external_body with accept hole comment
-
 🎉 No proof holes found! All proofs are complete.
-ternal_body with accept hole comment
-   BSTReducedStEph.rs:467: info: external_body_accept_hole - external_body with accept hole comment
 
-🎉 No proof holes found! All proofs are complete.
+=================================================================
+5. Started/Ended/Duration
+=================================================================
+
+Started:   2026-03-11 17:58:44 -07:00
+Ended:     2026-03-11 17:58:44 -07:00
+Duration:  26ms
+
+Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap40/analyses/veracity-review-verus-proof-holes.log

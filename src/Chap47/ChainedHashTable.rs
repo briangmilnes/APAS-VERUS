@@ -133,7 +133,7 @@ pub mod ChainedHashTable {
                 ensures cloned == *self
             {
                 let cloned = ChainEntry { chain: self.chain.clone(), _phantom: PhantomData };
-                proof { assume(cloned == *self); }
+                proof { accept(cloned == *self); }
                 cloned
             }
         }

@@ -352,7 +352,7 @@ broadcast use {
             ensures r == (self@ == other@)
         {
             let r = self.dimensions == other.dimensions && self.memo == other.memo;
-            proof { assume(r == (self@ == other@)); }
+            proof { accept(r == (self@ == other@)); }
             r
         }
     }
