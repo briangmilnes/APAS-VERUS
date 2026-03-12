@@ -20,16 +20,16 @@ Table of Contents:
 =================================================================
 
 ℹ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:52: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:52: info: accept()
    Info: 1 total
 ❌ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:237: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:237: error: external_body - #[verifier::external_body]
        238 |         fn bridge_star_partition<V: StT + Hash + Ord>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:280: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:280: error: external_body - #[verifier::external_body]
        281 |         fn boruvka_mst<V: StT + Hash + Ord>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:329: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:329: error: external_body - #[verifier::external_body]
        330 |         fn boruvka_mst_with_seed<V: StT + Hash + Ord>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:71: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:71: info: accept()
    Holes: 3 total
       3 × external_body
    Info: 1 total
@@ -81,12 +81,8 @@ Holes Found: 3 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 14:29:38 -07:00
-Ended:     2026-03-12 14:29:38 -07:00
-Duration:  7ms
-
-Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
-ed:     2026-03-12 14:29:38 -07:00
-Duration:  7ms
+Started:   2026-03-12 14:09:32 -07:00
+Ended:     2026-03-12 14:09:32 -07:00
+Duration:  6ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log

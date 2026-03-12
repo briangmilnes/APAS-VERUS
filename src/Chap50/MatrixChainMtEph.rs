@@ -156,9 +156,14 @@ broadcast use {
             ensures mc@.dimensions.len() == dim_pairs@.len();
 
         fn optimal_cost(&mut self) -> (cost: usize);
+
         fn dimensions(&self) -> (dims: Vec<MatrixDim>);
-        fn set_dimension(&mut self, index: usize, dim: MatrixDim);
-        fn update_dimension(&mut self, index: usize, rows: usize, cols: usize);
+
+        fn set_dimension(&mut self, index: usize, dim: MatrixDim)
+            requires index < old(self)@.dimensions.len();
+
+        fn update_dimension(&mut self, index: usize, rows: usize, cols: usize)
+            requires index < old(self)@.dimensions.len();
 
         fn num_matrices(&self) -> (n: usize)
             ensures n == self@.dimensions.len();
@@ -226,12 +231,16 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize) {
-            let handle = self.dimensions.acquire_read();
-            let left_rows = handle.borrow()[i].rows;
-            let split_cols = handle.borrow()[k].cols;
-            let right_cols = handle.borrow()[j].cols;
+            let rwlock = arc_deref(&self.dimensions);
+            let handle = rwlock.acquire_read();
+            let dims = handle.borrow();
+            proof { accept(i < dims@.len() && k < dims@.len() && j < dims@.len()); }
+            let left_rows = dims[i].rows;
+            let split_cols = dims[k].cols;
+            let right_cols = dims[j].cols;
+            proof { accept((left_rows as nat) * (split_cols as nat) <= usize::MAX as nat
+                && (left_rows as nat) * (split_cols as nat) * (right_cols as nat) <= usize::MAX as nat); }
             handle.release_read();
             left_rows * split_cols * right_cols
         }
@@ -294,21 +303,20 @@ broadcast use {
             cost
         }
 
-        #[verifier::external_body]
         fn optimal_cost(&mut self) -> (cost: usize) {
-            let dimensions_len = {
-                let handle = self.dimensions.acquire_read();
-                let len = handle.borrow().len();
-                handle.release_read();
-                len
-            };
+            let rwlock = arc_deref(&self.dimensions);
+            let handle = rwlock.acquire_read();
+            let dimensions_len = handle.borrow().len();
+            handle.release_read();
 
             if dimensions_len <= 1 {
                 return 0;
             }
 
             {
-                let (mut memo, write_handle) = self.memo.acquire_write();
+                let memo_arc = self.memo.clone();
+                let rwlock = arc_deref(&memo_arc);
+                let (mut memo, write_handle) = rwlock.acquire_write();
                 memo.clear();
                 write_handle.release_write(memo);
             }
@@ -316,35 +324,43 @@ broadcast use {
             self.matrix_chain_rec(0, dimensions_len - 1)
         }
 
-        #[verifier::external_body]
         fn dimensions(&self) -> (dims: Vec<MatrixDim>) {
-            let handle = self.dimensions.acquire_read();
+            let rwlock = arc_deref(&self.dimensions);
+            let handle = rwlock.acquire_read();
             let dims = handle.borrow().clone();
             handle.release_read();
             dims
         }
 
-        #[verifier::external_body]
         fn set_dimension(&mut self, index: usize, dim: MatrixDim) {
             {
-                let (mut dims, write_handle) = self.dimensions.acquire_write();
-                dims[index] = dim;
+                let dims_arc = self.dimensions.clone();
+                let rwlock = arc_deref(&dims_arc);
+                let (mut dims, write_handle) = rwlock.acquire_write();
+                proof { accept(index < dims@.len()); }
+                dims.set(index, dim);
                 write_handle.release_write(dims);
             }
-            let (mut memo, write_handle) = self.memo.acquire_write();
+            let memo_arc = self.memo.clone();
+            let rwlock = arc_deref(&memo_arc);
+            let (mut memo, write_handle) = rwlock.acquire_write();
             memo.clear();
             write_handle.release_write(memo);
         }
 
-        #[verifier::external_body]
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize) {
             let dim = MatrixDim { rows, cols };
             {
-                let (mut dims, write_handle) = self.dimensions.acquire_write();
-                dims[index] = dim;
+                let dims_arc = self.dimensions.clone();
+                let rwlock = arc_deref(&dims_arc);
+                let (mut dims, write_handle) = rwlock.acquire_write();
+                proof { accept(index < dims@.len()); }
+                dims.set(index, dim);
                 write_handle.release_write(dims);
             }
-            let (mut memo, write_handle) = self.memo.acquire_write();
+            let memo_arc = self.memo.clone();
+            let rwlock = arc_deref(&memo_arc);
+            let (mut memo, write_handle) = rwlock.acquire_write();
             memo.clear();
             write_handle.release_write(memo);
         }

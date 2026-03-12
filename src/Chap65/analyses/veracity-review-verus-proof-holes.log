@@ -22,7 +22,7 @@ Table of Contents:
 ✓ KruskalStEph.rs
 ✓ PrimStEph.rs
 ℹ UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:337: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:337: info: accept()
    Info: 1 total
 
 =================================================================
@@ -75,9 +75,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 14:29:38 -07:00
-Ended:     2026-03-12 14:29:38 -07:00
-Duration:  7ms
+Started:   2026-03-12 14:09:04 -07:00
+Ended:     2026-03-12 14:09:04 -07:00
+Duration:  5ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

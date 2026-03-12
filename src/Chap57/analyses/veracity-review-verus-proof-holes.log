@@ -21,7 +21,7 @@ Table of Contents:
 
 ✓ DijkstraStEphF64.rs
 ❌ DijkstraStEphI64.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphI64.rs:68: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphI64.rs:68: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
         63 |         fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64;
             ...
         66 |     // 9. impls
@@ -80,8 +80,8 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 14:29:38 -07:00
-Ended:     2026-03-12 14:29:38 -07:00
+Started:   2026-03-12 14:09:04 -07:00
+Ended:     2026-03-12 14:09:04 -07:00
 Duration:  4ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log

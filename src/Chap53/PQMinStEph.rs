@@ -7,6 +7,7 @@ pub mod PQMinStEph {
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -81,27 +82,54 @@ pub mod PQMinStEph {
         pq_min_multi(graph, sources, priority_fn)
     }
 
-    #[verifier::external_body]
     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
         frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
-    ) -> Option<V> {
+    ) -> (result: Option<V>) {
         if frontier.size() == 0 {
             None
         } else {
             let seq = frontier.to_seq();
-            Some(seq.nth(0).1.clone())
+            assert(seq@.len() > 0) by {
+                if seq@.len() == 0 {
+                    assert(seq@.to_set() =~= Set::empty());
+                }
+            }
+            let entry_ref = seq.nth(0);
+            let v = entry_ref.1.clone();
+            proof { accept(v@ == entry_ref.1@); }  // accept hole: V::clone external_body
+            Some(v)
         }
     }
 
-    #[verifier::external_body]
+    #[verifier::exec_allows_no_decreases_clause]
     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
         graph: &G,
         priority_fn: &PF,
-        visited: AVLTreeSetStEph<V>,
-        frontier: AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
-    ) -> (AVLTreeSetStEph<V>, AVLTreeSetStEph<Pair<V, P>>)
+        visited_init: AVLTreeSetStEph<V>,
+        frontier_init: AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
+    ) -> (result: (AVLTreeSetStEph<V>, AVLTreeSetStEph<Pair<V, P>>))
+        requires
+            forall|v: &V| #[trigger] graph.requires((v,)),
+            forall|v: &V| #[trigger] priority_fn.requires((v,)),
     {
-        if let Some(v) = pq_find_min_priority(&frontier) {
+        let mut visited = visited_init;
+        let mut frontier = frontier_init;
+
+        while frontier.size() > 0
+            invariant
+                forall|v: &V| #[trigger] graph.requires((v,)),
+                forall|v: &V| #[trigger] priority_fn.requires((v,)),
+        {
+            // Extract min-priority vertex (inline pq_find_min_priority).
+            let seq = frontier.to_seq();
+            assert(seq@.len() > 0) by {
+                if seq@.len() == 0 {
+                    assert(seq@.to_set() =~= Set::empty());
+                }
+            }
+            let entry_ref = seq.nth(0);
+            let v = entry_ref.1.clone();
+
             let p = priority_fn(&v);
             let entry = Pair(Pair(p.clone(), v.clone()), v.clone());
             let frontier_new = frontier.difference(&AVLTreeSetStEph::singleton(entry));
@@ -111,9 +139,15 @@ pub mod PQMinStEph {
             let neighbors = graph(&v);
             let mut frontier_updated = frontier_new;
             let neighbors_seq = neighbors.to_seq();
-
+            let nlen = neighbors_seq.length();
             let mut i: usize = 0;
-            while i < neighbors_seq.length()
+            while i < nlen
+                invariant
+                    i <= nlen,
+                    nlen == neighbors_seq@.len(),
+                    neighbors_seq.spec_avltreeseqsteph_wf(),
+                    forall|v: &V| #[trigger] priority_fn.requires((v,)),
+                decreases nlen - i,
             {
                 let neighbor = neighbors_seq.nth(i);
                 if !visited_new.find(neighbor) {
@@ -124,20 +158,29 @@ pub mod PQMinStEph {
                 i = i + 1;
             }
 
-            pq_explore(graph, priority_fn, visited_new, frontier_updated)
-        } else {
-            let mut priorities = AVLTreeSetStEph::empty();
-            let visited_seq = visited.to_seq();
-            let mut j: usize = 0;
-            while j < visited_seq.length()
-            {
-                let v = visited_seq.nth(j);
-                let p = priority_fn(v);
-                priorities = priorities.union(&AVLTreeSetStEph::singleton(Pair(v.clone(), p)));
-                j = j + 1;
-            }
-            (visited, priorities)
+            visited = visited_new;
+            frontier = frontier_updated;
         }
+
+        // Build priorities from visited.
+        let mut priorities = AVLTreeSetStEph::empty();
+        let visited_seq = visited.to_seq();
+        let vlen = visited_seq.length();
+        let mut j: usize = 0;
+        while j < vlen
+            invariant
+                j <= vlen,
+                vlen == visited_seq@.len(),
+                visited_seq.spec_avltreeseqsteph_wf(),
+                forall|v: &V| #[trigger] priority_fn.requires((v,)),
+            decreases vlen - j,
+        {
+            let vref = visited_seq.nth(j);
+            let p = priority_fn(vref);
+            priorities = priorities.union(&AVLTreeSetStEph::singleton(Pair(vref.clone(), p)));
+            j = j + 1;
+        }
+        (visited, priorities)
     }
 
     /// Priority-first search from multiple sources (Section 53.4).
