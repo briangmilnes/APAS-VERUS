@@ -181,14 +181,22 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self) {
-            let key_probs = keys
-                .into_iter()
-                .zip(probs)
-                .map(|(key, prob)| KeyProb { key, prob })
-                .collect();
-
+            let n = keys.len();
+            let mut key_probs: Vec<KeyProb<T>> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    n == keys@.len(),
+                    keys@.len() == probs@.len(),
+                    i <= n,
+                    key_probs@.len() == i as int,
+                decreases n - i,
+            {
+                key_probs.push(KeyProb { key: keys[i].clone(), prob: probs[i] });
+                i += 1;
+            }
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 keys: key_probs,
                 memo: HashMapWithViewPlus::new(),
@@ -203,9 +211,8 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn optimal_cost(&mut self) -> (cost: Probability) {
-            if self.keys.is_empty() {
+            if self.keys.len() == 0 {
                 return Probability::zero();
             }
 
@@ -222,9 +229,9 @@ broadcast use {
             self.memo.clear();
         }
 
-        #[verifier::external_body]
         fn update_prob(&mut self, index: usize, prob: Probability) {
-            self.keys[index].prob = prob;
+            let key = self.keys[index].key.clone();
+            self.keys.set(index, KeyProb { key, prob });
             self.memo.clear();
         }
 
