@@ -61,25 +61,41 @@
 - 1 remaining construction-wf assume (insert found-case): clone doesn't ensure wf.
 - 10 remaining assumes: 9 operation-spec (set semantics) + 1 clone-wf.
 
-## Current State (post StPer from_vec wf fix)
+### Chap37 wf size bound + compare_trees + clone_link — COMPLETE (Round 5)
+- Added size bound `(node.left_size + node.right_size + 1 < usize::MAX)` to node-level
+  `spec_avltreeseqsteph_wf` in AVLTreeSeqStEph.rs. Size bound is self-maintaining.
+- Strengthened `size_link_fn` requires from `true` to `spec_avltreeseqsteph_wf(*n)`.
+  Removed overflow assume at L313.
+- Added size bound requires to `update_meta` and `rebalance_fn` (cascade from wf change).
+- Ported verified `compare_trees` from shared AVLTreeSeq.rs: loop invariant with feq,
+  removes external_body. PartialEq::eq became external_body bridge (net 0 on that item).
+- Wrote verified `clone_link` recursive function: removes Clone external_body on
+  AVLTreeSeqStEphS. Single accept for T::clone view bridge.
+- Chap37: 39 → 37 holes (−1 assume, −1 external_body). 3672 verified, 0 errors.
+
+## Current State (post Chap37 Round 5)
 
 | # | Chap | Holes | assume | ext_body | triv_wf | Clean Mods | Total Mods |
 |---|------|-------|--------|----------|---------|------------|------------|
-| 1 | 37 | 39 | 7 | 31 | 1 | 14 | 19 |
+| 1 | 37 | 37 | 6 | 30 | 1 | 14 | 19 |
 | 2 | 39 | 38 | 0 | 38 | 0 | 1 | 4 |
 | 3 | 40 | 0 | 0 | 0 | 0 | 3 | 3 |
 | 4 | 41 | 51 | 28 | 22 | 1 | 1 | 7 |
 | 5 | 42 | 14 | 0 | 14 | 0 | 2 | 4 |
-| | **Total** | **142** | **35** | **105** | **2** | **21** | **37** |
+| | **Total** | **140** | **34** | **104** | **2** | **21** | **37** |
 
-Verification: 3670 verified, 0 errors (stable throughout).
+Verification: 3672 verified, 0 errors.
 
 ## Remaining Work
 
-### Chap37 (39 holes)
-- 7 assume: overflow/eq/clone in AVLTreeSeq* — need wf strengthening for overflow proofs
-- 31 external_body: persistent Arc tree operations — hard algorithmic proofs
-- 1 trivial_wf: BSTSplayStEph needs BST ordering predicate
+### Chap37 (37 holes)
+- 6 assume: 1 height overflow (StEph), 1 height overflow (shared), 1 next_key (StEph),
+  1 from_vec spec + 1 wf-bridge (MtPer, blocked by build_balanced ext_body),
+  1 eq wf-bridge (shared, PartialEq::eq)
+- 30 external_body: 19 Arc path-copying (shared), 5 iterator (StEph/StPer),
+  1 Clone for AVLTreeNode (shared, Arc), 1 PartialEq::eq (StEph, bridge),
+  4 misc (StPer iter/clone)
+- 1 trivial_wf: BSTSplayStEph (design choice, splay has no global invariant)
 
 ### Chap39 (38 holes)
 - 38 external_body: BSTTreapMtEph (10), BSTSetTreapMtEph (10), BSTParaTreapMtEph (18)

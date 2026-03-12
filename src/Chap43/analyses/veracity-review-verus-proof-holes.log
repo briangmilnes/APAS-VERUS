@@ -394,13 +394,13 @@ Holes Found: 126 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 13:40:55 -07:00
-Ended:     2026-03-12 13:40:55 -07:00
-Duration:  60ms
+Started:   2026-03-12 14:29:38 -07:00
+Ended:     2026-03-12 14:29:38 -07:00
+Duration:  69ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
 
-Ended:     2026-03-12 13:40:55 -07:00
-Duration:  60ms
+Ended:     2026-03-12 14:29:38 -07:00
+Duration:  69ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log

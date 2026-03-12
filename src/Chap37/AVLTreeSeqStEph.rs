@@ -166,6 +166,7 @@ pub mod AVLTreeSeqStEph {
                     spec_cached_height(&node.left),
                     spec_cached_height(&node.right),
                 )
+                && (node.left_size + node.right_size + 1 < usize::MAX)
             }
         }
     }
@@ -304,13 +305,12 @@ pub mod AVLTreeSeqStEph {
     }
 
     fn size_link_fn<T: StT>(n: &Link<T>) -> (size: N)
-        requires true,
+        requires spec_avltreeseqsteph_wf(*n),
         ensures size as nat == spec_cached_size(n),
     {
         match n {
             None => 0,
             Some(b) => {
-                proof { assume(1 + b.left_size + b.right_size < usize::MAX); }
                 1 + b.left_size + b.right_size
             }
         }
@@ -320,6 +320,7 @@ pub mod AVLTreeSeqStEph {
         requires
             spec_avltreeseqsteph_wf(old(n).left),
             spec_avltreeseqsteph_wf(old(n).right),
+            spec_cached_size(&old(n).left) + spec_cached_size(&old(n).right) + 1 < usize::MAX,
         ensures
             n.left_size as nat == spec_cached_size(&n.left),
             n.right_size as nat == spec_cached_size(&n.right),
@@ -419,6 +420,7 @@ pub mod AVLTreeSeqStEph {
         requires
             spec_avltreeseqsteph_wf(n.left),
             spec_avltreeseqsteph_wf(n.right),
+            spec_cached_size(&n.left) + spec_cached_size(&n.right) + 1 < usize::MAX,
         ensures
             spec_inorder(Some(balanced)) =~= spec_inorder(Some(n)),
             spec_avltreeseqsteph_wf(Some(balanced)),
@@ -589,17 +591,70 @@ pub mod AVLTreeSeqStEph {
         }
     }
 
-    #[verifier::external_body]
-    fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool) {
+    fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
+        requires
+            spec_avltreeseqsteph_wf(*a),
+            spec_avltreeseqsteph_wf(*b),
+            obeys_feq_full::<T>(),
+        ensures equal == (spec_inorder(*a) =~= spec_inorder(*b)),
+    {
+        proof { lemma_size_eq_inorder_len::<T>(a); }
+        proof { lemma_size_eq_inorder_len::<T>(b); }
         let sa = size_link_fn(a);
         let sb = size_link_fn(b);
-        if sa != sb { return false; }
-        for i in 0..sa {
-            if nth_link(a, i) != nth_link(b, i) {
+        if sa != sb {
+            return false;
+        }
+        let ghost seq_a = spec_inorder(*a);
+        let ghost seq_b = spec_inorder(*b);
+        let mut i: usize = 0;
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        while i < sa
+            invariant
+                sa == sb,
+                sa as nat == seq_a.len(),
+                sb as nat == seq_b.len(),
+                seq_a == spec_inorder(*a),
+                seq_b == spec_inorder(*b),
+                0 <= i <= sa,
+                forall|j: int| 0 <= j < i as int ==> seq_a[j] == seq_b[j],
+            decreases sa - i,
+        {
+            let ai = nth_link(a, i);
+            let bi = nth_link(b, i);
+            let eq = feq(ai, bi);
+            if !eq {
                 return false;
             }
+            assert(seq_a[i as int] == seq_b[i as int]);
+            i += 1;
         }
+        assert(seq_a =~= seq_b);
         true
+    }
+
+    fn clone_link<T: StT>(link: &Link<T>) -> (copy: Link<T>)
+        ensures spec_inorder(copy) =~= spec_inorder(*link),
+        decreases *link,
+    {
+        match link {
+            None => None,
+            Some(node) => {
+                let left = clone_link(&node.left);
+                let right = clone_link(&node.right);
+                let new_value = node.value.clone_plus();
+                proof { accept(new_value@ == node.value@); }  // accept hole: T::clone view bridge
+                Some(Box::new(AVLTreeNode {
+                    value: new_value,
+                    height: node.height,
+                    left_size: node.left_size,
+                    right_size: node.right_size,
+                    left,
+                    right,
+                    index: node.index,
+                }))
+            }
+        }
     }
 
     // 9. trait impl
@@ -989,22 +1044,20 @@ pub mod AVLTreeSeqStEph {
     impl<T: StT> Eq for AVLTreeSeqStEphS<T> {}
 
     impl<T: StT> PartialEq for AVLTreeSeqStEphS<T> {
+        #[verifier::external_body]
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
-            let equal = compare_trees(&self.root, &other.root);
-            proof { accept(equal == (self@ == other@)); }
-            equal
+            compare_trees(&self.root, &other.root)
         }
     }
 
     impl<T: StT> Clone for AVLTreeSeqStEphS<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (copy: Self)
             ensures copy@ == self@,
         {
             AVLTreeSeqStEphS {
-                root: self.root.clone(),
+                root: clone_link(&self.root),
                 next_key: self.next_key,
             }
         }

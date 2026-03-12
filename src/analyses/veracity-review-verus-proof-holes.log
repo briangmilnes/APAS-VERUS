@@ -597,53 +597,46 @@ Table of Contents:
    Info: 2 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ src/Chap37/AVLTreeSeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:313: error: assume() - proof { assume(1 + b.left_size + b.right_size < usize::MAX);
-       306 |     fn size_link_fn<T: StT>(n: &Link<T>) -> (size: N)
-            ...
-       311 |             None => 0,
-       312 |             Some(b) => {
-       314 |                 1 + b.left_size + b.right_size
-       315 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:338: error: assume() - assume(1 + (if hl >= hr { hl } else { hr }) as int <= usize:
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:339: error: assume() - assume(1 + (if hl >= hr { hl } else { hr }) as int <= usize:
        319 |     fn update_meta<T: StT>(n: &mut Box<AVLTreeNode<T>>)
             ...
-       336 |         let hl = h_fn(&n.left);
-       337 |         let hr = h_fn(&n.right);
-       339 |         n.height = 1 + if hl >= hr { hl } else { hr };
-       340 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:592: error: external_body - #[verifier::external_body]
-       593 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:774: error: external_body - #[verifier::external_body]
-       775 |         fn iter<'a>(&'a self) -> (it: AVLTreeSeqIterStEph<'a, T>) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:789: error: assume() - assume(self.next_key < usize::MAX);
-       784 |         fn push_back(&mut self, value: T) {
+       337 |         let hl = h_fn(&n.left);
+       338 |         let hr = h_fn(&n.right);
+       340 |         n.height = 1 + if hl >= hr { hl } else { hr };
+       341 |     }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:829: error: external_body - #[verifier::external_body]
+       830 |         fn iter<'a>(&'a self) -> (it: AVLTreeSeqIterStEph<'a, T>) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:844: error: assume() - assume(self.next_key < usize::MAX);
+       839 |         fn push_back(&mut self, value: T) {
             ...
-       787 |             let ghost old_inorder = spec_inorder(self.root);
-       788 |             let len = self.length();
-       790 |             let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
-       791 |             self.root = node;
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:940: error: external_body - #[verifier::external_body]
-       941 |     fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqIterStEph<'a, T>, link: &'a Link<T>) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:961: error: external_body - #[verifier::external_body]
-       962 |         fn next(&mut self) -> (next: Option<Self::Item>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:975: error: external_body - #[verifier::external_body]
-       976 |         fn clone(&self) -> (copy: Self) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1002: error: external_body - #[verifier::external_body]
-      1003 |         fn clone(&self) -> (copy: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:297: warning: requires_true - requires true — vacuous precondition
-       295 | 
-       296 |     fn h_fn<T: StT>(n: &Link<T>) -> (height: N)
-       298 |         ensures height as nat == spec_cached_height(n),
-       299 |     {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:307: warning: requires_true - requires true — vacuous precondition
-       305 | 
-       306 |     fn size_link_fn<T: StT>(n: &Link<T>) -> (size: N)
-       308 |         ensures size as nat == spec_cached_size(n),
-       309 |     {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:996: info: accept()
-   Holes: 9 total
-      3 × assume()
-      6 × external_body
+       842 |             let ghost old_inorder = spec_inorder(self.root);
+       843 |             let len = self.length();
+       845 |             let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
+       846 |             self.root = node;
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:995: error: external_body - #[verifier::external_body]
+       996 |     fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqIterStEph<'a, T>, link: &'a Link<T>) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1016: error: external_body - #[verifier::external_body]
+      1017 |         fn next(&mut self) -> (next: Option<Self::Item>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1030: error: external_body - #[verifier::external_body]
+      1031 |         fn clone(&self) -> (copy: Self) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1047: error: external_body - #[verifier::external_body]
+      1048 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:298: warning: requires_true - requires true — vacuous precondition
+       296 | 
+       297 |     fn h_fn<T: StT>(n: &Link<T>) -> (height: N)
+       299 |         ensures height as nat == spec_cached_height(n),
+       300 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:636: error: fn_missing_requires - fn clone_link — exec fn should have requires
+       594 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
+            ...
+       634 |     }
+       635 | 
+       637 |         ensures spec_inorder(copy) =~= spec_inorder(*link),
+       638 |         decreases *link,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:646: info: accept()
+   Holes: 7 total
+      2 × assume()
+      5 × external_body
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ src/Chap37/AVLTreeSeqStPer.rs
@@ -3520,15 +3513,15 @@ Proof Functions:
 
 Function Specs:
    5035 exec fns with complete spec (requires+ensures) (71%)
-   27 exec fns missing spec (0%)
+   28 exec fns missing spec (0%)
    1985 proof/spec fns clean (28%)
    4 proof/spec fns with holes (0%)
-   7051 total fns
+   7052 total fns
 
 
-Holes Found: 445 total
-   44 × assume() (9%)
-   385 × external_body (86%)
+Holes Found: 443 total
+   43 × assume() (9%)
+   384 × external_body (86%)
    4 × external (0%)
    12 × trivial spec*wf { true } (2%)
 
@@ -3545,7 +3538,7 @@ Holes Found: 445 total
    1  Chap43  (126 holes, 11 files)
    2  Chap41  (54 holes, 7 files)
    3  Chap50  (48 holes, 8 files)
-   4  Chap37  (41 holes, 19 files)
+   4  Chap37  (40 holes, 19 files)
    5  Chap47  (39 holes, 9 files)
    6  Chap39  (38 holes, 4 files)
    7  Chap38  (33 holes, 2 files)
@@ -3555,39 +3548,39 @@ Holes Found: 445 total
    11  Chap49  (8 holes, 8 files)
    12  Chap51  (8 holes, 8 files)
    13  Chap18  (6 holes, 7 files)
-   14  Chap55  (4 holes, 8 files)
-   15  Chap26  (4 holes, 8 files)
-   16  Chap66  (3 holes, 2 files)
-   17  Chap19  (3 holes, 4 files)
-   18  Chap57  (1 holes, 3 files)
-   19  Chap52  (1 holes, 14 files)
+   14  Chap26  (4 holes, 8 files)
+   15  Chap55  (4 holes, 8 files)
+   16  Chap19  (3 holes, 4 files)
+   17  Chap66  (3 holes, 2 files)
+   18  Chap52  (1 holes, 14 files)
+   19  Chap57  (1 holes, 3 files)
    20  Chap12  (1 holes, 3 files)
-   21  Chap35  (0 holes, 4 files)
-   22  Chap61  (0 holes, 4 files)
-   23  Chap05  (0 holes, 5 files)
-   24  Chap30  (0 holes, 1 files)
-   25  Chap27  (0 holes, 4 files)
-   26  Chap65  (0 holes, 3 files)
-   27  Chap59  (0 holes, 4 files)
+   21  ParaPairs  (0 holes, 1 files)
+   22  Chap05  (0 holes, 5 files)
+   23  Chap63  (0 holes, 2 files)
+   24  Chap21  (0 holes, 12 files)
+   25  Chap02  (0 holes, 2 files)
+   26  Chap56  (0 holes, 12 files)
+   27  Chap03  (0 holes, 1 files)
    28  Chap54  (0 holes, 4 files)
-   29  Chap40  (0 holes, 3 files)
-   30  Chap21  (0 holes, 12 files)
-   31  Chap17  (0 holes, 1 files)
-   32  ParaPairs  (0 holes, 1 files)
-   33  Chap06  (0 holes, 20 files)
-   34  Chap36  (0 holes, 3 files)
-   35  Chap03  (0 holes, 1 files)
-   36  Chap23  (0 holes, 2 files)
-   37  Chap63  (0 holes, 2 files)
-   38  Chap11  (0 holes, 5 files)
-   39  Chap44  (0 holes, 2 files)
-   40  Chap64  (0 holes, 3 files)
-   41  Chap28  (0 holes, 11 files)
-   42  Chap58  (0 holes, 2 files)
-   43  Chap62  (0 holes, 4 files)
-   44  Concurrency  (0 holes, 1 files)
-   45  Chap02  (0 holes, 2 files)
-   46  Chap56  (0 holes, 12 files)
+   29  Chap35  (0 holes, 4 files)
+   30  Chap23  (0 holes, 2 files)
+   31  Chap58  (0 holes, 2 files)
+   32  Chap44  (0 holes, 2 files)
+   33  Chap27  (0 holes, 4 files)
+   34  Chap65  (0 holes, 3 files)
+   35  Chap28  (0 holes, 11 files)
+   36  Concurrency  (0 holes, 1 files)
+   37  Chap64  (0 holes, 3 files)
+   38  Chap36  (0 holes, 3 files)
+   39  Chap30  (0 holes, 1 files)
+   40  Chap62  (0 holes, 4 files)
+   41  Chap11  (0 holes, 5 files)
+   42  Chap59  (0 holes, 4 files)
+   43  Chap06  (0 holes, 20 files)
+   44  Chap61  (0 holes, 4 files)
+   45  Chap17  (0 holes, 1 files)
+   46  Chap40  (0 holes, 3 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -3600,20 +3593,20 @@ Holes Found: 445 total
    5  src/Chap66/BoruvkaStEph.rs  (3 holes)
    6  src/Chap26/ETSPMtEph.rs  (2 holes)
    7  src/Chap26/ETSPStEph.rs  (2 holes)
-   8  src/Chap12/Exercise12_5.rs  (1 holes)
-   9  src/Chap18/ArraySeqMtEph.rs  (1 holes)
+   8  src/Chap18/LinkedListStPer.rs  (1 holes)
+   9  src/Chap50/OptBinSearchTreeStEph.rs  (1 holes)
    10  src/Chap18/LinkedListStEph.rs  (1 holes)
-   11  src/Chap19/ArraySeqMtEph.rs  (1 holes)
-   12  src/Chap19/ArraySeqStEph.rs  (1 holes)
-   13  src/Chap47/ParaHashTableStEph.rs  (1 holes)
-   14  src/Chap19/ArraySeqStPer.rs  (1 holes)
-   15  src/Chap18/ArraySeqStPer.rs  (1 holes)
-   16  src/Chap18/LinkedListStPer.rs  (1 holes)
-   17  src/Chap18/ArraySeqStEph.rs  (1 holes)
-   18  src/Chap18/ArraySeqMtPer.rs  (1 holes)
-   19  src/Chap57/DijkstraStEphI64.rs  (1 holes)
-   20  src/Chap50/OptBinSearchTreeStPer.rs  (1 holes)
-   21  src/Chap50/OptBinSearchTreeStEph.rs  (1 holes)
+   11  src/Chap18/ArraySeqMtPer.rs  (1 holes)
+   12  src/Chap50/OptBinSearchTreeStPer.rs  (1 holes)
+   13  src/Chap12/Exercise12_5.rs  (1 holes)
+   14  src/Chap18/ArraySeqStEph.rs  (1 holes)
+   15  src/Chap47/ParaHashTableStEph.rs  (1 holes)
+   16  src/Chap19/ArraySeqStPer.rs  (1 holes)
+   17  src/Chap57/DijkstraStEphI64.rs  (1 holes)
+   18  src/Chap19/ArraySeqStEph.rs  (1 holes)
+   19  src/Chap18/ArraySeqMtEph.rs  (1 holes)
+   20  src/Chap18/ArraySeqStPer.rs  (1 holes)
+   21  src/Chap19/ArraySeqMtEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -3622,8 +3615,8 @@ Holes Found: 445 total
    1  src/Chap50  (48 holes, 8 files)
    2  src/Chap18  (6 holes, 7 files)
    3  src/Chap26  (4 holes, 8 files)
-   4  src/Chap19  (3 holes, 4 files)
-   5  src/Chap66  (3 holes, 2 files)
+   4  src/Chap66  (3 holes, 2 files)
+   5  src/Chap19  (3 holes, 4 files)
    6  src/Chap57  (1 holes, 3 files)
    7  src/Chap12  (1 holes, 3 files)
 
@@ -3643,8 +3636,8 @@ Holes Found: 445 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 13:40:56 -07:00
-Ended:     2026-03-12 13:40:57 -07:00
-Duration:  1099ms
+Started:   2026-03-12 14:29:38 -07:00
+Ended:     2026-03-12 14:29:39 -07:00
+Duration:  1118ms
 
 Full output: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-review-verus-proof-holes.log
