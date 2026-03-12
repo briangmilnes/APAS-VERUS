@@ -14,6 +14,7 @@ pub mod UnionFindStEph {
     use vstd::prelude::*;
 
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
     use std::hash::Hash;
@@ -191,6 +192,19 @@ pub mod UnionFindStEph {
                 0 <= j < self.elements@.len() as int &&
                 i != j ==>
                 self.elements@[i]@ != self.elements@[j]@
+            // Self-parenting nodes are roots.
+            &&& forall|v: <V as View>::V| self.parent@.contains_key(v) && self.parent@[v]@ == v ==>
+                #[trigger] self.roots[v] == v
+            // Following a parent pointer preserves the root component.
+            &&& forall|v: <V as View>::V| #[trigger] self.parent@.contains_key(v) ==>
+                self.roots[self.parent@[v]@] == self.roots[v]
+            // Non-root nodes have strictly smaller rank than their parent.
+            &&& forall|v: <V as View>::V| self.parent@.contains_key(v)
+                && self.parent@[v]@ != v ==>
+                self.rank@[v] < #[trigger] self.rank@[self.parent@[v]@]
+            // Every element's rank is at most its root's rank.
+            &&& forall|v: <V as View>::V| #[trigger] self.rank@.contains_key(v) ==>
+                self.rank@[v] <= self.rank@[self.roots[v]]
         }
 
         /// - APAS: Work Theta(1), Span Theta(1)
@@ -211,8 +225,6 @@ pub mod UnionFindStEph {
                 self.elements.push(v.clone());
                 proof {
                     self.roots = self.roots.insert(v@, v@);
-                    // accept hole: wf maintenance for insert — elements uniqueness and domain coverage
-                    assume(self.spec_unionfindsteph_wf());
                 }
             }
         }
@@ -222,8 +234,7 @@ pub mod UnionFindStEph {
         fn find(&mut self, v: &V) -> (root: V) {
             // Pass 1: chase parent pointers to the root.
             let mut current = v.clone();
-            let ghost elem_count = self.elements@.len();
-            let mut ghost steps: nat = 0;
+            let ghost root_rank: usize = self.rank@[self.roots[v@]];
 
             loop
                 invariant
@@ -233,26 +244,21 @@ pub mod UnionFindStEph {
                     self.parent@.dom() =~= old(self).parent@.dom(),
                     self.rank@ =~= old(self).rank@,
                     self.elements@ =~= old(self).elements@,
-                    steps <= elem_count,
-                decreases elem_count - steps
+                    self.roots[current@] == old(self).roots[v@],
+                    self.rank@[current@] <= root_rank,
+                decreases root_rank - self.rank@[current@]
             {
                 let p = self.parent.get(&current).unwrap().clone();
                 if p == current {
                     break;
                 }
                 current = p;
-                proof {
-                    // accept hole: acyclicity — each step visits a new element
-                    assume(steps < elem_count);
-                    steps = steps + 1;
-                }
             }
             let root = current;
+            assert(root@ == old(self).roots[v@]);
 
             // Pass 2: path compression — point every node on the path directly to root.
             current = v.clone();
-            let ghost old_parent = self.parent@;
-            let ghost mut compress_steps: nat = 0;
 
             while current != root
                 invariant
@@ -263,28 +269,13 @@ pub mod UnionFindStEph {
                     self.parent@.dom() =~= old(self).parent@.dom(),
                     self.rank@ =~= old(self).rank@,
                     self.elements@ =~= old(self).elements@,
-                    // accept hole: wf preserved through compression
                     self.spec_unionfindsteph_wf(),
-                    compress_steps <= elem_count,
-                decreases elem_count - compress_steps
+                    self.rank@[current@] <= root_rank,
+                decreases root_rank - self.rank@[current@]
             {
                 let next = self.parent.get(&current).unwrap().clone();
                 self.parent.insert(current.clone(), root.clone());
                 current = next;
-                proof {
-                    // accept hole: acyclicity — each compression step visits a new element
-                    assume(compress_steps < elem_count);
-                    compress_steps = compress_steps + 1;
-                    // accept hole: wf is maintained after path compression
-                    assume(self.spec_unionfindsteph_wf());
-                    // accept hole: compressed node is in domain
-                    assume(self.parent@.contains_key(current@));
-                }
-            }
-
-            proof {
-                // accept hole: root matches the ghost canonical root
-                assume(root@ == old(self).roots[v@]);
             }
 
             root
@@ -332,20 +323,6 @@ pub mod UnionFindStEph {
                             }
                         },
                     );
-                    // accept hole: wf maintained after union
-                    assume(self.spec_unionfindsteph_wf());
-                    // accept hole: ensures clause on merged roots
-                    assume(
-                        forall|x: <V as View>::V| #[trigger] self.roots.contains_key(x) ==> {
-                            let or_u = old(self).roots[u@];
-                            let or_v = old(self).roots[v@];
-                            if old(self).roots[x] == or_u || old(self).roots[x] == or_v {
-                                self.roots[x] == self.roots[u@]
-                            } else {
-                                self.roots[x] == old(self).roots[x]
-                            }
-                        }
-                    );
                 }
             }
         }
@@ -357,7 +334,7 @@ pub mod UnionFindStEph {
             let root_v = self.find(v);
             proof {
                 // accept hole: PartialEq on V agrees with view equality for roots
-                assume((root_u == root_v) == (root_u@ == root_v@));
+                accept((root_u == root_v) == (root_u@ == root_v@));
             }
             root_u == root_v
         }
@@ -380,10 +357,6 @@ pub mod UnionFindStEph {
                 let root = self.find(&v);
                 let _ = roots_set.insert(root);
                 i = i + 1;
-                proof {
-                    // accept hole: wf preserved after find within iteration
-                    assume(self.spec_unionfindsteph_wf());
-                }
             }
             roots_set.len()
         }

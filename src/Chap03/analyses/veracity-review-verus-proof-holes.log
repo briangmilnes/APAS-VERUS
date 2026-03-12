@@ -20,7 +20,7 @@ Table of Contents:
 =================================================================
 
 ❌ InsertionSortStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap03/InsertionSortStEph.rs:37: error: fn_missing_requires - fn insertion_sort — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap03/InsertionSortStEph.rs:37: error: fn_missing_requires - fn insertion_sort — exec fn should have requires
         30 | pub open spec fn is_sorted<T: TotalOrder>(v: &[T]) -> bool {
             ...
         35 | /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS. Iterative in-place variant, same cost as the recursive prose version.
@@ -74,9 +74,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-11 17:58:44 -07:00
-Ended:     2026-03-11 17:58:44 -07:00
+Started:   2026-03-11 19:29:04 -07:00
+Ended:     2026-03-11 19:29:04 -07:00
 Duration:  2ms
 
 Full output: src/Chap03/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap03/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap03/analyses/veracity-review-verus-proof-holes.log

@@ -23,7 +23,7 @@ Table of Contents:
    2 clean proof functions
 ✓ Algorithm21_2.rs
 ❌ Algorithm21_5.rs
-/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:46: error: fn_missing_requires - fn primes_bf — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap21/Algorithm21_5.rs:46: error: fn_missing_requires - fn primes_bf — exec fn should have requires
         44 |     /// - APAS: Work Θ(n^{3/2}), Span Θ(lg n)
         45 |     /// - Claude-Opus-4.6: Work Θ(n^{3/2}), Span Θ(n^{3/2}) — sequential StPer tabulate + filter.
         47 |         ensures
@@ -34,14 +34,14 @@ Table of Contents:
    1 clean proof function
 ✓ Exercise21_6.rs
 ❌ Exercise21_7.rs
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:47: error: fn_missing_requires - fn is_even — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap21/Exercise21_7.rs:47: error: fn_missing_requires - fn is_even — exec fn should have requires
         40 |     pub open spec fn spec_is_even(x: int) -> bool { x % 2 == 0     }
             ...
         45 |     /// - APAS: Work Θ(1), Span Θ(1)
         46 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         48 |         ensures r == spec_is_even(*x as int)
         49 |     { *x % 2 == 0 }
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:60: error: fn_missing_requires - fn is_vowel — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap21/Exercise21_7.rs:60: error: fn_missing_requires - fn is_vowel — exec fn should have requires
         52 |     pub open spec fn spec_is_vowel(c: char) -> bool {
             ...
         58 |     /// - APAS: Work Θ(1), Span Θ(1)
@@ -49,7 +49,7 @@ Table of Contents:
         61 |         ensures r == spec_is_vowel(*c)
         62 |     {
 ❌ Exercise21_8.rs
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:176: error: fn_missing_requires - fn is_prime — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap21/Exercise21_8.rs:176: error: fn_missing_requires - fn is_prime — exec fn should have requires
        164 |     pub fn is_divisible(n: N, i: N) -> (divides: B)
             ...
        174 |     /// - APAS: Work Θ(√n), Span Θ(lg n)
@@ -131,9 +131,12 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-11 17:58:44 -07:00
-Ended:     2026-03-11 17:58:44 -07:00
-Duration:  11ms
+Started:   2026-03-11 19:29:05 -07:00
+Ended:     2026-03-11 19:29:05 -07:00
+Duration:  14ms
 
 Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
+3-11 19:29:05 -07:00
+Duration:  14ms
+
+Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log

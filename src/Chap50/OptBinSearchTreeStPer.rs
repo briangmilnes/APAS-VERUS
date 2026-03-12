@@ -16,6 +16,7 @@ pub mod OptBinSearchTreeStPer {
 
     use crate::Chap30::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::prob;
 
@@ -48,9 +49,12 @@ broadcast use {
     }
 
     impl<T: StT> Clone for KeyProb<T> {
-        #[verifier::external_body]
-        fn clone(&self) -> Self {
-            KeyProb { key: self.key.clone(), prob: self.prob }
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned == *self,
+        {
+            let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
+            proof { accept(cloned == *self); }  // accept hole: T::clone external_body
+            cloned
         }
     }
 
@@ -62,12 +66,15 @@ broadcast use {
     }
 
     impl<T: StT> Clone for OBSTStPerS<T> {
-        #[verifier::external_body]
-        fn clone(&self) -> Self {
-            OBSTStPerS {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@,
+        {
+            let cloned = OBSTStPerS {
                 keys: self.keys.clone(),
                 memo: self.memo.clone(),
-            }
+            };
+            proof { accept(cloned@ == self@); }  // accept hole: Vec::clone external_body
+            cloned
         }
     }
 
