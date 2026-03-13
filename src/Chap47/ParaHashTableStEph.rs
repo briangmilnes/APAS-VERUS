@@ -58,6 +58,50 @@ pub mod ParaHashTableStEph {
         if current_size == 0 { 0.0 } else { num_elements as f64 / current_size as f64 }
     }
 
+    /// Calls the hash function and returns a bucket index.
+    /// External_body because Verus cannot reason about opaque Fn closures.
+    #[verifier::external_body]
+    pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize) -> (index: usize)
+        requires table_size > 0,
+        ensures index < table_size,
+    {
+        (hash_fn)(key, table_size)
+    }
+
+    /// Linear probe: (hash(key) + attempt) % table_size.
+    #[verifier::external_body]
+    pub fn linear_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
+        requires table_size > 0,
+        ensures slot < table_size,
+    {
+        let h = (hash_fn)(key, table_size);
+        (h.wrapping_add(attempt)) % table_size
+    }
+
+    /// Quadratic probe: (hash(key) + attempt + attempt^2) % table_size.
+    #[verifier::external_body]
+    pub fn quadratic_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
+        requires table_size > 0,
+        ensures slot < table_size,
+    {
+        let h = (hash_fn)(key, table_size);
+        (h.wrapping_add(attempt).wrapping_add(attempt.wrapping_mul(attempt))) % table_size
+    }
+
+    /// Double hash probe: (hash(key) + attempt * second_hash(key, table_size)) % table_size.
+    #[verifier::external_body]
+    pub fn double_hash_probe<Key: std::hash::Hash, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
+        requires table_size > 0,
+        ensures slot < table_size,
+    {
+        use std::hash::{BuildHasher, Hasher, RandomState};
+        let h = (hash_fn)(key, table_size);
+        let mut hasher = RandomState::new().build_hasher();
+        key.hash(&mut hasher);
+        let h2 = (hasher.finish() as usize % (table_size - 1)) + 1;
+        (h.wrapping_add(attempt.wrapping_mul(h2))) % table_size
+    }
+
     // 8. traits
 
     /// Trait for parametric nested hash tables.

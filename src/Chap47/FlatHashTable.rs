@@ -63,34 +63,38 @@ pub mod FlatHashTable {
         /// Inserts using linear probing as default.
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — delegates to find_slot then O(1) write.
-        #[verifier::external_body]
         fn insert_with_probe(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
             requires
                 old(table).current_size > 0,
                 old(table).table@.len() == old(table).current_size as int,
         {
             let slot = Self::find_slot(table, &key);
-            if slot < table.table.len() {
-                table.table[slot].insert(key, value);
-            }
+            let mut entry = Entry::new();
+            EntryTrait::insert(&mut entry, key, value);
+            table.table.set(slot, entry);
         }
 
         /// Looks up using probe sequence.
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — iterates probe sequence until found or empty.
-        #[verifier::external_body]
         fn lookup_with_probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value>
             requires
                 table.current_size > 0,
                 table.table@.len() == table.current_size as int,
         {
-            for attempt in 0..table.current_size {
+            let mut attempt: usize = 0;
+            while attempt < table.current_size
+                invariant
+                    attempt <= table.current_size,
+                    table.table@.len() == table.current_size as int,
+                    table.current_size > 0,
+                decreases table.current_size - attempt,
+            {
                 let slot = Self::probe(table, key, attempt);
-                if slot < table.table.len() {
-                    if let Some(val) = table.table[slot].lookup(key) {
-                        return Some(val);
-                    }
+                if let Some(val) = table.table[slot].lookup(key) {
+                    return Some(val);
                 }
+                attempt = attempt + 1;
             }
             None
         }

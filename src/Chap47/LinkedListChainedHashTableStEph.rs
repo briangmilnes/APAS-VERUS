@@ -104,25 +104,71 @@ pub mod LinkedListChainedHashTableStEph {
             ParaHashTableStEphTrait<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>
             for LinkedListChainedHashTableStEph
         {
-            /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — delegates to insert_chained.
-            #[verifier::external_body]
+            /// - APAS: Work O(n) worst, Span O(n).
+            /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, copy bucket entries, insert, set back.
             fn insert(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
-                Self::insert_chained(table, key, value);
+                let index = call_hash_fn(&table.hash_fn, &key, table.current_size);
+                let bucket_len = table.table[index].seq.len();
+                let mut new_seq: Vec<(Key, Value)> = Vec::new();
+                let mut existed = false;
+                let mut i: usize = 0;
+                while i < bucket_len
+                    invariant
+                        i <= bucket_len,
+                        index < table.table.len(),
+                        bucket_len == table.table@[index as int].seq@.len(),
+                        table.table@.len() == table.current_size as int,
+                    decreases bucket_len - i,
+                {
+                    if table.table[index].seq[i].0 == key {
+                        existed = true;
+                    } else {
+                        new_seq.push((table.table[index].seq[i].0.clone(), table.table[index].seq[i].1.clone()));
+                    }
+                    i = i + 1;
+                }
+                new_seq.push((key, value));
+                table.table.set(index, LinkedListStEphS { seq: new_seq });
+                if !existed {
+                    table.num_elements = table.num_elements + 1;
+                }
             }
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — delegates to lookup_chained.
-            #[verifier::external_body]
+            /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — hash, index bucket, scan chain.
             fn lookup(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> Option<Value> {
-                Self::lookup_chained(table, key)
+                let index = call_hash_fn(&table.hash_fn, key, table.current_size);
+                EntryTrait::lookup(&table.table[index], key)
             }
 
-            /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — delegates to delete_chained.
-            #[verifier::external_body]
+            /// - APAS: Work O(n) worst, Span O(n).
+            /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, copy bucket entries, delete, set back.
             fn delete(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
-                Self::delete_chained(table, key)
+                let index = call_hash_fn(&table.hash_fn, key, table.current_size);
+                let bucket_len = table.table[index].seq.len();
+                let mut new_seq: Vec<(Key, Value)> = Vec::new();
+                let mut deleted = false;
+                let mut i: usize = 0;
+                while i < bucket_len
+                    invariant
+                        i <= bucket_len,
+                        index < table.table.len(),
+                        bucket_len == table.table@[index as int].seq@.len(),
+                        table.table@.len() == table.current_size as int,
+                    decreases bucket_len - i,
+                {
+                    if table.table[index].seq[i].0 == *key && !deleted {
+                        deleted = true;
+                    } else {
+                        new_seq.push((table.table[index].seq[i].0.clone(), table.table[index].seq[i].1.clone()));
+                    }
+                    i = i + 1;
+                }
+                table.table.set(index, LinkedListStEphS { seq: new_seq });
+                if deleted && table.num_elements > 0 {
+                    table.num_elements = table.num_elements - 1;
+                }
+                deleted
             }
 
             /// - APAS: Work O(n + m + m'), Span O(n + m + m').
@@ -164,9 +210,8 @@ pub mod LinkedListChainedHashTableStEph {
         {
             /// - APAS: Work O(1), Span O(1).
             /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to stored hash function.
-            #[verifier::external_body]
             fn hash_index(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (index: usize) {
-                (table.hash_fn)(key, table.current_size)
+                call_hash_fn(&table.hash_fn, key, table.current_size)
             }
         }
     }

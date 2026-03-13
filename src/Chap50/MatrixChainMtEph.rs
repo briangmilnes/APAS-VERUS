@@ -197,6 +197,8 @@ broadcast use {
                 i < self@.dimensions.len(),
                 k < self@.dimensions.len(),
                 j < self@.dimensions.len(),
+                (self@.dimensions[i as int].rows as nat) * (self@.dimensions[k as int].cols as nat) <= usize::MAX as nat,
+                spec_multiply_cost(self@.dimensions, i as int, k as int, j as int) <= usize::MAX as nat,
             ensures
                 cost as nat == spec_multiply_cost(self@.dimensions, i as int, k as int, j as int);
 
@@ -278,8 +280,10 @@ broadcast use {
             let left_rows = dims[i].rows;
             let split_cols = dims[k].cols;
             let right_cols = dims[j].cols;
-            proof { assume((left_rows as nat) * (split_cols as nat) <= usize::MAX as nat
-                && (left_rows as nat) * (split_cols as nat) * (right_cols as nat) <= usize::MAX as nat); }
+            assert(dims@ =~= self@.dimensions);
+            assert(left_rows == self@.dimensions[i as int].rows);
+            assert(split_cols == self@.dimensions[k as int].cols);
+            assert(right_cols == self@.dimensions[j as int].cols);
             handle.release_read();
             left_rows * split_cols * right_cols
         }

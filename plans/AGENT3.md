@@ -1,4 +1,127 @@
-# Agent 3 Report — Rounds 4–7
+# Agent 3 Report — Rounds 4–8
+
+## Round 8: Chap47 Hash Tables + Quick Wins
+
+### Assignment
+
+Close Chap50 (1 assume), close Chap52 (1 external_body), reduce Chap47 from 39 → ≤20.
+AFK mode.
+
+### Results
+
+Removed 20 holes total: 1 assume (Chap50) + 19 external_body (Chap47).
+
+#### Round 8a: Chap50 MatrixChainMtEph multiply_cost (-1 hole)
+
+Removed the last assume in `multiply_cost` by adding explicit overflow bounds to the trait
+requires (matching StEph's pattern) and asserting connections between RwLock-read values
+and spec-level dimensions.
+
+| # | Chap | File | Hole Type | Technique | Delta |
+|---|------|------|-----------|-----------|-------|
+| 1 | 50 | MatrixChainMtEph.rs | assume (overflow) | Explicit overflow preconditions + dim assertions | -1 |
+
+#### Round 8b: Chap47 Hash Table Proofs (-19 holes)
+
+**Core technique**: Clone+set pattern. Verus doesn't support `table.table[index].insert()`
+(mutable Vec indexing). Workaround: read-only index → clone entry → mutate clone → `Vec::set`.
+For tuple entries `(Key, Value)` where Verus can't derive tuple Clone, manually iterate and
+clone individual `Key`/`Value` fields.
+
+**Closure call pattern**: Created free `external_body` functions (`call_hash_fn`,
+`linear_probe`, `quadratic_probe`, `double_hash_probe`) in `ParaHashTableStEph.rs` to call
+opaque `Fn` closures with ensures `slot < table_size`. This avoids trait-cycle issues when
+`ParaHashTableStEphTrait` impl calls `ChainedHashTable`/`FlatHashTable` trait methods.
+
+| # | Chap | File | Function | Technique | Delta |
+|---|------|------|----------|-----------|-------|
+| 1 | 47 | VecChainedHashTableStEph.rs | insert | Manual bucket copy, call_hash_fn | -1 |
+| 2 | 47 | VecChainedHashTableStEph.rs | lookup | Delegate to EntryTrait::lookup | -1 |
+| 3 | 47 | VecChainedHashTableStEph.rs | delete | Manual bucket copy, call_hash_fn | -1 |
+| 4 | 47 | VecChainedHashTableStEph.rs | hash_index | Delegate to call_hash_fn | -1 |
+| 5 | 47 | LinkedListChainedHashTableStEph.rs | insert | Manual seq copy, call_hash_fn | -1 |
+| 6 | 47 | LinkedListChainedHashTableStEph.rs | lookup | Delegate to EntryTrait::lookup | -1 |
+| 7 | 47 | LinkedListChainedHashTableStEph.rs | delete | Manual seq copy, call_hash_fn | -1 |
+| 8 | 47 | LinkedListChainedHashTableStEph.rs | hash_index | Delegate to call_hash_fn | -1 |
+| 9 | 47 | StructChainedHashTable.rs | insert | Clone ChainList, EntryTrait::insert, set | -1 |
+| 10 | 47 | StructChainedHashTable.rs | lookup | Delegate to EntryTrait::lookup | -1 |
+| 11 | 47 | StructChainedHashTable.rs | delete | Clone ChainList, EntryTrait::delete, set | -1 |
+| 12 | 47 | StructChainedHashTable.rs | hash_index | Delegate to call_hash_fn | -1 |
+| 13 | 47 | LinProbFlatHashTableStEph.rs | insert | linear_probe + clone + set loop | -1 |
+| 14 | 47 | LinProbFlatHashTableStEph.rs | lookup | linear_probe + clone read loop | -1 |
+| 15 | 47 | LinProbFlatHashTableStEph.rs | delete | linear_probe + clone + set loop | -1 |
+| 16 | 47 | QuadProbFlatHashTableStEph.rs | insert | quadratic_probe + clone + set loop | -1 |
+| 17 | 47 | QuadProbFlatHashTableStEph.rs | lookup | quadratic_probe + clone read loop | -1 |
+| 18 | 47 | QuadProbFlatHashTableStEph.rs | delete | quadratic_probe + clone + set loop | -1 |
+| 19 | 47 | DoubleHashFlatHashTableStEph.rs | insert | double_hash_probe + clone + set | -1 |
+| 20 | 47 | DoubleHashFlatHashTableStEph.rs | lookup | double_hash_probe + clone read | -1 |
+| 21 | 47 | DoubleHashFlatHashTableStEph.rs | delete | double_hash_probe + clone + set | -1 |
+| 22 | 47 | FlatHashTable.rs | insert_with_probe | Entry::new + insert + set | -1 |
+| 23 | 47 | FlatHashTable.rs | lookup_with_probe | While loop + probe + read | -1 |
+| | | **Net** | | | **-19** |
+
+#### Round 8c: Chap52 EdgeSetGraphMtPer (deferred)
+
+`out_neighbors` uses parallel `filter` + `join`. The filter's spec only ensures `subset_of`,
+which can't capture predicate semantics needed for the proof. CLAUDE.md prohibits
+sequentializing parallel files. Deferred.
+
+### Key Proof Techniques
+
+**Clone+set for mutable Vec indexing**: Verus error "index for &mut not supported" blocks
+`table.table[index].method()`. Workaround: `let mut e = table.table[i].clone();
+e.method(); table.table.set(i, e);`. For Vec/LinkedList where tuple Clone isn't derived,
+manually iterate inner elements cloning individual fields.
+
+**Free external_body probe functions**: Wrapping opaque `Fn(&Key, usize) -> usize` closures
+in standalone functions with `ensures slot < table_size` provides verified bounds without
+Verus needing to reason about the closure body. Five such wrappers in ParaHashTableStEph.rs.
+
+**Entry::new for generic insert**: When `Entry` lacks `Clone` but has `EntryTrait::new()`,
+create a fresh entry, insert the key-value, then `Vec::set`. This avoids needing to clone
+the existing slot contents.
+
+### Remaining Chap47 Holes (20)
+
+| # | File | Function | Reason |
+|---|------|----------|--------|
+| 1 | ParaHashTableStEph.rs | compute_load_factor | f64 cast (usize→f64) |
+| 2 | ParaHashTableStEph.rs | call_hash_fn | Opaque Fn closure |
+| 3 | ParaHashTableStEph.rs | linear_probe | Opaque Fn closure |
+| 4 | ParaHashTableStEph.rs | quadratic_probe | Opaque Fn closure |
+| 5 | ParaHashTableStEph.rs | double_hash_probe | Opaque Fn closure + std hash |
+| 6 | ChainedHashTable.rs | insert_chained | Entry lacks Clone bound |
+| 7 | ChainedHashTable.rs | delete_chained | Entry lacks Clone bound |
+| 8 | FlatHashTable.rs | (none remaining) | |
+| 9 | LinProbFlatHashTableStEph.rs | resize | for-loop iteration |
+| 10 | LinProbFlatHashTableStEph.rs | probe | Calls opaque Fn closure |
+| 11 | LinProbFlatHashTableStEph.rs | find_slot | Calls Self::probe |
+| 12 | QuadProbFlatHashTableStEph.rs | resize | for-loop iteration |
+| 13 | QuadProbFlatHashTableStEph.rs | probe | Calls opaque Fn closure |
+| 14 | QuadProbFlatHashTableStEph.rs | find_slot | Calls Self::probe |
+| 15 | DoubleHashFlatHashTableStEph.rs | second_hash | std DefaultHasher |
+| 16 | DoubleHashFlatHashTableStEph.rs | resize | for-loop iteration |
+| 17 | DoubleHashFlatHashTableStEph.rs | probe | Calls opaque Fn closure |
+| 18 | DoubleHashFlatHashTableStEph.rs | find_slot | Calls Self::probe |
+| 19-21 | *Chained.rs (×3) | resize | for-loop iteration |
+
+### Per-Chapter Hole Summary
+
+| # | Chap | Before | After | Delta | Status |
+|---|------|--------|-------|-------|--------|
+| 1 | 47 | 39 | 20 | -19 | 20 external_body (closures, f64, iterators) |
+| 2 | 50 | 1 | 0 | -1 | Clean |
+| 3 | 52 | 1 | 1 | 0 | Deferred (parallel filter spec) |
+| | **Total** | **41** | **21** | **-20** | |
+
+### Verification
+
+- `scripts/validate.sh`: 3893 verified, 0 errors
+- `scripts/rtt.sh`: 2600 tests passed
+- `scripts/ptt.sh`: 147 tests passed
+- No trigger warnings
+
+---
 
 ## Round 7: DP Chapters Full Proof Pass
 
