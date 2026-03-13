@@ -71,12 +71,10 @@ pub mod ChainedHashTable {
                     table.table@.len() == table.current_size as int,
             {
                 let index = Self::hash_index(table, &key);
-                if index < table.table.len() {
-                    let existed = table.table[index].lookup(&key).is_some();
-                    table.table[index].insert(key, value);
-                    if !existed {
-                        table.num_elements += 1;
-                    }
+                let existed = table.table[index].lookup(&key).is_some();
+                table.table[index].insert(key, value);
+                if !existed {
+                    table.num_elements += 1;
                 }
             }
 

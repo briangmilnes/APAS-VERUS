@@ -109,24 +109,70 @@ pub mod VecChainedHashTableStEph {
             for VecChainedHashTableStEph
         {
             /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — delegates to insert_chained.
-            #[verifier::external_body]
+            /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, copy bucket entries, insert, set back.
             fn insert(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
-                Self::insert_chained(table, key, value);
+                let index = call_hash_fn(&table.hash_fn, &key, table.current_size);
+                let bucket_len = table.table[index].len();
+                let mut new_bucket: Vec<(Key, Value)> = Vec::new();
+                let mut existed = false;
+                let mut i: usize = 0;
+                while i < bucket_len
+                    invariant
+                        i <= bucket_len,
+                        index < table.table.len(),
+                        bucket_len == table.table@[index as int]@.len(),
+                        table.table@.len() == table.current_size as int,
+                    decreases bucket_len - i,
+                {
+                    if table.table[index][i].0 == key {
+                        existed = true;
+                    } else {
+                        new_bucket.push((table.table[index][i].0.clone(), table.table[index][i].1.clone()));
+                    }
+                    i = i + 1;
+                }
+                new_bucket.push((key, value));
+                table.table.set(index, new_bucket);
+                if !existed {
+                    table.num_elements = table.num_elements + 1;
+                }
             }
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — delegates to lookup_chained.
-            #[verifier::external_body]
+            /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — hash, index bucket, scan chain.
             fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> Option<Value> {
-                Self::lookup_chained(table, key)
+                let index = call_hash_fn(&table.hash_fn, key, table.current_size);
+                EntryTrait::lookup(&table.table[index], key)
             }
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — delegates to delete_chained.
-            #[verifier::external_body]
+            /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, copy bucket entries, delete, set back.
             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
-                Self::delete_chained(table, key)
+                let index = call_hash_fn(&table.hash_fn, key, table.current_size);
+                let bucket_len = table.table[index].len();
+                let mut new_bucket: Vec<(Key, Value)> = Vec::new();
+                let mut deleted = false;
+                let mut i: usize = 0;
+                while i < bucket_len
+                    invariant
+                        i <= bucket_len,
+                        index < table.table.len(),
+                        bucket_len == table.table@[index as int]@.len(),
+                        table.table@.len() == table.current_size as int,
+                    decreases bucket_len - i,
+                {
+                    if table.table[index][i].0 == *key && !deleted {
+                        deleted = true;
+                    } else {
+                        new_bucket.push((table.table[index][i].0.clone(), table.table[index][i].1.clone()));
+                    }
+                    i = i + 1;
+                }
+                table.table.set(index, new_bucket);
+                if deleted && table.num_elements > 0 {
+                    table.num_elements = table.num_elements - 1;
+                }
+                deleted
             }
 
             /// - APAS: Work O(n + m + m'), Span O(n + m + m').
@@ -168,9 +214,8 @@ pub mod VecChainedHashTableStEph {
         {
             /// - APAS: Work O(1), Span O(1).
             /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to stored hash function.
-            #[verifier::external_body]
-            fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> usize {
-                (table.hash_fn)(key, table.current_size)
+            fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (index: usize) {
+                call_hash_fn(&table.hash_fn, key, table.current_size)
             }
         }
     }

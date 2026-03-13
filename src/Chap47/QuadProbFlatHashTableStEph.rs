@@ -34,63 +34,81 @@ pub mod QuadProbFlatHashTableStEph {
         for QuadProbFlatHashTableStEph
     {
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe find_slot then O(1) write.
-        #[verifier::external_body]
+        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe find_slot then set.
         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
-            let slot = Self::find_slot(table, &key);
-            match &table.table[slot] {
-                | FlatEntry::Occupied(k, _) if k == &key => {
-                    table.table[slot] = FlatEntry::Occupied(key, value);
+            let mut attempt: usize = 0;
+            while attempt < table.current_size
+                invariant
+                    attempt <= table.current_size,
+                    table.table@.len() == table.current_size as int,
+                decreases table.current_size - attempt,
+            {
+                let slot = quadratic_probe(&table.hash_fn, &key, table.current_size, attempt);
+                let entry = table.table[slot].clone();
+                if let FlatEntry::Occupied(k, _) = &entry {
+                    if *k == key {
+                        table.table.set(slot, FlatEntry::Occupied(key, value));
+                        return;
+                    }
+                } else {
+                    table.table.set(slot, FlatEntry::Occupied(key, value));
+                    if table.num_elements < usize::MAX {
+                        table.num_elements = table.num_elements + 1;
+                    }
+                    return;
                 }
-                | FlatEntry::Empty | FlatEntry::Deleted => {
-                    table.table[slot] = FlatEntry::Occupied(key, value);
-                    table.num_elements += 1;
-                }
-                | _ => {
-                    table.table[slot] = FlatEntry::Occupied(key, value);
-                    table.num_elements += 1;
-                }
+                attempt = attempt + 1;
             }
         }
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe up to ⌈m/2⌉ attempts (Lemma 47.1).
-        #[verifier::external_body]
+        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe sequence until found or empty.
         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {
-            let mut attempt = 0;
-            let max_attempts = table.current_size.div_ceil(2);
-            while attempt < max_attempts {
-                let slot = Self::probe(table, key, attempt);
-                match &table.table[slot] {
-                    | FlatEntry::Occupied(k, v) if k == key => return Some(v.clone()),
-                    | FlatEntry::Empty => return None,
-                    | FlatEntry::Deleted | FlatEntry::Occupied(_, _) => {
-                        attempt += 1;
+            let mut attempt: usize = 0;
+            while attempt < table.current_size
+                invariant
+                    attempt <= table.current_size,
+                    table.table@.len() == table.current_size as int,
+                decreases table.current_size - attempt,
+            {
+                let slot = quadratic_probe(&table.hash_fn, key, table.current_size, attempt);
+                let entry = table.table[slot].clone();
+                if let FlatEntry::Occupied(k, v) = entry {
+                    if k == *key {
+                        return Some(v);
                     }
+                } else if let FlatEntry::Empty = entry {
+                    return None;
                 }
+                attempt = attempt + 1;
             }
             None
         }
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe until found or empty, then tombstone.
-        #[verifier::external_body]
         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
-            let mut attempt = 0;
-            let max_attempts = table.current_size.div_ceil(2);
-            while attempt < max_attempts {
-                let slot = Self::probe(table, key, attempt);
-                match &table.table[slot] {
-                    | FlatEntry::Occupied(k, _) if k == key => {
-                        table.table[slot] = FlatEntry::Deleted;
-                        table.num_elements -= 1;
+            let mut attempt: usize = 0;
+            while attempt < table.current_size
+                invariant
+                    attempt <= table.current_size,
+                    table.table@.len() == table.current_size as int,
+                decreases table.current_size - attempt,
+            {
+                let slot = quadratic_probe(&table.hash_fn, key, table.current_size, attempt);
+                let entry = table.table[slot].clone();
+                if let FlatEntry::Occupied(k, _) = &entry {
+                    if *k == *key {
+                        table.table.set(slot, FlatEntry::Deleted);
+                        if table.num_elements > 0 {
+                            table.num_elements = table.num_elements - 1;
+                        }
                         return true;
                     }
-                    | FlatEntry::Empty => return false,
-                    | FlatEntry::Deleted | FlatEntry::Occupied(_, _) => {
-                        attempt += 1;
-                    }
+                } else if let FlatEntry::Empty = &entry {
+                    return false;
                 }
+                attempt = attempt + 1;
             }
             false
         }
