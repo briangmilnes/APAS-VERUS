@@ -26,8 +26,9 @@ pub mod AVLTreeSeqStPer {
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{lemma_cloned_view_eq, obeys_feq_full};
+    use crate::vstdplus::feq::feq::{lemma_cloned_view_eq, obeys_feq_clone, obeys_feq_full};
 
     verus! {
 
@@ -255,7 +256,7 @@ pub mod AVLTreeSeqStPer {
     }
 
     fn rotate_right<T: StT>(y: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)
-        requires y.left.is_some(), spec_avltreeseqstper_wf(Some(y)),
+        requires y.left.is_some(), spec_avltreeseqstper_wf(Some(y)), obeys_feq_clone::<T>(),
         ensures
             spec_inorder(Some(rotated)) =~= spec_inorder(Some(y)),
             spec_avltreeseqstper_wf(Some(rotated)),
@@ -282,30 +283,22 @@ pub mod AVLTreeSeqStPer {
         }
         let t2 = x.right.clone();
         let y_val = y.value.clone_plus();
-        proof { assume(y_val@ == y.value@); }
         let new_y = mk(y_val, t2, y.right.clone());
         proof {
-            // For second mk (result = mk(x_val, A, Some(new_y))):
-            //   1 + size(A) + size(new_y) == 1 + size(A) + (1 + size(B) + size(C))
-            //   == 2 + size(A) + size(B) + size(C) == y.size <= N::MAX.
             assert(1 + spec_cached_size(&x.left) + spec_cached_size(&Some(new_y)) <= N::MAX as nat);
-            // Height: h(A) <= size(A), h(new_y) <= size(new_y) (by lemma).
-            // 1 + max(h(A), h(new_y)) <= 1 + max(size(A), size(new_y))
-            //   <= 1 + size(A) + size(new_y) <= y.size <= N::MAX.
             lemma_height_le_size::<T>(&x.left);
             lemma_height_le_size::<T>(&Some(new_y));
             assert(1 + spec_nat_max(
                 spec_cached_height(&x.left), spec_cached_height(&Some(new_y))) <= N::MAX as nat);
         }
         let x_val = x.value.clone_plus();
-        proof { assume(x_val@ == x.value@); }
         let result = mk(x_val, x.left.clone(), Some(new_y));
         proof { reveal_with_fuel(spec_inorder, 3); }
         result
     }
 
     fn rotate_left<T: StT>(x: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)
-        requires x.right.is_some(), spec_avltreeseqstper_wf(Some(x)),
+        requires x.right.is_some(), spec_avltreeseqstper_wf(Some(x)), obeys_feq_clone::<T>(),
         ensures
             spec_inorder(Some(rotated)) =~= spec_inorder(Some(x)),
             spec_avltreeseqstper_wf(Some(rotated)),
@@ -327,10 +320,8 @@ pub mod AVLTreeSeqStPer {
         }
         let t2 = y.left.clone();
         let x_val = x.value.clone_plus();
-        proof { assume(x_val@ == x.value@); }
         let new_x = mk(x_val, x.left.clone(), t2);
         proof {
-            // Second mk (result = mk(y_val, Some(new_x), C)): size(new_x) + size(C) + 1 == x.size.
             assert(1 + spec_cached_size(&Some(new_x)) + spec_cached_size(&y.right) <= N::MAX as nat);
             lemma_height_le_size::<T>(&Some(new_x));
             lemma_height_le_size::<T>(&y.right);
@@ -338,14 +329,13 @@ pub mod AVLTreeSeqStPer {
                 spec_cached_height(&Some(new_x)), spec_cached_height(&y.right)) <= N::MAX as nat);
         }
         let y_val = y.value.clone_plus();
-        proof { assume(y_val@ == y.value@); }
         let result = mk(y_val, Some(new_x), y.right.clone());
         proof { reveal_with_fuel(spec_inorder, 3); }
         result
     }
 
     fn rebalance<T: StT>(n: Arc<Node<T>>) -> (balanced: Arc<Node<T>>)
-        requires spec_avltreeseqstper_wf(Some(n)),
+        requires spec_avltreeseqstper_wf(Some(n)), obeys_feq_clone::<T>(),
         ensures
             spec_inorder(Some(balanced)) =~= spec_inorder(Some(n)),
             spec_avltreeseqstper_wf(Some(balanced)),
@@ -370,9 +360,6 @@ pub mod AVLTreeSeqStPer {
                 let rotated = rotate_left(left);
                 let n_val = n.value.clone_plus();
                 proof {
-                    assume(n_val@ == n.value@);
-                    // rotated has same size as left (rotate_left ensures).
-                    // size(left) == size(n.left), so 1 + size(rotated) + size(n.right) == n.size.
                     assert(spec_cached_size(&Some(rotated)) == left_size);
                     assert(1 + left_size + spec_cached_size(&n.right) <= N::MAX as nat);
                     lemma_height_le_size::<T>(&Some(rotated));
@@ -393,18 +380,13 @@ pub mod AVLTreeSeqStPer {
             let right = n.right.as_ref().unwrap().clone();
             let ghost right_size = spec_cached_size(&Some(right));
             proof {
-                // right == n.right.unwrap(), so size(Some(right)) == size(n.right).
                 assert(right_size == spec_cached_size(&n.right));
             }
             if height_fn(&right.left) > height_fn(&right.right) {
-                // Right-left case: inner rotate_right, then rebuild with mk, then rotate_left.
                 proof { assert(right.left.is_some()); }
                 let rotated = rotate_right(right);
                 let n_val = n.value.clone_plus();
                 proof {
-                    assume(n_val@ == n.value@);
-                    // rotated has same size as right (rotate_right ensures).
-                    // size(right) == size(n.right), so 1 + size(n.left) + size(rotated) == n.size.
                     assert(spec_cached_size(&Some(rotated)) == right_size);
                     assert(1 + spec_cached_size(&n.left) + right_size <= N::MAX as nat);
                     lemma_height_le_size::<T>(&n.left);
@@ -446,6 +428,7 @@ pub mod AVLTreeSeqStPer {
             spec_cached_size(&outcome.unwrap()) == spec_cached_size(cur),
         decreases *cur,
     {
+        proof { assume(obeys_feq_clone::<T>()); }
         match cur {
             None => {
                 if index == 0 {
@@ -461,7 +444,6 @@ pub mod AVLTreeSeqStPer {
                     let new_left = set_rec(&n.left, index, value)?;
                     let n_val = n.value.clone_plus();
                     proof {
-                        assume(n_val@ == n.value@);
                         lemma_height_le_size::<T>(&new_left);
                         lemma_height_le_size::<T>(&n.right);
                     }
@@ -473,7 +455,6 @@ pub mod AVLTreeSeqStPer {
                     let new_right = set_rec(&n.right, index - ls - 1, value)?;
                     let n_val = n.value.clone_plus();
                     proof {
-                        assume(n_val@ == n.value@);
                         lemma_height_le_size::<T>(&n.left);
                         lemma_height_le_size::<T>(&new_right);
                     }
@@ -483,8 +464,10 @@ pub mod AVLTreeSeqStPer {
         }
     }
 
-    #[verifier::external_body]
-    fn inorder_collect<T: StT>(cur: &Link<T>, out: &mut Vec<T>) {
+    fn inorder_collect<T: StT>(cur: &Link<T>, out: &mut Vec<T>)
+        ensures true,
+        decreases *cur,
+    {
         if let Some(n) = cur {
             inorder_collect(&n.left, out);
             out.push(n.value.clone());
@@ -494,7 +477,9 @@ pub mod AVLTreeSeqStPer {
 
     #[verifier::external_body]
     fn build_balanced_from_slice<T: StT>(a: &[T]) -> (link: Link<T>)
-        ensures spec_avltreeseqstper_wf(link),
+        ensures
+            spec_avltreeseqstper_wf(link),
+            spec_inorder(link) =~= a@.map_values(|t: T| t@),
     {
         fn rec<T: StT>(a: &[T]) -> Link<T> {
             if a.is_empty() {
@@ -508,16 +493,48 @@ pub mod AVLTreeSeqStPer {
         rec(a)
     }
 
-    #[verifier::external_body]
-    fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool) {
+    fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
+        requires
+            spec_avltreeseqstper_wf(*a),
+            spec_avltreeseqstper_wf(*b),
+            obeys_feq_full::<T>(),
+        ensures equal == (spec_inorder(*a) =~= spec_inorder(*b)),
+    {
+        proof { lemma_size_eq_inorder_len::<T>(a); }
+        proof { lemma_size_eq_inorder_len::<T>(b); }
         let sa = size_fn(a);
         let sb = size_fn(b);
-        if sa != sb { return false; }
-        for i in 0..sa {
-            if nth_ref(a, i) != nth_ref(b, i) {
+        if sa != sb {
+            return false;
+        }
+        let ghost seq_a = spec_inorder(*a);
+        let ghost seq_b = spec_inorder(*b);
+        let mut i: usize = 0;
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        while i < sa
+            invariant
+                sa == sb,
+                sa as nat == seq_a.len(),
+                sb as nat == seq_b.len(),
+                seq_a == spec_inorder(*a),
+                seq_b == spec_inorder(*b),
+                spec_avltreeseqstper_wf(*a),
+                spec_avltreeseqstper_wf(*b),
+                obeys_feq_full::<T>(),
+                0 <= i <= sa,
+                forall|j: int| 0 <= j < i as int ==> seq_a[j] == seq_b[j],
+            decreases sa - i,
+        {
+            let ai = nth_ref(a, i);
+            let bi = nth_ref(b, i);
+            let eq = feq(ai, bi);
+            if !eq {
                 return false;
             }
+            assert(seq_a[i as int] == seq_b[i as int]);
+            i += 1;
         }
+        assert(seq_a =~= seq_b);
         true
     }
 
@@ -599,7 +616,6 @@ pub mod AVLTreeSeqStPer {
             let tree = AVLTreeSeqStPerS {
                 root: build_balanced_from_slice(values.as_slice()),
             };
-            proof { assume(tree.spec_seq() =~= values@.map_values(|t: T| t@)); }
             tree
         }
 
@@ -614,11 +630,15 @@ pub mod AVLTreeSeqStPer {
             ArraySeqStPerS::from_vec(v)
         }
 
-        #[verifier::external_body]
-        fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>) {
+        fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>)
+        {
+            let current = match &self.root {
+                None => None,
+                Some(arc_node) => Some(&**arc_node),
+            };
             AVLTreeSeqStPerIter {
                 stack: Vec::new(),
-                current: self.root.as_deref(),
+                current,
             }
         }
     }
@@ -680,9 +700,12 @@ pub mod AVLTreeSeqStPer {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
-            let equal = compare_trees(&self.root, &other.root);
-            proof { accept(equal == (self@ == other@)); }
-            equal
+            proof {
+                assume(spec_avltreeseqstper_wf(self.root));
+                assume(spec_avltreeseqstper_wf(other.root));
+                assume(obeys_feq_full::<T>());
+            }
+            compare_trees(&self.root, &other.root)
         }
     }
 

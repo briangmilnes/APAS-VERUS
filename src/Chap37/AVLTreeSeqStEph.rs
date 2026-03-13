@@ -261,6 +261,7 @@ pub mod AVLTreeSeqStEph {
                 values@.len() < usize::MAX,
             ensures
                 spec_avltreeseqsteph_wf(tree.root),
+                tree.next_key as nat == spec_cached_size(&tree.root),
                 spec_inorder(tree.root) =~= values@.map_values(|t: T| t@);
 
         fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>)
@@ -277,7 +278,9 @@ pub mod AVLTreeSeqStEph {
             requires
                 old(self).spec_avltreeseqsteph_wf(),
                 old(self).spec_seq().len() + 1 < usize::MAX,
-            ensures self.spec_seq() =~= old(self).spec_seq().push(value@);
+            ensures
+                self.spec_seq() =~= old(self).spec_seq().push(value@),
+                self.spec_avltreeseqsteph_wf();
 
         fn contains_value(&self, target: &T) -> (found: B)
             requires self.spec_avltreeseqsteph_wf(), obeys_feq_full::<T>(),
@@ -688,6 +691,7 @@ pub mod AVLTreeSeqStEph {
 
         open spec fn spec_avltreeseqsteph_wf(&self) -> bool {
             spec_avltreeseqsteph_wf(self.root)
+            && self.next_key as nat == spec_cached_size(&self.root)
         }
 
         fn empty() -> (tree: Self) {
@@ -860,7 +864,6 @@ pub mod AVLTreeSeqStEph {
 
         fn push_back(&mut self, value: T) {
             assert(self.spec_avltreeseqsteph_wf());
-            assume(self.next_key < usize::MAX);
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             let ghost old_inorder = spec_inorder(self.root);
             let len = self.length();
