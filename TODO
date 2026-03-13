@@ -5,9 +5,6 @@
 2) Deep_view review.
 3) Get the derives in use where they now work.
 4) Where have we turned clean tail recursion into loops that does not match APAS?
-5) Check orders against vstd for generics, minimize vstdplus.
-6) Check partial eq, eq against vstd for generics, minimize vstdplus.
-7) Check clone against vstd for generics, minimize vstdplus.
 
 Review:
 
