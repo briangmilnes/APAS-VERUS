@@ -21,61 +21,61 @@ Table of Contents:
 =================================================================
 
 ❌ MatrixChainMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:281: error: assume() - proof { assume((left_rows as nat) * (split_cols as nat) <= u
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainMtEph.rs:281: error: assume() - proof { assume((left_rows as nat) * (split_cols as nat) <= u
        273 |         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize) {
             ...
        279 |             let split_cols = dims[k].cols;
        280 |             let right_cols = dims[j].cols;
        282 |                 && (left_rows as nat) * (split_cols as nat) * (right_cols as nat) <= usize::MAX as nat); }
        283 |             handle.release_read();
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:492: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:514: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainMtEph.rs:492: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainMtEph.rs:514: info: accept()
    Holes: 1 total
       1 × assume()
    Info: 2 total
 ℹ MatrixChainMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtPer.rs:408: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtPer.rs:426: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainMtPer.rs:408: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainMtPer.rs:426: info: accept()
    Info: 2 total
 ℹ MatrixChainStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStEph.rs:370: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStEph.rs:386: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainStEph.rs:370: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainStEph.rs:386: info: accept()
    Info: 2 total
 ℹ MatrixChainStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs:339: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs:355: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainStPer.rs:339: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainStPer.rs:355: info: accept()
    Info: 2 total
 ❌ OptBinSearchTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:140: error: fn_missing_ensures - fn obst_rec — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeMtEph.rs:140: error: fn_missing_ensures - fn obst_rec — exec fn should have ensures
        135 |         fn memo_size(&self) -> (count: usize);
             ...
        138 |     // 9. impls
        139 | 
        141 |         requires
        142 |             i + l <= table@.keys.len(),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:58: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:357: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:379: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeMtEph.rs:58: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeMtEph.rs:357: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeMtEph.rs:379: info: accept()
    Info: 3 total
 ❌ OptBinSearchTreeMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:117: error: fn_missing_ensures - fn obst_rec — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeMtPer.rs:117: error: fn_missing_ensures - fn obst_rec — exec fn should have ensures
        112 |         fn memo_size(&self) -> (count: usize);
             ...
        115 |     // 9. impls
        116 | 
        118 |         requires i + l <= table@.keys.len(),
        119 |         decreases l,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:61: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:262: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:280: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeMtPer.rs:61: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeMtPer.rs:262: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeMtPer.rs:280: info: accept()
    Info: 3 total
 ℹ OptBinSearchTreeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:55: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:75: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeStEph.rs:55: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeStEph.rs:75: info: accept()
    Info: 2 total
 ℹ OptBinSearchTreeStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStPer.rs:55: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStPer.rs:75: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeStPer.rs:55: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeStPer.rs:75: info: accept()
    Info: 2 total
 
 =================================================================
@@ -137,12 +137,13 @@ Holes Found: 1 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 13:21:10 -07:00
-Ended:     2026-03-13 13:21:10 -07:00
+Started:   2026-03-13 13:06:52 -07:00
+Ended:     2026-03-13 13:06:52 -07:00
 Duration:  25ms
 
 Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log
-00
+2026-03-13 13:06:52 -07:00
+Ended:     2026-03-13 13:06:52 -07:00
 Duration:  25ms
 
 Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log

@@ -97,6 +97,7 @@ pub mod BSTRBMtEph {
     // Verified RB tree algorithms (Layer 1).
 
     fn new_node<T: StTInMtT + Ord>(key: T) -> (node: Node<T>)
+        requires true,
         ensures
             node.key == key,
             node.size == 1,
@@ -113,6 +114,7 @@ pub mod BSTRBMtEph {
     }
 
     fn is_red<T: StTInMtT + Ord>(link: &Link<T>) -> (red: bool)
+        requires true,
         ensures
             (link is None) ==> !red,
     {
@@ -123,6 +125,7 @@ pub mod BSTRBMtEph {
     }
 
     fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (size: N)
+        requires true,
         ensures
             (link is None) ==> size == 0,
     {
@@ -133,6 +136,7 @@ pub mod BSTRBMtEph {
     }
 
     fn update<T: StTInMtT + Ord>(node: &mut Node<T>)
+        requires true,
         ensures
             node.left == old(node).left,
             node.right == old(node).right,
@@ -147,6 +151,7 @@ pub mod BSTRBMtEph {
     }
 
     fn rotate_left<T: StTInMtT + Ord>(link: &mut Link<T>)
+        requires true,
         ensures link_spec_size(*link) == link_spec_size(*old(link)),
     {
         let ghost old_link = *link;
@@ -172,6 +177,7 @@ pub mod BSTRBMtEph {
     }
 
     fn rotate_right<T: StTInMtT + Ord>(link: &mut Link<T>)
+        requires true,
         ensures link_spec_size(*link) == link_spec_size(*old(link)),
     {
         let ghost old_link = *link;
@@ -197,6 +203,7 @@ pub mod BSTRBMtEph {
     }
 
     fn flip_colors<T: StTInMtT + Ord>(link: &mut Link<T>)
+        requires true,
         ensures link_spec_size(*link) == link_spec_size(*old(link)),
     {
         if let Some(node) = link.as_mut() {
@@ -220,6 +227,7 @@ pub mod BSTRBMtEph {
     }
 
     fn fix_up<T: StTInMtT + Ord>(link: &mut Link<T>)
+        requires true,
         ensures link_spec_size(*link) == link_spec_size(*old(link)),
     {
         let rotate_left_needed = match link {
@@ -258,6 +266,7 @@ pub mod BSTRBMtEph {
     }
 
     fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T)
+        requires true,
         ensures link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
         decreases old(link),
     {
@@ -277,6 +286,7 @@ pub mod BSTRBMtEph {
     }
 
     fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
+        requires true,
         ensures
             (link is None) ==> found is None,
         decreases *link,
@@ -296,6 +306,7 @@ pub mod BSTRBMtEph {
     }
 
     fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> (min: Option<&T>)
+        requires true,
         ensures
             (link is None) ==> min is None,
             (link is Some) ==> min is Some,
@@ -311,6 +322,7 @@ pub mod BSTRBMtEph {
     }
 
     fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> (max: Option<&T>)
+        requires true,
         ensures
             (link is None) ==> max is None,
             (link is Some) ==> max is Some,
@@ -326,6 +338,7 @@ pub mod BSTRBMtEph {
     }
 
     fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+        requires true,
         ensures true,
         decreases *link,
     {
@@ -337,6 +350,7 @@ pub mod BSTRBMtEph {
     }
 
     fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+        requires true,
         ensures true,
         decreases *link,
     {
@@ -348,6 +362,7 @@ pub mod BSTRBMtEph {
     }
 
     fn in_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> (result: Vec<T>)
+        requires true,
         ensures true,
         decreases *link,
     {
@@ -368,6 +383,7 @@ pub mod BSTRBMtEph {
     }
 
     fn pre_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> (result: Vec<T>)
+        requires true,
         ensures true,
         decreases *link,
     {
@@ -388,6 +404,7 @@ pub mod BSTRBMtEph {
     }
 
     fn build_balanced<T: StTInMtT + Ord>(values: &[T]) -> (link: Link<T>)
+        requires true,
         ensures link_spec_size(link) <= values@.len(),
         decreases values.len(),
     {
@@ -418,6 +435,7 @@ pub mod BSTRBMtEph {
     fn filter_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
         where
             F: Fn(&T) -> bool + Send + Sync,
+        requires true,
         ensures true,
         decreases *link,
     {
@@ -446,6 +464,7 @@ pub mod BSTRBMtEph {
     fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
         where
             F: Fn(T, T) -> T + Send + Sync,
+        requires true,
         ensures true,
         decreases *link,
     {
@@ -469,6 +488,7 @@ pub mod BSTRBMtEph {
     }
 
     fn height_rec<T: StTInMtT + Ord>(link: &Link<T>) -> (h: N)
+        requires true,
         ensures
             (link is None) ==> h == 0,
         decreases *link,

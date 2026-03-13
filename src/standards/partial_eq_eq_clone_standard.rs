@@ -36,6 +36,47 @@
 //! obtain them through the ensures clauses of clone() and eq(), not by assuming
 //! or accepting them directly.
 //!
+//! 5. Propagating clone assumptions through requires (feq broadcast pattern).
+//!
+//!    When algorithmic code clones generic `T` values (e.g., `Arc<Node<T>>` in tree
+//!    rotations), each clone site needs `obeys_feq_clone::<T>()` to prove the cloned
+//!    value equals the original.  Rather than `assume(obeys_feq_clone::<T>())` at
+//!    every clone, add `obeys_feq_clone::<T>()` to the function's `requires` and
+//!    assume it once at the top-level entry point.
+//!
+//!    ```
+//!    // Internal helper: requires propagates the assumption.
+//!    fn rotate_right(y: Arc<Node<T>>) -> (out: Arc<Node<T>>)
+//!        requires spec_wf(Some(y)), obeys_feq_clone::<T>(),
+//!        ensures  spec_wf(Some(out)),
+//!    {
+//!        let x = y.left.as_ref().unwrap().clone();  // clone is safe: feq in scope
+//!        // ... no per-clone assume needed
+//!    }
+//!
+//!    // Top-level entry point: single assume.
+//!    fn insert(&mut self, value: T) {
+//!        proof { assume(obeys_feq_clone::<T>()); }  // ONE assume for entire call tree
+//!        self.root = insert_at(self.root.clone(), value);
+//!    }
+//!    ```
+//!
+//!    This replaces N per-clone assumes with 1 entry-point assume. The `group_feq_axioms`
+//!    broadcast group (`axiom_cloned_implies_eq`, `axiom_cloned_implies_eq_owned`) fires
+//!    automatically when `obeys_feq_clone::<T>()` is in scope, so clone results satisfy
+//!    `x == y` without explicit lemma calls.
+//!
+//!    Import pattern:
+//!    ```
+//!    use crate::vstdplus::feq::feq::feq;
+//!    #[cfg(verus_keep_ghost)]
+//!    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full};
+//!    ```
+//!    And in broadcast use (section 3):
+//!    ```
+//!    broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+//!    ```
+//!
 //! Section ordering within section 12:
 //! 1. Clone
 //! 2. PartialEq
