@@ -28,7 +28,6 @@ pub mod BSTTreapMtEph {
     use vstd::std_specs::cmp::PartialOrdSpec;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::IsLtTransitive;
     use crate::Types::Types::*;
 
@@ -309,7 +308,7 @@ pub mod BSTTreapMtEph {
         match link {
             None => {
                 let c = None;
-                proof { accept(c == *link); }
+                proof { assume(c == *link); }
                 c
             }
             Some(node) => {
@@ -322,7 +321,7 @@ pub mod BSTTreapMtEph {
                     left,
                     right,
                 }));
-                proof { accept(c == *link); }
+                proof { assume(c == *link); }
                 c
             }
         }
@@ -956,7 +955,7 @@ pub mod BSTTreapMtEph {
                 insert_link(&mut current, value, priority);
             }
             write_handle.release_write(current);
-            proof { accept(self@.contains(value_view)); }
+            proof { assume(self@.contains(value_view)); }
         }
 
         fn delete(&self, target: &T)
@@ -965,7 +964,7 @@ pub mod BSTTreapMtEph {
             let (mut current, write_handle) = self.locked_root.acquire_write();
             delete_link(&mut current, target);
             write_handle.release_write(current);
-            proof { accept(!self@.contains(target@)); }
+            proof { assume(!self@.contains(target@)); }
         }
 
         fn find(&self, target: &T) -> (found: Option<T>)
@@ -974,7 +973,7 @@ pub mod BSTTreapMtEph {
             let handle = self.locked_root.acquire_read();
             let result = find_link(handle.borrow(), target).cloned();
             handle.release_read();
-            proof { accept(result.is_some() <==> self@.contains(target@)); }
+            proof { assume(result.is_some() <==> self@.contains(target@)); }
             result
         }
 
@@ -990,7 +989,7 @@ pub mod BSTTreapMtEph {
             let handle = self.locked_root.acquire_read();
             let result = size_link(handle.borrow());
             handle.release_read();
-            proof { accept(result as nat == self@.len() && self@.finite()); }
+            proof { assume(result as nat == self@.len() && self@.finite()); }
             result
         }
 
@@ -1014,7 +1013,7 @@ pub mod BSTTreapMtEph {
             let handle = self.locked_root.acquire_read();
             let result = min_link(handle.borrow()).cloned();
             handle.release_read();
-            proof { accept(result.is_some() ==> self@.contains(result.unwrap()@)); }
+            proof { assume(result.is_some() ==> self@.contains(result.unwrap()@)); }
             result
         }
 
@@ -1024,7 +1023,7 @@ pub mod BSTTreapMtEph {
             let handle = self.locked_root.acquire_read();
             let result = max_link(handle.borrow()).cloned();
             handle.release_read();
-            proof { accept(result.is_some() ==> self@.contains(result.unwrap()@)); }
+            proof { assume(result.is_some() ==> self@.contains(result.unwrap()@)); }
             result
         }
 
@@ -1036,7 +1035,7 @@ pub mod BSTTreapMtEph {
             in_order_collect(handle.borrow(), &mut out);
             handle.release_read();
             let ordered = ArraySeqStPerS::from_vec(out);
-            proof { accept(ordered@.len() == self@.len()); }
+            proof { assume(ordered@.len() == self@.len()); }
             ordered
         }
 
@@ -1048,7 +1047,7 @@ pub mod BSTTreapMtEph {
             pre_order_collect(handle.borrow(), &mut out);
             handle.release_read();
             let preordered = ArraySeqStPerS::from_vec(out);
-            proof { accept(preordered@.len() == self@.len()); }
+            proof { assume(preordered@.len() == self@.len()); }
             preordered
         }
     }
@@ -1071,7 +1070,7 @@ pub mod BSTTreapMtEph {
                 left: clone_link(&self.left),
                 right: clone_link(&self.right),
             };
-            proof { accept(cloned == *self); }
+            proof { assume(cloned == *self); }
             cloned
         }
     }
@@ -1084,14 +1083,14 @@ pub mod BSTTreapMtEph {
             let inner_clone = clone_link(handle.borrow());
             handle.release_read();
             proof {
-                accept(spec_bsttreapmteph_link_wf(&inner_clone));
-                accept(self.ghost_locked_root@.finite());
+                assume(spec_bsttreapmteph_link_wf(&inner_clone));
+                assume(self.ghost_locked_root@.finite());
             }
             let cloned = BSTTreapMtEph {
                 locked_root: RwLock::new(inner_clone, Ghost(BSTTreapMtEphInv)),
                 ghost_locked_root: Ghost(self.ghost_locked_root@),
             };
-            proof { accept(cloned@ == self@); }
+            proof { assume(cloned@ == self@); }
             cloned
         }
     }

@@ -23,7 +23,6 @@ pub mod BSTSetTreapMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap39::BSTParaTreapMtEph::BSTParaTreapMtEph::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -65,7 +64,9 @@ pub mod BSTSetTreapMtEph {
             ensures self@.finite(), empty == (self@.len() == 0);
         /// - APAS: Work O(log n), Span O(log n)
         fn find(&self, value: &T) -> (found: Option<T>)
-            ensures found matches Some(v) ==> self@.contains(v@);
+            ensures
+                found matches Some(v) ==> v@ == value@ && self@.contains(v@),
+                found is None ==> !self@.contains(value@);
         /// - APAS: Work O(log n), Span O(log n)
         fn contains(&self, value: &T) -> (found: bool)
             ensures found == self@.contains(value@);
@@ -132,19 +133,19 @@ pub mod BSTSetTreapMtEph {
             tree@.len() == 0 ==> min is None,
             min matches Some(v) ==> tree@.contains(v@),
     {
-        let min = match tree.expose_with_priority() {
+        match tree.expose_with_priority() {
             None => None,
             Some((left, key, _, _)) => {
                 if left.is_empty() { Some(key) }
-                else { minimum_inner(&left) }
+                else {
+                    let result = minimum_inner(&left);
+                    // left@.subset_of(tree@) from expose ensures.
+                    // minimum_inner ensures: result Some(v) ==> left@.contains(v@).
+                    // left@.contains(v@) && left@.subset_of(tree@) ==> tree@.contains(v@).
+                    result
+                }
             }
-        };
-        proof {
-            accept(tree@.finite());
-            accept(tree@.len() == 0 ==> min is None);
-            accept(min matches Some(v) ==> tree@.contains(v@));
         }
-        min
     }
 
     #[verifier::exec_allows_no_decreases_clause]
@@ -154,19 +155,16 @@ pub mod BSTSetTreapMtEph {
             tree@.len() == 0 ==> max is None,
             max matches Some(v) ==> tree@.contains(v@),
     {
-        let max = match tree.expose_with_priority() {
+        match tree.expose_with_priority() {
             None => None,
             Some((_, key, _, right)) => {
                 if right.is_empty() { Some(key) }
-                else { maximum_inner(&right) }
+                else {
+                    let result = maximum_inner(&right);
+                    result
+                }
             }
-        };
-        proof {
-            accept(tree@.finite());
-            accept(tree@.len() == 0 ==> max is None);
-            accept(max matches Some(v) ==> tree@.contains(v@));
         }
-        max
     }
 
     impl<T: MtKey + 'static> BSTSetTreapMtEphTrait<T> for BSTSetTreapMtEph<T> {
@@ -183,7 +181,7 @@ pub mod BSTSetTreapMtEph {
             let tree = ParamTreap::new();
             tree.insert(value);
             let set = BSTSetTreapMtEph { tree };
-            proof { accept(set@.finite() && set@.len() == 1 && set@.contains(v)); }
+            proof { assume(set@.finite() && set@.len() == 1 && set@.contains(v)); }
             set
         }
 
@@ -195,32 +193,26 @@ pub mod BSTSetTreapMtEph {
 
         fn contains(&self, value: &T) -> (found: bool)
         {
-            let result = self.find(value).is_some();
-            proof { accept(result == self@.contains(value@)); }
-            result
+            self.find(value).is_some()
         }
 
         fn minimum(&self) -> (min: Option<T>) {
-            let min = minimum_inner(&self.tree);
-            proof { accept(self@.finite()); }
-            min
+            minimum_inner(&self.tree)
         }
 
         fn maximum(&self) -> (max: Option<T>) {
-            let max = maximum_inner(&self.tree);
-            proof { accept(self@.finite()); }
-            max
+            maximum_inner(&self.tree)
         }
 
         fn insert(&mut self, value: T) {
             let ghost v = value@;
             self.tree.insert(value);
-            proof { accept(self@.finite() && self@ =~= old(self)@.insert(v)); }
+            proof { assume(self@.finite() && self@ =~= old(self)@.insert(v)); }
         }
 
         fn delete(&mut self, target: &T) {
             self.tree.delete(target);
-            proof { accept(self@.finite() && self@ =~= old(self)@.remove(target@)); }
+            proof { assume(self@.finite() && self@ =~= old(self)@.remove(target@)); }
         }
 
         fn union(&self, other: &Self) -> (combined: Self) {
@@ -245,11 +237,9 @@ pub mod BSTSetTreapMtEph {
         }
 
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self) {
-            let joined = BSTSetTreapMtEph {
+            BSTSetTreapMtEph {
                 tree: ParamTreap::join_mid(Exposed::Node(left.tree, pivot, right.tree)),
-            };
-            proof { accept(joined@.finite()); }
-            joined
+            }
         }
 
         fn filter<F: Pred<T>>(&self, predicate: F) -> (filtered: Self) {

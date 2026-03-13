@@ -23,7 +23,6 @@ pub mod BSTParaMtEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     verus! {
@@ -295,7 +294,7 @@ pub mod BSTParaMtEph {
                 Exposed::Leaf => Exposed::Leaf,
                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
             };
-            proof { accept(cloned@ == self@); }
+            proof { assume(cloned@ == self@); }
             cloned
         }
     }
@@ -310,7 +309,7 @@ pub mod BSTParaMtEph {
                 left: self.left.clone(),
                 right: self.right.clone(),
             };
-            proof { accept(cloned@ == self@); }
+            proof { assume(cloned@ == self@); }
             cloned
         }
     }
@@ -320,7 +319,7 @@ pub mod BSTParaMtEph {
             ensures cloned@ == self@
         {
             let cloned = ParamBST { root: clone_arc_rwlock(&self.root) };
-            proof { accept(cloned@ == self@); }
+            proof { assume(cloned@ == self@); }
             cloned
         }
     }

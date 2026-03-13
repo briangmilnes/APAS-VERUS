@@ -27,7 +27,6 @@ pub mod AVLTreeSetStEph {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
@@ -170,7 +169,7 @@ broadcast use {
         {
             let r = self.elements.length();
             proof {
-                accept(r == self@.len()); // accept hole: seq len == set len (requires no-duplicates invariant not in wf).
+                assume(r == self@.len());
                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
             }
             r
@@ -182,7 +181,6 @@ broadcast use {
             proof {
                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
                 assert(seq@ =~= self.elements@);
-                accept(seq.spec_avltreeseqsteph_wf()); // accept hole: wf through clone.
             }
             seq
         }
@@ -199,7 +197,7 @@ broadcast use {
         fn singleton(x: T) -> (tree: Self)
         {
             let ghost x_view = x@;
-            proof { accept(obeys_feq_full::<T>()); } // accept hole: feq bridge.
+            proof { assume(obeys_feq_full::<T>()); }
             let mut v: Vec<T> = Vec::new();
             v.push(x);
             let ghost v_view = v@;
@@ -218,7 +216,7 @@ broadcast use {
 
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
         {
-            proof { accept(seq.spec_avltreeseqsteph_wf()); } // accept hole: input wf not in requires.
+            proof { assume(seq.spec_avltreeseqsteph_wf()); }
             let mut constructed = Self::empty();
             let n = seq.length();
             let mut i: usize = 0;
@@ -359,7 +357,7 @@ broadcast use {
         fn find(&self, x: &T) -> (found: B)
         {
             proof {
-                accept(obeys_feq_full::<T>()); // accept hole: feq bridge.
+                assume(obeys_feq_full::<T>());
             }
             let n = self.elements.length();
             let mut lo: usize = 0;
@@ -399,6 +397,7 @@ broadcast use {
                     self.elements.spec_avltreeseqsteph_wf(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
+                    result_vec@.len() <= i as int,
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
@@ -407,7 +406,7 @@ broadcast use {
                 }
                 i += 1;
             }
-            proof { accept(result_vec@.len() < usize::MAX); accept(obeys_feq_full::<T>()); } // accept hole: vec bound + feq bridge.
+            proof { assume(result_vec@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }
             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
             proof {
                 assume(self@ == old(self)@.remove(x@));
@@ -460,7 +459,7 @@ broadcast use {
                     new_vec.push(self.elements.nth(j).clone());
                     j += 1;
                 }
-                proof { accept(new_vec@.len() < usize::MAX); accept(obeys_feq_full::<T>()); } // accept hole: vec bound + feq bridge.
+                proof { assume(new_vec@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }
                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
             }
             proof {
@@ -492,8 +491,8 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             proof {
-                accept(self.elements.spec_avltreeseqsteph_wf());
-                accept(other.elements.spec_avltreeseqsteph_wf());
+                assume(self.elements.spec_avltreeseqsteph_wf());
+                assume(other.elements.spec_avltreeseqsteph_wf());
             }
             let equal = self.size() == other.size() && {
                 let n = self.elements.length();
@@ -515,7 +514,7 @@ broadcast use {
                 }
                 all_found
             };
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }
@@ -525,7 +524,6 @@ broadcast use {
             ensures cloned@ == self@
         {
             let cloned = AVLTreeSetStEph { elements: self.elements.clone() };
-            proof { accept(cloned@ == self@); }
             cloned
         }
     }

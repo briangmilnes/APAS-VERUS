@@ -24,7 +24,6 @@ pub mod AVLTreeSetStPer {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
@@ -156,7 +155,7 @@ broadcast use {
         {
             let r = self.elements.length();
             proof {
-                accept(r == self@.len()); // accept hole: seq len == set len (requires no-duplicates invariant not in wf).
+                assume(r == self@.len());
                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
             }
             r
@@ -242,14 +241,14 @@ broadcast use {
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
-                proof { accept(f.requires((&*elem,))); } // accept hole: predicate callability.
+                proof { assume(f.requires((&*elem,))); }
                 if f(elem) {
                     filtered = filtered.insert(elem.clone());
                 }
                 i += 1;
             }
             proof {
-                accept(filtered@.subset_of(self@)); // accept hole: filter subset postcondition.
+                assume(filtered@.subset_of(self@));
             }
             filtered
         }
@@ -347,7 +346,7 @@ broadcast use {
 
         fn find(&self, x: &T) -> (found: B)
         {
-            proof { accept(obeys_feq_full::<T>()); } // accept hole: feq bridge.
+            proof { assume(obeys_feq_full::<T>()); }
             let n = self.elements.length();
             let mut lo: usize = 0;
             let mut hi: usize = n;
@@ -408,8 +407,13 @@ broadcast use {
             if self.find(&x) {
                 let updated = Self { elements: self.elements.clone() };
                 proof {
-                    accept(updated@ == self@.insert(x_view)); // accept hole: insert already-present.
-                    accept(updated.spec_avltreesetstper_wf()); // accept hole: wf through clone.
+                    // find(&x) == true implies self@.contains(x@).
+                    // clone ensures updated.elements@ == self.elements@, so updated@ == self@.
+                    // Since x@ is already in self@, self@.insert(x_view) == self@ (set idempotence).
+                    assert(self@.contains(x_view));
+                    assert(updated.elements@ =~= self.elements@);
+                    assert(updated@ =~= self@);
+                    assert(self@.insert(x_view) =~= self@);
                     vstd::seq_lib::seq_to_set_is_finite(updated.elements@);
                 }
                 return updated;
@@ -481,8 +485,8 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             proof {
-                accept(self.spec_avltreesetstper_wf());
-                accept(other.spec_avltreesetstper_wf());
+                assume(self.spec_avltreesetstper_wf());
+                assume(other.spec_avltreesetstper_wf());
             }
             let equal = self.size() == other.size() && {
                 let n = self.elements.length();
@@ -504,7 +508,7 @@ broadcast use {
                 }
                 all_found
             };
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }
@@ -516,7 +520,6 @@ broadcast use {
             ensures cloned@ == self@
         {
             let cloned = AVLTreeSetStPer { elements: self.elements.clone() };
-            proof { accept(cloned@ == self@); }
             cloned
         }
     }
