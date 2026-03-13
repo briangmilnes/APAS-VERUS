@@ -1,4 +1,4 @@
-Chapter Status — 46 chapters, 35 clean, 11 holed, 382 holes (global), 257 modules
+Chapter Status — 46 chapters, 35 clean, 11 holed, 300 holes (global), 257 modules
 
 CLEAN CHAPTERS (35)
   Chapter        Files
@@ -39,18 +39,18 @@ CLEAN CHAPTERS (35)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (11) — 471 holes
+HOLED CHAPTERS (11) — 332 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap37           102    19  internal  Chap37::BSTAVLMtEph, Chap37::BSTBBAlphaMtEph, Chap37::BSTPlainMtEph, Chap37::BSTRBMtEph, Chap37::BSTSplayMtEph
-  Chap38            20     2  YES       
-  Chap39            37     4  internal  Chap39::BSTParaTreapMtEph
-  Chap41            77     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStPer
+  Chap37            20    19  YES       
+  Chap38            18     2  YES       
+  Chap39            15     4  internal  Chap39::BSTParaTreapMtEph
+  Chap41            62     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStPer
   Chap42            18     4  NO        Chap41::ArraySetStEph
   Chap43           145    11  NO        Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph, Chap42::TableStEph, Chap42::TableStPer, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetStPer
   Chap45             5     7  NO        Chap37::AVLTreeSeqStPer
-  Chap47            45     9  internal  Chap47::ParaHashTableStEph, Chap47::FlatHashTable, Chap47::ChainedHashTable
-  Chap50             3     8  YES       
+  Chap47            28     9  internal  Chap47::ParaHashTableStEph, Chap47::FlatHashTable, Chap47::ChainedHashTable
+  Chap50             2     8  YES       
   Chap52             1    14  NO        Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer, Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph, Chap41::AVLTreeSetStPer, Chap41::ArraySetStEph, Chap43::OrderedTableStPer
   Chap53            18     5  NO        Chap41::AVLTreeSetMtPer, Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetStPer
 
