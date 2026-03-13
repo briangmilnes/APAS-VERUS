@@ -829,32 +829,36 @@ pub mod DirGraphMtEph {
 
         fn vertices(&self) -> (v: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
-            let v = read_handle.borrow().V.clone();
-            proof { assume(v@ == self@.V); }
+            let inner = read_handle.borrow();
+            proof { accept(inner@ == self@); }
+            let v = inner.V.clone();
             read_handle.release_read();
             v
         }
 
         fn arcs(&self) -> (a: SetStEph<Edge<V>>) {
             let read_handle = self.locked_graph.acquire_read();
-            let a = read_handle.borrow().A.clone();
-            proof { assume(a@ == self@.A); }
+            let inner = read_handle.borrow();
+            proof { accept(inner@ == self@); }
+            let a = inner.A.clone();
             read_handle.release_read();
             a
         }
 
         fn sizeV(&self) -> (n: N) {
             let read_handle = self.locked_graph.acquire_read();
-            let n = read_handle.borrow().sizeV();
-            proof { assume(n == self@.V.len()); }
+            let inner = read_handle.borrow();
+            proof { accept(inner@ == self@); }
+            let n = inner.sizeV();
             read_handle.release_read();
             n
         }
 
         fn sizeA(&self) -> (n: N) {
             let read_handle = self.locked_graph.acquire_read();
-            let n = read_handle.borrow().sizeA();
-            proof { assume(n == self@.A.len()); }
+            let inner = read_handle.borrow();
+            proof { accept(inner@ == self@); }
+            let n = inner.sizeA();
             read_handle.release_read();
             n
         }
@@ -862,9 +866,8 @@ pub mod DirGraphMtEph {
         fn neighbor(&self, u: &V, v: &V) -> (b: B) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let b = inner.neighbor(u, v);
-            proof { assume(b == self@.A.contains((u@, v@))); }
             read_handle.release_read();
             b
         }
@@ -872,12 +875,8 @@ pub mod DirGraphMtEph {
         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let out_neighbors = inner.n_plus(v);
-            proof {
-                assume(out_neighbors@ == Set::new(|w: V::V| self@.A.contains((v@, w))));
-                assume(out_neighbors@ <= self@.V);
-            }
             read_handle.release_read();
             out_neighbors
         }
@@ -885,12 +884,8 @@ pub mod DirGraphMtEph {
         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let in_neighbors = inner.n_minus(v);
-            proof {
-                assume(in_neighbors@ == Set::new(|u: V::V| self@.A.contains((u, v@))));
-                assume(in_neighbors@ <= self@.V);
-            }
             read_handle.release_read();
             in_neighbors
         }
@@ -898,9 +893,8 @@ pub mod DirGraphMtEph {
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let neighbors = inner.ng(v);
-            proof { assume(neighbors@ <= self@.V); }
             read_handle.release_read();
             neighbors
         }
@@ -908,9 +902,8 @@ pub mod DirGraphMtEph {
         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let out_neighbors = inner.n_plus_of_vertices(u_set);
-            proof { assume(out_neighbors@ <= self@.V); }
             read_handle.release_read();
             out_neighbors
         }
@@ -918,9 +911,8 @@ pub mod DirGraphMtEph {
         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let in_neighbors = inner.n_minus_of_vertices(u_set);
-            proof { assume(in_neighbors@ <= self@.V); }
             read_handle.release_read();
             in_neighbors
         }
@@ -928,9 +920,8 @@ pub mod DirGraphMtEph {
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let neighbors = inner.ng_of_vertices(u_set);
-            proof { assume(neighbors@ <= self@.V); }
             read_handle.release_read();
             neighbors
         }
