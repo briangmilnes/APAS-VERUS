@@ -8,8 +8,12 @@ pub mod GraphSearchStEph {
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::*;
 
     verus! {
+
+    broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
     // 4. type definitions
     pub struct SearchResult<V: StT + Ord> {
@@ -23,7 +27,9 @@ pub mod GraphSearchStEph {
     // 8. traits
     pub trait SelectionStrategy<V: StT + Ord> {
         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, B))
-            requires frontier.spec_avltreesetsteph_wf(),
+            requires
+                frontier.spec_avltreesetsteph_wf(),
+                obeys_feq_clone::<V>(),
             ensures selected.0@.subset_of(frontier@);
     }
 
@@ -70,7 +76,7 @@ pub mod GraphSearchStEph {
                 }
                 let first_ref = seq.nth(0);
                 let first = first_ref.clone();
-                proof { assume(first@ == first_ref@); }  // accept hole: V::clone external_body
+                proof { assert(cloned(*first_ref, first)); }
                 assert(frontier@.contains(first@));
                 let result = AVLTreeSetStEph::singleton(first);
                 assert(result@.subset_of(frontier@)) by {
