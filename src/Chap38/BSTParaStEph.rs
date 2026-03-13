@@ -48,6 +48,14 @@ pub mod BSTParaStEph {
                     (*box_node).size >= 1
                     && self.contents.finite()
                     && self.contents.len() == (*box_node).size as nat
+                    && self.contents =~= (*box_node).left@.union((*box_node).right@).insert((*box_node).key@)
+                    && (*box_node).left@.finite() && (*box_node).right@.finite()
+                    && (*box_node).left@.disjoint((*box_node).right@)
+                    && !(*box_node).left@.contains((*box_node).key@)
+                    && !(*box_node).right@.contains((*box_node).key@)
+                    && (*box_node).left@.len() + (*box_node).right@.len() < usize::MAX as nat
+                    && (forall|t: T| #![auto] (*box_node).left@.contains(t@) ==> t.cmp_spec(&(*box_node).key) == Less)
+                    && (forall|t: T| #![auto] (*box_node).right@.contains(t@) ==> t.cmp_spec(&(*box_node).key) == Greater)
                 }
             }
         }
@@ -243,6 +251,8 @@ pub mod BSTParaStEph {
                     && !l@.contains(k@)
                     && !r@.contains(k@)
                     && l@.len() + r@.len() < usize::MAX as nat
+                    && (forall|t: T| #![auto] l@.contains(t@) ==> t.cmp_spec(&k) == Less)
+                    && (forall|t: T| #![auto] r@.contains(t@) ==> t.cmp_spec(&k) == Greater)
                 },
             ensures
                 exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty(),
@@ -255,6 +265,8 @@ pub mod BSTParaStEph {
                 !left@.contains(key@),
                 !right@.contains(key@),
                 left@.len() + right@.len() < usize::MAX as nat,
+                forall|t: T| #![auto] left@.contains(t@) ==> t.cmp_spec(&key) == Less,
+                forall|t: T| #![auto] right@.contains(t@) ==> t.cmp_spec(&key) == Greater,
             ensures tree@ =~= left@.union(right@).insert(key@);
         /// - APAS: Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
@@ -302,22 +314,38 @@ pub mod BSTParaStEph {
         /// - APAS: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|))
         fn join_pair(&self, other: Self) -> (joined: Self)
             requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 self@.disjoint(other@),
                 self@.finite(), other@.finite(),
                 self@.len() + other@.len() < usize::MAX as nat,
+                forall|s: T, o: T| #![auto] self@.contains(s@) && other@.contains(o@) ==> s.cmp_spec(&o) == Less,
             ensures joined@.finite(), joined@ =~= self@.union(other@);
         /// - APAS: Work O(m · lg(n/m)), Span O(m · lg(n/m)) — sequential
         fn union(&self, other: &Self) -> (combined: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures combined@ == self@.union(other@), combined@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(m · lg(n/m)) — sequential
         fn intersect(&self, other: &Self) -> (common: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures common@ == self@.intersect(other@), common@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(m · lg(n/m)) — sequential
         fn difference(&self, other: &Self) -> (remaining: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures remaining@ == self@.difference(other@), remaining@.finite();
         /// - APAS: Work O(|t|), Span O(|t|) — sequential
         fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)
-            requires self@.finite(), forall|t: &T| predicate.requires((t,)),
+            requires
+                self@.finite(),
+                forall|t: &T| predicate.requires((t,)),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures filtered@.subset_of(self@), filtered@.finite();
         /// - APAS: Work O(|t|), Span O(|t|) — sequential
         /// Requires `op` to be associative with identity `base`.
@@ -838,7 +866,11 @@ pub mod BSTParaStEph {
         tree: &ParamBST<T>,
         predicate: &F,
     ) -> (filtered: ParamBST<T>)
-        requires tree@.finite(), forall|t: &T| predicate.requires((t,)),
+        requires
+            tree@.finite(),
+            forall|t: &T| predicate.requires((t,)),
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
         ensures filtered@.subset_of(tree@), filtered@.finite(),
         decreases tree@.len(),
     {
@@ -865,6 +897,15 @@ pub mod BSTParaStEph {
                         };
                         vstd::set_lib::lemma_len_subset(left_filtered@, left@);
                         vstd::set_lib::lemma_len_subset(right_filtered@, right@);
+                        // Ordering: left_filtered ⊆ left < key < right ⊇ right_filtered.
+                        assert forall|s: T, o: T| #![auto]
+                            left_filtered@.contains(s@) && right_filtered@.contains(o@) implies
+                            s.cmp_spec(&o) == Less by {
+                            assert(left@.contains(s@));
+                            assert(right@.contains(o@));
+                            lemma_cmp_antisymmetry(o, key);
+                            lemma_cmp_transitivity(s, key, o);
+                        };
                     }
                     left_filtered.join_pair(right_filtered)
                 }
@@ -877,10 +918,11 @@ pub mod BSTParaStEph {
         tree: &ParamBST<T>,
         op: &F,
         identity: T,
-    ) -> T
+    ) -> (result: T)
         requires
             tree@.finite(),
             forall|a: T, b: T| op.requires((a, b)),
+        ensures true,
         decreases tree@.len(),
     {
         match tree.expose() {

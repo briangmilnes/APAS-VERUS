@@ -368,7 +368,6 @@ pub mod BSTAVLMtEph {
     }
 
     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
-        requires true,
         ensures
             (node is Leaf) ==> min is None,
             (node is Node) ==> min is Some,
@@ -384,7 +383,6 @@ pub mod BSTAVLMtEph {
     }
 
     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
-        requires true,
         ensures
             (node is Leaf) ==> max is None,
             (node is Node) ==> max is Some,
