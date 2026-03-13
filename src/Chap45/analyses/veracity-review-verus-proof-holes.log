@@ -20,151 +20,151 @@ Table of Contents:
 =================================================================
 
 ❌ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:211: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:211: error: external_body - #[verifier::external_body]
        212 |             fn insert(&self, element: T) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:225: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:225: error: external_body - #[verifier::external_body]
        226 |             fn delete_min(&self) -> (Self, Option<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:237: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:237: error: external_body - #[verifier::external_body]
        238 |             fn meld(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:267: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:267: error: external_body - #[verifier::external_body]
        268 |             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:292: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:292: error: external_body - #[verifier::external_body]
        293 |             fn delete_max(&self) -> (Self, Option<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:303: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:303: error: external_body - #[verifier::external_body]
        304 |             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:316: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:316: error: external_body - #[verifier::external_body]
        317 |             fn contains(&self, element: &T) -> bool {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:330: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:330: error: external_body - #[verifier::external_body]
        331 |             fn remove(&self, element: &T) -> (Self, bool) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:342: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:342: error: external_body - #[verifier::external_body]
        343 |             fn range(&self, min_val: &T, max_val: &T) -> AVLTreeSeqStPerS<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:356: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:356: error: external_body - #[verifier::external_body]
        357 |             fn from_vec(elements: Vec<T>) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:387: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:387: error: external_body - #[verifier::external_body]
        388 |             fn is_sorted(&self) -> bool {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:400: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:400: error: external_body - #[verifier::external_body]
        401 |             fn height(&self) -> usize {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:409: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:409: error: external_body - #[verifier::external_body]
        410 |             fn split(&self, element: &T) -> (Self, bool, Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:437: error: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:437: error: external - #[verifier::external]
        438 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:488: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:488: info: accept()
    Holes: 14 total
       13 × external_body
       1 × external
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:532: error: assume() - proof { assume(pq@.to_multiset() =~= Multiset::empty()); }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:532: error: assume() - proof { assume(pq@.to_multiset() =~= Multiset::empty()); }
        527 |             fn empty() -> (pq: Self) {
             ...
        530 |                 };
        531 |                 // accept hole: Empty seq@ maps to empty multiset.
        533 |                 pq
        534 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:541: error: assume() - proof { assume(pq@.to_multiset() =~= Multiset::empty().inser
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:541: error: assume() - proof { assume(pq@.to_multiset() =~= Multiset::empty().inser
        536 |             fn singleton(element: T) -> (pq: Self) {
             ...
        539 |                 };
        540 |                 // accept hole: Single-element seq@ maps to singleton multiset.
        542 |                 pq
        543 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:562: error: assume() - proof { assume(pq@.to_multiset() =~= self@.to_multiset().ins
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:562: error: assume() - proof { assume(pq@.to_multiset() =~= self@.to_multiset().ins
        553 |             fn insert(&self, element: T) -> Self {
             ...
        560 |                 let pq = BinaryHeapPQ { elements: heapified };
        561 |                 // accept hole: bubble_up is a permutation; multiset preserved.
        563 |                 pq
        564 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:576: error: assume() - assume(self@.to_multiset() =~=
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:576: error: assume() - assume(self@.to_multiset() =~=
        566 |             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
             ...
        574 |                     // accept hole: Single-element removal yields empty multiset + element.
        575 |                     proof {
        577 |                             empty_pq@.to_multiset().insert(min_element@));
        578 |                     }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:606: error: assume() - assume(self@.to_multiset() =~=
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:606: error: assume() - assume(self@.to_multiset() =~=
        566 |             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
             ...
        604 |                 // accept hole: Rebuild removes min and bubble_down is a permutation.
        605 |                 proof {
        607 |                         new_pq@.to_multiset().insert(min_element@));
        608 |                 }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:618: error: assume() - proof { assume(pq@.to_multiset() =~= self@.to_multiset().add
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:618: error: assume() - proof { assume(pq@.to_multiset() =~= self@.to_multiset().add
        612 |             fn meld(&self, other: &Self) -> Self {
             ...
        616 |                 let pq = BinaryHeapPQ { elements: heapified };
        617 |                 // accept hole: heapify is a permutation of the concatenation.
        619 |                 pq
        620 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:665: error: assume() - proof { assume(Self::spec_sorted(result.seq@)); }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:665: error: assume() - proof { assume(Self::spec_sorted(result.seq@)); }
        646 |             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
             ...
        663 | 
        664 |                 // accept hole: Proving sortedness requires heap property invariant (task #8).
        666 |                 result
        667 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:767: error: assume() - proof { assume(Self::spec_sorted(result@)); }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:767: error: assume() - proof { assume(Self::spec_sorted(result@)); }
        751 |             fn to_sorted_vec(&self) -> Vec<T> {
             ...
        765 |                 }
        766 |                 // accept hole: Vec elements are clones of sorted ArraySeqStPerS elements.
        768 |                 result
        769 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:246: error: fn_missing_requires - fn parent — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:246: error: fn_missing_requires - fn parent — exec fn should have requires
        239 |         fn right_child(i: usize) -> (child_idx: usize)
             ...
        244 |         }
        245 | 
        247 |             ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
        248 |         {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:787: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:802: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:787: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:802: info: accept()
    Holes: 8 total
       8 × assume()
    Info: 2 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Example45_2.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:43: error: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/Example45_2.rs:43: error: external - #[verifier::external]
         44 |         impl Example45_2Trait for Example45_2 {
    Holes: 1 total
       1 × external
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:137: error: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs:137: error: external - #[verifier::external]
        138 |         impl<T: StT + Ord + TotalOrder> HeapsortComparisonTrait<T> for HeapsortComparison<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:148: error: fn_missing_requires_ensures - fn is_sorted — exec fn should have requires and ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs:148: error: fn_missing_requires_ensures - fn is_sorted — exec fn should have requires and ensures
        146 | 
        147 |             fn all_results_sorted(&self) -> (sorted: bool) {
        149 | 
        150 |                 is_sorted(&self.unsorted_list_result)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:98: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:113: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs:98: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs:113: info: accept()
    Holes: 1 total
       1 × external
    Info: 2 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:84: error: fn_missing_requires - fn total_order_le — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:84: error: fn_missing_requires - fn total_order_le — exec fn should have requires
         81 |         proof fn _leftist_heap_pq_verified() {}
             ...
         82 | 
         83 |         /// Exec comparison with spec ensures connecting to TotalOrder::le.
         85 |             ensures le <==> TotalOrder::le(*a, *b)
         86 |         {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1130: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1150: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1162: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1172: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:1130: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:1150: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:1162: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:1172: info: accept()
    Info: 4 total
    Proof functions: 4 total (4 clean, 0 holed)
 ℹ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1039: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:1039: info: accept()
    Info: 1 total
    3 clean proof functions
 ℹ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:645: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:660: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/UnsortedListPQ.rs:645: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/UnsortedListPQ.rs:660: info: accept()
    Info: 2 total
    1 clean proof function
 
@@ -227,12 +227,13 @@ Holes Found: 24 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 19:12:47 -07:00
-Ended:     2026-03-12 19:12:47 -07:00
-Duration:  58ms
+Started:   2026-03-12 22:16:38 -07:00
+Ended:     2026-03-12 22:16:38 -07:00
+Duration:  46ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
-7:00
-Duration:  58ms
+26-03-12 22:16:38 -07:00
+Ended:     2026-03-12 22:16:38 -07:00
+Duration:  46ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
