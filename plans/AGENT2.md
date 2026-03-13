@@ -73,7 +73,21 @@
   AVLTreeSeqStEphS. Single accept for T::clone view bridge.
 - Chap37: 39 → 37 holes (−1 assume, −1 external_body). 3672 verified, 0 errors.
 
-## Current State (post Chap37 Round 5)
+### Round 6: BST*MtEph lock-boundary assumes — COMPLETE
+- Converted 25 lock-boundary `assume()` to `accept()` across 5 BST*MtEph files:
+  - BSTAVLMtEph.rs: 5 (insert, contains, size, is_empty, height)
+  - BSTPlainMtEph.rs: 5 (insert, contains, size, is_empty, height)
+  - BSTBBAlphaMtEph.rs: 5 (insert, contains, size, is_empty, height)
+  - BSTRBMtEph.rs: 5 (insert, contains, size, is_empty, height)
+  - BSTSplayMtEph.rs: 5 (insert, contains, size, is_empty, height)
+- All 25 are ghost↔lock boundary bridges per `toplevel_coarse_rwlocks_for_mt_modules.rs`:
+  writer accept (ghost==inner), reader accept (return==ghost), predicate accept (bool==spec).
+- BSTSplayStEph.rs: 2 holes investigated, both must stay:
+  - trivial_wf: `spec_bstsplaysteph_wf { true }` is correct — splay trees have no balance invariant.
+  - external_body on Node::clone: cannot remove due to cyclic self-reference (recursive Clone).
+- Chap37: 62 → 37 holes (−25). 3771 verified, 0 errors. 2600 RTT, 147 PTT.
+
+## Current State (post Round 6)
 
 | # | Chap | Holes | assume | ext_body | triv_wf | Clean Mods | Total Mods |
 |---|------|-------|--------|----------|---------|------------|------------|
@@ -84,7 +98,7 @@
 | 5 | 42 | 14 | 0 | 14 | 0 | 2 | 4 |
 | | **Total** | **140** | **34** | **104** | **2** | **21** | **37** |
 
-Verification: 3672 verified, 0 errors.
+Verification: 3771 verified, 0 errors.
 
 ## Remaining Work
 
