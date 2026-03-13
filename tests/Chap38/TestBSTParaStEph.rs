@@ -21,7 +21,7 @@ fn test_parambstlit_macro_functionality() {
 }
 
 fn make_range_tree(start: i32, end: i32) -> ParamBST<i32> {
-    let tree = ParamBST::new();
+    let mut tree = ParamBST::new();
     for value in start..end {
         tree.insert(value);
     }
@@ -29,7 +29,7 @@ fn make_range_tree(start: i32, end: i32) -> ParamBST<i32> {
 }
 
 fn make_tree(values: &[i32]) -> ParamBST<i32> {
-    let tree = ParamBST::new();
+    let mut tree = ParamBST::new();
     for &value in values {
         tree.insert(value);
     }
@@ -62,7 +62,7 @@ fn para_split_and_join_pair() {
 fn para_union_and_delete() {
     let a = make_tree(&[1, 3, 5, 7]);
     let b = make_tree(&[0, 2, 4, 6, 8]);
-    let union = a.union(&b);
+    let mut union = a.union(&b);
     assert_eq!(union.in_order(), ArraySeqStPerS::from_vec(vec![0, 1, 2, 3, 4, 5, 6, 7, 8]));
 
     union.delete(&4);
@@ -191,7 +191,7 @@ fn para_ops_on_empty_tree() {
 
 #[test]
 fn para_delete_nonexistent_key() {
-    let tree = make_tree(&[1, 3, 5]);
+    let mut tree = make_tree(&[1, 3, 5]);
     tree.delete(&2);
     assert_eq!(tree.in_order(), ArraySeqStPerS::from_vec(vec![1, 3, 5]));
     assert_eq!(tree.size(), 3);

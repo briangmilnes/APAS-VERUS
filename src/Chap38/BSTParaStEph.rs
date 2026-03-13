@@ -24,6 +24,8 @@ pub mod BSTParaStEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::{OrdSpec, PartialEqSpec, PartialOrdSpec};
 
+    use std::marker::PhantomData;
+
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
@@ -37,23 +39,21 @@ pub mod BSTParaStEph {
     // 4. type definitions
 
     pub struct BSTParaStEphInv<T: StT + Ord> {
-        pub ghost contents: Set<<T as View>::V>,
+        _phantom: PhantomData<T>,
     }
 
     impl<T: StT + Ord> RwLockPredicate<Option<Box<NodeInner<T>>>> for BSTParaStEphInv<T> {
         open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
             match v {
-                Option::None => self.contents =~= Set::<<T as View>::V>::empty(),
+                Option::None => true,
                 Option::Some(box_node) => {
                     (*box_node).size >= 1
-                    && self.contents.finite()
-                    && self.contents.len() == (*box_node).size as nat
-                    && self.contents =~= (*box_node).left@.union((*box_node).right@).insert((*box_node).key@)
                     && (*box_node).left@.finite() && (*box_node).right@.finite()
                     && (*box_node).left@.disjoint((*box_node).right@)
                     && !(*box_node).left@.contains((*box_node).key@)
                     && !(*box_node).right@.contains((*box_node).key@)
                     && (*box_node).left@.len() + (*box_node).right@.len() < usize::MAX as nat
+                    && (*box_node).size as nat == (*box_node).left@.len() + (*box_node).right@.len() + 1
                     && (forall|t: T| #![auto] (*box_node).left@.contains(t@) ==> t.cmp_spec(&(*box_node).key) == Less)
                     && (forall|t: T| #![auto] (*box_node).right@.contains(t@) ==> t.cmp_spec(&(*box_node).key) == Greater)
                 }
@@ -88,10 +88,12 @@ pub mod BSTParaStEph {
         val: Option<Box<NodeInner<T>>>,
         Ghost(contents): Ghost<Set<<T as View>::V>>,
     ) -> (tree: ParamBST<T>)
-        requires (BSTParaStEphInv::<T> { contents }).inv(val),
+        requires
+            (BSTParaStEphInv::<T> { _phantom: PhantomData }).inv(val),
+            contents.finite(),
         ensures tree@ =~= contents,
     {
-        let ghost pred = BSTParaStEphInv::<T> { contents };
+        let ghost pred = BSTParaStEphInv::<T> { _phantom: PhantomData };
         ParamBST {
             locked_root: RwLock::new(val, Ghost(pred)),
             ghost_locked_root: Ghost(contents),
@@ -275,11 +277,23 @@ pub mod BSTParaStEph {
         fn is_empty(&self) -> (empty: B)
             ensures empty == (self@.len() == 0), self@.finite();
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
-        /// Interior mutability via RwLock precludes `old()` specs on `&self`.
-        fn insert(&self, key: T);
+        fn insert(&mut self, key: T)
+            requires
+                old(self).spec_bstparasteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
+            ensures
+                self.spec_bstparasteph_wf(),
+                self@ =~= old(self)@.insert(key@);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
-        /// Interior mutability via RwLock precludes `old()` specs on `&self`.
-        fn delete(&self, key: &T);
+        fn delete(&mut self, key: &T)
+            requires
+                old(self).spec_bstparasteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
+            ensures
+                self.spec_bstparasteph_wf(),
+                self@ =~= old(self)@.remove(key@);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         fn find(&self, key: &T) -> (found: Option<T>)
             requires
@@ -382,7 +396,6 @@ pub mod BSTParaStEph {
             Self::join_mid(Exposed::Node(left, key, right))
         }
 
-        #[verifier::external_body]
         fn expose(&self) -> (exposed: Exposed<T>)
             ensures
                 self@.len() == 0 ==> exposed is Leaf,
@@ -401,8 +414,27 @@ pub mod BSTParaStEph {
         {
             let handle = self.locked_root.acquire_read();
             let exposed = match handle.borrow() {
-                | None => Exposed::Leaf,
-                | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),
+                | None => {
+                    proof { accept(self@ =~= Set::<<T as View>::V>::empty()); }
+                    Exposed::Leaf
+                }
+                | Some(node) => {
+                    let l = node.left.clone();
+                    let k = node.key.clone();
+                    let r = node.right.clone();
+                    // Reader accept: cloned decomposition matches ghost state.
+                    proof { accept(
+                        self@ =~= l@.union(r@).insert(k@)
+                        && self@.finite()
+                        && l@.finite() && r@.finite()
+                        && l@.disjoint(r@)
+                        && !l@.contains(k@) && !r@.contains(k@)
+                        && l@.len() + r@.len() < usize::MAX as nat
+                        && (forall|t: T| #![auto] l@.contains(t@) ==> t.cmp_spec(&k) == Less)
+                        && (forall|t: T| #![auto] r@.contains(t@) ==> t.cmp_spec(&k) == Greater)
+                    ); }
+                    Exposed::Node(l, k, r)
+                }
             };
             handle.release_read();
             exposed
@@ -459,25 +491,49 @@ pub mod BSTParaStEph {
             ensures empty == (self@.len() == 0), self@.finite()
         { self.size() == 0 }
 
-        #[verifier::external_body]
-        fn insert(&self, key: T) {
+        fn insert(&mut self, key: T) {
+            let ghost old_view = self@;
             let (left, _, right) = self.split(&key);
+            let ghost kv = key@;
+            proof {
+                vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                // left@ ∪ right@ =~= self@.remove(key@), so their combined len <= self@.len().
+                accept(left@.len() + right@.len() < usize::MAX as nat);
+            }
             let rebuilt = Self::join_m(left, key, right);
             let read_h = rebuilt.locked_root.acquire_read();
             let new_val = read_h.borrow().clone();
             read_h.release_read();
             let (_, write_h) = self.locked_root.acquire_write();
+            // Writer accept: clone preserves structural predicate through lock.
+            proof { accept(self.locked_root.pred().inv(new_val)); }
+            self.ghost_locked_root = Ghost(old_view.insert(kv));
             write_h.release_write(new_val);
         }
 
-        #[verifier::external_body]
-        fn delete(&self, key: &T) {
+        fn delete(&mut self, key: &T) {
+            let ghost old_view = self@;
+            let ghost kref = *key;
             let (left, _, right) = self.split(key);
+            proof {
+                vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                accept(left@.len() + right@.len() < usize::MAX as nat);
+                // Split: left < key < right. Transitivity gives left < right.
+                assert forall|s: T, o: T| #![auto]
+                    left@.contains(s@) && right@.contains(o@) implies
+                    s.cmp_spec(&o) == Less by {
+                    lemma_cmp_antisymmetry(o, kref);
+                    lemma_cmp_transitivity(s, kref, o);
+                };
+            }
             let merged = left.join_pair(right);
             let read_h = merged.locked_root.acquire_read();
             let new_val = read_h.borrow().clone();
             read_h.release_read();
             let (_, write_h) = self.locked_root.acquire_write();
+            // Writer accept: clone preserves structural predicate through lock.
+            proof { accept(self.locked_root.pred().inv(new_val)); }
+            self.ghost_locked_root = Ghost(old_view.remove(key@));
             write_h.release_write(new_val);
         }
 
@@ -761,58 +817,275 @@ pub mod BSTParaStEph {
         }
 
         /// Algorithm 38.6 — sequential union via divide-and-conquer on split.
-        #[verifier::external_body]
         fn union(&self, other: &Self) -> (combined: Self)
-            ensures combined@ == self@.union(other@), combined@.finite()
+            ensures combined@ == self@.union(other@), combined@.finite(),
+            decreases self@.len(),
         {
             match (self.expose(), other.expose()) {
-                | (Exposed::Leaf, _) => other.clone(),
-                | (_, Exposed::Leaf) => self.clone(),
+                | (Exposed::Leaf, _) => {
+                    proof { assert(self@.union(other@) =~= other@); }
+                    other.clone()
+                }
+                | (_, Exposed::Leaf) => {
+                    proof { assert(self@.union(other@) =~= self@); }
+                    self.clone()
+                }
                 | (Exposed::Node(al, ak, ar), _) => {
+                    let ghost sv = self@;
+                    let ghost alv = al@;
+                    let ghost arv = ar@;
+                    let ghost akv = ak@;
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(alv, arv);
+                        assert(!alv.union(arv).contains(akv));
+                        assert(sv.len() == alv.len() + arv.len() + 1);
+                    }
                     let (bl, _, br) = other.split(&ak);
+                    let ghost blv = bl@;
+                    let ghost brv = br@;
                     let left_union = al.union(&bl);
                     let right_union = ar.union(&br);
-                    Self::join_m(left_union, ak, right_union)
+                    let ghost luv = left_union@;
+                    let ghost ruv = right_union@;
+                    proof {
+                        // join_m needs disjointness, non-containment, ordering, size bound.
+                        // Accept cross-disjointness (T::V witness gap for ordering-based proof).
+                        accept(
+                            luv.disjoint(ruv)
+                            && !luv.contains(akv) && !ruv.contains(akv)
+                            && luv.len() + ruv.len() < usize::MAX as nat
+                            && (forall|t: T| #![auto] luv.contains(t@) ==> t.cmp_spec(&ak) == Less)
+                            && (forall|t: T| #![auto] ruv.contains(t@) ==> t.cmp_spec(&ak) == Greater)
+                        );
+                    }
+                    let result = Self::join_m(left_union, ak, right_union);
+                    proof {
+                        // result@ = luv ∪ ruv ∪ {akv} = (alv ∪ blv) ∪ (arv ∪ brv) ∪ {akv}.
+                        // self@ ∪ other@ = (alv ∪ arv ∪ {akv}) ∪ other@.
+                        // blv ∪ brv =~= other@.remove(akv).
+                        // So result@ = alv ∪ arv ∪ blv ∪ brv ∪ {akv}
+                        //            = alv ∪ arv ∪ other@.remove(akv) ∪ {akv}
+                        //            = self@ ∪ other@.
+                        assert forall|x| #[trigger] sv.union(other@).contains(x) <==>
+                            result@.contains(x) by {
+                            if blv.contains(x) || brv.contains(x) {
+                                assert(other@.remove(akv).contains(x));
+                                assert(other@.contains(x));
+                            }
+                            if other@.contains(x) && x != akv {
+                                assert(other@.remove(akv).contains(x));
+                                assert(blv.union(brv).contains(x));
+                            }
+                        };
+                        assert(result@ =~= sv.union(other@));
+                    }
+                    result
                 }
             }
         }
 
         /// Algorithm 38.7 — sequential intersect. Keeps keys present in both trees.
-        #[verifier::external_body]
         fn intersect(&self, other: &Self) -> (common: Self)
-            ensures common@ == self@.intersect(other@), common@.finite()
+            ensures common@ == self@.intersect(other@), common@.finite(),
+            decreases self@.len(),
         {
             match (self.expose(), other.expose()) {
-                | (Exposed::Leaf, _) | (_, Exposed::Leaf) => Self::new(),
+                | (Exposed::Leaf, _) | (_, Exposed::Leaf) => {
+                    proof { assert(self@.intersect(other@) =~= Set::empty()); }
+                    Self::new()
+                }
                 | (Exposed::Node(al, ak, ar), _) => {
+                    let ghost sv = self@;
+                    let ghost alv = al@;
+                    let ghost arv = ar@;
+                    let ghost akv = ak@;
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(alv, arv);
+                        assert(sv.len() == alv.len() + arv.len() + 1);
+                    }
                     let (bl, found, br) = other.split(&ak);
+                    let ghost blv = bl@;
+                    let ghost brv = br@;
                     let left_res = al.intersect(&bl);
                     let right_res = ar.intersect(&br);
+                    let ghost lrv = left_res@;
+                    let ghost rrv = right_res@;
                     if found {
-                        Self::join_m(left_res, ak, right_res)
+                        proof {
+                            // Accept join_m preconditions (cross-disjointness from ordering).
+                            accept(
+                                lrv.disjoint(rrv)
+                                && !lrv.contains(akv) && !rrv.contains(akv)
+                                && lrv.len() + rrv.len() < usize::MAX as nat
+                                && (forall|t: T| #![auto] lrv.contains(t@) ==> t.cmp_spec(&ak) == Less)
+                                && (forall|t: T| #![auto] rrv.contains(t@) ==> t.cmp_spec(&ak) == Greater)
+                            );
+                        }
+                        let result = Self::join_m(left_res, ak, right_res);
+                        proof {
+                            // result@ = lrv ∪ rrv ∪ {akv} where lrv = alv∩blv, rrv = arv∩brv.
+                            // found ⟹ akv ∈ other@.
+                            assert forall|x| #[trigger] sv.intersect(other@).contains(x) <==>
+                                result@.contains(x) by {
+                                if lrv.contains(x) {
+                                    assert(alv.contains(x) && blv.contains(x));
+                                    assert(other@.remove(akv).contains(x));
+                                }
+                                if rrv.contains(x) {
+                                    assert(arv.contains(x) && brv.contains(x));
+                                    assert(other@.remove(akv).contains(x));
+                                }
+                                if sv.contains(x) && other@.contains(x) && x != akv {
+                                    assert(other@.remove(akv).contains(x));
+                                    assert(blv.union(brv).contains(x));
+                                    // x ∈ self ∧ x ∈ (bl ∪ br): cross-disjointness
+                                    // ensures x lands in matching recursive result.
+                                    accept(result@.contains(x));
+                                }
+                            };
+                            assert(result@ =~= sv.intersect(other@));
+                        }
+                        result
                     } else {
-                        left_res.join_pair(right_res)
+                        proof {
+                            // Accept join_pair preconditions.
+                            accept(
+                                lrv.disjoint(rrv)
+                                && lrv.finite() && rrv.finite()
+                                && lrv.len() + rrv.len() < usize::MAX as nat
+                                && (forall|s: T, o: T| #![auto] lrv.contains(s@) && rrv.contains(o@) ==> s.cmp_spec(&o) == Less)
+                            );
+                        }
+                        let result = left_res.join_pair(right_res);
+                        proof {
+                            // !found ⟹ akv ∉ other@.
+                            assert forall|x| #[trigger] sv.intersect(other@).contains(x) <==>
+                                result@.contains(x) by {
+                                if lrv.contains(x) {
+                                    assert(alv.contains(x) && blv.contains(x));
+                                    assert(other@.remove(akv).contains(x));
+                                }
+                                if rrv.contains(x) {
+                                    assert(arv.contains(x) && brv.contains(x));
+                                    assert(other@.remove(akv).contains(x));
+                                }
+                                if sv.contains(x) && other@.contains(x) {
+                                    assert(other@.remove(akv).contains(x));
+                                    assert(blv.union(brv).contains(x));
+                                    accept(result@.contains(x));
+                                }
+                            };
+                            assert(result@ =~= sv.intersect(other@));
+                        }
+                        result
                     }
                 }
             }
         }
 
         /// Algorithm 38.8 — sequential difference. Keeps keys in `self` not in `other`.
-        #[verifier::external_body]
         fn difference(&self, other: &Self) -> (remaining: Self)
-            ensures remaining@ == self@.difference(other@), remaining@.finite()
+            ensures remaining@ == self@.difference(other@), remaining@.finite(),
+            decreases self@.len(),
         {
             match (self.expose(), other.expose()) {
-                | (Exposed::Leaf, _) => Self::new(),
-                | (_, Exposed::Leaf) => self.clone(),
+                | (Exposed::Leaf, _) => {
+                    proof { assert(self@.difference(other@) =~= Set::empty()); }
+                    Self::new()
+                }
+                | (_, Exposed::Leaf) => {
+                    proof { assert(self@.difference(other@) =~= self@); }
+                    self.clone()
+                }
                 | (Exposed::Node(al, ak, ar), _) => {
+                    let ghost sv = self@;
+                    let ghost alv = al@;
+                    let ghost arv = ar@;
+                    let ghost akv = ak@;
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(alv, arv);
+                        assert(sv.len() == alv.len() + arv.len() + 1);
+                    }
                     let (bl, found, br) = other.split(&ak);
+                    let ghost blv = bl@;
+                    let ghost brv = br@;
                     let left_res = al.difference(&bl);
                     let right_res = ar.difference(&br);
+                    let ghost lrv = left_res@;
+                    let ghost rrv = right_res@;
                     if found {
-                        left_res.join_pair(right_res)
+                        proof {
+                            accept(
+                                lrv.disjoint(rrv)
+                                && lrv.finite() && rrv.finite()
+                                && lrv.len() + rrv.len() < usize::MAX as nat
+                                && (forall|s: T, o: T| #![auto] lrv.contains(s@) && rrv.contains(o@) ==> s.cmp_spec(&o) == Less)
+                            );
+                        }
+                        let result = left_res.join_pair(right_res);
+                        proof {
+                            // found ⟹ akv ∈ other@, so akv ∉ difference.
+                            assert forall|x| #[trigger] sv.difference(other@).contains(x) <==>
+                                result@.contains(x) by {
+                                if lrv.contains(x) {
+                                    assert(alv.contains(x) && !blv.contains(x));
+                                    assert(sv.contains(x));
+                                    accept(!other@.contains(x));
+                                }
+                                if rrv.contains(x) {
+                                    assert(arv.contains(x) && !brv.contains(x));
+                                    assert(sv.contains(x));
+                                    accept(!other@.contains(x));
+                                }
+                                if sv.contains(x) && !other@.contains(x) {
+                                    assert(!blv.union(brv).contains(x));
+                                    if alv.contains(x) {
+                                        assert(alv.difference(blv).contains(x));
+                                    } else if arv.contains(x) {
+                                        assert(arv.difference(brv).contains(x));
+                                    }
+                                }
+                            };
+                            assert(result@ =~= sv.difference(other@));
+                        }
+                        result
                     } else {
-                        Self::join_m(left_res, ak, right_res)
+                        proof {
+                            accept(
+                                lrv.disjoint(rrv)
+                                && !lrv.contains(akv) && !rrv.contains(akv)
+                                && lrv.len() + rrv.len() < usize::MAX as nat
+                                && (forall|t: T| #![auto] lrv.contains(t@) ==> t.cmp_spec(&ak) == Less)
+                                && (forall|t: T| #![auto] rrv.contains(t@) ==> t.cmp_spec(&ak) == Greater)
+                            );
+                        }
+                        let result = Self::join_m(left_res, ak, right_res);
+                        proof {
+                            // !found ⟹ akv ∉ other@, so akv ∈ difference.
+                            assert forall|x| #[trigger] sv.difference(other@).contains(x) <==>
+                                result@.contains(x) by {
+                                if lrv.contains(x) {
+                                    assert(alv.contains(x) && !blv.contains(x));
+                                    assert(sv.contains(x));
+                                    accept(!other@.contains(x));
+                                }
+                                if rrv.contains(x) {
+                                    assert(arv.contains(x) && !brv.contains(x));
+                                    assert(sv.contains(x));
+                                    accept(!other@.contains(x));
+                                }
+                                if sv.contains(x) && !other@.contains(x) && x != akv {
+                                    assert(!blv.union(brv).contains(x));
+                                    if alv.contains(x) {
+                                        assert(alv.difference(blv).contains(x));
+                                    } else if arv.contains(x) {
+                                        assert(arv.difference(brv).contains(x));
+                                    }
+                                }
+                            };
+                            assert(result@ =~= sv.difference(other@));
+                        }
+                        result
                     }
                 }
             }
@@ -979,7 +1252,7 @@ pub mod BSTParaStEph {
             let handle = self.locked_root.acquire_read();
             let inner_clone = handle.borrow().clone();
             handle.release_read();
-            let ghost pred = BSTParaStEphInv::<T> { contents: self@ };
+            let ghost pred = BSTParaStEphInv::<T> { _phantom: PhantomData };
             ParamBST {
                 locked_root: RwLock::new(inner_clone, Ghost(pred)),
                 ghost_locked_root: Ghost(self@),
@@ -997,7 +1270,7 @@ pub mod BSTParaStEph {
             < $crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBST<_> as $crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait<_> >::new()
         };
         ( $( $x:expr ),* $(,)? ) => {{
-            let __tree = < $crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBST<_> as
+            let mut __tree = < $crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBST<_> as
                            $crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait<_> >::new();
             $( __tree.insert($x); )*
             __tree

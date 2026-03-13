@@ -13,6 +13,7 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
+     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -20,77 +21,75 @@ Table of Contents:
 =================================================================
 
 ❌ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:80: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:80: error: external_body - #[verifier::external_body]
         81 |         open spec fn view(&self) -> Set<<T as View>::V> { Set::empty() }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:164: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:164: error: external_body - #[verifier::external_body]
        165 |         fn new() -> (empty: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:169: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:169: error: external_body - #[verifier::external_body]
        170 |         fn singleton(key: T) -> (tree: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:178: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:178: error: external_body - #[verifier::external_body]
        179 |         fn expose(&self) -> (exposed: Exposed<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:183: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:183: error: external_body - #[verifier::external_body]
        184 |         fn join_mid(exposed: Exposed<T>) -> (joined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:188: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:188: error: external_body - #[verifier::external_body]
        189 |         fn size(&self) -> (count: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:198: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:198: error: external_body - #[verifier::external_body]
        199 |         fn is_empty(&self) -> (empty: B)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:203: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:203: error: external_body - #[verifier::external_body]
        204 |         fn insert(&self, key: T) {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:214: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:214: error: external_body - #[verifier::external_body]
        215 |         fn delete(&self, key: &T) {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:225: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:225: error: external_body - #[verifier::external_body]
        226 |         fn find(&self, key: &T) -> (found: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:239: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:239: error: external_body - #[verifier::external_body]
        240 |         fn split(&self, key: &T) -> (parts: (Self, B, Self))
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:247: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:247: error: external_body - #[verifier::external_body]
        248 |         fn join_pair(&self, other: Self) -> (joined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:252: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:252: error: external_body - #[verifier::external_body]
        253 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:257: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:257: error: external_body - #[verifier::external_body]
        258 |         fn intersect(&self, other: &Self) -> (common: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:262: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:262: error: external_body - #[verifier::external_body]
        263 |         fn difference(&self, other: &Self) -> (remaining: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:267: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:267: error: external_body - #[verifier::external_body]
        268 |         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(&self, predicate: F) -> (filtered: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:274: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:274: error: external_body - #[verifier::external_body]
        275 |         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:279: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:279: error: external_body - #[verifier::external_body]
        280 |         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:320: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:320: error: external_body - #[verifier::external_body]
        321 |         fn clone(&self) -> (cloned: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:299: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:314: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:299: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:314: info: accept()
    Holes: 19 total
       19 × external_body
    Info: 2 total
 ❌ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:357: error: external_body - #[verifier::external_body]
-       358 |         fn expose(&self) -> (exposed: Exposed<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:434: error: external_body - #[verifier::external_body]
-       435 |         fn insert(&self, key: T) {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:445: error: external_body - #[verifier::external_body]
-       446 |         fn delete(&self, key: &T) {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:736: error: external_body - #[verifier::external_body]
-       737 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:753: error: external_body - #[verifier::external_body]
-       754 |         fn intersect(&self, other: &Self) -> (common: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:773: error: external_body - #[verifier::external_body]
-       774 |         fn difference(&self, other: &Self) -> (remaining: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:933: error: external_body - #[verifier::external_body]
-       934 |         fn clone(&self) -> (cloned: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:876: error: fn_missing_ensures - fn reduce_inner — exec fn should have ensures
-       837 |     fn filter_inner<T: StT + Ord, F: Fn(&T) -> bool>(
-            ...
-       874 | 
-       875 |     /// Algorithm 38.10 — sequential reduce recursive helper (takes &F for recursion).
-       877 |         tree: &ParamBST<T>,
-       878 |         op: &F,
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:425: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:912: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:927: info: accept()
-   Holes: 7 total
-      7 × external_body
-   Info: 3 total
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:1248: error: external_body - #[verifier::external_body]
+      1249 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:418: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:426: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:485: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:501: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:509: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:520: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:535: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:853: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:916: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:943: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:952: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:975: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:1018: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:1033: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:1038: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:1054: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:1070: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:1075: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:1227: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:1242: info: accept()
+   Holes: 1 total
+      1 × external_body
+   Info: 20 total
    Proof functions: 5 total (5 clean, 0 holed)
 
 =================================================================
@@ -126,26 +125,22 @@ Proof Functions:
    5 total
 
 Function Specs:
-   83 exec fns with complete spec (requires+ensures) (79%)
-   1 exec fns missing spec (0%)
+   84 exec fns with complete spec (requires+ensures) (80%)
+   0 exec fns missing spec (0%)
    20 proof/spec fns clean (19%)
    0 proof/spec fns with holes (0%)
    104 total fns
 
 
-Holes Found: 26 total
-   26 × external_body (100%)
+Holes Found: 20 total
+   20 × external_body (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 07:57:03 -07:00
-Ended:     2026-03-13 07:57:03 -07:00
-Duration:  14ms
-
-Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
-2026-03-13 07:57:03 -07:00
-Duration:  14ms
+Started:   2026-03-13 11:28:24 -07:00
+Ended:     2026-03-13 11:28:24 -07:00
+Duration:  19ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
