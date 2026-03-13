@@ -16,7 +16,7 @@ pub mod Concurrency;
 pub mod ParaPairs;
 
 pub mod experiments {
-    pub mod vstd_laws_eq_clone;
+//    pub mod vstd_laws_eq_clone;  // Blocked: reveal() E0401 on generic types
 //    pub mod struct_rwlock_arc_with_fn_specs;  // FAILS: assumes/external_body at lock boundary
 //    pub mod struct_rwlock_with_fn_specs;  // FAILS: assumes/external_body at lock boundary
 //    pub mod struct_rwlock_with_fn_specs_result;  // FAILS: assumes at lock boundary

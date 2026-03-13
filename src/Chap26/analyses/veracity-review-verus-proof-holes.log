@@ -1,5 +1,5 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap26/
-Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes /home/milnes/projects/APAS-VERUS/src/Chap26/
+Full output: /home/milnes/projects/APAS-VERUS/src/Chap26/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
   1. File Holes
@@ -23,17 +23,17 @@ Table of Contents:
    3 clean proof functions
 ✓ DivConReduceStPer.rs
 ❌ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:508: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:508: error: external_body - #[verifier::external_body]
        509 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:526: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:526: error: external_body - #[verifier::external_body]
        527 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
    Holes: 2 total
       2 × external_body
    Proof functions: 4 total (4 clean, 0 holed)
 ❌ ETSPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPStEph.rs:483: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:483: error: external_body - #[verifier::external_body]
        484 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPStEph.rs:501: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:501: error: external_body - #[verifier::external_body]
        502 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
    Holes: 2 total
       2 × external_body
@@ -106,9 +106,8 @@ Holes Found: 4 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 14:20:01 -07:00
-Ended:     2026-03-12 14:20:01 -07:00
-Duration:  51ms
+Started:   2026-03-12 17:29:07 -07:00
+Ended:     2026-03-12 17:29:07 -07:00
+Duration:  28ms
 
-Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
+Full output: /home/milnes/projects/APAS-VERUS/src/Chap26/analyses/veracity-review-verus-proof-holes.log

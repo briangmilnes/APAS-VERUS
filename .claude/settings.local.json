@@ -126,7 +126,8 @@
       "Bash(for *$(*)* *)",
       "Bash(for *$(*)* done)",
       "Bash(for *$(*)*)",
-      "WebFetch(domain:)"
+      "WebFetch(domain:)",
+      "Bash(/home/milnes/projects/veracity/target/release/veracity-review-proof-holes:*)"
     ]
   }
 }

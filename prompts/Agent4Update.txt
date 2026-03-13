@@ -7,38 +7,48 @@ REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs.
 Read src/standards/* and apply them in your proposed work.
 Fix trigger warnings as they occur using the rules.
 
-We are working on plans/PBOGH.md — PROVE BIG OR GO HOME.
-Read it. You are Agent 4: Tables + Priority Queues.
+We are working on plans/ROUND6-PLAN.md — Round 6 Hole Reduction.
+Read it. You are Agent 4: Ordered Sets + Tables.
 
-Current state: 3670 verified, 456 holes, 25 clean chapters.
+Current state: 3764 verified, 541 holes, 26 clean chapters.
 
-Your chapters: Chap38, Chap43, Chap45, Chap47, Chap49, Chap51.
-Total: 107 holes across 39 files.
+Your chapters: Chap43, Chap42, Chap41.
+Total: 128 holes across ~8 focus files. Target: -30 holes.
 
-Section 4.2 target files in your chapters (clean deps):
-  Chap47/ParaHashTableStEph.rs (1 hole).
+Your files (in priority order):
+  Phase 1 — OrderedSetMtEph lock-boundary (mechanical, ~20 provable):
+    Chap43/OrderedSetMtEph.rs (39 assumes — lock-boundary)
 
-Other chapters have internal deps — they unblock each other as you clean them.
+  Phase 2 — Chap41 set-semantics (real proof work):
+    Chap41/AVLTreeSetStEph.rs (12 assumes — set semantics)
+    Chap41/AVLTreeSetStPer.rs (10 assumes — set semantics)
+    Chap41/AVLTreeSetMtPer.rs (5 assumes)
+    Chap41/ArraySetStEph.rs (9 assumes)
 
-Priority: Chap45 → Chap47 → Chap43 → Chap49 → Chap51 → Chap38.
+  Phase 3 — OrderedTable delegation (last):
+    Chap43/OrderedTableMtEph.rs (16 ext_body — Mt delegation)
+    Chap43/OrderedTableMtPer.rs (22 ext_body)
+    Chap42/TableMtEph.rs (15 holes — 2 assume + 13 ext_body)
 
-Also read plans/coarse-rwlock-migration-plan.md for the RwLock migration details.
+The dependency chain is Chap37 → Chap41 → Chap42 → Chap43. All deps are
+clean now. Agent 2 has Chap37 — no overlap.
+
+NOTE: OrderedSetMtEph.rs has cascade fixes from the Round 5 merge
+(wf requires propagation). Read it carefully before modifying.
+
+Read the standard: src/standards/toplevel_coarse_rwlocks_for_mt_modules.rs
 
 Key rules:
-- WARNING: Do NOT add accept() anywhere except the patterns defined in the standards
-  (lock-boundary, eq/clone). Misplaced accepts defeat the proof. When in doubt, leave
-  it as assume and flag it for review.
-- NEVER write `requires true`. Per spec_wf_standard.rs: every &self method requires
-  self.spec_<module>_wf(). Every &mut self method requires old(self).spec_<module>_wf().
-  Every Self output ensures out.spec_<module>_wf(). Read the standard.
+- WARNING: Do NOT add accept() anywhere. Do NOT convert assume to accept.
+- Do the proof work: try to prove each assume, don't just label it.
 - Run scripts/validate.sh after changes. Show full output.
-- Run scripts/holes.sh on your chapters to verify hole counts before and after.
+- Run scripts/holes.sh on your chapters to verify hole counts.
+- DO NOT touch files outside your assigned list.
 
 REPORTING: Before committing, write plans/AGENT4.md with:
   1. What you changed and why.
   2. Holes closed (file, hole type, how resolved).
   3. Blockers — anything you could not fix and why.
   4. Verified count, hole count for your chapters.
-This file is how the merge coordinator tracks your progress.
 
 Propose a plan of work.

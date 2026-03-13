@@ -1,5 +1,5 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap56/
-Full output: src/Chap56/analyses/veracity-review-verus-proof-holes.log
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes /home/milnes/projects/APAS-VERUS/src/Chap56/
+Full output: /home/milnes/projects/APAS-VERUS/src/Chap56/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
   1. File Holes
@@ -24,10 +24,10 @@ Table of Contents:
 ✓ AllPairsResultStPerF64.rs
 ✓ AllPairsResultStPerI64.rs
 ℹ Example56_1.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_1.rs:43: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:43: info: external_accept_hole
    Info: 1 total
 ℹ Example56_3.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap56/Example56_3.rs:40: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:40: info: external_accept_hole
    Info: 1 total
 ✓ PathWeightUtilsStEph.rs
 ✓ PathWeightUtilsStPer.rs
@@ -104,11 +104,8 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 14:20:02 -07:00
-Ended:     2026-03-12 14:20:02 -07:00
-Duration:  48ms
+Started:   2026-03-12 17:29:08 -07:00
+Ended:     2026-03-12 17:29:08 -07:00
+Duration:  23ms
 
-Full output: src/Chap56/analyses/veracity-review-verus-proof-holes.log
-Duration:  48ms
-
-Full output: src/Chap56/analyses/veracity-review-verus-proof-holes.log
+Full output: /home/milnes/projects/APAS-VERUS/src/Chap56/analyses/veracity-review-verus-proof-holes.log

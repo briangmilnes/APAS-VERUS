@@ -7,40 +7,45 @@ REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs.
 Read src/standards/* and apply them in your proposed work.
 Fix trigger warnings as they occur using the rules.
 
-We are working on plans/PBOGH.md — PROVE BIG OR GO HOME.
-Read it. You are Agent 3: DP + Graph Algorithms.
+We are working on plans/ROUND6-PLAN.md — Round 6 Hole Reduction.
+Read it. You are Agent 3: Near-Clean + DP + Graph Search.
 
-Current state: 3670 verified, 456 holes, 25 clean chapters.
-Great work proving Chap65 UnionFind clean last round!
+Current state: 3764 verified, 541 holes, 26 clean chapters.
 
-Your chapters: Chap26, Chap50, Chap53, Chap66.
-Total: 77 holes across 25 files.
+Your chapters: Chap65, Chap52, Chap53, Chap50, Chap45.
+Total: 43 holes across ~10 files. Target: -15 holes.
 
-Section 4.2 target files in your chapters (clean deps):
-  Chap50/MatrixChainMtEph.rs (15), Chap50/OptBinSearchTreeMtEph.rs (15),
-  Chap50/OptBinSearchTreeMtPer.rs (12), Chap50/MatrixChainMtPer.rs (4),
-  Chap50/OptBinSearchTreeStEph.rs (1), Chap50/OptBinSearchTreeStPer.rs (1),
-  Chap66/BoruvkaStEph.rs (3),
-  Chap26/ETSPMtEph.rs (2), Chap26/ETSPStEph.rs (2).
+Your files (in priority order):
+  Phase 1 — close near-clean chapters:
+    Chap65/UnionFindStEph.rs (1 assume — eq bridge)
+    Chap52/EdgeSetGraphMtPer.rs (1 external_body)
 
-Priority: Chap26 → Chap66 → Chap50 (Mt wrappers now) → Chap53.
+  Phase 2 — Chap53 graph search:
+    Chap53/GraphSearchStEph.rs (7 holes — mixed)
+    Chap53/PQMinStEph.rs (5 holes — mixed)
+    Chap53/GraphSearchMtPer.rs (2 assumes)
+
+  Phase 3 — Chap50 lock-boundary:
+    Chap50/MatrixChainMtEph.rs (7 holes — 5 assume + 2 ext_body)
+    Chap50/OptBinSearchTreeMtEph.rs (4 holes — mixed)
+    Chap50/MatrixChain+OptBST StPer/MtPer (7 holes — mixed)
+
+  Phase 4 — Chap45 if time permits:
+    Chap45/BinaryHeapPQ.rs (9 assumes — multiset proofs)
+
+Phase 1 gives +2 clean chapters (Chap65, Chap52) for minimal effort.
 
 Key rules:
-- WARNING: Do NOT add accept() anywhere except the patterns defined in the standards
-  (lock-boundary, eq/clone). Misplaced accepts defeat the proof. When in doubt, leave
-  it as assume and flag it for review.
-- NEVER write `requires true`. Per spec_wf_standard.rs: every &self method requires
-  self.spec_<module>_wf(). Every &mut self method requires old(self).spec_<module>_wf().
-  Every Self output ensures out.spec_<module>_wf(). Read the standard.
-- Do NOT accept algorithmic assumes — those must be proved.
+- WARNING: Do NOT add accept() anywhere. Do NOT convert assume to accept.
+- Do the proof work: try to prove each assume, don't just label it.
 - Run scripts/validate.sh after changes. Show full output.
-- Run scripts/holes.sh on your chapters to verify hole counts before and after.
+- Run scripts/holes.sh on your chapters to verify hole counts.
+- DO NOT touch files outside your assigned list.
 
 REPORTING: Before committing, write plans/AGENT3.md with:
   1. What you changed and why.
   2. Holes closed (file, hole type, how resolved).
   3. Blockers — anything you could not fix and why.
   4. Verified count, hole count for your chapters.
-This file is how the merge coordinator tracks your progress.
 
 Propose a plan of work.

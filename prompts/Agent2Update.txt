@@ -7,39 +7,47 @@ REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs.
 Read src/standards/* and apply them in your proposed work.
 Fix trigger warnings as they occur using the rules.
 
-We are working on plans/PBOGH.md — PROVE BIG OR GO HOME.
-Read it. You are Agent 2: BST + Collections.
+We are working on plans/ROUND6-PLAN.md — Round 6 Hole Reduction.
+Read it. You are Agent 2: BST MtEph + AVLTreeSeq.
 
-Current state: 3670 verified, 456 holes, 25 clean chapters.
+Current state: 3764 verified, 541 holes, 26 clean chapters.
 
-Your chapters: Chap37, Chap39, Chap40, Chap41, Chap42.
-Total: 255 holes across 37 files. Most are external_body that become accepts via
-coarse RwLock migration.
+Your chapters: Chap37 only.
+Total: 62 holes across 10 files. Target: -25 holes.
 
-Section 4.2 target files in your chapters (clean deps):
-  Chap40/BSTSizeStEph.rs (2 holes) — start here, provable assumes.
+Your files (in priority order):
+  Chap37/BSTAVLMtEph.rs (5 assumes — solve first as template)
+  Chap37/BSTPlainMtEph.rs (5 assumes)
+  Chap37/BSTRBMtEph.rs (5 assumes)
+  Chap37/BSTBBAlphaMtEph.rs (5 assumes)
+  Chap37/BSTSplayMtEph.rs (5 assumes)
+  Chap37/BSTSplayStEph.rs (2 holes — assume+trivial_wf)
+  Chap37/AVLTreeSeq.rs (3 holes — mixed)
+  Chap37/AVLTreeSeqStEph.rs (7 holes — 2 assume + 5 ext_body)
+  Chap37/AVLTreeSeqStPer.rs (13 holes — mixed)
+  Chap37/AVLTreeSeqMtPer.rs (12 holes — ext_body)
 
-Chap37/39/41/42 have internal deps — they unblock each other as you clean them.
+Phase 1: BST*MtEph lock-boundary (25 assumes, mechanical).
+All 25 MtEph assumes follow the lock-boundary pattern:
+  - assume(inner@ == self@) after acquire_read
+  - assume(result == self@.property) from inner's ensures
+Solve BSTAVLMtEph first as template, replicate to 4 siblings.
 
-Priority: Chap40 → Chap37 → Chap42 → Chap39 → Chap41.
+Phase 2: AVLTreeSeq proves if time permits.
 
-Also read plans/coarse-rwlock-migration-plan.md for the RwLock migration details.
+Read the standard: src/standards/toplevel_coarse_rwlocks_for_mt_modules.rs
 
 Key rules:
-- WARNING: Do NOT add accept() anywhere except the patterns defined in the standards
-  (lock-boundary, eq/clone). Misplaced accepts defeat the proof. When in doubt, leave
-  it as assume and flag it for review.
-- NEVER write `requires true`. Per spec_wf_standard.rs: every &self method requires
-  self.spec_<module>_wf(). Every &mut self method requires old(self).spec_<module>_wf().
-  Every Self output ensures out.spec_<module>_wf(). Read the standard.
+- WARNING: Do NOT add accept() anywhere. Do NOT convert assume to accept.
+- Do the proof work: try to prove each assume, don't just label it.
 - Run scripts/validate.sh after changes. Show full output.
-- Run scripts/holes.sh on your chapters to verify hole counts before and after.
+- Run scripts/holes.sh on your chapters to verify hole counts.
+- DO NOT touch files outside your assigned list.
 
 REPORTING: Before committing, write plans/AGENT2.md with:
   1. What you changed and why.
   2. Holes closed (file, hole type, how resolved).
   3. Blockers — anything you could not fix and why.
   4. Verified count, hole count for your chapters.
-This file is how the merge coordinator tracks your progress.
 
 Propose a plan of work.

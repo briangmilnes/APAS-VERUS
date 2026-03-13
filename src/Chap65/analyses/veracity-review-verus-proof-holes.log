@@ -1,5 +1,5 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap65/
-Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes /home/milnes/projects/APAS-VERUS/src/Chap65/
+Full output: /home/milnes/projects/APAS-VERUS/src/Chap65/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
   1. File Holes
@@ -21,9 +21,16 @@ Table of Contents:
 
 ✓ KruskalStEph.rs
 ✓ PrimStEph.rs
-ℹ UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap65/UnionFindStEph.rs:337: info: accept()
-   Info: 1 total
+❌ UnionFindStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:337: error: assume() - assume((root_u == root_v) == (root_u@ == root_v@));
+       331 |         fn equals(&mut self, u: &V, v: &V) -> (same: B) {
+            ...
+       335 |             proof {
+       336 |                 // accept hole: PartialEq on V agrees with view equality for roots
+       338 |             }
+       339 |             root_u == root_v
+   Holes: 1 total
+      1 × assume()
 
 =================================================================
 2. Depends Upon
@@ -50,8 +57,8 @@ UnionFindStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   2 clean (no holes, no errors; 66%)
+   1 holed (holes or errors, 33%)
    3 total
 
 Proof Functions:
@@ -67,17 +74,15 @@ Function Specs:
    23 total fns
 
 
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
+Holes Found: 1 total
+   1 × assume() (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 14:20:02 -07:00
-Ended:     2026-03-12 14:20:02 -07:00
-Duration:  12ms
+Started:   2026-03-12 17:29:08 -07:00
+Ended:     2026-03-12 17:29:08 -07:00
+Duration:  5ms
 
-Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-tput: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+Full output: /home/milnes/projects/APAS-VERUS/src/Chap65/analyses/veracity-review-verus-proof-holes.log
