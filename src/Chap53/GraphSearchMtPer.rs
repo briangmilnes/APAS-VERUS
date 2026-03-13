@@ -13,8 +13,12 @@ pub mod GraphSearchMtPer {
     use crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::*;
 
     verus! {
+
+    broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
     // 4. type definitions
     #[derive(Clone)]
@@ -30,6 +34,7 @@ pub mod GraphSearchMtPer {
     // 8. traits
     pub trait SelectionStrategy<V: StTInMtT + Ord + 'static> {
         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B))
+            requires obeys_feq_clone::<V>(),
             ensures selected.0@.subset_of(frontier@);
     }
 
@@ -76,7 +81,7 @@ pub mod GraphSearchMtPer {
                 }
                 let first_ref = seq.nth(0);
                 let first = first_ref.clone();
-                proof { assume(first@ == first_ref@); }
+                proof { assert(cloned(*first_ref, first)); }
                 assert(frontier@.contains(first@));
                 let result = AVLTreeSetMtPer::singleton(first);
                 assert(result@.subset_of(frontier@)) by {

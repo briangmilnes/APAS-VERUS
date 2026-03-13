@@ -21,7 +21,7 @@ Table of Contents:
 
 ✓ DijkstraStEphF64.rs
 ❌ DijkstraStEphI64.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphI64.rs:69: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap57/DijkstraStEphI64.rs:69: warning: requires_true - requires true — vacuous precondition
         67 | 
         68 |     fn pq_entry_new(dist: i64, vertex: usize) -> (r: PQEntry)
         70 |         ensures r.dist == dist, r.vertex == vertex,
@@ -78,8 +78,8 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 23:36:23 -07:00
-Ended:     2026-03-12 23:36:23 -07:00
+Started:   2026-03-12 22:32:23 -07:00
+Ended:     2026-03-12 22:32:23 -07:00
 Duration:  3ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log

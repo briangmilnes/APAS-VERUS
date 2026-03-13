@@ -14,9 +14,9 @@ pub mod UnionFindStEph {
     use vstd::prelude::*;
 
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
+    use crate::vstdplus::feq::feq::feq;
     use std::hash::Hash;
 
     #[cfg(verus_keep_ghost)]
@@ -332,11 +332,7 @@ pub mod UnionFindStEph {
             let root_u = self.find(u);
             assert(self.parent@.contains_key(v@));
             let root_v = self.find(v);
-            proof {
-                // accept hole: PartialEq on V agrees with view equality for roots
-                assume((root_u == root_v) == (root_u@ == root_v@));
-            }
-            root_u == root_v
+            feq(&root_u, &root_v)
         }
 
         /// - APAS: Work O(n alpha(n)), Span O(n alpha(n))

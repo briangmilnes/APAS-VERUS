@@ -7,9 +7,13 @@ pub mod PQMinStEph {
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
-
+    use crate::vstdplus::accept::accept;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::*;
 
     verus! {
+
+    broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
     // 4. type definitions
     pub struct PQMinResult<V: StT + Ord, P: StT + Ord> {
@@ -98,7 +102,9 @@ pub mod PQMinStEph {
     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
         frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
     ) -> (result: Option<V>)
-        requires frontier.spec_avltreesetsteph_wf()
+        requires
+            frontier.spec_avltreesetsteph_wf(),
+            obeys_feq_clone::<V>(),
     {
         if frontier.size() == 0 {
             None
@@ -111,7 +117,7 @@ pub mod PQMinStEph {
             }
             let entry_ref = seq.nth(0);
             let v = entry_ref.1.clone();
-            proof { assume(v@ == entry_ref.1@); }
+            proof { assert(cloned(entry_ref.1, v)); }
             Some(v)
         }
     }
