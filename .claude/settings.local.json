@@ -126,6 +126,8 @@
       "Bash(for *$(*)* *)",
       "Bash(for *$(*)* done)",
       "Bash(for *$(*)*)",
+      "Bash(for *; do *; done)",
+      "Bash(for *; do *done)",
       "WebFetch(domain:)",
       "Bash(/home/milnes/projects/veracity/target/release/veracity-review-proof-holes:*)",
       "Bash(bash:*)",
