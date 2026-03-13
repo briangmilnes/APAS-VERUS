@@ -144,7 +144,7 @@ pub mod BSTSplayStEph {
     //		9. impls
 
     fn new_node<T: TotalOrder + Clone>(key: T) -> (node: Node<T>)
-        requires true,
+
         ensures
             node.key == key,
             node.size == 1,
@@ -160,7 +160,7 @@ pub mod BSTSplayStEph {
     }
 
     fn size_link<T: TotalOrder + Clone>(link: &Link<T>) -> (size: N)
-        requires true,
+
         ensures size as nat == spec_size_link(link),
     {
         proof { reveal(spec_size_link); }
@@ -188,7 +188,7 @@ pub mod BSTSplayStEph {
     }
 
     fn update<T: TotalOrder + Clone>(node: &mut Node<T>)
-        requires true,
+
         ensures
             node.key == old(node).key,
             node.left == old(node).left,
@@ -205,7 +205,7 @@ pub mod BSTSplayStEph {
     // Bottom-up splay: bring target (or nearest key) toward the root using
     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
     fn splay<T: TotalOrder + Clone>(root: Box<Node<T>>, target: &T) -> (result: Box<Node<T>>)
-        requires true,
+
         ensures true,
         decreases root,
     {
@@ -328,7 +328,7 @@ pub mod BSTSplayStEph {
     }
 
     fn bst_insert<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)
-        requires true,
+
         ensures true,
         decreases old(link),
     {
@@ -352,7 +352,7 @@ pub mod BSTSplayStEph {
     }
 
     fn insert_link<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)
-        requires true,
+
         ensures true,
     {
         let v = value.clone();
@@ -366,7 +366,7 @@ pub mod BSTSplayStEph {
     }
 
     fn find_link<'a, T: TotalOrder + Clone>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
-        requires true,
+
         ensures
             found.is_some() ==> *found.unwrap() == *target,
         decreases *link,
@@ -384,7 +384,7 @@ pub mod BSTSplayStEph {
     }
 
     fn min_link<T: TotalOrder + Clone>(link: &Link<T>) -> (min: Option<&T>)
-        requires true,
+
         ensures
             link.is_some() ==> min.is_some(),
             min.is_some() ==> spec_contains_link(link, *min.unwrap()),
@@ -400,7 +400,7 @@ pub mod BSTSplayStEph {
     }
 
     fn max_link<T: TotalOrder + Clone>(link: &Link<T>) -> (max: Option<&T>)
-        requires true,
+
         ensures
             link.is_some() ==> max.is_some(),
             max.is_some() ==> spec_contains_link(link, *max.unwrap()),
@@ -416,7 +416,7 @@ pub mod BSTSplayStEph {
     }
 
     fn in_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
-        requires true,
+
         ensures true,
         decreases *link,
     {
@@ -428,7 +428,7 @@ pub mod BSTSplayStEph {
     }
 
     fn pre_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
-        requires true,
+
         ensures true,
         decreases *link,
     {
@@ -486,15 +486,23 @@ pub mod BSTSplayStEph {
     //		11. derive impls in verus!
 
     impl<T: TotalOrder + Clone> Clone for Node<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (copy: Self)
-            ensures copy == *self
+            ensures true,
+            decreases *self,
         {
+            let left = match &self.left {
+                None => None,
+                Some(boxed) => Some(Box::new((&**boxed).clone())),
+            };
+            let right = match &self.right {
+                None => None,
+                Some(boxed) => Some(Box::new((&**boxed).clone())),
+            };
             Node {
                 key: self.key.clone(),
                 size: self.size,
-                left: self.left.clone(),
-                right: self.right.clone(),
+                left,
+                right,
             }
         }
     }

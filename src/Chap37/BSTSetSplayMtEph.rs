@@ -140,14 +140,14 @@ pub mod BSTSetSplayMtEph {
     //	9. impls
 
     fn values_vec<T: StTInMtT + Ord>(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
-        requires true,
+
         ensures true,
     {
         tree.in_order().iter().cloned().collect()
     }
 
     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
-        requires true,
+
         ensures true,
     {
         let mut tree = BSTSplayMtEph::new();
@@ -160,7 +160,7 @@ pub mod BSTSetSplayMtEph {
     fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetSplayMtEph<T>)
     where
         I: IntoIterator<Item = T>,
-        requires true,
+
         ensures true,
     {
         let mut tree = BSTSplayMtEph::new();
@@ -467,7 +467,7 @@ pub mod BSTSetSplayMtEph {
         type Item = T;
         type IntoIter = std::vec::IntoIter<T>;
         fn into_iter(self) -> (it: Self::IntoIter)
-            requires true,
+    
         {
             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
             values.into_iter()

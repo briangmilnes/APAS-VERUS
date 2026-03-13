@@ -22,6 +22,7 @@ pub mod AVLTreeSeqStPer {
     use std::fmt::{Debug, Display, Formatter};
 
     use vstd::prelude::*;
+    use vstd::slice::slice_subrange;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
@@ -216,7 +217,7 @@ pub mod AVLTreeSeqStPer {
     // 9. impls
 
     fn height_fn<T: StT>(n: &Link<T>) -> (h: N)
-        requires true,
+
         ensures h as nat == spec_cached_height(n),
     {
         match n {
@@ -226,7 +227,7 @@ pub mod AVLTreeSeqStPer {
     }
 
     fn size_fn<T: StT>(n: &Link<T>) -> (sz: N)
-        requires true,
+
         ensures sz as nat == spec_cached_size(n),
     {
         match n {
@@ -475,22 +476,47 @@ pub mod AVLTreeSeqStPer {
         }
     }
 
-    #[verifier::external_body]
     fn build_balanced_from_slice<T: StT>(a: &[T]) -> (link: Link<T>)
         ensures
             spec_avltreeseqstper_wf(link),
             spec_inorder(link) =~= a@.map_values(|t: T| t@),
+        decreases a.len(),
     {
-        fn rec<T: StT>(a: &[T]) -> Link<T> {
-            if a.is_empty() {
-                return None;
-            }
-            let mid = a.len() / 2;
-            let left = rec(&a[..mid]);
-            let right = rec(&a[mid + 1..]);
-            Some(mk(a[mid].clone(), left, right))
+        if a.is_empty() {
+            assert(a@.map_values(|t: T| t@) =~= Seq::<T::V>::empty());
+            return None;
         }
-        rec(a)
+        let mid = a.len() / 2;
+        let left_slice = slice_subrange(a, 0, mid);
+        let right_slice = slice_subrange(a, mid + 1, a.len());
+        let left = build_balanced_from_slice(left_slice);
+        let right = build_balanced_from_slice(right_slice);
+        let val = a[mid].clone();
+        proof {
+            lemma_size_eq_inorder_len::<T>(&left);
+            lemma_size_eq_inorder_len::<T>(&right);
+            lemma_height_le_size::<T>(&left);
+            lemma_height_le_size::<T>(&right);
+            assume(val@ == a@[mid as int]@);
+        }
+        let node = mk(val, left, right);
+        proof {
+            // Relate left_slice@ and right_slice@ to a@ subranges.
+            let left_seq = left_slice@;
+            let right_seq = right_slice@;
+            let full_seq = a@;
+            let f = |t: T| t@;
+            // By recursive ensures:
+            //   spec_inorder(left) =~= left_seq.map_values(f)
+            //   spec_inorder(right) =~= right_seq.map_values(f)
+            // mk ensures: spec_inorder(Some(node)) =~= spec_inorder(left) + seq![val@] + spec_inorder(right)
+            // So: spec_inorder(Some(node)) =~= left_seq.map_values(f) + seq![val@] + right_seq.map_values(f)
+            // Need: left_seq.map_values(f) + seq![val@] + right_seq.map_values(f) =~= full_seq.map_values(f)
+            assert(left_seq =~= full_seq.subrange(0, mid as int));
+            assert(right_seq =~= full_seq.subrange(mid as int + 1, full_seq.len() as int));
+            assert(full_seq =~= left_seq + seq![full_seq[mid as int]] + right_seq);
+        }
+        Some(node)
     }
 
     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
@@ -657,11 +683,17 @@ pub mod AVLTreeSeqStPer {
 
     // 10. iterators
 
-    #[verifier::external_body]
-    fn push_left_iter_stper<'a, T: StT>(it: &mut AVLTreeSeqStPerIter<'a, T>, mut cur: Option<&'a Node<T>>) {
-        while let Some(n) = cur {
+    fn push_left_iter_stper<'a, T: StT>(it: &mut AVLTreeSeqStPerIter<'a, T>, cur: Option<&'a Node<T>>)
+        ensures true,
+        decreases cur,
+    {
+        if let Some(n) = cur {
             it.stack.push(n);
-            cur = n.left.as_deref();
+            let next = match &n.left {
+                None => None,
+                Some(arc) => Some(&**arc),
+            };
+            push_left_iter_stper(it, next);
         }
     }
 
@@ -677,7 +709,6 @@ pub mod AVLTreeSeqStPer {
 
     impl<'a, T: StT> Iterator for AVLTreeSeqStPerIter<'a, T> {
         type Item = &'a T;
-        #[verifier::external_body]
         fn next(&mut self) -> (next: Option<Self::Item>)
             ensures true,
         {
@@ -687,7 +718,11 @@ pub mod AVLTreeSeqStPer {
             }
             let node = self.stack.pop()?;
             let value_ref: &T = &node.value;
-            push_left_iter_stper(self, node.right.as_deref());
+            let right_ref = match &node.right {
+                None => None,
+                Some(arc) => Some(&**arc),
+            };
+            push_left_iter_stper(self, right_ref);
             Some(value_ref)
         }
     }

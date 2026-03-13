@@ -313,7 +313,7 @@ pub mod AVLTreeSeqStEph {
     // 9. impls
 
     fn h_fn<T: StT>(n: &Link<T>) -> (height: N)
-        requires true,
+
         ensures height as nat == spec_cached_height(n),
     {
         match n {
@@ -852,8 +852,9 @@ pub mod AVLTreeSeqStEph {
             ArraySeqStEphS::from_vec(vals)
         }
 
-        #[verifier::external_body]
-        fn iter<'a>(&'a self) -> (it: AVLTreeSeqIterStEph<'a, T>) {
+        fn iter<'a>(&'a self) -> (it: AVLTreeSeqIterStEph<'a, T>)
+            ensures true,
+        {
             let mut it = AVLTreeSeqIterStEph {
                 stack: Vec::new(),
                 current: None,
@@ -1017,12 +1018,13 @@ pub mod AVLTreeSeqStEph {
 
     // 10. iterators
 
-    #[verifier::external_body]
-    fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqIterStEph<'a, T>, link: &'a Link<T>) {
-        let mut cursor = link;
-        while let Some(node) = cursor.as_ref() {
+    fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqIterStEph<'a, T>, link: &'a Link<T>)
+        ensures true,
+        decreases *link,
+    {
+        if let Some(node) = link {
             it.stack.push(node);
-            cursor = &node.left;
+            push_left_iter(it, &node.left);
         }
     }
 
@@ -1038,7 +1040,6 @@ pub mod AVLTreeSeqStEph {
 
     impl<'a, T: StT> Iterator for AVLTreeSeqIterStEph<'a, T> {
         type Item = &'a T;
-        #[verifier::external_body]
         fn next(&mut self) -> (next: Option<Self::Item>)
             ensures true,
         {
@@ -1052,15 +1053,25 @@ pub mod AVLTreeSeqStEph {
     // 11. derive impls in verus!
 
     impl<T: StT> Clone for AVLTreeNode<T> {
-        #[verifier::external_body]
-        fn clone(&self) -> (copy: Self) {
+        fn clone(&self) -> (copy: Self)
+            ensures true,
+            decreases *self,
+        {
+            let left = match &self.left {
+                None => None,
+                Some(boxed) => Some(Box::new((&**boxed).clone())),
+            };
+            let right = match &self.right {
+                None => None,
+                Some(boxed) => Some(Box::new((&**boxed).clone())),
+            };
             AVLTreeNode {
                 value: self.value.clone(),
                 height: self.height,
                 left_size: self.left_size,
                 right_size: self.right_size,
-                left: self.left.clone(),
-                right: self.right.clone(),
+                left,
+                right,
                 index: self.index,
             }
         }

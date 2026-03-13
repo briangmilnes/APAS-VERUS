@@ -343,7 +343,7 @@ pub mod AVLTreeSeq {
     // 9. impls
 
     fn cached_height<T: StT>(n: &Link<T>) -> (height: N)
-        requires true,
+
         ensures height as nat == spec_avltreeseq_cached_height(n),
     {
         match n {
@@ -1192,15 +1192,25 @@ pub mod AVLTreeSeq {
     // 11. derive impls in verus!
 
     impl<T: StT> Clone for AVLTreeNode<T> {
-        #[verifier::external_body]
-        fn clone(&self) -> (copy: Self) {
+        fn clone(&self) -> (copy: Self)
+            ensures true,
+            decreases *self,
+        {
+            let left = match &self.left {
+                None => None,
+                Some(boxed) => Some(Box::new((&**boxed).clone())),
+            };
+            let right = match &self.right {
+                None => None,
+                Some(boxed) => Some(Box::new((&**boxed).clone())),
+            };
             AVLTreeNode {
                 value: self.value.clone(),
                 height: self.height,
                 left_size: self.left_size,
                 right_size: self.right_size,
-                left: self.left.clone(),
-                right: self.right.clone(),
+                left,
+                right,
                 index: self.index,
             }
         }
