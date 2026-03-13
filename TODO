@@ -6,53 +6,52 @@
 3) Get the derives in use where they now work.
 4) Where have we turned clean tail recursion into loops that does not match APAS?
 
-Review:
+13 Mar 2026 — 3856 verified, 382 holes, 35 clean, 11 holed.
 
-18 Finished:
+Clean (35):
+src/Chap02/ - accepted. Fork-join scheduler.
+src/Chap03/ - clean. Insertion sort.
+src/Chap05/ - clean. Kleene, mappings, relations, sets.
+src/Chap06/ - clean. Directed graphs.
+src/Chap11/ - clean. Fibonacci.
+src/Chap12/ - clean. Exercises (asymptotic).
+src/Chap17/ - clean. MathSeq.
+src/Chap18/ - clean. ArraySeq.
+src/Chap19/ - clean. ArraySeq slices.
+src/Chap21/ - clean. Seq algorithms (merge, sort, filter, scan).
+src/Chap23/ - clean. Balanced binary trees, prim tree seq.
+src/Chap26/ - clean. Divide-and-conquer reduce, ETSP.
+src/Chap27/ - clean. Reduce/scan contract.
+src/Chap28/ - clean. Max contiguous subarray sum.
+src/Chap30/ - clean but stub. Probability.
+src/Chap35/ - clean. Order-statistic select.
+src/Chap36/ - clean. Quicksort.
+src/Chap40/ - clean. BST key-value, reduced, size.
+src/Chap44/ - clean. Document index.
+src/Chap49/ - clean. Min edit distance (DP).
+src/Chap51/ - clean. Bottom-up DP.
+src/Chap54/ - clean. BFS.
+src/Chap55/ - clean. DFS, SCC.
+src/Chap56/ - clean. All-pairs shortest paths.
+src/Chap57/ - clean. Dijkstra.
+src/Chap58/ - clean. Bellman-Ford.
+src/Chap59/ - clean. Johnson.
+src/Chap61/ - clean. Edge contraction.
+src/Chap62/ - clean. Star contraction.
+src/Chap63/ - clean. Connectivity.
+src/Chap64/ - clean. Spanning tree.
+src/Chap65/ - clean. Kruskal, Prim, union-find.
+src/Chap66/ - clean. Boruvka.
 
-src/Chap02/analyses/veracity-review-verus-proof-holes.log - accepted 
-src/Chap03/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap05/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap06/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap11/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap12/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap17/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap18/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap19/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap21/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap23/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap26/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap27/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap28/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap30/analyses/veracity-review-verus-proof-holes.log - clean but it's stub.
-src/Chap35/analyses/veracity-review-verus-proof-holes.log - clean. 
-src/Chap44/analyses/veracity-review-verus-proof-holes.log - clean 
-src/Chap36/analyses/veracity-review-verus-proof-holes.log - clean
-
-Unknown: 
-src/Chap45/analyses/veracity-review-verus-proof-holes.log  - PQs 
-src/Chap39/analyses/veracity-review-verus-proof-holes.log - Treaps 
-src/Chap37/analyses/veracity-review-verus-proof-holes.log - 
-src/Chap40/analyses/veracity-review-verus-proof-holes.log - Key value - 
-src/Chap53/analyses/veracity-review-verus-proof-holes.log - Graph Search/PQ - 
-src/Chap41/analyses/veracity-review-verus-proof-holes.log - AVL -
-src/Chap42/analyses/veracity-review-verus-proof-holes.log - 
-src/Chap43/analyses/veracity-review-verus-proof-holes.log - AugOrderedTables, bad.
-src/Chap47/analyses/veracity-review-verus-proof-holes.log - Hashtables.
-src/Chap49/analyses/veracity-review-verus-proof-holes.log 
-src/Chap50/analyses/veracity-review-verus-proof-holes.log - Tables.  Arc<RwLock>
-src/Chap51/analyses/veracity-review-verus-proof-holes.log - 
-src/Chap52/analyses/veracity-review-verus-proof-holes.log - 
-src/Chap54/analyses/veracity-review-verus-proof-holes.log - 
-src/Chap56/analyses/veracity-review-verus-proof-holes.log - 
-src/Chap38/analyses/veracity-review-verus-proof-holes.log - started
-src/Chap55/analyses/veracity-review-verus-proof-holes.log - DFS, SCCD, not fully verusified.
-src/Chap57/analyses/veracity-review-verus-proof-holes.log - Dijsktra, not fully verusified.
-src/Chap58/analyses/veracity-review-verus-proof-holes.log - Bellman Ford, not fully verusified.
-src/Chap59/analyses/veracity-review-verus-proof-holes.log - Johnson, not fully verusified.
-src/Chap61/analyses/veracity-review-verus-proof-holes.log - edge contract, not fully verusified. 
-src/Chap62/analyses/veracity-review-verus-proof-holes.log - star contract, not fully verusified.
-src/Chap63/analyses/veracity-review-verus-proof-holes.log - connectivity, not fully verusified.
-src/Chap64/analyses/veracity-review-verus-proof-holes.log - spanning tree, not fully verusified.
-src/Chap65/analyses/veracity-review-verus-proof-holes.log - Kruskal, prim and unionfind, not fully verusified.
-src/Chap66/analyses/veracity-review-verus-proof-holes.log - Boruvka, not fully specified, verusified. 
+Holed (11):
+src/Chap37/ - 102 holes. BSTs (plain, AVL, red-black, BB-alpha, splay), AVLTreeSeq.
+src/Chap38/ - 20 holes. Augmented BSTs. Clean deps.
+src/Chap39/ - 37 holes. Treaps.
+src/Chap41/ - 77 holes. Sets (array, AVL tree). Blocked by Chap37.
+src/Chap42/ - 18 holes. Tables. Blocked by Chap41.
+src/Chap43/ - 145 holes. Augmented ordered tables. Blocked by Chap37, 41, 42.
+src/Chap45/ - 5 holes. Priority queues (balanced tree, binary heap). Blocked by Chap37.
+src/Chap47/ - 45 holes. Hash tables (chained, flat, parallel).
+src/Chap50/ - 3 holes. Matrix chain (DP). Clean deps.
+src/Chap52/ - 1 hole. Adjacency matrix graphs. Blocked by Chap41, 43.
+src/Chap53/ - 18 holes. Graph search, priority queue search. Blocked by Chap41.

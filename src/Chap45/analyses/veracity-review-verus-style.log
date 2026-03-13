@@ -48,7 +48,7 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:253: warning: [18] proof fn lemma_swap_preserves_multiset should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:254: warning: [18] proof fn lemma_swap_preserves_multiset should come before impls (expected proof fns/broadcast groups before impls)
 
 /home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [1] has mod declarations
@@ -93,12 +93,12 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:103: warning: [18] proof fn lemma_total_size_monotone should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:114: warning: [18] proof fn lemma_heap_root_is_min should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:175: warning: [18] proof fn lemma_rank_le_size should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:190: warning: [18] trait LeftistHeapNodeSpec should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:201: warning: [18] trait LeftistHeapNodeTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:257: warning: [18] trait LeftistHeapPQTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:104: warning: [18] proof fn lemma_total_size_monotone should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:115: warning: [18] proof fn lemma_heap_root_is_min should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:176: warning: [18] proof fn lemma_rank_le_size should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:191: warning: [18] trait LeftistHeapNodeSpec should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:202: warning: [18] trait LeftistHeapNodeTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:258: warning: [18] trait LeftistHeapPQTrait should come before impls (expected traits before impls)
 
 /home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [1] has mod declarations

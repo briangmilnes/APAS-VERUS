@@ -21,15 +21,13 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [16] no Lit macro definitions (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [18] definition order correct
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [23] free fn type bounds: N/A
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:112: warning: [18] impl BottomUpDPMtEphTrait for BottomUpDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:232: warning: [18] impl PartialEqSpecImpl for BottomUpDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:239: warning: [18] impl Default for BottomUpDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:50: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:40: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [1] has mod declarations
@@ -44,15 +42,13 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [16] no Lit macro definitions (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [18] definition order correct
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [23] free fn type bounds: N/A
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:100: warning: [18] impl BottomUpDPMtPerTrait for BottomUpDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:217: warning: [18] impl PartialEqSpecImpl for BottomUpDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:224: warning: [18] impl Default for BottomUpDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:50: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:40: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:1: info: [1] has mod declarations
@@ -111,13 +107,22 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [23] free fn type bounds: N/A
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:121: warning: [18] impl TopDownDPMtEphTrait for TopDownDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:190: warning: [18] impl PartialEqSpecImpl for TopDownDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:197: warning: [18] impl Default for TopDownDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:51: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:68: warning: [18] spec fn spec_min should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:73: warning: [18] spec fn spec_med_fn should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:88: warning: [18] spec fn spec_memo_correct should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:99: warning: [18] proof fn lemma_spec_med_fn_bounded should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:113: warning: [18] trait TopDownDPMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:173: warning: [18] fn med_recursive_sequential should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:249: warning: [18] fn med_recursive_parallel should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:378: warning: [18] impl TopDownDPMtEphTrait for TopDownDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:431: warning: [18] impl PartialEqSpecImpl for TopDownDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:438: warning: [18] impl Default for TopDownDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:68: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:73: warning: [22] free spec fn spec_med_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:88: warning: [22] free spec fn spec_memo_correct should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [1] has mod declarations
@@ -134,13 +139,22 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [23] free fn type bounds: N/A
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:98: warning: [18] impl TopDownDPMtPerTrait for TopDownDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:164: warning: [18] impl PartialEqSpecImpl for TopDownDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:171: warning: [18] impl Default for TopDownDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:51: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:68: warning: [18] spec fn spec_min should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:73: warning: [18] spec fn spec_med_fn should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:88: warning: [18] spec fn spec_memo_correct should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:99: warning: [18] proof fn lemma_spec_med_fn_bounded should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:113: warning: [18] trait TopDownDPMtPerTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:151: warning: [18] fn med_recursive_sequential should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:227: warning: [18] fn med_recursive_parallel should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:356: warning: [18] impl TopDownDPMtPerTrait for TopDownDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:406: warning: [18] impl PartialEqSpecImpl for TopDownDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:413: warning: [18] impl Default for TopDownDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:68: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:73: warning: [22] free spec fn spec_med_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:88: warning: [22] free spec fn spec_memo_correct should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:1: info: [1] has mod declarations
@@ -187,5 +201,5 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:56: warning: [22] free spec fn spec_med_fn should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 140 passed, 22 warnings in 8 files (checked 8 files)
+Summary: 142 passed, 34 warnings in 8 files (checked 8 files)
 ════════════════════════════════════════════════════════════════

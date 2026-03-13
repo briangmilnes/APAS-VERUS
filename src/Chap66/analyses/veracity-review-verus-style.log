@@ -54,22 +54,22 @@ Checking 2 files...
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:128: warning: [12] trait BoruvkaStEphTrait fn bridge_star_partition should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:155: warning: [12] trait BoruvkaStEphTrait fn mst_weight should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:54: warning: [14] struct BoruvkaStEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:54: warning: [14] struct BoruvkaStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:376: warning: [15] impl PartialOrd should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:382: warning: [15] impl Ord should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:391: warning: [15] impl Hash should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:80: warning: [18] impl View for LabeledEdge < V > should come before derive impls in verus! (expected view impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:88: warning: [18] spec fn spec_valid_bridge should come before derive impls in verus! (expected spec fns before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:97: warning: [18] spec fn spec_all_weights_finite should come before derive impls in verus! (expected spec fns before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:103: warning: [18] trait BoruvkaStEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:163: warning: [18] impl BoruvkaStEphTrait for BoruvkaStEph should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:67: warning: [19] eq return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:88: warning: [22] free spec fn spec_valid_bridge should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:97: warning: [22] free spec fn spec_all_weights_finite should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:105: warning: [22] spec fn spec_boruvkasteph_wf in trait BoruvkaStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:177: warning: [12] trait BoruvkaStEphTrait fn mst_weight should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:50: warning: [14] struct BoruvkaStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:50: warning: [14] struct BoruvkaStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:503: warning: [15] impl PartialOrd should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:509: warning: [15] impl Ord should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:518: warning: [15] impl Hash should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:76: warning: [18] impl View for LabeledEdge < V > should come before derive impls in verus! (expected view impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:84: warning: [18] spec fn spec_valid_bridge should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:93: warning: [18] spec fn spec_all_weights_finite should come before derive impls in verus! (expected spec fns before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:100: warning: [18] fn coin_flip should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:109: warning: [18] trait BoruvkaStEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:185: warning: [18] impl BoruvkaStEphTrait for BoruvkaStEph should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:63: warning: [19] eq return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:84: warning: [22] free spec fn spec_valid_bridge should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:93: warning: [22] free spec fn spec_all_weights_finite should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:111: warning: [22] spec fn spec_boruvkasteph_wf in trait BoruvkaStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
 
 ════════════════════════════════════════════════════════════════
 Summary: 26 passed, 33 warnings in 2 files (checked 2 files)

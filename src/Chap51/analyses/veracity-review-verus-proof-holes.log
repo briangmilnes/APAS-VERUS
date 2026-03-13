@@ -20,70 +20,36 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ BottomUpDPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:162: error: external_body - #[verifier::external_body]
-       163 |         fn med_bottom_up_parallel(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:270: info: accept()
-   Holes: 1 total
-      1 × external_body
+ℹ BottomUpDPMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:315: info: accept()
    Info: 1 total
-   Proof functions: 2 total (2 clean, 0 holed)
-❌ BottomUpDPMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:147: error: external_body - #[verifier::external_body]
-       148 |         fn med_bottom_up_parallel(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:255: info: accept()
-   Holes: 1 total
-      1 × external_body
+   2 clean proof functions
+ℹ BottomUpDPMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:296: info: accept()
    Info: 1 total
-   Proof functions: 2 total (2 clean, 0 holed)
+   2 clean proof functions
 ℹ BottomUpDPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:463: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:463: info: accept()
    Info: 1 total
    2 clean proof functions
 ℹ BottomUpDPStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:438: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:438: info: accept()
    Info: 1 total
    2 clean proof functions
-❌ TopDownDPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:171: error: external_body - #[verifier::external_body]
-       172 |         fn med_memoized_concurrent(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:180: error: external_body - #[verifier::external_body]
-       181 |         fn med_memoized_parallel(&mut self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:116: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-       102 |         fn med_memoized_parallel(&mut self) -> (distance: usize)
-            ...
-       114 |     /// cannot constrain map contents. Ghost fields carry context for documentation.
-       115 |     impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtEphInv {
-       117 |     }
-       118 | 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:228: info: accept()
-   Holes: 2 total
-      2 × external_body
+ℹ TopDownDPMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:469: info: accept()
    Info: 1 total
-   Proof functions: 2 total (2 clean, 0 holed)
-❌ TopDownDPMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:145: error: external_body - #[verifier::external_body]
-       146 |         fn med_memoized_concurrent(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:154: error: external_body - #[verifier::external_body]
-       155 |         fn med_memoized_parallel(&self) -> (distance: usize) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:94: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        86 |         fn med_memoized_parallel(&self) -> (distance: usize)
-            ...
-        92 |     /// cannot constrain map contents. Ghost fields carry context for documentation.
-        93 |     impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtPerInv {
-        95 |     }
-        96 | 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:202: info: accept()
-   Holes: 2 total
-      2 × external_body
+   3 clean proof functions
+ℹ TopDownDPMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:444: info: accept()
    Info: 1 total
-   Proof functions: 2 total (2 clean, 0 holed)
+   3 clean proof functions
 ℹ TopDownDPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:360: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:360: info: accept()
    Info: 1 total
    3 clean proof functions
 ℹ TopDownDPStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:334: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:334: info: accept()
    Info: 1 total
    3 clean proof functions
 
@@ -122,33 +88,34 @@ TopDownDPStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 50%)
-   4 holed (holes or errors, 50%)
+   8 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    8 total
 
 Proof Functions:
-   18 clean (100%)
+   20 clean (100%)
    0 holed (0%)
-   18 total
+   20 total
 
 Function Specs:
-   156 exec fns with complete spec (requires+ensures) (53%)
+   160 exec fns with complete spec (requires+ensures) (53%)
    0 exec fns missing spec (0%)
-   136 proof/spec fns clean (46%)
+   140 proof/spec fns clean (46%)
    0 proof/spec fns with holes (0%)
-   292 total fns
+   300 total fns
 
 
-Holes Found: 6 total
-   6 × external_body (100%)
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 11:34:55 -07:00
-Ended:     2026-03-13 11:34:55 -07:00
+Started:   2026-03-13 12:24:24 -07:00
+Ended:     2026-03-13 12:24:24 -07:00
 Duration:  29ms
 
 Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap51/analyses/veracity-review-verus-proof-holes.log

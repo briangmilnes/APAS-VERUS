@@ -26,15 +26,16 @@ Checking 19 files...
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1170: warning: [18] impl Default for AVLTreeS < T > should come before iterators (expected impls before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1188: warning: [18] impl Default for AVLTreeS < T > should come before iterators (expected impls before iterators)
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:100: warning: [22] free spec fn spec_avltreeseq_inorder_values should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:109: warning: [22] free spec fn spec_avltreeseq_inorder should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:118: warning: [22] free spec fn spec_avltreeseq_cached_size should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:125: warning: [22] free spec fn spec_avltreeseq_cached_height should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:132: warning: [22] free spec fn spec_avltreeseq_nat_max should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:136: warning: [22] free spec fn spec_avltreeseq_wf should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:154: warning: [22] free spec fn spec_avltreeseq_subseq should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:162: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:156: warning: [22] free spec fn spec_avltreeseq_avl_balanced should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:170: warning: [22] free spec fn spec_avltreeseq_subseq should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:178: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [1] has mod declarations
@@ -54,12 +55,12 @@ Checking 19 files...
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap37/ProveAVLTreeSeqMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:550: warning: [18] impl PartialEqSpecImpl for AVLTreeSeqMtPerS < T > should come before iterators (expected impls before iterators)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:116: warning: [22] free spec fn spec_inorder should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:125: warning: [22] free spec fn spec_cached_height should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:132: warning: [22] free spec fn spec_cached_size should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:139: warning: [22] free spec fn spec_nat_max should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:144: warning: [22] free spec fn spec_avltreeseqmtper_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:669: warning: [18] impl PartialEqSpecImpl for AVLTreeSeqMtPerS < T > should come before iterators (expected impls before iterators)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:119: warning: [22] free spec fn spec_inorder should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:128: warning: [22] free spec fn spec_cached_height should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:135: warning: [22] free spec fn spec_cached_size should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:142: warning: [22] free spec fn spec_nat_max should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:147: warning: [22] free spec fn spec_avltreeseqmtper_wf should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1: info: [1] has mod declarations
@@ -106,11 +107,11 @@ Checking 19 files...
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap37/ProveAVLTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:82: warning: [22] free spec fn spec_inorder should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:91: warning: [22] free spec fn spec_cached_height should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:98: warning: [22] free spec fn spec_cached_size should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:105: warning: [22] free spec fn spec_nat_max should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:110: warning: [22] free spec fn spec_avltreeseqstper_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:85: warning: [22] free spec fn spec_inorder should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:94: warning: [22] free spec fn spec_cached_height should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:101: warning: [22] free spec fn spec_cached_size should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:108: warning: [22] free spec fn spec_nat_max should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:113: warning: [22] free spec fn spec_avltreeseqstper_wf should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:1: info: [1] has mod declarations
@@ -130,14 +131,14 @@ Checking 19 files...
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:405: warning: [18] struct BSTAVLMtEphInv should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:418: warning: [18] struct BSTAVLMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:423: warning: [18] impl BSTAVLMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:436: warning: [18] impl View for BSTAVLMtEph < T > should come before top level coarse locking (expected view impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:441: warning: [18] trait BSTAVLMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:486: warning: [18] impl BSTAVLMtEphTrait for BSTAVLMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:448: warning: [19] insert return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:504: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:403: warning: [18] struct BSTAVLMtEphInv should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:416: warning: [18] struct BSTAVLMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:421: warning: [18] impl BSTAVLMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:434: warning: [18] impl View for BSTAVLMtEph < T > should come before top level coarse locking (expected view impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:439: warning: [18] trait BSTAVLMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:484: warning: [18] impl BSTAVLMtEphTrait for BSTAVLMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:446: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:502: warning: [19] insert return name 'r' could be more descriptive
 
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLStEph.rs:1: info: [1] has mod declarations
@@ -179,14 +180,14 @@ Checking 19 files...
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:220: warning: [18] struct BSTBBAlphaMtEphInv should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:233: warning: [18] struct BSTBBAlphaMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:238: warning: [18] impl BSTBBAlphaMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:251: warning: [18] impl View for BSTBBAlphaMtEph < T > should come before top level coarse locking (expected view impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:256: warning: [18] trait BSTBBAlphaMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:301: warning: [18] impl BSTBBAlphaMtEphTrait for BSTBBAlphaMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:263: warning: [19] insert return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:319: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:218: warning: [18] struct BSTBBAlphaMtEphInv should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:231: warning: [18] struct BSTBBAlphaMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:236: warning: [18] impl BSTBBAlphaMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:249: warning: [18] impl View for BSTBBAlphaMtEph < T > should come before top level coarse locking (expected view impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:254: warning: [18] trait BSTBBAlphaMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:299: warning: [18] impl BSTBBAlphaMtEphTrait for BSTBBAlphaMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:261: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:317: warning: [19] insert return name 'r' could be more descriptive
 
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaStEph.rs:1: info: [1] has mod declarations
@@ -228,14 +229,14 @@ Checking 19 files...
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:219: warning: [18] struct BSTPlainMtEphInv should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:232: warning: [18] struct BSTPlainMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:237: warning: [18] impl BSTPlainMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:250: warning: [18] impl View for BSTPlainMtEph < T > should come before top level coarse locking (expected view impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:255: warning: [18] trait BSTPlainMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:300: warning: [18] impl BSTPlainMtEphTrait for BSTPlainMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:262: warning: [19] insert return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:318: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:217: warning: [18] struct BSTPlainMtEphInv should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:230: warning: [18] struct BSTPlainMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:235: warning: [18] impl BSTPlainMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:248: warning: [18] impl View for BSTPlainMtEph < T > should come before top level coarse locking (expected view impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:253: warning: [18] trait BSTPlainMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:298: warning: [18] impl BSTPlainMtEphTrait for BSTPlainMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:260: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:316: warning: [19] insert return name 'r' could be more descriptive
 
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainStEph.rs:1: info: [1] has mod declarations
@@ -275,20 +276,20 @@ Checking 19 files...
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:521: warning: [18] struct BSTRBMtEphInv should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:530: warning: [18] struct BSTRBMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:535: warning: [18] type BSTreeRB should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:537: warning: [18] impl BSTRBMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:548: warning: [18] impl View for BSTRBMtEph < T > should come before top level coarse locking (expected view impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:553: warning: [18] trait BSTRBMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:607: warning: [18] impl BSTRBMtEphTrait for BSTRBMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:742: warning: [18] impl Default for BSTRBMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:364: warning: [19] in_order_parallel return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:385: warning: [19] pre_order_parallel return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:435: warning: [19] filter_parallel return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:464: warning: [19] reduce_parallel return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:563: warning: [19] insert return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:629: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:501: warning: [18] struct BSTRBMtEphInv should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:510: warning: [18] struct BSTRBMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:515: warning: [18] type BSTreeRB should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:517: warning: [18] impl BSTRBMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:528: warning: [18] impl View for BSTRBMtEph < T > should come before top level coarse locking (expected view impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:533: warning: [18] trait BSTRBMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:587: warning: [18] impl BSTRBMtEphTrait for BSTRBMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:722: warning: [18] impl Default for BSTRBMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:350: warning: [19] in_order_parallel return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:370: warning: [19] pre_order_parallel return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:418: warning: [19] filter_parallel return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:446: warning: [19] reduce_parallel return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:543: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:609: warning: [19] insert return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:60: warning: [22] free spec fn link_spec_size should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:70: warning: [22] free spec fn link_contains should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:82: warning: [22] free spec fn link_height should be an abstract signature in a trait with body in the impl
@@ -333,7 +334,7 @@ Checking 19 files...
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetAVLMtEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetAVLMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap37/ProveBSTSetAVLMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetAVLMtEph.rs:99: warning: [19] insert return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetAVLMtEph.rs:209: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetAVLMtEph.rs:205: warning: [19] insert return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetAVLMtEph.rs:68: warning: [22] free spec fn bstsetavlmteph_iter_invariant should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:
@@ -355,7 +356,7 @@ Checking 19 files...
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap37/ProveBSTSetBBAlphaMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:83: warning: [19] insert return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:190: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:186: warning: [19] insert return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:54: warning: [22] free spec fn bstsetbbalphamteph_iter_invariant should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:
@@ -377,7 +378,7 @@ Checking 19 files...
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap37/ProveBSTSetPlainMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:83: warning: [19] insert return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:190: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:186: warning: [19] insert return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:54: warning: [22] free spec fn bstsetplainmteph_iter_invariant should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:
@@ -399,7 +400,7 @@ Checking 19 files...
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap37/ProveBSTSetRBMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:83: warning: [19] insert return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:179: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:177: warning: [19] insert return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:54: warning: [22] free spec fn bstsetrbmteph_iter_invariant should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:
@@ -421,7 +422,7 @@ Checking 19 files...
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap37/ProveBSTSetSplayMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:99: warning: [19] insert return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:209: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:205: warning: [19] insert return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:68: warning: [22] free spec fn bstsetsplaymteph_iter_invariant should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:
@@ -441,21 +442,21 @@ Checking 19 files...
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:522: warning: [18] struct BSTSplayMtEphInv should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:531: warning: [18] struct BSTSplayMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:536: warning: [18] type BSTreeSplay should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:538: warning: [18] impl BSTSplayMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:549: warning: [18] impl View for BSTSplayMtEph < T > should come before top level coarse locking (expected view impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:554: warning: [18] trait BSTSplayMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:608: warning: [18] impl BSTSplayMtEphTrait for BSTSplayMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:740: warning: [18] impl Default for BSTSplayMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:135: warning: [19] splay return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:366: warning: [19] in_order_parallel return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:387: warning: [19] pre_order_parallel return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:436: warning: [19] filter_parallel return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:465: warning: [19] reduce_parallel return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:564: warning: [19] insert return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:630: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:505: warning: [18] struct BSTSplayMtEphInv should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:514: warning: [18] struct BSTSplayMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:519: warning: [18] type BSTreeSplay should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:521: warning: [18] impl BSTSplayMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:532: warning: [18] impl View for BSTSplayMtEph < T > should come before top level coarse locking (expected view impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:537: warning: [18] trait BSTSplayMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:591: warning: [18] impl BSTSplayMtEphTrait for BSTSplayMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:723: warning: [18] impl Default for BSTSplayMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:132: warning: [19] splay return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:355: warning: [19] in_order_parallel return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:375: warning: [19] pre_order_parallel return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:422: warning: [19] filter_parallel return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:450: warning: [19] reduce_parallel return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:547: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:613: warning: [19] insert return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:53: warning: [22] free spec fn link_spec_size should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:63: warning: [22] free spec fn link_contains should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:75: warning: [22] free spec fn link_height should be an abstract signature in a trait with body in the impl
@@ -484,5 +485,5 @@ Checking 19 files...
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayStEph.rs:76: warning: [22] free spec fn spec_contains_link should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 319 passed, 118 warnings in 17 files (checked 19 files)
+Summary: 319 passed, 119 warnings in 17 files (checked 19 files)
 ════════════════════════════════════════════════════════════════

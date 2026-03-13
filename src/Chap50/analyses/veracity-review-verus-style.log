@@ -22,13 +22,11 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:1: info: [23] free fn type bounds: N/A
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:162: warning: [12] trait MatrixChainMtEphTrait fn optimal_cost should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:164: warning: [12] trait MatrixChainMtEphTrait fn dimensions should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:182: warning: [12] trait MatrixChainMtEphTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:191: warning: [12] trait MatrixChainMtEphTrait fn matrix_chain_rec should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:474: warning: [13] impl IntoIterator for MatrixChainMtEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:488: warning: [13] impl IntoIterator for MatrixChainMtEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:502: warning: [13] impl IntoIterator for MatrixChainMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:174: warning: [12] trait MatrixChainMtEphTrait fn dimensions should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:192: warning: [12] trait MatrixChainMtEphTrait fn memo_size should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:545: warning: [13] impl IntoIterator for MatrixChainMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:559: warning: [13] impl IntoIterator for MatrixChainMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:573: warning: [13] impl IntoIterator for MatrixChainMtEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:51: warning: [14] struct MatrixDim should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:64: warning: [14] struct MatrixChainMtEphDimInv should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:64: warning: [14] struct MatrixChainMtEphDimInv should have impl Display outside verus!
@@ -53,9 +51,9 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:125: warning: [18] spec fn spec_memo_correct should come before top level coarse locking (expected spec fns before top level coarse locking)
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:130: warning: [18] spec fn spec_chain_cost should come before top level coarse locking (expected spec fns before top level coarse locking)
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:150: warning: [18] trait MatrixChainMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:202: warning: [18] impl MatrixChainMtEphTrait for MatrixChainMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:427: warning: [18] impl PartialEqSpecImpl for MatrixChainMtEphS should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:433: warning: [19] eq return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:223: warning: [18] impl MatrixChainMtEphTrait for MatrixChainMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:498: warning: [18] impl PartialEqSpecImpl for MatrixChainMtEphS should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:504: warning: [19] eq return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:102: warning: [22] free spec fn spec_multiply_cost should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:106: warning: [22] free spec fn spec_dims_bounded should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:115: warning: [22] free spec fn spec_costs_fit should be an abstract signature in a trait with body in the impl
@@ -76,10 +74,10 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:1: info: [23] free fn type bounds: N/A
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:161: warning: [12] trait MatrixChainMtPerTrait fn dimensions should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:166: warning: [12] trait MatrixChainMtPerTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:392: warning: [13] impl IntoIterator for MatrixChainMtPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:406: warning: [13] impl IntoIterator for MatrixChainMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:164: warning: [12] trait MatrixChainMtPerTrait fn dimensions should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:169: warning: [12] trait MatrixChainMtPerTrait fn memo_size should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:456: warning: [13] impl IntoIterator for MatrixChainMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:470: warning: [13] impl IntoIterator for MatrixChainMtPerS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:53: warning: [14] struct MatrixDim should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:66: warning: [14] struct MatrixChainMtPerV should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:66: warning: [14] struct MatrixChainMtPerV should have impl Display outside verus!
@@ -100,9 +98,9 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:117: warning: [18] spec fn spec_memo_correct should come before top level coarse locking (expected spec fns before top level coarse locking)
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:122: warning: [18] spec fn spec_chain_cost should come before top level coarse locking (expected spec fns before top level coarse locking)
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:142: warning: [18] trait MatrixChainMtPerTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:196: warning: [18] impl MatrixChainMtPerTrait for MatrixChainMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:350: warning: [18] impl PartialEqSpecImpl for MatrixChainMtPerS should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:356: warning: [19] eq return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:201: warning: [18] impl MatrixChainMtPerTrait for MatrixChainMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:414: warning: [18] impl PartialEqSpecImpl for MatrixChainMtPerS should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:420: warning: [19] eq return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:94: warning: [22] free spec fn spec_multiply_cost should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:98: warning: [22] free spec fn spec_dims_bounded should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:107: warning: [22] free spec fn spec_costs_fit should be an abstract signature in a trait with body in the impl
@@ -196,19 +194,18 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:115: warning: [12] trait OBSTMtEphTrait fn optimal_cost should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:117: warning: [12] trait OBSTMtEphTrait fn keys should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:135: warning: [12] trait OBSTMtEphTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:406: warning: [13] impl IntoIterator for OBSTMtEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:420: warning: [13] impl IntoIterator for OBSTMtEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:434: warning: [13] impl IntoIterator for OBSTMtEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:64: warning: [14] struct OptBSTMtEphKeysInv should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:64: warning: [14] struct OptBSTMtEphKeysInv should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:73: warning: [14] struct OptBSTMtEphMemoInv should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:73: warning: [14] struct OptBSTMtEphMemoInv should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:90: warning: [14] struct OBSTMtEphV should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:90: warning: [14] struct OBSTMtEphV should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:381: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:415: warning: [13] impl IntoIterator for OBSTMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:429: warning: [13] impl IntoIterator for OBSTMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:443: warning: [13] impl IntoIterator for OBSTMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:63: warning: [14] struct OptBSTMtEphKeysInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:63: warning: [14] struct OptBSTMtEphKeysInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:72: warning: [14] struct OptBSTMtEphMemoInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:72: warning: [14] struct OptBSTMtEphMemoInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:89: warning: [14] struct OBSTMtEphV should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:89: warning: [14] struct OBSTMtEphV should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:390: warning: [15] impl PartialEq should be inside verus! (for verification)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: warning: [17] collection KeyProb should have an Iterator impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: warning: [17] collection KeyProb has IntoIterator impl but it should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: warning: [17] collection OBSTMtEphS should have an Iterator impl
@@ -218,20 +215,19 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: warning: [17] IntoIterator for OBSTMtEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: warning: [17] IntoIterator for OBSTMtEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: warning: [17] IntoIterator for OBSTMtEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:64: warning: [18] struct OptBSTMtEphKeysInv should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:67: warning: [18] impl RwLockPredicate for OptBSTMtEphKeysInv should come before derive impls in verus! (expected top level coarse locking before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:73: warning: [18] struct OptBSTMtEphMemoInv should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:74: warning: [18] impl RwLockPredicate for OptBSTMtEphMemoInv should come before derive impls in verus! (expected top level coarse locking before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:82: warning: [18] struct OBSTMtEphS should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:90: warning: [18] struct OBSTMtEphV should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:94: warning: [18] impl View for OBSTMtEphS < T > should come before derive impls in verus! (expected view impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:102: warning: [18] trait OBSTMtEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:141: warning: [18] fn parallel_min_reduction should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:164: warning: [18] fn obst_rec should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:208: warning: [18] impl OBSTMtEphTrait for OBSTMtEphS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:354: warning: [18] impl PartialEqSpecImpl for OBSTMtEphS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:360: warning: [19] eq return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:164: warning: [23] free fn obst_rec param T has bounds `MtVal + Send + Sync + 'static` but trait OBSTMtEphTrait has `MtVal`
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:63: warning: [18] struct OptBSTMtEphKeysInv should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:66: warning: [18] impl RwLockPredicate for OptBSTMtEphKeysInv should come before derive impls in verus! (expected top level coarse locking before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:72: warning: [18] struct OptBSTMtEphMemoInv should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:73: warning: [18] impl RwLockPredicate for OptBSTMtEphMemoInv should come before derive impls in verus! (expected top level coarse locking before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:81: warning: [18] struct OBSTMtEphS should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:89: warning: [18] struct OBSTMtEphV should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:93: warning: [18] impl View for OBSTMtEphS < T > should come before derive impls in verus! (expected view impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:101: warning: [18] trait OBSTMtEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:140: warning: [18] fn obst_rec should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:216: warning: [18] impl OBSTMtEphTrait for OBSTMtEphS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:363: warning: [18] impl PartialEqSpecImpl for OBSTMtEphS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:369: warning: [19] eq return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:140: warning: [23] free fn obst_rec param T has bounds `MtVal + Send + Sync + 'static` but trait OBSTMtEphTrait has `MtVal`
 
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: info: [1] has mod declarations
@@ -249,13 +245,13 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:105: warning: [12] trait OBSTMtPerTrait fn optimal_cost should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:107: warning: [12] trait OBSTMtPerTrait fn keys should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:112: warning: [12] trait OBSTMtPerTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:305: warning: [13] impl IntoIterator for OBSTMtPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:319: warning: [13] impl IntoIterator for OBSTMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:313: warning: [13] impl IntoIterator for OBSTMtPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:327: warning: [13] impl IntoIterator for OBSTMtPerS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:66: warning: [14] struct OptBSTMtPerMemoInv should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:66: warning: [14] struct OptBSTMtPerMemoInv should have impl Display outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:82: warning: [14] struct OBSTMtPerV should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:82: warning: [14] struct OBSTMtPerV should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:283: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:291: warning: [15] impl PartialEq should be inside verus! (for verification)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: warning: [17] collection KeyProb should have an Iterator impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: warning: [17] collection KeyProb has IntoIterator impl but it should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: warning: [17] collection OBSTMtPerS should have an Iterator impl
@@ -270,12 +266,11 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:82: warning: [18] struct OBSTMtPerV should come before derive impls in verus! (expected type definitions before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:86: warning: [18] impl View for OBSTMtPerS < T > should come before derive impls in verus! (expected view impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:94: warning: [18] trait OBSTMtPerTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:118: warning: [18] fn parallel_min_reduction should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:141: warning: [18] fn obst_rec should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:179: warning: [18] impl OBSTMtPerTrait for OBSTMtPerS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:260: warning: [18] impl PartialEqSpecImpl for OBSTMtPerS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:266: warning: [19] eq return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:141: warning: [23] free fn obst_rec param T has bounds `MtVal + Send + Sync + 'static` but trait OBSTMtPerTrait has `MtVal`
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:117: warning: [18] fn obst_rec should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:187: warning: [18] impl OBSTMtPerTrait for OBSTMtPerS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:268: warning: [18] impl PartialEqSpecImpl for OBSTMtPerS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:274: warning: [19] eq return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:117: warning: [23] free fn obst_rec param T has bounds `MtVal + Send + Sync + 'static` but trait OBSTMtPerTrait has `MtVal`
 
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [1] has mod declarations
@@ -292,14 +287,14 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:116: warning: [12] trait OBSTStEphTrait fn optimal_cost should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:264: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:273: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:282: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:83: warning: [14] struct OBSTStEphV should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:83: warning: [14] struct OBSTStEphV should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:301: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:313: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:115: warning: [12] trait OBSTStEphTrait fn optimal_cost should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:302: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:311: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:320: warning: [13] impl IntoIterator for OBSTStEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:82: warning: [14] struct OBSTStEphV should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:82: warning: [14] struct OBSTStEphV should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:339: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:351: warning: [15] impl PartialEq should be inside verus! (for verification)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] collection KeyProb should have an Iterator impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] collection KeyProb has IntoIterator impl but it should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] collection OBSTStEphS should have an Iterator impl
@@ -310,12 +305,12 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] IntoIterator for OBSTStEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] IntoIterator for OBSTStEphS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: warning: [17] IntoIterator for OBSTStEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:63: warning: [18] struct OBSTStEphS should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:83: warning: [18] struct OBSTStEphV should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:88: warning: [18] impl View for OBSTStEphS < T > should come before derive impls in verus! (expected view impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:99: warning: [18] trait OBSTStEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:148: warning: [18] fn obst_rec_st_eph should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:175: warning: [18] impl OBSTStEphTrait for OBSTStEphS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:62: warning: [18] struct OBSTStEphS should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:82: warning: [18] struct OBSTStEphV should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:87: warning: [18] impl View for OBSTStEphS < T > should come before derive impls in verus! (expected view impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:98: warning: [18] trait OBSTStEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:146: warning: [18] fn obst_rec_st_eph should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:213: warning: [18] impl OBSTStEphTrait for OBSTStEphS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
 
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [1] has mod declarations
@@ -332,13 +327,13 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [22] spec fns: all in traits as abstract signatures
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:116: warning: [12] trait OBSTStPerTrait fn optimal_cost should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:235: warning: [13] impl IntoIterator for OBSTStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:244: warning: [13] impl IntoIterator for OBSTStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:83: warning: [14] struct OBSTStPerV should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:83: warning: [14] struct OBSTStPerV should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:263: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:275: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:115: warning: [12] trait OBSTStPerTrait fn optimal_cost should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:273: warning: [13] impl IntoIterator for OBSTStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:282: warning: [13] impl IntoIterator for OBSTStPerS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:82: warning: [14] struct OBSTStPerV should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:82: warning: [14] struct OBSTStPerV should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:301: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:313: warning: [15] impl PartialEq should be inside verus! (for verification)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] collection KeyProb should have an Iterator impl
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] collection KeyProb has IntoIterator impl but it should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] collection OBSTStPerS should have an Iterator impl
@@ -348,13 +343,13 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap50/ProveOptBinSearchTreeStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] IntoIterator for OBSTStPerS should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: warning: [17] IntoIterator for OBSTStPerS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:63: warning: [18] struct OBSTStPerS should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:83: warning: [18] struct OBSTStPerV should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:88: warning: [18] impl View for OBSTStPerS < T > should come before derive impls in verus! (expected view impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:99: warning: [18] trait OBSTStPerTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:131: warning: [18] fn obst_rec_st_per should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:158: warning: [18] impl OBSTStPerTrait for OBSTStPerS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:62: warning: [18] struct OBSTStPerS should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:82: warning: [18] struct OBSTStPerV should come before derive impls in verus! (expected type definitions before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:87: warning: [18] impl View for OBSTStPerS < T > should come before derive impls in verus! (expected view impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:98: warning: [18] trait OBSTStPerTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:129: warning: [18] fn obst_rec_st_per should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:196: warning: [18] impl OBSTStPerTrait for OBSTStPerS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
 
 ════════════════════════════════════════════════════════════════
-Summary: 106 passed, 225 warnings in 8 files (checked 8 files)
+Summary: 106 passed, 220 warnings in 8 files (checked 8 files)
 ════════════════════════════════════════════════════════════════

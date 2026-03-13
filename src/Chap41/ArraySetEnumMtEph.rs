@@ -435,7 +435,7 @@ broadcast use {
                             }
                         }
                         // Coverage: collected elements are in vec.
-                        assert forall|x: usize| collected.contains(x) implies
+                        assert forall|x: usize| #[trigger] collected.contains(x) implies
                             result_vec@.contains(x) by
                         {
                             if x == i {

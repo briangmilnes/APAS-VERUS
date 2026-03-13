@@ -479,7 +479,6 @@ broadcast use {
                     if *prev > *curr {
                         return false;
                     }
-                    i = i + 1;
                 }
                 true
             }

@@ -122,8 +122,9 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:120: warning: [18] proof fn bit_or_64_proof should come before impls (expected proof fns/broadcast groups before impls)
 /home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:127: warning: [18] proof fn bit_and_64_proof should come before impls (expected proof fns/broadcast groups before impls)
 /home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:134: warning: [18] proof fn bit_andnot_64_proof should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:140: warning: [18] proof fn lemma_view_finite should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:159: warning: [18] trait ArraySetEnumMtEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:141: warning: [18] proof fn lemma_bounded_usize_set_finite should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:155: warning: [18] proof fn lemma_view_finite should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:174: warning: [18] trait ArraySetEnumMtEphTrait should come before impls (expected traits before impls)
 /home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:86: warning: [22] free spec fn u64_view should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:90: warning: [22] free spec fn num_words should be an abstract signature in a trait with body in the impl
 
@@ -170,5 +171,5 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:1: info: [24] copyright line present
 
 ════════════════════════════════════════════════════════════════
-Summary: 127 passed, 20 warnings in 2 files (checked 7 files)
+Summary: 127 passed, 21 warnings in 2 files (checked 7 files)
 ════════════════════════════════════════════════════════════════

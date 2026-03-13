@@ -21,23 +21,23 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:148: warning: [12] trait MinEditDistMtEphTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:331: warning: [13] impl MinEditDistMtEphMutTrait for MinEditDistMtEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:47: warning: [14] struct MinEditDistMtEphMemoInv should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:47: warning: [14] struct MinEditDistMtEphMemoInv should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:338: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:342: warning: [15] impl Eq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:55: warning: [18] struct MinEditDistMtEphS should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:65: warning: [18] spec fn spec_med should come before top level coarse locking (expected spec fns before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:82: warning: [18] trait MinEditDistMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:154: warning: [18] fn new_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:164: warning: [18] fn clone_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:175: warning: [18] fn min_edit_distance_rec should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:230: warning: [18] impl MinEditDistMtEphTrait for MinEditDistMtEphS < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:91: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:99: warning: [19] from_sequences return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:65: warning: [22] free spec fn spec_med should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:175: warning: [23] free fn min_edit_distance_rec param T has bounds `MtVal + Send + Sync + 'static` but trait MinEditDistMtEphTrait has `MtVal`
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:150: warning: [12] trait MinEditDistMtEphTrait fn memo_size should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:372: warning: [13] impl MinEditDistMtEphMutTrait for MinEditDistMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:48: warning: [14] struct MinEditDistMtEphMemoInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:48: warning: [14] struct MinEditDistMtEphMemoInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:379: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:383: warning: [15] impl Eq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:56: warning: [18] struct MinEditDistMtEphS should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:66: warning: [18] spec fn spec_med should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:83: warning: [18] trait MinEditDistMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:156: warning: [18] fn new_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:166: warning: [18] fn clone_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:177: warning: [18] fn min_edit_distance_rec should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:271: warning: [18] impl MinEditDistMtEphTrait for MinEditDistMtEphS < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:92: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:100: warning: [19] from_sequences return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:66: warning: [22] free spec fn spec_med should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:177: warning: [23] free fn min_edit_distance_rec param T has bounds `MtVal + Send + Sync + 'static` but trait MinEditDistMtEphTrait has `MtVal`
 
 /home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [1] has mod declarations
@@ -53,23 +53,22 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:105: warning: [12] trait MinEditDistMtPerTrait fn min_edit_distance should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:121: warning: [12] trait MinEditDistMtPerTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:46: warning: [14] struct MinEditDistMtPerMemoInv should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:46: warning: [14] struct MinEditDistMtPerMemoInv should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:267: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:271: warning: [15] impl Eq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:54: warning: [18] struct MinEditDistMtPerS should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:64: warning: [18] spec fn spec_med should come before top level coarse locking (expected spec fns before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:81: warning: [18] trait MinEditDistMtPerTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:127: warning: [18] fn new_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:137: warning: [18] fn clone_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:148: warning: [18] fn min_edit_distance_rec should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:197: warning: [18] impl MinEditDistMtPerTrait for MinEditDistMtPerS < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:90: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:98: warning: [19] from_sequences return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:64: warning: [22] free spec fn spec_med should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:148: warning: [23] free fn min_edit_distance_rec param T has bounds `MtVal + Send + Sync + 'static` but trait MinEditDistMtPerTrait has `MtVal`
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:123: warning: [12] trait MinEditDistMtPerTrait fn memo_size should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:47: warning: [14] struct MinEditDistMtPerMemoInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:47: warning: [14] struct MinEditDistMtPerMemoInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:312: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:316: warning: [15] impl Eq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:55: warning: [18] struct MinEditDistMtPerS should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:65: warning: [18] spec fn spec_med should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:82: warning: [18] trait MinEditDistMtPerTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:129: warning: [18] fn new_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:139: warning: [18] fn clone_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:150: warning: [18] fn min_edit_distance_rec should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:241: warning: [18] impl MinEditDistMtPerTrait for MinEditDistMtPerS < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:91: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:99: warning: [19] from_sequences return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:65: warning: [22] free spec fn spec_med should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:150: warning: [23] free fn min_edit_distance_rec param T has bounds `MtVal + Send + Sync + 'static` but trait MinEditDistMtPerTrait has `MtVal`
 
 /home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistStEph.rs:1: info: [1] has mod declarations
@@ -138,23 +137,23 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:125: warning: [12] trait SubsetSumMtEphTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:280: warning: [13] impl SubsetSumMtEphMutTrait for SubsetSumMtEphS should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:47: warning: [14] struct SubsetSumMtEphMemoInv should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:47: warning: [14] struct SubsetSumMtEphMemoInv should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:286: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:290: warning: [15] impl Eq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:55: warning: [18] struct SubsetSumMtEphS should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:64: warning: [18] spec fn spec_subset_sum should come before top level coarse locking (expected spec fns before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:83: warning: [18] trait SubsetSumMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:131: warning: [18] fn new_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:141: warning: [18] fn clone_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:152: warning: [18] fn subset_sum_rec should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:195: warning: [18] impl SubsetSumMtEphTrait for SubsetSumMtEphS < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:89: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:97: warning: [19] from_multiset return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:64: warning: [22] free spec fn spec_subset_sum should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:152: warning: [23] free fn subset_sum_rec param T has bounds `MtVal + Into < i32 > + Copy + Send + Sync + 'static` but trait SubsetSumMtEphTrait has `MtVal`
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:126: warning: [12] trait SubsetSumMtEphTrait fn memo_size should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:310: warning: [13] impl SubsetSumMtEphMutTrait for SubsetSumMtEphS should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:48: warning: [14] struct SubsetSumMtEphMemoInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:48: warning: [14] struct SubsetSumMtEphMemoInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:316: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:320: warning: [15] impl Eq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:56: warning: [18] struct SubsetSumMtEphS should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:65: warning: [18] spec fn spec_subset_sum should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:84: warning: [18] trait SubsetSumMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:132: warning: [18] fn new_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:142: warning: [18] fn clone_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:153: warning: [18] fn subset_sum_rec should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:224: warning: [18] impl SubsetSumMtEphTrait for SubsetSumMtEphS < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:90: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:98: warning: [19] from_multiset return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:65: warning: [22] free spec fn spec_subset_sum should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:153: warning: [23] free fn subset_sum_rec param T has bounds `MtVal + Into < i32 > + Copy + Send + Sync + 'static` but trait SubsetSumMtEphTrait has `MtVal`
 
 /home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [1] has mod declarations
@@ -170,23 +169,23 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:101: warning: [12] trait SubsetSumMtPerTrait fn subset_sum should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:112: warning: [12] trait SubsetSumMtPerTrait fn memo_size should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:46: warning: [14] struct SubsetSumMtPerMemoInv should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:46: warning: [14] struct SubsetSumMtPerMemoInv should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:247: warning: [15] impl PartialEq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:251: warning: [15] impl Eq should be inside verus! (for verification)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:54: warning: [18] struct SubsetSumMtPerS should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:63: warning: [18] spec fn spec_subset_sum should come before top level coarse locking (expected spec fns before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:82: warning: [18] trait SubsetSumMtPerTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:118: warning: [18] fn new_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:128: warning: [18] fn clone_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:139: warning: [18] fn subset_sum_rec should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:182: warning: [18] impl SubsetSumMtPerTrait for SubsetSumMtPerS < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:88: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:96: warning: [19] from_multiset return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:63: warning: [22] free spec fn spec_subset_sum should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:139: warning: [23] free fn subset_sum_rec param T has bounds `MtVal + Into < i32 > + Copy + Send + Sync + 'static` but trait SubsetSumMtPerTrait has `MtVal`
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:102: warning: [12] trait SubsetSumMtPerTrait fn subset_sum should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:113: warning: [12] trait SubsetSumMtPerTrait fn memo_size should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:47: warning: [14] struct SubsetSumMtPerMemoInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:47: warning: [14] struct SubsetSumMtPerMemoInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:277: warning: [15] impl PartialEq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:281: warning: [15] impl Eq should be inside verus! (for verification)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:55: warning: [18] struct SubsetSumMtPerS should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:64: warning: [18] spec fn spec_subset_sum should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:83: warning: [18] trait SubsetSumMtPerTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:119: warning: [18] fn new_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:129: warning: [18] fn clone_arc_memo should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:140: warning: [18] fn subset_sum_rec should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:211: warning: [18] impl SubsetSumMtPerTrait for SubsetSumMtPerS < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:89: warning: [19] new return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:97: warning: [19] from_multiset return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:64: warning: [22] free spec fn spec_subset_sum should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:140: warning: [23] free fn subset_sum_rec param T has bounds `MtVal + Into < i32 > + Copy + Send + Sync + 'static` but trait SubsetSumMtPerTrait has `MtVal`
 
 /home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStEph.rs:1: info: [1] has mod declarations
@@ -242,5 +241,5 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumStPer.rs:109: warning: [23] free fn subset_sum_rec param T has bounds `StT + Into < i32 > + Copy` but trait SubsetSumStPerTrait has `StT`
 
 ════════════════════════════════════════════════════════════════
-Summary: 102 passed, 115 warnings in 8 files (checked 8 files)
+Summary: 102 passed, 114 warnings in 8 files (checked 8 files)
 ════════════════════════════════════════════════════════════════
