@@ -13,6 +13,7 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
+     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -3804,8 +3805,8 @@ Holes Found: 434 total
    4  Chap37  (40 holes, 19 files)
    5  Chap39  (37 holes, 4 files)
    6  Chap38  (27 holes, 2 files)
-   7  Chap53  (18 holes, 5 files)
-   8  Chap42  (18 holes, 4 files)
+   7  Chap42  (18 holes, 4 files)
+   8  Chap53  (18 holes, 5 files)
    9  Chap45  (17 holes, 7 files)
    10  Chap50  (11 holes, 8 files)
    11  Chap49  (8 holes, 8 files)
@@ -3813,37 +3814,37 @@ Holes Found: 434 total
    13  Chap26  (4 holes, 8 files)
    14  Chap66  (3 holes, 2 files)
    15  Chap52  (1 holes, 14 files)
-   16  ParaPairs  (0 holes, 1 files)
-   17  Chap02  (0 holes, 2 files)
-   18  Chap05  (0 holes, 5 files)
-   19  Chap59  (0 holes, 4 files)
-   20  Chap40  (0 holes, 3 files)
-   21  Chap57  (0 holes, 3 files)
-   22  Chap17  (0 holes, 1 files)
-   23  Chap61  (0 holes, 4 files)
-   24  Concurrency  (0 holes, 1 files)
-   25  Chap56  (0 holes, 12 files)
-   26  Chap62  (0 holes, 4 files)
-   27  Chap55  (0 holes, 8 files)
-   28  Chap64  (0 holes, 3 files)
-   29  Chap18  (0 holes, 7 files)
-   30  Chap30  (0 holes, 1 files)
-   31  Chap28  (0 holes, 11 files)
+   16  Chap11  (0 holes, 5 files)
+   17  Chap44  (0 holes, 2 files)
+   18  Chap03  (0 holes, 1 files)
+   19  Chap21  (0 holes, 12 files)
+   20  Chap28  (0 holes, 11 files)
+   21  Chap40  (0 holes, 3 files)
+   22  Concurrency  (0 holes, 1 files)
+   23  Chap27  (0 holes, 4 files)
+   24  Chap58  (0 holes, 2 files)
+   25  Chap57  (0 holes, 3 files)
+   26  Chap36  (0 holes, 3 files)
+   27  Chap65  (0 holes, 3 files)
+   28  Chap63  (0 holes, 2 files)
+   29  Chap55  (0 holes, 8 files)
+   30  Chap18  (0 holes, 7 files)
+   31  Chap64  (0 holes, 3 files)
    32  Chap12  (0 holes, 3 files)
    33  Chap35  (0 holes, 4 files)
    34  Chap23  (0 holes, 2 files)
-   35  Chap06  (0 holes, 20 files)
-   36  Chap19  (0 holes, 4 files)
-   37  Chap63  (0 holes, 2 files)
-   38  Chap27  (0 holes, 4 files)
-   39  Chap44  (0 holes, 2 files)
-   40  Chap58  (0 holes, 2 files)
-   41  Chap54  (0 holes, 4 files)
-   42  Chap36  (0 holes, 3 files)
-   43  Chap11  (0 holes, 5 files)
-   44  Chap65  (0 holes, 3 files)
-   45  Chap21  (0 holes, 12 files)
-   46  Chap03  (0 holes, 1 files)
+   35  Chap17  (0 holes, 1 files)
+   36  Chap62  (0 holes, 4 files)
+   37  Chap56  (0 holes, 12 files)
+   38  Chap19  (0 holes, 4 files)
+   39  Chap59  (0 holes, 4 files)
+   40  Chap05  (0 holes, 5 files)
+   41  Chap61  (0 holes, 4 files)
+   42  Chap02  (0 holes, 2 files)
+   43  ParaPairs  (0 holes, 1 files)
+   44  Chap06  (0 holes, 20 files)
+   45  Chap54  (0 holes, 4 files)
+   46  Chap30  (0 holes, 1 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -3853,33 +3854,33 @@ Holes Found: 434 total
    2  src/Chap39/BSTParaTreapMtEph.rs  (18 holes)
    3  src/Chap37/AVLTreeSeqStPer.rs  (14 holes)
    4  src/Chap37/AVLTreeSeqMtPer.rs  (13 holes)
-   5  src/Chap39/BSTTreapMtEph.rs  (9 holes)
-   6  src/Chap41/ArraySetStEph.rs  (9 holes)
+   5  src/Chap41/ArraySetStEph.rs  (9 holes)
+   6  src/Chap39/BSTTreapMtEph.rs  (9 holes)
    7  src/Chap37/AVLTreeSeqStEph.rs  (8 holes)
    8  src/Chap38/BSTParaStEph.rs  (8 holes)
    9  src/Chap41/ArraySetEnumMtEph.rs  (5 holes)
    10  src/Chap47/ParaHashTableStEph.rs  (4 holes)
    11  src/Chap50/MatrixChainMtEph.rs  (3 holes)
-   12  src/Chap66/BoruvkaStEph.rs  (3 holes)
-   13  src/Chap37/AVLTreeSeq.rs  (3 holes)
-   14  src/Chap49/MinEditDistMtPer.rs  (2 holes)
-   15  src/Chap26/ETSPStEph.rs  (2 holes)
-   16  src/Chap49/SubsetSumMtEph.rs  (2 holes)
-   17  src/Chap51/TopDownDPMtPer.rs  (2 holes)
-   18  src/Chap49/SubsetSumMtPer.rs  (2 holes)
-   19  src/Chap51/TopDownDPMtEph.rs  (2 holes)
-   20  src/Chap50/OptBinSearchTreeMtEph.rs  (2 holes)
-   21  src/Chap45/BinaryHeapPQ.rs  (2 holes)
-   22  src/Chap37/BSTSplayStEph.rs  (2 holes)
-   23  src/Chap49/MinEditDistMtEph.rs  (2 holes)
-   24  src/Chap50/OptBinSearchTreeMtPer.rs  (2 holes)
-   25  src/Chap26/ETSPMtEph.rs  (2 holes)
-   26  src/Chap50/MatrixChainMtPer.rs  (2 holes)
-   27  src/Chap45/LeftistHeapPQ.rs  (1 holes)
-   28  src/Chap51/BottomUpDPMtPer.rs  (1 holes)
-   29  src/Chap51/BottomUpDPMtEph.rs  (1 holes)
+   12  src/Chap37/AVLTreeSeq.rs  (3 holes)
+   13  src/Chap66/BoruvkaStEph.rs  (3 holes)
+   14  src/Chap49/SubsetSumMtPer.rs  (2 holes)
+   15  src/Chap45/BinaryHeapPQ.rs  (2 holes)
+   16  src/Chap26/ETSPStEph.rs  (2 holes)
+   17  src/Chap49/MinEditDistMtPer.rs  (2 holes)
+   18  src/Chap50/OptBinSearchTreeMtPer.rs  (2 holes)
+   19  src/Chap49/MinEditDistMtEph.rs  (2 holes)
+   20  src/Chap51/TopDownDPMtPer.rs  (2 holes)
+   21  src/Chap50/MatrixChainMtPer.rs  (2 holes)
+   22  src/Chap26/ETSPMtEph.rs  (2 holes)
+   23  src/Chap37/BSTSplayStEph.rs  (2 holes)
+   24  src/Chap50/OptBinSearchTreeMtEph.rs  (2 holes)
+   25  src/Chap51/TopDownDPMtEph.rs  (2 holes)
+   26  src/Chap49/SubsetSumMtEph.rs  (2 holes)
+   27  src/Chap51/BottomUpDPMtPer.rs  (1 holes)
+   28  src/Chap45/LeftistHeapPQ.rs  (1 holes)
+   29  src/Chap50/OptBinSearchTreeStEph.rs  (1 holes)
    30  src/Chap50/OptBinSearchTreeStPer.rs  (1 holes)
-   31  src/Chap50/OptBinSearchTreeStEph.rs  (1 holes)
+   31  src/Chap51/BottomUpDPMtEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -3906,11 +3907,85 @@ Holes Found: 434 total
    None
 
 =================================================================
+4.6. Chapter by Chapter Proof Targeting
+=================================================================
+
+Chapter Status — 46 chapters, 31 clean, 15 holed, 434 holes (global), 257 modules
+
+CLEAN CHAPTERS (31)
+  Chapter        Files
+  -------------- -----
+  Chap02             2
+  Chap03             1
+  Chap05             5
+  Chap06            20
+  Chap11             5
+  Chap12             3
+  Chap17             1
+  Chap18             7
+  Chap19             4
+  Chap21            12
+  Chap23             2
+  Chap27             4
+  Chap28            11
+  Chap30             1
+  Chap35             4
+  Chap36             3
+  Chap40             3
+  Chap44             2
+  Chap54             4
+  Chap55             8
+  Chap56            12
+  Chap57             3
+  Chap58             2
+  Chap59             4
+  Chap61             4
+  Chap62             4
+  Chap63             2
+  Chap64             3
+  Chap65             3
+  Concurrency        1
+  ParaPairs          1
+
+HOLED CHAPTERS (15) — 467 holes
+  Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
+  -------------- ----- -----  --------  -----------------------------------
+  Chap26             4     8  YES       
+  Chap37            40    19  YES       
+  Chap38            27     2  YES       
+  Chap39            37     4  internal  Chap39::BSTParaTreapMtEph
+  Chap41            87     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqStPer, Chap37::AVLTreeSeqMtPer
+  Chap42            18     4  NO        Chap41::ArraySetStEph
+  Chap43           145    11  NO        Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph, Chap42::TableStEph, Chap42::TableStPer, Chap41::AVLTreeSetStPer, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph
+  Chap45            17     7  NO        Chap37::AVLTreeSeqStPer
+  Chap47            45     9  internal  Chap47::ChainedHashTable, Chap47::ParaHashTableStEph, Chap47::FlatHashTable
+  Chap49             8     8  YES       
+  Chap50            11     8  YES       
+  Chap51             6     8  YES       
+  Chap52             1    14  NO        Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer, Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph, Chap41::AVLTreeSetStPer, Chap41::ArraySetStEph, Chap43::OrderedTableStPer
+  Chap53            18     5  NO        Chap41::AVLTreeSetStPer, Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetMtPer
+  Chap66             3     2  YES       
+
+DEPENDENCY CHAIN (chapter-level, external only)
+  Chapter         Blocked by chapters
+  --------------  -------------------
+  Chap41          Chap37
+  Chap42          Chap41
+  Chap43          Chap37, Chap41, Chap42
+  Chap44          Chap37, Chap41, Chap42
+  Chap45          Chap37
+  Chap52          Chap41, Chap43
+  Chap53          Chap41
+  Chap55          Chap37, Chap41
+  Chap57          Chap45
+  Chap65          Chap45
+
+=================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 07:57:04 -07:00
-Ended:     2026-03-13 07:57:05 -07:00
-Duration:  1143ms
+Started:   2026-03-13 08:51:30 -07:00
+Ended:     2026-03-13 08:51:32 -07:00
+Duration:  1662ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

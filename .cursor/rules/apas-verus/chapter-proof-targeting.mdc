@@ -1,0 +1,42 @@
+---
+description: Read chapter proof targeting data before planning agent work
+alwaysApply: false
+---
+
+# Chapter Proof Targeting — Read Before Planning
+
+When planning proof work, agent assignments, or round plans, **always read Section 4.6
+of the global proof holes log first**:
+
+```
+analyses/veracity-review-verus-proof-holes.log → Section 4.6. Chapter by Chapter Proof Targeting
+```
+
+This section contains:
+- **Clean chapters** — zero holes, no work needed.
+- **Holed chapters** — hole count, file count, whether deps are clean (`ClnDeps?`),
+  and which external holed modules block them.
+- **Dependency chain** — chapter-level blockers (external only).
+
+## How to use it
+
+1. **Read Section 4.6** before making any work plan. Search for
+   `4.6. Chapter by Chapter Proof Targeting` in the log.
+2. **Prioritize clean-deps chapters** (`ClnDeps? = YES`) — these can be closed without
+   waiting on other chapters.
+3. **Identify the critical path** from the dependency chain. Currently Chap37 is the root
+   blocker for the longest chain (37 → 41 → 42 → 43 → 52).
+4. **Partition work by file** to avoid agent overlap. The section lists which modules
+   block which chapters — use this to assign non-overlapping file sets.
+5. **Internal-only deps** (`ClnDeps? = internal`) can be closed by fixing files within
+   the same chapter.
+
+## When to regenerate
+
+Run `scripts/all-holes-by-chap.sh` to regenerate the log (includes Section 4.6) after:
+- Merging agent branches
+- Any proof work that changes hole counts
+- Structural changes (renames, new files)
+
+Do NOT run per-chapter `scripts/holes.sh` when you need the global picture — it overwrites
+per-chapter logs without producing the global analysis.

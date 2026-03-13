@@ -1,0 +1,22 @@
+---
+description: Where agents write status reports when finishing a round
+alwaysApply: false
+---
+
+# Agent Status Reports
+
+When you finish a round of work, write your summary to:
+
+```
+plans/agent{N}-round{R}-report.md
+```
+
+For example, Agent 3 finishing Round 7 writes to `plans/agent3-round7-report.md`.
+
+Include:
+- Holes before/after per file (table format)
+- Chapters closed
+- Verification counts (verified, errors, RTT, PTT)
+- Techniques used
+- Remaining holes with brief explanation of what blocks them
+- Commit hash on your branch

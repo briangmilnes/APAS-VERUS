@@ -54,7 +54,24 @@
 //! 5. `&mut self` methods use `old(self).spec_<mod>_wf()` in requires,
 //!    `self.spec_<mod>_wf()` in ensures.
 //!
-//! 6. Trivially-true wf for Vec-only wrappers.
+//! 6. Ordering: wf predicates come first in requires and ensures.
+//!
+//!    Put `self.spec_<mod>_wf()`, `other.spec_<mod>_wf()`, and `old(self).spec_<mod>_wf()`
+//!    before functional preconditions in requires. Put `self.spec_<mod>_wf()` and
+//!    `out.spec_<mod>_wf()` before functional postconditions in ensures. This makes
+//!    structural validity immediately visible and separates it from operational constraints.
+//!
+//!    ```
+//!    fn insert(&mut self, key: K, val: V)
+//!        requires
+//!            old(self).spec_table_wf(),        // wf first
+//!            old(self)@.len() < MAX_CAPACITY,  // then functional
+//!        ensures
+//!            self.spec_table_wf(),             // wf first
+//!            self@.contains_key(key),          // then functional
+//!    ```
+//!
+//! 7. Trivially-true wf for Vec-only wrappers.
 //!
 //!    Some types are thin wrappers around a single `Vec<T>` with no additional
 //!    exec fields — e.g., `struct ArraySeqStEphS<T> { pub seq: Vec<T> }`. These
@@ -117,28 +134,40 @@ pub mod spec_wf_standard {
 
         /// Constructor: no &self, uses spec_valid_key_type.
         fn empty() -> (out: Self)
-            requires Self::spec_valid_key_type()
-            ensures out.spec_container_wf();
+            requires
+                Self::spec_valid_key_type(),
+            ensures
+                out.spec_container_wf();
 
-        /// &self input: wf in requires.
+        /// &self input: wf first in requires.
         fn len(&self) -> (n: usize)
-            requires self.spec_container_wf()
-            ensures n == self@.len();
+            requires
+                self.spec_container_wf(),
+            ensures
+                n == self@.len();
 
-        /// &mut self: old(self) wf in requires, self wf in ensures.
+        /// &mut self: wf first in both requires and ensures.
         fn push(&mut self, x: T)
-            requires old(self).spec_container_wf(), old(self)@.len() < 999
-            ensures self.spec_container_wf();
+            requires
+                old(self).spec_container_wf(),
+                old(self)@.len() < 999,
+            ensures
+                self.spec_container_wf();
 
-        /// Self input and output: wf on both.
+        /// Self input and output: wf first on both.
         fn merge(&self, other: &Self) -> (out: Self)
-            requires self.spec_container_wf(), other.spec_container_wf()
-            ensures out.spec_container_wf();
+            requires
+                self.spec_container_wf(),
+                other.spec_container_wf(),
+            ensures
+                out.spec_container_wf();
 
-        /// Non-Self input and output: free function wf (cycle workaround).
+        /// Non-Self input and output: free function wf first (cycle workaround).
         fn flatten(nested: &Container<Container<T>>) -> (out: Container<Container<T>>)
-            requires spec_container_wf_generic(nested)
-            ensures spec_container_wf_generic(&out);
+            requires
+                spec_container_wf_generic(nested),
+            ensures
+                spec_container_wf_generic(&out);
     }
 
     //  9. impls
@@ -191,15 +220,22 @@ pub mod spec_wf_standard {
         spec fn spec_vecwrapper_wf(&self) -> bool;
 
         fn empty() -> (out: Self)
-            ensures out.spec_vecwrapper_wf(), out@.len() == 0;
+            ensures
+                out.spec_vecwrapper_wf(),
+                out@.len() == 0;
 
         fn len(&self) -> (n: usize)
-            requires self.spec_vecwrapper_wf()
-            ensures n == self@.len();
+            requires
+                self.spec_vecwrapper_wf(),
+            ensures
+                n == self@.len();
 
         fn push(&mut self, x: T)
-            requires old(self).spec_vecwrapper_wf()
-            ensures self.spec_vecwrapper_wf(), self@.len() == old(self)@.len() + 1;
+            requires
+                old(self).spec_vecwrapper_wf(),
+            ensures
+                self.spec_vecwrapper_wf(),
+                self@.len() == old(self)@.len() + 1;
     }
 
     impl<T> VecWrapperTrait<T> for VecWrapper<T> {

@@ -13,6 +13,7 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
+     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -140,12 +141,12 @@ Holes Found: 26 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 07:57:03 -07:00
-Ended:     2026-03-13 07:57:03 -07:00
-Duration:  14ms
+Started:   2026-03-13 08:51:30 -07:00
+Ended:     2026-03-13 08:51:30 -07:00
+Duration:  20ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
-2026-03-13 07:57:03 -07:00
-Duration:  14ms
+2026-03-13 08:51:30 -07:00
+Duration:  20ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log

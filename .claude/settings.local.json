@@ -128,7 +128,11 @@
       "Bash(for *$(*)*)",
       "WebFetch(domain:)",
       "Bash(/home/milnes/projects/veracity/target/release/veracity-review-proof-holes:*)",
-      "Bash(bash:*)"
+      "Bash(bash:*)",
+      "Bash(wc -l *)",
+      "Bash(*&& wc *)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:willschenk.com)"
     ]
   }
 }

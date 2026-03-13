@@ -162,6 +162,10 @@ minor). You bring:
   throwaway Python.
 - **No Perl.** Never use Perl for any purpose — no `perl -e`, no `perl -i`, no Perl one-liners.
 - Plans and proposed work tables go in `${cwd}/plans/`, not in `~/.claude`.
+- **Agent status reports**: When finishing a round, write your summary to
+  `plans/agent{N}-round{R}-report.md` (e.g., `plans/agent3-round7-report.md`).
+  Include: holes before/after per file (table), chapters closed, verification counts,
+  techniques used, remaining holes with what blocks them, commit hash.
 
 ---
 
@@ -286,6 +290,7 @@ renames, structural changes, or when refreshing analysis baselines.
 | `scripts/resolve-analysis-merge.sh [dir]` | Resolves analysis-only merge conflicts (`--theirs`) |
 | `scripts/resolve-analysis-rebase.sh [dir]` | Loops through rebase steps, resolves analysis-only conflicts (`--ours`) |
 | `scripts/resolve-settings-merge.sh [dir]` | Unions `.claude/settings.local.json` allow lists from both conflict sides |
+| `scripts/chapter-cleanliness-status.sh` | `analyses/chapter-cleanliness-status.log` |
 
 **NEVER add `external_body`, `admit()`, or `assume(...)` without asking the user first.**
 
