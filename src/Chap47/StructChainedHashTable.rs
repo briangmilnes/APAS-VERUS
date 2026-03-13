@@ -253,21 +253,44 @@ pub mod StructChainedHashTable {
 
             /// - APAS: Work O(n + m + m'), Span O(n + m + m').
             /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — traverses all chains, creates m' lists, reinserts.
-            #[verifier::external_body]
             fn resize(
                 table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>,
                 new_size: usize,
-            ) -> HashTable<Key, Value, ChainList<Key, Value>, Metrics, H> {
-                let mut pairs = Vec::new();
-                for chain in &table.table {
-                    let mut current = &chain.head;
-                    while let Some(node) = current {
+            ) -> (resized: HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>) {
+                // Phase 1: collect all pairs from all chains.
+                let mut pairs: Vec<(Key, Value)> = Vec::new();
+                let mut i: usize = 0;
+                while i < table.table.len()
+                    invariant
+                        i <= table.table@.len(),
+                        table.table@.len() == table.current_size as int,
+                    decreases table.table.len() - i,
+                {
+                    // Traverse the linked list for this bucket using to_seq on the chain.
+                    let chain_clone = table.table[i].clone();
+                    let mut current = chain_clone.head;
+                    while current.is_some()
+                        decreases current,
+                    {
+                        let node = current.unwrap();
                         pairs.push((node.key.clone(), node.value.clone()));
-                        current = &node.next;
+                        current = node.next;
                     }
+                    i = i + 1;
                 }
 
-                let new_table_vec = (0..new_size).map(|_| ChainList::new()).collect();
+                // Phase 2: create new table.
+                let mut new_table_vec: Vec<ChainList<Key, Value>> = Vec::new();
+                let mut k: usize = 0;
+                while k < new_size
+                    invariant
+                        k <= new_size,
+                        new_table_vec@.len() == k as int,
+                    decreases new_size - k,
+                {
+                    new_table_vec.push(ChainList { head: None });
+                    k = k + 1;
+                }
                 let mut new_table = HashTable {
                     table: new_table_vec,
                     hash_fn: table.hash_fn.clone(),
@@ -278,8 +301,21 @@ pub mod StructChainedHashTable {
                     _phantom: PhantomData,
                 };
 
-                for (key, value) in pairs {
+                // Phase 3: reinsert all pairs.
+                let mut m: usize = 0;
+                while m < pairs.len()
+                    invariant
+                        m <= pairs@.len(),
+                        new_size > 0,
+                        new_table.current_size == new_size,
+                        new_table.table@.len() == new_table.current_size as int,
+                        new_table.num_elements <= m,
+                    decreases pairs.len() - m,
+                {
+                    let key = pairs[m].0.clone();
+                    let value = pairs[m].1.clone();
                     Self::insert(&mut new_table, key, value);
+                    m = m + 1;
                 }
 
                 new_table

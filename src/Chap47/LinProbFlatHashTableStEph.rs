@@ -39,6 +39,8 @@ pub mod LinProbFlatHashTableStEph {
                 invariant
                     attempt <= table.current_size,
                     table.table@.len() == table.current_size as int,
+                    table.current_size == old(table).current_size,
+                    table.num_elements == old(table).num_elements,
                 decreases table.current_size - attempt,
             {
                 let slot = linear_probe(&table.hash_fn, &key, table.current_size, attempt);
@@ -91,6 +93,7 @@ pub mod LinProbFlatHashTableStEph {
                 invariant
                     attempt <= table.current_size,
                     table.table@.len() == table.current_size as int,
+                    table.current_size == old(table).current_size,
                 decreases table.current_size - attempt,
             {
                 let slot = linear_probe(&table.hash_fn, key, table.current_size, attempt);
@@ -113,19 +116,38 @@ pub mod LinProbFlatHashTableStEph {
 
         /// - APAS: Work O(n + m + m'), Span O(n + m + m').
         /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs from m slots, creates m' new slots, reinserts n pairs.
-        #[verifier::external_body]
         fn resize(
             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
             new_size: usize,
-        ) -> HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H> {
-            let mut pairs = Vec::new();
-            for entry in &table.table {
+        ) -> (resized: HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) {
+            // Phase 1: collect occupied pairs.
+            let mut pairs: Vec<(Key, Value)> = Vec::new();
+            let mut i: usize = 0;
+            while i < table.table.len()
+                invariant
+                    i <= table.table@.len(),
+                    table.table@.len() == table.current_size as int,
+                decreases table.table.len() - i,
+            {
+                let entry = table.table[i].clone();
                 if let FlatEntry::Occupied(k, v) = entry {
-                    pairs.push((k.clone(), v.clone()));
+                    pairs.push((k, v));
                 }
+                i = i + 1;
             }
 
-            let new_table_vec = (0..new_size).map(|_| FlatEntry::new()).collect();
+            // Phase 2: create new table with empty entries.
+            let mut new_table_vec: Vec<FlatEntry<Key, Value>> = Vec::new();
+            let mut k: usize = 0;
+            while k < new_size
+                invariant
+                    k <= new_size,
+                    new_table_vec@.len() == k as int,
+                decreases new_size - k,
+            {
+                new_table_vec.push(FlatEntry::Empty);
+                k = k + 1;
+            }
             let mut new_table = HashTable {
                 table: new_table_vec,
                 hash_fn: table.hash_fn.clone(),
@@ -136,8 +158,21 @@ pub mod LinProbFlatHashTableStEph {
                 _phantom: PhantomData,
             };
 
-            for (key, value) in pairs {
+            // Phase 3: reinsert all pairs.
+            let mut j: usize = 0;
+            while j < pairs.len()
+                invariant
+                    j <= pairs@.len(),
+                    new_size > 0,
+                    new_table.current_size == new_size,
+                    new_table.table@.len() == new_table.current_size as int,
+                    new_table.num_elements <= j,
+                decreases pairs.len() - j,
+            {
+                let key = pairs[j].0.clone();
+                let value = pairs[j].1.clone();
                 Self::insert(&mut new_table, key, value);
+                j = j + 1;
             }
 
             new_table
@@ -158,16 +193,26 @@ pub mod LinProbFlatHashTableStEph {
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe until empty/deleted/matching slot.
-        #[verifier::external_body]
-        fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> usize {
-            let mut attempt = 0;
-            while attempt < table.current_size {
+        fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (slot: usize) {
+            let mut attempt: usize = 0;
+            while attempt < table.current_size
+                invariant
+                    attempt <= table.current_size,
+                    table.current_size > 0,
+                    table.table@.len() == table.current_size as int,
+                decreases table.current_size - attempt,
+            {
                 let slot = Self::probe(table, key, attempt);
-                match &table.table[slot] {
-                    | FlatEntry::Empty | FlatEntry::Deleted => return slot,
-                    | FlatEntry::Occupied(k, _) if k == key => return slot,
-                    | _ => attempt += 1,
+                let entry = table.table[slot].clone();
+                match entry {
+                    FlatEntry::Empty | FlatEntry::Deleted => { return slot; },
+                    FlatEntry::Occupied(k, _) => {
+                        if k == *key {
+                            return slot;
+                        }
+                    },
                 }
+                attempt = attempt + 1;
             }
             Self::probe(table, key, 0)
         }
