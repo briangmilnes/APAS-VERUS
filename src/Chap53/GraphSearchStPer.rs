@@ -9,8 +9,12 @@ pub mod GraphSearchStPer {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerTrait;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::*;
 
     verus! {
+
+    broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
     // 4. type definitions
     #[verifier::reject_recursive_types(V)]
@@ -31,6 +35,9 @@ pub mod GraphSearchStPer {
         /// Select subset U ⊆ F where |U| ≥ 1.
         /// Returns (selected vertices, should_track_parents).
         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B))
+            requires
+                frontier.spec_avltreesetstper_wf(),
+                obeys_feq_clone::<V>(),
             ensures selected.0@.subset_of(frontier@);
     }
 
@@ -65,14 +72,27 @@ pub mod GraphSearchStPer {
     }
 
     impl<V: StT + Ord> SelectionStrategy<V> for SelectOne {
-        #[verifier::external_body]
         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B)) {
-            if frontier.size() == 0 {
+            let n = frontier.elements.length();
+            if n == 0 {
                 (AVLTreeSetStPer::empty(), false)
             } else {
+                let first_ref = frontier.elements.nth(0);
+                let first = first_ref.clone();
+                proof { assert(cloned(*first_ref, first)); }
                 let seq = frontier.to_seq();
-                let first = seq.nth(0).clone();
-                (AVLTreeSetStPer::singleton(first), false)
+                assert(seq@.to_set() =~= frontier@);
+                assert(frontier.elements@[0] == first_ref@);
+                assert(frontier.elements@.contains(first_ref@));
+                assert(frontier@.contains(first@));
+                let result = AVLTreeSetStPer::singleton(first);
+                assert(result@.subset_of(frontier@)) by {
+                    assert forall|a: <V as View>::V| result@.contains(a)
+                        implies frontier@.contains(a) by {
+                        assert(result@ == Set::<<V as View>::V>::empty().insert(first@));
+                    }
+                }
+                (result, false)
             }
         }
     }

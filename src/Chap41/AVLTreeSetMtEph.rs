@@ -250,7 +250,7 @@ broadcast use {
         fn empty() -> (empty: Self)
         {
             let st = AVLTreeSetStEph::empty();
-            proof { assume(AVLTreeSetMtEphInv.inv(st)); }  
+            assert(AVLTreeSetMtEphInv.inv(st));
             let empty = AVLTreeSetMtEph {
                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
             };
@@ -262,7 +262,7 @@ broadcast use {
         {
             let ghost x_view = x@;
             let st = AVLTreeSetStEph::singleton(x);
-            proof { assume(AVLTreeSetMtEphInv.inv(st)); }  
+            assert(AVLTreeSetMtEphInv.inv(st));
             let tree = AVLTreeSetMtEph {
                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
             };
@@ -276,7 +276,7 @@ broadcast use {
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
         {
             let st = AVLTreeSetStEph::from_seq(seq);
-            proof { assume(AVLTreeSetMtEphInv.inv(st)); }  
+            assert(AVLTreeSetMtEphInv.inv(st));
             let constructed = AVLTreeSetMtEph {
                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
             };
@@ -453,11 +453,11 @@ broadcast use {
         {
             let (mut current, write_handle) = self.inner.acquire_write();
             current.delete(x);
-            proof { assume(AVLTreeSetMtEphInv.inv(current)); }  
+            assert(AVLTreeSetMtEphInv.inv(current));
             write_handle.release_write(current);
             proof {
-                assume(self@ == old(self)@.remove(x@));  
-                assume(self@.finite());  
+                assume(self@ == old(self)@.remove(x@));
+                assume(self@.finite());
             }
         }
 
@@ -466,11 +466,11 @@ broadcast use {
             let ghost x_view = x@;
             let (mut current, write_handle) = self.inner.acquire_write();
             current.insert(x);
-            proof { assume(AVLTreeSetMtEphInv.inv(current)); }  
+            assert(AVLTreeSetMtEphInv.inv(current));
             write_handle.release_write(current);
             proof {
-                assume(self@ == old(self)@.insert(x_view));  
-                assume(self@.finite());  
+                assume(self@ == old(self)@.insert(x_view));
+                assume(self@.finite());
             }
         }
 
