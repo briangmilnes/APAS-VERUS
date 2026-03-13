@@ -21,77 +21,93 @@ Table of Contents:
 =================================================================
 
 ❌ GraphSearchMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:109: error: external_body - #[verifier::external_body]
-       110 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:98: error: fn_missing_requires - fn graph_search — exec fn should have requires
-        72 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B)) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchMtPer.rs:79: error: assume() - proof { assume(first@ == first_ref@); }
+        67 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B)) {
             ...
-        96 |     }
-        97 | 
-        99 |     where
-       100 |         G: Fn(&V) -> AVLTreeSetMtPer<V>,
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:141: error: fn_missing_requires - fn graph_search_multi — exec fn should have requires
-       110 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
-            ...
-       139 | 
-       140 |     /// Generic graph search starting from multiple sources (Exercise 53.3).
-       142 |         graph: &G,
-       143 |         sources: AVLTreeSetMtPer<V>,
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:172: error: fn_missing_requires - fn reachable — exec fn should have requires
-       164 |         fn reachable<G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetMtPer<V>)
-            ...
-       170 |     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
-       171 |     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
-       173 |     where
-       174 |         G: Fn(&V) -> AVLTreeSetMtPer<V>,
-   Holes: 1 total
-      1 × external_body
-❌ GraphSearchStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:104: error: external_body - #[verifier::external_body]
-       105 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:93: error: fn_missing_requires - fn graph_search — exec fn should have requires
-        67 |         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, B)) {
+        77 |                 let first_ref = seq.nth(0);
+        78 |                 let first = first_ref.clone();
+        80 |                 assert(frontier@.contains(first@));
+        81 |                 let result = AVLTreeSetMtPer::singleton(first);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchMtPer.rs:104: error: external_body - #[verifier::external_body]
+       105 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchMtPer.rs:93: error: fn_missing_requires - fn graph_search — exec fn should have requires
+        67 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B)) {
             ...
         91 |     }
         92 | 
         94 |     where
-        95 |         G: Fn(&V) -> AVLTreeSetStEph<V>,
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:140: error: fn_missing_requires - fn graph_search_multi — exec fn should have requires
-       105 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
+        95 |         G: Fn(&V) -> AVLTreeSetMtPer<V>,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchMtPer.rs:136: error: fn_missing_requires - fn graph_search_multi — exec fn should have requires
+       105 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
             ...
-       138 | 
-       139 |     /// Generic graph search starting from multiple sources (Exercise 53.3).
-       141 |         graph: &G,
-       142 |         sources: AVLTreeSetStEph<V>,
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:171: error: fn_missing_requires - fn reachable — exec fn should have requires
-       163 |         fn reachable<G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetStEph<V>)
+       134 | 
+       135 |     /// Generic graph search starting from multiple sources (Exercise 53.3).
+       137 |         graph: &G,
+       138 |         sources: AVLTreeSetMtPer<V>,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchMtPer.rs:167: error: fn_missing_requires - fn reachable — exec fn should have requires
+       159 |         fn reachable<G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetMtPer<V>)
             ...
-       169 |     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
-       170 |     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
-       172 |     where
-       173 |         G: Fn(&V) -> AVLTreeSetStEph<V>,
-   Holes: 1 total
+       165 |     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+       166 |     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
+       168 |     where
+       169 |         G: Fn(&V) -> AVLTreeSetMtPer<V>,
+   Holes: 2 total
+      1 × assume()
+      1 × external_body
+❌ GraphSearchStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchStEph.rs:73: error: assume() - proof { assume(first@ == first_ref@); }  // accept hole: V::
+        61 |         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, B)) {
+            ...
+        71 |                 let first_ref = seq.nth(0);
+        72 |                 let first = first_ref.clone();
+        74 |                 assert(frontier@.contains(first@));
+        75 |                 let result = AVLTreeSetStEph::singleton(first);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchStEph.rs:98: error: external_body - #[verifier::external_body]
+        99 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchStEph.rs:87: error: fn_missing_requires - fn graph_search — exec fn should have requires
+        61 |         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, B)) {
+            ...
+        85 |     }
+        86 | 
+        88 |     where
+        89 |         G: Fn(&V) -> AVLTreeSetStEph<V>,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchStEph.rs:134: error: fn_missing_requires - fn graph_search_multi — exec fn should have requires
+        99 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
+            ...
+       132 | 
+       133 |     /// Generic graph search starting from multiple sources (Exercise 53.3).
+       135 |         graph: &G,
+       136 |         sources: AVLTreeSetStEph<V>,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchStEph.rs:165: error: fn_missing_requires - fn reachable — exec fn should have requires
+       157 |         fn reachable<G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetStEph<V>)
+            ...
+       163 |     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+       164 |     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
+       166 |     where
+       167 |         G: Fn(&V) -> AVLTreeSetStEph<V>,
+   Holes: 2 total
+      1 × assume()
       1 × external_body
 ❌ GraphSearchStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:68: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchStPer.rs:68: error: external_body - #[verifier::external_body]
         69 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B)) {
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:91: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchStPer.rs:91: error: external_body - #[verifier::external_body]
         92 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>>(
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:80: error: fn_missing_requires - fn graph_search — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchStPer.rs:80: error: fn_missing_requires - fn graph_search — exec fn should have requires
         69 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B)) {
             ...
         78 |     }
         79 | 
         81 |     where
         82 |         G: Fn(&V) -> AVLTreeSetStPer<V>,
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:123: error: fn_missing_requires - fn graph_search_multi — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchStPer.rs:123: error: fn_missing_requires - fn graph_search_multi — exec fn should have requires
         92 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>>(
             ...
        121 | 
        122 |     /// Generic graph search starting from multiple sources (Exercise 53.3).
        124 |         graph: &G,
        125 |         sources: AVLTreeSetStPer<V>,
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:154: error: fn_missing_requires - fn reachable — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchStPer.rs:154: error: fn_missing_requires - fn reachable — exec fn should have requires
        146 |         fn reachable<G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetStPer<V>)
             ...
        152 |     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
@@ -101,21 +117,47 @@ Table of Contents:
    Holes: 2 total
       2 × external_body
 ❌ PQMinStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:102: error: fn_missing_ensures - fn pq_find_min_priority — exec fn should have ensures
-        86 |     pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF) -> (search: PQMinResult<V, P>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/PQMinStEph.rs:101: error: assume() - proof { assume(v@ == entry_ref.1@); }
+        85 |     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
             ...
-       100 |     }
-       101 | 
-       103 |         frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
-       104 |     ) -> (result: Option<V>)
+        99 |             let entry_ref = seq.nth(0);
+       100 |             let v = entry_ref.1.clone();
+       102 |             Some(v)
+       103 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/PQMinStEph.rs:146: error: assume() - proof { assume(neighbors.spec_avltreesetsteph_wf()); }
+       107 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
+            ...
+       144 | 
+       145 |             let neighbors = graph(&v);
+       147 |             let mut frontier_updated = frontier_new;
+       148 |             let neighbors_seq = neighbors.to_seq();
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/PQMinStEph.rs:197: error: external_body - #[verifier::external_body]
+       198 |     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/PQMinStEph.rs:73: error: fn_missing_requires - fn pq_min — exec fn should have requires
+        65 |         fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStEph<V>, priority_fn: &PF) -> (search: PQMinResult<V, P>)
+            ...
+        71 |     /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
+        72 |     /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — delegates to pq_min_multi.
+        74 |     where
+        75 |         G: Fn(&V) -> AVLTreeSetStEph<V>,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/PQMinStEph.rs:85: error: fn_missing_ensures - fn pq_find_min_priority — exec fn should have ensures
+        73 |     pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF) -> (search: PQMinResult<V, P>)
+            ...
+        83 |     }
+        84 | 
+        86 |         frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
+        87 |     ) -> (result: Option<V>)
+   Holes: 3 total
+      2 × assume()
+      1 × external_body
 ❌ PQMinStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:89: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/PQMinStPer.rs:89: error: external_body - #[verifier::external_body]
         90 |     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
-/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:101: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/PQMinStPer.rs:101: error: external_body - #[verifier::external_body]
        102 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
-/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:149: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/PQMinStPer.rs:149: error: external_body - #[verifier::external_body]
        150 |     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
-/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:77: error: fn_missing_requires - fn pq_min — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/PQMinStPer.rs:77: error: fn_missing_requires - fn pq_min — exec fn should have requires
         69 |         fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStPer<V>, priority_fn: &PF) -> (search: PQMinResult<V, P>)
             ...
         75 |     /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
@@ -164,27 +206,28 @@ Proof Functions:
    0 total
 
 Function Specs:
-   48 exec fns with complete spec (requires+ensures) (73%)
-   11 exec fns missing spec (16%)
+   47 exec fns with complete spec (requires+ensures) (72%)
+   12 exec fns missing spec (18%)
    6 proof/spec fns clean (9%)
    0 proof/spec fns with holes (0%)
    65 total fns
 
 
-Holes Found: 7 total
-   7 × external_body (100%)
+Holes Found: 12 total
+   4 × assume() (33%)
+   8 × external_body (66%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 08:51:30 -07:00
-Ended:     2026-03-13 08:51:30 -07:00
-Duration:  14ms
+Started:   2026-03-13 11:17:47 -07:00
+Ended:     2026-03-13 11:17:47 -07:00
+Duration:  25ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
-2026-03-13 08:51:30 -07:00
-Ended:     2026-03-13 08:51:30 -07:00
-Duration:  14ms
+ted:   2026-03-13 11:17:47 -07:00
+Ended:     2026-03-13 11:17:47 -07:00
+Duration:  25ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log

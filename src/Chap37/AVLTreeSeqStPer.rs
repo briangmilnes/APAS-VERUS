@@ -25,6 +25,9 @@ pub mod AVLTreeSeqStPer {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{lemma_cloned_view_eq, obeys_feq_full};
 
     verus! {
 
@@ -142,6 +145,21 @@ pub mod AVLTreeSeqStPer {
         }
     }
 
+    /// Under well-formedness, cached height <= cached size.
+    proof fn lemma_height_le_size<T: StT>(link: &Link<T>)
+        requires spec_avltreeseqstper_wf(*link),
+        ensures spec_cached_height(link) <= spec_cached_size(link),
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_height_le_size::<T>(&node.left);
+                lemma_height_le_size::<T>(&node.right);
+            }
+        }
+    }
+
     // 8. traits
 
     pub trait AVLTreeSeqStPerTrait<T: StT>: Sized {
@@ -216,7 +234,6 @@ pub mod AVLTreeSeqStPer {
         }
     }
 
-    #[verifier::external_body]
     fn mk<T: StT>(value: T, left: Link<T>, right: Link<T>) -> (node: Arc<Node<T>>)
         requires
             1 + spec_cached_size(&left) + spec_cached_size(&right) <= N::MAX as nat,
@@ -227,6 +244,8 @@ pub mod AVLTreeSeqStPer {
             node.height as nat == 1 + spec_nat_max(
                 spec_cached_height(&left), spec_cached_height(&right)),
             spec_avltreeseqstper_wf(left) && spec_avltreeseqstper_wf(right) ==> spec_avltreeseqstper_wf(Some(node)),
+            node.left == left,
+            node.right == right,
     {
         let hl = height_fn(&left);
         let hr = height_fn(&right);
@@ -235,85 +254,197 @@ pub mod AVLTreeSeqStPer {
         Arc::new(Node { value, height: h, size: sz, left, right })
     }
 
-    #[verifier::external_body]
     fn rotate_right<T: StT>(y: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)
         requires y.left.is_some(), spec_avltreeseqstper_wf(Some(y)),
         ensures
             spec_inorder(Some(rotated)) =~= spec_inorder(Some(y)),
             spec_avltreeseqstper_wf(Some(rotated)),
+            spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(y)),
     {
+        let ghost old_y = y;
         let x = y.left.as_ref().unwrap().clone();
+        proof {
+            // Unfold wf: x == y.left.unwrap(), wf(y.left) holds.
+            assert(spec_avltreeseqstper_wf(y.left));
+            assert(spec_avltreeseqstper_wf(y.right));
+            assert(spec_avltreeseqstper_wf(x.left));
+            assert(spec_avltreeseqstper_wf(x.right));
+            // Size bound: y.size is usize, so 1 + size(x) + size(C) <= N::MAX.
+            // x.size is usize, so 1 + size(A) + size(B) <= N::MAX.
+            // Combined: 2 + size(A) + size(B) + size(C) <= N::MAX (== y.size).
+            // For first mk (new_y = mk(y_val, B, C)):
+            //   1 + size(B) + size(C) <= 2 + size(A) + size(B) + size(C) == y.size <= N::MAX.
+            assert(1 + spec_cached_size(&x.right) + spec_cached_size(&y.right) <= N::MAX as nat);
+            // Height: h(B) <= x.height-1, h(C) <= y.height-1.
+            // max(h(B), h(C)) < y.height. So 1 + max(h(B), h(C)) <= y.height <= N::MAX.
+            assert(1 + spec_nat_max(
+                spec_cached_height(&x.right), spec_cached_height(&y.right)) <= N::MAX as nat);
+        }
         let t2 = x.right.clone();
-        let new_y = mk(y.value.clone(), t2, y.right.clone());
-        mk(x.value.clone(), x.left.clone(), Some(new_y))
+        let y_val = y.value.clone_plus();
+        proof { assume(y_val@ == y.value@); }
+        let new_y = mk(y_val, t2, y.right.clone());
+        proof {
+            // For second mk (result = mk(x_val, A, Some(new_y))):
+            //   1 + size(A) + size(new_y) == 1 + size(A) + (1 + size(B) + size(C))
+            //   == 2 + size(A) + size(B) + size(C) == y.size <= N::MAX.
+            assert(1 + spec_cached_size(&x.left) + spec_cached_size(&Some(new_y)) <= N::MAX as nat);
+            // Height: h(A) <= size(A), h(new_y) <= size(new_y) (by lemma).
+            // 1 + max(h(A), h(new_y)) <= 1 + max(size(A), size(new_y))
+            //   <= 1 + size(A) + size(new_y) <= y.size <= N::MAX.
+            lemma_height_le_size::<T>(&x.left);
+            lemma_height_le_size::<T>(&Some(new_y));
+            assert(1 + spec_nat_max(
+                spec_cached_height(&x.left), spec_cached_height(&Some(new_y))) <= N::MAX as nat);
+        }
+        let x_val = x.value.clone_plus();
+        proof { assume(x_val@ == x.value@); }
+        let result = mk(x_val, x.left.clone(), Some(new_y));
+        proof { reveal_with_fuel(spec_inorder, 3); }
+        result
     }
 
-    #[verifier::external_body]
     fn rotate_left<T: StT>(x: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)
         requires x.right.is_some(), spec_avltreeseqstper_wf(Some(x)),
         ensures
             spec_inorder(Some(rotated)) =~= spec_inorder(Some(x)),
             spec_avltreeseqstper_wf(Some(rotated)),
+            spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(x)),
     {
+        let ghost old_x = x;
         let y = x.right.as_ref().unwrap().clone();
+        proof {
+            assert(spec_avltreeseqstper_wf(x.left));
+            assert(spec_avltreeseqstper_wf(x.right));
+            assert(spec_avltreeseqstper_wf(y.left));
+            assert(spec_avltreeseqstper_wf(y.right));
+            // First mk (new_x = mk(x_val, A, B)): A=x.left, B=y.left.
+            // 1 + size(A) + size(B) ≤ x.size ≤ N::MAX (since x.size is usize,
+            // and size(y) = 1 + size(B) + size(C), so x.size = 1 + size(A) + size(y) ≥ 2 + size(A) + size(B)).
+            assert(1 + spec_cached_size(&x.left) + spec_cached_size(&y.left) <= N::MAX as nat);
+            assert(1 + spec_nat_max(
+                spec_cached_height(&x.left), spec_cached_height(&y.left)) <= N::MAX as nat);
+        }
         let t2 = y.left.clone();
-        let new_x = mk(x.value.clone(), x.left.clone(), t2);
-        mk(y.value.clone(), Some(new_x), y.right.clone())
+        let x_val = x.value.clone_plus();
+        proof { assume(x_val@ == x.value@); }
+        let new_x = mk(x_val, x.left.clone(), t2);
+        proof {
+            // Second mk (result = mk(y_val, Some(new_x), C)): size(new_x) + size(C) + 1 == x.size.
+            assert(1 + spec_cached_size(&Some(new_x)) + spec_cached_size(&y.right) <= N::MAX as nat);
+            lemma_height_le_size::<T>(&Some(new_x));
+            lemma_height_le_size::<T>(&y.right);
+            assert(1 + spec_nat_max(
+                spec_cached_height(&Some(new_x)), spec_cached_height(&y.right)) <= N::MAX as nat);
+        }
+        let y_val = y.value.clone_plus();
+        proof { assume(y_val@ == y.value@); }
+        let result = mk(y_val, Some(new_x), y.right.clone());
+        proof { reveal_with_fuel(spec_inorder, 3); }
+        result
     }
 
-    #[verifier::external_body]
     fn rebalance<T: StT>(n: Arc<Node<T>>) -> (balanced: Arc<Node<T>>)
         requires spec_avltreeseqstper_wf(Some(n)),
         ensures
             spec_inorder(Some(balanced)) =~= spec_inorder(Some(n)),
             spec_avltreeseqstper_wf(Some(balanced)),
+            spec_cached_size(&Some(balanced)) == spec_cached_size(&Some(n)),
     {
         let hl = height_fn(&n.left);
         let hr = height_fn(&n.right);
         if hl > hr.saturating_add(1) {
-            let left = n.left.as_ref().unwrap().clone();
-            if height_fn(&left.right) > height_fn(&left.left) {
-                let rotated = rotate_left(left);
-                return rotate_right(mk(n.value.clone(), Some(rotated), n.right.clone()));
+            proof {
+                assert(spec_cached_height(&n.left) > 0);
+                assert(n.left.is_some());
             }
+            let left = n.left.as_ref().unwrap().clone();
+            let ghost left_size = spec_cached_size(&Some(left));
+            proof {
+                // left == n.left.unwrap(), so size(Some(left)) == size(n.left).
+                assert(left_size == spec_cached_size(&n.left));
+            }
+            if height_fn(&left.right) > height_fn(&left.left) {
+                // Left-right case: inner rotate_left, then rebuild with mk, then rotate_right.
+                proof { assert(left.right.is_some()); }
+                let rotated = rotate_left(left);
+                let n_val = n.value.clone_plus();
+                proof {
+                    assume(n_val@ == n.value@);
+                    // rotated has same size as left (rotate_left ensures).
+                    // size(left) == size(n.left), so 1 + size(rotated) + size(n.right) == n.size.
+                    assert(spec_cached_size(&Some(rotated)) == left_size);
+                    assert(1 + left_size + spec_cached_size(&n.right) <= N::MAX as nat);
+                    lemma_height_le_size::<T>(&Some(rotated));
+                    lemma_height_le_size::<T>(&n.right);
+                }
+                let rebuilt = mk(n_val, Some(rotated), n.right.clone());
+                proof { reveal_with_fuel(spec_inorder, 2); }
+                return rotate_right(rebuilt);
+            }
+            proof { reveal_with_fuel(spec_inorder, 2); }
             return rotate_right(n);
         }
         if hr > hl.saturating_add(1) {
-            let right = n.right.as_ref().unwrap().clone();
-            if height_fn(&right.left) > height_fn(&right.right) {
-                let rotated = rotate_right(right);
-                return rotate_left(mk(n.value.clone(), n.left.clone(), Some(rotated)));
+            proof {
+                assert(spec_cached_height(&n.right) > 0);
+                assert(n.right.is_some());
             }
+            let right = n.right.as_ref().unwrap().clone();
+            let ghost right_size = spec_cached_size(&Some(right));
+            proof {
+                // right == n.right.unwrap(), so size(Some(right)) == size(n.right).
+                assert(right_size == spec_cached_size(&n.right));
+            }
+            if height_fn(&right.left) > height_fn(&right.right) {
+                // Right-left case: inner rotate_right, then rebuild with mk, then rotate_left.
+                proof { assert(right.left.is_some()); }
+                let rotated = rotate_right(right);
+                let n_val = n.value.clone_plus();
+                proof {
+                    assume(n_val@ == n.value@);
+                    // rotated has same size as right (rotate_right ensures).
+                    // size(right) == size(n.right), so 1 + size(n.left) + size(rotated) == n.size.
+                    assert(spec_cached_size(&Some(rotated)) == right_size);
+                    assert(1 + spec_cached_size(&n.left) + right_size <= N::MAX as nat);
+                    lemma_height_le_size::<T>(&n.left);
+                    lemma_height_le_size::<T>(&Some(rotated));
+                }
+                let rebuilt = mk(n_val, n.left.clone(), Some(rotated));
+                proof { reveal_with_fuel(spec_inorder, 2); }
+                return rotate_left(rebuilt);
+            }
+            proof { reveal_with_fuel(spec_inorder, 2); }
             return rotate_left(n);
         }
         n
     }
 
-    #[verifier::external_body]
     fn nth_ref<'a, T: StT>(cur: &'a Link<T>, index: N) -> (elem: &'a T)
         requires spec_avltreeseqstper_wf(*cur), (index as int) < spec_inorder(*cur).len(),
         ensures elem@ == spec_inorder(*cur)[index as int],
+        decreases *cur,
     {
-        let mut cur = cur;
-        let mut index = index;
-        loop {
-            let node = cur.as_ref().unwrap();
-            let ls = size_fn(&node.left);
-            if index < ls {
-                cur = &node.left;
-            } else if index == ls {
-                return &node.value;
-            } else {
-                index -= ls + 1;
-                cur = &node.right;
-            }
+        let node = cur.as_ref().unwrap();
+        proof { lemma_size_eq_inorder_len::<T>(&node.left); }
+        let ls = size_fn(&node.left);
+        if index < ls {
+            nth_ref(&node.left, index)
+        } else if index == ls {
+            &node.value
+        } else {
+            proof { lemma_size_eq_inorder_len::<T>(&node.right); }
+            nth_ref(&node.right, index - ls - 1)
         }
     }
 
-    #[verifier::external_body]
     fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
         requires spec_avltreeseqstper_wf(*cur), (index as int) < spec_inorder(*cur).len(),
-        ensures outcome.is_ok(),
+        ensures
+            outcome is Ok,
+            spec_avltreeseqstper_wf(outcome.unwrap()),
+            spec_cached_size(&outcome.unwrap()) == spec_cached_size(cur),
+        decreases *cur,
     {
         match cur {
             None => {
@@ -324,15 +455,29 @@ pub mod AVLTreeSeqStPer {
                 }
             }
             Some(n) => {
+                proof { lemma_size_eq_inorder_len::<T>(&n.left); }
                 let ls = size_fn(&n.left);
                 if index < ls {
                     let new_left = set_rec(&n.left, index, value)?;
-                    Ok(Some(rebalance(mk(n.value.clone(), new_left, n.right.clone()))))
+                    let n_val = n.value.clone_plus();
+                    proof {
+                        assume(n_val@ == n.value@);
+                        lemma_height_le_size::<T>(&new_left);
+                        lemma_height_le_size::<T>(&n.right);
+                    }
+                    Ok(Some(rebalance(mk(n_val, new_left, n.right.clone()))))
                 } else if index == ls {
                     Ok(Some(mk(value, n.left.clone(), n.right.clone())))
                 } else {
+                    proof { lemma_size_eq_inorder_len::<T>(&n.right); }
                     let new_right = set_rec(&n.right, index - ls - 1, value)?;
-                    Ok(Some(rebalance(mk(n.value.clone(), n.left.clone(), new_right))))
+                    let n_val = n.value.clone_plus();
+                    proof {
+                        assume(n_val@ == n.value@);
+                        lemma_height_le_size::<T>(&n.left);
+                        lemma_height_le_size::<T>(&new_right);
+                    }
+                    Ok(Some(rebalance(mk(n_val, n.left.clone(), new_right))))
                 }
             }
         }

@@ -191,6 +191,21 @@ pub mod AVLTreeSeqStEph {
         }
     }
 
+    /// Under well-formedness, cached height is at most cached size.
+    proof fn lemma_height_le_size<T: StT>(link: &Link<T>)
+        requires spec_avltreeseqsteph_wf(*link),
+        ensures spec_cached_height(link) <= spec_cached_size(link),
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_height_le_size::<T>(&node.left);
+                lemma_height_le_size::<T>(&node.right);
+            }
+        }
+    }
+
 
     //		8. traits
 
@@ -336,7 +351,14 @@ pub mod AVLTreeSeqStEph {
         n.right_size = size_link_fn(&n.right);
         let hl = h_fn(&n.left);
         let hr = h_fn(&n.right);
-        assume(1 + (if hl >= hr { hl } else { hr }) as int <= usize::MAX as int);
+        proof {
+            lemma_height_le_size::<T>(&n.left);
+            lemma_height_le_size::<T>(&n.right);
+            // h_left <= size_left, h_right <= size_right.
+            // size_left + size_right + 1 < usize::MAX (precondition).
+            // max(h_left, h_right) <= size_left + size_right < usize::MAX - 1.
+            // 1 + max(h_left, h_right) <= 1 + size_left + size_right < usize::MAX.
+        }
         n.height = 1 + if hl >= hr { hl } else { hr };
     }
 
@@ -838,10 +860,10 @@ pub mod AVLTreeSeqStEph {
 
         fn push_back(&mut self, value: T) {
             assert(self.spec_avltreeseqsteph_wf());
+            assume(self.next_key < usize::MAX);
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             let ghost old_inorder = spec_inorder(self.root);
             let len = self.length();
-            assume(self.next_key < usize::MAX);
             let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
             self.root = node;
             proof {
@@ -1044,10 +1066,14 @@ pub mod AVLTreeSeqStEph {
     impl<T: StT> Eq for AVLTreeSeqStEphS<T> {}
 
     impl<T: StT> PartialEq for AVLTreeSeqStEphS<T> {
-        #[verifier::external_body]
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
+            proof {
+                assume(spec_avltreeseqsteph_wf(self.root));
+                assume(spec_avltreeseqsteph_wf(other.root));
+                assume(obeys_feq_full::<T>());
+            }
             compare_trees(&self.root, &other.root)
         }
     }
