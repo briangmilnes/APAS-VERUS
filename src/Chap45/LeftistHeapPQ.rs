@@ -82,6 +82,7 @@ broadcast use {
 
         /// Exec comparison with spec ensures connecting to TotalOrder::le.
         fn total_order_le<T: StT + Ord + TotalOrder>(a: &T, b: &T) -> (le: bool)
+            requires true,
             ensures le <==> TotalOrder::le(*a, *b)
         {
             match TotalOrder::cmp(a, b) {
@@ -259,22 +260,19 @@ broadcast use {
             spec fn spec_size(self) -> nat;
             spec fn spec_seq(&self) -> Seq<T>;
             spec fn spec_sorted(s: Seq<T>) -> bool;
-            spec fn spec_is_valid_leftist_heap(&self) -> bool;
 
             fn empty() -> (pq: Self)
                 ensures
+                    pq.spec_leftistheappq_wf(),
                     pq.spec_size() == 0,
-                    pq@ =~= Multiset::empty(),
-                    pq.spec_is_valid_leftist_heap(),
-                    pq.spec_leftistheappq_wf();
+                    pq@ =~= Multiset::empty();
             fn singleton(element: T) -> (pq: Self)
                 ensures
+                    pq.spec_leftistheappq_wf(),
                     pq.spec_size() == 1,
-                    pq@ =~= Multiset::empty().insert(element),
-                    pq.spec_is_valid_leftist_heap(),
-                    pq.spec_leftistheappq_wf();
+                    pq@ =~= Multiset::empty().insert(element);
             fn find_min(&self) -> (min_elem: Option<&T>)
-                requires self.spec_is_valid_leftist_heap(),
+                requires self.spec_leftistheappq_wf(),
                 ensures
                     self.spec_size() == 0 ==> min_elem.is_none(),
                     self.spec_size() > 0 ==> min_elem.is_some(),
@@ -283,17 +281,18 @@ broadcast use {
                         #[trigger] TotalOrder::le(*min_elem.unwrap(), e);
             fn insert(&self, element: T) -> (pq: Self)
                 requires
+                    self.spec_leftistheappq_wf(),
                     self.spec_size() + 1 <= usize::MAX as nat,
-                    self.spec_is_valid_leftist_heap(),
                 ensures
+                    pq.spec_leftistheappq_wf(),
                     pq.spec_size() == self.spec_size() + 1,
-                    pq@ =~= self@.insert(element),
-                    pq.spec_is_valid_leftist_heap();
+                    pq@ =~= self@.insert(element);
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires
+                    self.spec_leftistheappq_wf(),
                     self.spec_size() <= usize::MAX as nat,
-                    self.spec_is_valid_leftist_heap(),
                 ensures
+                    min_and_rest.0.spec_leftistheappq_wf(),
                     self.spec_size() > 0 ==> min_and_rest.1.is_some(),
                     self.spec_size() > 0 ==> min_and_rest.0.spec_size() == self.spec_size() - 1,
                     self.spec_size() == 0 ==> min_and_rest.1.is_none(),
@@ -301,22 +300,21 @@ broadcast use {
                     self.spec_size() > 0 ==> self@ =~=
                         min_and_rest.0@.insert(min_and_rest.1.unwrap()),
                     self.spec_size() > 0 ==> forall|e: T| self@.count(e) > 0 ==>
-                        #[trigger] TotalOrder::le(min_and_rest.1.unwrap(), e),
-                    min_and_rest.0.spec_is_valid_leftist_heap();
+                        #[trigger] TotalOrder::le(min_and_rest.1.unwrap(), e);
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
+                    self.spec_leftistheappq_wf(),
+                    other.spec_leftistheappq_wf(),
                     self.spec_size() + other.spec_size() <= usize::MAX as nat,
-                    self.spec_is_valid_leftist_heap(),
-                    other.spec_is_valid_leftist_heap(),
                 ensures
+                    pq.spec_leftistheappq_wf(),
                     pq.spec_size() == self.spec_size() + other.spec_size(),
-                    pq@ =~= self@.add(other@),
-                    pq.spec_is_valid_leftist_heap();
+                    pq@ =~= self@.add(other@);
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
-                    pq.spec_size() == seq@.len(),
-                    pq.spec_is_valid_leftist_heap();
+                    pq.spec_leftistheappq_wf(),
+                    pq.spec_size() == seq@.len();
             fn size(&self) -> (n: usize)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures n as nat == self.spec_size();
@@ -324,8 +322,8 @@ broadcast use {
                 ensures is_empty == (self.spec_size() == 0);
             fn extract_all_sorted(&self) -> (sorted: Vec<T>)
                 requires
+                    self.spec_leftistheappq_wf(),
                     self.spec_size() <= usize::MAX as nat,
-                    self.spec_is_valid_leftist_heap(),
                 ensures
                     sorted@.len() as nat == self.spec_size(),
                     Self::spec_sorted(sorted@);
@@ -336,19 +334,19 @@ broadcast use {
                 ensures self.spec_size() == 0 ==> rank_val == 0;
             fn is_valid_leftist_heap(&self) -> (is_valid: bool)
                 requires self.spec_size() <= usize::MAX as nat,
-                ensures is_valid <==> self.spec_is_valid_leftist_heap();
+                ensures is_valid <==> self.spec_leftistheappq_wf();
             fn from_vec(vec: Vec<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
-                    pq.spec_size() == vec@.len(),
-                    pq.spec_is_valid_leftist_heap();
+                    pq.spec_leftistheappq_wf(),
+                    pq.spec_size() == vec@.len();
             fn to_vec(&self) -> (v: Vec<T>)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures v@.len() as nat == self.spec_size();
             fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires
+                    self.spec_leftistheappq_wf(),
                     self.spec_size() <= usize::MAX as nat,
-                    self.spec_is_valid_leftist_heap(),
                 ensures
                     v@.len() as nat == self.spec_size(),
                     Self::spec_sorted(v@);
@@ -356,17 +354,17 @@ broadcast use {
 
             fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self)
                 requires
-                    Self::spec_total_size(heaps@, heaps@.len() as int) <= usize::MAX as nat,
                     forall|i: int| 0 <= i < heaps@.len() ==>
-                        (#[trigger] heaps@[i]).spec_is_valid_leftist_heap(),
+                        (#[trigger] heaps@[i]).spec_leftistheappq_wf(),
+                    Self::spec_total_size(heaps@, heaps@.len() as int) <= usize::MAX as nat,
                 ensures
-                    pq.spec_size() == Self::spec_total_size(heaps@, heaps@.len() as int),
-                    pq.spec_is_valid_leftist_heap();
+                    pq.spec_leftistheappq_wf(),
+                    pq.spec_size() == Self::spec_total_size(heaps@, heaps@.len() as int);
             fn split(&self, key: &T) -> (parts: (Self, Self))
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures
-                    parts.0.spec_is_valid_leftist_heap(),
-                    parts.1.spec_is_valid_leftist_heap();
+                    parts.0.spec_leftistheappq_wf(),
+                    parts.1.spec_leftistheappq_wf();
         }
 
 
@@ -735,7 +733,9 @@ broadcast use {
 
         impl<T: StT + Ord + TotalOrder> LeftistHeapPQTrait<T> for LeftistHeapPQ<T> {
             open spec fn spec_leftistheappq_wf(&self) -> bool {
-                self.spec_is_valid_leftist_heap()
+                self.root.spec_is_leftist()
+                && self.root.spec_is_heap()
+                && self.root.spec_rank_bounded()
             }
 
             open spec fn spec_size(self) -> nat {
@@ -749,10 +749,6 @@ broadcast use {
             open spec fn spec_sorted(s: Seq<T>) -> bool {
                 forall|i: int, j: int| 0 <= i < j < s.len() ==>
                     #[trigger] TotalOrder::le(s[i], s[j])
-            }
-
-            open spec fn spec_is_valid_leftist_heap(&self) -> bool {
-                self.root.spec_is_leftist() && self.root.spec_is_heap() && self.root.spec_rank_bounded()
             }
 
             open spec fn spec_total_size(heaps: Seq<Self>, n: int) -> nat
@@ -915,7 +911,7 @@ broadcast use {
                     invariant
                         n == seq@.len(),
                         pq.spec_size() == i as nat,
-                        pq.spec_is_valid_leftist_heap(),
+                        pq.spec_leftistheappq_wf(),
                 {
                     pq = pq.insert(seq.nth(i).clone());
                 }
@@ -948,7 +944,7 @@ broadcast use {
                     invariant
                         result@.len() as nat + current_heap.spec_size() == self.spec_size(),
                         self.spec_size() <= usize::MAX as nat,
-                        current_heap.spec_is_valid_leftist_heap(),
+                        current_heap.spec_leftistheappq_wf(),
                         Self::spec_sorted(result@),
                         forall|i: int, e: T| 0 <= i < result@.len() && current_heap@.count(e) > 0 ==>
                             #[trigger] TotalOrder::le(result@[i], e),
@@ -1060,7 +1056,7 @@ broadcast use {
                         n == heaps@.len(),
                         result.spec_size() == Self::spec_total_size(heaps@, i as int),
                         Self::spec_total_size(heaps@, heaps@.len() as int) <= usize::MAX as nat,
-                        result.spec_is_valid_leftist_heap(),
+                        result.spec_leftistheappq_wf(),
                 {
                     proof { lemma_total_size_monotone::<T>(heaps@, (i + 1) as int, n as int); }
                     result = result.meld(&heaps[i]);
@@ -1080,8 +1076,8 @@ broadcast use {
                         n as nat == self.spec_size(),
                         self.spec_size() <= usize::MAX as nat,
                         less_than.spec_size() + equal_or_greater.spec_size() == i as nat,
-                        less_than.spec_is_valid_leftist_heap(),
-                        equal_or_greater.spec_is_valid_leftist_heap(),
+                        less_than.spec_leftistheappq_wf(),
+                        equal_or_greater.spec_leftistheappq_wf(),
                 {
                     let element = all_elements[i].clone();
                     if element < *key {

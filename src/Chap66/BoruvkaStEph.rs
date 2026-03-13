@@ -12,6 +12,7 @@
 //	4. type definitions
 //	5. view impls
 //	6. spec fns
+//	7. proof fns/broadcast groups
 //	8. traits
 //	9. impls
 //	11. derive impls in verus!
@@ -27,14 +28,9 @@ pub mod BoruvkaStEph {
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::feq::feq::obeys_feq_full;
 
-    #[cfg(not(verus_keep_ghost))]
-    use std::collections::HashMap;
     use std::hash::Hash;
-    #[cfg(not(verus_keep_ghost))]
-    use rand::rngs::StdRng;
-    #[cfg(not(verus_keep_ghost))]
-    use rand::*;
 
     verus! {
 
@@ -98,6 +94,16 @@ pub mod BoruvkaStEph {
         forall|e: LabeledEdge<V>| edges.contains(e) ==> e.2.spec_is_finite()
     }
 
+    //		7. proof fns/broadcast groups
+
+    /// Deterministic coin flip from seed and vertex iteration index.
+    fn coin_flip(seed: u64, index: usize) -> (flip: bool)
+        requires true,
+        ensures flip == (((seed ^ (index as u64)) & 1u64) == 1u64)
+    {
+        ((seed ^ (index as u64)) & 1) == 1
+    }
+
     //		8. traits
 
     pub trait BoruvkaStEphTrait {
@@ -128,8 +134,12 @@ pub mod BoruvkaStEph {
         fn bridge_star_partition<V: StT + Hash + Ord>(
             vertices: &SetStEph<V>,
             bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
-            rng: &mut StdRng,
-        ) -> (mst_edges: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>));
+            seed: u64,
+        ) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>))
+            requires
+                obeys_key_model::<V>(),
+                obeys_feq_full::<V>(),
+                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2;
 
         /// Borůvka's MST algorithm.
         /// APAS: Work O(m log n), Span O(m log n)
@@ -137,9 +147,15 @@ pub mod BoruvkaStEph {
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: SetStEph<usize>,
-            rng: &mut StdRng,
+            seed: u64,
         ) -> (mst: SetStEph<usize>)
-            requires Self::spec_boruvkasteph_wf(edges@);
+            requires
+                Self::spec_boruvkasteph_wf(edges@),
+                obeys_key_model::<V>(),
+                obeys_feq_full::<V>(),
+                obeys_key_model::<LabeledEdge<V>>(),
+                obeys_feq_full::<LabeledEdge<V>>(),
+                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2;
 
         /// Borůvka's MST with random seed.
         /// APAS: Work O(m log n), Span O(m log n)
@@ -148,7 +164,13 @@ pub mod BoruvkaStEph {
             edges: &SetStEph<LabeledEdge<V>>,
             seed: u64,
         ) -> (mst: SetStEph<usize>)
-            requires Self::spec_boruvkasteph_wf(edges@);
+            requires
+                Self::spec_boruvkasteph_wf(edges@),
+                obeys_key_model::<V>(),
+                obeys_feq_full::<V>(),
+                obeys_key_model::<LabeledEdge<V>>(),
+                obeys_feq_full::<LabeledEdge<V>>(),
+                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2;
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
@@ -229,45 +251,103 @@ pub mod BoruvkaStEph {
 
         /// Algorithm 66.2: Bridge star partition.
         ///
-        /// Performs star contraction along vertex bridges using randomized coin flips.
+        /// Performs star contraction along vertex bridges using deterministic coin flips.
         /// Each vertex flips a coin (Heads/Tails). Edges from Tail to Head are contracted.
         ///
         /// - APAS: Work O(n), Span O(log n)
         /// - Sequential: Work O(n), Span O(n) — sequential iteration over vertices.
-        #[verifier::external_body]
         fn bridge_star_partition<V: StT + Hash + Ord>(
             vertices: &SetStEph<V>,
             bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
-            rng: &mut StdRng,
-        ) -> (mst_edges: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>)) {
-            // Coin flips for all vertices.
-            let mut flips = HashMap::<V, bool>::new();
-            for v in vertices.iter() {
-                let is_heads = rng.random::<bool>();
-                let _ = flips.insert(v.clone(), is_heads);
-            }
+            seed: u64,
+        ) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>)) {
+            // Phase 1: Assign coin flips to all vertices.
+            let mut flips: HashMapWithViewPlus<V, bool> = HashMapWithViewPlus::new();
+            let mut idx: usize = 0;
+            let mut vit = vertices.iter();
+            let ghost vit_seq = vit@.1;
 
-            // Select edges from Tail to Head (Tail=false, Head=true).
-            let mut partition = HashMapWithViewPlus { inner: HashMap::new() };
-            for (u, (v, w, label)) in bridges.inner.iter() {
-                let u_heads = flips.get(u).copied().unwrap_or(false);
-                let v_heads = flips.get(v).copied().unwrap_or(false);
-
-                // Contract if u is Tail and v is Head.
-                if !u_heads && v_heads {
-                    let _ = partition.inner.insert(u.clone(), (v.clone(), *w, *label));
+            loop
+                invariant
+                    iter_invariant(&vit),
+                    vit_seq == vit@.1,
+                    obeys_key_model::<V>(),
+                    forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                decreases vit_seq.len() - vit@.0,
+            {
+                if let Some(v) = vit.next() {
+                    let flip = coin_flip(seed, idx);
+                    flips.insert(v.clone(), flip);
+                    if idx < usize::MAX {
+                        idx = idx + 1;
+                    }
+                } else {
+                    break;
                 }
             }
 
-            // Remaining vertices = all vertices minus contracted tails.
-            let mut remaining = SetStEph::empty();
-            for v in vertices.iter() {
-                if !partition.inner.contains_key(v) {
-                    let _ = remaining.insert(v.clone());
+            // Phase 2: Select edges from Tail to Head (iterate vertices, check bridges).
+            let mut contracted: HashMapWithViewPlus<V, (V, WrappedF64, usize)> =
+                HashMapWithViewPlus::new();
+            let mut vit2 = vertices.iter();
+            let ghost vit2_seq = vit2@.1;
+
+            loop
+                invariant
+                    iter_invariant(&vit2),
+                    vit2_seq == vit2@.1,
+                    obeys_key_model::<V>(),
+                    forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                decreases vit2_seq.len() - vit2@.0,
+            {
+                if let Some(u) = vit2.next() {
+                    let u_heads = match flips.get(u) {
+                        Some(b) => *b,
+                        None => false,
+                    };
+
+                    if !u_heads {
+                        match bridges.get(u) {
+                            Some((v, w, label)) => {
+                                let v_heads = match flips.get(v) {
+                                    Some(b) => *b,
+                                    None => false,
+                                };
+                                if v_heads {
+                                    contracted.insert(
+                                        u.clone(), (v.clone(), *w, *label));
+                                }
+                            }
+                            None => {}
+                        }
+                    }
+                } else {
+                    break;
                 }
             }
 
-            (remaining, partition)
+            // Phase 3: Remaining vertices = all vertices minus contracted tails.
+            let mut remaining: SetStEph<V> = SetStEph::empty();
+            let mut vit3 = vertices.iter();
+            let ghost vit3_seq = vit3@.1;
+
+            loop
+                invariant
+                    iter_invariant(&vit3),
+                    vit3_seq == vit3@.1,
+                    remaining.spec_setsteph_wf(),
+                decreases vit3_seq.len() - vit3@.0,
+            {
+                if let Some(v) = vit3.next() {
+                    if !contracted.contains_key(v) {
+                        let _ = remaining.insert(v.clone());
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            (remaining, contracted)
         }
 
         /// Algorithm 66.3: Borůvka's MST.
@@ -277,12 +357,12 @@ pub mod BoruvkaStEph {
         ///
         /// - APAS: Work O(m log n), Span O(log^2 n)
         /// - Sequential: Work O(m log n), Span O(m log n) — sequential; O(log n) rounds each O(m).
-        #[verifier::external_body]
+        #[verifier::exec_allows_no_decreases_clause]
         fn boruvka_mst<V: StT + Hash + Ord>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: SetStEph<usize>,
-            rng: &mut StdRng,
+            seed: u64,
         ) -> (mst: SetStEph<usize>) {
             if edges.size() == 0 {
                 return mst_labels;
@@ -290,50 +370,97 @@ pub mod BoruvkaStEph {
 
             let bridges = Self::vertex_bridges(edges);
             let (remaining_vertices, partition) =
-                Self::bridge_star_partition(vertices, &bridges, rng);
+                Self::bridge_star_partition(vertices, &bridges, seed);
 
-            // Collect new MST labels from partition.
-            let mut new_mst_labels = mst_labels.clone();
-            for (_, (_, _, label)) in partition.inner.iter() {
-                let _ = new_mst_labels.insert(*label);
-            }
+            // Collect new MST labels from partition and build tail->head map.
+            let mut new_mst_labels = mst_labels;
+            let mut full_partition: HashMapWithViewPlus<V, V> = HashMapWithViewPlus::new();
 
-            // Build full partition map (including identity for non-contracted vertices).
-            let mut full_partition = HashMap::<V, V>::new();
-            for (tail, (head, _, _)) in partition.inner.iter() {
-                let _ = full_partition.insert(tail.clone(), head.clone());
-            }
-            for v in remaining_vertices.iter() {
-                let _ = full_partition.insert(v.clone(), v.clone());
-            }
+            let mut pit = partition.iter();
+            let ghost pit_seq = pit@.1;
 
-            // Re-route edges to new endpoints, removing self-edges.
-            let mut new_edges = SetStEph::empty();
-            for LabeledEdge(u, v, w, label) in edges.iter() {
-                let new_u = full_partition.get(u).cloned().unwrap_or_else(|| u.clone());
-                let new_v = full_partition.get(v).cloned().unwrap_or_else(|| v.clone());
-
-                if new_u != new_v {
-                    let _ = new_edges.insert(LabeledEdge(new_u, new_v, *w, *label));
+            loop
+                invariant
+                    0 <= pit@.0 <= pit@.1.len(),
+                    pit_seq == pit@.1,
+                    new_mst_labels.spec_setsteph_wf(),
+                    obeys_key_model::<V>(),
+                    forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                decreases pit_seq.len() - pit@.0,
+            {
+                if let Some((tail, bridge_entry)) = pit.next() {
+                    let (head, _w, label) = bridge_entry;
+                    let _ = new_mst_labels.insert(*label);
+                    full_partition.insert(tail.clone(), head.clone());
+                } else {
+                    break;
                 }
             }
 
-            Self::boruvka_mst(&remaining_vertices, &new_edges, new_mst_labels, rng)
+            // Add identity mappings for remaining vertices.
+            let mut rit = remaining_vertices.iter();
+            let ghost rit_seq = rit@.1;
+
+            loop
+                invariant
+                    iter_invariant(&rit),
+                    rit_seq == rit@.1,
+                    obeys_key_model::<V>(),
+                    forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                decreases rit_seq.len() - rit@.0,
+            {
+                if let Some(v) = rit.next() {
+                    full_partition.insert(v.clone(), v.clone());
+                } else {
+                    break;
+                }
+            }
+
+            // Re-route edges to new endpoints, removing self-edges.
+            let mut new_edges: SetStEph<LabeledEdge<V>> = SetStEph::empty();
+            let mut eit = edges.iter();
+            let ghost eit_seq = eit@.1;
+
+            loop
+                invariant
+                    iter_invariant(&eit),
+                    eit_seq == eit@.1,
+                    new_edges.spec_setsteph_wf(),
+                    spec_all_weights_finite(edges@),
+                decreases eit_seq.len() - eit@.0,
+            {
+                if let Some(edge) = eit.next() {
+                    let LabeledEdge(u, v, w, label) = edge.clone();
+                    let new_u = match full_partition.get(&u) {
+                        Some(mapped) => mapped.clone(),
+                        None => u,
+                    };
+                    let new_v = match full_partition.get(&v) {
+                        Some(mapped) => mapped.clone(),
+                        None => v,
+                    };
+                    if new_u != new_v {
+                        let _ = new_edges.insert(LabeledEdge(new_u, new_v, w, label));
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            Self::boruvka_mst(&remaining_vertices, &new_edges, new_mst_labels, seed)
         }
 
         /// Borůvka MST with a specific seed.
-        /// Initializes RNG and delegates to `boruvka_mst`.
+        /// Deterministic coin flips replace StdRng for Verus verification.
         ///
         /// - APAS: Work O(m log n), Span O(log^2 n)
         /// - Sequential: Work O(m log n), Span O(m log n) — delegates to sequential boruvka_mst.
-        #[verifier::external_body]
         fn boruvka_mst_with_seed<V: StT + Hash + Ord>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
             seed: u64,
         ) -> (mst: SetStEph<usize>) {
-            let mut rng = StdRng::seed_from_u64(seed);
-            Self::boruvka_mst(vertices, edges, SetStEph::empty(), &mut rng)
+            Self::boruvka_mst(vertices, edges, SetStEph::empty(), seed)
         }
 
         /// Compute MST weight from edge labels.

@@ -207,70 +207,126 @@ broadcast use {
                 }
             }
 
-            /// APAS Work Θ(n), Span Θ(n) — flatten, find position, rebuild.
-            #[verifier::external_body]
+            /// APAS Work Θ(n), Span Θ(n) — linear scan for position, rebuild.
             fn insert(&self, element: T) -> Self {
-                let mut values = self.elements.values_in_order();
-                let insert_pos = match values.binary_search(&element) {
-                    Ok(pos) => pos,
-                    Err(pos) => pos,
-                };
-                values.insert(insert_pos, element);
+                let n = self.elements.length();
+                let mut values: Vec<T> = Vec::new();
+                let mut inserted = false;
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                for i in 0..n
+                    invariant
+                        values@.len() == (if inserted { i as int + 1 } else { i as int }),
+                        n == self.elements.spec_seq().len(),
+                        self.elements.spec_avltreeseqstper_wf(),
+                {
+                    let current = self.elements.nth(i);
+                    if !inserted && element <= *current {
+                        values.push(element.clone());
+                        inserted = true;
+                    }
+                    values.push(current.clone());
+                }
+                if !inserted {
+                    values.push(element);
+                }
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::from_vec(values),
                 }
             }
 
-            /// APAS Work Θ(n), Span Θ(n) — subseq_copy to skip first element.
-            #[verifier::external_body]
+            /// APAS Work Θ(n), Span Θ(n) — clone elements 1..n, rebuild.
             fn delete_min(&self) -> (Self, Option<T>) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
                 }
                 let min_element = self.elements.nth(0).clone();
                 let n = self.elements.length();
-                let remaining = self.elements.subseq_copy(1, n - 1);
+                let mut values: Vec<T> = Vec::new();
+                for i in 1..n
+                    invariant
+                        values@.len() == (i - 1) as int,
+                        n == self.elements.spec_seq().len(),
+                        self.elements.spec_avltreeseqstper_wf(),
+                {
+                    values.push(self.elements.nth(i).clone());
+                }
+                let remaining = AVLTreeSeqStPerS::from_vec(values);
                 (BalancedTreePQ { elements: remaining }, Some(min_element))
             }
 
-            /// APAS Work Θ(m+n), Span Θ(m+n) — flatten both, merge, rebuild.
-            #[verifier::external_body]
+            /// APAS Work Θ(m+n), Span Θ(m+n) — merge two sorted sequences, rebuild.
             fn meld(&self, other: &Self) -> Self {
-                let values1 = self.elements.values_in_order();
-                let values2 = other.elements.values_in_order();
-                let mut merged = Vec::with_capacity(values1.len() + values2.len());
-                let mut i = 0;
-                let mut j = 0;
-                while i < values1.len() && j < values2.len() {
-                    if values1[i] <= values2[j] {
-                        merged.push(values1[i].clone());
-                        i += 1;
+                let n1 = self.elements.length();
+                let n2 = other.elements.length();
+                let mut values: Vec<T> = Vec::new();
+                let mut i: usize = 0;
+                let mut j: usize = 0;
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                while i < n1 && j < n2
+                    invariant
+                        values@.len() == (i + j) as int,
+                        i <= n1, j <= n2,
+                        n1 as nat == self.elements.spec_seq().len(),
+                        n2 as nat == other.elements.spec_seq().len(),
+                        self.elements.spec_avltreeseqstper_wf(),
+                        other.elements.spec_avltreeseqstper_wf(),
+                    decreases (n1 - i) + (n2 - j),
+                {
+                    let a = self.elements.nth(i);
+                    let b = other.elements.nth(j);
+                    if *a <= *b {
+                        values.push(a.clone());
+                        i = i + 1;
                     } else {
-                        merged.push(values2[j].clone());
-                        j += 1;
+                        values.push(b.clone());
+                        j = j + 1;
                     }
                 }
-                while i < values1.len() {
-                    merged.push(values1[i].clone());
-                    i += 1;
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                while i < n1
+                    invariant
+                        values@.len() == (i + j) as int,
+                        i <= n1, j <= n2,
+                        n1 as nat == self.elements.spec_seq().len(),
+                        self.elements.spec_avltreeseqstper_wf(),
+                    decreases n1 - i,
+                {
+                    values.push(self.elements.nth(i).clone());
+                    i = i + 1;
                 }
-                while j < values2.len() {
-                    merged.push(values2[j].clone());
-                    j += 1;
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                while j < n2
+                    invariant
+                        values@.len() == (i + j) as int,
+                        j <= n2,
+                        n1 as nat == self.elements.spec_seq().len(),
+                        n2 as nat == other.elements.spec_seq().len(),
+                        other.elements.spec_avltreeseqstper_wf(),
+                    decreases n2 - j,
+                {
+                    values.push(other.elements.nth(j).clone());
+                    j = j + 1;
                 }
-                BalancedTreePQ {
-                    elements: AVLTreeSeqStPerS::from_vec(merged),
-                }
-            }
-
-            /// APAS Work Θ(n log n), Span Θ(log² n) — sort then build.
-            #[verifier::external_body]
-            fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
-                let mut values: Vec<T> = (0..seq.length()).map(|i| seq.nth(i).clone()).collect();
-                values.sort();
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::from_vec(values),
                 }
+            }
+
+            /// APAS Work Θ(n²), Span Θ(n²) — insertion sort via repeated insert.
+            fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
+                let mut result = Self::empty();
+                let n = seq.length();
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                for i in 0..n
+                    invariant
+                        result@.len() == i as int,
+                        result.spec_balancedtreepq_wf(),
+                        n as nat == seq.spec_seq().len(),
+                        seq.spec_avltreeseqstper_wf(),
+                {
+                    result = result.insert(seq.nth(i).clone());
+                }
+                result
             }
 
             fn size(&self) -> usize { self.elements.length() }
@@ -288,26 +344,30 @@ broadcast use {
                 }
             }
 
-            /// APAS Work Θ(n), Span Θ(n) — subseq_copy to skip last element.
-            #[verifier::external_body]
+            /// APAS Work Θ(n), Span Θ(n) — clone elements 0..n-1, rebuild.
             fn delete_max(&self) -> (Self, Option<T>) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
                 }
                 let n = self.elements.length();
                 let max_element = self.elements.nth(n - 1).clone();
-                let remaining = self.elements.subseq_copy(0, n - 1);
+                let mut values: Vec<T> = Vec::new();
+                for i in 0..(n - 1)
+                    invariant
+                        values@.len() == i as int,
+                        n == self.elements.spec_seq().len(),
+                        n >= 1,
+                        self.elements.spec_avltreeseqstper_wf(),
+                {
+                    values.push(self.elements.nth(i).clone());
+                }
+                let remaining = AVLTreeSeqStPerS::from_vec(values);
                 (BalancedTreePQ { elements: remaining }, Some(max_element))
             }
 
-            #[verifier::external_body]
             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
-                let mut result = self.clone();
-                for i in 0..elements.length() {
-                    let element = elements.nth(i);
-                    result = result.insert(element.clone());
-                }
-                result
+                let other = Self::from_seq(elements);
+                self.meld(&other)
             }
 
             /// Already sorted — clone the backing tree.
@@ -327,39 +387,58 @@ broadcast use {
                 false
             }
 
-            #[verifier::external_body]
             fn remove(&self, element: &T) -> (Self, bool) {
-                let mut values = self.elements.values_in_order();
-                match values.binary_search(element) {
-                    Ok(pos) => {
-                        values.remove(pos);
-                        (BalancedTreePQ { elements: AVLTreeSeqStPerS::from_vec(values) }, true)
+                let n = self.elements.length();
+                let mut values: Vec<T> = Vec::new();
+                let mut found = false;
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                for i in 0..n
+                    invariant
+                        values@.len() == (if found { i as int - 1 } else { i as int }),
+                        n == self.elements.spec_seq().len(),
+                        self.elements.spec_avltreeseqstper_wf(),
+                {
+                    let current = self.elements.nth(i);
+                    if !found && *current == *element {
+                        found = true;
+                    } else {
+                        values.push(current.clone());
                     }
-                    Err(_) => (self.clone(), false),
                 }
+                (BalancedTreePQ { elements: AVLTreeSeqStPerS::from_vec(values) }, found)
             }
 
-            #[verifier::external_body]
             fn range(&self, min_val: &T, max_val: &T) -> AVLTreeSeqStPerS<T> {
-                let values = self.elements.values_in_order();
-                let mut range_values = Vec::new();
-                for current in values.iter() {
-                    if current >= min_val && current <= max_val {
-                        range_values.push(current.clone());
-                    } else if current > max_val {
-                        break;
+                let n = self.elements.length();
+                let mut values: Vec<T> = Vec::new();
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                for i in 0..n
+                    invariant
+                        values@.len() <= i as int,
+                        n == self.elements.spec_seq().len(),
+                        self.elements.spec_avltreeseqstper_wf(),
+                {
+                    let current = self.elements.nth(i);
+                    if *current >= *min_val && *current <= *max_val {
+                        values.push(current.clone());
                     }
                 }
-                AVLTreeSeqStPerS::from_vec(range_values)
+                AVLTreeSeqStPerS::from_vec(values)
             }
 
-            #[verifier::external_body]
             fn from_vec(elements: Vec<T>) -> Self {
-                let mut values = elements;
-                values.sort();
-                BalancedTreePQ {
-                    elements: AVLTreeSeqStPerS::from_vec(values),
+                let mut result = Self::empty();
+                let n = elements.len();
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                for i in 0..n
+                    invariant
+                        result@.len() == i as int,
+                        result.spec_balancedtreepq_wf(),
+                        n == elements@.len(),
+                {
+                    result = result.insert(elements[i].clone());
                 }
+                result
             }
 
             fn to_vec(&self) -> Vec<T> {
@@ -384,12 +463,20 @@ broadcast use {
                 self.to_vec()
             }
 
-            #[verifier::external_body]
             fn is_sorted(&self) -> bool {
-                for i in 1..self.elements.length() {
+                let n = self.elements.length();
+                if n <= 1 {
+                    return true;
+                }
+                for i in 1..n
+                    invariant
+                        n == self.elements.spec_seq().len(),
+                        n >= 2,
+                        self.elements.spec_avltreeseqstper_wf(),
+                {
                     let prev = self.elements.nth(i - 1);
                     let curr = self.elements.nth(i);
-                    if prev > curr {
+                    if *prev > *curr {
                         return false;
                     }
                 }
@@ -406,17 +493,25 @@ broadcast use {
                 }
             }
 
-            #[verifier::external_body]
             fn split(&self, element: &T) -> (Self, bool, Self) {
                 let mut left = Self::empty();
                 let mut right = Self::empty();
                 let mut found = false;
-                for i in 0..self.elements.length() {
+                let n = self.elements.length();
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                for i in 0..n
+                    invariant
+                        left@.len() + right@.len() == i as int,
+                        left.spec_balancedtreepq_wf(),
+                        right.spec_balancedtreepq_wf(),
+                        n == self.elements.spec_seq().len(),
+                        self.elements.spec_avltreeseqstper_wf(),
+                {
                     let current = self.elements.nth(i);
-                    if current < element {
+                    if *current < *element {
                         left = left.insert(current.clone());
                     } else {
-                        if current == element {
+                        if *current == *element {
                             found = true;
                         }
                         right = right.insert(current.clone());

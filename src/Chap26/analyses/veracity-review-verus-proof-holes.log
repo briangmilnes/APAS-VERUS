@@ -13,6 +13,7 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
+     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -22,22 +23,10 @@ Table of Contents:
 ✓ DivConReduceMtPer.rs
    3 clean proof functions
 ✓ DivConReduceStPer.rs
-❌ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:508: error: external_body - #[verifier::external_body]
-       509 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:526: error: external_body - #[verifier::external_body]
-       527 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
-   Holes: 2 total
-      2 × external_body
-   Proof functions: 4 total (4 clean, 0 holed)
-❌ ETSPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPStEph.rs:483: error: external_body - #[verifier::external_body]
-       484 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPStEph.rs:501: error: external_body - #[verifier::external_body]
-       502 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
-   Holes: 2 total
-      2 × external_body
-   Proof functions: 3 total (3 clean, 0 holed)
+✓ ETSPMtEph.rs
+   4 clean proof functions
+✓ ETSPStEph.rs
+   3 clean proof functions
 ✓ MergeSortMtPer.rs
    4 clean proof functions
 ✓ MergeSortStPer.rs
@@ -82,8 +71,8 @@ ScanDCStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   6 clean (no holes, no errors; 75%)
-   2 holed (holes or errors, 25%)
+   8 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    8 total
 
 Proof Functions:
@@ -99,16 +88,17 @@ Function Specs:
    110 total fns
 
 
-Holes Found: 4 total
-   4 × external_body (100%)
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 22:32:22 -07:00
-Ended:     2026-03-12 22:32:22 -07:00
-Duration:  27ms
+Started:   2026-03-13 11:34:55 -07:00
+Ended:     2026-03-13 11:34:55 -07:00
+Duration:  30ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
-alyses/veracity-review-verus-proof-holes.log
+c/Chap26/analyses/veracity-review-verus-proof-holes.log

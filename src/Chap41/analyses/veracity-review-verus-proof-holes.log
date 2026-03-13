@@ -13,6 +13,7 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
+     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -481,93 +482,40 @@ Table of Contents:
       12 × assume()
    Info: 4 total
 ❌ ArraySetEnumMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetEnumMtEph.rs:154: error: assume() - assume(our_set.finite());
-       140 |     proof fn lemma_view_finite(bits: Seq<u64>, universe_size: usize)
-            ...
-       152 |         // Set::new(|i: usize| i < universe_size) is finite because it's a subset of
-       153 |         // a range. The broadcast lemmas from group_set_lib_default handle this.
-       155 |     }
-       156 | 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetEnumMtEph.rs:324: error: external_body - #[verifier::external_body]
-       325 |         fn size(&self) -> (count: usize)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetEnumMtEph.rs:339: error: external_body - #[verifier::external_body]
-       340 |         fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetEnumMtEph.rs:380: error: external_body - #[verifier::external_body]
-       381 |         fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetEnumMtEph.rs:400: error: external_body - #[verifier::external_body]
-       401 |         fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (filtered: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetEnumMtEph.rs:140: error: proof_fn_with_holes - proof fn lemma_view_finite — contains assume/external_body/admit, needs proof
-       134 |     proof fn bit_andnot_64_proof(bv1: u64, bv2: u64, bv_new: u64)
-            ...
-       138 |     {}
-       139 | 
-       141 |         requires bits.len() == num_words(universe_size as int),
-       142 |         ensures Set::new(|i: usize|
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetEnumMtEph.rs:695: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetEnumMtEph.rs:708: info: accept()
-   Holes: 5 total
-      1 × assume()
-      4 × external_body
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetEnumMtEph.rs:570: error: external_body - #[verifier::external_body]
+       571 |         fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (filtered: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetEnumMtEph.rs:865: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetEnumMtEph.rs:878: info: accept()
+   Holes: 1 total
+      1 × external_body
    Info: 2 total
-   Proof functions: 6 total (5 clean, 1 holed)
+   Proof functions: 7 total (7 clean, 0 holed)
 ❌ ArraySetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:423: error: assume() - assume(obeys_feq_clone::<T>());  // accept hole: Clone prese
-       419 |         fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:442: error: assume() - proof { assume(obeys_feq_full::<T>()); }
+       437 |         fn empty() -> (empty: Self)
             ...
-       421 |             let seq = self.elements.clone();
-       422 |             proof {
-       424 |                 lemma_seq_map_cloned_view_eq(
-       425 |                     self.elements.seq@,
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:485: error: assume() - proof { assume(obeys_feq_full::<T>()); }
-       483 |         fn find(&self, x: &T) -> (found: B)
-       484 |         {
-       486 |             let n = self.elements.length();
-       487 |             let mut i: usize = 0;
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:516: error: assume() - proof { assume(obeys_feq_full::<T>()); }
-       514 |         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
-       515 |         {
-       517 |             let ghost old_view = self.elements@;
-       518 |             let mut result_vec: Vec<T> = Vec::new();
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:539: error: assume() - proof { assume(f.requires((&*elem,))); }
-       514 |         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
+       440 |                 elements: ArraySeqStEphS::empty(),
+       441 |             };
+       443 |             empty
+       444 |         }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:465: error: assume() - assume(obeys_feq_full::<T>());
+       446 |         fn singleton(x: T) -> (tree: Self)
             ...
-       537 |             {
-       538 |                 let elem = self.elements.nth(i);
-       540 |                 if f(elem) {
-       541 |                     let cloned_elem = elem.clone();
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:623: error: assume() - proof { assume(obeys_feq_full::<T>()); }  // accept hole: fe
-       621 |         fn intersection(&self, other: &Self) -> (common: Self)
-       622 |         {
-       624 |             let ghost old_view = self.elements@;
-       625 |             let ghost other_set = other@;
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:703: error: assume() - proof { assume(obeys_feq_full::<T>()); }
-       701 |         fn difference(&self, other: &Self) -> (remaining: Self)
-       702 |         {
-       704 |             let ghost old_view = self.elements@;
-       705 |             let ghost other_set = other@;
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:783: error: assume() - proof { assume(obeys_feq_full::<T>()); }
-       781 |         fn union(&self, other: &Self) -> (combined: Self)
-       782 |         {
-       784 |             let ghost self_view = self.elements@;
-       785 |             let ghost other_view = other.elements@;
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:939: error: assume() - proof { assume(obeys_feq_full::<T>()); }  // accept hole: fe
-       937 |         fn delete(&mut self, x: &T)
-       938 |         {
-       940 |             let ghost old_view = self.elements@;
-       941 |             let ghost x_view = x@;
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:1016: error: assume() - proof { assume(obeys_feq_full::<T>()); }
-      1013 |         fn insert(&mut self, x: T)
-            ...
-      1014 |         {
-      1015 |             if !self.find(&x) {
-      1017 |                 let ghost old_view = self.elements@;
-      1018 |                 let ghost x_view = x@;
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:1103: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:1104: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:1126: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:1139: info: accept()
-   Holes: 9 total
-      9 × assume()
+       463 |                 Seq::<<T as View>::V>::empty().lemma_push_to_set_commute(x_view);
+       464 |                 assert(seq![x_view] =~= Seq::<<T as View>::V>::empty().push(x_view));
+       466 |             }
+       467 |             ArraySetStEph { elements }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:493: error: assume() - proof { assume(obeys_feq_full::<T>()); }
+       491 |         fn find(&self, x: &T) -> (found: B)
+       492 |         {
+       494 |             let n = self.elements.length();
+       495 |             let mut i: usize = 0;
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:1105: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:1106: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:1128: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/ArraySetStEph.rs:1141: info: accept()
+   Holes: 3 total
+      3 × assume()
    Info: 4 total
    Proof functions: 7 total (7 clean, 0 holed)
 ❌ Example41_3.rs
@@ -640,36 +588,36 @@ Modules:
    7 total
 
 Proof Functions:
-   12 clean (92%)
-   1 holed (7%)
-   13 total
+   14 clean (100%)
+   0 holed (0%)
+   14 total
 
 Function Specs:
    182 exec fns with complete spec (requires+ensures) (74%)
    3 exec fns missing spec (1%)
-   58 proof/spec fns clean (23%)
-   1 proof/spec fns with holes (0%)
-   244 total fns
+   60 proof/spec fns clean (24%)
+   0 proof/spec fns with holes (0%)
+   245 total fns
 
 
-Holes Found: 84 total
-   61 × assume() (72%)
-   22 × external_body (26%)
+Holes Found: 74 total
+   54 × assume() (72%)
+   19 × external_body (25%)
    1 × trivial spec*wf { true } (1%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 22:32:22 -07:00
-Ended:     2026-03-12 22:32:22 -07:00
-Duration:  44ms
+Started:   2026-03-13 11:34:55 -07:00
+Ended:     2026-03-13 11:34:55 -07:00
+Duration:  45ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
-===========================
+==========
 
-Started:   2026-03-12 22:32:22 -07:00
-Ended:     2026-03-12 22:32:22 -07:00
-Duration:  44ms
+Started:   2026-03-13 11:34:55 -07:00
+Ended:     2026-03-13 11:34:55 -07:00
+Duration:  45ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log

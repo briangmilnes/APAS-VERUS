@@ -13,6 +13,7 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
+     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -23,15 +24,12 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaMtEph.rs:52: info: accept()
    Info: 1 total
 ❌ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaStEph.rs:237: error: external_body - #[verifier::external_body]
-       238 |         fn bridge_star_partition<V: StT + Hash + Ord>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaStEph.rs:280: error: external_body - #[verifier::external_body]
-       281 |         fn boruvka_mst<V: StT + Hash + Ord>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaStEph.rs:329: error: external_body - #[verifier::external_body]
-       330 |         fn boruvka_mst_with_seed<V: StT + Hash + Ord>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaStEph.rs:71: info: accept()
-   Holes: 3 total
-      3 × external_body
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaStEph.rs:101: warning: requires_true - requires true — vacuous precondition
+        99 |     /// Deterministic coin flip from seed and vertex iteration index.
+       100 |     fn coin_flip(seed: u64, index: usize) -> (flip: bool)
+       102 |         ensures flip == (((seed ^ (index as u64)) & 1u64) == 1u64)
+       103 |     {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaStEph.rs:67: info: accept()
    Info: 1 total
 
 =================================================================
@@ -57,8 +55,8 @@ BoruvkaStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 50%)
-   1 holed (holes or errors, 50%)
+   2 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    2 total
 
 Proof Functions:
@@ -67,23 +65,24 @@ Proof Functions:
    0 total
 
 Function Specs:
-   19 exec fns with complete spec (requires+ensures) (73%)
+   20 exec fns with complete spec (requires+ensures) (74%)
    0 exec fns missing spec (0%)
-   7 proof/spec fns clean (26%)
+   7 proof/spec fns clean (25%)
    0 proof/spec fns with holes (0%)
-   26 total fns
+   27 total fns
 
 
-Holes Found: 3 total
-   3 × external_body (100%)
+Holes Found: 0 total
+
+🎉 No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 22:32:23 -07:00
-Ended:     2026-03-12 22:32:23 -07:00
-Duration:  10ms
+Started:   2026-03-13 11:34:56 -07:00
+Ended:     2026-03-13 11:34:56 -07:00
+Duration:  8ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log

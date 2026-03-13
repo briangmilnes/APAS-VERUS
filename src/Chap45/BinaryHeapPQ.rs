@@ -244,6 +244,7 @@ pub mod BinaryHeapPQ {
         }
 
         fn parent(i: usize) -> (parent_idx: usize)
+            requires true,
             ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
         {
             if i == 0 { 0 } else { (i - 1) / 2 }
@@ -880,13 +881,21 @@ pub mod BinaryHeapPQ {
                         n == sorted_seq@.len(),
                         result@.len() == i as int,
                         forall|j: int| 0 <= j < i ==> (result@[j])@ == #[trigger] sorted_seq@[j],
+                        forall|j: int| 0 <= j < i ==> #[trigger] result@[j] == sorted_seq.seq@[j],
+                        Self::spec_sorted(sorted_seq.seq@),
+                        obeys_feq_clone::<T>(),
                 {
                     let elem = sorted_seq.nth(i).clone();
                     proof { axiom_cloned_implies_eq_owned(sorted_seq.spec_index(i as int), elem); }
                     result.push(elem);
                 }
-                // accept hole: Vec elements are clones of sorted ArraySeqStPerS elements.
-                proof { assume(Self::spec_sorted(result@)); }
+                proof {
+                    assert forall|ii: int, jj: int| 0 <= ii < jj < result@.len()
+                        implies #[trigger] TotalOrder::le(result@[ii], result@[jj]) by {
+                        assert(result@[ii] == sorted_seq.seq@[ii]);
+                        assert(result@[jj] == sorted_seq.seq@[jj]);
+                    }
+                }
                 result
             }
         }
