@@ -20,99 +20,101 @@ Table of Contents:
 =================================================================
 
 ❌ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:211: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:211: error: external_body - #[verifier::external_body]
        212 |             fn insert(&self, element: T) -> Self {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:225: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:225: error: external_body - #[verifier::external_body]
        226 |             fn delete_min(&self) -> (Self, Option<T>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:237: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:237: error: external_body - #[verifier::external_body]
        238 |             fn meld(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:267: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:267: error: external_body - #[verifier::external_body]
        268 |             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:292: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:292: error: external_body - #[verifier::external_body]
        293 |             fn delete_max(&self) -> (Self, Option<T>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:303: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:303: error: external_body - #[verifier::external_body]
        304 |             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:316: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:316: error: external_body - #[verifier::external_body]
        317 |             fn contains(&self, element: &T) -> bool {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:330: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:330: error: external_body - #[verifier::external_body]
        331 |             fn remove(&self, element: &T) -> (Self, bool) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:342: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:342: error: external_body - #[verifier::external_body]
        343 |             fn range(&self, min_val: &T, max_val: &T) -> AVLTreeSeqStPerS<T> {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:356: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:356: error: external_body - #[verifier::external_body]
        357 |             fn from_vec(elements: Vec<T>) -> Self {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:387: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:387: error: external_body - #[verifier::external_body]
        388 |             fn is_sorted(&self) -> bool {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:400: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:400: error: external_body - #[verifier::external_body]
        401 |             fn height(&self) -> usize {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:409: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:409: error: external_body - #[verifier::external_body]
        410 |             fn split(&self, element: &T) -> (Self, bool, Self) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:431: error: external - #[verifier::external]
-       432 |         impl<T: StT + Ord + TotalOrder> Default for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:436: error: external - #[verifier::external]
-       437 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:487: info: accept()
-   Holes: 15 total
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:437: error: external - #[verifier::external]
+       438 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:488: info: accept()
+   Holes: 14 total
       13 × external_body
-      2 × external
+      1 × external
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:247: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:246: error: fn_missing_requires - fn parent — exec fn should have requires
+       239 |         fn right_child(i: usize) -> (child_idx: usize)
+            ...
+       244 |         }
        245 | 
-       246 |         fn parent(i: usize) -> (parent_idx: usize)
-       248 |             ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
-       249 |         {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:533: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:542: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:563: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:577: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:607: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:619: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:666: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:768: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:788: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:803: info: accept()
+       247 |             ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
+       248 |         {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:532: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:541: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:562: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:576: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:606: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:618: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:665: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:767: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:787: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:802: info: accept()
    Info: 10 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Example45_2.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/Example45_2.rs:43: error: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/Example45_2.rs:43: error: external - #[verifier::external]
         44 |         impl Example45_2Trait for Example45_2 {
    Holes: 1 total
       1 × external
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/HeapsortExample.rs:137: error: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/HeapsortExample.rs:137: error: external - #[verifier::external]
        138 |         impl<T: StT + Ord + TotalOrder> HeapsortComparisonTrait<T> for HeapsortComparison<T> {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/HeapsortExample.rs:148: error: fn_missing_requires_ensures - fn is_sorted — exec fn should have requires and ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/HeapsortExample.rs:148: error: fn_missing_requires_ensures - fn is_sorted — exec fn should have requires and ensures
        146 | 
        147 |             fn all_results_sorted(&self) -> (sorted: bool) {
        149 | 
        150 |                 is_sorted(&self.unsorted_list_result)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/HeapsortExample.rs:98: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/HeapsortExample.rs:113: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/HeapsortExample.rs:98: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/HeapsortExample.rs:113: info: accept()
    Holes: 1 total
       1 × external
    Info: 2 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:85: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:84: error: fn_missing_requires - fn total_order_le — exec fn should have requires
+        81 |         proof fn _leftist_heap_pq_verified() {}
+            ...
+        82 | 
         83 |         /// Exec comparison with spec ensures connecting to TotalOrder::le.
-        84 |         fn total_order_le<T: StT + Ord + TotalOrder>(a: &T, b: &T) -> (le: bool)
-        86 |             ensures le <==> TotalOrder::le(*a, *b)
-        87 |         {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1131: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1151: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1163: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1173: info: accept()
+        85 |             ensures le <==> TotalOrder::le(*a, *b)
+        86 |         {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1130: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1150: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1162: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1172: info: accept()
    Info: 4 total
    Proof functions: 4 total (4 clean, 0 holed)
 ℹ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/SortedListPQ.rs:1039: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/SortedListPQ.rs:1039: info: accept()
    Info: 1 total
    3 clean proof functions
 ℹ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/UnsortedListPQ.rs:645: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/UnsortedListPQ.rs:660: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/UnsortedListPQ.rs:645: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/UnsortedListPQ.rs:660: info: accept()
    Info: 2 total
    1 clean proof function
 
@@ -149,8 +151,8 @@ UnsortedListPQ.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 57%)
-   3 holed (holes or errors, 42%)
+   2 clean (no holes, no errors; 28%)
+   5 holed (holes or errors, 71%)
    7 total
 
 Proof Functions:
@@ -159,27 +161,27 @@ Proof Functions:
    12 total
 
 Function Specs:
-   258 exec fns with complete spec (requires+ensures) (72%)
-   1 exec fns missing spec (0%)
+   256 exec fns with complete spec (requires+ensures) (71%)
+   3 exec fns missing spec (0%)
    99 proof/spec fns clean (27%)
    0 proof/spec fns with holes (0%)
    358 total fns
 
 
-Holes Found: 17 total
-   13 × external_body (76%)
-   4 × external (23%)
+Holes Found: 16 total
+   13 × external_body (81%)
+   3 × external (18%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 14:09:04 -07:00
-Ended:     2026-03-12 14:09:04 -07:00
-Duration:  47ms
+Started:   2026-03-12 14:20:02 -07:00
+Ended:     2026-03-12 14:20:02 -07:00
+Duration:  68ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
-ded:     2026-03-12 14:09:04 -07:00
-Duration:  47ms
+0
+Duration:  68ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log

@@ -24,14 +24,14 @@ Table of Contents:
 ✓ DFSStEph.rs
 ✓ DFSStPer.rs
 ❌ SCCStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap55/SCCStEph.rs:48: error: fn_missing_ensures - fn compute_finish_order — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStEph.rs:48: error: fn_missing_ensures - fn compute_finish_order — exec fn should have ensures
         37 |         fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (components: AVLTreeSeqStEphS<AVLTreeSetStEph<N>>)
             ...
         46 | 
         47 |     /// Computes the finish order for SCC (decreasing finish times).
         49 |         requires spec_toposortsteph_wf(graph),
         50 |     {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap55/SCCStEph.rs:147: error: fn_missing_requires - fn check_wf_adj_list_eph — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStEph.rs:147: error: fn_missing_requires - fn check_wf_adj_list_eph — exec fn should have requires
         85 |     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<N>>)
             ...
        145 | 
@@ -39,14 +39,14 @@ Table of Contents:
        148 |         ensures valid ==> spec_toposortsteph_wf(graph),
        149 |     {
 ❌ SCCStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap55/SCCStPer.rs:97: error: fn_missing_ensures - fn compute_finish_order — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStPer.rs:97: error: fn_missing_ensures - fn compute_finish_order — exec fn should have ensures
         46 |     fn dfs_finish_order(
             ...
         95 | 
         96 |     /// Computes the finish order for SCC (decreasing finish times).
         98 |         requires spec_toposortstper_wf(graph),
         99 |     {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap55/SCCStPer.rs:202: error: fn_missing_requires - fn check_wf_adj_list_per — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStPer.rs:202: error: fn_missing_requires - fn check_wf_adj_list_per — exec fn should have requires
        142 |     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<N>>)
             ...
        200 | 
@@ -117,11 +117,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 14:09:04 -07:00
-Ended:     2026-03-12 14:09:04 -07:00
-Duration:  14ms
+Started:   2026-03-12 14:20:02 -07:00
+Ended:     2026-03-12 14:20:02 -07:00
+Duration:  26ms
 
 Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
-Duration:  14ms
-
 Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log

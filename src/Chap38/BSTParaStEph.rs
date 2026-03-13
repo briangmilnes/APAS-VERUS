@@ -140,11 +140,10 @@ pub mod BSTParaStEph {
     }
 
     /// Equal-substitution: Less(a,b) and Equal(b,c) implies Less(a,c).
-    /// Standard total-order property; vstd axiomatizes Less+Less and Greater+Greater
-    /// transitivity but not Less+Equal. One assume bridges the gap.
     proof fn lemma_cmp_eq_subst<T: StT + Ord>(a: T, b: T, c: T)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
             a.cmp_spec(&b) == Less,
             b.cmp_spec(&c) == Equal,
         ensures
@@ -152,37 +151,44 @@ pub mod BSTParaStEph {
     {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        // Greater case: solver derives contradiction (Less+Less transitivity).
-        // Equal case: needs Less+Equal→Less, not in vstd axioms.
-        assume(a.cmp_spec(&c) != Equal);
+        // Greater: c < a, with a < b gives c < b (transitivity),
+        // so b > c, contradicting Equal(b,c). Solver handles.
+        // Equal: a@ == c@ (view_ord_consistent), b@ == c@ (same),
+        // so a@ == b@, hence Equal(a,b), contradicting Less(a,b).
     }
 
     /// Left congruence: Equal(a,b) implies a and b compare the same way to c.
-    /// One assume for vstd axiom gap (Equal substitution under cmp_spec).
     proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
             a.cmp_spec(&b) == Equal,
         ensures
             a.cmp_spec(&c) == b.cmp_spec(&c),
     {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        assume(a.cmp_spec(&c) == b.cmp_spec(&c));
+        // a@ == b@ from view_ord_consistent + Equal(a,b).
+        assert(a@ == b@);
+        // Mismatch cases (a cmp c) != (b cmp c) all lead to contradiction:
+        // (L,G) or (G,L): transitivity gives Less(a,b) or Less(b,a),
+        //   contradicting Equal(a,b).
+        // (L,E) or (E,L) or (G,E) or (E,G): view_ord_consistent chains
+        //   a@ == b@ == c@ or a@ == c@ == b@, collapsing to Equal on both.
     }
 
     /// Right congruence: Equal(b,c) implies any a compares the same way to b and c.
-    /// One assume for vstd axiom gap (Equal substitution under cmp_spec).
     proof fn lemma_cmp_equal_congruent_right<T: StT + Ord>(a: T, b: T, c: T)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
             b.cmp_spec(&c) == Equal,
         ensures
             a.cmp_spec(&b) == a.cmp_spec(&c),
     {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        assume(a.cmp_spec(&b) == a.cmp_spec(&c));
+        assert(b@ == c@);
     }
 
     // 8. traits
@@ -515,10 +521,24 @@ pub mod BSTParaStEph {
                                 };
                                 assert(llv.union(rebuilt@) =~= self@.remove(key@));
                                 // Ordering: rebuilt elements > key.
-                                // TODO: prove via antisymmetry+transitivity+congruence
-                                // (blocked on &T/T ghost bridging in proof context).
-                                assume(forall|t: T| #![auto] rebuilt@.contains(t@) ==>
-                                    t.cmp_spec(&key) == Greater);
+                                assert forall|t: T| #![auto] rebuilt@.contains(t@) implies
+                                    t.cmp_spec(&key) == Greater by {
+                                    reveal(vstd::laws_cmp::obeys_cmp_ord);
+                                    reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                                    if lrv.contains(t@) {
+                                        // Recursive split ensures t > key.
+                                    } else if rv.contains(t@) {
+                                        // expose: t > rk. rk < t (antisymmetry).
+                                        // kval < rk < t (transitivity) → t > kval.
+                                        lemma_cmp_antisymmetry(t, rk);
+                                        lemma_cmp_transitivity(kval, rk, t);
+                                    } else {
+                                        // t@ == rkv → Equal(t, rk) via view_ord_consistent.
+                                        // kval < rk, Equal(rk, t) → kval < t (eq_subst).
+                                        assert(t@ == rkv);
+                                        lemma_cmp_eq_subst(kval, rk, t);
+                                    }
+                                };
                             }
                             (ll, found, rebuilt)
                         }
@@ -555,22 +575,40 @@ pub mod BSTParaStEph {
                                 };
                                 assert(rebuilt@.union(rrv) =~= self@.remove(key@));
                                 // Ordering: rebuilt elements < key.
-                                // TODO: prove via transitivity+congruence
-                                // (blocked on &T/T ghost bridging in proof context).
-                                assume(forall|t: T| #![auto] rebuilt@.contains(t@) ==>
-                                    t.cmp_spec(&key) == Less);
+                                assert forall|t: T| #![auto] rebuilt@.contains(t@) implies
+                                    t.cmp_spec(&key) == Less by {
+                                    reveal(vstd::laws_cmp::obeys_cmp_ord);
+                                    reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                                    if rlv.contains(t@) {
+                                        // Recursive split ensures t < key.
+                                    } else if lv.contains(t@) {
+                                        // expose: t < rk. kval > rk → rk < kval (antisymmetry).
+                                        // t < rk < kval (transitivity).
+                                        lemma_cmp_antisymmetry(kval, rk);
+                                        lemma_cmp_transitivity(t, rk, kval);
+                                    } else {
+                                        // t@ == rkv → Equal(t, rk) via view_ord_consistent.
+                                        // t cmp kval == rk cmp kval (congruence), rk < kval.
+                                        assert(t@ == rkv);
+                                        lemma_cmp_antisymmetry(kval, rk);
+                                        lemma_cmp_equal_congruent(t, rk, kval);
+                                    }
+                                };
                             }
                             (rebuilt, found, rr)
                         }
                         | Equal => {
                             proof {
                                 // left < root_key == key, right > root_key == key.
-                                // TODO: prove via congruence
-                                // (blocked on &T/T ghost bridging in proof context).
-                                assume(forall|t: T| #![auto] left@.contains(t@) ==>
-                                    t.cmp_spec(&key) == Less);
-                                assume(forall|t: T| #![auto] right@.contains(t@) ==>
-                                    t.cmp_spec(&key) == Greater);
+                                // Right congruence: Equal(kval, rk) → t cmp kval == t cmp rk.
+                                assert forall|t: T| #![auto] left@.contains(t@) implies
+                                    t.cmp_spec(&key) == Less by {
+                                    lemma_cmp_equal_congruent_right(t, kval, rk);
+                                };
+                                assert forall|t: T| #![auto] right@.contains(t@) implies
+                                    t.cmp_spec(&key) == Greater by {
+                                    lemma_cmp_equal_congruent_right(t, kval, rk);
+                                };
                             }
                             (left, true, right)
                         }

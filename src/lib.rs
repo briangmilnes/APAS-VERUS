@@ -102,6 +102,7 @@ pub mod experiments {
 //    pub mod collect_deep_view;
 //    pub mod verus_keep_ghost_and_test;
 //    pub mod biconditional_spec_fun;
+    pub mod vstd_laws_eq_clone;
     // pub mod arc_rwlock_ninject;
     // pub mod ArrayVal;
     // pub mod ArrayVecSet;

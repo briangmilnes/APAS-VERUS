@@ -15,6 +15,7 @@
 //!   1. Generic struct wrapping Vec<T> — PartialEq without accept.
 //!   2. Generic struct wrapping Vec<T> — Clone without accept.
 //!   3. Generic free functions: vec_eq, vec_clone with full postconditions.
+//!   4. SuperCollection wrapping Collection<T> — PartialEq and Clone compose.
 //!
 //! RESULT: 0 errors.
 
@@ -84,6 +85,45 @@ pub mod vstd_laws_eq_clone {
             // Same issue: cannot add requires to Clone::clone.
             let cloned = Collection { elements: self.elements.clone() };
             proof { assume(cloned.elements@ == self.elements@); }
+            cloned
+        }
+    }
+
+    // SuperCollection wrapping Collection<T> — composability test.
+    #[verifier::reject_recursive_types(T)]
+    pub struct SuperCollection<T> {
+        pub inner: Collection<T>,
+    }
+
+    impl<T> View for SuperCollection<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.inner@ }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: Eq + View + Clone> PartialEqSpecImpl for SuperCollection<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<T: Eq + View + Clone> PartialEq for SuperCollection<T> {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@),
+        {
+            let equal = self.inner == other.inner;
+            proof { assume(equal == (self.inner@ == other.inner@)); }
+            equal
+        }
+    }
+
+    impl<T: Eq + View + Clone> Eq for SuperCollection<T> {}
+
+    impl<T: Eq + View + Clone> Clone for SuperCollection<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@,
+        {
+            let cloned = SuperCollection { inner: self.inner.clone() };
+            proof { assume(cloned.inner@ == self.inner@); }
             cloned
         }
     }
