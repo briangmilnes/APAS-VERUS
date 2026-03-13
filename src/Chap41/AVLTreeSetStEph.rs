@@ -73,13 +73,12 @@ broadcast use {
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
             requires self.spec_avltreesetsteph_wf(),
-            ensures count == self@.len(), self@.finite();
+            ensures count == self@.len();
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
             requires self.spec_avltreesetsteph_wf(),
             ensures
-                self@.finite(),
                 seq.spec_avltreeseqsteph_wf(),
                 seq@.to_set() =~= self@,
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
@@ -94,19 +93,16 @@ broadcast use {
         fn singleton(x: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(x@),
-                tree@.finite(),
                 tree.spec_avltreesetsteph_wf();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
             ensures
-                constructed@.finite(),
                 constructed.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
             requires self.spec_avltreesetsteph_wf(),
             ensures
-                filtered@.finite(),
                 filtered@.subset_of(self@),
                 filtered.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
@@ -115,7 +111,6 @@ broadcast use {
             requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),
             ensures
                 common@ == self@.intersect(other@),
-                common@.finite(),
                 common.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
@@ -123,7 +118,6 @@ broadcast use {
             requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),
             ensures
                 remaining@ == self@.difference(other@),
-                remaining@.finite(),
                 remaining.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
@@ -131,7 +125,6 @@ broadcast use {
             requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),
             ensures
                 combined@ == self@.union(other@),
-                combined@.finite(),
                 combined.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
@@ -144,7 +137,6 @@ broadcast use {
             requires old(self).spec_avltreesetsteph_wf(),
             ensures
                 self@ == old(self)@.remove(x@),
-                self@.finite(),
                 self.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
@@ -152,7 +144,6 @@ broadcast use {
             requires old(self).spec_avltreesetsteph_wf(),
             ensures
                 self@ == old(self)@.insert(x@),
-                self@.finite(),
                 self.spec_avltreesetsteph_wf();
     }
 
@@ -172,6 +163,7 @@ broadcast use {
     impl<T: StT + Ord> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
         open spec fn spec_avltreesetsteph_wf(&self) -> bool {
             self.elements.spec_avltreeseqsteph_wf()
+            && self@.finite()
         }
 
         fn size(&self) -> (count: usize)

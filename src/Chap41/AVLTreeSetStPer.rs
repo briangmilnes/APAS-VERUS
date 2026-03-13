@@ -65,12 +65,11 @@ broadcast use {
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
             requires self.spec_avltreesetstper_wf(),
-            ensures count == self@.len(), self@.finite();
+            ensures count == self@.len();
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
             ensures
-                self@.finite(),
                 seq@.to_set() =~= self@,
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// - APAS Cost Spec 41.4: Work 1, Span 1
@@ -84,20 +83,17 @@ broadcast use {
         fn singleton(x: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(x@),
-                tree@.finite(),
                 tree.spec_avltreesetstper_wf();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             requires seq.spec_avltreeseqstper_wf(),
             ensures
-                constructed@.finite(),
                 constructed.spec_avltreesetstper_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
             requires self.spec_avltreesetstper_wf(),
             ensures
-                filtered@.finite(),
                 filtered@.subset_of(self@),
                 filtered.spec_avltreesetstper_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
@@ -108,7 +104,6 @@ broadcast use {
                 other.spec_avltreesetstper_wf(),
             ensures
                 common@ == self@.intersect(other@),
-                common@.finite(),
                 common.spec_avltreesetstper_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
@@ -118,7 +113,6 @@ broadcast use {
                 other.spec_avltreesetstper_wf(),
             ensures
                 remaining@ == self@.difference(other@),
-                remaining@.finite(),
                 remaining.spec_avltreesetstper_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
@@ -128,7 +122,6 @@ broadcast use {
                 other.spec_avltreesetstper_wf(),
             ensures
                 combined@ == self@.union(other@),
-                combined@.finite(),
                 combined.spec_avltreesetstper_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
@@ -141,7 +134,6 @@ broadcast use {
             requires self.spec_avltreesetstper_wf(),
             ensures
                 updated@ == self@.remove(x@),
-                updated@.finite(),
                 updated.spec_avltreesetstper_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
@@ -149,7 +141,6 @@ broadcast use {
             requires self.spec_avltreesetstper_wf(),
             ensures
                 updated@ == self@.insert(x@),
-                updated@.finite(),
                 updated.spec_avltreesetstper_wf();
     }
 
@@ -158,6 +149,7 @@ broadcast use {
     impl<T: StT + Ord> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
         open spec fn spec_avltreesetstper_wf(&self) -> bool {
             self.elements.spec_avltreeseqstper_wf()
+            && self@.finite()
         }
 
         fn size(&self) -> (count: usize)
