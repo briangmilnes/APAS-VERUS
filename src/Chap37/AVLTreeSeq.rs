@@ -147,6 +147,22 @@ pub mod AVLTreeSeq {
                     spec_avltreeseq_cached_height(&node.left),
                     spec_avltreeseq_cached_height(&node.right),
                 )
+                && 1 + node.left_size + node.right_size < usize::MAX
+            }
+        }
+    }
+
+    /// AVL balance at every node: |h_left - h_right| <= 1.
+    pub open spec fn spec_avltreeseq_avl_balanced<T: StT>(link: Link<T>) -> bool
+        decreases link,
+    {
+        match link {
+            None => true,
+            Some(node) => {
+                spec_avltreeseq_avl_balanced(node.left)
+                && spec_avltreeseq_avl_balanced(node.right)
+                && spec_avltreeseq_cached_height(&node.left) <= spec_avltreeseq_cached_height(&node.right) + 1
+                && spec_avltreeseq_cached_height(&node.right) <= spec_avltreeseq_cached_height(&node.left) + 1
             }
         }
     }
@@ -188,6 +204,20 @@ pub mod AVLTreeSeq {
             Some(node) => {
                 lemma_inorder_values_maps_to_inorder::<T>(node.left);
                 lemma_inorder_values_maps_to_inorder::<T>(node.right);
+            }
+        }
+    }
+
+    proof fn lemma_height_le_size<T: StT>(link: &Link<T>)
+        requires spec_avltreeseq_wf(*link),
+        ensures spec_avltreeseq_cached_height(link) <= spec_avltreeseq_cached_size(link),
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_height_le_size::<T>(&node.left);
+                lemma_height_le_size::<T>(&node.right);
             }
         }
     }
@@ -338,10 +368,6 @@ pub mod AVLTreeSeq {
         requires
             spec_avltreeseq_wf(old(n).left),
             spec_avltreeseq_wf(old(n).right),
-            spec_avltreeseq_nat_max(
-                spec_avltreeseq_cached_height(&old(n).left),
-                spec_avltreeseq_cached_height(&old(n).right),
-            ) < usize::MAX,
             1 + spec_avltreeseq_cached_size(&old(n).left)
               + spec_avltreeseq_cached_size(&old(n).right) < usize::MAX,
         ensures
@@ -355,12 +381,20 @@ pub mod AVLTreeSeq {
             n.left == old(n).left,
             n.right == old(n).right,
             n.index == old(n).index,
+            spec_avltreeseq_wf(Some(*n)),
             spec_avltreeseq_inorder(Some(*n)) =~= spec_avltreeseq_inorder(Some(*old(n))),
     {
         n.left_size = cached_size(&n.left);
         n.right_size = cached_size(&n.right);
         let hl = cached_height(&n.left);
         let hr = cached_height(&n.right);
+        proof {
+            lemma_height_le_size::<T>(&n.left);
+            lemma_height_le_size::<T>(&n.right);
+            // h_left <= size_left, h_right <= size_right.
+            // size_left + size_right + 1 < usize::MAX (precondition).
+            // 1 + max(h_left, h_right) <= 1 + size_left + size_right < usize::MAX.
+        }
         n.height = 1 + if hl >= hr { hl } else { hr };
     }
 
@@ -368,13 +402,10 @@ pub mod AVLTreeSeq {
         requires
             spec_avltreeseq_wf(Some(node)),
             node.left is Some,
-            spec_avltreeseq_cached_height(&Some(node)) < usize::MAX,
-            spec_avltreeseq_cached_size(&Some(node)) < usize::MAX,
         ensures
             spec_avltreeseq_wf(Some(rotated)),
             spec_avltreeseq_inorder(Some(rotated)) =~= spec_avltreeseq_inorder(Some(node)),
             spec_avltreeseq_cached_size(&Some(rotated)) == spec_avltreeseq_cached_size(&Some(node)),
-            spec_avltreeseq_cached_height(&Some(rotated)) <= spec_avltreeseq_cached_height(&Some(node)) + 1,
     {
         // Standard AVL right rotation:
         //      y                x
@@ -385,32 +416,25 @@ pub mod AVLTreeSeq {
         let ghost old_node = node;
         let mut y = node;
         let ghost old_y = *y;
-        // wf(Some(old_y)) gives us wf on children two levels deep.
         proof {
-            // Unfold wf one level: wf(y.left) && wf(y.right) && sizes/height correct.
             assert(spec_avltreeseq_wf(old_y.left));
             assert(spec_avltreeseq_wf(old_y.right));
         }
         let mut x = y.left.take().unwrap();
         let ghost old_x = *x;
         proof {
-            // x was old_y.left.unwrap(), so wf(Some(old_x)) == wf(old_y.left).
             assert(spec_avltreeseq_wf(old_x.left));
             assert(spec_avltreeseq_wf(old_x.right));
         }
         let b = x.right.take();
-        // b == old_x.right, which is wf.
         proof { assert(b == old_x.right); }
         y.left = b;
-        // y now: left=B (wf), right=C (wf, unchanged from old_y.right).
         proof {
             assert(spec_avltreeseq_wf(y.left));
             assert(spec_avltreeseq_wf(y.right));
         }
         update_size_height(&mut y);
-        // After update_size_height, y has correct cached sizes/height, so wf(Some(y)).
         x.right = Some(y);
-        // x now: left=A (wf, old_x.left unchanged), right=Some(y) (just proved wf).
         proof {
             assert(spec_avltreeseq_wf(x.left));
             assert(spec_avltreeseq_wf(x.right));
@@ -427,13 +451,10 @@ pub mod AVLTreeSeq {
         requires
             spec_avltreeseq_wf(Some(node)),
             node.right is Some,
-            spec_avltreeseq_cached_height(&Some(node)) < usize::MAX,
-            spec_avltreeseq_cached_size(&Some(node)) < usize::MAX,
         ensures
-            spec_avltreeseq_inorder(Some(rotated)) =~= spec_avltreeseq_inorder(Some(node)),
             spec_avltreeseq_wf(Some(rotated)),
+            spec_avltreeseq_inorder(Some(rotated)) =~= spec_avltreeseq_inorder(Some(node)),
             spec_avltreeseq_cached_size(&Some(rotated)) == spec_avltreeseq_cached_size(&Some(node)),
-            spec_avltreeseq_cached_height(&Some(rotated)) <= spec_avltreeseq_cached_height(&Some(node)) + 1,
     {
         // Standard AVL left rotation:
         //      x                y
@@ -479,10 +500,6 @@ pub mod AVLTreeSeq {
         requires
             spec_avltreeseq_wf(n.left),
             spec_avltreeseq_wf(n.right),
-            spec_avltreeseq_nat_max(
-                spec_avltreeseq_cached_height(&n.left),
-                spec_avltreeseq_cached_height(&n.right),
-            ) + 2 < usize::MAX,
             1 + spec_avltreeseq_cached_size(&n.left)
               + spec_avltreeseq_cached_size(&n.right) < usize::MAX,
         ensures
@@ -494,16 +511,18 @@ pub mod AVLTreeSeq {
     {
         let ghost old_n = *n;
         update_size_height(&mut n);
-        // wf(Some(n)) now holds; n.height = 1 + max(hl, hr) < usize::MAX.
         let hl = cached_height(&n.left);
         let hr = cached_height(&n.right);
         if hl > hr.saturating_add(1) {
-            // Left-heavy: n.left is Some (hl > 0).
+            // Left-heavy: n.left must be Some since hl > 1.
+            proof {
+                if n.left is None { assert(spec_avltreeseq_cached_height(&n.left) == 0); }
+                assert(n.left is Some);
+            }
             if cached_height(&n.left.as_ref().unwrap().right) > cached_height(&n.left.as_ref().unwrap().left) {
                 // Left-right case: inner rotate_left on left child, then rotate_right.
                 let left = n.left.take().unwrap();
                 n.left = Some(rotate_left(left));
-                // Metadata stale; re-establish wf(Some(n)).
                 update_size_height(&mut n);
             }
             proof {
@@ -512,12 +531,15 @@ pub mod AVLTreeSeq {
             return rotate_right(n);
         }
         if hr > hl.saturating_add(1) {
-            // Right-heavy: n.right is Some (hr > 0).
+            // Right-heavy: n.right must be Some since hr > 1.
+            proof {
+                if n.right is None { assert(spec_avltreeseq_cached_height(&n.right) == 0); }
+                assert(n.right is Some);
+            }
             if cached_height(&n.right.as_ref().unwrap().left) > cached_height(&n.right.as_ref().unwrap().right) {
                 // Right-left case: inner rotate_right on right child, then rotate_left.
                 let right = n.right.take().unwrap();
                 n.right = Some(rotate_right(right));
-                // Metadata stale; re-establish wf(Some(n)).
                 update_size_height(&mut n);
             }
             proof {
@@ -591,10 +613,6 @@ pub mod AVLTreeSeq {
                     }
                 }
                 proof {
-                    assume(spec_avltreeseq_nat_max(
-                        spec_avltreeseq_cached_height(&n.left),
-                        spec_avltreeseq_cached_height(&n.right),
-                    ) + 2 < usize::MAX);
                     // Size: one child grew by 1, other unchanged.
                     // rebalance requires: 1 + left_size + right_size < usize::MAX.
                     // From recursive ensures: new_child_size == old_child_size + 1.
@@ -1197,8 +1215,7 @@ pub mod AVLTreeSeq {
             assume(spec_avltreeseq_wf(self.root));
             assume(spec_avltreeseq_wf(other.root));
             proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
-            assume(spec_avltreeseq_cached_size(&self.root) < usize::MAX);
-            assume(spec_avltreeseq_cached_size(&other.root) < usize::MAX);
+            // Per-node size bound in wf gives cached_size < usize::MAX.
             let equal = compare_trees(&self.root, &other.root);
             equal
         }
