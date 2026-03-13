@@ -107,6 +107,9 @@ pub mod PQMinStPer {
         requires
             frontier.spec_avltreesetstper_wf(),
             obeys_feq_clone::<V>(),
+        ensures
+            frontier.elements.spec_seq().len() == 0 ==> result.is_none(),
+            frontier.elements.spec_seq().len() > 0 ==> result.is_some(),
     {
         if frontier.elements.length() == 0 {
             None

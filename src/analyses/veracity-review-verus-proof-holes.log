@@ -1335,67 +1335,60 @@ Table of Contents:
        143 |         fn size(&self) -> (count: usize)
        144 |         {
        146 |             let r = self.elements.length();
-       147 |             proof { assume(r == self@.len()); assume(self@.finite()); }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:147: error: assume() - proof { assume(r == self@.len()); assume(self@.finite()); }
+       147 |             proof {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:149: error: assume() - assume(r == self@.len());
        143 |         fn size(&self) -> (count: usize)
             ...
-       145 |             proof { assume(self.elements.spec_avltreeseqmtper_wf()); }
-       146 |             let r = self.elements.length();
-       148 |             r
-       149 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:147: error: assume() - proof { assume(r == self@.len()); assume(self@.finite()); }
-       143 |         fn size(&self) -> (count: usize)
+       147 |             proof {
+       148 |                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+       150 |             }
+       151 |             r
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:198: error: external_body - #[verifier::external_body]
+       199 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:248: error: external_body - #[verifier::external_body]
+       249 |         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:308: error: external_body - #[verifier::external_body]
+       309 |         fn intersection(&self, other: &Self) -> (common: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:366: error: external_body - #[verifier::external_body]
+       367 |         fn difference(&self, other: &Self) -> (remaining: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:376: error: external_body - #[verifier::external_body]
+       377 |         fn union(&self, other: &Self) -> (combined: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:432: error: assume() - assume(self.elements.spec_avltreeseqmtper_wf());
+       429 |         fn find(&self, x: &T) -> (found: B)
             ...
-       145 |             proof { assume(self.elements.spec_avltreeseqmtper_wf()); }
-       146 |             let r = self.elements.length();
-       148 |             r
-       149 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:195: error: external_body - #[verifier::external_body]
-       196 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:245: error: external_body - #[verifier::external_body]
-       246 |         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:305: error: external_body - #[verifier::external_body]
-       306 |         fn intersection(&self, other: &Self) -> (common: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:363: error: external_body - #[verifier::external_body]
-       364 |         fn difference(&self, other: &Self) -> (remaining: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:373: error: external_body - #[verifier::external_body]
-       374 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:429: error: assume() - assume(self.elements.spec_avltreeseqmtper_wf());
-       426 |         fn find(&self, x: &T) -> (found: B)
+       430 |         {
+       431 |             proof {
+       433 |                 assume(obeys_feq_full::<T>());  // accept hole: feq bridge
+       434 |             }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:433: error: assume() - assume(obeys_feq_full::<T>());  // accept hole: feq bridge
+       429 |         fn find(&self, x: &T) -> (found: B)
             ...
-       427 |         {
-       428 |             proof {
-       430 |                 assume(obeys_feq_full::<T>());  // accept hole: feq bridge
-       431 |             }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:430: error: assume() - assume(obeys_feq_full::<T>());  // accept hole: feq bridge
-       426 |         fn find(&self, x: &T) -> (found: B)
+       431 |             proof {
+       432 |                 assume(self.elements.spec_avltreeseqmtper_wf());
+       434 |             }
+       435 |             let n = self.elements.length();
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:459: error: assume() - proof { assume(!self@.contains(x@)); }
+       429 |         fn find(&self, x: &T) -> (found: B)
             ...
-       428 |             proof {
-       429 |                 assume(self.elements.spec_avltreeseqmtper_wf());
-       431 |             }
-       432 |             let n = self.elements.length();
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:456: error: assume() - proof { assume(!self@.contains(x@)); }
-       426 |         fn find(&self, x: &T) -> (found: B)
+       457 |                 }
+       458 |             }
+       460 |             false
+       461 |         }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:463: error: external_body - #[verifier::external_body]
+       464 |         fn delete(&self, x: &T) -> (updated: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:472: error: external_body - #[verifier::external_body]
+       473 |         fn insert(&self, x: T) -> (updated: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:204: error: fn_missing_requires_ensures - fn parallel_sort — exec fn should have requires and ensures
+       199 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
             ...
-       454 |                 }
-       455 |             }
-       457 |             false
-       458 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:460: error: external_body - #[verifier::external_body]
-       461 |         fn delete(&self, x: &T) -> (updated: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:469: error: external_body - #[verifier::external_body]
-       470 |         fn insert(&self, x: T) -> (updated: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:201: error: fn_missing_requires_ensures - fn parallel_sort — exec fn should have requires and ensures
-       196 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
-            ...
-       199 |             let mut vals = seq.values_in_order();
-       200 | 
-       202 |                 let n = vals.len();
-       203 |                 if n <= 1 {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:523: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:570: info: accept()
-   Holes: 13 total
-      6 × assume()
+       202 |             let mut vals = seq.values_in_order();
+       203 | 
+       205 |                 let n = vals.len();
+       206 |                 if n <= 1 {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:526: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:573: info: accept()
+   Holes: 12 total
+      5 × assume()
       7 × external_body
    Info: 2 total
 ❌ src/Chap41/AVLTreeSetStEph.rs
@@ -2646,66 +2639,9 @@ Table of Contents:
        174 |         G: Fn(&V) -> AVLTreeSetMtPer<V>,
    Holes: 1 total
       1 × external_body
-❌ src/Chap53/GraphSearchStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:104: error: external_body - #[verifier::external_body]
-       105 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:93: error: fn_missing_requires - fn graph_search — exec fn should have requires
-        67 |         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, B)) {
-            ...
-        91 |     }
-        92 | 
-        94 |     where
-        95 |         G: Fn(&V) -> AVLTreeSetStEph<V>,
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:140: error: fn_missing_requires - fn graph_search_multi — exec fn should have requires
-       105 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
-            ...
-       138 | 
-       139 |     /// Generic graph search starting from multiple sources (Exercise 53.3).
-       141 |         graph: &G,
-       142 |         sources: AVLTreeSetStEph<V>,
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStEph.rs:171: error: fn_missing_requires - fn reachable — exec fn should have requires
-       163 |         fn reachable<G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetStEph<V>)
-            ...
-       169 |     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
-       170 |     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
-       172 |     where
-       173 |         G: Fn(&V) -> AVLTreeSetStEph<V>,
-   Holes: 1 total
-      1 × external_body
-❌ src/Chap53/GraphSearchStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:111: error: external_body - #[verifier::external_body]
-       112 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:100: error: fn_missing_requires - fn graph_search — exec fn should have requires
-        75 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B)) {
-            ...
-        98 |     }
-        99 | 
-       101 |     where
-       102 |         G: Fn(&V) -> AVLTreeSetStPer<V>,
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:143: error: fn_missing_requires - fn graph_search_multi — exec fn should have requires
-       112 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>>(
-            ...
-       141 | 
-       142 |     /// Generic graph search starting from multiple sources (Exercise 53.3).
-       144 |         graph: &G,
-       145 |         sources: AVLTreeSetStPer<V>,
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchStPer.rs:174: error: fn_missing_requires - fn reachable — exec fn should have requires
-       166 |         fn reachable<G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetStPer<V>)
-            ...
-       172 |     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
-       173 |     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
-       175 |     where
-       176 |         G: Fn(&V) -> AVLTreeSetStPer<V>,
-   Holes: 1 total
-      1 × external_body
-❌ src/Chap53/PQMinStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:102: error: fn_missing_ensures - fn pq_find_min_priority — exec fn should have ensures
-        86 |     pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF) -> (search: PQMinResult<V, P>)
-            ...
-       100 |     }
-       101 | 
-       103 |         frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
-       104 |     ) -> (result: Option<V>)
+✓ src/Chap53/GraphSearchStEph.rs
+✓ src/Chap53/GraphSearchStPer.rs
+✓ src/Chap53/PQMinStEph.rs
 ❌ src/Chap53/PQMinStPer.rs
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:104: error: fn_missing_ensures - fn pq_find_min_priority — exec fn should have ensures
         88 |     pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF) -> (search: PQMinResult<V, P>)
@@ -3336,8 +3272,8 @@ src/ParaPairs.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   208 clean (no holes, no errors; 80%)
-   49 holed (holes or errors, 19%)
+   211 clean (no holes, no errors; 82%)
+   46 holed (holes or errors, 17%)
    257 total
 
 Proof Functions:
@@ -3346,16 +3282,16 @@ Proof Functions:
    312 total
 
 Function Specs:
-   5040 exec fns with complete spec (requires+ensures) (71%)
-   32 exec fns missing spec (0%)
+   5047 exec fns with complete spec (requires+ensures) (71%)
+   25 exec fns missing spec (0%)
    2026 proof/spec fns clean (28%)
    0 proof/spec fns with holes (0%)
    7098 total fns
 
 
-Holes Found: 291 total
-   94 × assume() (32%)
-   193 × external_body (66%)
+Holes Found: 288 total
+   93 × assume() (32%)
+   191 × external_body (66%)
    2 × external (0%)
    2 × trivial spec*wf { true } (0%)
 
@@ -3370,51 +3306,51 @@ Holes Found: 291 total
 =================================================================
 
    1  Chap43  (145 holes, 11 files)
-   2  Chap41  (57 holes, 7 files)
+   2  Chap41  (56 holes, 7 files)
    3  Chap47  (28 holes, 9 files)
    4  Chap37  (20 holes, 19 files)
-   5  Chap42  (18 holes, 4 files)
-   6  Chap38  (18 holes, 2 files)
+   5  Chap38  (18 holes, 2 files)
+   6  Chap42  (18 holes, 4 files)
    7  Chap39  (15 holes, 4 files)
-   8  Chap53  (14 holes, 5 files)
+   8  Chap53  (5 holes, 5 files)
    9  Chap45  (5 holes, 7 files)
    10  Chap50  (2 holes, 8 files)
    11  Chap52  (1 holes, 14 files)
-   12  Chap55  (0 holes, 8 files)
-   13  Chap49  (0 holes, 8 files)
-   14  Chap12  (0 holes, 3 files)
-   15  Chap17  (0 holes, 1 files)
-   16  Chap35  (0 holes, 4 files)
-   17  Chap66  (0 holes, 2 files)
-   18  Chap03  (0 holes, 1 files)
-   19  Chap23  (0 holes, 2 files)
-   20  Chap05  (0 holes, 5 files)
-   21  Chap57  (0 holes, 3 files)
-   22  Chap51  (0 holes, 8 files)
-   23  Chap64  (0 holes, 3 files)
-   24  Chap62  (0 holes, 4 files)
-   25  Chap19  (0 holes, 4 files)
-   26  Chap27  (0 holes, 4 files)
-   27  Chap18  (0 holes, 7 files)
-   28  Chap61  (0 holes, 4 files)
-   29  Chap56  (0 holes, 12 files)
-   30  Chap40  (0 holes, 3 files)
-   31  Chap65  (0 holes, 3 files)
-   32  ParaPairs  (0 holes, 1 files)
-   33  Chap28  (0 holes, 11 files)
-   34  Chap30  (0 holes, 1 files)
-   35  Chap06  (0 holes, 20 files)
-   36  Chap58  (0 holes, 2 files)
-   37  Chap21  (0 holes, 12 files)
-   38  Chap63  (0 holes, 2 files)
-   39  Chap54  (0 holes, 4 files)
-   40  Chap26  (0 holes, 8 files)
-   41  Chap11  (0 holes, 5 files)
-   42  Concurrency  (0 holes, 1 files)
-   43  Chap36  (0 holes, 3 files)
-   44  Chap59  (0 holes, 4 files)
-   45  Chap44  (0 holes, 2 files)
-   46  Chap02  (0 holes, 2 files)
+   12  Chap58  (0 holes, 2 files)
+   13  Chap19  (0 holes, 4 files)
+   14  Chap30  (0 holes, 1 files)
+   15  Chap55  (0 holes, 8 files)
+   16  Chap06  (0 holes, 20 files)
+   17  Chap44  (0 holes, 2 files)
+   18  Chap21  (0 holes, 12 files)
+   19  Chap66  (0 holes, 2 files)
+   20  Chap54  (0 holes, 4 files)
+   21  Chap05  (0 holes, 5 files)
+   22  Chap57  (0 holes, 3 files)
+   23  Chap40  (0 holes, 3 files)
+   24  Chap17  (0 holes, 1 files)
+   25  Chap36  (0 holes, 3 files)
+   26  Chap23  (0 holes, 2 files)
+   27  Chap02  (0 holes, 2 files)
+   28  Chap11  (0 holes, 5 files)
+   29  Chap18  (0 holes, 7 files)
+   30  Chap27  (0 holes, 4 files)
+   31  Chap26  (0 holes, 8 files)
+   32  Chap49  (0 holes, 8 files)
+   33  Chap51  (0 holes, 8 files)
+   34  Chap12  (0 holes, 3 files)
+   35  Chap61  (0 holes, 4 files)
+   36  Chap62  (0 holes, 4 files)
+   37  Chap59  (0 holes, 4 files)
+   38  Chap28  (0 holes, 11 files)
+   39  Chap64  (0 holes, 3 files)
+   40  Chap03  (0 holes, 1 files)
+   41  Chap63  (0 holes, 2 files)
+   42  Chap56  (0 holes, 12 files)
+   43  Concurrency  (0 holes, 1 files)
+   44  Chap65  (0 holes, 3 files)
+   45  ParaPairs  (0 holes, 1 files)
+   46  Chap35  (0 holes, 4 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -3424,14 +3360,14 @@ Holes Found: 291 total
    2  src/Chap39/BSTParaTreapMtEph.rs  (15 holes)
    3  src/Chap47/ParaHashTableStEph.rs  (8 holes)
    4  src/Chap37/AVLTreeSeqStPer.rs  (6 holes)
-   5  src/Chap37/AVLTreeSeqMtPer.rs  (5 holes)
-   6  src/Chap37/AVLTreeSeqStEph.rs  (5 holes)
+   5  src/Chap37/AVLTreeSeqStEph.rs  (5 holes)
+   6  src/Chap37/AVLTreeSeqMtPer.rs  (5 holes)
    7  src/Chap41/ArraySetStEph.rs  (3 holes)
    8  src/Chap37/BSTSplayStEph.rs  (2 holes)
    9  src/Chap37/AVLTreeSeq.rs  (2 holes)
    10  src/Chap50/OptBinSearchTreeMtEph.rs  (1 holes)
-   11  src/Chap45/BinaryHeapPQ.rs  (1 holes)
-   12  src/Chap50/OptBinSearchTreeMtPer.rs  (1 holes)
+   11  src/Chap50/OptBinSearchTreeMtPer.rs  (1 holes)
+   12  src/Chap45/BinaryHeapPQ.rs  (1 holes)
    13  src/Chap41/ArraySetEnumMtEph.rs  (1 holes)
    14  src/Chap38/BSTParaStEph.rs  (1 holes)
 
@@ -3459,7 +3395,7 @@ Holes Found: 291 total
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 35 clean, 11 holed, 291 holes (global), 257 modules
+Chapter Status — 46 chapters, 35 clean, 11 holed, 288 holes (global), 257 modules
 
 CLEAN CHAPTERS (35)
   Chapter        Files
@@ -3500,20 +3436,20 @@ CLEAN CHAPTERS (35)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (11) — 323 holes
+HOLED CHAPTERS (11) — 313 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap37            20    19  YES       
   Chap38            18     2  YES       
   Chap39            15     4  internal  Chap39::BSTParaTreapMtEph
-  Chap41            57     7  NO        Chap37::AVLTreeSeqStPer, Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStEph
+  Chap41            56     7  NO        Chap37::AVLTreeSeqStPer, Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqMtPer
   Chap42            18     4  NO        Chap41::ArraySetStEph
-  Chap43           145    11  NO        Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph, Chap41::AVLTreeSetStPer, Chap42::TableStEph, Chap42::TableStPer, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph
+  Chap43           145    11  NO        Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph, Chap42::TableStPer, Chap42::TableStEph, Chap41::AVLTreeSetStPer
   Chap45             5     7  NO        Chap37::AVLTreeSeqStPer
-  Chap47            28     9  internal  Chap47::ChainedHashTable, Chap47::ParaHashTableStEph, Chap47::FlatHashTable
+  Chap47            28     9  internal  Chap47::ParaHashTableStEph, Chap47::ChainedHashTable, Chap47::FlatHashTable
   Chap50             2     8  YES       
-  Chap52             1    14  NO        Chap41::AVLTreeSetMtPer, Chap41::AVLTreeSetStPer, Chap41::ArraySetStEph, Chap43::OrderedTableStPer, Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph, Chap43::OrderedTableMtPer
-  Chap53            14     5  NO        Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetStPer, Chap41::AVLTreeSetMtPer
+  Chap52             1    14  NO        Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer, Chap43::OrderedTableStEph, Chap41::AVLTreeSetStPer, Chap41::ArraySetStEph, Chap43::OrderedTableStPer
+  Chap53             5     5  NO        Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetMtPer, Chap41::AVLTreeSetStPer
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
@@ -3533,8 +3469,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 16:16:51 -07:00
-Ended:     2026-03-13 16:16:53 -07:00
-Duration:  2275ms
+Started:   2026-03-13 16:54:26 -07:00
+Ended:     2026-03-13 16:54:27 -07:00
+Duration:  1184ms
 
 Full output: /home/milnes/projects/APAS-VERUS-agent4/analyses/veracity-review-verus-proof-holes.log

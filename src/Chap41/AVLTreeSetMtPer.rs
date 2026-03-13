@@ -144,7 +144,10 @@ broadcast use {
         {
             proof { assume(self.elements.spec_avltreeseqmtper_wf()); }
             let r = self.elements.length();
-            proof { assume(r == self@.len()); assume(self@.finite()); }
+            proof {
+                vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+                assume(r == self@.len());
+            }
             r
         }
 

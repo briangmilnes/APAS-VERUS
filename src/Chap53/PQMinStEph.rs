@@ -105,6 +105,9 @@ pub mod PQMinStEph {
         requires
             frontier.spec_avltreesetsteph_wf(),
             obeys_feq_clone::<V>(),
+        ensures
+            frontier@.len() == 0 ==> result.is_none(),
+            frontier@.len() > 0 ==> result.is_some(),
     {
         if frontier.size() == 0 {
             None

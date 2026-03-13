@@ -145,67 +145,60 @@ Table of Contents:
        143 |         fn size(&self) -> (count: usize)
        144 |         {
        146 |             let r = self.elements.length();
-       147 |             proof { assume(r == self@.len()); assume(self@.finite()); }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:147: error: assume() - proof { assume(r == self@.len()); assume(self@.finite()); }
+       147 |             proof {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:149: error: assume() - assume(r == self@.len());
        143 |         fn size(&self) -> (count: usize)
             ...
-       145 |             proof { assume(self.elements.spec_avltreeseqmtper_wf()); }
-       146 |             let r = self.elements.length();
-       148 |             r
-       149 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:147: error: assume() - proof { assume(r == self@.len()); assume(self@.finite()); }
-       143 |         fn size(&self) -> (count: usize)
+       147 |             proof {
+       148 |                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+       150 |             }
+       151 |             r
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:198: error: external_body - #[verifier::external_body]
+       199 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:248: error: external_body - #[verifier::external_body]
+       249 |         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:308: error: external_body - #[verifier::external_body]
+       309 |         fn intersection(&self, other: &Self) -> (common: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:366: error: external_body - #[verifier::external_body]
+       367 |         fn difference(&self, other: &Self) -> (remaining: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:376: error: external_body - #[verifier::external_body]
+       377 |         fn union(&self, other: &Self) -> (combined: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:432: error: assume() - assume(self.elements.spec_avltreeseqmtper_wf());
+       429 |         fn find(&self, x: &T) -> (found: B)
             ...
-       145 |             proof { assume(self.elements.spec_avltreeseqmtper_wf()); }
-       146 |             let r = self.elements.length();
-       148 |             r
-       149 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:195: error: external_body - #[verifier::external_body]
-       196 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:245: error: external_body - #[verifier::external_body]
-       246 |         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:305: error: external_body - #[verifier::external_body]
-       306 |         fn intersection(&self, other: &Self) -> (common: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:363: error: external_body - #[verifier::external_body]
-       364 |         fn difference(&self, other: &Self) -> (remaining: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:373: error: external_body - #[verifier::external_body]
-       374 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:429: error: assume() - assume(self.elements.spec_avltreeseqmtper_wf());
-       426 |         fn find(&self, x: &T) -> (found: B)
+       430 |         {
+       431 |             proof {
+       433 |                 assume(obeys_feq_full::<T>());  // accept hole: feq bridge
+       434 |             }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:433: error: assume() - assume(obeys_feq_full::<T>());  // accept hole: feq bridge
+       429 |         fn find(&self, x: &T) -> (found: B)
             ...
-       427 |         {
-       428 |             proof {
-       430 |                 assume(obeys_feq_full::<T>());  // accept hole: feq bridge
-       431 |             }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:430: error: assume() - assume(obeys_feq_full::<T>());  // accept hole: feq bridge
-       426 |         fn find(&self, x: &T) -> (found: B)
+       431 |             proof {
+       432 |                 assume(self.elements.spec_avltreeseqmtper_wf());
+       434 |             }
+       435 |             let n = self.elements.length();
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:459: error: assume() - proof { assume(!self@.contains(x@)); }
+       429 |         fn find(&self, x: &T) -> (found: B)
             ...
-       428 |             proof {
-       429 |                 assume(self.elements.spec_avltreeseqmtper_wf());
-       431 |             }
-       432 |             let n = self.elements.length();
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:456: error: assume() - proof { assume(!self@.contains(x@)); }
-       426 |         fn find(&self, x: &T) -> (found: B)
+       457 |                 }
+       458 |             }
+       460 |             false
+       461 |         }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:463: error: external_body - #[verifier::external_body]
+       464 |         fn delete(&self, x: &T) -> (updated: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:472: error: external_body - #[verifier::external_body]
+       473 |         fn insert(&self, x: T) -> (updated: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:204: error: fn_missing_requires_ensures - fn parallel_sort — exec fn should have requires and ensures
+       199 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
             ...
-       454 |                 }
-       455 |             }
-       457 |             false
-       458 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:460: error: external_body - #[verifier::external_body]
-       461 |         fn delete(&self, x: &T) -> (updated: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:469: error: external_body - #[verifier::external_body]
-       470 |         fn insert(&self, x: T) -> (updated: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:201: error: fn_missing_requires_ensures - fn parallel_sort — exec fn should have requires and ensures
-       196 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
-            ...
-       199 |             let mut vals = seq.values_in_order();
-       200 | 
-       202 |                 let n = vals.len();
-       203 |                 if n <= 1 {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:523: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:570: info: accept()
-   Holes: 13 total
-      6 × assume()
+       202 |             let mut vals = seq.values_in_order();
+       203 | 
+       205 |                 let n = vals.len();
+       206 |                 if n <= 1 {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:526: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtPer.rs:573: info: accept()
+   Holes: 12 total
+      5 × assume()
       7 × external_body
    Info: 2 total
 ❌ AVLTreeSetStEph.rs
@@ -456,8 +449,8 @@ Function Specs:
    245 total fns
 
 
-Holes Found: 54 total
-   34 × assume() (62%)
+Holes Found: 53 total
+   33 × assume() (62%)
    19 × external_body (35%)
    1 × trivial spec*wf { true } (1%)
 
@@ -465,8 +458,8 @@ Holes Found: 54 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 16:16:58 -07:00
-Ended:     2026-03-13 16:16:58 -07:00
-Duration:  65ms
+Started:   2026-03-13 16:55:51 -07:00
+Ended:     2026-03-13 16:55:51 -07:00
+Duration:  46ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
