@@ -988,20 +988,20 @@ verus! {
     }
 
     impl<T: StT + Hash> LockedSetMtEph<T> {
-        pub proof fn type_invariant(&self)
-            ensures
-                self@.finite(),
-                valid_key_type::<T>(),
-        {
-            assume(self@.finite());
-            assume(valid_key_type::<T>());
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            self.ghost_locked_set@.finite()
+        }
+
+        pub closed spec fn spec_ghost_locked_set(self) -> Set<<T as View>::V> {
+            self.ghost_locked_set@
         }
     }
 
     impl<T: StT + Hash> View for LockedSetMtEph<T> {
         type V = Set<<T as View>::V>;
-        closed spec fn view(&self) -> Self::V {
-            self.ghost_locked_set@
+        open spec fn view(&self) -> Self::V {
+            self.spec_ghost_locked_set()
         }
     }
 
@@ -1042,9 +1042,8 @@ verus! {
         fn size(&self) -> (size: N) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let size = inner.size();
-            proof { assume(size == self@.len()); }
             read_handle.release_read();
             size
         }
@@ -1052,16 +1051,15 @@ verus! {
         fn mem(&self, x: T) -> (contains: B) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let contains = inner.mem(&x);
-            proof { assume(contains == self@.contains(x@)); }
             read_handle.release_read();
             contains
         }
 
         fn insert(&mut self, x: T) -> (r: std::result::Result<bool, ()>) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { assume(self.ghost_locked_set@ == locked_val@); }
+            proof { accept(self.ghost_locked_set@ == locked_val@); }
             let inserted = locked_val.insert(x);
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);
@@ -1072,9 +1070,8 @@ verus! {
         fn choose(&self) -> (element: T) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let element = inner.choose();
-            proof { assume(self@.contains(element@)); }
             read_handle.release_read();
             element
         }
