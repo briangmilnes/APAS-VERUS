@@ -90,6 +90,7 @@ pub mod BSTSplayMtEph {
     // Verified splay tree algorithms (Layer 1).
 
     fn new_node<T: StTInMtT + Ord>(key: T) -> (node: Node<T>)
+        requires true,
         ensures
             node.key == key,
             node.size == 1,
@@ -105,6 +106,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (size: N)
+        requires true,
         ensures
             (link is None) ==> size == 0,
     {
@@ -115,6 +117,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn update<T: StTInMtT + Ord>(node: &mut Node<T>)
+        requires true,
         ensures
             node.left == old(node).left,
             node.right == old(node).right,
@@ -130,6 +133,7 @@ pub mod BSTSplayMtEph {
     // Bottom-up splay: bring target (or nearest key) toward the root using
     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
     fn splay<T: StTInMtT + Ord>(root: Box<Node<T>>, target: &T) -> (result: Box<Node<T>>)
+        requires true,
         ensures link_spec_size(Some(result)) == link_spec_size(Some(root)),
         decreases root,
     {
@@ -246,6 +250,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn bst_insert<T: StTInMtT + Ord>(link: &mut Link<T>, value: T) -> (inserted: bool)
+        requires true,
         ensures link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
         decreases old(link),
     {
@@ -269,6 +274,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T) -> (inserted: bool)
+        requires true,
         ensures link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
     {
         let v = value.clone();
@@ -282,6 +288,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
+        requires true,
         ensures
             (link is None) ==> found is None,
         decreases *link,
@@ -301,6 +308,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> (min: Option<&T>)
+        requires true,
         ensures
             (link is None) ==> min is None,
             (link is Some) ==> min is Some,
@@ -316,6 +324,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> (max: Option<&T>)
+        requires true,
         ensures
             (link is None) ==> max is None,
             (link is Some) ==> max is Some,
@@ -331,6 +340,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+        requires true,
         ensures true,
         decreases *link,
     {
@@ -342,6 +352,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+        requires true,
         ensures true,
         decreases *link,
     {
@@ -353,6 +364,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn in_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> (result: Vec<T>)
+        requires true,
         ensures true,
         decreases *link,
     {
@@ -373,6 +385,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn pre_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> (result: Vec<T>)
+        requires true,
         ensures true,
         decreases *link,
     {
@@ -393,6 +406,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn build_balanced<T: StTInMtT + Ord>(values: &[T]) -> (link: Link<T>)
+        requires true,
         ensures link_spec_size(link) <= values@.len(),
         decreases values.len(),
     {
@@ -422,6 +436,7 @@ pub mod BSTSplayMtEph {
     fn filter_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
         where
             F: Fn(&T) -> bool + Send + Sync,
+        requires true,
         ensures true,
         decreases *link,
     {
@@ -450,6 +465,7 @@ pub mod BSTSplayMtEph {
     fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
         where
             F: Fn(T, T) -> T + Send + Sync,
+        requires true,
         ensures true,
         decreases *link,
     {
@@ -473,6 +489,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn height_rec<T: StTInMtT + Ord>(link: &Link<T>) -> (h: N)
+        requires true,
         ensures
             (link is None) ==> h == 0,
         decreases *link,
