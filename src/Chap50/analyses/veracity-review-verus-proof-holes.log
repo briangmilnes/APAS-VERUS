@@ -21,32 +21,21 @@ Table of Contents:
 =================================================================
 
 ❌ MatrixChainMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:259: error: assume() - proof { assume((left_rows as nat) * (split_cols as nat) <= u
-       251 |         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:281: error: assume() - proof { assume((left_rows as nat) * (split_cols as nat) <= u
+       273 |         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize) {
             ...
-       257 |             let split_cols = dims[k].cols;
-       258 |             let right_cols = dims[j].cols;
-       260 |                 && (left_rows as nat) * (split_cols as nat) * (right_cols as nat) <= usize::MAX as nat); }
-       261 |             handle.release_read();
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:265: error: external_body - #[verifier::external_body]
-       266 |         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:288: error: external_body - #[verifier::external_body]
-       289 |         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:421: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:443: info: accept()
-   Holes: 3 total
+       279 |             let split_cols = dims[k].cols;
+       280 |             let right_cols = dims[j].cols;
+       282 |                 && (left_rows as nat) * (split_cols as nat) * (right_cols as nat) <= usize::MAX as nat); }
+       283 |             handle.release_read();
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:492: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:514: info: accept()
+   Holes: 1 total
       1 × assume()
-      2 × external_body
    Info: 2 total
-❌ MatrixChainMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtPer.rs:244: error: external_body - #[verifier::external_body]
-       245 |         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtPer.rs:267: error: external_body - #[verifier::external_body]
-       268 |         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtPer.rs:344: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtPer.rs:362: info: accept()
-   Holes: 2 total
-      2 × external_body
+ℹ MatrixChainMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtPer.rs:408: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtPer.rs:426: info: accept()
    Info: 2 total
 ℹ MatrixChainStEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainStEph.rs:370: info: accept()
@@ -57,42 +46,36 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainStPer.rs:355: info: accept()
    Info: 2 total
 ❌ OptBinSearchTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:140: error: external_body - #[verifier::external_body]
-       141 |     fn parallel_min_reduction<T: MtVal>(table: &OBSTMtEphS<T>, costs: Vec<Probability>) -> (cost: Probability) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:163: error: external_body - #[verifier::external_body]
-       164 |     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> (cost: Probability) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:59: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:348: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:370: info: accept()
-   Holes: 2 total
-      2 × external_body
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:140: error: fn_missing_ensures - fn obst_rec — exec fn should have ensures
+       135 |         fn memo_size(&self) -> (count: usize);
+            ...
+       138 |     // 9. impls
+       139 | 
+       141 |         requires
+       142 |             i + l <= table@.keys.len(),
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:58: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:357: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:379: info: accept()
    Info: 3 total
 ❌ OptBinSearchTreeMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtPer.rs:117: error: external_body - #[verifier::external_body]
-       118 |     fn parallel_min_reduction<T: MtVal>(table: &OBSTMtPerS<T>, costs: Vec<Probability>) -> (cost: Probability) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtPer.rs:140: error: external_body - #[verifier::external_body]
-       141 |     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtPerS<T>, i: usize, l: usize) -> (cost: Probability) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtPer.rs:117: error: fn_missing_ensures - fn obst_rec — exec fn should have ensures
+       112 |         fn memo_size(&self) -> (count: usize);
+            ...
+       115 |     // 9. impls
+       116 | 
+       118 |         requires i + l <= table@.keys.len(),
+       119 |         decreases l,
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtPer.rs:61: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtPer.rs:254: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtPer.rs:272: info: accept()
-   Holes: 2 total
-      2 × external_body
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtPer.rs:262: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtPer.rs:280: info: accept()
    Info: 3 total
-❌ OptBinSearchTreeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeStEph.rs:147: error: external_body - #[verifier::external_body]
-       148 |     fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (cost: Probability) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeStEph.rs:56: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeStEph.rs:76: info: accept()
-   Holes: 1 total
-      1 × external_body
+ℹ OptBinSearchTreeStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeStEph.rs:55: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeStEph.rs:75: info: accept()
    Info: 2 total
-❌ OptBinSearchTreeStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeStPer.rs:130: error: external_body - #[verifier::external_body]
-       131 |     fn obst_rec_st_per<T: StT>(s: &mut OBSTStPerS<T>, i: usize, l: usize) -> (cost: Probability) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeStPer.rs:56: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeStPer.rs:76: info: accept()
-   Holes: 1 total
-      1 × external_body
+ℹ OptBinSearchTreeStPer.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeStPer.rs:55: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeStPer.rs:75: info: accept()
    Info: 2 total
 
 =================================================================
@@ -130,8 +113,8 @@ OptBinSearchTreeStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 25%)
-   6 holed (holes or errors, 75%)
+   5 clean (no holes, no errors; 62%)
+   3 holed (holes or errors, 37%)
    8 total
 
 Proof Functions:
@@ -140,28 +123,22 @@ Proof Functions:
    0 total
 
 Function Specs:
-   180 exec fns with complete spec (requires+ensures) (76%)
-   0 exec fns missing spec (0%)
-   54 proof/spec fns clean (23%)
+   176 exec fns with complete spec (requires+ensures) (75%)
+   2 exec fns missing spec (0%)
+   56 proof/spec fns clean (23%)
    0 proof/spec fns with holes (0%)
    234 total fns
 
 
-Holes Found: 11 total
-   1 × assume() (9%)
-   10 × external_body (90%)
+Holes Found: 1 total
+   1 × assume() (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 09:22:29 -07:00
-Ended:     2026-03-13 09:22:29 -07:00
-Duration:  26ms
-
-Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log
-  2026-03-13 09:22:29 -07:00
-Ended:     2026-03-13 09:22:29 -07:00
-Duration:  26ms
+Started:   2026-03-13 11:10:44 -07:00
+Ended:     2026-03-13 11:10:44 -07:00
+Duration:  41ms
 
 Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log

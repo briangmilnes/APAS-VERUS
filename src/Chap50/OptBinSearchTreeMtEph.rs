@@ -13,7 +13,6 @@ pub mod OptBinSearchTreeMtEph {
     use vstd::prelude::*;
     use vstd::rwlock::*;
 
-    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap30::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
@@ -112,7 +111,8 @@ broadcast use {
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)
             ensures constructed@.keys =~= key_probs@, constructed.spec_obstmteph_wf();
 
-        fn optimal_cost(&mut self) -> (cost: Probability) where T: Send + Sync + 'static;
+        fn optimal_cost(&mut self) -> (cost: Probability) where T: Send + Sync + 'static
+            requires old(self).spec_obstmteph_wf();
 
         fn keys(&self) -> (keys: Vec<KeyProb<T>>);
 
@@ -137,34 +137,20 @@ broadcast use {
 
     // 9. impls
 
-    #[verifier::external_body]
-    fn parallel_min_reduction<T: MtVal>(table: &OBSTMtEphS<T>, costs: Vec<Probability>) -> (cost: Probability) {
-        if costs.is_empty() {
-            return Probability::infinity();
-        }
-        if costs.len() == 1 {
-            return costs[0];
-        }
-
-        let mid = costs.len() / 2;
-        let left_costs = costs[..mid].to_vec();
-        let right_costs = costs[mid..].to_vec();
-
-        let table_clone1 = table.clone();
-        let table_clone2 = table.clone();
-
-        let f1 = move || parallel_min_reduction(&table_clone1, left_costs);
-        let f2 = move || parallel_min_reduction(&table_clone2, right_costs);
-        let (left_min, right_min) = join(f1, f2);
-
-        std::cmp::min(left_min, right_min)
-    }
-
-    #[verifier::external_body]
-    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> (cost: Probability) {
+    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> (cost: Probability)
+        requires
+            i + l <= table@.keys.len(),
+            table.spec_obstmteph_wf(),
+        decreases l,
+    {
+        // Memo lookup.
         {
-            let handle = table.memo.acquire_read();
-            let cached = handle.borrow().get(&Pair(i, l)).copied();
+            let rwlock = arc_deref(&table.memo);
+            let handle = rwlock.acquire_read();
+            let cached = match handle.borrow().get(&Pair(i, l)) {
+                Some(v) => Some(*v),
+                None => None,
+            };
             handle.release_read();
             if let Some(cost) = cached {
                 return cost;
@@ -174,30 +160,52 @@ broadcast use {
         let cost = if l == 0 {
             Probability::zero()
         } else {
-            let prob_sum = {
-                let handle = table.keys.acquire_read();
-                let keys = handle.borrow();
-                let sum = (0..l)
-                    .map(|k| keys[i + k].prob)
-                    .fold(Probability::zero(), |acc, p| acc + p);
-                handle.release_read();
-                sum
-            };
+            // Sum probabilities of keys[i..i+l].
+            let keys_rwlock = arc_deref(&table.keys);
+            let keys_handle = keys_rwlock.acquire_read();
+            let keys_ref = keys_handle.borrow();
+            let n = keys_ref.len();
+            let mut prob_sum = Probability::zero();
+            let mut k: usize = 0;
+            while k < l
+                invariant
+                    k <= l,
+                    i + l <= n,
+                    n == keys_ref@.len(),
+                decreases l - k,
+            {
+                prob_sum = prob_sum + keys_ref[i + k].prob;
+                k = k + 1;
+            }
+            keys_handle.release_read();
 
-            let costs = (0..l)
-                .map(|k| {
-                    let left_cost = obst_rec(table, i, k);
-                    let right_cost = obst_rec(table, i + k + 1, l - k - 1);
-                    left_cost + right_cost
-                }).collect::<Vec<Probability>>();
-
-            let min_cost = parallel_min_reduction(table, costs);
+            // Find minimum cost over all split points.
+            let mut min_cost = Probability::infinity();
+            let mut k: usize = 0;
+            while k < l
+                invariant
+                    k <= l,
+                    i + l <= n,
+                    i + l <= table@.keys.len(),
+                    table.spec_obstmteph_wf(),
+                decreases l - k,
+            {
+                let left_cost = obst_rec(table, i, k);
+                let right_cost = obst_rec(table, i + k + 1, l - k - 1);
+                let split_cost = left_cost + right_cost;
+                if split_cost <= min_cost {
+                    min_cost = split_cost;
+                }
+                k = k + 1;
+            }
 
             prob_sum + min_cost
         };
 
+        // Memo store.
         {
-            let (mut memo, write_handle) = table.memo.acquire_write();
+            let rwlock = arc_deref(&table.memo);
+            let (mut memo, write_handle) = rwlock.acquire_write();
             memo.insert(Pair(i, l), cost);
             write_handle.release_write(memo);
         }
@@ -256,6 +264,7 @@ broadcast use {
             let rwlock = arc_deref(&self.keys);
             let handle = rwlock.acquire_read();
             let keys_len = handle.borrow().len();
+            assert(keys_len == rwlock.pred().expected_len);
             handle.release_read();
             if keys_len == 0 { return Probability::zero(); }
             {

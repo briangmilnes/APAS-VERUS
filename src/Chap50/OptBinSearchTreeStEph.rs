@@ -6,7 +6,6 @@
 
 pub mod OptBinSearchTreeStEph {
 
-    use std::cmp::min;
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::iter::Cloned;
     use std::slice::Iter;
@@ -144,26 +143,65 @@ broadcast use {
 
     // 9. impls
 
-    #[verifier::external_body]
-    fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (cost: Probability) {
-        if let Some(&cost) = s.memo.get(&Pair(i, l)) {
+    fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (cost: Probability)
+        requires
+            i + l <= old(s)@.keys.len(),
+            old(s)@.memo.dom().finite(),
+        ensures
+            s@.keys =~= old(s)@.keys,
+            s@.memo.dom().finite(),
+        decreases l,
+    {
+        let cached = match s.memo.get(&Pair(i, l)) {
+            Some(v) => Some(*v),
+            None => None,
+        };
+        if let Some(cost) = cached {
             return cost;
         }
 
         let cost = if l == 0 {
             Probability::zero()
         } else {
-            let prob_sum = (0..l)
-                .map(|k| s.keys[i + k].prob)
-                .fold(Probability::zero(), |acc, p| acc + p);
+            let n = s.keys.len();
 
-            let min_cost = (0..l)
-                .map(|k| {
-                    let left_cost = obst_rec_st_eph(s, i, k);
-                    let right_cost = obst_rec_st_eph(s, i + k + 1, l - k - 1);
-                    left_cost + right_cost
-                })
-                .fold(Probability::infinity(), min);
+            // Sum probabilities of keys[i..i+l].
+            let mut prob_sum = Probability::zero();
+            let mut k: usize = 0;
+            while k < l
+                invariant
+                    k <= l,
+                    i + l <= n,
+                    n == s@.keys.len(),
+                    s@.keys =~= old(s)@.keys,
+                    s@.memo.dom().finite(),
+                decreases l - k,
+            {
+                prob_sum = prob_sum + s.keys[i + k].prob;
+                k = k + 1;
+            }
+
+            // Find minimum cost over all split points.
+            let mut min_cost = Probability::infinity();
+            let mut k: usize = 0;
+            while k < l
+                invariant
+                    k <= l,
+                    i + l <= n,
+                    n == s@.keys.len(),
+                    i + l <= s@.keys.len(),
+                    s@.keys =~= old(s)@.keys,
+                    s@.memo.dom().finite(),
+                decreases l - k,
+            {
+                let left_cost = obst_rec_st_eph(s, i, k);
+                let right_cost = obst_rec_st_eph(s, i + k + 1, l - k - 1);
+                let split_cost = left_cost + right_cost;
+                if split_cost <= min_cost {
+                    min_cost = split_cost;
+                }
+                k = k + 1;
+            }
 
             prob_sum + min_cost
         };

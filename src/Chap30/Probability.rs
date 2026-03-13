@@ -13,6 +13,8 @@ pub mod Probability {
     use std::ops::{Add, Div, Mul, Sub};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::ops::AddSpecImpl;
 
     use crate::Types::Types::*;
 
@@ -144,6 +146,13 @@ pub mod Probability {
 
         #[verifier::external_body] // accept hole
         fn div(self, other: Self) -> Self { Probability(self.0 / other.0) }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl AddSpecImpl for Probability {
+        open spec fn obeys_add_spec() -> bool { false }
+        open spec fn add_req(self, rhs: Probability) -> bool { true }
+        open spec fn add_spec(self, rhs: Probability) -> Probability { arbitrary() }
     }
 
     } // verus!
