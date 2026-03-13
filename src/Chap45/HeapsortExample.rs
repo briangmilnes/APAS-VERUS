@@ -126,6 +126,26 @@ broadcast use {
         proof fn _heapsort_example_verified() {}
 
 // 8. traits
+
+        /// Check if a Vec is sorted in non-decreasing order using element-wise comparison.
+        fn is_vec_sorted_exec<T: StT + Ord + TotalOrder>(v: &Vec<T>) -> (sorted: bool) {
+            if v.len() <= 1 {
+                return true;
+            }
+            let mut i: usize = 0;
+            while i < v.len() - 1
+                invariant
+                    v.len() >= 2,
+                    0 <= i <= v.len() - 1,
+                decreases v.len() - 1 - i,
+            {
+                if !(v[i] <= v[i + 1]) {
+                    return false;
+                }
+                i = i + 1;
+            }
+            true
+        }
         pub trait HeapsortComparisonTrait<T: StT + Ord + TotalOrder> {
             /// Verify that all implementations produce the same sorted result.
             fn all_results_match(&self) -> (matches: bool);
@@ -134,7 +154,6 @@ broadcast use {
         }
 
 // 9. impls
-        #[verifier::external]
         impl<T: StT + Ord + TotalOrder> HeapsortComparisonTrait<T> for HeapsortComparison<T> {
             fn all_results_match(&self) -> (matches: bool) {
                 let expected = &self.binary_heap_result;
@@ -145,13 +164,11 @@ broadcast use {
             }
 
             fn all_results_sorted(&self) -> (sorted: bool) {
-                fn is_sorted<T: Ord>(vec: &[T]) -> bool { vec.windows(2).all(|w| w[0] <= w[1]) }
-
-                is_sorted(&self.unsorted_list_result)
-                    && is_sorted(&self.sorted_list_result)
-                    && is_sorted(&self.balanced_tree_result)
-                    && is_sorted(&self.binary_heap_result)
-                    && is_sorted(&self.leftist_heap_result)
+                is_vec_sorted_exec(&self.unsorted_list_result)
+                    && is_vec_sorted_exec(&self.sorted_list_result)
+                    && is_vec_sorted_exec(&self.balanced_tree_result)
+                    && is_vec_sorted_exec(&self.binary_heap_result)
+                    && is_vec_sorted_exec(&self.leftist_heap_result)
             }
         }
 

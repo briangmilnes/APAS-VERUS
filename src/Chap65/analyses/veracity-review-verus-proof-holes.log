@@ -22,7 +22,7 @@ Table of Contents:
 ✓ KruskalStEph.rs
 ✓ PrimStEph.rs
 ❌ UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:337: error: assume() - assume((root_u == root_v) == (root_u@ == root_v@));
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:337: error: assume() - assume((root_u == root_v) == (root_u@ == root_v@));
        331 |         fn equals(&mut self, u: &V, v: &V) -> (same: B) {
             ...
        335 |             proof {
@@ -81,12 +81,8 @@ Holes Found: 1 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 22:16:38 -07:00
-Ended:     2026-03-12 22:16:38 -07:00
-Duration:  5ms
-
-Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-8 -07:00
+Started:   2026-03-12 23:36:39 -07:00
+Ended:     2026-03-12 23:36:39 -07:00
 Duration:  5ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

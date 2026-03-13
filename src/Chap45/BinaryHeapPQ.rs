@@ -24,6 +24,7 @@ pub mod BinaryHeapPQ {
 
     use vstd::prelude::*;
     use vstd::multiset::Multiset;
+    use vstd::assert_multisets_equal;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     #[cfg(verus_keep_ghost)]
@@ -249,16 +250,46 @@ pub mod BinaryHeapPQ {
             if i == 0 { 0 } else { (i - 1) / 2 }
         }
 
+        proof fn lemma_swap_preserves_multiset<A>(s: Seq<A>, i: int, j: int)
+            requires 0 <= i < s.len(), 0 <= j < s.len(),
+            ensures s.update(i, s[j]).update(j, s[i]).to_multiset() =~= s.to_multiset(),
+        {
+            let s1 = s.update(i, s[j]);
+            let s2 = s1.update(j, s[i]);
+            vstd::seq_lib::to_multiset_update(s, i, s[j]);
+            // s1.to_multiset() == s.to_multiset().insert(s[j]).remove(s[i])
+            assert(s1[j] == s[j]);  // update at i doesn't affect j (or i==j: updated to s[j])
+            vstd::seq_lib::to_multiset_update(s1, j, s[i]);
+            // s2.to_multiset() == s1.to_multiset().insert(s[i]).remove(s1[j])
+            //                   == s.to_multiset().insert(s[j]).remove(s[i]).insert(s[i]).remove(s[j])
+            let m = s.to_multiset();
+            let a = s[i];
+            let b = s[j];
+            // Need: m.insert(b).remove(a).insert(a).remove(b) == m
+            assert(s.contains(s[i]));
+            vstd::seq_lib::to_multiset_contains(s, s[i]);
+            assert(m.count(a) >= 1nat);
+            assert_multisets_equal!(m.insert(b).remove(a).insert(a).remove(b), m, key => {
+                vstd::multiset::lemma_insert_increases_count_by_1(m, b);
+                vstd::multiset::lemma_insert_other_elements_unchanged(m, b, key);
+                vstd::multiset::lemma_insert_increases_count_by_1(m.insert(b).remove(a), a);
+                vstd::multiset::lemma_insert_other_elements_unchanged(m.insert(b).remove(a), a, key);
+            });
+        }
+
         fn swap_elements<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>, i: usize, j: usize) -> (swapped: ArraySeqStPerS<T>)
             requires
                 obeys_feq_clone::<T>(),
                 (i as int) < seq.view().len(),
                 (j as int) < seq.view().len(),
                 seq@.len() <= usize::MAX as int,
-            ensures swapped@.len() == seq@.len()
+            ensures
+                swapped@.len() == seq@.len(),
+                swapped@.to_multiset() =~= seq@.to_multiset(),
         {
             let n = seq.length();
             let mut result = ArraySeqStPerS::empty();
+            let ghost sv = seq@.update(i as int, seq@[j as int]).update(j as int, seq@[i as int]);
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             for k in 0..n
@@ -267,6 +298,9 @@ pub mod BinaryHeapPQ {
                     result@.len() == k as int,
                     (i as int) < n,
                     (j as int) < n,
+                    obeys_feq_clone::<T>(),
+                    sv == seq@.update(i as int, seq@[j as int]).update(j as int, seq@[i as int]),
+                    forall|m: int| 0 <= m < k as int ==> #[trigger] result@[m] == sv[m],
             {
                 let element = if k == i {
                     seq.nth(j).clone()
@@ -277,9 +311,37 @@ pub mod BinaryHeapPQ {
                 };
 
                 let single_seq = ArraySeqStPerS::singleton(element);
+                let ghost pre_seq = result.seq@;
+                let ghost pre_view = result@;
                 result = ArraySeqStPerS::append(&result, &single_seq);
+
+                proof {
+                    let pos: int = if k == i { j as int } else if k == j { i as int } else { k as int };
+                    axiom_cloned_implies_eq_owned(seq.spec_index(pos), element);
+                    assert(element@ == seq@[pos]) by {
+                        assert(seq.spec_index(pos)@ == seq@[pos]);
+                    }
+                    // New element at position k.
+                    assert(result@[k as int] == element@) by {
+                        assert(result.spec_index(k as int) == single_seq.seq@[0]);
+                        assert(single_seq.spec_index(0) == element);
+                        assert(result.spec_index(k as int)@ == result@[k as int]);
+                    }
+                    // Previous elements preserved by append.
+                    assert forall|m: int| 0 <= m < k as int
+                        implies #[trigger] result@[m] == sv[m] by {
+                        assert(result.spec_index(m) == pre_seq[m]);
+                        assert(result.spec_index(m)@ == result@[m]);
+                        assert(pre_seq[m]@ == pre_view[m]);
+                        assert(pre_view[m] == sv[m]);
+                    }
+                }
             }
 
+            proof {
+                assert(result@ =~= sv);
+                lemma_swap_preserves_multiset(seq@, i as int, j as int);
+            }
             result
         }
 
@@ -288,9 +350,19 @@ pub mod BinaryHeapPQ {
                 obeys_feq_clone::<T>(),
                 (i as int) < seq.view().len(),
                 seq@.len() <= usize::MAX as int,
-            ensures heaped@.len() == seq@.len()
+            ensures
+                heaped@.len() == seq@.len(),
+                heaped@.to_multiset() =~= seq@.to_multiset(),
         {
             let mut result = seq.clone();
+
+            proof {
+                // Clone bridge: cloned elements are T-level equal, so views match.
+                assert(result@.len() == seq@.len());
+                assert forall|k: int| 0 <= k < seq@.len()
+                    implies #[trigger] result@[k] == seq@[k] by {}
+                assert(result@ =~= seq@);
+            }
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             while i > 0
@@ -299,6 +371,8 @@ pub mod BinaryHeapPQ {
                     result@.len() <= usize::MAX as int,
                     (i as int) < seq.view().len(),
                     BinaryHeapPQ::<T>::parent_spec(i as int) < seq.view().len(),
+                    result@.to_multiset() =~= seq@.to_multiset(),
+                    obeys_feq_clone::<T>(),
                 decreases i,
             {
                 let parent_idx = parent(i);
@@ -329,11 +403,20 @@ pub mod BinaryHeapPQ {
                 (i as int) < heap.view().len(),
                 heap@.len() <= usize::MAX as int,
                 heap@.len() * 2 <= usize::MAX as int,
-            ensures heaped@.len() == heap@.len()
+            ensures
+                heaped@.len() == heap@.len(),
+                heaped@.to_multiset() =~= heap@.to_multiset(),
         {
             let mut result = heap.clone();
             let n = result.length();
             let mut idx = i;
+
+            proof {
+                assert(result@.len() == heap@.len());
+                assert forall|k: int| 0 <= k < heap@.len()
+                    implies #[trigger] result@[k] == heap@[k] by {}
+                assert(result@ =~= heap@);
+            }
 
             let mut done = false;
             let ghost mut old_idx: int = idx as int;
@@ -347,6 +430,7 @@ pub mod BinaryHeapPQ {
                     n * 2 <= usize::MAX as int,
                     obeys_feq_clone::<T>(),
                     !done ==> old_idx == idx as int,
+                    result@.to_multiset() =~= heap@.to_multiset(),
                 decreases (if !done { 1int } else { 0int }), n - idx,
             {
                 let left = left_child(idx);
@@ -379,13 +463,30 @@ pub mod BinaryHeapPQ {
                 obeys_feq_clone::<T>(),
                 seq@.len() <= usize::MAX as int,
                 seq@.len() * 2 <= usize::MAX as int,
-            ensures heap@.len() == seq@.len()
+            ensures
+                heap@.len() == seq@.len(),
+                heap@.to_multiset() =~= seq@.to_multiset(),
         {
             if seq.length() <= 1 {
-                return seq.clone();
+                let r = seq.clone();
+                proof {
+                    assert(r@.len() == seq@.len());
+                    assert forall|k: int| 0 <= k < seq@.len()
+                        implies #[trigger] r@[k] == seq@[k] by {}
+                    assert(r@ =~= seq@);
+                }
+                return r;
             }
 
             let mut result = seq.clone();
+
+            proof {
+                assert(result@.len() == seq@.len());
+                assert forall|k: int| 0 <= k < seq@.len()
+                    implies #[trigger] result@[k] == seq@[k] by {}
+                assert(result@ =~= seq@);
+            }
+
             let last_non_leaf = if seq.length() >= 2 { (seq.length() - 2) / 2 } else { 0 };
 
             let mut idx = last_non_leaf + 1;
@@ -396,6 +497,8 @@ pub mod BinaryHeapPQ {
                     (idx as int) <= seq@.len(),
                     result@.len() <= usize::MAX as int,
                     result@.len() * 2 <= usize::MAX as int,
+                    obeys_feq_clone::<T>(),
+                    result@.to_multiset() =~= seq@.to_multiset(),
                 decreases idx,
             {
                 idx = idx - 1;
@@ -528,8 +631,9 @@ pub mod BinaryHeapPQ {
                 let pq = BinaryHeapPQ {
                     elements: ArraySeqStPerS::empty(),
                 };
-                // accept hole: Empty seq@ maps to empty multiset.
-                proof { assume(pq@.to_multiset() =~= Multiset::empty()); }
+                proof {
+                    assert(pq@.len() == 0);
+                }
                 pq
             }
 
@@ -537,8 +641,11 @@ pub mod BinaryHeapPQ {
                 let pq = BinaryHeapPQ {
                     elements: ArraySeqStPerS::singleton(element),
                 };
-                // accept hole: Single-element seq@ maps to singleton multiset.
-                proof { assume(pq@.to_multiset() =~= Multiset::empty().insert(element@)); }
+                proof {
+                    assert(pq@.len() == 1);
+                    assert(pq@[0] == element@);
+                    assert(pq@ =~= Seq::<T::V>::empty().push(element@));
+                }
                 pq
             }
 
@@ -558,8 +665,27 @@ pub mod BinaryHeapPQ {
                 let heapified = bubble_up(&new_elements, last_index);
 
                 let pq = BinaryHeapPQ { elements: heapified };
-                // accept hole: bubble_up is a permutation; multiset preserved.
-                proof { assume(pq@.to_multiset() =~= self@.to_multiset().insert(element@)); }
+                proof {
+                    // Bridge: append ensures at T-level → view-level sequence equality.
+                    let n = self.elements.spec_len() as int;
+                    assert(new_elements@.len() == n + 1);
+                    assert forall|i: int| 0 <= i < n
+                        implies #[trigger] new_elements@[i] == self@[i] by {
+                        // T-level: append ensures spec_index correspondence.
+                        assert(new_elements.spec_index(i) == self.elements.seq@[i]);
+                        // View bridge: spec_index(i)@ == @[i] by map definition.
+                        assert(new_elements.spec_index(i)@ == new_elements@[i]);
+                        assert(self.elements.seq@[i]@ == self@[i]);
+                    }
+                    assert(new_elements@[n] == element@) by {
+                        assert(new_elements.spec_index(n) == single_seq.seq@[0]);
+                        assert(single_seq.spec_index(0) == element);
+                        assert(new_elements.spec_index(n)@ == new_elements@[n]);
+                    }
+                    assert(new_elements@ =~= self@.push(element@));
+                    // to_multiset_build broadcast: push(a).to_multiset() =~= to_multiset().insert(a)
+                    // heapified@.to_multiset() =~= new_elements@.to_multiset() from bubble_up
+                }
                 pq
             }
 
@@ -571,10 +697,10 @@ pub mod BinaryHeapPQ {
                 if self.elements.length() == 1 {
                     let min_element = self.elements.nth(0).clone();
                     let empty_pq = Self::empty();
-                    // accept hole: Single-element removal yields empty multiset + element.
                     proof {
-                        assume(self@.to_multiset() =~=
-                            empty_pq@.to_multiset().insert(min_element@));
+                        axiom_cloned_implies_eq_owned(self.elements.spec_index(0), min_element);
+                        assert(self@.len() == 1);
+                        assert(self@ =~= Seq::<T::V>::empty().push(self@[0]));
                     }
                     return (empty_pq, Some(min_element));
                 }
@@ -585,26 +711,162 @@ pub mod BinaryHeapPQ {
                 let mut new_elements = ArraySeqStPerS::singleton(last_element);
                 let n = self.elements.length();
                 let end = n - 1;
+
+                proof {
+                    axiom_cloned_implies_eq_owned(self.elements.spec_index(0), min_element);
+                    assert(min_element@ == self@[0]) by {
+                        assert(self.elements.spec_index(0)@ == self@[0]);
+                    }
+                    axiom_cloned_implies_eq_owned(self.elements.spec_index(n as int - 1), last_element);
+                    assert(last_element@ == self@[n as int - 1]) by {
+                        assert(self.elements.spec_index(n as int - 1)@ == self@[n as int - 1]);
+                    }
+                    // Establish initial element: new_elements@[0] == self@[n-1].
+                    assert(new_elements@[0] == self@[n as int - 1]) by {
+                        assert(new_elements.spec_index(0) == last_element);
+                        assert(new_elements.spec_index(0)@ == new_elements@[0]);
+                    }
+                }
+
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 1..end
                     invariant
                         n == self.elements@.len(),
+                        n >= 2,
                         end == n - 1,
                         new_elements@.len() == (i - 1) as int + 1,
+                        new_elements@.len() == i as int,
                         (i as int) < n,
+                        obeys_feq_clone::<T>(),
+                        new_elements@[0] == self@[n as int - 1],
+                        forall|m: int| 1 <= m < i as int ==>
+                            #[trigger] new_elements@[m] == self@[m],
                 {
                     let elem = self.elements.nth(i);
                     let single_seq = ArraySeqStPerS::singleton(elem.clone());
+                    let ghost pre_seq = new_elements.seq@;
+                    let ghost pre_view = new_elements@;
                     new_elements = ArraySeqStPerS::append(&new_elements, &single_seq);
+
+                    proof {
+                        // single_seq.spec_index(0) is the cloned element.
+                        axiom_cloned_implies_eq_owned(self.elements.spec_index(i as int), single_seq.spec_index(0));
+                        assert(single_seq.spec_index(0)@ == self@[i as int]) by {
+                            assert(self.elements.spec_index(i as int)@ == self@[i as int]);
+                        }
+                        // New element at position i.
+                        assert(new_elements@[i as int] == self@[i as int]) by {
+                            assert(new_elements.spec_index(i as int) == single_seq.seq@[0]);
+                            assert(new_elements.spec_index(i as int)@ == new_elements@[i as int]);
+                        }
+                        // Element at position 0 preserved.
+                        assert(new_elements@[0] == self@[n as int - 1]) by {
+                            assert(new_elements.spec_index(0) == pre_seq[0]);
+                            assert(new_elements.spec_index(0)@ == new_elements@[0]);
+                            assert(pre_seq[0]@ == pre_view[0]);
+                        }
+                        // Previous elements preserved.
+                        assert forall|m: int| 1 <= m < i as int
+                            implies #[trigger] new_elements@[m] == self@[m] by {
+                            assert(new_elements.spec_index(m) == pre_seq[m]);
+                            assert(new_elements.spec_index(m)@ == new_elements@[m]);
+                            assert(pre_seq[m]@ == pre_view[m]);
+                        }
+                    }
                 }
 
                 let heapified = bubble_down(&new_elements, 0);
 
                 let new_pq = BinaryHeapPQ { elements: heapified };
-                // accept hole: Rebuild removes min and bubble_down is a permutation.
                 proof {
-                    assume(self@.to_multiset() =~=
-                        new_pq@.to_multiset().insert(min_element@));
+                    // new_elements has elements: [self@[n-1], self@[1], ..., self@[n-2]]
+                    // These are exactly self@.subrange(1, n) rearranged.
+                    let sr = self@.subrange(1, n as int);
+                    // Show multisets are equal by relating to subrange.
+                    // sr = [self@[1], ..., self@[n-1]], sr.last() = self@[n-1]
+                    // new_elements@ = [sr.last()] + sr.subrange(0, sr.len()-1)
+                    assert(sr.len() == n as int - 1);
+                    assert(sr.last() == self@[n as int - 1]) by {
+                        assert(sr[sr.len() - 1] == self@[sr.len() - 1 + 1]);
+                    }
+
+                    // Build the rearranged sequence: last element first, then rest.
+                    let first = Seq::<T::V>::empty().push(sr.last());
+                    let rest = sr.subrange(0, sr.len() - 1);
+                    let rearranged = first + rest;
+
+                    // Show new_elements@ =~= rearranged.
+                    assert(rearranged.len() == sr.len());
+                    assert(new_elements@.len() == sr.len());
+                    assert(new_elements@ =~= rearranged) by {
+                        assert(new_elements@[0] == rearranged[0]);
+                        assert forall|m: int| 1 <= m < new_elements@.len()
+                            implies #[trigger] new_elements@[m] == rearranged[m] by {
+                            assert(new_elements@[m] == self@[m]);
+                            assert(0 <= m - 1 < rest.len());
+                            assert(rearranged[m] == rest[m - 1]);
+                            assert(0 <= m - 1 < sr.len());
+                            assert(rest[m - 1] == sr[m - 1]);
+                            assert(sr[m - 1] == self@[m - 1 + 1]);
+                        }
+                    }
+
+                    // rearranged.to_multiset() == sr.to_multiset()
+                    // Because: sr = rest.push(sr.last()), so sr.to_multiset() = rest.to_multiset().insert(sr.last())
+                    // And: rearranged = first + rest, rearranged.to_multiset() = first.to_multiset().add(rest.to_multiset())
+                    //     = singleton(sr.last()).add(rest.to_multiset())
+                    assert(sr =~= rest.push(sr.last())) by {
+                        assert(sr.len() == rest.push(sr.last()).len());
+                        assert forall|m: int| 0 <= m < sr.len()
+                            implies #[trigger] sr[m] == rest.push(sr.last())[m] by {
+                            if m < sr.len() - 1 {
+                                assert(0 <= m < rest.len());
+                                assert(rest.push(sr.last())[m] == rest[m]);
+                                assert(rest[m] == sr[m]);
+                            }
+                        }
+                    }
+                    // sr.to_multiset() = rest.push(sr.last()).to_multiset() = rest.to_multiset().insert(sr.last())
+                    // rearranged.to_multiset() = first.to_multiset().add(rest.to_multiset())
+                    vstd::seq_lib::lemma_multiset_commutative(first, rest);
+                    // (first + rest).to_multiset() = first.to_multiset().add(rest.to_multiset())
+                    // first = Seq::empty().push(sr.last())
+                    // first.to_multiset() = singleton(sr.last())
+                    // So rearranged.to_multiset() = Multiset::singleton(sr.last()).add(rest.to_multiset())
+                    //                             = rest.to_multiset().add(Multiset::singleton(sr.last()))
+                    //                             = rest.to_multiset().insert(sr.last())
+                    //                             = sr.to_multiset()
+
+                    // Use to_multiset_remove to connect to self@.to_multiset()
+                    vstd::seq_lib::to_multiset_remove(self@, 0int);
+                    // self@.remove(0).to_multiset() == self@.to_multiset().remove(self@[0])
+                    assert(self@.remove(0) =~= sr);
+                    // So sr.to_multiset() == self@.to_multiset().remove(self@[0])
+                    // And new_elements@.to_multiset() == sr.to_multiset()
+                    // And heapified@.to_multiset() == new_elements@.to_multiset() (from bubble_down)
+                    // And min_element@ == self@[0]
+                    // So: new_pq@.to_multiset().insert(min_element@)
+                    //   = heapified@.to_multiset().insert(self@[0])
+                    //   = new_elements@.to_multiset().insert(self@[0])
+                    //   = self@.to_multiset().remove(self@[0]).insert(self@[0])
+                    //   = self@.to_multiset()
+                    assert(self@.contains(self@[0]));
+                    vstd::seq_lib::to_multiset_contains(self@, self@[0]);
+                    assert_multisets_equal!(
+                        self@.to_multiset().remove(self@[0]).insert(self@[0]),
+                        self@.to_multiset(),
+                        key => {
+                            vstd::multiset::lemma_insert_increases_count_by_1(
+                                self@.to_multiset().remove(self@[0]),
+                                self@[0],
+                            );
+                            vstd::multiset::lemma_insert_other_elements_unchanged(
+                                self@.to_multiset().remove(self@[0]),
+                                self@[0],
+                                key,
+                            );
+                        }
+                    );
                 }
                 (new_pq, Some(min_element))
             }
@@ -614,8 +876,27 @@ pub mod BinaryHeapPQ {
                 let heapified = heapify(&merged);
 
                 let pq = BinaryHeapPQ { elements: heapified };
-                // accept hole: heapify is a permutation of the concatenation.
-                proof { assume(pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset())); }
+                proof {
+                    // Bridge: append ensures at T-level → view-level sequence equality.
+                    let a_len = self.elements.spec_len() as int;
+                    let b_len = other.elements.spec_len() as int;
+                    assert(merged@.len() == a_len + b_len);
+                    assert forall|i: int| 0 <= i < a_len
+                        implies #[trigger] merged@[i] == self@[i] by {
+                        assert(merged.spec_index(i) == self.elements.seq@[i]);
+                        assert(merged.spec_index(i)@ == merged@[i]);
+                        assert(self.elements.seq@[i]@ == self@[i]);
+                    }
+                    assert forall|i: int| 0 <= i < b_len
+                        implies #[trigger] merged@[a_len + i] == other@[i] by {
+                        assert(merged.spec_index(a_len + i) == other.elements.seq@[i]);
+                        assert(merged.spec_index(a_len + i)@ == merged@[a_len + i]);
+                        assert(other.elements.seq@[i]@ == other@[i]);
+                    }
+                    assert(merged@ =~= self@ + other@);
+                    vstd::seq_lib::lemma_multiset_commutative(self@, other@);
+                    // heapify preserves multiset: heapified@.to_multiset() =~= merged@.to_multiset()
+                }
                 pq
             }
 
@@ -756,15 +1037,23 @@ pub mod BinaryHeapPQ {
                 for i in 0..n
                     invariant
                         n == sorted_seq@.len(),
+                        n == sorted_seq.seq@.len(),
                         result@.len() == i as int,
                         forall|j: int| 0 <= j < i ==> (result@[j])@ == #[trigger] sorted_seq@[j],
+                        forall|j: int| 0 <= j < i ==> result@[j] == #[trigger] sorted_seq.seq@[j],
+                        Self::spec_sorted(sorted_seq.seq@),
                 {
                     let elem = sorted_seq.nth(i).clone();
                     proof { axiom_cloned_implies_eq_owned(sorted_seq.spec_index(i as int), elem); }
                     result.push(elem);
                 }
-                // accept hole: Vec elements are clones of sorted ArraySeqStPerS elements.
-                proof { assume(Self::spec_sorted(result@)); }
+                proof {
+                    assert forall|a: int, b: int| 0 <= a < b < result@.len()
+                        implies #[trigger] TotalOrder::le(result@[a], result@[b]) by {
+                        assert(result@[a] == sorted_seq.seq@[a]);
+                        assert(result@[b] == sorted_seq.seq@[b]);
+                    }
+                }
                 result
             }
         }

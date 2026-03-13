@@ -61,10 +61,12 @@ broadcast use {
         }
     }
 
-    pub struct MatrixChainMtEphDimInv;
+    pub struct MatrixChainMtEphDimInv {
+        pub ghost expected_len: nat,
+    }
     impl RwLockPredicate<Vec<MatrixDim>> for MatrixChainMtEphDimInv {
         open spec fn inv(self, v: Vec<MatrixDim>) -> bool {
-            v@.len() <= usize::MAX as nat
+            v@.len() == self.expected_len
         }
     }
 
@@ -146,34 +148,45 @@ broadcast use {
 
     // 8. traits
     pub trait MatrixChainMtEphTrait: Sized + View<V = MatrixChainMtEphV> {
+        spec fn spec_matrixchainmteph_wf(&self) -> bool;
+
         fn new() -> (mc: Self)
-            ensures mc@.dimensions.len() == 0;
+            ensures mc@.dimensions.len() == 0, mc.spec_matrixchainmteph_wf();
 
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)
-            ensures mc@.dimensions.len() == dimensions@.len();
+            ensures mc@.dimensions.len() == dimensions@.len(), mc.spec_matrixchainmteph_wf();
 
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
-            ensures mc@.dimensions.len() == dim_pairs@.len();
+            ensures mc@.dimensions.len() == dim_pairs@.len(), mc.spec_matrixchainmteph_wf();
 
         fn optimal_cost(&mut self) -> (cost: usize);
 
         fn dimensions(&self) -> (dims: Vec<MatrixDim>);
 
         fn set_dimension(&mut self, index: usize, dim: MatrixDim)
-            requires index < old(self)@.dimensions.len();
+            requires index < old(self)@.dimensions.len(), old(self).spec_matrixchainmteph_wf(),
+            ensures self.spec_matrixchainmteph_wf();
 
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize)
-            requires index < old(self)@.dimensions.len();
+            requires index < old(self)@.dimensions.len(), old(self).spec_matrixchainmteph_wf(),
+            ensures self.spec_matrixchainmteph_wf();
 
         fn num_matrices(&self) -> (n: usize)
+            requires self.spec_matrixchainmteph_wf(),
             ensures n == self@.dimensions.len();
 
         fn clear_memo(&mut self)
-            ensures self@.dimensions =~= old(self)@.dimensions;
+            requires old(self).spec_matrixchainmteph_wf(),
+            ensures self@.dimensions =~= old(self)@.dimensions, self.spec_matrixchainmteph_wf();
 
         fn memo_size(&self) -> (n: usize);
 
-        fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize);
+        fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize)
+            requires
+                self.spec_matrixchainmteph_wf(),
+                i < self@.dimensions.len(),
+                k < self@.dimensions.len(),
+                j < self@.dimensions.len();
 
         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize);
 
@@ -187,10 +200,14 @@ broadcast use {
     // 9. impls
 
     impl MatrixChainMtEphTrait for MatrixChainMtEphS {
+        open spec fn spec_matrixchainmteph_wf(&self) -> bool {
+            self.dimensions.pred().expected_len == self.ghost_dimensions@.len()
+        }
+
         fn new() -> (mc: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                dimensions: new_arc_rwlock(Vec::new(), Ghost(MatrixChainMtEphDimInv)),
+                dimensions: new_arc_rwlock(Vec::new(), Ghost(MatrixChainMtEphDimInv { expected_len: 0 })),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: Seq::empty() })),
                 ghost_dimensions: Ghost(Seq::empty()),
             }
@@ -201,7 +218,7 @@ broadcast use {
             let _len = dimensions.len();
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv)),
+                dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv { expected_len: gd.len() })),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: Seq::empty() })),
                 ghost_dimensions: Ghost(gd),
             }
@@ -225,7 +242,7 @@ broadcast use {
             let ghost gd = dimensions@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv)),
+                dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv { expected_len: gd.len() })),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: Seq::empty() })),
                 ghost_dimensions: Ghost(gd),
             }
@@ -235,7 +252,7 @@ broadcast use {
             let rwlock = arc_deref(&self.dimensions);
             let handle = rwlock.acquire_read();
             let dims = handle.borrow();
-            proof { assume(i < dims@.len() && k < dims@.len() && j < dims@.len()); }
+            assert(dims@.len() == rwlock.pred().expected_len);
             let left_rows = dims[i].rows;
             let split_cols = dims[k].cols;
             let right_cols = dims[j].cols;
@@ -337,7 +354,7 @@ broadcast use {
                 let dims_arc = self.dimensions.clone();
                 let rwlock = arc_deref(&dims_arc);
                 let (mut dims, write_handle) = rwlock.acquire_write();
-                proof { assume(index < dims@.len()); }
+                assert(dims@.len() == rwlock.pred().expected_len);
                 dims.set(index, dim);
                 write_handle.release_write(dims);
             }
@@ -354,7 +371,7 @@ broadcast use {
                 let dims_arc = self.dimensions.clone();
                 let rwlock = arc_deref(&dims_arc);
                 let (mut dims, write_handle) = rwlock.acquire_write();
-                proof { assume(index < dims@.len()); }
+                assert(dims@.len() == rwlock.pred().expected_len);
                 dims.set(index, dim);
                 write_handle.release_write(dims);
             }
@@ -369,8 +386,8 @@ broadcast use {
             let rwlock = arc_deref(&self.dimensions);
             let handle = rwlock.acquire_read();
             let n = handle.borrow().len();
+            assert(n == rwlock.pred().expected_len);
             handle.release_read();
-            proof { assume(n == self@.dimensions.len()); }
             n
         }
 

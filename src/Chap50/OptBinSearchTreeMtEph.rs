@@ -61,10 +61,12 @@ broadcast use {
         }
     }
 
-        pub struct OptBSTMtEphKeysInv;
+        pub struct OptBSTMtEphKeysInv {
+            pub ghost expected_len: nat,
+        }
         impl<T: MtVal> RwLockPredicate<Vec<KeyProb<T>>> for OptBSTMtEphKeysInv {
             open spec fn inv(self, v: Vec<KeyProb<T>>) -> bool {
-                v@.len() <= usize::MAX as nat
+                v@.len() == self.expected_len
             }
         }
 
@@ -98,31 +100,37 @@ broadcast use {
 
     // 8. traits
     pub trait OBSTMtEphTrait<T: MtVal>: Sized + View<V = OBSTMtEphV<T>> {
+        spec fn spec_obstmteph_wf(&self) -> bool;
+
         fn new() -> (empty: Self)
-            ensures empty@.keys.len() == 0;
+            ensures empty@.keys.len() == 0, empty.spec_obstmteph_wf();
 
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)
             requires keys@.len() == probs@.len(),
-            ensures constructed@.keys.len() == keys@.len();
+            ensures constructed@.keys.len() == keys@.len(), constructed.spec_obstmteph_wf();
 
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)
-            ensures constructed@.keys =~= key_probs@;
+            ensures constructed@.keys =~= key_probs@, constructed.spec_obstmteph_wf();
 
         fn optimal_cost(&mut self) -> (cost: Probability) where T: Send + Sync + 'static;
 
         fn keys(&self) -> (keys: Vec<KeyProb<T>>);
 
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>)
-            requires index < old(self)@.keys.len();
+            requires index < old(self)@.keys.len(), old(self).spec_obstmteph_wf(),
+            ensures self.spec_obstmteph_wf();
 
         fn update_prob(&mut self, index: usize, prob: Probability)
-            requires index < old(self)@.keys.len();
+            requires index < old(self)@.keys.len(), old(self).spec_obstmteph_wf(),
+            ensures self.spec_obstmteph_wf();
 
         fn num_keys(&self) -> (count: usize)
+            requires self.spec_obstmteph_wf(),
             ensures count == self@.keys.len();
 
         fn clear_memo(&mut self)
-            ensures self@.keys =~= old(self)@.keys;
+            requires old(self).spec_obstmteph_wf(),
+            ensures self@.keys =~= old(self)@.keys, self.spec_obstmteph_wf();
 
         fn memo_size(&self) -> (count: usize);
     }
@@ -198,10 +206,14 @@ broadcast use {
     }
 
     impl<T: MtVal> OBSTMtEphTrait<T> for OBSTMtEphS<T> {
+        open spec fn spec_obstmteph_wf(&self) -> bool {
+            self.keys.pred().expected_len == self.ghost_keys@.len()
+        }
+
         fn new() -> (empty: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                keys: new_arc_rwlock(Vec::new(), Ghost(OptBSTMtEphKeysInv)),
+                keys: new_arc_rwlock(Vec::new(), Ghost(OptBSTMtEphKeysInv { expected_len: 0 })),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
                 ghost_keys: Ghost(Seq::empty()),
             }
@@ -223,7 +235,7 @@ broadcast use {
             let ghost gk = key_probs@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv)),
+                keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv { expected_len: gk.len() })),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
                 ghost_keys: Ghost(gk),
             }
@@ -234,7 +246,7 @@ broadcast use {
             let _len = key_probs.len();
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv)),
+                keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv { expected_len: gk.len() })),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
                 ghost_keys: Ghost(gk),
             }
@@ -269,7 +281,7 @@ broadcast use {
                 let keys_arc = self.keys.clone();
                 let rwlock = arc_deref(&keys_arc);
                 let (mut keys, write_handle) = rwlock.acquire_write();
-                proof { assume(index < keys@.len()); }
+                assert(keys@.len() == rwlock.pred().expected_len);
                 keys.set(index, key_prob);
                 write_handle.release_write(keys);
             }
@@ -285,7 +297,7 @@ broadcast use {
                 let keys_arc = self.keys.clone();
                 let rwlock = arc_deref(&keys_arc);
                 let (mut keys, write_handle) = rwlock.acquire_write();
-                proof { assume(index < keys@.len()); }
+                assert(keys@.len() == rwlock.pred().expected_len);
                 let new_kp = KeyProb { key: keys[index].key.clone(), prob };
                 keys.set(index, new_kp);
                 write_handle.release_write(keys);
@@ -301,8 +313,8 @@ broadcast use {
             let rwlock = arc_deref(&self.keys);
             let handle = rwlock.acquire_read();
             let count = handle.borrow().len();
+            assert(count == rwlock.pred().expected_len);
             handle.release_read();
-            proof { accept(count == self@.keys.len()); }
             count
         }
 
