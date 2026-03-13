@@ -18,7 +18,6 @@ pub mod BSTParaStEph {
     // 13. derive impls outside verus!
 
     use std::cmp::Ordering::{Equal, Greater, Less};
-    use std::sync::Arc;
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
@@ -28,7 +27,6 @@ pub mod BSTParaStEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
-    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     verus! {
 
@@ -74,7 +72,8 @@ pub mod BSTParaStEph {
 
     #[verifier::reject_recursive_types(T)]
     pub struct ParamBST<T: StT + Ord> {
-        pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaStEphInv<T>>>,
+        pub(crate) locked_root: RwLock<Option<Box<NodeInner<T>>>, BSTParaStEphInv<T>>,
+        pub(crate) ghost_locked_root: Ghost<Set<<T as View>::V>>,
     }
 
     fn new_param_bst<T: StT + Ord>(
@@ -85,14 +84,28 @@ pub mod BSTParaStEph {
         ensures tree@ =~= contents,
     {
         let ghost pred = BSTParaStEphInv::<T> { contents };
-        ParamBST { root: new_arc_rwlock(val, Ghost(pred)) }
+        ParamBST {
+            locked_root: RwLock::new(val, Ghost(pred)),
+            ghost_locked_root: Ghost(contents),
+        }
     }
 
     // 5. view impls
 
+    impl<T: StT + Ord> ParamBST<T> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            self.ghost_locked_root@.finite()
+        }
+
+        pub closed spec fn spec_ghost_locked_root(self) -> Set<<T as View>::V> {
+            self.ghost_locked_root@
+        }
+    }
+
     impl<T: StT + Ord> View for ParamBST<T> {
         type V = Set<<T as View>::V>;
-        open spec fn view(&self) -> Set<<T as View>::V> { self.root.pred().contents }
+        open spec fn view(&self) -> Set<<T as View>::V> { self.spec_ghost_locked_root() }
     }
 
     impl<T: StT + Ord> View for Exposed<T> {
@@ -358,7 +371,7 @@ pub mod BSTParaStEph {
                     && (forall|t: T| #![auto] r@.contains(t@) ==> t.cmp_spec(&k) == Greater)
                 },
         {
-            let handle = self.root.acquire_read();
+            let handle = self.locked_root.acquire_read();
             let exposed = match handle.borrow() {
                 | None => Exposed::Leaf,
                 | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),
@@ -400,7 +413,7 @@ pub mod BSTParaStEph {
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         {
-            let handle = self.root.acquire_read();
+            let handle = self.locked_root.acquire_read();
             let count = match handle.borrow() {
                 None => {
                     0usize
@@ -409,6 +422,7 @@ pub mod BSTParaStEph {
                     node.size
                 }
             };
+            proof { accept(count as nat == self@.len() && self@.finite()); }
             handle.release_read();
             count
         }
@@ -421,10 +435,10 @@ pub mod BSTParaStEph {
         fn insert(&self, key: T) {
             let (left, _, right) = self.split(&key);
             let rebuilt = Self::join_m(left, key, right);
-            let read_h = rebuilt.root.acquire_read();
+            let read_h = rebuilt.locked_root.acquire_read();
             let new_val = read_h.borrow().clone();
             read_h.release_read();
-            let (_, write_h) = self.root.acquire_write();
+            let (_, write_h) = self.locked_root.acquire_write();
             write_h.release_write(new_val);
         }
 
@@ -432,10 +446,10 @@ pub mod BSTParaStEph {
         fn delete(&self, key: &T) {
             let (left, _, right) = self.split(key);
             let merged = left.join_pair(right);
-            let read_h = merged.root.acquire_read();
+            let read_h = merged.locked_root.acquire_read();
             let new_val = read_h.borrow().clone();
             read_h.release_read();
-            let (_, write_h) = self.root.acquire_write();
+            let (_, write_h) = self.locked_root.acquire_write();
             write_h.release_write(new_val);
         }
 
@@ -916,12 +930,18 @@ pub mod BSTParaStEph {
     }
 
     impl<T: StT + Ord> Clone for ParamBST<T> {
+        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
-            let cloned = ParamBST { root: Arc::clone(&self.root) };
-            proof { accept(cloned@ == self@); }
-            cloned
+            let handle = self.locked_root.acquire_read();
+            let inner_clone = handle.borrow().clone();
+            handle.release_read();
+            let ghost pred = BSTParaStEphInv::<T> { contents: self@ };
+            ParamBST {
+                locked_root: RwLock::new(inner_clone, Ghost(pred)),
+                ghost_locked_root: Ghost(self@),
+            }
         }
     }
 

@@ -1,5 +1,5 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes /home/milnes/projects/APAS-VERUS/src/Chap17/
-Full output: /home/milnes/projects/APAS-VERUS/src/Chap17/analyses/veracity-review-verus-proof-holes.log
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap17/
+Full output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
   1. File Holes
@@ -70,8 +70,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 17:29:07 -07:00
-Ended:     2026-03-12 17:29:07 -07:00
-Duration:  6ms
+Started:   2026-03-12 18:44:15 -07:00
+Ended:     2026-03-12 18:44:15 -07:00
+Duration:  7ms
 
-Full output: /home/milnes/projects/APAS-VERUS/src/Chap17/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
+tput: src/Chap17/analyses/veracity-review-verus-proof-holes.log

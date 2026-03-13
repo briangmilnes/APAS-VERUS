@@ -245,14 +245,16 @@ fn test_empty_operations() {
 }
 
 #[test]
-fn test_clone_shares_state() {
+fn test_clone_independent_copy() {
     let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(5, rand_priority());
     let cloned = tree.clone();
 
-    // Clone shares the Arc, so inserts on one are visible on the other.
+    // Clone produces an independent copy — inserts on one are not visible on the other.
     tree.insert(10, rand_priority());
-    assert!(cloned.contains(&10));
+    assert!(tree.contains(&10));
+    assert!(!cloned.contains(&10));
+    assert!(cloned.contains(&5));
 }
 
 #[test]

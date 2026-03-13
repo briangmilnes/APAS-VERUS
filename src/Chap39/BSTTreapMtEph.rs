@@ -20,8 +20,6 @@
 
 pub mod BSTTreapMtEph {
 
-    use std::sync::Arc;
-
     use vstd::prelude::*;
     use vstd::rwlock::*;
     #[cfg(verus_keep_ghost)]
@@ -31,7 +29,6 @@ pub mod BSTTreapMtEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::vstdplus::accept::accept;
-    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::total_order::total_order::IsLtTransitive;
     use crate::Types::Types::*;
 
@@ -58,7 +55,8 @@ pub mod BSTTreapMtEph {
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTTreapMtEph<T: StTInMtT + Ord + IsLtTransitive> {
-        root: Arc<RwLock<Link<T>, BSTTreapMtEphInv>>,
+        pub(crate) locked_root: RwLock<Link<T>, BSTTreapMtEphInv>,
+        pub(crate) ghost_locked_root: Ghost<Set<<T as View>::V>>,
     }
 
     pub type BSTreeTreap<T> = BSTTreapMtEph<T>;
@@ -68,15 +66,19 @@ pub mod BSTTreapMtEph {
     //		5. view impls
 
     impl<T: StTInMtT + Ord + IsLtTransitive> BSTTreapMtEph<T> {
-        #[verifier::external_body]
-        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-            Set::empty()
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            self.ghost_locked_root@.finite()
+        }
+
+        pub closed spec fn spec_ghost_locked_root(self) -> Set<<T as View>::V> {
+            self.ghost_locked_root@
         }
     }
 
     impl<T: StTInMtT + Ord + IsLtTransitive> View for BSTTreapMtEph<T> {
         type V = Set<<T as View>::V>;
-        open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
+        open spec fn view(&self) -> Set<<T as View>::V> { self.spec_ghost_locked_root() }
     }
 
     //		6. spec fns
@@ -935,12 +937,12 @@ pub mod BSTTreapMtEph {
             self@.finite()
         }
 
-        #[verifier::external_body]
         fn new() -> (empty_tree: Self)
             ensures empty_tree@ == Set::<<T as View>::V>::empty(), empty_tree.spec_bsttreapmteph_wf()
         {
             BSTTreapMtEph {
-                root: new_arc_rwlock::<Link<T>, BSTTreapMtEphInv>(None, Ghost(BSTTreapMtEphInv)),
+                locked_root: RwLock::new(None, Ghost(BSTTreapMtEphInv)),
+                ghost_locked_root: Ghost(Set::<<T as View>::V>::empty()),
             }
         }
 
@@ -948,7 +950,7 @@ pub mod BSTTreapMtEph {
         fn insert(&self, value: T, priority: u64)
             ensures self@.contains(value@)
         {
-            let (mut current, write_handle) = self.root.acquire_write();
+            let (mut current, write_handle) = self.locked_root.acquire_write();
             let sz = size_link(&current);
             if sz + 1 < usize::MAX {
                 insert_link(&mut current, value, priority);
@@ -960,7 +962,7 @@ pub mod BSTTreapMtEph {
         fn delete(&self, target: &T)
             ensures !self@.contains(target@)
         {
-            let (mut current, write_handle) = self.root.acquire_write();
+            let (mut current, write_handle) = self.locked_root.acquire_write();
             delete_link(&mut current, target);
             write_handle.release_write(current);
         }
@@ -969,7 +971,7 @@ pub mod BSTTreapMtEph {
         fn find(&self, target: &T) -> (found: Option<T>)
             ensures found.is_some() <==> self@.contains(target@)
         {
-            let handle = self.root.acquire_read();
+            let handle = self.locked_root.acquire_read();
             let result = find_link(handle.borrow(), target).cloned();
             handle.release_read();
             result
@@ -985,7 +987,7 @@ pub mod BSTTreapMtEph {
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         {
-            let handle = self.root.acquire_read();
+            let handle = self.locked_root.acquire_read();
             let result = size_link(handle.borrow());
             handle.release_read();
             result
@@ -998,7 +1000,7 @@ pub mod BSTTreapMtEph {
         }
 
         fn height(&self) -> (h: usize) {
-            let handle = self.root.acquire_read();
+            let handle = self.locked_root.acquire_read();
             let link: &Link<T> = handle.borrow();
             let result = height_link(link);
             handle.release_read();
@@ -1009,7 +1011,7 @@ pub mod BSTTreapMtEph {
         fn minimum(&self) -> (min_val: Option<T>)
             ensures min_val.is_some() ==> self@.contains(min_val.unwrap()@)
         {
-            let handle = self.root.acquire_read();
+            let handle = self.locked_root.acquire_read();
             let result = min_link(handle.borrow()).cloned();
             handle.release_read();
             result
@@ -1019,7 +1021,7 @@ pub mod BSTTreapMtEph {
         fn maximum(&self) -> (max_val: Option<T>)
             ensures max_val.is_some() ==> self@.contains(max_val.unwrap()@)
         {
-            let handle = self.root.acquire_read();
+            let handle = self.locked_root.acquire_read();
             let result = max_link(handle.borrow()).cloned();
             handle.release_read();
             result
@@ -1029,7 +1031,7 @@ pub mod BSTTreapMtEph {
         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
             ensures ordered@.len() == self@.len()
         {
-            let handle = self.root.acquire_read();
+            let handle = self.locked_root.acquire_read();
             let mut out = Vec::with_capacity(size_link(handle.borrow()));
             in_order_collect(handle.borrow(), &mut out);
             handle.release_read();
@@ -1040,7 +1042,7 @@ pub mod BSTTreapMtEph {
         fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>)
             ensures preordered@.len() == self@.len()
         {
-            let handle = self.root.acquire_read();
+            let handle = self.locked_root.acquire_read();
             let mut out = Vec::with_capacity(size_link(handle.borrow()));
             pre_order_collect(handle.borrow(), &mut out);
             handle.release_read();
@@ -1072,8 +1074,15 @@ pub mod BSTTreapMtEph {
     }
 
     impl<T: StTInMtT + Ord + IsLtTransitive> Clone for BSTTreapMtEph<T> {
+        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self) {
-            BSTTreapMtEph { root: clone_arc_rwlock(&self.root) }
+            let handle = self.locked_root.acquire_read();
+            let inner_clone = clone_link(handle.borrow());
+            handle.release_read();
+            BSTTreapMtEph {
+                locked_root: RwLock::new(inner_clone, Ghost(BSTTreapMtEphInv)),
+                ghost_locked_root: Ghost(self@),
+            }
         }
     }
 
