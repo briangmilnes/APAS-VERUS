@@ -175,8 +175,8 @@ Checking 20 files...
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:643: warning: [18] impl LockedLabUnDirGraphMtEphTrait for LockedLabUnDirGraphMtEph < V , L > should come before top level coarse locking (expected impls before top level coarse locking)
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:633: warning: [19] add_vertex return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:639: warning: [19] add_labeled_edge return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:716: warning: [19] add_vertex return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:726: warning: [19] add_labeled_edge return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:700: warning: [19] add_vertex return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:710: warning: [19] add_labeled_edge return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:85: warning: [22] free spec fn valid_key_type_for_lab_graph should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:95: warning: [22] spec fn spec_vertices in trait LabUnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:96: warning: [22] spec fn spec_labeled_edges in trait LabUnDirGraphMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl

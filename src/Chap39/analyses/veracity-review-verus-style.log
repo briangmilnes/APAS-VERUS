@@ -55,7 +55,7 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [1] has mod declarations
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [2] vstd::prelude::* before verus!
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [4] no std imports (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [13] trait impls inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [14] Debug, Display outside verus!
@@ -67,41 +67,41 @@ Checking 4 files...
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: warning: [11] Set usage should have vstd::set::group_set_axioms in broadcast use
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:231: warning: [12] trait BSTTreapMtEphTrait fn height should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:77: warning: [18] impl View for BSTTreapMtEph < T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:84: warning: [18] spec fn spec_bsttreapmteph_link_wf should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:91: warning: [18] spec fn spec_contains_link should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:107: warning: [18] proof fn lemma_bst_decompose should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:121: warning: [18] proof fn lemma_contains_left should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:127: warning: [18] proof fn lemma_contains_right should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:133: warning: [18] proof fn lemma_contains_root should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:138: warning: [18] proof fn lemma_height_le_size should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:155: warning: [18] proof fn lemma_size_wf_child_bounded should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:179: warning: [18] proof fn lemma_wf_assemble_node should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:191: warning: [18] trait LinkTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:204: warning: [18] trait BSTTreapMtEphTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:335: warning: [18] fn size_link should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:344: warning: [18] fn update should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:359: warning: [18] fn rotate_left should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:433: warning: [18] fn rotate_right should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:509: warning: [18] fn insert_link should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:614: warning: [18] fn delete_link should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:798: warning: [18] fn find_link should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:827: warning: [18] fn min_link should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:851: warning: [18] fn max_link should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:873: warning: [18] fn height_link should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:902: warning: [18] fn in_order_collect should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:916: warning: [18] fn pre_order_collect should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:928: warning: [18] impl BSTTreapMtEphTrait for BSTTreapMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1046: warning: [18] impl Default for BSTTreapMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:84: warning: [22] free spec fn spec_bsttreapmteph_link_wf should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:91: warning: [22] free spec fn spec_contains_link should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:84: warning: [23] free fn spec_bsttreapmteph_link_wf param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:300: warning: [23] free fn clone_link param T has bounds `StTInMtT + Ord + Clone` but trait LinkTrait has `StTInMtT + Ord`
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:359: warning: [23] free fn rotate_left param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:433: warning: [23] free fn rotate_right param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:509: warning: [23] free fn insert_link param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:614: warning: [23] free fn delete_link param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:233: warning: [12] trait BSTTreapMtEphTrait fn height should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:79: warning: [18] impl View for BSTTreapMtEph < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:86: warning: [18] spec fn spec_bsttreapmteph_link_wf should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:93: warning: [18] spec fn spec_contains_link should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:109: warning: [18] proof fn lemma_bst_decompose should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:123: warning: [18] proof fn lemma_contains_left should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:129: warning: [18] proof fn lemma_contains_right should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:135: warning: [18] proof fn lemma_contains_root should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:140: warning: [18] proof fn lemma_height_le_size should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:157: warning: [18] proof fn lemma_size_wf_child_bounded should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:181: warning: [18] proof fn lemma_wf_assemble_node should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:193: warning: [18] trait LinkTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:206: warning: [18] trait BSTTreapMtEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:338: warning: [18] fn size_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:348: warning: [18] fn update should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:363: warning: [18] fn rotate_left should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:437: warning: [18] fn rotate_right should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:513: warning: [18] fn insert_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:618: warning: [18] fn delete_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:802: warning: [18] fn find_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:832: warning: [18] fn min_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:857: warning: [18] fn max_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:880: warning: [18] fn height_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:909: warning: [18] fn in_order_collect should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:923: warning: [18] fn pre_order_collect should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:935: warning: [18] impl BSTTreapMtEphTrait for BSTTreapMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1053: warning: [18] impl Default for BSTTreapMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:86: warning: [22] free spec fn spec_bsttreapmteph_link_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:93: warning: [22] free spec fn spec_contains_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:86: warning: [23] free fn spec_bsttreapmteph_link_wf param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:302: warning: [23] free fn clone_link param T has bounds `StTInMtT + Ord + Clone` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:363: warning: [23] free fn rotate_left param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:437: warning: [23] free fn rotate_right param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:513: warning: [23] free fn insert_link param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:618: warning: [23] free fn delete_link param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
 
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [1] has mod declarations

@@ -182,9 +182,9 @@ Checking 9 files...
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:1: info: [24] copyright line present
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:56: warning: [22] free spec fn spec_chain_to_map should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:103: warning: [23] free fn chain_insert param Key has bounds `PartialEq` but trait ChainListTrait has `(none)`
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:137: warning: [23] free fn chain_lookup param Key has bounds `PartialEq` but trait ChainListTrait has `(none)`
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:137: warning: [23] free fn chain_lookup param Value has bounds `Clone` but trait ChainListTrait has `(none)`
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:159: warning: [23] free fn chain_delete param Key has bounds `PartialEq` but trait ChainListTrait has `(none)`
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:136: warning: [23] free fn chain_lookup param Key has bounds `PartialEq` but trait ChainListTrait has `(none)`
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:136: warning: [23] free fn chain_lookup param Value has bounds `Clone` but trait ChainListTrait has `(none)`
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:157: warning: [23] free fn chain_delete param Key has bounds `PartialEq` but trait ChainListTrait has `(none)`
 
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [1] has mod declarations

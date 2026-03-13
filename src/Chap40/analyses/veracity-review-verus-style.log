@@ -28,7 +28,7 @@ Checking 3 files...
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:205: warning: [12] trait NodeTrait fn new should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:62: warning: [14] struct Lnk should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:62: warning: [14] struct Lnk should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:845: warning: [18] impl PartialEqSpecImpl for BSTKeyValueStEph < K , V > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:851: warning: [18] impl PartialEqSpecImpl for BSTKeyValueStEph < K , V > should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:76: warning: [22] free spec fn spec_content_link should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:88: warning: [22] free spec fn spec_node_count_link should be an abstract signature in a trait with body in the impl
 
@@ -53,7 +53,7 @@ Checking 3 files...
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:111: warning: [12] trait NodeTrait fn new should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:66: warning: [14] struct Lnk should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:66: warning: [14] struct Lnk should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:891: warning: [18] impl PartialEqSpecImpl for BSTReducedStEph < K , V , R , Op > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:897: warning: [18] impl PartialEqSpecImpl for BSTReducedStEph < K , V , R , Op > should come before derive impls in verus! (expected impls before derive impls in verus!)
 
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1: info: [1] has mod declarations
@@ -76,7 +76,7 @@ Checking 3 files...
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:140: warning: [12] trait NodeTrait fn new should have requires/ensures
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:54: warning: [14] struct Lnk should have impl Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:54: warning: [14] struct Lnk should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:864: warning: [18] impl PartialEqSpecImpl for BSTSizeStEph < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:870: warning: [18] impl PartialEqSpecImpl for BSTSizeStEph < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
 
 ════════════════════════════════════════════════════════════════
 Summary: 50 passed, 14 warnings in 3 files (checked 3 files)

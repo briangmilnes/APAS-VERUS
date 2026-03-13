@@ -62,34 +62,35 @@ Checking 2 files...
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [23] free fn type bounds match trait
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:248: warning: [12] trait ParamBSTTrait fn insert should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:251: warning: [12] trait ParamBSTTrait fn delete should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:41: warning: [14] struct BSTParaStEphInv should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:41: warning: [14] struct BSTParaStEphInv should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:60: warning: [14] struct Exposed should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:60: warning: [14] struct Exposed should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:68: warning: [14] struct NodeInner should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:68: warning: [14] struct NodeInner should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:76: warning: [14] struct ParamBST should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:60: warning: [18] enum Exposed should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:68: warning: [18] struct NodeInner should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:76: warning: [18] struct ParamBST should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:80: warning: [18] fn new_param_bst should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:93: warning: [18] impl View for ParamBST < T > should come before top level coarse locking (expected view impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:98: warning: [18] impl View for Exposed < T > should come before top level coarse locking (expected view impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:103: warning: [18] impl View for NodeInner < T > should come before top level coarse locking (expected view impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:111: warning: [18] spec fn view_ord_consistent should come before top level coarse locking (expected spec fns before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:118: warning: [18] proof fn lemma_cmp_antisymmetry should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:130: warning: [18] proof fn lemma_cmp_transitivity should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:145: warning: [18] proof fn lemma_cmp_eq_subst should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:162: warning: [18] proof fn lemma_cmp_equal_congruent should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:176: warning: [18] proof fn lemma_cmp_equal_congruent_right should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:190: warning: [18] trait ParamBSTTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:318: warning: [18] impl ParamBSTTrait for ParamBST < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:785: warning: [18] fn filter_inner should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:824: warning: [18] fn reduce_inner should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:111: warning: [22] free spec fn view_ord_consistent should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:267: warning: [12] trait ParamBSTTrait fn insert should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:270: warning: [12] trait ParamBSTTrait fn delete should have requires/ensures
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:39: warning: [14] struct BSTParaStEphInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:39: warning: [14] struct BSTParaStEphInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:58: warning: [14] struct Exposed should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:58: warning: [14] struct Exposed should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:66: warning: [14] struct NodeInner should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:66: warning: [14] struct NodeInner should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:74: warning: [14] struct ParamBST should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:58: warning: [18] enum Exposed should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:66: warning: [18] struct NodeInner should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:74: warning: [18] struct ParamBST should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:79: warning: [18] fn new_param_bst should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:95: warning: [18] impl ParamBST < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:106: warning: [18] impl View for ParamBST < T > should come before top level coarse locking (expected view impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:111: warning: [18] impl View for Exposed < T > should come before top level coarse locking (expected view impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:116: warning: [18] impl View for NodeInner < T > should come before top level coarse locking (expected view impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:124: warning: [18] spec fn view_ord_consistent should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:131: warning: [18] proof fn lemma_cmp_antisymmetry should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:143: warning: [18] proof fn lemma_cmp_transitivity should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:156: warning: [18] proof fn lemma_cmp_eq_subst should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:174: warning: [18] proof fn lemma_cmp_equal_congruent should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:194: warning: [18] proof fn lemma_cmp_equal_congruent_right should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:209: warning: [18] trait ParamBSTTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:337: warning: [18] impl ParamBSTTrait for ParamBST < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:837: warning: [18] fn filter_inner should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:876: warning: [18] fn reduce_inner should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:124: warning: [22] free spec fn view_ord_consistent should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 31 passed, 47 warnings in 2 files (checked 2 files)
+Summary: 31 passed, 48 warnings in 2 files (checked 2 files)
 ════════════════════════════════════════════════════════════════

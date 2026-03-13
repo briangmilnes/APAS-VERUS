@@ -136,7 +136,7 @@ Checking 5 files...
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1008: warning: [18] trait LockedSetMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1032: warning: [18] impl LockedSetMtEphTrait for LockedSetMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1021: warning: [19] insert return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1062: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1060: warning: [19] insert return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:99: warning: [22] free spec fn valid_key_type should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:106: warning: [22] free spec fn spec_setmteph_wf_generic should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:138: warning: [22] spec fn spec_finite in trait SetMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl

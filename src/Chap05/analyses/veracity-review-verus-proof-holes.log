@@ -22,85 +22,19 @@ Table of Contents:
 ✓ KleeneStPer.rs
    9 clean proof functions
 ℹ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:592: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:592: info: accept()
    Info: 1 total
 ✓ RelationStEph.rs
-❌ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:996: error: assume() - assume(self@.finite());
-       991 |         pub proof fn type_invariant(&self)
-            ...
-       994 |                 valid_key_type::<T>(),
-       995 |         {
-       997 |             assume(valid_key_type::<T>());
-       998 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:997: error: assume() - assume(valid_key_type::<T>());
-       991 |         pub proof fn type_invariant(&self)
-            ...
-       995 |         {
-       996 |             assume(self@.finite());
-       998 |         }
-       999 |     }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1045: error: assume() - proof { assume(inner@ == self@); }
-      1042 |         fn size(&self) -> (size: N) {
-            ...
-      1043 |             let read_handle = self.locked_set.acquire_read();
-      1044 |             let inner = read_handle.borrow();
-      1046 |             let size = inner.size();
-      1047 |             proof { assume(size == self@.len()); }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1047: error: assume() - proof { assume(size == self@.len()); }
-      1042 |         fn size(&self) -> (size: N) {
-            ...
-      1045 |             proof { assume(inner@ == self@); }
-      1046 |             let size = inner.size();
-      1048 |             read_handle.release_read();
-      1049 |             size
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1055: error: assume() - proof { assume(inner@ == self@); }
-      1052 |         fn mem(&self, x: T) -> (contains: B) {
-            ...
-      1053 |             let read_handle = self.locked_set.acquire_read();
-      1054 |             let inner = read_handle.borrow();
-      1056 |             let contains = inner.mem(&x);
-      1057 |             proof { assume(contains == self@.contains(x@)); }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1057: error: assume() - proof { assume(contains == self@.contains(x@)); }
-      1052 |         fn mem(&self, x: T) -> (contains: B) {
-            ...
-      1055 |             proof { assume(inner@ == self@); }
-      1056 |             let contains = inner.mem(&x);
-      1058 |             read_handle.release_read();
-      1059 |             contains
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1064: error: assume() - proof { assume(self.ghost_locked_set@ == locked_val@); }
-      1062 |         fn insert(&mut self, x: T) -> (r: std::result::Result<bool, ()>) {
-      1063 |             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-      1065 |             let inserted = locked_val.insert(x);
-      1066 |             let ghost new_val = locked_val@;
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1075: error: assume() - proof { assume(inner@ == self@); }
-      1072 |         fn choose(&self) -> (element: T) {
-            ...
-      1073 |             let read_handle = self.locked_set.acquire_read();
-      1074 |             let inner = read_handle.borrow();
-      1076 |             let element = inner.choose();
-      1077 |             proof { assume(self@.contains(element@)); }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1077: error: assume() - proof { assume(self@.contains(element@)); }
-      1072 |         fn choose(&self) -> (element: T) {
-            ...
-      1075 |             proof { assume(inner@ == self@); }
-      1076 |             let element = inner.choose();
-      1078 |             read_handle.release_read();
-      1079 |             element
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:991: error: proof_fn_with_holes - proof fn type_invariant — contains assume/external_body/admit, needs proof
-       979 |         open spec fn inv(self, v: SetMtEph<T>) -> bool {
-            ...
-       989 | 
-       990 |     impl<T: StT + Hash> LockedSetMtEph<T> {
-       992 |             ensures
-       993 |                 self@.finite(),
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1102: info: accept()
-   Holes: 9 total
-      9 × assume()
-   Info: 1 total
-   Proof functions: 2 total (1 clean, 1 holed)
+ℹ SetMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1045: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1054: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1062: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1073: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1099: info: accept()
+   Info: 5 total
+   1 clean proof function
 ℹ SetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:899: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:899: info: accept()
    Info: 1 total
    1 clean proof function
 
@@ -133,33 +67,34 @@ SetStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 80%)
-   1 holed (holes or errors, 20%)
+   5 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    5 total
 
 Proof Functions:
-   11 clean (91%)
-   1 holed (8%)
-   12 total
+   11 clean (100%)
+   0 holed (0%)
+   11 total
 
 Function Specs:
    151 exec fns with complete spec (requires+ensures) (59%)
    0 exec fns missing spec (0%)
-   101 proof/spec fns clean (39%)
-   1 proof/spec fns with holes (0%)
-   253 total fns
+   103 proof/spec fns clean (40%)
+   0 proof/spec fns with holes (0%)
+   254 total fns
 
 
-Holes Found: 9 total
-   9 × assume() (100%)
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 22:32:21 -07:00
-Ended:     2026-03-12 22:32:21 -07:00
-Duration:  30ms
+Started:   2026-03-13 07:48:19 -07:00
+Ended:     2026-03-13 07:48:19 -07:00
+Duration:  28ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
-ll output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
+: src/Chap05/analyses/veracity-review-verus-proof-holes.log

@@ -145,18 +145,18 @@ Checking 7 files...
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:917: warning: [14] struct ArraySeqStEphIter should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:917: warning: [14] struct ArraySeqStEphIter should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:928: warning: [14] struct ArraySeqStEphGhostIterator should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:928: warning: [14] struct ArraySeqStEphGhostIterator should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:917: warning: [18] struct ArraySeqStEphIter should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:921: warning: [18] impl View for ArraySeqStEphIter < 'a , T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:928: warning: [18] struct ArraySeqStEphGhostIterator should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:934: warning: [18] impl View for ArraySeqStEphGhostIterator < 'a , T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:939: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:915: warning: [14] struct ArraySeqStEphIter should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:915: warning: [14] struct ArraySeqStEphIter should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:926: warning: [14] struct ArraySeqStEphGhostIterator should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:926: warning: [14] struct ArraySeqStEphGhostIterator should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:915: warning: [18] struct ArraySeqStEphIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:919: warning: [18] impl View for ArraySeqStEphIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:926: warning: [18] struct ArraySeqStEphGhostIterator should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:932: warning: [18] impl View for ArraySeqStEphGhostIterator < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:937: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:81: warning: [22] free spec fn spec_iterate should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:87: warning: [22] free spec fn spec_inject should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:939: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:937: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:
