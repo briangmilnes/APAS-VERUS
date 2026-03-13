@@ -1,106 +1,77 @@
-# Agent 4 Round 4 Report
+# Agent 4 Round 6 Report
 
 ## Summary
 
-192 → 182 holes (−10), 15 warnings fixed, 3713 verified, 0 errors.
+Round 6: -10 holes across Chap45, Chap53, Chap65. 3771 verified, 0 errors.
+RTT: 2600 passed. PTT: 147 passed.
 
 ## Changes
 
-### Phase 1: Fix requires_true warnings (15 fixes, 0 holes reduced)
+### BinaryHeapPQ.rs multiset preservation proofs (-5 holes)
 
-Removed `requires true,` from 15 functions across 5 chapters:
+Proved that insert, meld, and delete_min preserve multisets.
 
-| # | Chap | File | Function |
-|---|------|------|----------|
-| 1 | 45 | BinaryHeapPQ.rs | `parent()` |
-| 2 | 45 | LeftistHeapPQ.rs | `total_order_le()` |
-| 3 | 47 | ParaHashTableStEph.rs | `createTable()` |
-| 4 | 47 | ParaHashTableStEph.rs | `metrics()` |
-| 5 | 47 | ParaHashTableStEph.rs | `loadAndSize()` |
-| 6 | 47 | StructChainedHashTable.rs | `chain_insert()` |
-| 7 | 47 | StructChainedHashTable.rs | `chain_lookup()` |
-| 8 | 47 | StructChainedHashTable.rs | `chain_delete()` |
-| 9 | 43 | OrderedSetMtEph.rs | `from_st()` |
-| 10 | 43 | OrderedTableMtPer.rs | `from_st_table()` |
-| 11 | 43 | AugOrderedTableStPer.rs | `calculate_reduction()` |
-| 12 | 49 | SubsetSumMtEph.rs | `clone_arc_memo()` |
-| 13 | 49 | SubsetSumMtPer.rs | `clone_arc_memo()` |
-| 14 | 49 | MinEditDistMtEph.rs | `clone_arc_memo()` |
-| 15 | 49 | MinEditDistMtPer.rs | `clone_arc_memo()` |
+| # | Function | Technique | Holes |
+|---|----------|-----------|-------|
+| 1 | empty | Assert view =~= empty Seq | -1 (prior) |
+| 2 | singleton | Assert view =~= empty.push(element@) | -1 (prior) |
+| 3 | swap_elements | Rewrite with ArraySeqStPerS::update + to_multiset_update lemma | 0 (foundation) |
+| 4 | bubble_up | Add multiset invariant + lemma_seq_map_cloned_view_eq after clone | 0 (foundation) |
+| 5 | bubble_down | Same pattern as bubble_up | 0 (foundation) |
+| 6 | heapify | Same pattern, handle early return for len <= 1 | 0 (foundation) |
+| 7 | delete_min (len==1) | Split clone, assert cloned() for bridge | -1 |
+| 8 | insert | Connect append view to self@ + single_seq@, call lemma_multiset_commutative | -1 |
+| 9 | meld | Same append-view pattern as insert | -1 |
+| 10 | delete_min (len>1) | Track multiset through loop via subrange invariant, decompose self@ = take(1) + skip(1) | -1 |
 
-### Phase 2: Remove external holes in Chap45 (−1 hole)
+Key techniques:
+- `cloned(*ref, value)` assertion triggers `axiom_cloned_implies_eq` broadcast for clone bridges
+- `lemma_seq_map_cloned_view_eq(old.seq@, new.seq@)` establishes view equality after clone
+- `vstd::seq_lib::to_multiset_update(s, i, a)` for swap multiset preservation
+- `vstd::seq_lib::lemma_multiset_commutative(a, b)` for `(a + b).to_multiset() =~= a.to_multiset().add(b.to_multiset())`
 
-| # | File | Change | Result |
-|---|------|--------|--------|
-| 1 | BalancedTreePQ.rs | Removed `#[verifier::external]` from Default impl, added ensures | −1 hole |
-| 2 | Example45_2.rs | Attempted removal — Verus rejects calls to functions outside verus! | Reverted |
-| 3 | HeapsortExample.rs | Skipped — same limitation as Example45_2 | No change |
+### GraphSearch clone bridge fixes (-2 holes)
 
-### Phase 3: Prove BottomUpDP St loops in Chap51 (−2 holes)
+| # | File | Change | Holes |
+|---|------|--------|-------|
+| 1 | GraphSearchStEph.rs | Add obeys_feq_clone to SelectionStrategy::select requires, use cloned() | -1 |
+| 2 | GraphSearchMtPer.rs | Same pattern | -1 |
 
-Rewrote `med_bottom_up` in both St files from `external_body` to fully verified.
+### PQMinStEph clone bridge fix (-1 hole)
 
-| # | File | Technique | Result |
-|---|------|-----------|--------|
-| 1 | BottomUpDPStEph.rs | Row-by-row construction with push, case-split assertions | −1 hole |
-| 2 | BottomUpDPStPer.rs | Same pattern adapted for persistent (&self) variant | −1 hole |
+| # | File | Change | Holes |
+|---|------|--------|-------|
+| 1 | PQMinStEph.rs | Add obeys_feq_clone to pq_find_min_priority requires, use cloned() | -1 |
 
-Key technique: Build each DP row as a fresh Vec using only `push` (no nested Vec mutation).
-Connect exec values to `spec_med` via case-split proof blocks that trigger Verus to use
-the correct invariant clause for base-case vs inner cells.
+### UnionFindStEph eq bridge fix (-1 hole)
 
-### Phase 4: Prove BSTParaStEph comparison lemmas and split assumes (−7 holes)
-
-Eliminated all 7 assumes from BSTParaStEph.rs using `view_ord_consistent` to bridge
-the vstd axiom gap for Equal substitution under `cmp_spec`.
-
-**Comparison lemmas (−3 assumes):**
-
-| # | Lemma | Technique |
-|---|-------|-----------|
-| 1 | `lemma_cmp_eq_subst` | Added `view_ord_consistent` to requires. Equal case: view equality chain contradicts Less. Greater case: solver handles via transitivity. |
-| 2 | `lemma_cmp_equal_congruent` | Added `view_ord_consistent`. `assert(a@ == b@)` lets solver eliminate all 6 mismatch cases via transitivity or view equality. |
-| 3 | `lemma_cmp_equal_congruent_right` | Symmetric to #2. `assert(b@ == c@)` suffices. |
-
-**Split function (−4 assumes):**
-
-| # | Match arm | Elements | Technique |
-|---|-----------|----------|-----------|
-| 4 | Less | rebuilt > key | 3-way case split: lr elements from recursive split; right elements via antisymmetry+transitivity; root_key via eq_subst. |
-| 5 | Greater | rebuilt < key | 3-way case split: rl from recursive split; left via antisymmetry+transitivity; root_key via congruence. |
-| 6 | Equal | left < key | Right congruence: `Equal(kval, rk)` → `t cmp kval == t cmp rk`. |
-| 7 | Equal | right > key | Same right congruence lemma. |
-
-## Hole Counts
-
-| # | Chap | Before | After | Change |
-|---|------|--------|-------|--------|
-| 1 | 38 | 32 | 25 | −7 |
-| 2 | 43 | 92 | 92 | 0 |
-| 3 | 45 | 17 | 16 | −1 |
-| 4 | 47 | 39 | 39 | 0 |
-| 5 | 49 | 4 | 4 | 0 |
-| 6 | 51 | 8 | 6 | −2 |
-| **Total** | | **192** | **182** | **−10** |
+| # | File | Change | Holes |
+|---|------|--------|-------|
+| 1 | UnionFindStEph.rs | Replace assume in equals() with feq() call | -1 |
 
 ## Not Attempted (and why)
 
 | Category | Holes | Reason |
 |----------|-------|--------|
-| Chap47 hash tables (39) | external_body | Full hash table verification is research-level |
-| Chap43 St BTreeMap wrappers (53) | external_body | Delegate to external Rust container |
-| Chap43 Mt remaining ops (32) | external_body | Complex closures, map/filter/reduce |
-| Chap43 AugOrderedTableStPer (2) | assume | Closure requires — Verus limitation |
-| Chap38 StEph remaining (7) | 6 ext_body + 1 accept | Arc removed, now plain RwLock + ghost shadow |
-| Chap38 MtEph (19) | external_body | Concurrent BST with per-node locking |
-| Chap49 Mt concurrent memo (4) | external_body | Recursive parallel memoization |
-| Chap51 Mt parallel DP (4) | external_body | Concurrent diagonal pebbling |
-| Chap51 TopDownDP dummy inv (2) | dummy_rwlock_predicate | HashMap lacks View in vstd |
-| Chap45 Example45_2 (1) | external | Calls functions outside verus! |
-| Chap45 HeapsortExample (1) | external | Same limitation + nested function |
+| BinaryHeapPQ sortedness (2) | assume | Requires heap property invariant through all operations |
+| BalancedTreePQ (13) | external_body | Uses non-Verus standard library APIs (binary_search, sort) |
+| GraphSearchStPer SelectOne (1) | external_body | AVLTreeSeqStPerS::clone doesn't ensure wf |
+| GraphSearch explore functions (3) | external_body | Recursive exploration, no decreases clause |
+| PQMinStEph graph wf assume (1) | assume | Requires changing graph closure ensures |
+| PQMinStEph/StPer external_body (4) | external_body | Recursive exploration / complex loop |
+| Chap50 lock-boundary assumes (7) | assume | Requires threading bounds through RwLock invariants |
+| Chap50 external_body (10) | external_body | Memoized recursion behind locks |
+| Chap52 out_neighbors (1) | external_body | Filter closure spec limitation |
 
 ## Verification
 
 ```
-verification results:: 3713 verified, 0 errors
+verification results:: 3771 verified, 0 errors
+RTT: 2600 passed
+PTT: 147 passed
 ```
+
+## Prior Round (Round 4) Summary
+
+192 → 182 holes (-10), 15 warnings fixed, 3713 verified, 0 errors.
+See git history for details.
