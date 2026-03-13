@@ -3409,49 +3409,21 @@ Table of Contents:
 ✓ src/Chap49/SubsetSumStEph.rs
 ✓ src/Chap49/SubsetSumStPer.rs
 ❌ src/Chap50/MatrixChainMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:238: error: assume() - proof { assume(i < dims@.len() && k < dims@.len() && j < dim
-       234 |         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:259: error: assume() - proof { assume((left_rows as nat) * (split_cols as nat) <= u
+       251 |         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize) {
             ...
-       236 |             let handle = rwlock.acquire_read();
-       237 |             let dims = handle.borrow();
-       239 |             let left_rows = dims[i].rows;
-       240 |             let split_cols = dims[k].cols;
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:242: error: assume() - proof { assume((left_rows as nat) * (split_cols as nat) <= u
-       234 |         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize) {
-            ...
-       240 |             let split_cols = dims[k].cols;
-       241 |             let right_cols = dims[j].cols;
-       243 |                 && (left_rows as nat) * (split_cols as nat) * (right_cols as nat) <= usize::MAX as nat); }
-       244 |             handle.release_read();
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:248: error: external_body - #[verifier::external_body]
-       249 |         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:271: error: external_body - #[verifier::external_body]
-       272 |         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:340: error: assume() - proof { assume(index < dims@.len()); }
-       335 |         fn set_dimension(&mut self, index: usize, dim: MatrixDim) {
-            ...
-       338 |                 let rwlock = arc_deref(&dims_arc);
-       339 |                 let (mut dims, write_handle) = rwlock.acquire_write();
-       341 |                 dims.set(index, dim);
-       342 |                 write_handle.release_write(dims);
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:357: error: assume() - proof { assume(index < dims@.len()); }
-       351 |         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize) {
-            ...
-       355 |                 let rwlock = arc_deref(&dims_arc);
-       356 |                 let (mut dims, write_handle) = rwlock.acquire_write();
-       358 |                 dims.set(index, dim);
-       359 |                 write_handle.release_write(dims);
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:373: error: assume() - proof { assume(n == self@.dimensions.len()); }
-       368 |         fn num_matrices(&self) -> (n: usize) {
-            ...
-       371 |             let n = handle.borrow().len();
-       372 |             handle.release_read();
-       374 |             n
-       375 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:404: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:426: info: accept()
-   Holes: 7 total
-      5 × assume()
+       257 |             let split_cols = dims[k].cols;
+       258 |             let right_cols = dims[j].cols;
+       260 |                 && (left_rows as nat) * (split_cols as nat) * (right_cols as nat) <= usize::MAX as nat); }
+       261 |             handle.release_read();
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:265: error: external_body - #[verifier::external_body]
+       266 |         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:288: error: external_body - #[verifier::external_body]
+       289 |         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:421: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:443: info: accept()
+   Holes: 3 total
+      1 × assume()
       2 × external_body
    Info: 2 total
 ❌ src/Chap50/MatrixChainMtPer.rs
@@ -3473,32 +3445,16 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainStPer.rs:355: info: accept()
    Info: 2 total
 ❌ src/Chap50/OptBinSearchTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:132: error: external_body - #[verifier::external_body]
-       133 |     fn parallel_min_reduction<T: MtVal>(table: &OBSTMtEphS<T>, costs: Vec<Probability>) -> (cost: Probability) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:155: error: external_body - #[verifier::external_body]
-       156 |     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> (cost: Probability) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:272: error: assume() - proof { assume(index < keys@.len()); }
-       267 |         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>) {
-            ...
-       270 |                 let rwlock = arc_deref(&keys_arc);
-       271 |                 let (mut keys, write_handle) = rwlock.acquire_write();
-       273 |                 keys.set(index, key_prob);
-       274 |                 write_handle.release_write(keys);
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:288: error: assume() - proof { assume(index < keys@.len()); }
-       283 |         fn update_prob(&mut self, index: usize, prob: Probability) {
-            ...
-       286 |                 let rwlock = arc_deref(&keys_arc);
-       287 |                 let (mut keys, write_handle) = rwlock.acquire_write();
-       289 |                 let new_kp = KeyProb { key: keys[index].key.clone(), prob };
-       290 |                 keys.set(index, new_kp);
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:140: error: external_body - #[verifier::external_body]
+       141 |     fn parallel_min_reduction<T: MtVal>(table: &OBSTMtEphS<T>, costs: Vec<Probability>) -> (cost: Probability) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:163: error: external_body - #[verifier::external_body]
+       164 |     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> (cost: Probability) {
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:59: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:305: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:336: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:358: info: accept()
-   Holes: 4 total
-      2 × assume()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:348: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:370: info: accept()
+   Holes: 2 total
       2 × external_body
-   Info: 4 total
+   Info: 3 total
 ❌ src/Chap50/OptBinSearchTreeMtPer.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtPer.rs:117: error: external_body - #[verifier::external_body]
        118 |     fn parallel_min_reduction<T: MtVal>(table: &OBSTMtPerS<T>, costs: Vec<Probability>) -> (cost: Probability) {
@@ -3720,39 +3676,22 @@ Table of Contents:
    Holes: 2 total
       2 × external_body
 ❌ src/Chap53/PQMinStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStEph.rs:101: error: assume() - proof { assume(v@ == entry_ref.1@); }
-        85 |     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStEph.rs:114: error: assume() - proof { assume(v@ == entry_ref.1@); }
+        98 |     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
             ...
-        99 |             let entry_ref = seq.nth(0);
-       100 |             let v = entry_ref.1.clone();
-       102 |             Some(v)
-       103 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStEph.rs:146: error: assume() - proof { assume(neighbors.spec_avltreesetsteph_wf()); }
-       107 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
+       112 |             let entry_ref = seq.nth(0);
+       113 |             let v = entry_ref.1.clone();
+       115 |             Some(v)
+       116 |         }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStEph.rs:98: error: fn_missing_ensures - fn pq_find_min_priority — exec fn should have ensures
+        82 |     pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF) -> (search: PQMinResult<V, P>)
             ...
-       144 | 
-       145 |             let neighbors = graph(&v);
-       147 |             let mut frontier_updated = frontier_new;
-       148 |             let neighbors_seq = neighbors.to_seq();
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStEph.rs:197: error: external_body - #[verifier::external_body]
-       198 |     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStEph.rs:73: error: fn_missing_requires - fn pq_min — exec fn should have requires
-        65 |         fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStEph<V>, priority_fn: &PF) -> (search: PQMinResult<V, P>)
-            ...
-        71 |     /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
-        72 |     /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — delegates to pq_min_multi.
-        74 |     where
-        75 |         G: Fn(&V) -> AVLTreeSetStEph<V>,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStEph.rs:85: error: fn_missing_ensures - fn pq_find_min_priority — exec fn should have ensures
-        73 |     pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF) -> (search: PQMinResult<V, P>)
-            ...
-        83 |     }
-        84 | 
-        86 |         frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
-        87 |     ) -> (result: Option<V>)
-   Holes: 3 total
-      2 × assume()
-      1 × external_body
+        96 |     }
+        97 | 
+        99 |         frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
+       100 |     ) -> (result: Option<V>)
+   Holes: 1 total
+      1 × assume()
 ❌ src/Chap53/PQMinStPer.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStPer.rs:89: error: external_body - #[verifier::external_body]
         90 |     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
@@ -4413,16 +4352,16 @@ Proof Functions:
    307 total
 
 Function Specs:
-   5031 exec fns with complete spec (requires+ensures) (71%)
-   34 exec fns missing spec (0%)
-   2004 proof/spec fns clean (28%)
+   5032 exec fns with complete spec (requires+ensures) (71%)
+   33 exec fns missing spec (0%)
+   2008 proof/spec fns clean (28%)
    3 proof/spec fns with holes (0%)
-   7072 total fns
+   7076 total fns
 
 
-Holes Found: 531 total
-   222 × assume() (41%)
-   305 × external_body (57%)
+Holes Found: 523 total
+   215 × assume() (41%)
+   304 × external_body (58%)
    2 × external (0%)
    2 × trivial spec*wf { true } (0%)
 
@@ -4443,45 +4382,45 @@ Holes Found: 531 total
    5  Chap47  (45 holes, 9 files)
    6  Chap39  (37 holes, 4 files)
    7  Chap38  (27 holes, 2 files)
-   8  Chap53  (24 holes, 5 files)
+   8  Chap53  (21 holes, 5 files)
    9  Chap42  (18 holes, 4 files)
-   10  Chap50  (17 holes, 8 files)
-   11  Chap45  (17 holes, 7 files)
+   10  Chap45  (17 holes, 7 files)
+   11  Chap50  (11 holes, 8 files)
    12  Chap05  (9 holes, 5 files)
    13  Chap49  (8 holes, 8 files)
    14  Chap51  (6 holes, 8 files)
    15  Chap26  (4 holes, 8 files)
    16  Chap66  (3 holes, 2 files)
-   17  Chap65  (1 holes, 3 files)
-   18  Chap52  (1 holes, 14 files)
-   19  Chap40  (0 holes, 3 files)
-   20  Chap23  (0 holes, 2 files)
-   21  Chap30  (0 holes, 1 files)
-   22  Chap54  (0 holes, 4 files)
-   23  Chap55  (0 holes, 8 files)
-   24  ParaPairs  (0 holes, 1 files)
-   25  Chap12  (0 holes, 3 files)
-   26  Chap44  (0 holes, 2 files)
-   27  Chap28  (0 holes, 11 files)
-   28  Chap21  (0 holes, 12 files)
-   29  Chap27  (0 holes, 4 files)
-   30  Chap03  (0 holes, 1 files)
-   31  Concurrency  (0 holes, 1 files)
-   32  Chap56  (0 holes, 12 files)
-   33  Chap64  (0 holes, 3 files)
+   17  Chap52  (1 holes, 14 files)
+   18  Chap65  (1 holes, 3 files)
+   19  Chap36  (0 holes, 3 files)
+   20  ParaPairs  (0 holes, 1 files)
+   21  Chap56  (0 holes, 12 files)
+   22  Concurrency  (0 holes, 1 files)
+   23  Chap62  (0 holes, 4 files)
+   24  Chap58  (0 holes, 2 files)
+   25  Chap21  (0 holes, 12 files)
+   26  Chap35  (0 holes, 4 files)
+   27  Chap40  (0 holes, 3 files)
+   28  Chap59  (0 holes, 4 files)
+   29  Chap55  (0 holes, 8 files)
+   30  Chap27  (0 holes, 4 files)
+   31  Chap30  (0 holes, 1 files)
+   32  Chap23  (0 holes, 2 files)
+   33  Chap12  (0 holes, 3 files)
    34  Chap18  (0 holes, 7 files)
-   35  Chap35  (0 holes, 4 files)
-   36  Chap36  (0 holes, 3 files)
-   37  Chap19  (0 holes, 4 files)
-   38  Chap57  (0 holes, 3 files)
-   39  Chap11  (0 holes, 5 files)
-   40  Chap58  (0 holes, 2 files)
-   41  Chap59  (0 holes, 4 files)
-   42  Chap61  (0 holes, 4 files)
-   43  Chap02  (0 holes, 2 files)
-   44  Chap62  (0 holes, 4 files)
-   45  Chap63  (0 holes, 2 files)
-   46  Chap17  (0 holes, 1 files)
+   35  Chap63  (0 holes, 2 files)
+   36  Chap11  (0 holes, 5 files)
+   37  Chap57  (0 holes, 3 files)
+   38  Chap28  (0 holes, 11 files)
+   39  Chap54  (0 holes, 4 files)
+   40  Chap02  (0 holes, 2 files)
+   41  Chap19  (0 holes, 4 files)
+   42  Chap17  (0 holes, 1 files)
+   43  Chap03  (0 holes, 1 files)
+   44  Chap61  (0 holes, 4 files)
+   45  Chap44  (0 holes, 2 files)
+   46  Chap64  (0 holes, 3 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -4499,36 +4438,36 @@ Holes Found: 531 total
    10  src/Chap05/SetMtEph.rs  (9 holes)
    11  src/Chap37/AVLTreeSeqStEph.rs  (8 holes)
    12  src/Chap38/BSTParaStEph.rs  (8 holes)
-   13  src/Chap50/MatrixChainMtEph.rs  (7 holes)
-   14  src/Chap06/LabDirGraphMtEph.rs  (6 holes)
+   13  src/Chap06/LabDirGraphMtEph.rs  (6 holes)
+   14  src/Chap41/ArraySetEnumMtEph.rs  (5 holes)
    15  src/Chap37/BSTSplayMtEph.rs  (5 holes)
-   16  src/Chap41/ArraySetEnumMtEph.rs  (5 holes)
-   17  src/Chap37/BSTAVLMtEph.rs  (5 holes)
-   18  src/Chap37/BSTBBAlphaMtEph.rs  (5 holes)
+   16  src/Chap37/BSTPlainMtEph.rs  (5 holes)
+   17  src/Chap37/BSTBBAlphaMtEph.rs  (5 holes)
+   18  src/Chap37/BSTAVLMtEph.rs  (5 holes)
    19  src/Chap37/BSTRBMtEph.rs  (5 holes)
-   20  src/Chap37/BSTPlainMtEph.rs  (5 holes)
-   21  src/Chap47/ParaHashTableStEph.rs  (4 holes)
-   22  src/Chap50/OptBinSearchTreeMtEph.rs  (4 holes)
+   20  src/Chap47/ParaHashTableStEph.rs  (4 holes)
+   21  src/Chap50/MatrixChainMtEph.rs  (3 holes)
+   22  src/Chap66/BoruvkaStEph.rs  (3 holes)
    23  src/Chap37/AVLTreeSeq.rs  (3 holes)
-   24  src/Chap66/BoruvkaStEph.rs  (3 holes)
-   25  src/Chap51/TopDownDPMtEph.rs  (2 holes)
-   26  src/Chap49/MinEditDistMtPer.rs  (2 holes)
-   27  src/Chap49/SubsetSumMtEph.rs  (2 holes)
-   28  src/Chap49/MinEditDistMtEph.rs  (2 holes)
-   29  src/Chap26/ETSPStEph.rs  (2 holes)
-   30  src/Chap37/BSTSplayStEph.rs  (2 holes)
-   31  src/Chap50/MatrixChainMtPer.rs  (2 holes)
-   32  src/Chap49/SubsetSumMtPer.rs  (2 holes)
-   33  src/Chap45/BinaryHeapPQ.rs  (2 holes)
-   34  src/Chap50/OptBinSearchTreeMtPer.rs  (2 holes)
-   35  src/Chap26/ETSPMtEph.rs  (2 holes)
-   36  src/Chap51/TopDownDPMtPer.rs  (2 holes)
+   24  src/Chap49/SubsetSumMtEph.rs  (2 holes)
+   25  src/Chap49/MinEditDistMtEph.rs  (2 holes)
+   26  src/Chap45/BinaryHeapPQ.rs  (2 holes)
+   27  src/Chap26/ETSPMtEph.rs  (2 holes)
+   28  src/Chap37/BSTSplayStEph.rs  (2 holes)
+   29  src/Chap51/TopDownDPMtPer.rs  (2 holes)
+   30  src/Chap49/MinEditDistMtPer.rs  (2 holes)
+   31  src/Chap26/ETSPStEph.rs  (2 holes)
+   32  src/Chap50/MatrixChainMtPer.rs  (2 holes)
+   33  src/Chap50/OptBinSearchTreeMtPer.rs  (2 holes)
+   34  src/Chap51/TopDownDPMtEph.rs  (2 holes)
+   35  src/Chap50/OptBinSearchTreeMtEph.rs  (2 holes)
+   36  src/Chap49/SubsetSumMtPer.rs  (2 holes)
    37  src/Chap45/LeftistHeapPQ.rs  (1 holes)
-   38  src/Chap50/OptBinSearchTreeStPer.rs  (1 holes)
-   39  src/Chap50/OptBinSearchTreeStEph.rs  (1 holes)
-   40  src/Chap51/BottomUpDPMtPer.rs  (1 holes)
-   41  src/Chap51/BottomUpDPMtEph.rs  (1 holes)
-   42  src/Chap65/UnionFindStEph.rs  (1 holes)
+   38  src/Chap65/UnionFindStEph.rs  (1 holes)
+   39  src/Chap50/OptBinSearchTreeStPer.rs  (1 holes)
+   40  src/Chap51/BottomUpDPMtEph.rs  (1 holes)
+   41  src/Chap50/OptBinSearchTreeStEph.rs  (1 holes)
+   42  src/Chap51/BottomUpDPMtPer.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -4536,7 +4475,7 @@ Holes Found: 531 total
 
    1  src/Chap06  (51 holes, 20 files)
    2  src/Chap38  (27 holes, 2 files)
-   3  src/Chap50  (17 holes, 8 files)
+   3  src/Chap50  (11 holes, 8 files)
    4  src/Chap05  (9 holes, 5 files)
    5  src/Chap49  (8 holes, 8 files)
    6  src/Chap51  (6 holes, 8 files)
@@ -4559,8 +4498,8 @@ Holes Found: 531 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 20:19:27 -07:00
-Ended:     2026-03-12 20:19:28 -07:00
-Duration:  952ms
+Started:   2026-03-12 23:36:23 -07:00
+Ended:     2026-03-12 23:36:24 -07:00
+Duration:  1096ms
 
 Full output: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-review-verus-proof-holes.log

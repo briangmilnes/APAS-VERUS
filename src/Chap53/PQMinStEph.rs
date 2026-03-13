@@ -7,7 +7,7 @@ pub mod PQMinStEph {
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
+
 
     verus! {
 
@@ -36,6 +36,10 @@ pub mod PQMinStEph {
         where
             G: Fn(&V) -> AVLTreeSetStEph<V>,
             PF: Fn(&V) -> P,
+            requires
+                forall|v: &V| #[trigger] graph.requires((v,)),
+                forall|v: &V| #[trigger] priority_fn.requires((v,)),
+                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
             ensures
                 spec_pqminsteph_wf_generic(&search),
                 search.visited@.contains(source@);
@@ -46,6 +50,11 @@ pub mod PQMinStEph {
         where
             G: Fn(&V) -> AVLTreeSetStEph<V>,
             PF: Fn(&V) -> P,
+            requires
+                sources.spec_avltreesetsteph_wf(),
+                forall|v: &V| #[trigger] graph.requires((v,)),
+                forall|v: &V| #[trigger] priority_fn.requires((v,)),
+                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
             ensures
                 spec_pqminsteph_wf_generic(&search),
                 sources@.subset_of(search.visited@);
@@ -74,6 +83,10 @@ pub mod PQMinStEph {
     where
         G: Fn(&V) -> AVLTreeSetStEph<V>,
         PF: Fn(&V) -> P,
+        requires
+            forall|v: &V| #[trigger] graph.requires((v,)),
+            forall|v: &V| #[trigger] priority_fn.requires((v,)),
+            forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
         ensures
             spec_pqminsteph_wf_generic(&search),
             search.visited@.contains(source@),
@@ -115,6 +128,11 @@ pub mod PQMinStEph {
             frontier_init.spec_avltreesetsteph_wf(),
             forall|v: &V| #[trigger] graph.requires((v,)),
             forall|v: &V| #[trigger] priority_fn.requires((v,)),
+            forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
+        ensures
+            result.0.spec_avltreesetsteph_wf(),
+            result.1.spec_avltreesetsteph_wf(),
+            visited_init@.subset_of(result.0@),
     {
         let mut visited = visited_init;
         let mut frontier = frontier_init;
@@ -123,8 +141,10 @@ pub mod PQMinStEph {
             invariant
                 visited.spec_avltreesetsteph_wf(),
                 frontier.spec_avltreesetsteph_wf(),
+                visited_init@.subset_of(visited@),
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
+                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
         {
             // Extract min-priority vertex (inline pq_find_min_priority).
             let seq = frontier.to_seq();
@@ -143,7 +163,6 @@ pub mod PQMinStEph {
             let visited_new = visited.union(&AVLTreeSetStEph::singleton(v.clone()));
 
             let neighbors = graph(&v);
-            proof { assume(neighbors.spec_avltreesetsteph_wf()); }
             let mut frontier_updated = frontier_new;
             let neighbors_seq = neighbors.to_seq();
             let nlen = neighbors_seq.length();
@@ -181,6 +200,8 @@ pub mod PQMinStEph {
                 j <= vlen,
                 vlen == visited_seq@.len(),
                 visited_seq.spec_avltreeseqsteph_wf(),
+                visited.spec_avltreesetsteph_wf(),
+                visited_init@.subset_of(visited@),
                 priorities.spec_avltreesetsteph_wf(),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
             decreases vlen - j,
@@ -194,7 +215,6 @@ pub mod PQMinStEph {
     }
 
     /// Priority-first search from multiple sources (Section 53.4).
-    #[verifier::external_body]
     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
         graph: &G,
         sources: AVLTreeSetStEph<V>,
@@ -203,14 +223,30 @@ pub mod PQMinStEph {
     where
         G: Fn(&V) -> AVLTreeSetStEph<V>,
         PF: Fn(&V) -> P,
+        requires
+            sources.spec_avltreesetsteph_wf(),
+            forall|v: &V| #[trigger] graph.requires((v,)),
+            forall|v: &V| #[trigger] priority_fn.requires((v,)),
+            forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
         ensures
             spec_pqminsteph_wf_generic(&search),
             sources@.subset_of(search.visited@),
     {
         let mut initial_frontier = AVLTreeSetStEph::empty();
         let sources_seq = sources.to_seq();
+        let slen = sources_seq.length();
         let mut i: usize = 0;
-        while i < sources_seq.length()
+        while i < slen
+            invariant
+                i <= slen,
+                slen == sources_seq@.len(),
+                sources_seq.spec_avltreeseqsteph_wf(),
+                sources.spec_avltreesetsteph_wf(),
+                initial_frontier.spec_avltreesetsteph_wf(),
+                forall|v: &V| #[trigger] graph.requires((v,)),
+                forall|v: &V| #[trigger] priority_fn.requires((v,)),
+                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
+            decreases slen - i,
         {
             let v = sources_seq.nth(i);
             let p = priority_fn(v);
@@ -219,7 +255,7 @@ pub mod PQMinStEph {
             i = i + 1;
         }
 
-        let (visited, priorities) = pq_explore(graph, priority_fn, AVLTreeSetStEph::empty(), initial_frontier);
+        let (visited, priorities) = pq_explore(graph, priority_fn, sources, initial_frontier);
 
         PQMinResult {
             visited,
