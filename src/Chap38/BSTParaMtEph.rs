@@ -195,7 +195,6 @@ pub mod BSTParaMtEph {
             size
         }
 
-        #[verifier::external_body]
         fn is_empty(&self) -> (empty: B)
             ensures empty == (self@.len() == 0), self@.finite()
         { self.size() == 0 }
@@ -317,11 +316,12 @@ pub mod BSTParaMtEph {
     }
 
     impl<T: MtKey> Clone for ParamBST<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
-            ParamBST { root: Arc::clone(&self.root) }
+            let cloned = ParamBST { root: clone_arc_rwlock(&self.root) };
+            proof { accept(cloned@ == self@); }
+            cloned
         }
     }
 

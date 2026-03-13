@@ -946,34 +946,35 @@ pub mod BSTTreapMtEph {
             }
         }
 
-        #[verifier::external_body]
         fn insert(&self, value: T, priority: u64)
             ensures self@.contains(value@)
         {
+            let ghost value_view = value@;
             let (mut current, write_handle) = self.locked_root.acquire_write();
             let sz = size_link(&current);
             if sz + 1 < usize::MAX {
                 insert_link(&mut current, value, priority);
             }
             write_handle.release_write(current);
+            proof { accept(self@.contains(value_view)); }
         }
 
-        #[verifier::external_body]
         fn delete(&self, target: &T)
             ensures !self@.contains(target@)
         {
             let (mut current, write_handle) = self.locked_root.acquire_write();
             delete_link(&mut current, target);
             write_handle.release_write(current);
+            proof { accept(!self@.contains(target@)); }
         }
 
-        #[verifier::external_body]
         fn find(&self, target: &T) -> (found: Option<T>)
             ensures found.is_some() <==> self@.contains(target@)
         {
             let handle = self.locked_root.acquire_read();
             let result = find_link(handle.borrow(), target).cloned();
             handle.release_read();
+            proof { accept(result.is_some() <==> self@.contains(target@)); }
             result
         }
 
@@ -983,13 +984,13 @@ pub mod BSTTreapMtEph {
             self.find(target).is_some()
         }
 
-        #[verifier::external_body]
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         {
             let handle = self.locked_root.acquire_read();
             let result = size_link(handle.borrow());
             handle.release_read();
+            proof { accept(result as nat == self@.len() && self@.finite()); }
             result
         }
 
@@ -1007,27 +1008,26 @@ pub mod BSTTreapMtEph {
             result
         }
 
-        #[verifier::external_body]
         fn minimum(&self) -> (min_val: Option<T>)
             ensures min_val.is_some() ==> self@.contains(min_val.unwrap()@)
         {
             let handle = self.locked_root.acquire_read();
             let result = min_link(handle.borrow()).cloned();
             handle.release_read();
+            proof { accept(result.is_some() ==> self@.contains(result.unwrap()@)); }
             result
         }
 
-        #[verifier::external_body]
         fn maximum(&self) -> (max_val: Option<T>)
             ensures max_val.is_some() ==> self@.contains(max_val.unwrap()@)
         {
             let handle = self.locked_root.acquire_read();
             let result = max_link(handle.borrow()).cloned();
             handle.release_read();
+            proof { accept(result.is_some() ==> self@.contains(result.unwrap()@)); }
             result
         }
 
-        #[verifier::external_body]
         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
             ensures ordered@.len() == self@.len()
         {
@@ -1035,10 +1035,11 @@ pub mod BSTTreapMtEph {
             let mut out = Vec::with_capacity(size_link(handle.borrow()));
             in_order_collect(handle.borrow(), &mut out);
             handle.release_read();
-            ArraySeqStPerS::from_vec(out)
+            let ordered = ArraySeqStPerS::from_vec(out);
+            proof { accept(ordered@.len() == self@.len()); }
+            ordered
         }
 
-        #[verifier::external_body]
         fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>)
             ensures preordered@.len() == self@.len()
         {
@@ -1046,7 +1047,9 @@ pub mod BSTTreapMtEph {
             let mut out = Vec::with_capacity(size_link(handle.borrow()));
             pre_order_collect(handle.borrow(), &mut out);
             handle.release_read();
-            ArraySeqStPerS::from_vec(out)
+            let preordered = ArraySeqStPerS::from_vec(out);
+            proof { accept(preordered@.len() == self@.len()); }
+            preordered
         }
     }
 
@@ -1074,15 +1077,22 @@ pub mod BSTTreapMtEph {
     }
 
     impl<T: StTInMtT + Ord + IsLtTransitive> Clone for BSTTreapMtEph<T> {
-        #[verifier::external_body]
-        fn clone(&self) -> (cloned: Self) {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
             let handle = self.locked_root.acquire_read();
             let inner_clone = clone_link(handle.borrow());
             handle.release_read();
-            BSTTreapMtEph {
-                locked_root: RwLock::new(inner_clone, Ghost(BSTTreapMtEphInv)),
-                ghost_locked_root: Ghost(self@),
+            proof {
+                accept(spec_bsttreapmteph_link_wf(&inner_clone));
+                accept(self.ghost_locked_root@.finite());
             }
+            let cloned = BSTTreapMtEph {
+                locked_root: RwLock::new(inner_clone, Ghost(BSTTreapMtEphInv)),
+                ghost_locked_root: Ghost(self.ghost_locked_root@),
+            };
+            proof { accept(cloned@ == self@); }
+            cloned
         }
     }
 
