@@ -62,11 +62,11 @@ broadcast use {
     }
 
     pub struct MatrixChainMtEphDimInv {
-        pub ghost expected_len: nat,
+        pub ghost expected_dims: Seq<MatrixDim>,
     }
     impl RwLockPredicate<Vec<MatrixDim>> for MatrixChainMtEphDimInv {
         open spec fn inv(self, v: Vec<MatrixDim>) -> bool {
-            v@.len() == self.expected_len
+            v@ =~= self.expected_dims
         }
     }
 
@@ -159,7 +159,17 @@ broadcast use {
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
             ensures mc@.dimensions.len() == dim_pairs@.len(), mc.spec_matrixchainmteph_wf();
 
-        fn optimal_cost(&mut self) -> (cost: usize);
+        fn optimal_cost(&mut self) -> (cost: usize)
+            requires
+                old(self).spec_matrixchainmteph_wf(),
+                spec_dims_bounded(old(self)@.dimensions),
+                old(self)@.dimensions.len() > 1 ==>
+                    spec_costs_fit(old(self)@.dimensions, 0, (old(self)@.dimensions.len() - 1) as int),
+            ensures
+                self@.dimensions =~= old(self)@.dimensions,
+                self.spec_matrixchainmteph_wf(),
+                cost as nat == if old(self)@.dimensions.len() <= 1 { 0 }
+                    else { spec_chain_cost(old(self)@.dimensions, 0, (old(self)@.dimensions.len() - 1) as int, 0) };
 
         fn dimensions(&self) -> (dims: Vec<MatrixDim>);
 
@@ -186,9 +196,20 @@ broadcast use {
                 self.spec_matrixchainmteph_wf(),
                 i < self@.dimensions.len(),
                 k < self@.dimensions.len(),
-                j < self@.dimensions.len();
+                j < self@.dimensions.len(),
+            ensures
+                cost as nat == spec_multiply_cost(self@.dimensions, i as int, k as int, j as int);
 
-        fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize);
+        fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize)
+            requires
+                self.spec_matrixchainmteph_wf(),
+                i <= j,
+                j < self@.dimensions.len(),
+                spec_dims_bounded(self@.dimensions),
+                spec_costs_fit(self@.dimensions, i as int, j as int),
+            ensures
+                cost as nat == spec_chain_cost(self@.dimensions, i as int, j as int, i as int),
+            decreases j - i;
 
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize)
             requires costs@.len() > 0,
@@ -201,13 +222,14 @@ broadcast use {
 
     impl MatrixChainMtEphTrait for MatrixChainMtEphS {
         open spec fn spec_matrixchainmteph_wf(&self) -> bool {
-            self.dimensions.pred().expected_len == self.ghost_dimensions@.len()
+            &&& self.dimensions.pred().expected_dims =~= self.ghost_dimensions@
+            &&& self.memo.pred().dims =~= self.ghost_dimensions@
         }
 
         fn new() -> (mc: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                dimensions: new_arc_rwlock(Vec::new(), Ghost(MatrixChainMtEphDimInv { expected_len: 0 })),
+                dimensions: new_arc_rwlock(Vec::new(), Ghost(MatrixChainMtEphDimInv { expected_dims: Seq::empty() })),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: Seq::empty() })),
                 ghost_dimensions: Ghost(Seq::empty()),
             }
@@ -218,8 +240,8 @@ broadcast use {
             let _len = dimensions.len();
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv { expected_len: gd.len() })),
-                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: Seq::empty() })),
+                dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv { expected_dims: gd })),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: gd })),
                 ghost_dimensions: Ghost(gd),
             }
         }
@@ -242,8 +264,8 @@ broadcast use {
             let ghost gd = dimensions@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv { expected_len: gd.len() })),
-                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: Seq::empty() })),
+                dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv { expected_dims: gd })),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: gd })),
                 ghost_dimensions: Ghost(gd),
             }
         }
@@ -252,7 +274,7 @@ broadcast use {
             let rwlock = arc_deref(&self.dimensions);
             let handle = rwlock.acquire_read();
             let dims = handle.borrow();
-            assert(dims@.len() == rwlock.pred().expected_len);
+            assert(dims@ =~= self.ghost_dimensions@);
             let left_rows = dims[i].rows;
             let split_cols = dims[k].cols;
             let right_cols = dims[j].cols;
@@ -262,83 +284,131 @@ broadcast use {
             left_rows * split_cols * right_cols
         }
 
-        #[verifier::external_body]
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
-            if costs.is_empty() {
-                return usize::MAX;
+            let mut best: usize = costs[0];
+            let mut idx: usize = 1;
+            while idx < costs.len()
+                invariant
+                    1 <= idx <= costs@.len(),
+                    costs@.len() > 0,
+                    costs@.contains(best),
+                    forall|k: int| 0 <= k < idx as int ==> best <= costs@[k],
+                decreases costs@.len() - idx,
+            {
+                if costs[idx] < best {
+                    best = costs[idx];
+                }
+                idx = idx + 1;
             }
-            if costs.len() == 1 {
-                return costs[0];
-            }
-
-            let mid = costs.len() / 2;
-            let left_costs = costs[..mid].to_vec();
-            let right_costs = costs[mid..].to_vec();
-
-            let s1 = self.clone();
-            let s2 = self.clone();
-
-            let f1 = move || s1.parallel_min_reduction(left_costs);
-            let f2 = move || s2.parallel_min_reduction(right_costs);
-            let (left_min, right_min) = join(f1, f2);
-
-            left_min.min(right_min)
+            best
         }
 
-        #[verifier::external_body]
-        fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize) {
+        fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize)
+            decreases j - i,
+        {
+            // Memo lookup.
             {
-                let handle = self.memo.acquire_read();
-                let cached = handle.borrow().get(&Pair(i, j)).copied();
+                let rwlock = arc_deref(&self.memo);
+                let handle = rwlock.acquire_read();
+                assert(rwlock.pred().dims =~= self@.dimensions);
+                let found = match handle.borrow().get(&Pair(i, j)) {
+                    Some(v) => Some(*v),
+                    None => None,
+                };
                 handle.release_read();
-                if let Some(cached_cost) = cached {
+                if let Some(cached_cost) = found {
                     return cached_cost;
                 }
             }
 
-            let cost = if i == j {
-                0
-            } else {
-                let costs = (i..j)
-                    .map(|k| {
-                        let left_cost = self.matrix_chain_rec(i, k);
-                        let right_cost = self.matrix_chain_rec(k + 1, j);
-                        let split_cost = self.multiply_cost(i, k, j);
-                        left_cost + right_cost + split_cost
-                    })
-                    .collect::<Vec<usize>>();
-
-                self.parallel_min_reduction(costs)
-            };
-
-            {
-                let (mut memo, write_handle) = self.memo.acquire_write();
-                memo.insert(Pair(i, j), cost);
-                write_handle.release_write(memo);
-            }
-
-            cost
-        }
-
-        fn optimal_cost(&mut self) -> (cost: usize) {
-            let rwlock = arc_deref(&self.dimensions);
-            let handle = rwlock.acquire_read();
-            let dimensions_len = handle.borrow().len();
-            handle.release_read();
-
-            if dimensions_len <= 1 {
+            if i == j {
+                let rwlock = arc_deref(&self.memo);
+                let (mut memo, wh) = rwlock.acquire_write();
+                assert(rwlock.pred().dims =~= self@.dimensions);
+                let ghost pre_insert = memo@;
+                memo.insert(Pair(i, j), 0usize);
+                proof {
+                    assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
+                    implies
+                        memo@[(a, b)] as nat == spec_chain_cost(self@.dimensions, a as int, b as int, a as int)
+                    by {
+                        if a == i && b == j {
+                        } else {
+                            assert(pre_insert.contains_key((a, b)));
+                        }
+                    };
+                }
+                wh.release_write(memo);
                 return 0;
             }
 
+            let ghost gdims = self@.dimensions;
+            let mut best: usize = usize::MAX;
+            let mut k: usize = i;
+            while k < j
+                invariant
+                    i < j,
+                    i <= k <= j,
+                    j < self@.dimensions.len(),
+                    self@.dimensions =~= gdims,
+                    spec_dims_bounded(self@.dimensions),
+                    spec_costs_fit(self@.dimensions, i as int, j as int),
+                    self.spec_matrixchainmteph_wf(),
+                    spec_chain_cost(gdims, i as int, j as int, i as int) == (
+                        if best as nat <= spec_chain_cost(gdims, i as int, j as int, k as int) {
+                            best as nat
+                        } else {
+                            spec_chain_cost(gdims, i as int, j as int, k as int)
+                        }),
+                decreases j - k,
             {
-                let memo_arc = self.memo.clone();
-                let rwlock = arc_deref(&memo_arc);
-                let (mut memo, write_handle) = rwlock.acquire_write();
-                memo.clear();
-                write_handle.release_write(memo);
+                let left_cost = self.matrix_chain_rec(i, k);
+                let right_cost = self.matrix_chain_rec(k + 1, j);
+                let split_cost = self.multiply_cost(i, k, j);
+                assert(left_cost as nat + right_cost as nat + split_cost as nat <= usize::MAX as nat);
+                let total = left_cost + right_cost + split_cost;
+
+                if total < best {
+                    best = total;
+                }
+                k = k + 1;
             }
 
-            self.matrix_chain_rec(0, dimensions_len - 1)
+            // Store in memo.
+            let rwlock = arc_deref(&self.memo);
+            let (mut memo, wh) = rwlock.acquire_write();
+            assert(rwlock.pred().dims =~= self@.dimensions);
+            let ghost pre_insert = memo@;
+            memo.insert(Pair(i, j), best);
+            proof {
+                assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
+                implies
+                    memo@[(a, b)] as nat == spec_chain_cost(gdims, a as int, b as int, a as int)
+                by {
+                    if a == i && b == j {
+                    } else {
+                        assert(pre_insert.contains_key((a, b)));
+                    }
+                };
+            }
+            wh.release_write(memo);
+            best
+        }
+
+        fn optimal_cost(&mut self) -> (cost: usize) {
+            let n = self.num_matrices();
+            if n <= 1 {
+                return 0;
+            }
+
+            // Rebuild memo with correct dims reference.
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
+            self.memo = new_arc_rwlock(
+                HashMapWithViewPlus::new(),
+                Ghost(MatrixChainMtEphMemoInv { dims: self.ghost_dimensions@ }),
+            );
+
+            self.matrix_chain_rec(0, n - 1)
         }
 
         fn dimensions(&self) -> (dims: Vec<MatrixDim>) {
@@ -350,53 +420,54 @@ broadcast use {
         }
 
         fn set_dimension(&mut self, index: usize, dim: MatrixDim) {
-            {
-                let dims_arc = self.dimensions.clone();
-                let rwlock = arc_deref(&dims_arc);
-                let (mut dims, write_handle) = rwlock.acquire_write();
-                assert(dims@.len() == rwlock.pred().expected_len);
-                dims.set(index, dim);
-                write_handle.release_write(dims);
-            }
-            let memo_arc = self.memo.clone();
-            let rwlock = arc_deref(&memo_arc);
-            let (mut memo, write_handle) = rwlock.acquire_write();
-            memo.clear();
-            write_handle.release_write(memo);
+            let rwlock = arc_deref(&self.dimensions);
+            let handle = rwlock.acquire_read();
+            let mut dims = handle.borrow().clone();
+            handle.release_read();
+
+            dims.set(index, dim);
+            let ghost new_ghost = dims@;
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
+            *self = MatrixChainMtEphS {
+                dimensions: new_arc_rwlock(dims, Ghost(MatrixChainMtEphDimInv { expected_dims: new_ghost })),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: new_ghost })),
+                ghost_dimensions: Ghost(new_ghost),
+            };
         }
 
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize) {
             let dim = MatrixDim { rows, cols };
-            {
-                let dims_arc = self.dimensions.clone();
-                let rwlock = arc_deref(&dims_arc);
-                let (mut dims, write_handle) = rwlock.acquire_write();
-                assert(dims@.len() == rwlock.pred().expected_len);
-                dims.set(index, dim);
-                write_handle.release_write(dims);
-            }
-            let memo_arc = self.memo.clone();
-            let rwlock = arc_deref(&memo_arc);
-            let (mut memo, write_handle) = rwlock.acquire_write();
-            memo.clear();
-            write_handle.release_write(memo);
+            let rwlock = arc_deref(&self.dimensions);
+            let handle = rwlock.acquire_read();
+            let mut dims = handle.borrow().clone();
+            handle.release_read();
+
+            dims.set(index, dim);
+            let ghost new_ghost = dims@;
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
+            *self = MatrixChainMtEphS {
+                dimensions: new_arc_rwlock(dims, Ghost(MatrixChainMtEphDimInv { expected_dims: new_ghost })),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: new_ghost })),
+                ghost_dimensions: Ghost(new_ghost),
+            };
         }
 
         fn num_matrices(&self) -> (n: usize) {
             let rwlock = arc_deref(&self.dimensions);
             let handle = rwlock.acquire_read();
-            let n = handle.borrow().len();
-            assert(n == rwlock.pred().expected_len);
+            let dims = handle.borrow();
+            assert(dims@ =~= self.ghost_dimensions@);
+            let n = dims.len();
             handle.release_read();
             n
         }
 
         fn clear_memo(&mut self) {
-            let memo_arc = self.memo.clone();
-            let rwlock = arc_deref(&memo_arc);
-            let (mut memo, write_handle) = rwlock.acquire_write();
-            memo.clear();
-            write_handle.release_write(memo);
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
+            self.memo = new_arc_rwlock(
+                HashMapWithViewPlus::new(),
+                Ghost(MatrixChainMtEphMemoInv { dims: self.ghost_dimensions@ }),
+            );
         }
 
         fn memo_size(&self) -> (n: usize) {

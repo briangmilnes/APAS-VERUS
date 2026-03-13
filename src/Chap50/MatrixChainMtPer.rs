@@ -140,17 +140,20 @@ broadcast use {
 
     // 8. traits
     pub trait MatrixChainMtPerTrait: Sized + View<V = MatrixChainMtPerV> {
+        spec fn spec_matrixchainmtper_wf(&self) -> bool;
+
         fn new() -> (mc: Self)
-            ensures mc@.dimensions.len() == 0;
+            ensures mc@.dimensions.len() == 0, mc.spec_matrixchainmtper_wf();
 
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)
-            ensures mc@.dimensions =~= dimensions@;
+            ensures mc@.dimensions =~= dimensions@, mc.spec_matrixchainmtper_wf();
 
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
-            ensures mc@.dimensions.len() == dim_pairs@.len();
+            ensures mc@.dimensions.len() == dim_pairs@.len(), mc.spec_matrixchainmtper_wf();
 
         fn optimal_cost(&self) -> (cost: usize)
             requires
+                self.spec_matrixchainmtper_wf(),
                 spec_dims_bounded(self@.dimensions),
                 self@.dimensions.len() > 1 ==>
                     spec_costs_fit(self@.dimensions, 0, (self@.dimensions.len() - 1) as int),
@@ -177,12 +180,14 @@ broadcast use {
 
         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize)
             requires
+                self.spec_matrixchainmtper_wf(),
                 i <= j,
                 j < self@.dimensions.len(),
                 spec_dims_bounded(self@.dimensions),
                 spec_costs_fit(self@.dimensions, i as int, j as int),
             ensures
-                cost as nat == spec_chain_cost(self@.dimensions, i as int, j as int, i as int);
+                cost as nat == spec_chain_cost(self@.dimensions, i as int, j as int, i as int),
+            decreases j - i;
 
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize)
             requires costs@.len() > 0,
@@ -194,6 +199,10 @@ broadcast use {
     // 9. impls
 
     impl MatrixChainMtPerTrait for MatrixChainMtPerS {
+        open spec fn spec_matrixchainmtper_wf(&self) -> bool {
+            self.memo.pred().dims =~= self@.dimensions
+        }
+
         fn new() -> (mc: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -203,10 +212,11 @@ broadcast use {
         }
 
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
+            let ghost gd = dimensions@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions: Arc::new(dimensions),
-                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtPerMemoInv { dims: Seq::empty() })),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtPerMemoInv { dims: gd })),
             }
         }
 
@@ -225,10 +235,11 @@ broadcast use {
                 });
                 idx = idx + 1;
             }
+            let ghost gd = dimensions@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions: Arc::new(dimensions),
-                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtPerMemoInv { dims: Seq::empty() })),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtPerMemoInv { dims: gd })),
             }
         }
 
@@ -241,62 +252,115 @@ broadcast use {
             intermediate * right_cols
         }
 
-        #[verifier::external_body]
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
-            if costs.is_empty() {
-                return usize::MAX;
+            let mut best: usize = costs[0];
+            let mut idx: usize = 1;
+            while idx < costs.len()
+                invariant
+                    1 <= idx <= costs@.len(),
+                    costs@.len() > 0,
+                    costs@.contains(best),
+                    forall|k: int| 0 <= k < idx as int ==> best <= costs@[k],
+                decreases costs@.len() - idx,
+            {
+                if costs[idx] < best {
+                    best = costs[idx];
+                }
+                idx = idx + 1;
             }
-            if costs.len() == 1 {
-                return costs[0];
-            }
-
-            let mid = costs.len() / 2;
-            let left_costs = costs[..mid].to_vec();
-            let right_costs = costs[mid..].to_vec();
-
-            let s1 = self.clone();
-            let s2 = self.clone();
-
-            let f1 = move || s1.parallel_min_reduction(left_costs);
-            let f2 = move || s2.parallel_min_reduction(right_costs);
-            let (left_min, right_min) = join(f1, f2);
-
-            left_min.min(right_min)
+            best
         }
 
-        #[verifier::external_body]
-        fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize) {
+        fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize)
+            decreases j - i,
+        {
+            // Memo lookup.
             {
-                let handle = self.memo.acquire_read();
-                let cached = handle.borrow().get(&Pair(i, j)).copied();
+                let rwlock = arc_deref(&self.memo);
+                let handle = rwlock.acquire_read();
+                assert(rwlock.pred().dims =~= self@.dimensions);
+                let found = match handle.borrow().get(&Pair(i, j)) {
+                    Some(v) => Some(*v),
+                    None => None,
+                };
                 handle.release_read();
-                if let Some(cached_cost) = cached {
+                if let Some(cached_cost) = found {
                     return cached_cost;
                 }
             }
 
-            let cost = if i == j {
-                0
-            } else {
-                let costs = (i..j)
-                    .map(|k| {
-                        let left_cost = self.matrix_chain_rec(i, k);
-                        let right_cost = self.matrix_chain_rec(k + 1, j);
-                        let split_cost = self.multiply_cost(i, k, j);
-                        left_cost + right_cost + split_cost
-                    })
-                    .collect::<Vec<usize>>();
-
-                self.parallel_min_reduction(costs)
-            };
-
-            {
-                let (mut memo, write_handle) = self.memo.acquire_write();
-                memo.insert(Pair(i, j), cost);
-                write_handle.release_write(memo);
+            if i == j {
+                let rwlock = arc_deref(&self.memo);
+                let (mut memo, wh) = rwlock.acquire_write();
+                assert(rwlock.pred().dims =~= self@.dimensions);
+                let ghost pre_insert = memo@;
+                memo.insert(Pair(i, j), 0usize);
+                proof {
+                    assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
+                    implies
+                        memo@[(a, b)] as nat == spec_chain_cost(self@.dimensions, a as int, b as int, a as int)
+                    by {
+                        if a == i && b == j {
+                        } else {
+                            assert(pre_insert.contains_key((a, b)));
+                        }
+                    };
+                }
+                wh.release_write(memo);
+                return 0;
             }
 
-            cost
+            let ghost gdims = self@.dimensions;
+            let mut best: usize = usize::MAX;
+            let mut k: usize = i;
+            while k < j
+                invariant
+                    i < j,
+                    i <= k <= j,
+                    j < self@.dimensions.len(),
+                    self@.dimensions =~= gdims,
+                    spec_dims_bounded(self@.dimensions),
+                    spec_costs_fit(self@.dimensions, i as int, j as int),
+                    self.spec_matrixchainmtper_wf(),
+                    spec_chain_cost(gdims, i as int, j as int, i as int) == (
+                        if best as nat <= spec_chain_cost(gdims, i as int, j as int, k as int) {
+                            best as nat
+                        } else {
+                            spec_chain_cost(gdims, i as int, j as int, k as int)
+                        }),
+                decreases j - k,
+            {
+                let left_cost = self.matrix_chain_rec(i, k);
+                let right_cost = self.matrix_chain_rec(k + 1, j);
+                let split_cost = self.multiply_cost(i, k, j);
+                assert(left_cost as nat + right_cost as nat + split_cost as nat <= usize::MAX as nat);
+                let total = left_cost + right_cost + split_cost;
+
+                if total < best {
+                    best = total;
+                }
+                k = k + 1;
+            }
+
+            // Store in memo.
+            let rwlock = arc_deref(&self.memo);
+            let (mut memo, wh) = rwlock.acquire_write();
+            assert(rwlock.pred().dims =~= self@.dimensions);
+            let ghost pre_insert = memo@;
+            memo.insert(Pair(i, j), best);
+            proof {
+                assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
+                implies
+                    memo@[(a, b)] as nat == spec_chain_cost(gdims, a as int, b as int, a as int)
+                by {
+                    if a == i && b == j {
+                    } else {
+                        assert(pre_insert.contains_key((a, b)));
+                    }
+                };
+            }
+            wh.release_write(memo);
+            best
         }
 
         fn optimal_cost(&self) -> (cost: usize) {
@@ -359,7 +423,7 @@ broadcast use {
             let self_dims = arc_deref(&self.dimensions);
             let other_dims = arc_deref(&other.dimensions);
             let r = *self_dims == *other_dims;
-            proof { accept(r == (self@ == other@)); }  // accept hole: Vec::eq external_body
+            proof { accept(r == (self@ == other@)); }
             r
         }
     }
