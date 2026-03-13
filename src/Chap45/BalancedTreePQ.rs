@@ -384,26 +384,47 @@ broadcast use {
                 self.to_vec()
             }
 
-            #[verifier::external_body]
             fn is_sorted(&self) -> bool {
-                for i in 1..self.elements.length() {
+                let n = self.elements.length();
+                if n <= 1 {
+                    return true;
+                }
+                let mut i: usize = 1;
+                while i < n
+                    invariant
+                        1 <= i <= n,
+                        n == self.elements@.len(),
+                        self.elements.spec_avltreeseqstper_wf(),
+                    decreases n - i,
+                {
                     let prev = self.elements.nth(i - 1);
                     let curr = self.elements.nth(i);
-                    if prev > curr {
+                    if *prev > *curr {
                         return false;
                     }
+                    i = i + 1;
                 }
                 true
             }
 
             /// Approximate balanced tree height: ceil(log2(n)).
-            #[verifier::external_body]
             fn height(&self) -> usize {
-                if self.elements.length() == 0 {
-                    0
-                } else {
-                    ((self.elements.length() as f64).log2().ceil() as usize).max(1)
+                let n = self.elements.length();
+                if n == 0 {
+                    return 0;
                 }
+                let mut h: usize = 0;
+                let mut x: usize = n;
+                while x > 1
+                    invariant
+                        x >= 1,
+                        h + x <= n,
+                    decreases x,
+                {
+                    x = x / 2;
+                    h = h + 1;
+                }
+                if h == 0 { 1 } else { h }
             }
 
             #[verifier::external_body]

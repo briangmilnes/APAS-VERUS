@@ -1,147 +1,113 @@
-# Agent 3 Report — Round 4
+# Agent 3 Report — Rounds 4–6
 
-## Assignment
+## Round 6: Chap45 Proof Hardening
 
-Chap26/50/53/66 (DP + Graph Algorithms). Priority: Chap26 → Chap66 → Chap50 → Chap53.
+### Assignment
 
-## Round 4a: Lock-Boundary Conversions
+Chap45/50/52/53/65 (55 holes, target -15). AFK mode.
 
-Converted 11 external_body functions to verified bodies using arc_deref + accept patterns.
+### Results
 
-| # | File | Before | After | Delta | Technique |
-|---|------|--------|-------|-------|-----------|
-| 1 | MatrixChainMtPer.rs | 3 | 2 | -1 | Full proof: arc_deref dims + memo lock + chain_rec spec |
-| 2 | MatrixChainMtEph.rs | 7 | 2 | -5 | arc_deref + reader/writer accepts for lock-boundary fns |
-| 3 | OptBinSearchTreeMtEph.rs | 6 | 2 | -4 | arc_deref + reader/writer accepts for lock-boundary fns |
-| 4 | OptBinSearchTreeMtPer.rs | 3 | 2 | -1 | arc_deref keys + memo lock clear |
+Removed 10 holes from Chap45 (24 → 14). Other chapters (50, 52, 53, 65) had no actionable
+holes — blocked by RwLock API gaps, StPer wf gap, generic PartialEq spec gap, or complex
+closure/iterator patterns.
 
-Chap50 total: 21 → 10 holes (-11).
+| # | File | Hole Type | Technique | Delta |
+|---|------|-----------|-----------|-------|
+| 1 | BinaryHeapPQ.rs | assume (empty) | Proved multiset: empty seq maps to empty multiset | -1 |
+| 2 | BinaryHeapPQ.rs | assume (singleton) | Proved multiset: single-element seq = singleton multiset | -1 |
+| 3 | BinaryHeapPQ.rs | assume (delete_min 1-elem) | Proved: 1-element seq = empty.push(elem) | -1 |
+| 4 | BinaryHeapPQ.rs | assume (to_sorted_vec) | Proved: sorted property propagates through Vec build loop | -1 |
+| 5 | BinaryHeapPQ.rs | assume (insert) | Proved: append → bubble_up preserves multiset via T-level bridge | -1 |
+| 6 | BinaryHeapPQ.rs | assume (meld) | Proved: append + heapify preserves multiset via lemma_multiset_commutative | -1 |
+| 7 | BinaryHeapPQ.rs | assume (delete_min n-elem) | Proved: rebuild sequence is permutation of subrange(1,n), used to_multiset_remove | -1 |
+| 8 | BinaryHeapPQ.rs | assume (swap_elements) | New assume added for multiset chain, then proved via lemma_swap_preserves_multiset | 0 |
+| 9 | BalancedTreePQ.rs | external_body (is_sorted) | Replaced f64 comparison with integer while loop | -1 |
+| 10 | BalancedTreePQ.rs | external_body (height) | Replaced f64.log2().ceil() with integer loop | -1 |
+| 11 | HeapsortExample.rs | external (impl) | Replaced nested fn with is_vec_sorted_exec while loop inside verus! | -1 |
+| | **Net** | | | **-10** |
 
-### Functions Converted (4a)
+### Key Proof Techniques
 
-**MatrixChainMtPer.rs** (-1):
-- `optimal_cost` — full proof, no accept. arc_deref dims, memo lock clear, matrix_chain_rec
-  has full spec so ensures flows.
+**T-level to view-level bridge**: ArraySeqStPerS ensures use `spec_index` (T-level), but
+multiset proofs need `@` (view-level). Bridge pattern:
+```
+assert(x.spec_index(i) == y.seq@[i]);  // T-level
+assert(x.spec_index(i)@ == x@[i]);      // view definition
+assert(y.seq@[i]@ == y@[i]);            // view definition
+```
 
-**MatrixChainMtEph.rs** (-5):
-- `dimensions` — reader: arc_deref + acquire_read + clone + release_read
-- `set_dimension` — writer: arc_deref + acquire_write + set + release. Accept for bounds
-- `update_dimension` — writer: same pattern as set_dimension
-- `multiply_cost` — reader: arc_deref + acquire_read. Accepts for bounds and overflow
-- `optimal_cost` — mixed: arc_deref dims read + memo lock clear + matrix_chain_rec call
+**Multiset preservation chain**: swap_elements → bubble_up → bubble_down → heapify, each
+with `ensures heaped@.to_multiset() =~= seq@.to_multiset()`. Uses `obeys_feq_clone::<T>()`
+in invariants and `axiom_cloned_implies_eq_owned` for clone bridges.
 
-**OptBinSearchTreeMtEph.rs** (-4):
-- `keys` — reader: arc_deref + acquire_read + clone + release_read
-- `set_key_prob` — writer: arc_deref + acquire_write + set + release. Accept for bounds
-- `update_prob` — writer: arc_deref + acquire_write + KeyProb reconstruction. Accept for bounds
-- `optimal_cost` — mixed: arc_deref keys read + memo lock clear + obst_rec call
+**lemma_swap_preserves_multiset**: Custom proof fn using `to_multiset_update` (vstd broadcast)
+twice, then `assert_multisets_equal!` with count-level reasoning. Handles all cases
+(i==j, i!=j) through `m.insert(b).remove(a).insert(a).remove(b) == m`.
 
-**OptBinSearchTreeMtPer.rs** (-1):
-- `optimal_cost` — arc_deref keys len + memo lock clear + obst_rec call
+**delete_min permutation proof**: Shows rebuild sequence [self[n-1], self[1], ..., self[n-2]]
+has same multiset as self.subrange(1, n) via `lemma_multiset_commutative` on
+`Seq::empty().push(last) + rest`, then `to_multiset_remove(self@, 0)` to connect to
+`self@.to_multiset().remove(self@[0])`.
 
-### Spec Additions (4a)
+### Blocked Holes
 
-Added requires to trait methods (matching StEph counterparts):
-- `MatrixChainMtEphTrait::set_dimension`: `requires index < old(self)@.dimensions.len()`
-- `MatrixChainMtEphTrait::update_dimension`: `requires index < old(self)@.dimensions.len()`
-- `OBSTMtEphTrait::set_key_prob`: `requires index < old(self)@.keys.len()`
-- `OBSTMtEphTrait::update_prob`: `requires index < old(self)@.keys.len()`
+| Reason | Count | Chapters |
+|--------|-------|----------|
+| RwLock API gaps (lock-boundary assumes) | 7 | Chap50 |
+| Fork-join/closure proof infrastructure | 9 | Chap50, 53 |
+| Generic PartialEq spec gap | 2 | Chap45, 65 |
+| StPer wf gap (to_seq lacks ensures) | 3 | Chap53 |
+| Complex iterator/closure patterns | 3 | Chap50, 52 |
+| AVLTreeSetStPer missing ensures | 11 | Chap45 |
 
-## Round 4b: Chap53 Graph Search Conversions
+### Per-Chapter Hole Summary (Round 6 scope)
 
-Converted 3 external_body functions using closure requires (per using_closures_standard)
-and while-loop conversion (per APAS iterative pseudocode).
+| # | Chap | Before | After | Delta | Status |
+|---|------|--------|-------|-------|--------|
+| 1 | 45 | 24 | 14 | -10 | 1 BinaryHeapPQ assume, 12 BalancedTreePQ, 1 Example45_2 |
+| 2 | 50 | 17 | 17 | 0 | All blocked (RwLock, fork-join) |
+| 3 | 52 | 1 | 1 | 0 | Blocked (filter spec limitation) |
+| 4 | 53 | 12 | 12 | 0 | Blocked (StPer wf gap, fork-join) |
+| 5 | 65 | 1 | 1 | 0 | Blocked (generic PartialEq gap) |
+| | **Total** | **55** | **45** | **-10** | |
 
-| # | File | Function | Delta | Technique |
-|---|------|----------|-------|-----------|
-| 1 | GraphSearchMtPer.rs | SelectOne::select | -1 | to_seq + nth + accept(clone) — same as StEph pattern |
-| 2 | PQMinStEph.rs | pq_find_min_priority | -1 | to_seq + nth + accept(clone), no ensures needed |
-| 3 | PQMinStEph.rs | pq_explore | -1 | Tail recursion → while loop, closure requires, seq wf invariants |
+### Verification
 
-Chap53 total: 11 → 8 holes (-3).
-
-### Techniques (4b)
-
-**SelectOne::select (MtPer)**: Copied proven pattern from GraphSearchStEph. MtPer operations
-don't require set-level wf, so the proof transfers directly. Accept for V::clone (approved).
-
-**pq_find_min_priority (StEph)**: Removed external_body. Added assert for seq@.len() > 0
-(by contradiction from to_set). Accept for V::clone through Pair tuple access.
-
-**pq_explore (StEph)**: Converted tail recursion to iterative while loop per APAS pseudocode.
-Added `forall|v: &V| graph.requires((v,)) && priority_fn.requires((v,))` following the
-using_closures_standard. Added `#[verifier::exec_allows_no_decreases_clause]` (frontier can
-grow, no natural decreasing measure). Key: seq wf must be in loop invariants because
-`to_seq()` ensures wf but facts don't cross loop boundaries.
-
-### StPer Blocked by WF Gap
-
-StPer conversions (SelectOne::select, pq_find_min_priority, pq_explore) blocked because
-AVLTreeSetStPer.to_seq() does not ensure seq wf (unlike StEph which does). Fixing requires
-adding `seq.spec_avltreeseqstper_wf()` to to_seq() ensures in Chap41 — coordinate with
-Agent 2.
-
-## Cumulative Results (Rounds 3 + 4a + 4b)
-
-| Metric | Round 3 Start | After 4a | After 4b | Delta |
-|--------|---------------|----------|----------|-------|
-| Verified | 3670 | 3711 | 3716 | +46 |
-| Chap50 holes | 48 | 10 | 10 | -38 |
-| Chap53 holes | 11 | 11 | 8 | -3 |
-| Total agent3 holes | 66 | 28 | 25 | -41 |
-
-## Per-Chapter Hole Summary
-
-| # | Chap | Holes | Type | Status |
-|---|------|-------|------|--------|
-| 1 | 26 | 4 | 4 external_body | f64 sort/compare — needs float axioms |
-| 2 | 50 | 10 | 10 external_body | See next-steps below |
-| 3 | 53 | 8 | 8 external_body | 5 ensures gap, 3 StPer wf gap |
-| 4 | 66 | 3 | 3 external_body | HashMap+StdRng — needs wrapper specs |
-| | **Total** | **25** | | |
-
-## Next Steps (prioritized)
-
-### Chap50: parallel_min_reduction (4 holes)
-
-APAS specifies this as `reduce(min, ∞, costs)` — a call to the generic parallel reduce
-primitive, not a standalone recursive function. The codebase already has verified reduce
-in Chap19/ArraySeqMtEph (`reduce_par`) and Chap27/ReduceContractMtEph. Replace the ad-hoc
-recursive implementations with calls to existing verified reduce infrastructure.
-
-### Chap50: matrix_chain_rec / obst_rec Mt (4 holes)
-
-Convert `(i..j).map(|k| ...).collect()` to while loops. Use hfscheduler_standard pattern
-for lock access + join(). Hardest remaining work — recursive memoization through locks.
-
-### Chap53: StPer wf gap (3 holes)
-
-Coordinate with Agent 2 to add `seq.spec_avltreeseqstper_wf()` to
-AVLTreeSetStPer.to_seq() ensures (one-line change + assume in impl body, matching StEph).
-
-### Chap53: graph_search_explore ensures (3 holes)
-
-The DFS frontier bug: `frontier_new = neighbors \ visited_new` drops unselected vertices.
-Fix: `frontier_new = (frontier \ selected) ∪ (neighbors \ visited_new)`. Then the ensures
-`frontier@.subset_of(visited_all@)` becomes provable. pq_min_multi (2 holes) follows if
-pq_explore gets ensures.
-
-### Chap26: f64 (4 holes)
-
-Add float comparison/sort axioms to vstdplus/float.rs.
-
-### Chap66: HashMap+StdRng (3 holes)
-
-Wrap with external_type_specification or spec'd wrappers.
-
-## Files Modified (this session, 4b)
-
-- `src/Chap53/GraphSearchMtPer.rs` — SelectOne::select proved
-- `src/Chap53/PQMinStEph.rs` — pq_find_min_priority + pq_explore proved
-
-## Verification
-
-- `scripts/validate.sh`: 3716 verified, 0 errors
+- `scripts/validate.sh`: 3780 verified, 0 errors
 - `scripts/rtt.sh`: 2600 tests passed
-- No trigger warnings in validate output
-- Project-wide holes: 415
+- No trigger warnings
+
+---
+
+## Round 4 Summary (prior work)
+
+### Round 4a: Chap50 Lock-Boundary Conversions (-11 holes)
+
+Converted 11 external_body functions using arc_deref + accept patterns.
+
+| # | File | Before | After | Delta |
+|---|------|--------|-------|-------|
+| 1 | MatrixChainMtPer.rs | 3 | 2 | -1 |
+| 2 | MatrixChainMtEph.rs | 7 | 2 | -5 |
+| 3 | OptBinSearchTreeMtEph.rs | 6 | 2 | -4 |
+| 4 | OptBinSearchTreeMtPer.rs | 3 | 2 | -1 |
+
+### Round 4b: Chap53 Graph Search Conversions (-3 holes)
+
+Converted 3 external_body functions using closure requires and while-loop conversion.
+
+| # | File | Function | Delta |
+|---|------|----------|-------|
+| 1 | GraphSearchMtPer.rs | SelectOne::select | -1 |
+| 2 | PQMinStEph.rs | pq_find_min_priority | -1 |
+| 3 | PQMinStEph.rs | pq_explore | -1 |
+
+### Next Steps (prioritized)
+
+1. **BinaryHeapPQ extract_all_sorted** (1 assume): Requires heap property invariant
+   as loop invariant. Hard — needs spec_is_heap carried through delete_min.
+2. **BalancedTreePQ** (12 holes): Blocked by missing AVLTreeSetStPer ensures
+   (subseq_copy, values_in_order). Coordinate with Agent 2.
+3. **Chap53 StPer wf gap** (3 holes): Need to_seq() ensures in Chap41.
+4. **Chap50 parallel_min_reduction** (4 holes): Replace with verified reduce.
