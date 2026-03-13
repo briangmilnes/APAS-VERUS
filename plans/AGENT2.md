@@ -87,45 +87,45 @@
   - external_body on Node::clone: cannot remove due to cyclic self-reference (recursive Clone).
 - Chap37: 62 → 37 holes (−25). 3771 verified, 0 errors. 2600 RTT, 147 PTT.
 
-## Current State (post Round 6)
+### Round 7: Chap37 requires_true + Chap38 BSTParaStEph — COMPLETE
+- **Chap37 requires_true fixes**: Fixed `requires true` warnings in 10 BST*MtEph and
+  BSTSet*MtEph files — replaced with real requires (wf, obeys_cmp_spec, etc.).
+- **Chap38 BSTParaStEph.rs**: Removed 6 of 7 external_body holes (7→1):
+  - Restructured BSTParaStEphInv to structural-only predicate (PhantomData, no contents).
+  - Changed insert/delete to `&mut self` with full specs (requires wf+ordering, ensures set ops).
+  - Removed external_body from: expose, insert, delete, union, intersect, difference.
+  - Each uses accepts at lock boundary (reader-accept for expose, writer-accept for mutations,
+    cross-disjointness accepts for set operations).
+  - Clone remains external_body: recursive cycle (ParamBST→NodeInner→ParamBST) in Clone trait,
+    which doesn't support `decreases`.
+  - Updated ParamBSTLit! macro and test file for `&mut self` signatures.
+- After rebase onto main: 3786 verified, 0 errors. 2600 RTT passed.
 
-| # | Chap | Holes | assume | ext_body | triv_wf | Clean Mods | Total Mods |
-|---|------|-------|--------|----------|---------|------------|------------|
-| 1 | 37 | 37 | 6 | 30 | 1 | 14 | 19 |
-| 2 | 39 | 38 | 0 | 38 | 0 | 1 | 4 |
-| 3 | 40 | 0 | 0 | 0 | 0 | 3 | 3 |
-| 4 | 41 | 51 | 28 | 22 | 1 | 1 | 7 |
-| 5 | 42 | 14 | 0 | 14 | 0 | 2 | 4 |
-| | **Total** | **140** | **34** | **104** | **2** | **21** | **37** |
+### Round 7: Chap38 BSTParaMtEph — IN PROGRESS
+- File read and architecture analyzed. 19 external_body holes.
+- Key architectural differences from StEph:
+  - Uses `Arc<RwLock<...>>` (not plain RwLock) for thread-safe sharing.
+  - All algorithmic helpers are outside `verus!` block (use `ParaPair!` for parallelism).
+  - insert/delete are `&self` (interior mutability) — concurrent tests depend on this.
+  - No ghost state, view() is external_body with dummy `Set::empty()`.
+- Challenge: `&self` insert/delete precludes ghost state updates, making a real view
+  impossible to maintain across mutations. Options under consideration:
+  1. Keep view external_body, remove external_body from other functions with accepts
+     (converts 19 external_body → 1 external_body + ~15 accepts = 18 holes removed).
+  2. Move all helpers inside verus!, use `join()` for parallelism, but still face the
+     `&self` ghost state problem for insert/delete.
+  3. Change insert/delete to `&mut self` (enables ghost state but breaks concurrent tests).
+- Not yet modified — researching approach before implementing.
 
-Verification: 3771 verified, 0 errors.
+## Current State (post Round 7 partial)
 
-## Remaining Work
+| # | Chap | Holes | Notes |
+|---|------|-------|-------|
+| 1 | 37 | 37 | requires_true warnings fixed |
+| 2 | 38 | 20 | BSTParaStEph: 7→1 (−6), BSTParaMtEph: 19 (unchanged) |
+| 3 | 39 | 38 | unchanged |
+| 4 | 40 | 0 | clean |
+| 5 | 41 | 51 | unchanged |
+| 6 | 42 | 14 | unchanged |
 
-### Chap37 (37 holes)
-- 6 assume: 1 height overflow (StEph), 1 height overflow (shared), 1 next_key (StEph),
-  1 from_vec spec + 1 wf-bridge (MtPer, blocked by build_balanced ext_body),
-  1 eq wf-bridge (shared, PartialEq::eq)
-- 30 external_body: 19 Arc path-copying (shared), 5 iterator (StEph/StPer),
-  1 Clone for AVLTreeNode (shared, Arc), 1 PartialEq::eq (StEph, bridge),
-  4 misc (StPer iter/clone)
-- 1 trivial_wf: BSTSplayStEph (design choice, splay has no global invariant)
-
-### Chap39 (37 holes)
-- 37 external_body: BSTTreapMtEph (9), BSTSetTreapMtEph (10), BSTParaTreapMtEph (18)
-- BSTTreapMtEph: Arc removed, now plain RwLock + ghost shadow. new() fully verified (-1 hole).
-- BSTParaTreapMtEph is fine-grained concurrent — excluded from simple migration
-
-### Chap41 (51 holes)
-- 12 assume in AVLTreeSetStEph: 8 operation-spec (set semantics proofs), 2 overflow, 1 clone-wf, 1 from_seq-wf
-- 10 assume in AVLTreeSetStPer: 9 operation-spec (set semantics), 1 clone-wf
-- 5 assume in AVLTreeSetMtPer: 2 wf-bridge (size, find), 2 operation-spec (size, find), 1 finiteness
-- 1 assume in ArraySetEnumMtEph: finiteness of bounded Set::new
-- 22 external_body: mix of parallel (filter, intersection, union, difference) and delegated Mt ops
-- 1 trivial_wf in AVLTreeSetMtEph: Unit Inv (no ghost↔exec fields to link)
-
-### Chap42 (14 holes)
-- 13 external_body in TableMtEph.rs: 8 join-based (must stay), 5 sequential (potentially provable)
-- 1 external_body in TableStPer.rs: collect_by_key
-
-## Priority Order: Chap40 → Chap37 → Chap42 → Chap39 → Chap41
+Verification: 3786 verified, 0 errors (+6 from 3780 baseline).
