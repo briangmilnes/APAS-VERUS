@@ -22,16 +22,7 @@ Table of Contents:
 
 ✓ KruskalStEph.rs
 ✓ PrimStEph.rs
-❌ UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:337: error: assume() - assume((root_u == root_v) == (root_u@ == root_v@));
-       331 |         fn equals(&mut self, u: &V, v: &V) -> (same: B) {
-            ...
-       335 |             proof {
-       336 |                 // accept hole: PartialEq on V agrees with view equality for roots
-       338 |             }
-       339 |             root_u == root_v
-   Holes: 1 total
-      1 × assume()
+✓ UnionFindStEph.rs
 
 =================================================================
 2. Depends Upon
@@ -58,8 +49,8 @@ UnionFindStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 66%)
-   1 holed (holes or errors, 33%)
+   3 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    3 total
 
 Proof Functions:
@@ -75,16 +66,17 @@ Function Specs:
    23 total fns
 
 
-Holes Found: 1 total
-   1 × assume() (100%)
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 11:17:47 -07:00
-Ended:     2026-03-13 11:17:47 -07:00
-Duration:  13ms
+Started:   2026-03-13 11:34:56 -07:00
+Ended:     2026-03-13 11:34:56 -07:00
+Duration:  5ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

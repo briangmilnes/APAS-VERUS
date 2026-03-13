@@ -3,8 +3,6 @@
 //! Tests for Chapter 66: Borůvka's MST Algorithm (Sequential Ephemeral)
 
 use ordered_float::OrderedFloat;
-use rand::rngs::StdRng;
-use rand::SeedableRng;
 
 use apas_verus::Chap05::SetStEph::SetStEph::*;
 use apas_verus::Chap66::BoruvkaStEph::BoruvkaStEph::*;
@@ -221,9 +219,8 @@ fn test_bridge_star_partition() {
     ];
 
     let bridges = BoruvkaStEph::vertex_bridges(&edges);
-    let mut rng = StdRng::seed_from_u64(42);
 
-    let (remaining, partition) = BoruvkaStEph::bridge_star_partition(&vertices, &bridges, &mut rng);
+    let (remaining, partition) = BoruvkaStEph::bridge_star_partition(&vertices, &bridges, 42);
 
     // Some vertices should be contracted (partition non-empty).
     // Remaining + contracted should equal original vertices.
@@ -237,9 +234,8 @@ fn test_bridge_star_partition_single_vertex() {
     let vertices = SetLit![1];
     let bridges: HashMapWithViewPlus<i32, (i32, ordered_float::OrderedFloat<f64>, usize)> =
         HashMapWithViewPlus { inner: std::collections::HashMap::new() };
-    let mut rng = StdRng::seed_from_u64(42);
 
-    let (remaining, partition) = BoruvkaStEph::bridge_star_partition(&vertices, &bridges, &mut rng);
+    let (remaining, partition) = BoruvkaStEph::bridge_star_partition(&vertices, &bridges, 42);
 
     // Single vertex with no bridges: stays as-is.
     assert_eq!(remaining.size(), 1);
@@ -256,8 +252,7 @@ fn test_boruvka_mst_direct() {
         LabeledEdge(3, 1, OrderedFloat(1.0), 2),
     ];
 
-    let mut rng = StdRng::seed_from_u64(42);
-    let mst_labels = BoruvkaStEph::boruvka_mst(&vertices, &edges, SetLit![], &mut rng);
+    let mst_labels = BoruvkaStEph::boruvka_mst(&vertices, &edges, SetLit![], 42);
 
     // MST of triangle should have 2 edges.
     assert_eq!(mst_labels.size(), 2);
@@ -270,8 +265,7 @@ fn test_boruvka_mst_direct_empty() {
     let vertices = SetLit![1];
     let edges: SetStEph<LabeledEdge<i32>> = SetLit![];
 
-    let mut rng = StdRng::seed_from_u64(42);
-    let mst_labels = BoruvkaStEph::boruvka_mst(&vertices, &edges, SetLit![], &mut rng);
+    let mst_labels = BoruvkaStEph::boruvka_mst(&vertices, &edges, SetLit![], 42);
 
     // No edges = empty MST.
     assert_eq!(mst_labels.size(), 0);

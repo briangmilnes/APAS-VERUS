@@ -137,6 +137,21 @@ broadcast use {
             get_bit64!(bv_new, i) == (get_bit64!(bv1, i) && !get_bit64!(bv2, i)),
     {}
 
+    /// A set of usize values bounded by n is finite.
+    proof fn lemma_bounded_usize_set_finite(n: usize)
+        ensures Set::new(|i: usize| (i as int) < n as int).finite()
+        decreases n
+    {
+        if n == 0 {
+            assert(Set::new(|i: usize| (i as int) < 0int) =~= Set::<usize>::empty());
+        } else {
+            lemma_bounded_usize_set_finite((n - 1) as usize);
+            let smaller = Set::new(|i: usize| (i as int) < (n - 1) as int);
+            let bigger = Set::new(|i: usize| (i as int) < n as int);
+            assert(bigger =~= smaller.insert((n - 1) as usize));
+        }
+    }
+
     proof fn lemma_view_finite(bits: Seq<u64>, universe_size: usize)
         requires bits.len() == num_words(universe_size as int),
         ensures Set::new(|i: usize|
@@ -148,10 +163,10 @@ broadcast use {
             (i as int) < universe_size as int
             && u64_view(bits[i as int / 64])[i as int % 64]
         );
-        assert(our_set.subset_of(Set::new(|i: usize| (i as int) < universe_size as int)));
-        // Set::new(|i: usize| i < universe_size) is finite because it's a subset of
-        // a range. The broadcast lemmas from group_set_lib_default handle this.
-        assume(our_set.finite()); 
+        let range_set = Set::new(|i: usize| (i as int) < universe_size as int);
+        assert(our_set.subset_of(range_set));
+        lemma_bounded_usize_set_finite(universe_size);
+        // range_set is finite, our_set is a subset — lemma_set_subset_finite fires.
     }
 
     // 8. traits
@@ -321,33 +336,168 @@ broadcast use {
             result
         }
 
-        #[verifier::external_body]
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite(),
         {
+            proof { lemma_view_finite(self.bits@, self.universe_size); }
             let mut count: usize = 0;
-            for i in 0..self.universe_size {
+            let ghost mut partial_set: Set<usize> = Set::empty();
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            for i in 0..self.universe_size
+                invariant
+                    partial_set.finite(),
+                    count as int == partial_set.len(),
+                    count <= i,
+                    partial_set =~= Set::new(|j: usize| (j as int) < i as int && self@.contains(j)),
+                    self.spec_arraysetenummteph_wf(),
+            {
                 let word_idx = i / 64;
                 let bit_idx = (i % 64) as u64;
                 if get_bit64_macro!(self.bits[word_idx], bit_idx) {
-                    count += 1;
+                    proof {
+                        assert(self@.contains(i));
+                        assert(!partial_set.contains(i));
+                        partial_set = partial_set.insert(i);
+                    }
+                    count = count + 1;
+                } else {
+                    proof {
+                        assert(!self@.contains(i));
+                    }
                 }
+                proof {
+                    assert(partial_set =~= Set::new(|j: usize|
+                        (j as int) < (i + 1) as int && self@.contains(j)));
+                    let range_set = Set::new(|j: usize| (j as int) < (i + 1) as int);
+                    assert(partial_set.subset_of(range_set));
+                    lemma_bounded_usize_set_finite((i + 1) as usize);
+                }
+            }
+            proof {
+                assert(partial_set =~= self@);
             }
             count
         }
 
-        #[verifier::external_body]
         fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)
         {
-            let mut result_vec = Vec::with_capacity(self.universe_size);
-            for i in 0..self.universe_size {
+            proof { lemma_view_finite(self.bits@, self.universe_size); }
+            let mut result_vec: Vec<usize> = Vec::new();
+            let ghost mut collected: Set<usize> = Set::empty();
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            for i in 0..self.universe_size
+                invariant
+                    self.spec_arraysetenummteph_wf(),
+                    result_vec@.len() <= i,
+                    collected.finite(),
+                    // Ghost set matches the partial view.
+                    collected =~= Set::new(|j: usize|
+                        (j as int) < i as int && self@.contains(j)),
+                    // All collected elements are in self@ and below i.
+                    forall|k: int| #![trigger result_vec@[k]]
+                        0 <= k < result_vec@.len() ==> (
+                            collected.contains(result_vec@[k])
+                        ),
+                    // Strictly increasing — implies no duplicates.
+                    forall|k: int, l: int| 0 <= k < l < result_vec@.len() ==>
+                        (#[trigger] result_vec@[k]) < (#[trigger] result_vec@[l]),
+                    // Vec covers the ghost set: every collected element is in vec.
+                    forall|x: usize| #[trigger] collected.contains(x) ==>
+                        result_vec@.contains(x),
+                    // Length matches.
+                    result_vec@.len() as int == collected.len(),
+            {
                 let word_idx = i / 64;
                 let bit_idx = (i % 64) as u64;
                 if get_bit64_macro!(self.bits[word_idx], bit_idx) {
+                    proof {
+                        assert(self@.contains(i));
+                        assert(!collected.contains(i));
+                    }
+                    let ghost old_collected = collected;
+                    let old_len = result_vec.len();
+                    let ghost old_view = result_vec@;
                     result_vec.push(i);
+                    proof {
+                        collected = collected.insert(i);
+                        // Push preserves existing elements.
+                        assert forall|k: int| 0 <= k < old_len as int implies
+                            #[trigger] result_vec@[k] == old_view[k] by {}
+                        // Ordering: all previous elements < i.
+                        assert forall|k: int, l: int|
+                            0 <= k < l < result_vec@.len() implies
+                            (#[trigger] result_vec@[k]) < (#[trigger] result_vec@[l]) by
+                        {
+                            if l == old_len as int {
+                                assert(result_vec@[k] == old_view[k]);
+                            }
+                        }
+                        // Coverage: collected elements are in vec.
+                        assert forall|x: usize| collected.contains(x) implies
+                            result_vec@.contains(x) by
+                        {
+                            if x == i {
+                                assert(result_vec@[old_len as int] == i);
+                            } else {
+                                assert(old_collected.contains(x));
+                                assert(old_view.contains(x));
+                                let k = choose|k: int|
+                                    0 <= k < old_view.len() && old_view[k] == x;
+                                assert(result_vec@[k] == old_view[k]);
+                                assert(result_vec@[k] == x);
+                            }
+                        }
+                        // Ghost set update.
+                        assert(collected =~= Set::new(|j: usize|
+                            (j as int) < (i + 1) as int && self@.contains(j)));
+                        let range_set = Set::new(|j: usize| (j as int) < (i + 1) as int);
+                        assert(collected.subset_of(range_set));
+                        lemma_bounded_usize_set_finite((i + 1) as usize);
+                    }
+                } else {
+                    proof {
+                        assert(!self@.contains(i));
+                        assert(collected =~= Set::new(|j: usize|
+                            (j as int) < (i + 1) as int && self@.contains(j)));
+                        let range_set = Set::new(|j: usize| (j as int) < (i + 1) as int);
+                        assert(collected.subset_of(range_set));
+                        lemma_bounded_usize_set_finite((i + 1) as usize);
+                    }
                 }
             }
-            ArraySeqMtEphS::from_vec(result_vec)
+
+            let seq = ArraySeqMtEphS::from_vec(result_vec);
+            proof {
+                assert(collected =~= self@);
+                // seq@ is result_vec@ mapped through view (identity for usize).
+                assert(seq@ =~= result_vec@) by {
+                    assert forall|k: int| 0 <= k < result_vec@.len() implies
+                        #[trigger] seq@[k] == result_vec@[k] by
+                    {
+                        assert(seq.spec_index(k) == result_vec@[k]);
+                    }
+                }
+                // seq@.to_set() =~= self@.
+                assert forall|x: usize|
+                    seq@.to_set().contains(x) <==> #[trigger] self@.contains(x) by
+                {
+                    if seq@.to_set().contains(x) {
+                        let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == x;
+                        assert(result_vec@[j] == x);
+                        assert(collected.contains(x));
+                    }
+                    if self@.contains(x) {
+                        assert(collected.contains(x));
+                        assert(result_vec@.contains(x));
+                        let k = choose|k: int|
+                            0 <= k < result_vec@.len() && result_vec@[k] == x;
+                        assert(seq@[k] == x);
+                    }
+                }
+            }
+            seq
         }
 
         fn empty(u: usize) -> (empty: Self)
@@ -377,24 +527,44 @@ broadcast use {
             s
         }
 
-        #[verifier::external_body]
         fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)
             ensures
                 constructed@.finite(),
                 constructed.spec_arraysetenummteph_wf(),
                 constructed.spec_universe_size() == u,
         {
-            let word_count = if u == 0 { 0 } else { (u - 1) / 64 + 1 };
-            let mut bits = vec![0u64; word_count];
-            for i in 0..seq.length() {
-                let elem = seq.nth(i).clone();
+            let word_count: usize = if u == 0 { 0 } else { (u - 1) / 64 + 1 };
+            let mut bits: Vec<u64> = Vec::new();
+            let mut j: usize = 0;
+            while j < word_count
+                invariant
+                    j <= word_count,
+                    bits@.len() == j as int,
+                    word_count as int == num_words(u as int),
+                decreases word_count - j,
+            {
+                bits.push(0u64);
+                j = j + 1;
+            }
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            for i in 0..seq.length()
+                invariant
+                    bits@.len() == word_count as int,
+                    word_count as int == num_words(u as int),
+            {
+                let elem = *seq.nth(i);
                 if elem < u {
                     let word_idx = elem / 64;
                     let bit_idx = (elem % 64) as u64;
-                    bits[word_idx] = set_bit64_macro!(bits[word_idx], bit_idx, true);
+                    let old_word = bits[word_idx];
+                    let new_word = set_bit64_macro!(old_word, bit_idx, true);
+                    bits.set(word_idx, new_word);
                 }
             }
-            ArraySetEnumMtEph { bits, universe_size: u }
+            let constructed = ArraySetEnumMtEph { bits, universe_size: u };
+            proof { lemma_view_finite(constructed.bits@, u); }
+            constructed
         }
 
         #[verifier::external_body]

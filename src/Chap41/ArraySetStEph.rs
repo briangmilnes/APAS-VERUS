@@ -331,6 +331,7 @@ pub mod ArraySetStEph {
             requires
                 self.spec_arraysetsteph_wf(),
                 self@.finite(),
+                forall|t: &T| #[trigger] f.requires((t,)),
             ensures
                 filtered@.finite(),
                 filtered@.subset_of(self@),
@@ -398,6 +399,8 @@ pub mod ArraySetStEph {
     impl<T: StT + Ord> ArraySetStEph<T> {
         pub open spec fn spec_arraysetsteph_wf(&self) -> bool {
             self.elements@.no_duplicates()
+            && self@.finite()
+            && obeys_feq_full::<T>()
         }
     }
 
@@ -406,6 +409,8 @@ pub mod ArraySetStEph {
     impl<T: StT + Ord> ArraySetStEphTrait<T> for ArraySetStEph<T> {
         open spec fn spec_arraysetsteph_wf(&self) -> bool {
             self.elements@.no_duplicates()
+            && self@.finite()
+            && obeys_feq_full::<T>()
         }
 
         fn size(&self) -> (count: usize)
@@ -420,7 +425,7 @@ pub mod ArraySetStEph {
         {
             let seq = self.elements.clone();
             proof {
-                assume(obeys_feq_clone::<T>());  // accept hole: Clone preserves feq
+                // obeys_feq_clone follows from obeys_feq_full in wf.
                 lemma_seq_map_cloned_view_eq(
                     self.elements.seq@,
                     seq.seq@,
@@ -431,9 +436,11 @@ pub mod ArraySetStEph {
 
         fn empty() -> (empty: Self)
         {
-            ArraySetStEph {
+            let empty = ArraySetStEph {
                 elements: ArraySeqStEphS::empty(),
-            }
+            };
+            proof { assume(obeys_feq_full::<T>()); }
+            empty
         }
 
         fn singleton(x: T) -> (tree: Self)
@@ -455,6 +462,7 @@ pub mod ArraySetStEph {
                 assert(elements@ =~= seq![x_view]);
                 Seq::<<T as View>::V>::empty().lemma_push_to_set_commute(x_view);
                 assert(seq![x_view] =~= Seq::<<T as View>::V>::empty().push(x_view));
+                assume(obeys_feq_full::<T>());
             }
             ArraySetStEph { elements }
         }
@@ -482,7 +490,7 @@ pub mod ArraySetStEph {
 
         fn find(&self, x: &T) -> (found: B)
         {
-            proof { assume(obeys_feq_full::<T>()); }  
+            proof { assume(obeys_feq_full::<T>()); }
             let n = self.elements.length();
             let mut i: usize = 0;
             while i < n
@@ -513,7 +521,6 @@ pub mod ArraySetStEph {
 
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
         {
-            proof { assume(obeys_feq_full::<T>()); }  
             let ghost old_view = self.elements@;
             let mut result_vec: Vec<T> = Vec::new();
             let ghost mut rv_views: Seq<<T as View>::V> = Seq::empty();
@@ -526,6 +533,7 @@ pub mod ArraySetStEph {
                     self.elements@ == old_view,
                     old_view.no_duplicates(),
                     obeys_feq_full::<T>(),
+                    forall|t: &T| #[trigger] f.requires((t,)),
                     rv_views.len() == result_vec@.len(),
                     forall|j: int| #![trigger rv_views[j]]
                         0 <= j < rv_views.len() ==> rv_views[j] == result_vec@[j]@,
@@ -536,7 +544,6 @@ pub mod ArraySetStEph {
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
-                proof { assume(f.requires((&*elem,))); }  
                 if f(elem) {
                     let cloned_elem = elem.clone();
                     proof {
@@ -620,7 +627,6 @@ pub mod ArraySetStEph {
 
         fn intersection(&self, other: &Self) -> (common: Self)
         {
-            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
             let ghost old_view = self.elements@;
             let ghost other_set = other@;
             let mut result_vec: Vec<T> = Vec::new();
@@ -700,7 +706,6 @@ pub mod ArraySetStEph {
 
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
-            proof { assume(obeys_feq_full::<T>()); }  
             let ghost old_view = self.elements@;
             let ghost other_set = other@;
             let mut result_vec: Vec<T> = Vec::new();
@@ -780,7 +785,6 @@ pub mod ArraySetStEph {
 
         fn union(&self, other: &Self) -> (combined: Self)
         {
-            proof { assume(obeys_feq_full::<T>()); }  
             let ghost self_view = self.elements@;
             let ghost other_view = other.elements@;
             let ghost self_set = self@;
@@ -936,7 +940,6 @@ pub mod ArraySetStEph {
 
         fn delete(&mut self, x: &T)
         {
-            proof { assume(obeys_feq_full::<T>()); }  // accept hole: feq bridge
             let ghost old_view = self.elements@;
             let ghost x_view = x@;
             let mut result_vec: Vec<T> = Vec::new();
@@ -1013,7 +1016,6 @@ pub mod ArraySetStEph {
         fn insert(&mut self, x: T)
         {
             if !self.find(&x) {
-                proof { assume(obeys_feq_full::<T>()); }  
                 let ghost old_view = self.elements@;
                 let ghost x_view = x@;
                 let n = self.elements.length();
