@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap45/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap45/BinaryHeapPQ.rs
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -19,37 +19,6 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:211: error: external_body - #[verifier::external_body]
-       212 |             fn insert(&self, element: T) -> Self {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:225: error: external_body - #[verifier::external_body]
-       226 |             fn delete_min(&self) -> (Self, Option<T>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:237: error: external_body - #[verifier::external_body]
-       238 |             fn meld(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:267: error: external_body - #[verifier::external_body]
-       268 |             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:292: error: external_body - #[verifier::external_body]
-       293 |             fn delete_max(&self) -> (Self, Option<T>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:303: error: external_body - #[verifier::external_body]
-       304 |             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:316: error: external_body - #[verifier::external_body]
-       317 |             fn contains(&self, element: &T) -> bool {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:330: error: external_body - #[verifier::external_body]
-       331 |             fn remove(&self, element: &T) -> (Self, bool) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:342: error: external_body - #[verifier::external_body]
-       343 |             fn range(&self, min_val: &T, max_val: &T) -> AVLTreeSeqStPerS<T> {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:356: error: external_body - #[verifier::external_body]
-       357 |             fn from_vec(elements: Vec<T>) -> Self {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:430: error: external_body - #[verifier::external_body]
-       431 |             fn split(&self, element: &T) -> (Self, bool, Self) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:458: error: external - #[verifier::external]
-       459 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:509: info: accept()
-   Holes: 12 total
-      11 × external_body
-      1 × external
-   Info: 1 total
-   Proof functions: 1 total (1 clean, 0 holed)
 ❌ BinaryHeapPQ.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:946: error: assume() - proof { assume(Self::spec_sorted(result.seq@)); }
        927 |             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
@@ -71,47 +40,6 @@ Table of Contents:
       1 × assume()
    Info: 2 total
    Proof functions: 2 total (2 clean, 0 holed)
-❌ Example45_2.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/Example45_2.rs:43: error: external - #[verifier::external]
-        44 |         impl Example45_2Trait for Example45_2 {
-   Holes: 1 total
-      1 × external
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/HeapsortExample.rs:131: error: fn_missing_requires_ensures - fn is_vec_sorted_exec — exec fn should have requires and ensures
-       126 |         proof fn _heapsort_example_verified() {}
-            ...
-       129 | 
-       130 |         /// Check if a Vec is sorted in non-decreasing order using element-wise comparison.
-       132 |             if v.len() <= 1 {
-       133 |                 return true;
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/HeapsortExample.rs:98: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/HeapsortExample.rs:113: info: accept()
-   Info: 2 total
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:84: error: fn_missing_requires - fn total_order_le — exec fn should have requires
-        81 |         proof fn _leftist_heap_pq_verified() {}
-            ...
-        82 | 
-        83 |         /// Exec comparison with spec ensures connecting to TotalOrder::le.
-        85 |             ensures le <==> TotalOrder::le(*a, *b)
-        86 |         {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1130: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1150: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1162: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1172: info: accept()
-   Info: 4 total
-   Proof functions: 4 total (4 clean, 0 holed)
-ℹ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/SortedListPQ.rs:1039: info: accept()
-   Info: 1 total
-   3 clean proof functions
-ℹ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/UnsortedListPQ.rs:645: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/UnsortedListPQ.rs:660: info: accept()
-   Info: 2 total
-   1 clean proof function
 
 =================================================================
 2. Depends Upon
@@ -121,59 +49,45 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-BalancedTreePQ  depends upon only clean modules
 BinaryHeapPQ  depends upon only clean modules
-Example45_2  depends upon only clean modules
-HeapsortExample  depends upon only clean modules
-LeftistHeapPQ  depends upon only clean modules
-SortedListPQ  depends upon only clean modules
-UnsortedListPQ  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-BalancedTreePQ.rs  depends upon only clean modules
 BinaryHeapPQ.rs  depends upon only clean modules
-Example45_2.rs  depends upon only clean modules
-HeapsortExample.rs  depends upon only clean modules
-LeftistHeapPQ.rs  depends upon only clean modules
-SortedListPQ.rs  depends upon only clean modules
-UnsortedListPQ.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 28%)
-   5 holed (holes or errors, 71%)
-   7 total
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
+   1 total
 
 Proof Functions:
-   13 clean (100%)
+   2 clean (100%)
    0 holed (0%)
-   13 total
+   2 total
 
 Function Specs:
-   256 exec fns with complete spec (requires+ensures) (71%)
-   3 exec fns missing spec (0%)
-   100 proof/spec fns clean (27%)
+   48 exec fns with complete spec (requires+ensures) (64%)
+   1 exec fns missing spec (1%)
+   25 proof/spec fns clean (33%)
    0 proof/spec fns with holes (0%)
-   359 total fns
+   74 total fns
 
 
-Holes Found: 14 total
-   1 × assume() (7%)
-   11 × external_body (78%)
-   2 × external (14%)
+Holes Found: 1 total
+   1 × assume() (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-12 23:36:39 -07:00
-Ended:     2026-03-12 23:36:39 -07:00
-Duration:  44ms
+Started:   2026-03-13 07:44:42 -07:00
+Ended:     2026-03-13 07:44:42 -07:00
+Duration:  13ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log

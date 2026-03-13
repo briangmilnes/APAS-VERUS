@@ -28,6 +28,7 @@ pub mod SubsetSumMtPer {
     use crate::Types::Types::*;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
 
@@ -128,6 +129,7 @@ pub mod SubsetSumMtPer {
     fn clone_arc_memo<T: MtVal>(
         s: &SubsetSumMtPerS<T>,
     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>)
+        requires s.memo.pred() == SubsetSumMtPerMemoInv,
         ensures cloned.pred() == s.memo.pred(),
     {
         clone_arc_rwlock(&s.memo)
@@ -135,15 +137,26 @@ pub mod SubsetSumMtPer {
 
     /// Recursive memoized parallel subset sum solver.
     /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
-    #[verifier::external_body]
     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
-        table: &SubsetSumMtPerS<T>,
+        multiset: &ArraySeqMtPerS<T>,
+        memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>,
         i: usize,
         j: i32,
-    ) -> (found: bool) {
+    ) -> (found: bool)
+        requires
+            i <= multiset.spec_len(),
+            memo.pred() == SubsetSumMtPerMemoInv,
+        ensures true,
+        decreases i,
+    {
+        // Memo lookup.
         {
-            let handle = table.memo.acquire_read();
-            let found = handle.borrow().get(&Pair(i, j)).copied();
+            let rwlock = arc_deref(memo);
+            let handle = rwlock.acquire_read();
+            let found = match handle.borrow().get(&Pair(i, j)) {
+                Some(v) => Some(*v),
+                None => None,
+            };
             handle.release_read();
             if let Some(result) = found {
                 return result;
@@ -155,25 +168,41 @@ pub mod SubsetSumMtPer {
         } else if i == 0 {
             false
         } else {
-            let element_value: i32 = (*table.multiset.nth(i - 1)).into();
+            let element_value: i32 = (*multiset.nth(i - 1)).clone().into();
             if element_value < 0 || element_value > j {
-                subset_sum_rec(table, i - 1, j)
+                subset_sum_rec(multiset, memo, i - 1, j)
             } else {
-                let table_clone1 = table.clone();
-                let table_clone2 = table.clone();
+                let multiset1 = multiset.clone();
+                let memo1 = clone_arc_rwlock(memo);
+                let multiset2 = multiset.clone();
+                let memo2 = clone_arc_rwlock(memo);
 
-                let f1 = move || subset_sum_rec(&table_clone1, i - 1, j - element_value);
-                let f2 = move || subset_sum_rec(&table_clone2, i - 1, j);
+                let f1 = move || -> (r: bool)
+                    requires
+                        i - 1 <= multiset1.spec_len(),
+                        memo1.pred() == SubsetSumMtPerMemoInv,
+                {
+                    subset_sum_rec(&multiset1, &memo1, i - 1, j - element_value)
+                };
+                let f2 = move || -> (r: bool)
+                    requires
+                        i - 1 <= multiset2.spec_len(),
+                        memo2.pred() == SubsetSumMtPerMemoInv,
+                {
+                    subset_sum_rec(&multiset2, &memo2, i - 1, j)
+                };
                 let (result1, result2) = join(f1, f2);
 
                 result1 || result2
             }
         };
 
+        // Memo store.
         {
-            let (mut memo, write_handle) = table.memo.acquire_write();
-            memo.insert(Pair(i, j), result);
-            write_handle.release_write(memo);
+            let rwlock = arc_deref(memo);
+            let (mut current, write_handle) = rwlock.acquire_write();
+            current.insert(Pair(i, j), result);
+            write_handle.release_write(current);
         }
 
         result
@@ -210,13 +239,14 @@ pub mod SubsetSumMtPer {
             }
 
             {
-                let (mut memo, write_handle) = self.memo.acquire_write();
+                let rwlock = arc_deref(&self.memo);
+                let (mut memo, write_handle) = rwlock.acquire_write();
                 memo.clear();
                 write_handle.release_write(memo);
             }
 
             let n = self.multiset.length();
-            subset_sum_rec(self, n, target)
+            subset_sum_rec(&self.multiset, &self.memo, n, target)
         }
 
         fn multiset(&self) -> (ms: &ArraySeqMtPerS<T>) { &self.multiset }

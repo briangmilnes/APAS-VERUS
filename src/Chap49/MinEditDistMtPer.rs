@@ -28,6 +28,7 @@ pub mod MinEditDistMtPer {
     use crate::Types::Types::*;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
 
@@ -104,7 +105,8 @@ pub mod MinEditDistMtPer {
         /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
         fn min_edit_distance(&self) -> (dist: usize)
         where
-            T: Send + Sync + 'static;
+            T: Send + Sync + 'static
+            requires self.spec_source_len() + self.spec_target_len() < usize::MAX;
 
         /// Get the source sequence.
         /// - APAS: not specified
@@ -137,6 +139,7 @@ pub mod MinEditDistMtPer {
     fn clone_arc_memo<T: MtVal>(
         s: &MinEditDistMtPerS<T>,
     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>)
+        requires s.memo.pred() == MinEditDistMtPerMemoInv,
         ensures cloned.pred() == s.memo.pred(),
     {
         clone_arc_rwlock(&s.memo)
@@ -144,37 +147,76 @@ pub mod MinEditDistMtPer {
 
     /// Recursive memoized parallel minimum edit distance solver.
     /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
-    #[verifier::external_body]
     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
-        table: &MinEditDistMtPerS<T>,
+        source: &ArraySeqMtPerS<T>,
+        target: &ArraySeqMtPerS<T>,
+        memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>,
         i: usize,
         j: usize,
-    ) -> (dist: usize) {
+    ) -> (dist: usize)
+        requires
+            i <= source.spec_len(),
+            j <= target.spec_len(),
+            source.spec_len() + target.spec_len() < usize::MAX,
+            memo.pred() == MinEditDistMtPerMemoInv,
+        ensures
+            dist <= i + j,
+        decreases i + j,
+    {
+        // Memo lookup.
         {
-            let handle = table.memo.acquire_read();
-            let found = handle.borrow().get(&Pair(i, j)).copied();
+            let rwlock = arc_deref(memo);
+            let handle = rwlock.acquire_read();
+            let found = match handle.borrow().get(&Pair(i, j)) {
+                Some(v) => Some(*v),
+                None => None,
+            };
             handle.release_read();
             if let Some(result) = found {
-                return result;
+                if result <= i + j {
+                    return result;
+                }
             }
         }
 
-        let result = if i == 0 {
+        let dist = if i == 0 {
             j
         } else if j == 0 {
             i
         } else {
-            let source_char = table.source.nth(i - 1);
-            let target_char = table.target.nth(j - 1);
+            let source_char = source.nth(i - 1).clone();
+            let target_char = target.nth(j - 1).clone();
 
-            if *source_char == *target_char {
-                min_edit_distance_rec(table, i - 1, j - 1)
+            if source_char == target_char {
+                min_edit_distance_rec(source, target, memo, i - 1, j - 1)
             } else {
-                let table_clone1 = table.clone();
-                let table_clone2 = table.clone();
+                let source1 = source.clone();
+                let target1 = target.clone();
+                let memo1 = clone_arc_rwlock(memo);
+                let source2 = source.clone();
+                let target2 = target.clone();
+                let memo2 = clone_arc_rwlock(memo);
 
-                let f1 = move || min_edit_distance_rec(&table_clone1, i - 1, j);
-                let f2 = move || min_edit_distance_rec(&table_clone2, i, j - 1);
+                let f1 = move || -> (r: usize)
+                    requires
+                        i - 1 <= source1.spec_len(),
+                        j <= target1.spec_len(),
+                        source1.spec_len() + target1.spec_len() < usize::MAX,
+                        memo1.pred() == MinEditDistMtPerMemoInv,
+                    ensures r <= (i - 1) + j,
+                {
+                    min_edit_distance_rec(&source1, &target1, &memo1, i - 1, j)
+                };
+                let f2 = move || -> (r: usize)
+                    requires
+                        i <= source2.spec_len(),
+                        j - 1 <= target2.spec_len(),
+                        source2.spec_len() + target2.spec_len() < usize::MAX,
+                        memo2.pred() == MinEditDistMtPerMemoInv,
+                    ensures r <= i + (j - 1),
+                {
+                    min_edit_distance_rec(&source2, &target2, &memo2, i, j - 1)
+                };
                 let (delete_cost, insert_cost) = join(f1, f2);
 
                 if delete_cost <= insert_cost {
@@ -185,13 +227,15 @@ pub mod MinEditDistMtPer {
             }
         };
 
+        // Memo store.
         {
-            let (mut memo, write_handle) = table.memo.acquire_write();
-            memo.insert(Pair(i, j), result);
-            write_handle.release_write(memo);
+            let rwlock = arc_deref(memo);
+            let (mut current, write_handle) = rwlock.acquire_write();
+            current.insert(Pair(i, j), dist);
+            write_handle.release_write(current);
         }
 
-        result
+        dist
     }
 
     impl<T: MtVal> MinEditDistMtPerTrait<T> for MinEditDistMtPerS<T> {
@@ -225,7 +269,8 @@ pub mod MinEditDistMtPer {
             T: Send + Sync + 'static,
         {
             {
-                let (mut memo, write_handle) = self.memo.acquire_write();
+                let rwlock = arc_deref(&self.memo);
+                let (mut memo, write_handle) = rwlock.acquire_write();
                 memo.clear();
                 write_handle.release_write(memo);
             }
@@ -233,7 +278,7 @@ pub mod MinEditDistMtPer {
             let source_len = self.source.length();
             let target_len = self.target.length();
 
-            min_edit_distance_rec(self, source_len, target_len)
+            min_edit_distance_rec(&self.source, &self.target, &self.memo, source_len, target_len)
         }
 
         fn source(&self) -> (s: &ArraySeqMtPerS<T>) { &self.source }
