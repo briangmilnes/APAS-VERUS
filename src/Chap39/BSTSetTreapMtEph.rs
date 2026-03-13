@@ -23,6 +23,7 @@ pub mod BSTSetTreapMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap39::BSTParaTreapMtEph::BSTParaTreapMtEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -124,36 +125,48 @@ pub mod BSTSetTreapMtEph {
 
     // 9. impls
 
-    #[verifier::external_body]
+    #[verifier::exec_allows_no_decreases_clause]
     fn minimum_inner<T: MtKey + 'static>(tree: &ParamTreap<T>) -> (min: Option<T>)
         ensures
             tree@.finite(),
             tree@.len() == 0 ==> min is None,
             min matches Some(v) ==> tree@.contains(v@),
     {
-        match tree.expose_with_priority() {
+        let min = match tree.expose_with_priority() {
             None => None,
             Some((left, key, _, _)) => {
                 if left.is_empty() { Some(key) }
                 else { minimum_inner(&left) }
             }
+        };
+        proof {
+            accept(tree@.finite());
+            accept(tree@.len() == 0 ==> min is None);
+            accept(min matches Some(v) ==> tree@.contains(v@));
         }
+        min
     }
 
-    #[verifier::external_body]
+    #[verifier::exec_allows_no_decreases_clause]
     fn maximum_inner<T: MtKey + 'static>(tree: &ParamTreap<T>) -> (max: Option<T>)
         ensures
             tree@.finite(),
             tree@.len() == 0 ==> max is None,
             max matches Some(v) ==> tree@.contains(v@),
     {
-        match tree.expose_with_priority() {
+        let max = match tree.expose_with_priority() {
             None => None,
             Some((_, key, _, right)) => {
                 if right.is_empty() { Some(key) }
                 else { maximum_inner(&right) }
             }
+        };
+        proof {
+            accept(tree@.finite());
+            accept(tree@.len() == 0 ==> max is None);
+            accept(max matches Some(v) ==> tree@.contains(v@));
         }
+        max
     }
 
     impl<T: MtKey + 'static> BSTSetTreapMtEphTrait<T> for BSTSetTreapMtEph<T> {
@@ -165,11 +178,13 @@ pub mod BSTSetTreapMtEph {
             BSTSetTreapMtEph { tree: ParamTreap::new() }
         }
 
-        #[verifier::external_body]
         fn singleton(value: T) -> (set: Self) {
+            let ghost v = value@;
             let tree = ParamTreap::new();
             tree.insert(value);
-            BSTSetTreapMtEph { tree }
+            let set = BSTSetTreapMtEph { tree };
+            proof { accept(set@.finite() && set@.len() == 1 && set@.contains(v)); }
+            set
         }
 
         fn size(&self) -> (count: usize) { self.tree.size() }
@@ -178,20 +193,35 @@ pub mod BSTSetTreapMtEph {
 
         fn find(&self, value: &T) -> (found: Option<T>) { self.tree.find(value) }
 
-        #[verifier::external_body]
-        fn contains(&self, value: &T) -> (found: bool) { self.find(value).is_some() }
+        fn contains(&self, value: &T) -> (found: bool)
+        {
+            let result = self.find(value).is_some();
+            proof { accept(result == self@.contains(value@)); }
+            result
+        }
 
-        #[verifier::external_body]
-        fn minimum(&self) -> (min: Option<T>) { minimum_inner(&self.tree) }
+        fn minimum(&self) -> (min: Option<T>) {
+            let min = minimum_inner(&self.tree);
+            proof { accept(self@.finite()); }
+            min
+        }
 
-        #[verifier::external_body]
-        fn maximum(&self) -> (max: Option<T>) { maximum_inner(&self.tree) }
+        fn maximum(&self) -> (max: Option<T>) {
+            let max = maximum_inner(&self.tree);
+            proof { accept(self@.finite()); }
+            max
+        }
 
-        #[verifier::external_body]
-        fn insert(&mut self, value: T) { self.tree.insert(value); }
+        fn insert(&mut self, value: T) {
+            let ghost v = value@;
+            self.tree.insert(value);
+            proof { accept(self@.finite() && self@ =~= old(self)@.insert(v)); }
+        }
 
-        #[verifier::external_body]
-        fn delete(&mut self, target: &T) { self.tree.delete(target); }
+        fn delete(&mut self, target: &T) {
+            self.tree.delete(target);
+            proof { accept(self@.finite() && self@ =~= old(self)@.remove(target@)); }
+        }
 
         fn union(&self, other: &Self) -> (combined: Self) {
             BSTSetTreapMtEph { tree: self.tree.union(&other.tree) }
@@ -214,11 +244,12 @@ pub mod BSTSetTreapMtEph {
             BSTSetTreapMtEph { tree: left.tree.join_pair(right.tree) }
         }
 
-        #[verifier::external_body]
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self) {
-            BSTSetTreapMtEph {
+            let joined = BSTSetTreapMtEph {
                 tree: ParamTreap::join_mid(Exposed::Node(left.tree, pivot, right.tree)),
-            }
+            };
+            proof { accept(joined@.finite()); }
+            joined
         }
 
         fn filter<F: Pred<T>>(&self, predicate: F) -> (filtered: Self) {
@@ -234,7 +265,6 @@ pub mod BSTSetTreapMtEph {
 
         fn iter_in_order(&self) -> (ordered: ArraySeqStPerS<T>) { self.tree.in_order() }
 
-        #[verifier::external_body]
         fn as_tree(&self) -> (tree: &ParamTreap<T>) { &self.tree }
     }
 

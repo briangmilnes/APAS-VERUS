@@ -21,137 +21,163 @@ Table of Contents:
 =================================================================
 
 ❌ ChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ChainedHashTable.rs:64: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ChainedHashTable.rs:64: error: external_body - #[verifier::external_body]
         65 |             fn insert_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ChainedHashTable.rs:101: error: external_body - #[verifier::external_body]
-       102 |             fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ChainedHashTable.rs:135: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ChainedHashTable.rs:145: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ChainedHashTable.rs:103: error: external_body - #[verifier::external_body]
+       104 |             fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ChainedHashTable.rs:137: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ChainedHashTable.rs:147: info: accept()
    Holes: 2 total
       2 × external_body
    Info: 2 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ DoubleHashFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/DoubleHashFlatHashTableStEph.rs:40: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:40: error: external_body - #[verifier::external_body]
         41 |         pub fn second_hash<Key: StT + Hash>(key: &Key, table_size: usize) -> usize {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/DoubleHashFlatHashTableStEph.rs:150: error: external_body - #[verifier::external_body]
-       151 |         fn resize(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/DoubleHashFlatHashTableStEph.rs:187: error: external_body - #[verifier::external_body]
-       188 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> usize {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/DoubleHashFlatHashTableStEph.rs:196: error: external_body - #[verifier::external_body]
-       197 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> usize {
-   Holes: 4 total
-      4 × external_body
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:70: error: external_body - #[verifier::external_body]
+        71 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:90: error: external_body - #[verifier::external_body]
+        91 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:108: error: external_body - #[verifier::external_body]
+       109 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:130: error: external_body - #[verifier::external_body]
+       131 |         fn resize(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:167: error: external_body - #[verifier::external_body]
+       168 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> usize {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:176: error: external_body - #[verifier::external_body]
+       177 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> usize {
+   Holes: 7 total
+      7 × external_body
 ❌ FlatHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/FlatHashTable.rs:66: error: fn_missing_ensures - fn insert_with_probe — exec fn should have ensures
-        57 |         fn find_slot(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (slot: usize)
-            ...
-        64 |         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        65 |         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — delegates to find_slot then O(1) write.
-        67 |             requires
-        68 |                 old(table).current_size > 0,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/FlatHashTable.rs:80: error: fn_missing_ensures - fn lookup_with_probe — exec fn should have ensures
-        66 |         fn insert_with_probe(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
-            ...
-        78 |         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        79 |         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — iterates probe sequence until found or empty.
-        81 |             requires
-        82 |                 table.current_size > 0,
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/FlatHashTable.rs:66: error: external_body - #[verifier::external_body]
+        67 |         fn insert_with_probe(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/FlatHashTable.rs:81: error: external_body - #[verifier::external_body]
+        82 |         fn lookup_with_probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value>
+   Holes: 2 total
+      2 × external_body
 ❌ LinProbFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/LinProbFlatHashTableStEph.rs:116: error: external_body - #[verifier::external_body]
-       117 |         fn resize(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/LinProbFlatHashTableStEph.rs:153: error: external_body - #[verifier::external_body]
-       154 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> usize {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/LinProbFlatHashTableStEph.rs:161: error: external_body - #[verifier::external_body]
-       162 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> usize {
-   Holes: 3 total
-      3 × external_body
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/LinProbFlatHashTableStEph.rs:36: error: external_body - #[verifier::external_body]
+        37 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/LinProbFlatHashTableStEph.rs:56: error: external_body - #[verifier::external_body]
+        57 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/LinProbFlatHashTableStEph.rs:74: error: external_body - #[verifier::external_body]
+        75 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/LinProbFlatHashTableStEph.rs:96: error: external_body - #[verifier::external_body]
+        97 |         fn resize(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/LinProbFlatHashTableStEph.rs:133: error: external_body - #[verifier::external_body]
+       134 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> usize {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/LinProbFlatHashTableStEph.rs:141: error: external_body - #[verifier::external_body]
+       142 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> usize {
+   Holes: 6 total
+      6 × external_body
 ❌ LinkedListChainedHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/LinkedListChainedHashTableStEph.rs:176: error: external_body - #[verifier::external_body]
-       177 |             fn resize(
-   Holes: 1 total
-      1 × external_body
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ ParaHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:55: error: external_body - #[verifier::external_body]
-        56 |     fn compute_load_factor(num_elements: usize, current_size: usize) -> (lf: f64)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:63: error: external_body - #[verifier::external_body]
-        64 |     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize) -> (index: usize)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:72: error: external_body - #[verifier::external_body]
-        73 |     pub fn linear_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:82: error: external_body - #[verifier::external_body]
-        83 |     pub fn quadratic_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:92: error: external_body - #[verifier::external_body]
-        93 |     pub fn double_hash_probe<Key: std::hash::Hash, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:130: error: fn_missing_requires - fn createTable — exec fn should have requires
-       121 |         fn delete(&mut self, key: &Key) -> (deleted: bool);
-            ...
-       128 |         /// - APAS: Work O(m), Span O(m) where m is initial size.
-       129 |         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
-       131 |             ensures
-       132 |                 table.initial_size == initial_size,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:192: error: fn_missing_requires - fn metrics — exec fn should have requires
-       182 |         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
-            ...
-       190 |         /// - APAS: N/A — Verus-specific scaffolding.
-       191 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
-       193 |             ensures m == &table.metrics,
-       194 |         { &table.metrics }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:200: error: fn_missing_requires - fn loadAndSize — exec fn should have requires
-       192 |         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
-            ...
-       198 |         /// - APAS: Work O(1), Span O(1).
-       199 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads and one division.
-       201 |             ensures load_and_size.size == table.current_size,
-       202 |         {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/LinkedListChainedHashTableStEph.rs:109: error: external_body - #[verifier::external_body]
+       110 |             fn insert(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/LinkedListChainedHashTableStEph.rs:116: error: external_body - #[verifier::external_body]
+       117 |             fn lookup(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/LinkedListChainedHashTableStEph.rs:123: error: external_body - #[verifier::external_body]
+       124 |             fn delete(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/LinkedListChainedHashTableStEph.rs:130: error: external_body - #[verifier::external_body]
+       131 |             fn resize(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/LinkedListChainedHashTableStEph.rs:167: error: external_body - #[verifier::external_body]
+       168 |             fn hash_index(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (index: usize) {
    Holes: 5 total
       5 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ ParaHashTableStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ParaHashTableStEph.rs:55: error: external_body - #[verifier::external_body]
+        56 |     fn compute_load_factor(num_elements: usize, current_size: usize) -> (lf: f64)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ParaHashTableStEph.rs:86: error: fn_missing_requires - fn createTable — exec fn should have requires
+        77 |         fn delete(&mut self, key: &Key) -> (deleted: bool);
+            ...
+        84 |         /// - APAS: Work O(m), Span O(m) where m is initial size.
+        85 |         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
+        87 |             ensures
+        88 |                 table.initial_size == initial_size,
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ParaHashTableStEph.rs:148: error: fn_missing_requires - fn metrics — exec fn should have requires
+       138 |         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
+            ...
+       146 |         /// - APAS: N/A — Verus-specific scaffolding.
+       147 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
+       149 |             ensures m == &table.metrics,
+       150 |         { &table.metrics }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/ParaHashTableStEph.rs:156: error: fn_missing_requires - fn loadAndSize — exec fn should have requires
+       148 |         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
+            ...
+       154 |         /// - APAS: Work O(1), Span O(1).
+       155 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads and one division.
+       157 |             ensures load_and_size.size == table.current_size,
+       158 |         {
+   Holes: 1 total
+      1 × external_body
 ❌ QuadProbFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/QuadProbFlatHashTableStEph.rs:118: error: external_body - #[verifier::external_body]
-       119 |         fn resize(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/QuadProbFlatHashTableStEph.rs:155: error: external_body - #[verifier::external_body]
-       156 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> usize {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/QuadProbFlatHashTableStEph.rs:163: error: external_body - #[verifier::external_body]
-       164 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> usize {
-   Holes: 3 total
-      3 × external_body
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/QuadProbFlatHashTableStEph.rs:38: error: external_body - #[verifier::external_body]
+        39 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/QuadProbFlatHashTableStEph.rs:58: error: external_body - #[verifier::external_body]
+        59 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/QuadProbFlatHashTableStEph.rs:77: error: external_body - #[verifier::external_body]
+        78 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/QuadProbFlatHashTableStEph.rs:100: error: external_body - #[verifier::external_body]
+       101 |         fn resize(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/QuadProbFlatHashTableStEph.rs:137: error: external_body - #[verifier::external_body]
+       138 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> usize {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/QuadProbFlatHashTableStEph.rs:145: error: external_body - #[verifier::external_body]
+       146 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> usize {
+   Holes: 6 total
+      6 × external_body
 ❌ StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:256: error: external_body - #[verifier::external_body]
-       257 |             fn resize(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:103: error: fn_missing_requires - fn chain_insert — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:223: error: external_body - #[verifier::external_body]
+       224 |             fn insert(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:230: error: external_body - #[verifier::external_body]
+       231 |             fn lookup(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:237: error: external_body - #[verifier::external_body]
+       238 |             fn delete(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:244: error: external_body - #[verifier::external_body]
+       245 |             fn resize(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:283: error: external_body - #[verifier::external_body]
+       284 |             fn hash_index(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> usize {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:103: error: fn_missing_requires - fn chain_insert — exec fn should have requires
         99 |             fn default() -> Self { ChainList { head: None } }
             ...
        101 | 
        102 |         /// Inserts key-value into chain, updating if key exists, appending if not.
        104 |             chain: Option<Box<Node<Key, Value>>>,
        105 |             key: Key,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:136: error: fn_missing_requires - fn chain_lookup — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:136: error: fn_missing_requires - fn chain_lookup — exec fn should have requires
        103 |         fn chain_insert<Key: PartialEq, Value>(
             ...
        134 | 
        135 |         /// Looks up key in chain, returning value if found.
        137 |             chain: &Option<Box<Node<Key, Value>>>,
        138 |             key: &Key,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:157: error: fn_missing_requires - fn chain_delete — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:157: error: fn_missing_requires - fn chain_delete — exec fn should have requires
        136 |         fn chain_lookup<Key: PartialEq, Value: Clone>(
             ...
        155 | 
        156 |         /// Removes first node matching key, returns updated chain and whether found.
        158 |             chain: Option<Box<Node<Key, Value>>>,
        159 |             key: &Key,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:315: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:332: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:349: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:363: info: accept()
-   Holes: 1 total
-      1 × external_body
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:304: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:321: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:338: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/StructChainedHashTable.rs:352: info: accept()
+   Holes: 5 total
+      5 × external_body
    Info: 4 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ VecChainedHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/VecChainedHashTableStEph.rs:180: error: external_body - #[verifier::external_body]
-       181 |             fn resize(
-   Holes: 1 total
-      1 × external_body
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/VecChainedHashTableStEph.rs:113: error: external_body - #[verifier::external_body]
+       114 |             fn insert(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/VecChainedHashTableStEph.rs:120: error: external_body - #[verifier::external_body]
+       121 |             fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/VecChainedHashTableStEph.rs:127: error: external_body - #[verifier::external_body]
+       128 |             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/VecChainedHashTableStEph.rs:134: error: external_body - #[verifier::external_body]
+       135 |             fn resize(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/VecChainedHashTableStEph.rs:171: error: external_body - #[verifier::external_body]
+       172 |             fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> usize {
+   Holes: 5 total
+      5 × external_body
    Proof functions: 1 total (1 clean, 0 holed)
 
 =================================================================
@@ -201,27 +227,27 @@ Proof Functions:
    4 total
 
 Function Specs:
-   77 exec fns with complete spec (requires+ensures) (77%)
-   8 exec fns missing spec (8%)
+   75 exec fns with complete spec (requires+ensures) (78%)
+   6 exec fns missing spec (6%)
    14 proof/spec fns clean (14%)
    0 proof/spec fns with holes (0%)
-   99 total fns
+   95 total fns
 
 
-Holes Found: 20 total
-   20 × external_body (100%)
+Holes Found: 39 total
+   39 × external_body (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 13:16:04 -07:00
-Ended:     2026-03-13 13:16:04 -07:00
-Duration:  15ms
+Started:   2026-03-13 13:05:56 -07:00
+Ended:     2026-03-13 13:05:56 -07:00
+Duration:  24ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
-04 -07:00
-Ended:     2026-03-13 13:16:04 -07:00
-Duration:  15ms
+ted:   2026-03-13 13:05:56 -07:00
+Ended:     2026-03-13 13:05:56 -07:00
+Duration:  24ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log

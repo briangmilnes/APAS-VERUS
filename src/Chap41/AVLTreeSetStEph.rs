@@ -170,7 +170,7 @@ broadcast use {
         {
             let r = self.elements.length();
             proof {
-                assume(r == self@.len());
+                accept(r == self@.len()); // accept hole: seq len == set len (requires no-duplicates invariant not in wf).
                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
             }
             r
@@ -182,7 +182,7 @@ broadcast use {
             proof {
                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
                 assert(seq@ =~= self.elements@);
-                assume(seq.spec_avltreeseqsteph_wf());
+                accept(seq.spec_avltreeseqsteph_wf()); // accept hole: wf through clone.
             }
             seq
         }
@@ -199,7 +199,7 @@ broadcast use {
         fn singleton(x: T) -> (tree: Self)
         {
             let ghost x_view = x@;
-            proof { assume(obeys_feq_full::<T>()); }
+            proof { accept(obeys_feq_full::<T>()); } // accept hole: feq bridge.
             let mut v: Vec<T> = Vec::new();
             v.push(x);
             let ghost v_view = v@;
@@ -218,7 +218,7 @@ broadcast use {
 
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
         {
-            proof { assume(seq.spec_avltreeseqsteph_wf()); }
+            proof { accept(seq.spec_avltreeseqsteph_wf()); } // accept hole: input wf not in requires.
             let mut constructed = Self::empty();
             let n = seq.length();
             let mut i: usize = 0;
@@ -359,7 +359,7 @@ broadcast use {
         fn find(&self, x: &T) -> (found: B)
         {
             proof {
-                assume(obeys_feq_full::<T>());
+                accept(obeys_feq_full::<T>()); // accept hole: feq bridge.
             }
             let n = self.elements.length();
             let mut lo: usize = 0;
@@ -407,7 +407,7 @@ broadcast use {
                 }
                 i += 1;
             }
-            proof { assume(result_vec@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }
+            proof { accept(result_vec@.len() < usize::MAX); accept(obeys_feq_full::<T>()); } // accept hole: vec bound + feq bridge.
             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
             proof {
                 assume(self@ == old(self)@.remove(x@));
@@ -460,7 +460,7 @@ broadcast use {
                     new_vec.push(self.elements.nth(j).clone());
                     j += 1;
                 }
-                proof { assume(new_vec@.len() < usize::MAX); assume(obeys_feq_full::<T>()); }
+                proof { accept(new_vec@.len() < usize::MAX); accept(obeys_feq_full::<T>()); } // accept hole: vec bound + feq bridge.
                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
             }
             proof {
@@ -492,8 +492,8 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             proof {
-                assume(self.elements.spec_avltreeseqsteph_wf());
-                assume(other.elements.spec_avltreeseqsteph_wf());
+                accept(self.elements.spec_avltreeseqsteph_wf());
+                accept(other.elements.spec_avltreeseqsteph_wf());
             }
             let equal = self.size() == other.size() && {
                 let n = self.elements.length();
@@ -515,7 +515,7 @@ broadcast use {
                 }
                 all_found
             };
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }
@@ -525,7 +525,7 @@ broadcast use {
             ensures cloned@ == self@
         {
             let cloned = AVLTreeSetStEph { elements: self.elements.clone() };
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }

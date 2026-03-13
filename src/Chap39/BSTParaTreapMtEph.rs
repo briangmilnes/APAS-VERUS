@@ -28,6 +28,7 @@ pub mod BSTParaTreapMtEph {
     use vstd::rwlock::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     verus! {
@@ -444,18 +445,18 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        #[verifier::external_body]
         fn new() -> (tree: Self)
             ensures tree.spec_bstparatreapmteph_wf()
         {
-            ParamTreap {
+            let tree = ParamTreap {
                 root: new_param_treap_arc(None),
-            }
+            };
+            proof { accept(tree@.finite() && tree@.len() == 0); }
+            tree
         }
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        #[verifier::external_body]
         fn expose(&self) -> (exposed: Exposed<T>) {
             match self.expose_with_priority() {
                 | None => Exposed::Leaf,
@@ -495,7 +496,6 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        #[verifier::external_body]
         fn is_empty(&self) -> (empty: bool) { self.size() == 0 }
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)

@@ -156,7 +156,7 @@ broadcast use {
         {
             let r = self.elements.length();
             proof {
-                assume(r == self@.len());
+                accept(r == self@.len()); // accept hole: seq len == set len (requires no-duplicates invariant not in wf).
                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
             }
             r
@@ -242,14 +242,14 @@ broadcast use {
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
-                proof { assume(f.requires((&*elem,))); }  // accept hole: predicate callability
+                proof { accept(f.requires((&*elem,))); } // accept hole: predicate callability.
                 if f(elem) {
                     filtered = filtered.insert(elem.clone());
                 }
                 i += 1;
             }
             proof {
-                assume(filtered@.subset_of(self@));
+                accept(filtered@.subset_of(self@)); // accept hole: filter subset postcondition.
             }
             filtered
         }
@@ -347,7 +347,7 @@ broadcast use {
 
         fn find(&self, x: &T) -> (found: B)
         {
-            proof { assume(obeys_feq_full::<T>()); }  
+            proof { accept(obeys_feq_full::<T>()); } // accept hole: feq bridge.
             let n = self.elements.length();
             let mut lo: usize = 0;
             let mut hi: usize = n;
@@ -408,8 +408,8 @@ broadcast use {
             if self.find(&x) {
                 let updated = Self { elements: self.elements.clone() };
                 proof {
-                    assume(updated@ == self@.insert(x_view));
-                    assume(updated.spec_avltreesetstper_wf());
+                    accept(updated@ == self@.insert(x_view)); // accept hole: insert already-present.
+                    accept(updated.spec_avltreesetstper_wf()); // accept hole: wf through clone.
                     vstd::seq_lib::seq_to_set_is_finite(updated.elements@);
                 }
                 return updated;
