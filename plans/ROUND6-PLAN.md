@@ -6,7 +6,8 @@
 Goal: reduce holes through real proof work, close near-clean chapters.
 
 **Not assigned** (thread-boundary external_body, must stay):
-Chap38 (25), Chap39 (38), Chap47 (39), Chap49 (4), Chap51 (6), Chap26 (4), Chap66 (3) = 119 holes skipped.
+Chap38 (26), Chap39 (37), Chap47 (39), Chap49 (4), Chap51 (6), Chap26 (4), Chap66 (3) = 119 holes skipped.
+Note: Arc<RwLock> antipattern removed from BSTTreapMtEph and BSTParaStEph (now plain RwLock + ghost shadow).
 
 **Dependency chain:** Chap37 → Chap41 → Chap42 → Chap43. All have clean deps now.
 

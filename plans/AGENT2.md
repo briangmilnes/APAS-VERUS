@@ -97,9 +97,9 @@ Verification: 3672 verified, 0 errors.
   4 misc (StPer iter/clone)
 - 1 trivial_wf: BSTSplayStEph (design choice, splay has no global invariant)
 
-### Chap39 (38 holes)
-- 38 external_body: BSTTreapMtEph (10), BSTSetTreapMtEph (10), BSTParaTreapMtEph (18)
-- BSTTreapMtEph uses Arc<RwLock> for concurrent access — coarse RwLock migration NOT applicable
+### Chap39 (37 holes)
+- 37 external_body: BSTTreapMtEph (9), BSTSetTreapMtEph (10), BSTParaTreapMtEph (18)
+- BSTTreapMtEph: Arc removed, now plain RwLock + ghost shadow. new() fully verified (-1 hole).
 - BSTParaTreapMtEph is fine-grained concurrent — excluded from simple migration
 
 ### Chap41 (51 holes)

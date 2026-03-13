@@ -91,7 +91,7 @@ the vstd axiom gap for Equal substitution under `cmp_spec`.
 | Chap43 St BTreeMap wrappers (53) | external_body | Delegate to external Rust container |
 | Chap43 Mt remaining ops (32) | external_body | Complex closures, map/filter/reduce |
 | Chap43 AugOrderedTableStPer (2) | assume | Closure requires — Verus limitation |
-| Chap38 StEph remaining (6) | external_body | expose/insert/delete use Arc<RwLock> interior mutability |
+| Chap38 StEph remaining (7) | 6 ext_body + 1 accept | Arc removed, now plain RwLock + ghost shadow |
 | Chap38 MtEph (19) | external_body | Concurrent BST with per-node locking |
 | Chap49 Mt concurrent memo (4) | external_body | Recursive parallel memoization |
 | Chap51 Mt parallel DP (4) | external_body | Concurrent diagonal pebbling |
