@@ -35,7 +35,7 @@ pub mod ArraySetStEph {
     use crate::vstdplus::seq_set::{lemma_push_not_contains_to_set, lemma_seq_index_in_map_to_set};
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_clone, lemma_cloned_view_eq, lemma_seq_map_cloned_view_eq};
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_feq_clone, lemma_cloned_view_eq, lemma_seq_map_cloned_view_eq};
 
     verus! {
 
@@ -438,7 +438,7 @@ pub mod ArraySetStEph {
             let empty = ArraySetStEph {
                 elements: ArraySeqStEphS::empty(),
             };
-            proof { assume(obeys_feq_full::<T>()); }
+            assert(obeys_feq_full_trigger::<T>());
             empty
         }
 
@@ -461,7 +461,7 @@ pub mod ArraySetStEph {
                 assert(elements@ =~= seq![x_view]);
                 Seq::<<T as View>::V>::empty().lemma_push_to_set_commute(x_view);
                 assert(seq![x_view] =~= Seq::<<T as View>::V>::empty().push(x_view));
-                assume(obeys_feq_full::<T>());
+                assert(obeys_feq_full_trigger::<T>());
             }
             ArraySetStEph { elements }
         }
@@ -489,7 +489,7 @@ pub mod ArraySetStEph {
 
         fn find(&self, x: &T) -> (found: B)
         {
-            proof { assume(obeys_feq_full::<T>()); }
+            assert(obeys_feq_full_trigger::<T>());
             let n = self.elements.length();
             let mut i: usize = 0;
             while i < n
