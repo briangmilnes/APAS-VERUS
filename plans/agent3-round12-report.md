@@ -36,4 +36,4 @@ T-vs-T::V bridge problem. Iterator view is `(int, Seq<T>)` but `nth` ensures onl
 
 ## Commit
 
-TBD
+`2744fc18` on `agent3/ready`
