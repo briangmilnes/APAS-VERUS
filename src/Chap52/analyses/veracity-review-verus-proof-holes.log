@@ -27,7 +27,7 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    3 clean proof functions
 ℹ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/AdjMatrixGraphStPer.rs:478: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:478: info: accept()
    Info: 1 total
    3 clean proof functions
 ✓ AdjSeqGraphMtEph.rs
@@ -37,18 +37,14 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
 ℹ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/AdjSeqGraphStPer.rs:514: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:514: info: accept()
    Info: 1 total
    2 clean proof functions
 ✓ AdjTableGraphMtPer.rs
 ✓ AdjTableGraphStEph.rs
    1 clean proof function
 ✓ AdjTableGraphStPer.rs
-❌ EdgeSetGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/EdgeSetGraphMtPer.rs:135: error: external_body - #[verifier::external_body]
-       136 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
-   Holes: 1 total
-      1 × external_body
+✓ EdgeSetGraphMtPer.rs
 ✓ EdgeSetGraphStEph.rs
 ✓ EdgeSetGraphStPer.rs
 
@@ -99,8 +95,8 @@ EdgeSetGraphStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   13 clean (no holes, no errors; 92%)
-   1 holed (holes or errors, 7%)
+   14 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    14 total
 
 Proof Functions:
@@ -116,16 +112,17 @@ Function Specs:
    434 total fns
 
 
-Holes Found: 1 total
-   1 × external_body (100%)
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 16:54:25 -07:00
-Ended:     2026-03-13 16:54:26 -07:00
-Duration:  40ms
+Started:   2026-03-13 17:11:59 -07:00
+Ended:     2026-03-13 17:11:59 -07:00
+Duration:  42ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log

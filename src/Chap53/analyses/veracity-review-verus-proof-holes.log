@@ -21,23 +21,23 @@ Table of Contents:
 =================================================================
 
 ❌ GraphSearchMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:109: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:109: error: external_body - #[verifier::external_body]
        110 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:98: error: fn_missing_requires - fn graph_search — exec fn should have requires
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:98: error: fn_missing_requires - fn graph_search — exec fn should have requires
         72 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B)) {
             ...
         96 |     }
         97 | 
         99 |     where
        100 |         G: Fn(&V) -> AVLTreeSetMtPer<V>,
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:141: error: fn_missing_requires - fn graph_search_multi — exec fn should have requires
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:141: error: fn_missing_requires - fn graph_search_multi — exec fn should have requires
        110 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
             ...
        139 | 
        140 |     /// Generic graph search starting from multiple sources (Exercise 53.3).
        142 |         graph: &G,
        143 |         sources: AVLTreeSetMtPer<V>,
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:172: error: fn_missing_requires - fn reachable — exec fn should have requires
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:172: error: fn_missing_requires - fn reachable — exec fn should have requires
        164 |         fn reachable<G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetMtPer<V>)
             ...
        170 |     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
@@ -104,8 +104,12 @@ Holes Found: 1 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 16:55:52 -07:00
-Ended:     2026-03-13 16:55:52 -07:00
-Duration:  14ms
+Started:   2026-03-13 17:11:59 -07:00
+Ended:     2026-03-13 17:11:59 -07:00
+Duration:  13ms
+
+Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
+59 -07:00
+Duration:  13ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log

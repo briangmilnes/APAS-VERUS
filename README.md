@@ -10,9 +10,9 @@ develop two software engineering tools to clean things up:
 - [veracity](https://github.com/briangmilnes/veracity) - Verus code analysis tools (proof hole detection, spec strength review, function search).
 - [rusticate](https://github.com/briangmilnes/rusticate) - Rust code style and structure review tools.
 
-**~90% of chapters verified (40 of 44 attempted), 17 with zero proof holes**
+**All 44 algorithm chapters verified, 34 with zero proof holes**
 
-**3525 verified, 0 errors | 2595 runtime tests | 144 proof time tests | 280 proof holes**
+**3976 verified, 0 errors | 2600 runtime tests | 147 proof time tests | 311 proof holes**
 
 ## Project Structure
 
@@ -24,33 +24,29 @@ develop two software engineering tools to clean things up:
 
 ## Proof State
 
-Full verification: **3525 verified, 0 errors**
+Full verification: **3976 verified, 0 errors**
 
 | # | Metric | Count |
 |---|--------|-------|
-| 1 | Chapters verified | 39 |
-| 2 | Chapters with zero holes | 17 |
-| 3 | Clean modules (no holes) | 249 |
-| 4 | Holed modules | 29 |
-| 5 | Total verified modules | 278 |
-| 6 | Clean proof functions | 268 |
-| 7 | Runtime tests (RTT) | 2595 |
-| 8 | Proof time tests (PTT) | 144 |
+| 1 | Chapters verified | 44 |
+| 2 | Chapters with zero proof holes | 34 |
+| 3 | Clean modules (no holes) | 282 |
+| 4 | Holed modules | 161 |
+| 5 | Total verified modules | 443 |
+| 6 | Clean proof functions | 650 |
+| 7 | Runtime tests (RTT) | 2600 |
+| 8 | Proof time tests (PTT) | 147 |
 
-### Proof Holes: 280 total
+### Proof Holes: 311 total (algorithm chapters only)
 
-| # | Hole Type | Count | Notes |
-|---|-----------|-------|-------|
-| 1 | `accept()` | 136 | Accepted proof holes (PartialEq bridge, iterator ghost) |
-| 2 | `external_body` (accepted) | 68 | Accepted external bodies (atomics, FFI) |
-| 3 | `verus_rwlock_external_body` | 56 | Verus RwLock::new requires external_body |
-| 4 | `unsafe {}` (accepted) | 8 | Unsafe blocks (Chap12 raw pointers) |
-| 5 | `external` (accepted) | 6 | External function specifications |
-| 6 | `external_type_specification` (accepted) | 2 | External type specs |
-| 7 | `struct outside verus!` (accepted) | 2 | Structs outside verus! block |
-| 8 | `enum outside verus!` (accepted) | 2 | Enums outside verus! block |
+| # | Hole Type | Count | Pct | Notes |
+|---|-----------|-------|-----|-------|
+| 1 | `external_body` | 172 | 55% | Thread boundaries, opaque types, Verus limitations |
+| 2 | `assume()` | 135 | 43% | Proof obligations not yet discharged |
+| 3 | `external` | 2 | 1% | External function specifications |
+| 4 | `trivial spec*wf { true }` | 2 | 1% | Well-formedness specs returning true |
 
-All holes are explicitly accepted with `// accept hole` comments and tracked by veracity.
+Holes tracked by [veracity](https://github.com/briangmilnes/veracity). 10 chapters remain holed; 34 are fully clean.
 
 ## Algorithm Status
 
@@ -264,18 +260,19 @@ All with custom iterators and ForLoopGhostIterator.
 
 ### Chapter 41: Sets via BST - ✅ VERIFIED
 
-5 unconditional + 1 behind `all_chapters` feature gate.
+6 unconditional + 1 behind `all_chapters` feature gate.
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
 | 1 | ArraySetStEph | St | Array-backed set |
-| 2 | AVLTreeSetStEph | St | AVL tree set |
-| 3 | AVLTreeSetStPer | St | Persistent AVL tree set |
-| 4 | AVLTreeSetMtEph | Mt | Parallel AVL tree set |
-| 5 | AVLTreeSetMtPer | Mt | Parallel persistent AVL tree set (gated) |
-| 6 | Example41_3 | St | Textbook example |
+| 2 | ArraySetEnumMtEph | Mt | Parallel array set (enum-based) |
+| 3 | AVLTreeSetStEph | St | AVL tree set |
+| 4 | AVLTreeSetStPer | St | Persistent AVL tree set |
+| 5 | AVLTreeSetMtEph | Mt | Parallel AVL tree set |
+| 6 | AVLTreeSetMtPer | Mt | Parallel persistent AVL tree set (gated) |
+| 7 | Example41_3 | St | Textbook example |
 
-### Chapter 42: Hash Tables - ✅ VERIFIED (ZERO HOLES)
+### Chapter 42: Hash Tables - ✅ VERIFIED
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -300,9 +297,12 @@ All with custom iterators and ForLoopGhostIterator.
 | 10 | OrderedSetMtEph | Mt | Parallel ordered set |
 | 11 | Example43_1 | St | Textbook example |
 
-### Chapter 44: Document Index - ⬜ BLOCKED
+### Chapter 44: Document Index - ✅ VERIFIED (ZERO HOLES)
 
-All files depend on types declared outside verus! (Chap41 AVLTreeSet).
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | DocumentIndex | St | Document indexing |
+| 2 | Example44_1 | St | Textbook example |
 
 ### Chapter 45: Priority Queues - ✅ VERIFIED
 
@@ -330,7 +330,7 @@ All files depend on types declared outside verus! (Chap41 AVLTreeSet).
 | 8 | DoubleHashFlatHashTableStEph | St | Double hashing |
 | 9 | ParaHashTableStEph | St | Parallel hash table |
 
-### Chapter 49: Dynamic Programming I - ✅ VERIFIED
+### Chapter 49: Dynamic Programming I - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -356,7 +356,7 @@ All files depend on types declared outside verus! (Chap41 AVLTreeSet).
 | 7 | OptBinSearchTreeMtEph | Mt | Parallel optimal BST |
 | 8 | OptBinSearchTreeMtPer | Mt | Parallel persistent optimal BST |
 
-### Chapter 51: Dynamic Programming III - ✅ VERIFIED
+### Chapter 51: Dynamic Programming III - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -386,7 +386,7 @@ All files depend on types declared outside verus! (Chap41 AVLTreeSet).
 | 9 | AdjTableGraphMtPer | Mt | Adjacency table (gated) |
 | 10 | EdgeSetGraphMtPer | Mt | Edge set graph (gated) |
 
-### Chapter 53: Graph Search - ✅ VERIFIED (ZERO HOLES)
+### Chapter 53: Graph Search - ✅ VERIFIED
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -394,6 +394,7 @@ All files depend on types declared outside verus! (Chap41 AVLTreeSet).
 | 2 | PQMinStPer | St | Persistent PQ minimum |
 | 3 | GraphSearchStEph | St | Generic graph search |
 | 4 | GraphSearchStPer | St | Persistent graph search |
+| 5 | GraphSearchMtPer | Mt | Parallel persistent graph search |
 
 ### Chapter 54: BFS - ✅ VERIFIED (ZERO HOLES)
 
@@ -404,9 +405,18 @@ All files depend on types declared outside verus! (Chap41 AVLTreeSet).
 | 3 | BFSMtEph | Mt | Parallel BFS |
 | 4 | BFSMtPer | Mt | Parallel persistent BFS |
 
-### Chapter 55: DFS - ⬜ BLOCKED
+### Chapter 55: DFS - ✅ VERIFIED (ZERO HOLES)
 
-All files depend on types declared outside verus! (Chap37/41 BST/Set types).
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | DFSStEph | St | Depth-first search |
+| 2 | DFSStPer | St | Persistent DFS |
+| 3 | TopoSortStEph | St | Topological sort |
+| 4 | TopoSortStPer | St | Persistent topological sort |
+| 5 | SCCStEph | St | Strongly connected components |
+| 6 | SCCStPer | St | Persistent SCC |
+| 7 | CycleDetectStEph | St | Cycle detection |
+| 8 | CycleDetectStPer | St | Persistent cycle detection |
 
 ### Chapter 56: Shortest Paths (Results) - ✅ VERIFIED (ZERO HOLES)
 
@@ -423,29 +433,38 @@ All files depend on types declared outside verus! (Chap37/41 BST/Set types).
 | 9 | AllPairsResultStEphF64 | St | All-pairs result (f64) |
 | 10 | AllPairsResultStPerF64 | St | Persistent all-pairs result (f64) |
 
-### Chapter 57: Dijkstra - 🔄 PARTIAL
+### Chapter 57: Dijkstra - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
 | 1 | StackStEph | St | Stack for graph algorithms |
-
-Dijkstra blocked on BinaryHeapPQ types declared outside verus!.
+| 2 | DijkstraStEphI64 | St | Dijkstra shortest paths (i64) |
+| 3 | DijkstraStEphF64 | St | Dijkstra shortest paths (f64) |
 
 ### Chapter 58: Bellman-Ford - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
 | 1 | BellmanFordStEphI64 | St | Bellman-Ford shortest paths (i64) |
+| 2 | BellmanFordStEphF64 | St | Bellman-Ford shortest paths (f64) |
 
-F64 variant blocked on missing WeightedDirGraphStEphF64.
+### Chapter 59: Johnson - ✅ VERIFIED (ZERO HOLES)
 
-### Chapter 59: Johnson - ⬜ BLOCKED
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | JohnsonStEphI64 | St | Johnson's all-pairs shortest paths (i64) |
+| 2 | JohnsonStEphF64 | St | Johnson's all-pairs shortest paths (f64) |
+| 3 | JohnsonMtEphI64 | Mt | Parallel Johnson (i64) |
+| 4 | JohnsonMtEphF64 | Mt | Parallel Johnson (f64) |
 
-All files depend on DijkstraStEphI64 (Chap57, blocked).
+### Chapter 61: Matching - ✅ VERIFIED (ZERO HOLES)
 
-### Chapter 61: Matching - ⬜ BLOCKED
-
-All files use `rand` crate (Verus can't link external crates).
+| # | Algorithm | St/Mt | Notes |
+|---|-----------|-------|-------|
+| 1 | VertexMatchingStEph | St | Vertex matching |
+| 2 | VertexMatchingMtEph | Mt | Parallel vertex matching |
+| 3 | EdgeContractionStEph | St | Edge contraction |
+| 4 | EdgeContractionMtEph | Mt | Parallel edge contraction |
 
 ### Chapter 62: Star Partition - ✅ VERIFIED (ZERO HOLES)
 
@@ -453,16 +472,15 @@ All files use `rand` crate (Verus can't link external crates).
 |---|-----------|-------|-------|
 | 1 | StarPartitionStEph | St | Star partition |
 | 2 | StarContractionStEph | St | Star contraction |
-
-Mt variants blocked on `rand` crate.
+| 3 | StarPartitionMtEph | Mt | Parallel star partition |
+| 4 | StarContractionMtEph | Mt | Parallel star contraction |
 
 ### Chapter 63: Connectivity - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
 | 1 | ConnectivityStEph | St | Graph connectivity |
-
-Mt variant depends on StarPartitionMtEph (blocked).
+| 2 | ConnectivityMtEph | Mt | Parallel graph connectivity |
 
 ### Chapter 64: Spanning Trees - ✅ VERIFIED (`all_chapters`)
 
@@ -496,10 +514,8 @@ Behind `all_chapters` feature gate.
 ---
 
 **Legend:**
-- ✅ VERIFIED (ZERO HOLES) - All functions verified, no proof holes
-- ✅ VERIFIED - All files verify, some accepted holes (PartialEq bridge, RwLock, external_body for atomics)
-- 🔄 PARTIAL - Some files active, some blocked
-- ⬜ BLOCKED - All files blocked (dependency or crate-linking issues)
+- ✅ VERIFIED (ZERO HOLES) - All functions verified, no proof holes of any kind
+- ✅ VERIFIED - All files verify, some accepted holes (PartialEq bridge, RwLock, external_body for atomics) or proof work remaining
 
 ### vstdplus Library Extensions
 

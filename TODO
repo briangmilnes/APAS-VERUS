@@ -1,6 +1,7 @@
 
  21 Feb 2026
 
+-1) Get the readme up to date on it's proven, holes tables.
 0) Run verusfmt on all files after Round 9 merge.
 1) Clean up types, pair, concurrency.
 2) Deep_view review.
