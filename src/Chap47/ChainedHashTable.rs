@@ -61,7 +61,6 @@ pub mod ChainedHashTable {
             /// Inserts into the chain at the hashed bucket, updating num_elements on new keys.
             /// - APAS: Work O(1) expected, Span O(1).
             /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — lookup to check existence, then chain insert.
-            #[verifier::external_body]
             fn insert_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
                 requires
                     old(table).current_size > 0,
@@ -72,9 +71,11 @@ pub mod ChainedHashTable {
             {
                 let index = Self::hash_index(table, &key);
                 let existed = table.table[index].lookup(&key).is_some();
-                table.table[index].insert(key, value);
+                let mut entry = table.table[index].clone_entry();
+                entry.insert(key, value);
+                table.table.set(index, entry);
                 if !existed {
-                    table.num_elements += 1;
+                    table.num_elements = table.num_elements + 1;
                 }
             }
 
@@ -98,7 +99,6 @@ pub mod ChainedHashTable {
             /// Deletes from the chain at the hashed bucket, updating num_elements on removal.
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — agrees with APAS; hashes then linear scan of chain.
-            #[verifier::external_body]
             fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
                 requires
                     old(table).current_size > 0,
@@ -108,9 +108,11 @@ pub mod ChainedHashTable {
             {
                 let index = Self::hash_index(table, key);
                 if index < table.table.len() {
-                    let deleted = table.table[index].delete(key);
-                    if deleted {
-                        table.num_elements -= 1;
+                    let mut entry = table.table[index].clone_entry();
+                    let deleted = entry.delete(key);
+                    table.table.set(index, entry);
+                    if deleted && table.num_elements > 0 {
+                        table.num_elements = table.num_elements - 1;
                     }
                     deleted
                 } else {

@@ -79,17 +79,35 @@ pub mod ParaHashTableStEph {
         (h.wrapping_add(attempt).wrapping_add(attempt.wrapping_mul(attempt))) % table_size
     }
 
-    /// Double hash probe: (hash(key) + attempt * second_hash(key, table_size)) % table_size.
+    /// Computes a second hash value for double hashing.
+    /// External_body because Verus cannot reason about std::hash types.
     #[verifier::external_body]
+    pub fn compute_second_hash<Key: std::hash::Hash>(key: &Key, table_size: usize) -> (step: usize)
+        requires table_size > 0,
+    {
+        use std::collections::hash_map::DefaultHasher;
+        use std::hash::Hasher;
+        if table_size <= 1 {
+            return 1;
+        }
+        let mut hasher = DefaultHasher::new();
+        key.hash(&mut hasher);
+        let hash = hasher.finish();
+        let base = (table_size - 1) as u64;
+        let mut step = ((hash % base) + 1) as usize;
+        if step % 2 == 0 && step < table_size - 1 {
+            step += 1;
+        }
+        step
+    }
+
+    /// Double hash probe: (hash(key) + attempt * second_hash(key, table_size)) % table_size.
     pub fn double_hash_probe<Key: std::hash::Hash, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
         requires table_size > 0,
         ensures slot < table_size,
     {
-        use std::hash::{BuildHasher, Hasher, RandomState};
-        let h = (hash_fn)(key, table_size);
-        let mut hasher = RandomState::new().build_hasher();
-        key.hash(&mut hasher);
-        let h2 = (hasher.finish() as usize % (table_size - 1)) + 1;
+        let h = call_hash_fn(hash_fn, key, table_size);
+        let h2 = compute_second_hash(key, table_size);
         (h.wrapping_add(attempt.wrapping_mul(h2))) % table_size
     }
 
@@ -110,6 +128,8 @@ pub mod ParaHashTableStEph {
         /// - APAS: N/A — inner table interface, cost depends on implementation.
         /// - Claude-Opus-4.6: N/A — abstract trait method.
         fn delete(&mut self, key: &Key) -> (deleted: bool);
+        /// Element-wise clone that avoids Verus tuple-Clone limitation.
+        fn clone_entry(&self) -> (cloned: Self);
     }
 
     /// Trait for parametric nested hash tables.

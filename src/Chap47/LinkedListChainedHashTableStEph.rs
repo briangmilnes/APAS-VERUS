@@ -98,6 +98,21 @@ pub mod LinkedListChainedHashTableStEph {
                 }
                 false
             }
+
+            /// Element-wise clone avoiding Verus tuple-Clone limitation.
+            fn clone_entry(&self) -> (cloned: Self) {
+                let mut new_seq: Vec<(Key, Value)> = Vec::new();
+                let mut i: usize = 0;
+                while i < self.seq.len()
+                    invariant
+                        i <= self.seq@.len(),
+                    decreases self.seq.len() - i,
+                {
+                    new_seq.push((self.seq[i].0.clone(), self.seq[i].1.clone()));
+                    i += 1;
+                }
+                LinkedListStEphS { seq: new_seq }
+            }
         }
 
         impl<Key: StT, Value: StT, Metrics: Default, H: Fn(&Key, usize) -> usize + Clone>

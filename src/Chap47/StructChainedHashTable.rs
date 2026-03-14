@@ -210,6 +210,11 @@ pub mod StructChainedHashTable {
                 self.head = new_head;
                 found
             }
+
+            /// Delegates to ChainList's Clone impl.
+            fn clone_entry(&self) -> (cloned: Self) {
+                self.clone()
+            }
         }
 
         // 9. impls (ParaHashTableStEphTrait, ChainedHashTable)

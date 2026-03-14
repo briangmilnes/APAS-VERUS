@@ -150,6 +150,11 @@ pub mod FlatHashTable {
                 false
             }
         }
+
+        /// Delegates to FlatEntry's Clone impl.
+        fn clone_entry(&self) -> (cloned: Self) {
+            self.clone()
+        }
     }
 
     // 11. derive impls in verus!
