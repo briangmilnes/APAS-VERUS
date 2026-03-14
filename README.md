@@ -12,7 +12,9 @@ develop two software engineering tools to clean things up:
 
 **All 44 algorithm chapters verified, 34 with zero proof holes**
 
-**3976 verified, 0 errors | 2600 runtime tests | 147 proof time tests | 311 proof holes**
+**3976 verified, 0 errors | 2600 runtime tests | 147 proof time tests | 311 proof holes | 101 PartialEq/Clone workarounds**
+
+The 101 PartialEq/Clone workarounds are accepted `assume` calls inside `eq()` and `clone()` bodies — Verus cannot yet verify that Rust's generic PartialEq and Clone match spec-level View equality. These are standard across all Verus projects and will be eliminated when Verus adds derived spec support for these traits.
 
 ## Project Structure
 
