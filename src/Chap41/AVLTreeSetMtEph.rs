@@ -139,6 +139,7 @@ broadcast use {
                 tree.spec_avltreesetmteph_wf();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
+            requires seq.spec_avltreeseqsteph_wf(),
             ensures
                 constructed@.finite(),
                 constructed.spec_avltreesetmteph_wf();
