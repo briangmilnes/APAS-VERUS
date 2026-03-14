@@ -386,6 +386,12 @@ a new experiment. Do not assume limitations without evidence.
 
 ### Fork-Join Inside verus!
 
+**Before writing or modifying any code that uses closures** — including `Fn`, `FnMut`,
+`FnOnce`, `join()`, `filter`, `map`, `reduce`, `tabulate`, or any higher-order function —
+**read `src/standards/using_closures_standard.rs` first.** Closure verification in Verus
+has specific patterns for `requires`/`ensures` propagation, named closure variables, and
+ghost captures. If you skip the standard, you will write unverifiable code.
+
 All fork-join parallelism lives inside `verus!` using `join()` with named closures:
 
 ```rust
