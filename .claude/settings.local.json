@@ -138,7 +138,11 @@
       "Bash(/tmp/loop_search.txt:*)",
       "Bash(/tmp/analyze_algorithms.txt:*)",
       "Bash(/tmp/loop_analysis.txt:*)",
-      "Bash(/tmp/final_report.txt:*)"
+      "Bash(/tmp/final_report.txt:*)",
+      "Bash(cat /home/milnes/.claude/*)",
+      "Bash(cat /home/milnes/.claude/**)",
+      "Bash(grep * /home/milnes/.claude/*)",
+      "Bash(grep * /home/milnes/.claude/**)"
     ]
   }
 }
