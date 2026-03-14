@@ -100,6 +100,21 @@ pub mod VecChainedHashTableStEph {
                 }
                 false
             }
+
+            /// Element-wise clone avoiding Verus tuple-Clone limitation.
+            fn clone_entry(&self) -> (cloned: Self) {
+                let mut new_vec: Vec<(Key, Value)> = Vec::new();
+                let mut i: usize = 0;
+                while i < self.len()
+                    invariant
+                        i <= self@.len(),
+                    decreases self.len() - i,
+                {
+                    new_vec.push((self[i].0.clone(), self[i].1.clone()));
+                    i += 1;
+                }
+                new_vec
+            }
         }
 
         // 9. impls (ParaHashTableStEphTrait, ChainedHashTable)

@@ -464,16 +464,28 @@ broadcast use {
             self.ghost_set_view = Ghost(old_view.insert(x_view));
         }
 
-        #[verifier::external_body]
         fn iter(&self) -> (it: AVLTreeSetMtEphIter<T>)
         {
             let handle = self.inner.acquire_read();
-            let seq = handle.borrow().to_seq();
-            let mut vals = Vec::with_capacity(seq.length());
-            for i in 0..seq.length() {
-                vals.push(seq.nth(i).clone());
+            let inner_ref = handle.borrow();
+            proof {
+                vstd::seq_lib::seq_to_set_is_finite(inner_ref.elements@);
             }
+            let seq = inner_ref.to_seq();
             handle.release_read();
+            let mut vals: Vec<T> = Vec::new();
+            let len = seq.length();
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    seq.spec_avltreeseqsteph_wf(),
+                    len == seq@.len(),
+                decreases len - i,
+            {
+                vals.push(seq.nth(i).clone());
+                i = i + 1;
+            }
             AVLTreeSetMtEphIter { snapshot: vals, pos: 0 }
         }
     }

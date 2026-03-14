@@ -1,83 +1,85 @@
-# Agent 4 — Round 13 Report
+# Agent 4 — Round 13 (Full) Report
 
 ## Summary
 
-Removed 5 external_body holes from Chap47 hash table probe functions.
-Two Chap47 files now fully clean. All other assigned chapters (Chap42, Chap41 Mt,
-Chap39) have exclusively architectural holes that cannot be removed without
-structural changes (IndexMut limitation, view bridge, parallel ops, closure specs).
+Two passes this round. Pass 1: probe function verification (-5). Pass 2 (restart):
+clone_entry pattern for ChainedHashTable (-2), compute_second_hash factoring (+1 -2 net -1),
+iter() while-loop rewrite (-1). Between passes, Agents 1+3 merged (-55 from 267→217).
 
-**Holes: 272 → 267 (−5)**
-**Verified: 3986 → 4004 (+18)**
-**RTT: 2600 pass | PTT: 147 pass**
+- **Holes**: 267 → 213 (agent4 contribution: -4 on top of 217 base)
+- **Verified**: 4004 → 4024
+- **RTT**: 2600 pass
+- **PTT**: 147 pass
 
 ## Hole Changes by File
 
-| # | Chap | File                          | Before | After | Delta | Status     |
-|---|------|-------------------------------|--------|-------|-------|------------|
-| 1 | 47   | ParaHashTableStEph.rs         | 4      | 2     | −2    | 2 remain   |
-| 2 | 47   | LinProbFlatHashTableStEph.rs  | 1      | 0     | −1    | CLEAN      |
-| 3 | 47   | QuadProbFlatHashTableStEph.rs | 1      | 0     | −1    | CLEAN      |
-| 4 | 47   | DoubleHashFlatHashTableStEph  | 2      | 1     | −1    | 1 remain   |
-| 5 | 47   | ChainedHashTable.rs           | 2      | 2     |  0    | blocked    |
-| 6 | 42   | TableMtEph.rs                 | 11     | 11    |  0    | blocked    |
-| 7 | 41   | AVLTreeSetMtEph.rs            | 10     | 10    |  0    | blocked    |
-| 8 | 41   | AVLTreeSetMtPer.rs            | 12     | 12    |  0    | blocked    |
-| 9 | 39   | BSTTreapMtEph.rs              | 8      | 8     |  0    | blocked    |
+| # | Chap | File | Before | After | Delta | Notes |
+|---|------|------|--------|-------|-------|-------|
+| 1 | 47 | ParaHashTableStEph.rs | 4 | 2 | -2 | call_hash_fn + compute_second_hash remain |
+| 2 | 47 | DoubleHashFlatHashTableStEph.rs | 2 | 0 | -2 | second_hash + probe both verified |
+| 3 | 47 | ChainedHashTable.rs | 2 | 0 | -2 | clone_entry pattern |
+| 4 | 47 | LinProbFlatHashTableStEph.rs | 0 | 0 | 0 | CLEAN (pass 1) |
+| 5 | 47 | QuadProbFlatHashTableStEph.rs | 0 | 0 | 0 | CLEAN (pass 1) |
+| 6 | 41 | AVLTreeSetMtEph.rs | 10 | 9 | -1 | iter() verified |
+| 7 | 41 | AVLTreeSetMtPer.rs | 11 | 11 | 0 | all blocked |
+| 8 | 42 | TableMtEph.rs | 11 | 11 | 0 | all blocked |
+| 9 | 39 | BSTTreapMtEph.rs | 8 | 8 | 0 | all view bridge |
 
 ## Chapters Closed
 
-None (Chap47 went from 10 → 5 but not yet 0).
+None. Chap47 has 2 irreducible external_body utilities (call_hash_fn, compute_second_hash).
 
 ## Techniques Used
 
-**Probe function verification (5 holes removed):**
-Replace raw closure call `(hash_fn)(key, table_size)` with `call_hash_fn(hash_fn, key, table_size)`
-which has external_body with tight `ensures index < table_size`. Then use wrapping arithmetic
-(`wrapping_add`, `wrapping_mul`) for overflow safety, and `% table_size` which Verus/Z3
-automatically proves yields `result < table_size` when `table_size > 0`.
+### 1. clone_entry pattern (Chap47 ChainedHashTable, -2 holes)
+Verus cannot derive Clone for `(Key, Value)` tuples. Added `fn clone_entry(&self) -> Self`
+to `EntryTrait` with element-wise cloning (`.0.clone()`, `.1.clone()`). Implemented for
+Vec, LinkedListStEphS, ChainList, FlatEntry. Enabled clone + vec.set workaround for
+insert_chained and delete_chained, bypassing both IndexMut and tuple-Clone limitations.
+
+### 2. compute_second_hash factoring (Chap47, net -1)
+Extracted `compute_second_hash` as single external_body utility in ParaHashTableStEph.
+Both `double_hash_probe` and `second_hash` now delegate to it and are verified.
+
+### 3. Probe verification (Chap47, -5 holes in pass 1)
+Replace raw `(hash_fn)(key, table_size)` with `call_hash_fn` (tight ensures).
+Use wrapping arithmetic + `% table_size` for automatic bound proof.
+
+### 4. iter() while-loop rewrite (Chap41 MtEph, -1 hole)
+Trivial ensures (pos==0, bounds) didn't need view bridge. Used
+`seq_to_set_is_finite` proof for inner to_seq() requires.
 
 ## Remaining Holes — What Blocks Them
 
-### Chap47 (5 remaining)
+### Chap47 (2 holes) — irreducible utilities
+- `call_hash_fn`: external_body wrapping Fn closure dispatch
+- `compute_second_hash`: external_body wrapping std::hash API
 
-| Hole | File | Blocker |
-|------|------|---------|
-| `call_hash_fn` external_body | ParaHashTableStEph | Opaque Fn closure; can't verify |
-| `double_hash_probe` ext_body | ParaHashTableStEph | Uses DefaultHasher (std lib) |
-| `second_hash` external_body | DoubleHashFlat... | Uses DefaultHasher (std lib) |
-| `insert_chained` ext_body | ChainedHashTable | Verus lacks IndexMut for Vec |
-| `delete_chained` ext_body | ChainedHashTable | Verus lacks IndexMut for Vec |
+### Chap41 MtEph (9 holes)
+- 2 assume (size, find): **view bridge** — ghost_set_view outside RwLock
+- 5 external_body (to_seq, filter, intersection, difference, union): **parallel** — join(), nested fns
+- 2 unsafe (Send, Sync): required for Ghost<Set<V>>
 
-ChainedHashTable: Attempted clone+set workaround for IndexMut. Failed because
-Verus cannot synthesize Clone for `(Key, Value)` tuple types.
+### Chap41 MtPer (11 holes)
+- 1 assume (size): view bridge (seq length vs set cardinality)
+- 1 assume (find feq): type axiom (obeys_feq_full not provable for generic T)
+- 1 assume (find not-found): missing sorted invariant in AVLTreeSeqMtPer wf
+- 7 external_body (from_seq, filter, intersection, difference, union, delete, insert): parallel
+- 1 external_body (cmp): no requires allowed on Ord::cmp trait method
 
-### Chap42 — TableMtEph.rs (11 remaining)
+### Chap42 TableMtEph (11 holes)
+- 8 external_body: parallel (join + unverified closures + for-range loops)
+- 3 external_body (intersection, union, difference): sequential code but proves require
+  sorted-entries invariant not tracked in spec_tablemteph_wf
 
-All 11 external_body functions use parallel `join()`, closure specs not in trait
-signatures, or require sorted-entries invariant not currently tracked. Architectural.
-
-### Chap41 — AVLTreeSetMtEph/MtPer (22 remaining)
-
-- View bridge assumes: ghost_set_view can't connect to locked inner through &self
-- Parallel external_body: nested functions, ParaPair, sort/dedup outside verus!
-- Unsafe Send/Sync: required for Ghost field (veracity counts as holes)
-
-### Chap39 — BSTTreapMtEph.rs (8 remaining)
-
-All 8 assumes bridge &self ghost view to locked data. Methods use &self with
-RwLock interior mutability; ghost_locked_root can't be updated through &self.
-Would require &mut self or GhostCell/AtomicGhost.
+### Chap39 BSTTreapMtEph (8 holes)
+- 8 assume: view bridge — unit struct RwLock invariant can't carry instance-specific ghost data
 
 ## Verification
 
 ```
-verification results:: 4004 verified, 0 errors
+verification results:: 4024 verified, 0 errors
 RTT: 2600 tests run: 2600 passed
 PTT: 147 tests run: 147 passed
-Total holes: 267
+Total holes: 213
 ```
-
-## Commit
-
-Will be committed on branch `agent4/ready`.

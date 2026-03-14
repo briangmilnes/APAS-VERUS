@@ -37,27 +37,10 @@ pub mod DoubleHashFlatHashTableStEph {
         /// - Claude-Opus-4.6: Work O(sizeof(Key)), Span O(sizeof(Key)) — hashes key with SipHash.
         /// Strategy: Always return an odd number (works for power-of-2 sizes),
         /// and for prime sizes, ensure < m and non-zero.
-        #[verifier::external_body]
-        pub fn second_hash<Key: StT + Hash>(key: &Key, table_size: usize) -> usize {
-            use std::collections::hash_map::DefaultHasher;
-            use std::hash::Hasher;
-
-            if table_size <= 2 {
-                return 1;
-            }
-
-            let mut hasher = DefaultHasher::new();
-            key.hash(&mut hasher);
-            let hash = hasher.finish();
-
-            let base = (table_size - 1) as u64;
-            let mut step = ((hash % base) + 1) as usize;
-
-            if step % 2 == 0 && step < table_size - 1 {
-                step += 1;
-            }
-
-            step
+        pub fn second_hash<Key: StT + Hash>(key: &Key, table_size: usize) -> (step: usize)
+            requires table_size > 0,
+        {
+            compute_second_hash(key, table_size)
         }
     }
 
