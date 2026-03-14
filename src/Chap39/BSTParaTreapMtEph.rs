@@ -399,7 +399,10 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
         /// - Claude-Opus-4.6: Work O(log(|left| + |right|)), Span O(log(|left| + |right|)) — delegates to join_with_priority
         fn join_mid(exposed: Exposed<T>) -> (tree: Self)
-            ensures tree@.finite();
+            ensures
+                tree@.finite(),
+                exposed is Leaf ==> tree@ =~= Set::<T::V>::empty(),
+                exposed matches Exposed::Node(l, k, r) ==> tree@ =~= l@.union(r@).insert(k@);
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
@@ -427,11 +430,16 @@ pub mod BSTParaTreapMtEph {
         fn split(&self, key: &T) -> (parts: (Self, bool, Self))
             ensures
                 parts.0@.finite(), parts.2@.finite(),
-                parts.1 == self@.contains(key@);
+                parts.1 == self@.contains(key@),
+                self@.finite(),
+                !parts.0@.contains(key@) && !parts.2@.contains(key@),
+                self@ =~= parts.0@.union(parts.2@).union(
+                    if parts.1 { Set::<T::V>::empty().insert(key@) } else { Set::<T::V>::empty() }
+                );
         /// - APAS: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         /// - Claude-Opus-4.6: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         fn join_pair(&self, other: Self) -> (joined: Self)
-            ensures joined@.finite();
+            ensures joined@.finite(), joined@ =~= self@.union(other@);
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
         fn union(&self, other: &Self) -> (combined: Self)
