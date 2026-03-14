@@ -1841,7 +1841,7 @@ pub mod TableStPer {
                 pairs@ == pairs_view,
                 result.spec_tablestper_wf(),
                 result@.dom().finite(),
-                forall|k: K::V| result@.contains_key(k)
+                forall|k: K::V| #![auto] result@.contains_key(k)
                     <==> spec_collect_domain::<K::V, V::V>(
                         pairs_view.subrange(0, i as int)).contains(k),
                 forall|k: K::V| #![auto] result@.contains_key(k)
@@ -1886,7 +1886,7 @@ pub mod TableStPer {
                         // Trigger second append ensures via val_seq.seq@ term.
                         assert(val_seq.seq@[0int] == val_clone);
                         assert(val_clone@ == pair_val_view);
-                        assert forall|j: int| 0 <= j < appended@.len()
+                        assert forall|j: int| #![auto] 0 <= j < appended@.len()
                             implies appended@[j]
                                 == seq@.push(pair_val_view)[j]
                         by {
@@ -1936,7 +1936,7 @@ pub mod TableStPer {
                 lemma_spec_collect_domain_step::<K::V, V::V>(pairs_view, i as int);
                 assert(result@[key_view] == new_seq_view);
 
-                assert forall|k: K::V| result@.contains_key(k)
+                assert forall|k: K::V| #![auto] result@.contains_key(k)
                     implies result@[k]
                         == spec_collect_key::<K::V, V::V>(sub_i1, k)
                 by {
