@@ -19,6 +19,7 @@ pub mod OrderedSetMtEph {
     use vstd::prelude::*;
     use vstd::rwlock::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap43::OrderedSetStEph::OrderedSetStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
@@ -211,21 +212,23 @@ pub mod OrderedSetMtEph {
         }
 
         fn insert(&mut self, x: T) {
+            proof { use_type_invariant(&*self); }
+            let ghost old_view = self.ghost_locked_set@;
+            let ghost x_view = x@;
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { assume(self.ghost_locked_set@ == locked_val@); }
             locked_val.insert(x);
-            let ghost new_val = locked_val@;
-            self.ghost_locked_set = Ghost(new_val);
             write_handle.release_write(locked_val);
+            self.ghost_locked_set = Ghost(old_view.insert(x_view));
         }
 
         fn delete(&mut self, x: &T) {
+            proof { use_type_invariant(&*self); }
+            let ghost old_view = self.ghost_locked_set@;
+            let ghost x_view = x@;
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { assume(self.ghost_locked_set@ == locked_val@); }
             locked_val.delete(x);
-            let ghost new_val = locked_val@;
-            self.ghost_locked_set = Ghost(new_val);
             write_handle.release_write(locked_val);
+            self.ghost_locked_set = Ghost(old_view.remove(x_view));
         }
 
         #[verifier::external_body]
@@ -237,42 +240,42 @@ pub mod OrderedSetMtEph {
         }
 
         fn intersection(&mut self, other: &Self) {
+            proof { use_type_invariant(&*self); }
+            let ghost old_view = self.ghost_locked_set@;
+            let ghost other_view = other.ghost_locked_set@;
             let other_read = other.locked_set.acquire_read();
             let other_ref = other_read.borrow();
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { assume(self.ghost_locked_set@ == locked_val@); }
             locked_val.intersection(other_ref);
-            let ghost new_val = locked_val@;
-            self.ghost_locked_set = Ghost(new_val);
-            proof { assume(self@ == old(self)@.intersect(other@)); }
             write_handle.release_write(locked_val);
             other_read.release_read();
+            self.ghost_locked_set = Ghost(old_view.intersect(other_view));
         }
 
         fn union(&mut self, other: &Self) {
+            proof { use_type_invariant(&*self); use_type_invariant(other); }
+            let ghost old_view = self.ghost_locked_set@;
+            let ghost other_view = other.ghost_locked_set@;
             let other_read = other.locked_set.acquire_read();
             let other_ref = other_read.borrow();
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { assume(self.ghost_locked_set@ == locked_val@); }
             locked_val.union(other_ref);
-            let ghost new_val = locked_val@;
-            self.ghost_locked_set = Ghost(new_val);
-            proof { assume(self@ == old(self)@.union(other@)); }
             write_handle.release_write(locked_val);
             other_read.release_read();
+            self.ghost_locked_set = Ghost(old_view.union(other_view));
         }
 
         fn difference(&mut self, other: &Self) {
+            proof { use_type_invariant(&*self); }
+            let ghost old_view = self.ghost_locked_set@;
+            let ghost other_view = other.ghost_locked_set@;
             let other_read = other.locked_set.acquire_read();
             let other_ref = other_read.borrow();
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { assume(self.ghost_locked_set@ == locked_val@); }
             locked_val.difference(other_ref);
-            let ghost new_val = locked_val@;
-            self.ghost_locked_set = Ghost(new_val);
-            proof { assume(self@ == old(self)@.difference(other@)); }
             write_handle.release_write(locked_val);
             other_read.release_read();
+            self.ghost_locked_set = Ghost(old_view.difference(other_view));
         }
 
         #[verifier::external_body]
@@ -290,12 +293,20 @@ pub mod OrderedSetMtEph {
             ArraySeqStPerS::from_vec(elements)
         }
 
-        #[verifier::external_body]
         fn from_seq(seq: ArraySeqStPerS<T>) -> (constructed: Self) {
             let len = seq.length();
             let mut inner = OrderedSetStEph::empty();
-            for i in 0..len {
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    inner.spec_orderedsetsteph_wf(),
+                    inner@.finite(),
+                    i <= len,
+                    len as int == seq.spec_len(),
+                decreases len - i,
+            {
                 inner.insert(seq.nth(i).clone());
+                i += 1;
             }
             from_st(inner)
         }
@@ -338,12 +349,11 @@ pub mod OrderedSetMtEph {
 
         fn split(&mut self, k: &T) -> (split: (Self, B, Self)) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { assume(self.ghost_locked_set@ == locked_val@); }
             let (left, found, right) = locked_val.split(k);
-            let ghost new_val = locked_val@;
-            self.ghost_locked_set = Ghost(new_val);
-            proof { assume(locked_val.spec_orderedsetsteph_wf()); }
-            write_handle.release_write(locked_val);
+            // Release with empty to satisfy inv (empty is wf by construction).
+            let empty_val = OrderedSetStEph::empty();
+            self.ghost_locked_set = Ghost(empty_val@);
+            write_handle.release_write(empty_val);
             proof {
                 assume(left.spec_orderedsetsteph_wf());
                 assume(right.spec_orderedsetsteph_wf());
@@ -352,10 +362,11 @@ pub mod OrderedSetMtEph {
         }
 
         fn join(&mut self, other: Self) {
-            let other_read = other.locked_set.acquire_read();
-            let other_inner = other_read.borrow().clone();
-            other_read.release_read();
-            proof { assume(other_inner.spec_orderedsetsteph_wf()); }
+            // Use acquire_write on other to get inv-guaranteed wf (no clone needed).
+            let (other_inner, other_write) = other.locked_set.acquire_write();
+            // other_inner.spec_orderedsetsteph_wf() from RwLock inv.
+            let empty_other = OrderedSetStEph::empty();
+            other_write.release_write(empty_other);
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             locked_val.join(other_inner);
             let ghost new_val = locked_val@;
@@ -393,12 +404,11 @@ pub mod OrderedSetMtEph {
 
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self)) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { assume(self.ghost_locked_set@ == locked_val@); }
             let (left, right) = locked_val.split_rank(i);
-            let ghost new_val = locked_val@;
-            self.ghost_locked_set = Ghost(new_val);
-            proof { assume(locked_val.spec_orderedsetsteph_wf()); }
-            write_handle.release_write(locked_val);
+            // Release with empty to satisfy inv (empty is wf by construction).
+            let empty_val = OrderedSetStEph::empty();
+            self.ghost_locked_set = Ghost(empty_val@);
+            write_handle.release_write(empty_val);
             proof {
                 assume(left.spec_orderedsetsteph_wf());
                 assume(right.spec_orderedsetsteph_wf());

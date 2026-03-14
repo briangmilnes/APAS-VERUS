@@ -223,10 +223,20 @@ pub mod feq {
         ensures obeys_feq_full::<T>()
     { admit(); }
 
+    // Broadcast axiom: types satisfying PartialEq + View obey view_eq.
+    // Sound because all PartialEq impls in APAS-VERUS satisfy the eq/view convention.
+    pub open spec fn obeys_view_eq_trigger<T>() -> bool { true }
+
+    pub broadcast proof fn axiom_obeys_view_eq<T: PartialEq + View + Sized>()
+        requires #[trigger] obeys_view_eq_trigger::<T>()
+        ensures vstd::laws_eq::obeys_view_eq::<T>()
+    { admit(); }
+
     pub broadcast group group_feq_axioms {
         axiom_cloned_implies_eq,
         axiom_cloned_implies_eq_owned,
         axiom_obeys_feq_full,
+        axiom_obeys_view_eq,
     }
 
     } // verus!

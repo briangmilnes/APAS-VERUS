@@ -19,10 +19,15 @@ pub mod OrderedTableMtPer {
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
+    use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap43::OrderedSetMtEph::OrderedSetMtEph::*;
     use crate::Chap43::OrderedTableStPer::OrderedTableStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_view_eq_trigger};
+    #[cfg(verus_keep_ghost)]
+    use vstd::laws_eq::obeys_view_eq;
 
     verus! {
 
@@ -115,9 +120,11 @@ pub mod OrderedTableMtPer {
             ensures self@.dom().finite();
 
         fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self)
+            requires forall|k: &K, v: &V| f.requires((k, v))
             ensures mapped@.dom().finite();
 
         fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (filtered: Self)
+            requires forall|p: &Pair<K, V>| f.requires((p,))
             ensures filtered@.dom().finite();
 
         fn first_key(&self) -> (first: Option<K>)
@@ -179,14 +186,21 @@ pub mod OrderedTableMtPer {
             }
         }
 
-        #[verifier::external_body]
         fn singleton(k: K, v: V) -> (tree: Self) {
+            proof { assert(obeys_feq_full_trigger::<Pair<K, V>>()); }
             let inner = OrderedTableStPer::singleton(k, v);
-            from_st_table(inner)
+            let ghost view = inner@;
+            OrderedTableMtPer {
+                locked_table: RwLock::new(inner, Ghost(OrderedTableMtPerInv)),
+                ghost_locked_table: Ghost(view),
+            }
         }
 
-        #[verifier::external_body]
         fn find(&self, k: &K) -> (found: Option<V>) {
+            proof {
+                assert(obeys_view_eq_trigger::<K>());
+                assert(obeys_feq_full_trigger::<V>());
+            }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let found = inner.find(k);
@@ -194,62 +208,125 @@ pub mod OrderedTableMtPer {
             found
         }
 
-        #[verifier::external_body]
         fn insert(&self, k: K, v: V) -> (updated: Self) {
+            proof {
+                assert(obeys_view_eq_trigger::<K>());
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+            }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let result = inner.insert(k, v);
             read_handle.release_read();
-            from_st_table(result)
+            let ghost view = result@;
+            OrderedTableMtPer {
+                locked_table: RwLock::new(result, Ghost(OrderedTableMtPerInv)),
+                ghost_locked_table: Ghost(view),
+            }
         }
 
-        #[verifier::external_body]
         fn delete(&self, k: &K) -> (updated: Self) {
+            proof {
+                assert(obeys_view_eq_trigger::<K>());
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+            }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let result = inner.delete(k);
             read_handle.release_read();
-            from_st_table(result)
+            let ghost view = result@;
+            OrderedTableMtPer {
+                locked_table: RwLock::new(result, Ghost(OrderedTableMtPerInv)),
+                ghost_locked_table: Ghost(view),
+            }
         }
 
-        #[verifier::external_body]
         fn domain(&self) -> (domain: OrderedSetMtEph<K>) {
+            proof { use_type_invariant(self); }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
-            let inner_clone = inner.clone();
+            let entries = inner.collect();
             read_handle.release_read();
             let mut result = OrderedSetMtEph::empty();
-            for entry in &inner_clone {
-                result.insert(entry.0.clone());
+            let len = entries.length();
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    entries.spec_avltreeseqstper_wf(),
+                    i <= len,
+                    len as nat == entries.spec_seq().len(),
+                    result@.finite(),
+                decreases len - i,
+            {
+                let pair = entries.nth(i);
+                result.insert(pair.0.clone());
+                i += 1;
             }
             result
         }
 
-        #[verifier::external_body]
         fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self) {
+            proof {
+                assert(obeys_view_eq_trigger::<K>());
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+                use_type_invariant(self);
+            }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
-            let inner_clone = inner.clone();
+            let entries = inner.collect();
             read_handle.release_read();
             let mut result = OrderedTableStPer::empty();
-            for entry in &inner_clone {
-                let new_v = f(&entry.0, &entry.1);
-                result = result.insert(entry.0.clone(), new_v);
+            let len = entries.length();
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    entries.spec_avltreeseqstper_wf(),
+                    result.spec_orderedtablestper_wf(),
+                    result@.dom().finite(),
+                    i <= len,
+                    len as nat == entries.spec_seq().len(),
+                    forall|k: &K, v: &V| f.requires((k, v)),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                decreases len - i,
+            {
+                let pair = entries.nth(i);
+                let new_v = f(&pair.0, &pair.1);
+                result = result.insert(pair.0.clone(), new_v);
+                i += 1;
             }
             from_st_table(result)
         }
 
-        #[verifier::external_body]
         fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (filtered: Self) {
+            proof {
+                assert(obeys_view_eq_trigger::<K>());
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+                use_type_invariant(self);
+            }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
-            let inner_clone = inner.clone();
+            let entries = inner.collect();
             read_handle.release_read();
             let mut result = OrderedTableStPer::empty();
-            for entry in &inner_clone {
-                if f(entry) {
-                    result = result.insert(entry.0.clone(), entry.1.clone());
+            let len = entries.length();
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    entries.spec_avltreeseqstper_wf(),
+                    result.spec_orderedtablestper_wf(),
+                    result@.dom().finite(),
+                    i <= len,
+                    len as nat == entries.spec_seq().len(),
+                    forall|p: &Pair<K, V>| f.requires((p,)),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                decreases len - i,
+            {
+                let pair = entries.nth(i);
+                if f(pair) {
+                    result = result.insert(pair.0.clone(), pair.1.clone());
                 }
+                i += 1;
             }
             from_st_table(result)
         }
@@ -299,16 +376,23 @@ pub mod OrderedTableMtPer {
             (from_st_table(left), val, from_st_table(right))
         }
 
-        #[verifier::external_body]
         fn join_key(&self, other: &Self) -> (joined: Self) {
-            let other_read = other.locked_table.acquire_read();
-            let other_inner = other_read.borrow().clone();
-            other_read.release_read();
+            proof {
+                assert(obeys_view_eq_trigger::<K>());
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+            }
             let self_read = self.locked_table.acquire_read();
             let self_inner = self_read.borrow();
-            let result = OrderedTableStPer::join_key(self_inner, &other_inner);
+            let other_read = other.locked_table.acquire_read();
+            let other_inner = other_read.borrow();
+            let result = OrderedTableStPer::join_key(self_inner, other_inner);
+            other_read.release_read();
             self_read.release_read();
-            from_st_table(result)
+            let ghost view = result@;
+            OrderedTableMtPer {
+                locked_table: RwLock::new(result, Ghost(OrderedTableMtPerInv)),
+                ghost_locked_table: Ghost(view),
+            }
         }
 
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self) {
