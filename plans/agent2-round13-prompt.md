@@ -1,11 +1,17 @@
-# Agent 2 — Round 13 Prompt
+# Agent 2 — Round 13 (RESTART)
 
-## Mission
+## You produced ZERO holes in 40 minutes.
 
-Prove 20 of the 53 StEph/StPer external_body holes in Chap43. These are
-deterministic AVL tree wrappers — no threading, no concurrency, no excuses.
+You were assigned 53 external_body functions in Chap43 StEph/StPer files and
+proved none of them. Agent 1 proved 7 of these in Round 11 in less time.
+What happened?
 
-## Your Files
+## Your ONE job
+
+Prove external_body AVL tree wrappers in Chap43 StEph/StPer files. Start with
+the simplest and work up.
+
+## Files (53 external_body + 3 assume)
 
 - `OrderedTableStEph.rs` — 14 external_body
 - `OrderedSetStEph.rs` — 14 external_body, 1 assume
@@ -14,52 +20,56 @@ deterministic AVL tree wrappers — no threading, no concurrency, no excuses.
 - `AugOrderedTableStEph.rs` — 3 external_body
 - `AugOrderedTableStPer.rs` — 2 assume
 
-## The Work
+## How to prove them
 
-Each external_body wraps an inner AVLTreeSeq operation. The inner operations
-(Chap37) have verified specs. Your job:
+Each function wraps an inner AVLTreeSeq call. Example pattern:
 
-1. Remove `#[verifier::external_body]`
-2. Write the body — usually a single call to the inner AVLTreeSeq method
-3. Map the ensures: inner ensures `result.spec_seq()...` → outer ensures
-   `result@...`
-4. Add view-bridging assertions if needed
-5. Validate
+```rust
+// BEFORE (external_body):
+#[verifier::external_body]
+fn find(&self, key: &K) -> (r: Option<V>)
+    requires self.spec_orderedtablesteph_wf(),
+    ensures match r { Some(v) => self@.contains_key(key@), None => !self@.contains_key(key@) }
+{ ... }
 
-## Triage Order (easiest first)
+// AFTER (proved):
+fn find(&self, key: &K) -> (r: Option<V>)
+    requires self.spec_orderedtablesteph_wf(),
+    ensures match r { Some(v) => self@.contains_key(key@), None => !self@.contains_key(key@) }
+{
+    let result = self.inner.find(key);  // inner has verified ensures
+    // chain inner ensures to outer ensures with assertions if needed
+    result
+}
+```
 
-**Batch 1 — Direct delegations (target: all)**:
-find, singleton, size, is_empty, first, last, contains
+Agent 1 already proved `singleton`, `delete`, `iter` in these files in Round 11.
+Read those proved functions for the exact pattern.
 
-**Batch 2 — One-call with view mapping**:
-delete, insert, filter, get_range
+## Triage: do them in this order
 
-**Batch 3 — Two-call compositions**:
-split, split_rank, union, intersection, difference
+1. **size, is_empty** — trivial delegation
+2. **find, contains** — single inner call
+3. **first, last** — single inner call
+4. **singleton** — constructor, may already be proved in some files
+5. **delete, insert** — one inner call + view mapping
+6. **filter** — loop with inner calls
+7. **get_range, split, split_rank** — two inner calls
 
-**Batch 4 — Complex (stretch)**:
-from_sorted_elements, rank, select, previous, next
+Do NOT attempt from_sorted_elements, rank, select, previous, next until you've
+proved at least 10 of the above.
 
-Agent 1 proved singleton, delete, iter in R11. Read those proofs for the pattern.
+## DO NOT
 
-## Also: Chap47 (10 holes, bonus)
-
-If you finish Chap43 StEph/StPer work early, attack Chap47. The probe functions
-are modular arithmetic: `(hash + attempt) % size`. Remove external_body, write
-the body, assert `result < size`.
-
-## DO NOT TOUCH
-
-- Chap43 Mt files — Agent 1
-- Chap41 — Agents 3 and 4
-- Chap42 TableMtEph — Agent 4
-- Chap38, Chap39 — Agents 3 and 4
+- Touch Chap43 Mt files (Agent 1)
+- Touch Chap41 (Agent 3)
+- Touch Chap42, Chap47 (Agent 4)
+- Spend more than 10 minutes on any single hole
 
 ## Rules
 
 - Run `scripts/validate.sh` after every change.
-- NO accept(). Skip Example files.
+- NO accept().
 - Push to `agent2/ready`. Write `plans/agent2-round13-report.md`.
-- **Prove or move on.** Don't spend more than 10 minutes on any single hole.
 
-## Target: Chap43 St/StPer 53 → ≤ 33 (-20). Chap47 10 → ≤ 8 (-2).
+## Target: -15 minimum. No excuses.

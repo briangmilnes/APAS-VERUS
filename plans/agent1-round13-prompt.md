@@ -1,58 +1,49 @@
-# Agent 1 — Round 13 Prompt
+# Agent 1 — Round 13 (RESTART)
 
-## Mission
+## You produced ZERO holes in 40 minutes.
 
-Prove 40 of the 61 Mt holes in Chap43. Strengthen RwLock invariants, replace
-assumes with asserts, prove external_body wrappers. This is mechanical work —
-do it fast.
+You were assigned 50 RwLock ghost-state assumes and produced nothing. You
+wandered off to "bonus files" instead of doing the assigned work. That is
+unacceptable.
 
-## Your Files
+## Your ONE job
 
-- `OrderedSetMtEph.rs` — 36 assume, 3 external_body (39 total)
-- `OrderedTableMtPer.rs` — 14 assume, 8 external_body (22 total)
-- `OrderedTableMtEph.rs` — 15 external_body (bonus)
-- `AugOrderedTableMtEph.rs` — 5 external_body (bonus)
+Prove the RwLock ghost-state assumes in these TWO files:
 
-## Step 1: Strengthen the RwLock Invariant
+1. `Chap43/OrderedSetMtEph.rs` — 36 assume
+2. `Chap43/OrderedTableMtPer.rs` — 14 assume
 
-Read the `*Inv` struct (OrderedSetMtEphInv, OrderedTableMtPerInv). If `inv`
-is weak, add:
-- `ghost_field@ == v@`
-- `v@.finite()`
-- Any other properties the assumes need
+That's it. Do not touch bonus files. Do not touch StEph files. Do not explore.
+Do not analyze. PROVE.
 
-Update constructors and mutators to establish/preserve the invariant.
+## The pattern (you should already know this)
 
-## Step 2: Replace Assumes with Asserts
+1. Open OrderedSetMtEph.rs
+2. Find the `OrderedSetMtEphInv` struct and its `inv` function
+3. If `inv` returns `true` or doesn't link ghost to locked value:
+   - Change `inv` to: `self.ghost_field@ == v@  && v@.finite()`
+   - Update every constructor (new, empty, singleton) to pass the right pred
+   - Update every mutator to preserve it
+4. Every `assume(self.ghost_X@ == locked_val@)` becomes `assert(...)`
+5. Every `assume(self@.finite())` becomes `assert(...)`
+6. Run `scripts/validate.sh`
+7. Repeat for OrderedTableMtPer.rs
 
-After `acquire_read`/`acquire_write`, Verus knows `inv(pred, locked_val)`.
-Change every `assume(...)` to `assert(...)`. If Verus can't prove it, add
-an intermediate assertion bridging inv to the property.
+Read `src/Chap41/AVLTreeSetMtEph.rs` — Agent 4 already did this exact pattern
+there. Copy the approach.
 
-## Step 3: Prove External_body Wrappers
+## DO NOT
 
-For each external_body function:
-1. Remove `#[verifier::external_body]`
-2. Write the body: typically acquire lock, call inner method, release
-3. The inner StEph/StPer methods have verified ensures — chain them
-
-## References
-
-- `src/standards/toplevel_coarse_rwlocks_for_mt_modules.rs` — READ FIRST
-- `src/Chap41/AVLTreeSetMtEph.rs` — Agent 4 did this exact pattern
-- `src/Chap42/TableMtEph.rs` — Agent 3's broadcast proof for feq
-
-## DO NOT TOUCH
-
-- Chap43 St/StPer files — Agent 2
-- Chap41 — Agents 3 and 4
-- Chap42, Chap47 — Agent 4
+- Touch any StEph/StPer files (Agent 2)
+- Touch Chap41 (Agent 3)
+- Touch Chap42, Chap47 (Agent 4)
+- Work on "bonus" files before finishing the primary assignment
+- Write paragraphs about why something is hard instead of trying it
 
 ## Rules
 
 - Run `scripts/validate.sh` after every change.
-- NO accept(). Skip Example files.
+- NO accept().
 - Push to `agent1/ready`. Write `plans/agent1-round13-report.md`.
-- **Prove or move on.** Don't spend more than 10 minutes on any single hole.
 
-## Target: 61 → ≤ 21 (-40)
+## Target: -25 minimum. Prove or explain exactly what you tried.

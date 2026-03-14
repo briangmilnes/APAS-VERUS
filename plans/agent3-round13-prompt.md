@@ -1,56 +1,50 @@
-# Agent 3 — Round 13 Prompt
+# Agent 3 — Round 13 (RESTART)
 
-## Mission
+## You were the star last run (-16). Keep going.
 
-Apply your feq broadcast proof trick everywhere it can go. Eliminate feq assumes
-in Chap41 (17 holes) and Chap38 (15 holes). You proved the technique works in
-Round 11 — now scale it. Target: -15 holes.
+ArraySetStEph is CLEAN. AVLTreeSetStEph 14→6. AVLTreeSetStPer 10→5. Excellent.
+Now finish what's left and hit BSTParaStEph.
 
-## Your Files
+## Remaining holes you own
 
-**Chap41** (24 holes across 2 files):
-- `ArraySetStEph.rs` — 3 assume (feq) — HIGHEST PRIORITY, unblocks Chap42
-- `AVLTreeSetStEph.rs` — 14 assume (feq + set ops)
-- `AVLTreeSetStPer.rs` — 10 assume (same patterns as StEph)
+**Chap41** (11 holes across 2 files):
+- `AVLTreeSetStEph.rs` — 6 assume remaining:
+  - `size`: seq.len vs set.len needs `no_duplicates` invariant in wf
+  - `find` not-found: needs sorted invariant in wf
+  - `delete` postcondition (2): `from_vec` to `to_set()` gap
+  - `insert` postcondition (2): same gap
+- `AVLTreeSetStPer.rs` — 5 assume remaining:
+  - `size`: same gap
+  - `filter`: closure requires needs trait spec precondition
+  - `find` not-found: same sorted invariant gap
 
 **Chap38** (15 holes):
-- `BSTParaStEph.rs` — 15 assume (set ops, you got -4 in R10)
+- `BSTParaStEph.rs` — 15 assume (you got 0 delta last run, all T::V witness)
 
-## Step 1: ArraySetStEph.rs (3 holes) — DO THIS FIRST
+## Strategy
 
-The 3 assumes are `assume(obeys_feq_full::<T>())`. Create a broadcast proof
-that makes this provable from `T: StT` bounds, same as your Pair_feq_trigger.
-If the broadcast approach doesn't fit, add `requires obeys_feq_full::<T>()` to
-empty/singleton/find and cascade to callers IN YOUR FILES. Document callers in
-Chap42/43 for other agents.
+For the Chap41 remaining 11:
+- **size**: Add `no_duplicates` to `spec_avltreesetsteph_wf`. The inner
+  AVLTreeSeq ensures no duplicates — thread that through.
+- **find not-found**: Add sorted invariant to wf. The inner tree is sorted.
+- **delete/insert postconditions**: The `from_vec` → `to_set()` gap needs
+  a lemma connecting `Seq::to_set` after insert/delete to `Set::insert/remove`.
 
-## Step 2: AVLTreeSetStEph.rs (14 holes)
+For BSTParaStEph (15):
+- You said "T::V witness gap — cannot bridge view-level set membership to
+  value-level cmp_spec." Try: can you add a spec function relating view
+  membership to value ordering? Or restructure the set to use value-level?
 
-Same feq technique. Also try:
-- filter subset: loop invariant + intermediate assertions
-- intersection/union/difference: set algebra lemmas from vstd::set_lib
-- insert/delete: chain from inner AVLTreeSeq ensures
+## DO NOT
 
-## Step 3: AVLTreeSetStPer.rs (10 holes)
-
-Mirror of StEph. Same patterns apply.
-
-## Step 4: BSTParaStEph.rs (15 holes)
-
-Continue from R10. Try broadcast proof for the 11 set op assumes.
-
-## DO NOT TOUCH
-
-- Chap43 — Agents 1 and 2
-- Chap42 — Agent 4
-- Chap41 Mt files — Agent 4
-- Chap39 — Agent 4
+- Touch Chap43 (Agents 1 and 2)
+- Touch Chap42, Chap47 (Agent 4)
+- Touch Chap41 Mt files (Agent 4)
 
 ## Rules
 
 - Run `scripts/validate.sh` after every change.
-- NO accept(). Skip Example files.
+- NO accept().
 - Push to `agent3/ready`. Write `plans/agent3-round13-report.md`.
-- **Prove or move on.** Don't spend more than 10 minutes on any single hole.
 
-## Target: ArraySetStEph 3 → 0. AVLTreeSetStEph 14 → ≤ 8. AVLTreeSetStPer 10 → ≤ 6. BSTParaStEph 15 → ≤ 10. Total -15.
+## Target: AVLTreeSetStEph 6 → ≤ 2. AVLTreeSetStPer 5 → ≤ 2. BSTParaStEph 15 → ≤ 10. Total -12.
