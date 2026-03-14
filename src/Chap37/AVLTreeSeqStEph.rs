@@ -659,7 +659,11 @@ pub mod AVLTreeSeqStEph {
     }
 
     fn clone_link<T: StT>(link: &Link<T>) -> (copy: Link<T>)
-        ensures spec_inorder(copy) =~= spec_inorder(*link),
+        ensures
+            spec_inorder(copy) =~= spec_inorder(*link),
+            spec_avltreeseqsteph_wf(*link) ==> spec_avltreeseqsteph_wf(copy),
+            spec_cached_size(&copy) == spec_cached_size(link),
+            spec_cached_height(&copy) == spec_cached_height(link),
         decreases *link,
     {
         match link {
@@ -1094,7 +1098,9 @@ pub mod AVLTreeSeqStEph {
 
     impl<T: StT> Clone for AVLTreeSeqStEphS<T> {
         fn clone(&self) -> (copy: Self)
-            ensures copy@ == self@,
+            ensures
+                copy@ == self@,
+                self.spec_avltreeseqsteph_wf() ==> copy.spec_avltreeseqsteph_wf(),
         {
             AVLTreeSeqStEphS {
                 root: clone_link(&self.root),

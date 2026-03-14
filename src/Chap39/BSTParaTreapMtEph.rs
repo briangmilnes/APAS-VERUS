@@ -371,11 +371,31 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn expose(&self) -> (exposed: Exposed<T>)
-            ensures true;
+            ensures
+                self@.finite(),
+                exposed is Leaf ==> self@.len() == 0,
+                exposed matches Exposed::Node(left, key, right) ==> (
+                    self@.contains(key@)
+                    && left@.finite()
+                    && right@.finite()
+                    && left@.subset_of(self@)
+                    && right@.subset_of(self@)
+                    && self@ =~= left@.union(right@).insert(key@)
+                );
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn expose_with_priority(&self) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>)
-            ensures true;
+            ensures
+                self@.finite(),
+                parts is None ==> self@.len() == 0,
+                parts matches Some((left, key, _, right)) ==> (
+                    self@.contains(key@)
+                    && left@.finite()
+                    && right@.finite()
+                    && left@.subset_of(self@)
+                    && right@.subset_of(self@)
+                    && self@ =~= left@.union(right@).insert(key@)
+                );
         /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
         /// - Claude-Opus-4.6: Work O(log(|left| + |right|)), Span O(log(|left| + |right|)) — delegates to join_with_priority
         fn join_mid(exposed: Exposed<T>) -> (tree: Self)
@@ -399,7 +419,9 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn find(&self, key: &T) -> (found: Option<T>)
-            ensures found matches Some(v) ==> self@.contains(v@);
+            ensures
+                found matches Some(v) ==> v@ == key@ && self@.contains(v@),
+                found is None ==> !self@.contains(key@);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn split(&self, key: &T) -> (parts: (Self, bool, Self))

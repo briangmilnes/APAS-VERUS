@@ -28,7 +28,6 @@ pub mod BSTParaStEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -415,7 +414,7 @@ pub mod BSTParaStEph {
             let handle = self.locked_root.acquire_read();
             let exposed = match handle.borrow() {
                 | None => {
-                    proof { accept(self@ =~= Set::<<T as View>::V>::empty()); }
+                    proof { assume(self@ =~= Set::<<T as View>::V>::empty()); }
                     Exposed::Leaf
                 }
                 | Some(node) => {
@@ -423,7 +422,7 @@ pub mod BSTParaStEph {
                     let k = node.key.clone();
                     let r = node.right.clone();
                     // Reader accept: cloned decomposition matches ghost state.
-                    proof { accept(
+                    proof { assume(
                         self@ =~= l@.union(r@).insert(k@)
                         && self@.finite()
                         && l@.finite() && r@.finite()
@@ -482,7 +481,7 @@ pub mod BSTParaStEph {
                     node.size
                 }
             };
-            proof { accept(count as nat == self@.len() && self@.finite()); }
+            proof { assume(count as nat == self@.len() && self@.finite()); }
             handle.release_read();
             count
         }
@@ -498,7 +497,7 @@ pub mod BSTParaStEph {
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
                 // left@ ∪ right@ =~= self@.remove(key@), so their combined len <= self@.len().
-                accept(left@.len() + right@.len() < usize::MAX as nat);
+                assume(left@.len() + right@.len() < usize::MAX as nat);
             }
             let rebuilt = Self::join_m(left, key, right);
             let read_h = rebuilt.locked_root.acquire_read();
@@ -506,7 +505,7 @@ pub mod BSTParaStEph {
             read_h.release_read();
             let (_, write_h) = self.locked_root.acquire_write();
             // Writer accept: clone preserves structural predicate through lock.
-            proof { accept(self.locked_root.pred().inv(new_val)); }
+            proof { assume(self.locked_root.pred().inv(new_val)); }
             self.ghost_locked_root = Ghost(old_view.insert(kv));
             write_h.release_write(new_val);
         }
@@ -517,7 +516,7 @@ pub mod BSTParaStEph {
             let (left, _, right) = self.split(key);
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                accept(left@.len() + right@.len() < usize::MAX as nat);
+                assume(left@.len() + right@.len() < usize::MAX as nat);
                 // Split: left < key < right. Transitivity gives left < right.
                 assert forall|s: T, o: T| #![auto]
                     left@.contains(s@) && right@.contains(o@) implies
@@ -532,7 +531,7 @@ pub mod BSTParaStEph {
             read_h.release_read();
             let (_, write_h) = self.locked_root.acquire_write();
             // Writer accept: clone preserves structural predicate through lock.
-            proof { accept(self.locked_root.pred().inv(new_val)); }
+            proof { assume(self.locked_root.pred().inv(new_val)); }
             self.ghost_locked_root = Ghost(old_view.remove(key@));
             write_h.release_write(new_val);
         }
@@ -850,7 +849,7 @@ pub mod BSTParaStEph {
                     proof {
                         // join_m needs disjointness, non-containment, ordering, size bound.
                         // Accept cross-disjointness (T::V witness gap for ordering-based proof).
-                        accept(
+                        assume(
                             luv.disjoint(ruv)
                             && !luv.contains(akv) && !ruv.contains(akv)
                             && luv.len() + ruv.len() < usize::MAX as nat
@@ -913,7 +912,7 @@ pub mod BSTParaStEph {
                     if found {
                         proof {
                             // Accept join_m preconditions (cross-disjointness from ordering).
-                            accept(
+                            assume(
                                 lrv.disjoint(rrv)
                                 && !lrv.contains(akv) && !rrv.contains(akv)
                                 && lrv.len() + rrv.len() < usize::MAX as nat
@@ -940,7 +939,7 @@ pub mod BSTParaStEph {
                                     assert(blv.union(brv).contains(x));
                                     // x ∈ self ∧ x ∈ (bl ∪ br): cross-disjointness
                                     // ensures x lands in matching recursive result.
-                                    accept(result@.contains(x));
+                                    assume(result@.contains(x));
                                 }
                             };
                             assert(result@ =~= sv.intersect(other@));
@@ -949,7 +948,7 @@ pub mod BSTParaStEph {
                     } else {
                         proof {
                             // Accept join_pair preconditions.
-                            accept(
+                            assume(
                                 lrv.disjoint(rrv)
                                 && lrv.finite() && rrv.finite()
                                 && lrv.len() + rrv.len() < usize::MAX as nat
@@ -972,7 +971,7 @@ pub mod BSTParaStEph {
                                 if sv.contains(x) && other@.contains(x) {
                                     assert(other@.remove(akv).contains(x));
                                     assert(blv.union(brv).contains(x));
-                                    accept(result@.contains(x));
+                                    assume(result@.contains(x));
                                 }
                             };
                             assert(result@ =~= sv.intersect(other@));
@@ -1015,7 +1014,7 @@ pub mod BSTParaStEph {
                     let ghost rrv = right_res@;
                     if found {
                         proof {
-                            accept(
+                            assume(
                                 lrv.disjoint(rrv)
                                 && lrv.finite() && rrv.finite()
                                 && lrv.len() + rrv.len() < usize::MAX as nat
@@ -1030,12 +1029,12 @@ pub mod BSTParaStEph {
                                 if lrv.contains(x) {
                                     assert(alv.contains(x) && !blv.contains(x));
                                     assert(sv.contains(x));
-                                    accept(!other@.contains(x));
+                                    assume(!other@.contains(x));
                                 }
                                 if rrv.contains(x) {
                                     assert(arv.contains(x) && !brv.contains(x));
                                     assert(sv.contains(x));
-                                    accept(!other@.contains(x));
+                                    assume(!other@.contains(x));
                                 }
                                 if sv.contains(x) && !other@.contains(x) {
                                     assert(!blv.union(brv).contains(x));
@@ -1051,7 +1050,7 @@ pub mod BSTParaStEph {
                         result
                     } else {
                         proof {
-                            accept(
+                            assume(
                                 lrv.disjoint(rrv)
                                 && !lrv.contains(akv) && !rrv.contains(akv)
                                 && lrv.len() + rrv.len() < usize::MAX as nat
@@ -1067,12 +1066,12 @@ pub mod BSTParaStEph {
                                 if lrv.contains(x) {
                                     assert(alv.contains(x) && !blv.contains(x));
                                     assert(sv.contains(x));
-                                    accept(!other@.contains(x));
+                                    assume(!other@.contains(x));
                                 }
                                 if rrv.contains(x) {
                                     assert(arv.contains(x) && !brv.contains(x));
                                     assert(sv.contains(x));
-                                    accept(!other@.contains(x));
+                                    assume(!other@.contains(x));
                                 }
                                 if sv.contains(x) && !other@.contains(x) && x != akv {
                                     assert(!blv.union(brv).contains(x));
@@ -1224,7 +1223,7 @@ pub mod BSTParaStEph {
                 Exposed::Leaf => Exposed::Leaf,
                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
             };
-            proof { accept(cloned@ == self@); }
+            proof { assume(cloned@ == self@); }
             cloned
         }
     }
@@ -1239,7 +1238,7 @@ pub mod BSTParaStEph {
                 left: self.left.clone(),
                 right: self.right.clone(),
             };
-            proof { accept(cloned@ == self@); }
+            proof { assume(cloned@ == self@); }
             cloned
         }
     }
