@@ -185,10 +185,9 @@ pub mod LinProbFlatHashTableStEph {
     {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — hash + addition + modulo.
-        #[verifier::external_body]
-        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> usize {
-            let hash_val = (table.hash_fn)(key, table.current_size);
-            (hash_val + attempt) % table.current_size
+        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {
+            let hash_val = call_hash_fn(&table.hash_fn, key, table.current_size);
+            (hash_val.wrapping_add(attempt)) % table.current_size
         }
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).

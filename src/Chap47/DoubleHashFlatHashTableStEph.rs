@@ -216,11 +216,10 @@ pub mod DoubleHashFlatHashTableStEph {
     {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — two hash values + arithmetic + modulo.
-        #[verifier::external_body]
-        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> usize {
-            let hash1 = (table.hash_fn)(key, table.current_size);
+        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {
+            let hash1 = call_hash_fn(&table.hash_fn, key, table.current_size);
             let step = Self::second_hash(key, table.current_size);
-            (hash1 + (attempt * step)) % table.current_size
+            (hash1.wrapping_add(attempt.wrapping_mul(step))) % table.current_size
         }
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).

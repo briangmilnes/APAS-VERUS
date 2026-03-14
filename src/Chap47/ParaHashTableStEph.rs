@@ -62,22 +62,20 @@ pub mod ParaHashTableStEph {
     }
 
     /// Linear probe: (hash(key) + attempt) % table_size.
-    #[verifier::external_body]
     pub fn linear_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
         requires table_size > 0,
         ensures slot < table_size,
     {
-        let h = (hash_fn)(key, table_size);
+        let h = call_hash_fn(hash_fn, key, table_size);
         (h.wrapping_add(attempt)) % table_size
     }
 
     /// Quadratic probe: (hash(key) + attempt + attempt^2) % table_size.
-    #[verifier::external_body]
     pub fn quadratic_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
         requires table_size > 0,
         ensures slot < table_size,
     {
-        let h = (hash_fn)(key, table_size);
+        let h = call_hash_fn(hash_fn, key, table_size);
         (h.wrapping_add(attempt).wrapping_add(attempt.wrapping_mul(attempt))) % table_size
     }
 
