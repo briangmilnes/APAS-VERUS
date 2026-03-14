@@ -141,6 +141,7 @@ broadcast use {
         requires
             i + l <= table@.keys.len(),
             table.spec_obstmteph_wf(),
+        ensures true,
         decreases l,
     {
         // Memo lookup.

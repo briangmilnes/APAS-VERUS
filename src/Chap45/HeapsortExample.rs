@@ -128,7 +128,9 @@ broadcast use {
 // 8. traits
 
         /// Check if a Vec is sorted in non-decreasing order using element-wise comparison.
-        fn is_vec_sorted_exec<T: StT + Ord + TotalOrder>(v: &Vec<T>) -> (sorted: bool) {
+        fn is_vec_sorted_exec<T: StT + Ord + TotalOrder>(v: &Vec<T>) -> (sorted: bool)
+            ensures true,
+        {
             if v.len() <= 1 {
                 return true;
             }

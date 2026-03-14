@@ -116,6 +116,7 @@ broadcast use {
 
     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtPerS<T>, i: usize, l: usize) -> (cost: Probability)
         requires i + l <= table@.keys.len(),
+        ensures true,
         decreases l,
     {
         // Memo lookup.

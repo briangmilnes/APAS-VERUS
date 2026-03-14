@@ -21,13 +21,10 @@ Table of Contents:
 =================================================================
 
 ❌ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:376: error: external_body - #[verifier::external_body]
-       377 |             fn contains(&self, element: &T) -> bool {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:542: error: external - #[verifier::external]
-       543 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:593: info: accept()
-   Holes: 2 total
-      1 × external_body
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:555: error: external - #[verifier::external]
+       556 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:606: info: accept()
+   Holes: 1 total
       1 × external
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
@@ -57,13 +54,13 @@ Table of Contents:
       1 × external
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:131: error: fn_missing_requires_ensures - fn is_vec_sorted_exec — exec fn should have requires and ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:131: error: fn_missing_requires - fn is_vec_sorted_exec — exec fn should have requires
        126 |         proof fn _heapsort_example_verified() {}
             ...
        129 | 
        130 |         /// Check if a Vec is sorted in non-decreasing order using element-wise comparison.
-       132 |             if v.len() <= 1 {
-       133 |                 return true;
+       132 |             ensures true,
+       133 |         {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:98: info: accept()
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:113: info: accept()
    Info: 2 total
@@ -140,17 +137,17 @@ Function Specs:
    357 total fns
 
 
-Holes Found: 4 total
-   1 × assume() (25%)
-   1 × external_body (25%)
-   2 × external (50%)
+Holes Found: 3 total
+   1 × assume() (33%)
+   2 × external (66%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 16:32:08 -07:00
-Ended:     2026-03-13 16:32:08 -07:00
-Duration:  73ms
+Started:   2026-03-13 18:10:57 -07:00
+Ended:     2026-03-13 18:10:57 -07:00
+Duration:  67ms
 
+Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log

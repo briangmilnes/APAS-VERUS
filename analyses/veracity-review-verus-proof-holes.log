@@ -401,69 +401,61 @@ Table of Contents:
    Info: 2 total
    Proof functions: 3 total (3 clean, 0 holed)
 ❌ src/Chap37/AVLTreeSeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:455: error: assume() - proof { assume(obeys_feq_clone::<T>()); }
-       447 |     fn set_rec<T: StTInMtT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:508: error: external_body - #[verifier::external_body]
+       509 |     fn build_balanced_from_slice<T: StTInMtT>(a: &[T]) -> (link: Link<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:623: error: external_body - #[verifier::external_body]
+       624 |         fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:259: error: fn_missing_requires - fn height_fn — exec fn should have requires
+       250 |         fn values_in_order(&self) -> (values: Vec<T>)
             ...
-       453 |         decreases *cur,
-       454 |     {
-       456 |         match cur {
-       457 |             None => {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:502: error: external_body - #[verifier::external_body]
-       503 |     fn build_balanced_from_slice<T: StTInMtT>(a: &[T]) -> (link: Link<T>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:617: error: external_body - #[verifier::external_body]
-       618 |         fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:255: error: fn_missing_requires - fn height_fn — exec fn should have requires
-       246 |         fn values_in_order(&self) -> (values: Vec<T>)
+       257 |     // 9. impls
+       258 | 
+       260 | 
+       261 |         ensures h as nat == spec_cached_height(n),
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:269: error: fn_missing_requires - fn size_fn — exec fn should have requires
+       259 |     fn height_fn<T: StTInMtT>(n: &Link<T>) -> (h: N)
             ...
-       253 |     // 9. impls
-       254 | 
-       256 | 
-       257 |         ensures h as nat == spec_cached_height(n),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:265: error: fn_missing_requires - fn size_fn — exec fn should have requires
-       255 |     fn height_fn<T: StTInMtT>(n: &Link<T>) -> (h: N)
+       267 |     }
+       268 | 
+       270 | 
+       271 |         ensures sz as nat == spec_cached_size(n),
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:497: error: fn_missing_requires - fn inorder_collect — exec fn should have requires
+       451 |     fn set_rec<T: StTInMtT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
             ...
-       263 |     }
-       264 | 
-       266 | 
-       267 |         ensures sz as nat == spec_cached_size(n),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:491: error: fn_missing_requires - fn inorder_collect — exec fn should have requires
-       447 |     fn set_rec<T: StTInMtT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
+       495 |     }
+       496 | 
+       498 |         ensures true,
+       499 |         decreases *cur,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:514: error: fn_missing_requires_ensures - fn rec — exec fn should have requires and ensures
+       509 |     fn build_balanced_from_slice<T: StTInMtT>(a: &[T]) -> (link: Link<T>)
             ...
-       489 |     }
-       490 | 
-       492 |         ensures true,
-       493 |         decreases *cur,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:508: error: fn_missing_requires_ensures - fn rec — exec fn should have requires and ensures
-       503 |     fn build_balanced_from_slice<T: StTInMtT>(a: &[T]) -> (link: Link<T>)
+       512 |             spec_inorder(link) =~= a@.map_values(|t: T| t@),
+       513 |     {
+       515 |             if a.is_empty() {
+       516 |                 return None;
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:715: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       711 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       506 |             spec_inorder(link) =~= a@.map_values(|t: T| t@),
-       507 |     {
-       509 |             if a.is_empty() {
-       510 |                 return None;
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:709: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       705 |         fn eq(&self, other: &Self) -> (equal: bool)
+       713 |         {
+       714 |             proof {
+       716 |                 assume(spec_avltreeseqmtper_wf(other.root));
+       717 |                 assume(obeys_feq_full::<T>());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:716: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       711 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       707 |         {
-       708 |             proof {
-       710 |                 assume(spec_avltreeseqmtper_wf(other.root));
-       711 |                 assume(obeys_feq_full::<T>());
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:710: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       705 |         fn eq(&self, other: &Self) -> (equal: bool)
+       714 |             proof {
+       715 |                 assume(spec_avltreeseqmtper_wf(self.root));
+       717 |                 assume(obeys_feq_full::<T>());
+       718 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:717: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       711 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       708 |             proof {
-       709 |                 assume(spec_avltreeseqmtper_wf(self.root));
-       711 |                 assume(obeys_feq_full::<T>());
-       712 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:711: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       705 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       709 |                 assume(spec_avltreeseqmtper_wf(self.root));
-       710 |                 assume(spec_avltreeseqmtper_wf(other.root));
-       712 |             }
-       713 |             compare_trees(&self.root, &other.root)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:724: info: accept()
-   Holes: 3 total
-      1 × assume()
+       715 |                 assume(spec_avltreeseqmtper_wf(self.root));
+       716 |                 assume(spec_avltreeseqmtper_wf(other.root));
+       718 |             }
+       719 |             compare_trees(&self.root, &other.root)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:730: info: accept()
+   Holes: 2 total
       2 × external_body
    Info: 1 total
    Proof functions: 2 total (2 clean, 0 holed)
@@ -519,79 +511,72 @@ Table of Contents:
       1091 |             compare_trees(&self.root, &other.root)
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ src/Chap37/AVLTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:432: error: assume() - proof { assume(obeys_feq_clone::<T>()); }
-       424 |     fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:506: error: assume() - assume(val@ == a@[mid as int]@);
+       485 |     fn build_balanced_from_slice<T: StT>(a: &[T]) -> (link: Link<T>)
             ...
-       430 |         decreases *cur,
-       431 |     {
-       433 |         match cur {
-       434 |             None => {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:500: error: assume() - assume(val@ == a@[mid as int]@);
-       479 |     fn build_balanced_from_slice<T: StT>(a: &[T]) -> (link: Link<T>)
+       504 |             lemma_height_le_size::<T>(&left);
+       505 |             lemma_height_le_size::<T>(&right);
+       507 |         }
+       508 |         let node = mk(val, left, right);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:223: error: fn_missing_requires - fn height_fn — exec fn should have requires
+       217 |         fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>)
             ...
-       498 |             lemma_height_le_size::<T>(&left);
-       499 |             lemma_height_le_size::<T>(&right);
-       501 |         }
-       502 |         let node = mk(val, left, right);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:219: error: fn_missing_requires - fn height_fn — exec fn should have requires
-       213 |         fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>)
+       221 |     // 9. impls
+       222 | 
+       224 | 
+       225 |         ensures h as nat == spec_cached_height(n),
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:233: error: fn_missing_requires - fn size_fn — exec fn should have requires
+       223 |     fn height_fn<T: StT>(n: &Link<T>) -> (h: N)
             ...
-       217 |     // 9. impls
-       218 | 
-       220 | 
-       221 |         ensures h as nat == spec_cached_height(n),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:229: error: fn_missing_requires - fn size_fn — exec fn should have requires
-       219 |     fn height_fn<T: StT>(n: &Link<T>) -> (h: N)
+       231 |     }
+       232 | 
+       234 | 
+       235 |         ensures sz as nat == spec_cached_size(n),
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:474: error: fn_missing_requires - fn inorder_collect — exec fn should have requires
+       428 |     fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
             ...
-       227 |     }
-       228 | 
-       230 | 
-       231 |         ensures sz as nat == spec_cached_size(n),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:468: error: fn_missing_requires - fn inorder_collect — exec fn should have requires
-       424 |     fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
+       472 |     }
+       473 | 
+       475 |         ensures true,
+       476 |         decreases *cur,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:485: error: fn_missing_requires - fn build_balanced_from_slice — exec fn should have requires
+       474 |     fn inorder_collect<T: StT>(cur: &Link<T>, out: &mut Vec<T>)
             ...
-       466 |     }
-       467 | 
-       469 |         ensures true,
-       470 |         decreases *cur,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:479: error: fn_missing_requires - fn build_balanced_from_slice — exec fn should have requires
-       468 |     fn inorder_collect<T: StT>(cur: &Link<T>, out: &mut Vec<T>)
+       483 |     }
+       484 | 
+       486 |         ensures
+       487 |             spec_avltreeseqstper_wf(link),
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:692: error: fn_missing_requires - fn push_left_iter_stper — exec fn should have requires
+       687 |         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
             ...
-       477 |     }
-       478 | 
-       480 |         ensures
-       481 |             spec_avltreeseqstper_wf(link),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:686: error: fn_missing_requires - fn push_left_iter_stper — exec fn should have requires
-       681 |         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+       690 |     // 10. iterators
+       691 | 
+       693 |         ensures true,
+       694 |         decreases cur,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:745: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       741 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       684 |     // 10. iterators
-       685 | 
-       687 |         ensures true,
-       688 |         decreases cur,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:739: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       735 |         fn eq(&self, other: &Self) -> (equal: bool)
+       743 |         {
+       744 |             proof {
+       746 |                 assume(spec_avltreeseqstper_wf(other.root));
+       747 |                 assume(obeys_feq_full::<T>());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:746: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       741 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       737 |         {
-       738 |             proof {
-       740 |                 assume(spec_avltreeseqstper_wf(other.root));
-       741 |                 assume(obeys_feq_full::<T>());
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:740: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       735 |         fn eq(&self, other: &Self) -> (equal: bool)
+       744 |             proof {
+       745 |                 assume(spec_avltreeseqstper_wf(self.root));
+       747 |                 assume(obeys_feq_full::<T>());
+       748 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:747: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       741 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       738 |             proof {
-       739 |                 assume(spec_avltreeseqstper_wf(self.root));
-       741 |                 assume(obeys_feq_full::<T>());
-       742 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:741: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       735 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       739 |                 assume(spec_avltreeseqstper_wf(self.root));
-       740 |                 assume(spec_avltreeseqstper_wf(other.root));
-       742 |             }
-       743 |             compare_trees(&self.root, &other.root)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:754: info: accept()
-   Holes: 2 total
-      2 × assume()
+       745 |                 assume(spec_avltreeseqstper_wf(self.root));
+       746 |                 assume(spec_avltreeseqstper_wf(other.root));
+       748 |             }
+       749 |             compare_trees(&self.root, &other.root)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:760: info: accept()
+   Holes: 1 total
+      1 × assume()
    Info: 1 total
    Proof functions: 2 total (2 clean, 0 holed)
 ℹ src/Chap37/BSTAVLMtEph.rs
@@ -1010,88 +995,88 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:677: info: accept()
    Info: 5 total
 ❌ src/Chap37/BSTSplayStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:446: error: trivial_spec_wf - spec fn spec_bstsplaysteph_wf — trivial body { true } or { true; }, needs // accept hole
-       444 |         open spec fn spec_height(self) -> nat { spec_height_link(&self.root) }
-       445 |         open spec fn spec_contains(self, value: T) -> bool { spec_contains_link(&self.root, value) }
-       447 | 
-       448 |         fn new() -> (tree: Self) { BSTSplayStEph { root: None } }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:146: error: fn_missing_requires - fn new_node — exec fn should have requires
-       138 |         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:464: error: trivial_spec_wf - spec fn spec_bstsplaysteph_wf — trivial body { true } or { true; }, needs // accept hole
+       462 |         open spec fn spec_contains(self, value: T) -> bool { spec_contains_link(&self.root, value) }
+       463 |         // TODO: Strengthen to spec_is_bst_link(&self.root) when splay/bst_insert proves BST preservation.
+       465 | 
+       466 |         fn new() -> (tree: Self) { BSTSplayStEph { root: None } }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:163: error: fn_missing_requires - fn new_node — exec fn should have requires
+       155 |         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
             ...
-       144 |     //		9. impls
-       145 | 
-       147 | 
-       148 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:162: error: fn_missing_requires - fn size_link — exec fn should have requires
-       146 |     fn new_node<T: TotalOrder + Clone>(key: T) -> (node: Node<T>)
+       161 |     //		9. impls
+       162 | 
+       164 | 
+       165 |         ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:179: error: fn_missing_requires - fn size_link — exec fn should have requires
+       163 |     fn new_node<T: TotalOrder + Clone>(key: T) -> (node: Node<T>)
             ...
-       160 |     }
-       161 | 
-       163 | 
-       164 |         ensures size as nat == spec_size_link(link),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:190: error: fn_missing_requires - fn update — exec fn should have requires
-       173 |     fn height_link<T: TotalOrder + Clone>(link: &Link<T>) -> (height: N)
+       177 |     }
+       178 | 
+       180 | 
+       181 |         ensures size as nat == spec_size_link(link),
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:207: error: fn_missing_requires - fn update — exec fn should have requires
+       190 |     fn height_link<T: TotalOrder + Clone>(link: &Link<T>) -> (height: N)
             ...
-       188 |     }
-       189 | 
-       191 | 
-       192 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:207: error: fn_missing_requires - fn splay — exec fn should have requires
-       190 |     fn update<T: TotalOrder + Clone>(node: &mut Node<T>)
-            ...
-       205 |     // Bottom-up splay: bring target (or nearest key) toward the root using
-       206 |     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
+       205 |     }
+       206 | 
        208 | 
-       209 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:330: error: fn_missing_requires - fn bst_insert — exec fn should have requires
-       207 |     fn splay<T: TotalOrder + Clone>(root: Box<Node<T>>, target: &T) -> (result: Box<Node<T>>)
+       209 |         ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:224: error: fn_missing_requires - fn splay — exec fn should have requires
+       207 |     fn update<T: TotalOrder + Clone>(node: &mut Node<T>)
             ...
-       328 |     }
-       329 | 
-       331 | 
-       332 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:354: error: fn_missing_requires - fn insert_link — exec fn should have requires
-       330 |     fn bst_insert<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)
+       222 |     // Bottom-up splay: bring target (or nearest key) toward the root using
+       223 |     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
+       225 | 
+       226 |         ensures true,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:347: error: fn_missing_requires - fn bst_insert — exec fn should have requires
+       224 |     fn splay<T: TotalOrder + Clone>(root: Box<Node<T>>, target: &T) -> (result: Box<Node<T>>)
             ...
-       352 |     }
-       353 | 
-       355 | 
-       356 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:368: error: fn_missing_requires - fn find_link — exec fn should have requires
-       354 |     fn insert_link<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)
+       345 |     }
+       346 | 
+       348 | 
+       349 |         ensures true,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:371: error: fn_missing_requires - fn insert_link — exec fn should have requires
+       347 |     fn bst_insert<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)
             ...
-       366 |     }
-       367 | 
-       369 | 
-       370 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:386: error: fn_missing_requires - fn min_link — exec fn should have requires
-       368 |     fn find_link<'a, T: TotalOrder + Clone>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
+       369 |     }
+       370 | 
+       372 | 
+       373 |         ensures true,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:385: error: fn_missing_requires - fn find_link — exec fn should have requires
+       371 |     fn insert_link<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)
             ...
-       384 |     }
-       385 | 
-       387 | 
-       388 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:402: error: fn_missing_requires - fn max_link — exec fn should have requires
-       386 |     fn min_link<T: TotalOrder + Clone>(link: &Link<T>) -> (min: Option<&T>)
+       383 |     }
+       384 | 
+       386 | 
+       387 |         ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:403: error: fn_missing_requires - fn min_link — exec fn should have requires
+       385 |     fn find_link<'a, T: TotalOrder + Clone>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             ...
-       400 |     }
-       401 | 
-       403 | 
-       404 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:418: error: fn_missing_requires - fn in_order_collect — exec fn should have requires
-       402 |     fn max_link<T: TotalOrder + Clone>(link: &Link<T>) -> (max: Option<&T>)
+       401 |     }
+       402 | 
+       404 | 
+       405 |         ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:419: error: fn_missing_requires - fn max_link — exec fn should have requires
+       403 |     fn min_link<T: TotalOrder + Clone>(link: &Link<T>) -> (min: Option<&T>)
             ...
-       416 |     }
-       417 | 
-       419 | 
-       420 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:430: error: fn_missing_requires - fn pre_order_collect — exec fn should have requires
-       418 |     fn in_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
+       417 |     }
+       418 | 
+       420 | 
+       421 |         ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:435: error: fn_missing_requires - fn in_order_collect — exec fn should have requires
+       419 |     fn max_link<T: TotalOrder + Clone>(link: &Link<T>) -> (max: Option<&T>)
             ...
-       428 |     }
-       429 | 
-       431 | 
-       432 |         ensures true,
+       433 |     }
+       434 | 
+       436 | 
+       437 |         ensures true,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:447: error: fn_missing_requires - fn pre_order_collect — exec fn should have requires
+       435 |     fn in_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
+            ...
+       445 |     }
+       446 | 
+       448 | 
+       449 |         ensures true,
    Holes: 1 total
       1 × trivial spec*wf { true }
 ❌ src/Chap38/BSTParaMtEph.rs
@@ -2429,13 +2414,10 @@ Table of Contents:
 ✓ src/Chap44/Example44_1.rs
    1 clean proof function
 ❌ src/Chap45/BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:376: error: external_body - #[verifier::external_body]
-       377 |             fn contains(&self, element: &T) -> bool {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:542: error: external - #[verifier::external]
-       543 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:593: info: accept()
-   Holes: 2 total
-      1 × external_body
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:555: error: external - #[verifier::external]
+       556 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:606: info: accept()
+   Holes: 1 total
       1 × external
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
@@ -2465,13 +2447,13 @@ Table of Contents:
       1 × external
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ src/Chap45/HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:131: error: fn_missing_requires_ensures - fn is_vec_sorted_exec — exec fn should have requires and ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:131: error: fn_missing_requires - fn is_vec_sorted_exec — exec fn should have requires
        126 |         proof fn _heapsort_example_verified() {}
             ...
        129 | 
        130 |         /// Check if a Vec is sorted in non-decreasing order using element-wise comparison.
-       132 |             if v.len() <= 1 {
-       133 |                 return true;
+       132 |             ensures true,
+       133 |         {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:98: info: accept()
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:113: info: accept()
    Info: 2 total
@@ -2654,29 +2636,15 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs:339: info: accept()
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs:355: info: accept()
    Info: 2 total
-❌ src/Chap50/OptBinSearchTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:140: error: fn_missing_ensures - fn obst_rec — exec fn should have ensures
-       135 |         fn memo_size(&self) -> (count: usize);
-            ...
-       138 |     // 9. impls
-       139 | 
-       141 |         requires
-       142 |             i + l <= table@.keys.len(),
+ℹ src/Chap50/OptBinSearchTreeMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:58: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:357: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:379: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:358: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:380: info: accept()
    Info: 3 total
-❌ src/Chap50/OptBinSearchTreeMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:117: error: fn_missing_ensures - fn obst_rec — exec fn should have ensures
-       112 |         fn memo_size(&self) -> (count: usize);
-            ...
-       115 |     // 9. impls
-       116 | 
-       118 |         requires i + l <= table@.keys.len(),
-       119 |         decreases l,
+ℹ src/Chap50/OptBinSearchTreeMtPer.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:61: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:262: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:280: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:263: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:281: info: accept()
    Info: 3 total
 ℹ src/Chap50/OptBinSearchTreeStEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:55: info: accept()
@@ -3475,8 +3443,8 @@ src/ParaPairs.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   201 clean (no holes, no errors; 78%)
-   56 holed (holes or errors, 21%)
+   203 clean (no holes, no errors; 78%)
+   54 holed (holes or errors, 21%)
    257 total
 
 Proof Functions:
@@ -3485,16 +3453,16 @@ Proof Functions:
    312 total
 
 Function Specs:
-   4969 exec fns with complete spec (requires+ensures) (70%)
-   102 exec fns missing spec (1%)
-   2026 proof/spec fns clean (28%)
+   4971 exec fns with complete spec (requires+ensures) (70%)
+   100 exec fns missing spec (1%)
+   2027 proof/spec fns clean (28%)
    0 proof/spec fns with holes (0%)
-   7097 total fns
+   7098 total fns
 
 
-Holes Found: 292 total
-   100 × assume() (34%)
-   188 × external_body (64%)
+Holes Found: 289 total
+   98 × assume() (33%)
+   187 × external_body (64%)
    2 × external (0%)
    2 × trivial spec*wf { true } (0%)
 
@@ -3509,82 +3477,79 @@ Holes Found: 292 total
 =================================================================
 
    1  Chap43  (145 holes, 11 files)
-   2  Chap37  (82 holes, 19 files)
+   2  Chap37  (80 holes, 19 files)
    3  Chap41  (62 holes, 7 files)
    4  Chap47  (28 holes, 9 files)
-   5  Chap42  (18 holes, 4 files)
-   6  Chap38  (18 holes, 2 files)
-   7  Chap53  (18 holes, 5 files)
+   5  Chap53  (18 holes, 5 files)
+   6  Chap42  (18 holes, 4 files)
+   7  Chap38  (18 holes, 2 files)
    8  Chap39  (15 holes, 4 files)
-   9  Chap45  (5 holes, 7 files)
-   10  Chap50  (2 holes, 8 files)
-   11  Chap52  (1 holes, 14 files)
-   12  Chap64  (0 holes, 3 files)
-   13  Chap23  (0 holes, 2 files)
-   14  Chap62  (0 holes, 4 files)
-   15  Chap26  (0 holes, 8 files)
-   16  Chap27  (0 holes, 4 files)
-   17  Chap28  (0 holes, 11 files)
-   18  Chap03  (0 holes, 1 files)
-   19  Chap11  (0 holes, 5 files)
-   20  Chap58  (0 holes, 2 files)
-   21  Chap59  (0 holes, 4 files)
-   22  Chap19  (0 holes, 4 files)
-   23  Concurrency  (0 holes, 1 files)
-   24  Chap54  (0 holes, 4 files)
-   25  Chap30  (0 holes, 1 files)
-   26  Chap55  (0 holes, 8 files)
-   27  Chap56  (0 holes, 12 files)
-   28  Chap36  (0 holes, 3 files)
-   29  Chap63  (0 holes, 2 files)
-   30  ParaPairs  (0 holes, 1 files)
-   31  Chap40  (0 holes, 3 files)
-   32  Chap17  (0 holes, 1 files)
-   33  Chap66  (0 holes, 2 files)
-   34  Chap57  (0 holes, 3 files)
-   35  Chap49  (0 holes, 8 files)
-   36  Chap65  (0 holes, 3 files)
-   37  Chap18  (0 holes, 7 files)
-   38  Chap35  (0 holes, 4 files)
-   39  Chap44  (0 holes, 2 files)
-   40  Chap61  (0 holes, 4 files)
-   41  Chap21  (0 holes, 12 files)
-   42  Chap06  (0 holes, 20 files)
-   43  Chap51  (0 holes, 8 files)
-   44  Chap05  (0 holes, 5 files)
-   45  Chap02  (0 holes, 2 files)
-   46  Chap12  (0 holes, 3 files)
+   9  Chap45  (4 holes, 7 files)
+   10  Chap52  (1 holes, 14 files)
+   11  Chap44  (0 holes, 2 files)
+   12  Chap11  (0 holes, 5 files)
+   13  Chap06  (0 holes, 20 files)
+   14  Chap59  (0 holes, 4 files)
+   15  Chap55  (0 holes, 8 files)
+   16  Concurrency  (0 holes, 1 files)
+   17  Chap30  (0 holes, 1 files)
+   18  Chap17  (0 holes, 1 files)
+   19  Chap26  (0 holes, 8 files)
+   20  Chap40  (0 holes, 3 files)
+   21  Chap63  (0 holes, 2 files)
+   22  Chap49  (0 holes, 8 files)
+   23  Chap51  (0 holes, 8 files)
+   24  Chap05  (0 holes, 5 files)
+   25  Chap35  (0 holes, 4 files)
+   26  Chap56  (0 holes, 12 files)
+   27  Chap64  (0 holes, 3 files)
+   28  ParaPairs  (0 holes, 1 files)
+   29  Chap54  (0 holes, 4 files)
+   30  Chap21  (0 holes, 12 files)
+   31  Chap66  (0 holes, 2 files)
+   32  Chap50  (0 holes, 8 files)
+   33  Chap28  (0 holes, 11 files)
+   34  Chap62  (0 holes, 4 files)
+   35  Chap61  (0 holes, 4 files)
+   36  Chap12  (0 holes, 3 files)
+   37  Chap36  (0 holes, 3 files)
+   38  Chap03  (0 holes, 1 files)
+   39  Chap27  (0 holes, 4 files)
+   40  Chap19  (0 holes, 4 files)
+   41  Chap58  (0 holes, 2 files)
+   42  Chap02  (0 holes, 2 files)
+   43  Chap57  (0 holes, 3 files)
+   44  Chap65  (0 holes, 3 files)
+   45  Chap18  (0 holes, 7 files)
+   46  Chap23  (0 holes, 2 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
    1  src/Chap37/BSTRBMtEph.rs  (20 holes)
-   2  src/Chap37/BSTSplayMtEph.rs  (17 holes)
-   3  src/Chap38/BSTParaMtEph.rs  (17 holes)
+   2  src/Chap38/BSTParaMtEph.rs  (17 holes)
+   3  src/Chap37/BSTSplayMtEph.rs  (17 holes)
    4  src/Chap39/BSTParaTreapMtEph.rs  (15 holes)
    5  src/Chap37/BSTSplayStEph.rs  (12 holes)
    6  src/Chap47/ParaHashTableStEph.rs  (8 holes)
-   7  src/Chap37/AVLTreeSeqMtPer.rs  (7 holes)
-   8  src/Chap37/AVLTreeSeqStPer.rs  (7 holes)
-   9  src/Chap37/BSTSetAVLMtEph.rs  (3 holes)
-   10  src/Chap37/AVLTreeSeqStEph.rs  (3 holes)
-   11  src/Chap37/BSTSetBBAlphaMtEph.rs  (3 holes)
-   12  src/Chap37/BSTSetPlainMtEph.rs  (3 holes)
-   13  src/Chap41/ArraySetStEph.rs  (3 holes)
+   7  src/Chap37/AVLTreeSeqStPer.rs  (6 holes)
+   8  src/Chap37/AVLTreeSeqMtPer.rs  (6 holes)
+   9  src/Chap37/BSTSetPlainMtEph.rs  (3 holes)
+   10  src/Chap41/ArraySetStEph.rs  (3 holes)
+   11  src/Chap37/BSTSetAVLMtEph.rs  (3 holes)
+   12  src/Chap37/AVLTreeSeqStEph.rs  (3 holes)
+   13  src/Chap37/BSTSetBBAlphaMtEph.rs  (3 holes)
    14  src/Chap37/AVLTreeSeq.rs  (2 holes)
-   15  src/Chap50/OptBinSearchTreeMtEph.rs  (1 holes)
-   16  src/Chap45/BinaryHeapPQ.rs  (1 holes)
-   17  src/Chap50/OptBinSearchTreeMtPer.rs  (1 holes)
-   18  src/Chap38/BSTParaStEph.rs  (1 holes)
-   19  src/Chap41/ArraySetEnumMtEph.rs  (1 holes)
+   15  src/Chap41/ArraySetEnumMtEph.rs  (1 holes)
+   16  src/Chap38/BSTParaStEph.rs  (1 holes)
+   17  src/Chap45/BinaryHeapPQ.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
    1  src/Chap38  (18 holes, 2 files)
-   2  src/Chap50  (2 holes, 8 files)
 
 =================================================================
 4.4. Not Verusified
@@ -3602,9 +3567,9 @@ Holes Found: 292 total
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 35 clean, 11 holed, 292 holes (global), 257 modules
+Chapter Status — 46 chapters, 36 clean, 10 holed, 289 holes (global), 257 modules
 
-CLEAN CHAPTERS (35)
+CLEAN CHAPTERS (36)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -3627,6 +3592,7 @@ CLEAN CHAPTERS (35)
   Chap40             3
   Chap44             2
   Chap49             8
+  Chap50             8
   Chap51             8
   Chap54             4
   Chap55             8
@@ -3643,19 +3609,18 @@ CLEAN CHAPTERS (35)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (11) — 394 holes
+HOLED CHAPTERS (10) — 389 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap37            82    19  internal  Chap37::BSTRBMtEph, Chap37::BSTSplayMtEph
+  Chap37            80    19  internal  Chap37::BSTRBMtEph, Chap37::BSTSplayMtEph
   Chap38            18     2  YES       
   Chap39            15     4  internal  Chap39::BSTParaTreapMtEph
-  Chap41            62     7  NO        Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqStPer
+  Chap41            62     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStPer
   Chap42            18     4  NO        Chap41::ArraySetStEph
-  Chap43           145    11  NO        Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStPer, Chap42::TableMtEph, Chap41::AVLTreeSetStPer, Chap42::TableStEph, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph
-  Chap45             5     7  NO        Chap37::AVLTreeSeqStPer
+  Chap43           145    11  NO        Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStEph, Chap42::TableStPer, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph, Chap42::TableMtEph, Chap41::AVLTreeSetStPer
+  Chap45             4     7  NO        Chap37::AVLTreeSeqStPer
   Chap47            28     9  internal  Chap47::ChainedHashTable, Chap47::ParaHashTableStEph, Chap47::FlatHashTable
-  Chap50             2     8  YES       
-  Chap52             1    14  NO        Chap41::AVLTreeSetStPer, Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph, Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer, Chap41::ArraySetStEph, Chap43::OrderedTableStPer
+  Chap52             1    14  NO        Chap41::AVLTreeSetMtPer, Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph, Chap41::AVLTreeSetStPer, Chap41::ArraySetStEph, Chap43::OrderedTableStPer, Chap43::OrderedTableMtPer
   Chap53            18     5  NO        Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetStPer, Chap41::AVLTreeSetMtPer
 
 DEPENDENCY CHAIN (chapter-level, external only)
@@ -3676,8 +3641,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 16:31:55 -07:00
-Ended:     2026-03-13 16:31:57 -07:00
-Duration:  1467ms
+Started:   2026-03-13 18:10:58 -07:00
+Ended:     2026-03-13 18:10:59 -07:00
+Duration:  1458ms
 
 Full output: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-review-verus-proof-holes.log

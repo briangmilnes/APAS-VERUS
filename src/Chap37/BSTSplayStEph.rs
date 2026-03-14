@@ -85,6 +85,23 @@ pub mod BSTSplayStEph {
         }
     }
 
+    /// BST ordering invariant for a splay tree link.
+    pub open spec fn spec_is_bst_link<T: TotalOrder + Clone>(link: &Link<T>) -> bool
+        decreases *link,
+    {
+        match link {
+            None => true,
+            Some(node) => {
+                spec_is_bst_link(&node.left)
+                && spec_is_bst_link(&node.right)
+                && (forall|x: T| (#[trigger] spec_contains_link(&node.left, x)) ==>
+                    T::le(x, node.key) && x != node.key)
+                && (forall|x: T| (#[trigger] spec_contains_link(&node.right, x)) ==>
+                    T::le(node.key, x) && x != node.key)
+            }
+        }
+    }
+
 
     //		8. traits
 
@@ -443,6 +460,7 @@ pub mod BSTSplayStEph {
         open spec fn spec_size(self) -> nat { spec_size_link(&self.root) }
         open spec fn spec_height(self) -> nat { spec_height_link(&self.root) }
         open spec fn spec_contains(self, value: T) -> bool { spec_contains_link(&self.root, value) }
+        // TODO: Strengthen to spec_is_bst_link(&self.root) when splay/bst_insert proves BST preservation.
         open spec fn spec_bstsplaysteph_wf(&self) -> bool { true }
 
         fn new() -> (tree: Self) { BSTSplayStEph { root: None } }
