@@ -81,7 +81,9 @@ broadcast use {
             ensures updated@ == self@.remove(x@), updated@.finite(), updated.spec_orderedsetstper_wf();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
-            requires self.spec_orderedsetstper_wf(),
+            requires
+                self.spec_orderedsetstper_wf(),
+                forall|t: &T| #[trigger] f.requires((t,)),
             ensures filtered@.finite(), filtered@.subset_of(self@), filtered.spec_orderedsetstper_wf();
         /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn intersection(&self, other: &Self) -> (common: Self)

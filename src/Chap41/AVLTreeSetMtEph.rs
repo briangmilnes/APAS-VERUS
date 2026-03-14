@@ -214,7 +214,7 @@ broadcast use {
 
     impl<T: StTInMtT + Ord + 'static> RwLockPredicate<AVLTreeSetStEph<T>> for AVLTreeSetMtEphInv {
         open spec fn inv(self, v: AVLTreeSetStEph<T>) -> bool {
-            v.elements.spec_avltreeseqsteph_wf()
+            v.spec_avltreesetsteph_wf()
         }
     }
 
