@@ -101,13 +101,18 @@ pub mod BSTSetTreapMtEph {
         fn split(&self, pivot: &T) -> (parts: (Self, bool, Self))
             ensures
                 parts.0@.finite(), parts.2@.finite(),
-                parts.1 == self@.contains(pivot@);
+                parts.1 == self@.contains(pivot@),
+                self@.finite(),
+                !parts.0@.contains(pivot@) && !parts.2@.contains(pivot@),
+                self@ =~= parts.0@.union(parts.2@).union(
+                    if parts.1 { Set::<<T as View>::V>::empty().insert(pivot@) } else { Set::<<T as View>::V>::empty() }
+                );
         /// - APAS: Work O(lg(|left| + |right|)), Span O(lg(|left| + |right|))
         fn join_pair(left: Self, right: Self) -> (joined: Self)
-            ensures joined@.finite();
+            ensures joined@.finite(), joined@ =~= left@.union(right@);
         /// - APAS: Work O(lg(|left| + |right|)), Span O(lg(|left| + |right|))
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)
-            ensures joined@.finite();
+            ensures joined@.finite(), joined@ =~= left@.union(right@).insert(pivot@);
         /// - APAS: Work Θ(n), Span O(lg n)
         fn filter<F: Pred<T>>(&self, predicate: F) -> (filtered: Self)
             ensures filtered@.finite();
@@ -177,11 +182,14 @@ pub mod BSTSetTreapMtEph {
         }
 
         fn singleton(value: T) -> (set: Self) {
-            let ghost v = value@;
-            let tree = ParamTreap::new();
-            tree.insert(value);
-            let set = BSTSetTreapMtEph { tree };
-            proof { assume(set@.finite() && set@.len() == 1 && set@.contains(v)); }
+            let set = Self::join_m(Self::empty(), value, Self::empty());
+            proof {
+                let empty = Set::<<T as View>::V>::empty();
+                assert(empty.finite());
+                assert(empty.len() == 0);
+                assert(!empty.contains(value@));
+                assert(set@ =~= empty.insert(value@));
+            }
             set
         }
 
@@ -206,13 +214,13 @@ pub mod BSTSetTreapMtEph {
 
         fn insert(&mut self, value: T) {
             let ghost v = value@;
-            self.tree.insert(value);
-            proof { assume(self@.finite() && self@ =~= old(self)@.insert(v)); }
+            let (left, _found, right) = self.split(&value);
+            *self = Self::join_m(left, value, right);
         }
 
         fn delete(&mut self, target: &T) {
-            self.tree.delete(target);
-            proof { assume(self@.finite() && self@ =~= old(self)@.remove(target@)); }
+            let (left, _found, right) = self.split(target);
+            *self = Self::join_pair(left, right);
         }
 
         fn union(&self, other: &Self) -> (combined: Self) {

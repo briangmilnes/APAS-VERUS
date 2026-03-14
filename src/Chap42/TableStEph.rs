@@ -58,6 +58,7 @@ pub mod TableStEph {
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
+    crate::Types::Types::group_Pair_axioms,
     vstd::map::group_map_axioms,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
@@ -1649,7 +1650,7 @@ broadcast use {
         fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>) {
             let entries = self.entries.clone();
             proof {
-                assume(obeys_feq_clone::<Pair<K, V>>());  // accept hole: Clone preserves feq
+                assert(Pair_feq_trigger::<K, V>());
                 lemma_seq_map_cloned_view_eq(
                     self.entries.seq@,
                     entries.seq@,

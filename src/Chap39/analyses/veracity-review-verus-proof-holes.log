@@ -23,60 +23,39 @@ Table of Contents:
 ❌ BSTParaTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:67: error: external_body - #[verifier::external_body]
         68 |         open spec fn view(&self) -> Set<T::V> {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:491: error: external_body - #[verifier::external_body]
-       492 |         fn expose_with_priority(&self) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:503: error: external_body - #[verifier::external_body]
-       504 |         fn join_mid(exposed: Exposed<T>) -> (tree: Self) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:516: error: external_body - #[verifier::external_body]
-       517 |         fn size(&self) -> (count: usize) { tree_size(self) }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:525: error: external_body - #[verifier::external_body]
-       526 |         fn insert(&self, key: T) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:539: error: external_body - #[verifier::external_body]
-       540 |         fn delete(&self, key: &T) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:552: error: external_body - #[verifier::external_body]
-       553 |         fn find(&self, key: &T) -> (found: Option<T>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:566: error: external_body - #[verifier::external_body]
-       567 |         fn split(&self, key: &T) -> (parts: (Self, bool, Self)) { split_inner(self, key) }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:571: error: external_body - #[verifier::external_body]
-       572 |         fn join_pair(&self, other: Self) -> (joined: Self) { join_pair_inner(self.clone(), other) }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:576: error: external_body - #[verifier::external_body]
-       577 |         fn union(&self, other: &Self) -> (combined: Self) { union_inner(self, other) }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:581: error: external_body - #[verifier::external_body]
-       582 |         fn intersect(&self, other: &Self) -> (common: Self) { intersect_inner(self, other) }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:586: error: external_body - #[verifier::external_body]
-       587 |         fn difference(&self, other: &Self) -> (diff: Self) { difference_inner(self, other) }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:591: error: external_body - #[verifier::external_body]
-       592 |         fn filter<F: Pred<T>>(&self, predicate: F) -> (filtered: Self) { filter_parallel(self, predicate) }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:596: error: external_body - #[verifier::external_body]
-       597 |         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:606: error: external_body - #[verifier::external_body]
-       607 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:476: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:499: error: external_body - #[verifier::external_body]
+       500 |         fn expose_with_priority(&self) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:511: error: external_body - #[verifier::external_body]
+       512 |         fn join_mid(exposed: Exposed<T>) -> (tree: Self) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:524: error: external_body - #[verifier::external_body]
+       525 |         fn size(&self) -> (count: usize) { tree_size(self) }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:533: error: external_body - #[verifier::external_body]
+       534 |         fn insert(&self, key: T) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:547: error: external_body - #[verifier::external_body]
+       548 |         fn delete(&self, key: &T) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:560: error: external_body - #[verifier::external_body]
+       561 |         fn find(&self, key: &T) -> (found: Option<T>) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:574: error: external_body - #[verifier::external_body]
+       575 |         fn split(&self, key: &T) -> (parts: (Self, bool, Self)) { split_inner(self, key) }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:579: error: external_body - #[verifier::external_body]
+       580 |         fn join_pair(&self, other: Self) -> (joined: Self) { join_pair_inner(self.clone(), other) }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:584: error: external_body - #[verifier::external_body]
+       585 |         fn union(&self, other: &Self) -> (combined: Self) { union_inner(self, other) }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:589: error: external_body - #[verifier::external_body]
+       590 |         fn intersect(&self, other: &Self) -> (common: Self) { intersect_inner(self, other) }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:594: error: external_body - #[verifier::external_body]
+       595 |         fn difference(&self, other: &Self) -> (diff: Self) { difference_inner(self, other) }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:599: error: external_body - #[verifier::external_body]
+       600 |         fn filter<F: Pred<T>>(&self, predicate: F) -> (filtered: Self) { filter_parallel(self, predicate) }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:604: error: external_body - #[verifier::external_body]
+       605 |         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:614: error: external_body - #[verifier::external_body]
+       615 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:484: info: accept()
    Holes: 15 total
       15 × external_body
    Info: 1 total
-❌ BSTSetTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:184: error: assume() - proof { assume(set@.finite() && set@.len() == 1 && set@.cont
-       179 |         fn singleton(value: T) -> (set: Self) {
-            ...
-       182 |             tree.insert(value);
-       183 |             let set = BSTSetTreapMtEph { tree };
-       185 |             set
-       186 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:210: error: assume() - proof { assume(self@.finite() && self@ =~= old(self)@.insert
-       207 |         fn insert(&mut self, value: T) {
-            ...
-       208 |             let ghost v = value@;
-       209 |             self.tree.insert(value);
-       211 |         }
-       212 | 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTSetTreapMtEph.rs:215: error: assume() - proof { assume(self@.finite() && self@ =~= old(self)@.remove
-       213 |         fn delete(&mut self, target: &T) {
-       214 |             self.tree.delete(target);
-       216 |         }
-       217 | 
-   Holes: 3 total
-      3 × assume()
+✓ BSTSetTreapMtEph.rs
 ❌ BSTTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:958: error: assume() - proof { assume(self@.contains(value_view)); }
        948 |         fn insert(&self, value: T, priority: u64)
@@ -234,8 +213,8 @@ BSTTreapStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 25%)
-   3 holed (holes or errors, 75%)
+   2 clean (no holes, no errors; 50%)
+   2 holed (holes or errors, 50%)
    4 total
 
 Proof Functions:
@@ -251,23 +230,16 @@ Function Specs:
    257 total fns
 
 
-Holes Found: 26 total
-   11 × assume() (42%)
-   15 × external_body (57%)
+Holes Found: 23 total
+   8 × assume() (34%)
+   15 × external_body (65%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 19:06:35 -07:00
-Ended:     2026-03-13 19:06:35 -07:00
-Duration:  35ms
-
-Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
-=======================
-
-Started:   2026-03-13 19:06:35 -07:00
-Ended:     2026-03-13 19:06:35 -07:00
-Duration:  35ms
+Started:   2026-03-13 19:36:53 -07:00
+Ended:     2026-03-13 19:36:53 -07:00
+Duration:  40ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
