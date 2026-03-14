@@ -24,7 +24,7 @@ pub mod BSTParaStEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::{OrdSpec, PartialEqSpec, PartialOrdSpec};
 
-    use std::marker::PhantomData;
+
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
@@ -38,15 +38,16 @@ pub mod BSTParaStEph {
     // 4. type definitions
 
     pub struct BSTParaStEphInv<T: StT + Ord> {
-        _phantom: PhantomData<T>,
+        pub ghost contents: Set<<T as View>::V>,
     }
 
     impl<T: StT + Ord> RwLockPredicate<Option<Box<NodeInner<T>>>> for BSTParaStEphInv<T> {
         open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
             match v {
-                Option::None => true,
+                Option::None => self.contents =~= Set::<<T as View>::V>::empty(),
                 Option::Some(box_node) => {
-                    (*box_node).size >= 1
+                    self.contents =~= (*box_node).left@.union((*box_node).right@).insert((*box_node).key@)
+                    && (*box_node).size >= 1
                     && (*box_node).left@.finite() && (*box_node).right@.finite()
                     && (*box_node).left@.disjoint((*box_node).right@)
                     && !(*box_node).left@.contains((*box_node).key@)
@@ -88,11 +89,11 @@ pub mod BSTParaStEph {
         Ghost(contents): Ghost<Set<<T as View>::V>>,
     ) -> (tree: ParamBST<T>)
         requires
-            (BSTParaStEphInv::<T> { _phantom: PhantomData }).inv(val),
+            (BSTParaStEphInv::<T> { contents }).inv(val),
             contents.finite(),
         ensures tree@ =~= contents,
     {
-        let ghost pred = BSTParaStEphInv::<T> { _phantom: PhantomData };
+        let ghost pred = BSTParaStEphInv::<T> { contents };
         ParamBST {
             locked_root: RwLock::new(val, Ghost(pred)),
             ghost_locked_root: Ghost(contents),
@@ -105,6 +106,7 @@ pub mod BSTParaStEph {
         #[verifier::type_invariant]
         spec fn wf(self) -> bool {
             self.ghost_locked_root@.finite()
+            && self.ghost_locked_root@ =~= self.locked_root.pred().contents
         }
 
         pub closed spec fn spec_ghost_locked_root(self) -> Set<<T as View>::V> {
@@ -411,24 +413,19 @@ pub mod BSTParaStEph {
                     && (forall|t: T| #![auto] r@.contains(t@) ==> t.cmp_spec(&k) == Greater)
                 },
         {
+            proof { use_type_invariant(self); }
             let handle = self.locked_root.acquire_read();
             let exposed = match handle.borrow() {
                 | None => {
-                    proof { assume(self@ =~= Set::<<T as View>::V>::empty()); }
                     Exposed::Leaf
                 }
                 | Some(node) => {
                     let l = node.left.clone();
                     let k = node.key.clone();
                     let r = node.right.clone();
-                    // Reader accept: cloned decomposition matches ghost state.
+                    // T::clone has no verified ensures; cmp_spec(k) vs cmp_spec(node.key) unresolvable.
                     proof { assume(
-                        self@ =~= l@.union(r@).insert(k@)
-                        && self@.finite()
-                        && l@.finite() && r@.finite()
-                        && l@.disjoint(r@)
-                        && !l@.contains(k@) && !r@.contains(k@)
-                        && l@.len() + r@.len() < usize::MAX as nat
+                        k@ == node.key@
                         && (forall|t: T| #![auto] l@.contains(t@) ==> t.cmp_spec(&k) == Less)
                         && (forall|t: T| #![auto] r@.contains(t@) ==> t.cmp_spec(&k) == Greater)
                     ); }
@@ -472,16 +469,17 @@ pub mod BSTParaStEph {
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         {
+            proof { use_type_invariant(self); }
             let handle = self.locked_root.acquire_read();
             let count = match handle.borrow() {
-                None => {
-                    0usize
-                }
+                None => 0usize,
                 Some(node) => {
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(node.left@, node.right@);
+                    }
                     node.size
                 }
             };
-            proof { assume(count as nat == self@.len() && self@.finite()); }
             handle.release_read();
             count
         }
@@ -496,18 +494,9 @@ pub mod BSTParaStEph {
             let ghost kv = key@;
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                // left@ ∪ right@ =~= self@.remove(key@), so their combined len <= self@.len().
                 assume(left@.len() + right@.len() < usize::MAX as nat);
             }
-            let rebuilt = Self::join_m(left, key, right);
-            let read_h = rebuilt.locked_root.acquire_read();
-            let new_val = read_h.borrow().clone();
-            read_h.release_read();
-            let (_, write_h) = self.locked_root.acquire_write();
-            // Writer accept: clone preserves structural predicate through lock.
-            proof { assume(self.locked_root.pred().inv(new_val)); }
-            self.ghost_locked_root = Ghost(old_view.insert(kv));
-            write_h.release_write(new_val);
+            *self = Self::join_m(left, key, right);
         }
 
         fn delete(&mut self, key: &T) {
@@ -517,7 +506,6 @@ pub mod BSTParaStEph {
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
                 assume(left@.len() + right@.len() < usize::MAX as nat);
-                // Split: left < key < right. Transitivity gives left < right.
                 assert forall|s: T, o: T| #![auto]
                     left@.contains(s@) && right@.contains(o@) implies
                     s.cmp_spec(&o) == Less by {
@@ -525,15 +513,7 @@ pub mod BSTParaStEph {
                     lemma_cmp_transitivity(s, kref, o);
                 };
             }
-            let merged = left.join_pair(right);
-            let read_h = merged.locked_root.acquire_read();
-            let new_val = read_h.borrow().clone();
-            read_h.release_read();
-            let (_, write_h) = self.locked_root.acquire_write();
-            // Writer accept: clone preserves structural predicate through lock.
-            proof { assume(self.locked_root.pred().inv(new_val)); }
-            self.ghost_locked_root = Ghost(old_view.remove(key@));
-            write_h.release_write(new_val);
+            *self = left.join_pair(right);
         }
 
         fn find(&self, key: &T) -> (found: Option<T>)
@@ -1219,12 +1199,10 @@ pub mod BSTParaStEph {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
-            let cloned = match self {
+            match self {
                 Exposed::Leaf => Exposed::Leaf,
                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
-            };
-            proof { assume(cloned@ == self@); }
-            cloned
+            }
         }
     }
 
@@ -1232,14 +1210,12 @@ pub mod BSTParaStEph {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
-            let cloned = NodeInner {
+            NodeInner {
                 key: self.key.clone(),
                 size: self.size,
                 left: self.left.clone(),
                 right: self.right.clone(),
-            };
-            proof { assume(cloned@ == self@); }
-            cloned
+            }
         }
     }
 
@@ -1251,7 +1227,7 @@ pub mod BSTParaStEph {
             let handle = self.locked_root.acquire_read();
             let inner_clone = handle.borrow().clone();
             handle.release_read();
-            let ghost pred = BSTParaStEphInv::<T> { _phantom: PhantomData };
+            let ghost pred = BSTParaStEphInv::<T> { contents: self@ };
             ParamBST {
                 locked_root: RwLock::new(inner_clone, Ghost(pred)),
                 ghost_locked_root: Ghost(self@),
