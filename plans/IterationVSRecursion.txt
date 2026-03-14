@@ -1,0 +1,16 @@
+
+ The agents often replace a recursion from the APAS textbook with an iteration.
+
+ Review Chapter by Chapter and produce a table of places that the pseudocode
+ from the textbook has been replaced by an iteration.
+
+ Each entry in this table should have a chapter, file, function, lines, status, and propose.
+
+ Status  =  APASItCodeRec | APASNA | APASUnspecified | APASRecOK
+ Propose =  GoIt | GoRec | StayIt | StayRec 
+
+ Estimate the time for the plan for 4 agents.
+
+ Save this table and a plan to do this in plans/IterationVSRecursion.md.
+ Write 4 agent prompts.
+ 

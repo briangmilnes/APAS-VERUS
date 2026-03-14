@@ -166,7 +166,9 @@ pub mod ParaHashTableStEph {
                 old(table).table@.len() == old(table).current_size as int,
                 old(table).num_elements < usize::MAX,
             ensures
-                table.table@.len() == table.current_size as int;
+                table.table@.len() == table.current_size as int,
+                table.current_size == old(table).current_size,
+                table.num_elements <= old(table).num_elements + 1;
 
         /// Looks up a key in the hash table, returning its value if found.
         /// - APAS: Work O(1) expected, Span O(1).
@@ -184,7 +186,8 @@ pub mod ParaHashTableStEph {
                 old(table).current_size > 0,
                 old(table).table@.len() == old(table).current_size as int,
             ensures
-                table.table@.len() == table.current_size as int;
+                table.table@.len() == table.current_size as int,
+                table.current_size == old(table).current_size;
 
         /// Accessor for metrics field.
         /// - APAS: N/A — Verus-specific scaffolding.
@@ -215,6 +218,7 @@ pub mod ParaHashTableStEph {
         fn resize(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> (resized: HashTable<Key, Value, Entry, Metrics, H>)
             requires
                 new_size > 0,
+                spec_hashtable_wf(table),
             ensures
                 resized.current_size == new_size,
                 resized.table@.len() == new_size as int;

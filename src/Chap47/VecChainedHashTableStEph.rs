@@ -122,6 +122,8 @@ pub mod VecChainedHashTableStEph {
                         index < table.table.len(),
                         bucket_len == table.table@[index as int]@.len(),
                         table.table@.len() == table.current_size as int,
+                        table.current_size == old(table).current_size,
+                        table.num_elements == old(table).num_elements,
                     decreases bucket_len - i,
                 {
                     if table.table[index][i].0 == key {
@@ -159,6 +161,7 @@ pub mod VecChainedHashTableStEph {
                         index < table.table.len(),
                         bucket_len == table.table@[index as int]@.len(),
                         table.table@.len() == table.current_size as int,
+                        table.current_size == old(table).current_size,
                     decreases bucket_len - i,
                 {
                     if table.table[index][i].0 == *key && !deleted {
@@ -177,19 +180,46 @@ pub mod VecChainedHashTableStEph {
 
             /// - APAS: Work O(n + m + m'), Span O(n + m + m').
             /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' chains, reinserts.
-            #[verifier::external_body]
             fn resize(
                 table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>,
                 new_size: usize,
-            ) -> HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H> {
-                let mut pairs = Vec::new();
-                for chain in &table.table {
-                    for (k, v) in chain.iter() {
-                        pairs.push((k.clone(), v.clone()));
+            ) -> (resized: HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>) {
+                let mut pairs: Vec<(Key, Value)> = Vec::new();
+                let mut i: usize = 0;
+                while i < table.table.len()
+                    invariant
+                        i <= table.table@.len(),
+                        table.table@.len() == table.current_size as int,
+                    decreases table.table.len() - i,
+                {
+                    let ghost table_len = table.table@.len();
+                    let chain_len = table.table[i].len();
+                    let mut j: usize = 0;
+                    while j < chain_len
+                        invariant
+                            i < table_len,
+                            table.table@.len() == table_len,
+                            j <= chain_len,
+                            chain_len == table.table@[i as int]@.len(),
+                        decreases chain_len - j,
+                    {
+                        pairs.push((table.table[i][j].0.clone(), table.table[i][j].1.clone()));
+                        j = j + 1;
                     }
+                    i = i + 1;
                 }
 
-                let new_table_vec = (0..new_size).map(|_| Vec::new()).collect();
+                let mut new_table_vec: Vec<Vec<(Key, Value)>> = Vec::new();
+                let mut k: usize = 0;
+                while k < new_size
+                    invariant
+                        k <= new_size,
+                        new_table_vec@.len() == k as int,
+                    decreases new_size - k,
+                {
+                    new_table_vec.push(Vec::new());
+                    k = k + 1;
+                }
                 let mut new_table = HashTable {
                     table: new_table_vec,
                     hash_fn: table.hash_fn.clone(),
@@ -200,8 +230,20 @@ pub mod VecChainedHashTableStEph {
                     _phantom: PhantomData,
                 };
 
-                for (key, value) in pairs {
+                let mut m: usize = 0;
+                while m < pairs.len()
+                    invariant
+                        m <= pairs@.len(),
+                        new_size > 0,
+                        new_table.current_size == new_size,
+                        new_table.table@.len() == new_table.current_size as int,
+                        new_table.num_elements <= m,
+                    decreases pairs.len() - m,
+                {
+                    let key = pairs[m].0.clone();
+                    let value = pairs[m].1.clone();
                     Self::insert(&mut new_table, key, value);
+                    m = m + 1;
                 }
 
                 new_table

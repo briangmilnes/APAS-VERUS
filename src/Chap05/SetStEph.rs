@@ -1,5 +1,4 @@
 // Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-
 //! Ephemeral Set built on `std::collections::HashSet` as wrapped by vstd and vstdplus.
 
 //  Table of Contents
@@ -767,8 +766,6 @@ verus! {
 
     //		10. iterators
 
-    /// - Iterator wrapper with CLOSED spec view for encapsulation.
-    /// - Inner is private; closed view() can access it but external code cannot see it.
     #[verifier::reject_recursive_types(T)]
     pub struct SetStEphIter<'a, T: StT + Hash> {
         pub inner: HashSetWithViewPlusIter<'a, T>,

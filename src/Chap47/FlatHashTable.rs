@@ -57,6 +57,7 @@ pub mod FlatHashTable {
         fn find_slot(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (slot: usize)
             requires
                 table.current_size > 0,
+                table.table@.len() == table.current_size as int,
             ensures
                 slot < table.current_size;
 

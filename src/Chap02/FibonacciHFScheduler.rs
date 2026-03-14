@@ -1,5 +1,6 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Parallel Fibonacci demonstrating bounded parallelism with global pool.
+//! Reviewed and is clean. briangmilnes@gmail.com 13 March 2026 
 
 pub mod FibonacciHFScheduler {
     use vstd::prelude::*;

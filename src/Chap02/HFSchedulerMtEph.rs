@@ -5,6 +5,7 @@
 //! - Prevents deadlock from nested joins by not blocking when capacity exhausted.
 //! - Call `set_parallelism()` before first use to configure thread limit for a single
 //! parallel pool.
+//! Reviewed and is clean. briangmilnes@gmail.com 13 March 2026 
 
 pub mod HFSchedulerMtEph {
     use vstd::prelude::*;

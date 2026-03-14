@@ -21,728 +21,634 @@ Table of Contents:
 =================================================================
 
 ❌ AVLTreeSeq.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:1117: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1117: error: external_body - #[verifier::external_body]
       1118 |         fn next(&mut self) -> (next: Option<&'a T>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:345: error: fn_missing_requires - fn cached_height — exec fn should have requires
-       335 |         fn values_in_order(&self) -> (values: Vec<T>)
-            ...
-       343 |     // 9. impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1195: error: external_body - #[verifier::external_body]
+      1196 |         fn clone(&self) -> (copy: Self) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:346: warning: requires_true - requires true — vacuous precondition
        344 | 
-       346 | 
+       345 |     fn cached_height<T: StT>(n: &Link<T>) -> (height: N)
        347 |         ensures height as nat == spec_avltreeseq_cached_height(n),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:1225: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1222 |         fn eq(&self, other: &Self) -> (equal: bool)
+       348 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1215: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1212 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1223 |             ensures equal == (self@ == other@)
-      1224 |         {
-      1226 |             assume(spec_avltreeseq_wf(other.root));
-      1227 |             proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:1226: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1222 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1213 |             ensures equal == (self@ == other@)
+      1214 |         {
+      1216 |             assume(spec_avltreeseq_wf(other.root));
+      1217 |             proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1216: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1212 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1224 |         {
-      1225 |             assume(spec_avltreeseq_wf(self.root));
-      1227 |             proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
-      1228 |             // Per-node size bound in wf gives cached_size < usize::MAX.
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:1227: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:1249: info: accept()
-   Holes: 1 total
-      1 × external_body
+      1214 |         {
+      1215 |             assume(spec_avltreeseq_wf(self.root));
+      1217 |             proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+      1218 |             // Per-node size bound in wf gives cached_size < usize::MAX.
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1217: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:1239: info: accept()
+   Holes: 2 total
+      2 × external_body
    Info: 2 total
    Proof functions: 3 total (3 clean, 0 holed)
 ❌ AVLTreeSeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:455: error: assume() - proof { assume(obeys_feq_clone::<T>()); }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:455: error: assume() - proof { assume(obeys_feq_clone::<T>()); }
        447 |     fn set_rec<T: StTInMtT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
             ...
        453 |         decreases *cur,
        454 |     {
        456 |         match cur {
        457 |             None => {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:502: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:502: error: external_body - #[verifier::external_body]
        503 |     fn build_balanced_from_slice<T: StTInMtT>(a: &[T]) -> (link: Link<T>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:617: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:617: error: external_body - #[verifier::external_body]
        618 |         fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:255: error: fn_missing_requires - fn height_fn — exec fn should have requires
-       246 |         fn values_in_order(&self) -> (values: Vec<T>)
-            ...
-       253 |     // 9. impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:256: warning: requires_true - requires true — vacuous precondition
        254 | 
-       256 | 
-       257 |         ensures h as nat == spec_cached_height(n),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:265: error: fn_missing_requires - fn size_fn — exec fn should have requires
        255 |     fn height_fn<T: StTInMtT>(n: &Link<T>) -> (h: N)
-            ...
-       263 |     }
+       257 |         ensures h as nat == spec_cached_height(n),
+       258 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:266: warning: requires_true - requires true — vacuous precondition
        264 | 
-       266 | 
+       265 |     fn size_fn<T: StTInMtT>(n: &Link<T>) -> (sz: N)
        267 |         ensures sz as nat == spec_cached_size(n),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:491: error: fn_missing_requires - fn inorder_collect — exec fn should have requires
+       268 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:491: error: fn_missing_requires - fn inorder_collect — exec fn should have requires
        447 |     fn set_rec<T: StTInMtT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
             ...
        489 |     }
        490 | 
        492 |         ensures true,
        493 |         decreases *cur,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:508: error: fn_missing_requires_ensures - fn rec — exec fn should have requires and ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:508: error: fn_missing_requires_ensures - fn rec — exec fn should have requires and ensures
        503 |     fn build_balanced_from_slice<T: StTInMtT>(a: &[T]) -> (link: Link<T>)
             ...
        506 |             spec_inorder(link) =~= a@.map_values(|t: T| t@),
        507 |     {
        509 |             if a.is_empty() {
        510 |                 return None;
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:709: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:709: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        705 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        707 |         {
        708 |             proof {
        710 |                 assume(spec_avltreeseqmtper_wf(other.root));
        711 |                 assume(obeys_feq_full::<T>());
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:710: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:710: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        705 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        708 |             proof {
        709 |                 assume(spec_avltreeseqmtper_wf(self.root));
        711 |                 assume(obeys_feq_full::<T>());
        712 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:711: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:711: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        705 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        709 |                 assume(spec_avltreeseqmtper_wf(self.root));
        710 |                 assume(spec_avltreeseqmtper_wf(other.root));
        712 |             }
        713 |             compare_trees(&self.root, &other.root)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:724: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqMtPer.rs:724: info: accept()
    Holes: 3 total
       1 × assume()
       2 × external_body
    Info: 1 total
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ AVLTreeSeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:315: error: fn_missing_requires - fn h_fn — exec fn should have requires
-       296 |         fn delete_value(&mut self, target: &T) -> (deleted: bool)
-            ...
-       313 |     // 9. impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:855: error: external_body - #[verifier::external_body]
+       856 |         fn iter<'a>(&'a self) -> (it: AVLTreeSeqIterStEph<'a, T>) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1020: error: external_body - #[verifier::external_body]
+      1021 |     fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqIterStEph<'a, T>, link: &'a Link<T>) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1041: error: external_body - #[verifier::external_body]
+      1042 |         fn next(&mut self) -> (next: Option<Self::Item>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1055: error: external_body - #[verifier::external_body]
+      1056 |         fn clone(&self) -> (copy: Self) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:316: warning: requires_true - requires true — vacuous precondition
        314 | 
-       316 | 
+       315 |     fn h_fn<T: StT>(n: &Link<T>) -> (height: N)
        317 |         ensures height as nat == spec_cached_height(n),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:661: error: fn_missing_requires - fn clone_link — exec fn should have requires
+       318 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:661: error: fn_missing_requires - fn clone_link — exec fn should have requires
        619 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
             ...
        659 |     }
        660 | 
        662 |         ensures spec_inorder(copy) =~= spec_inorder(*link),
        663 |         decreases *link,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:671: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:671: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        661 |     fn clone_link<T: StT>(link: &Link<T>) -> (copy: Link<T>)
             ...
        669 |                 let right = clone_link(&node.right);
        670 |                 let new_value = node.value.clone_plus();
        672 |                 Some(Box::new(AVLTreeNode {
        673 |                     value: new_value,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:1021: error: fn_missing_requires - fn push_left_iter — exec fn should have requires
-      1016 |         fn default() -> Self { Self::new() }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1076: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1072 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1019 |     // 10. iterators
-      1020 | 
-      1022 |         ensures true,
-      1023 |         decreases *link,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:1087: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1083 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1074 |         {
+      1075 |             proof {
+      1077 |                 assume(spec_avltreeseqsteph_wf(other.root));
+      1078 |                 assume(obeys_feq_full::<T>());
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1077: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1072 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1085 |         {
-      1086 |             proof {
-      1088 |                 assume(spec_avltreeseqsteph_wf(other.root));
-      1089 |                 assume(obeys_feq_full::<T>());
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:1088: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1083 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1075 |             proof {
+      1076 |                 assume(spec_avltreeseqsteph_wf(self.root));
+      1078 |                 assume(obeys_feq_full::<T>());
+      1079 |             }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:1078: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1072 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1086 |             proof {
-      1087 |                 assume(spec_avltreeseqsteph_wf(self.root));
-      1089 |                 assume(obeys_feq_full::<T>());
-      1090 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:1089: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1083 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1087 |                 assume(spec_avltreeseqsteph_wf(self.root));
-      1088 |                 assume(spec_avltreeseqsteph_wf(other.root));
-      1090 |             }
-      1091 |             compare_trees(&self.root, &other.root)
+      1076 |                 assume(spec_avltreeseqsteph_wf(self.root));
+      1077 |                 assume(spec_avltreeseqsteph_wf(other.root));
+      1079 |             }
+      1080 |             compare_trees(&self.root, &other.root)
+   Holes: 4 total
+      4 × external_body
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ AVLTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:432: error: assume() - proof { assume(obeys_feq_clone::<T>()); }
-       424 |     fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:431: error: assume() - proof { assume(obeys_feq_clone::<T>()); }
+       423 |     fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
             ...
-       430 |         decreases *cur,
-       431 |     {
-       433 |         match cur {
-       434 |             None => {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:500: error: assume() - assume(val@ == a@[mid as int]@);
+       429 |         decreases *cur,
+       430 |     {
+       432 |         match cur {
+       433 |             None => {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:478: error: external_body - #[verifier::external_body]
+       479 |     fn build_balanced_from_slice<T: StT>(a: &[T]) -> (link: Link<T>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:660: error: external_body - #[verifier::external_body]
+       661 |     fn push_left_iter_stper<'a, T: StT>(it: &mut AVLTreeSeqStPerIter<'a, T>, mut cur: Option<&'a Node<T>>) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:680: error: external_body - #[verifier::external_body]
+       681 |         fn next(&mut self) -> (next: Option<Self::Item>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:219: warning: requires_true - requires true — vacuous precondition
+       217 | 
+       218 |     fn height_fn<T: StT>(n: &Link<T>) -> (h: N)
+       220 |         ensures h as nat == spec_cached_height(n),
+       221 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:229: warning: requires_true - requires true — vacuous precondition
+       227 | 
+       228 |     fn size_fn<T: StT>(n: &Link<T>) -> (sz: N)
+       230 |         ensures sz as nat == spec_cached_size(n),
+       231 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:467: error: fn_missing_requires - fn inorder_collect — exec fn should have requires
+       423 |     fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
+            ...
+       465 |     }
+       466 | 
+       468 |         ensures true,
+       469 |         decreases *cur,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:484: error: fn_missing_requires_ensures - fn rec — exec fn should have requires and ensures
        479 |     fn build_balanced_from_slice<T: StT>(a: &[T]) -> (link: Link<T>)
             ...
-       498 |             lemma_height_le_size::<T>(&left);
-       499 |             lemma_height_le_size::<T>(&right);
-       501 |         }
-       502 |         let node = mk(val, left, right);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:219: error: fn_missing_requires - fn height_fn — exec fn should have requires
-       213 |         fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>)
+       482 |             spec_inorder(link) =~= a@.map_values(|t: T| t@),
+       483 |     {
+       485 |             if a.is_empty() {
+       486 |                 return None;
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:704: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       700 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       217 |     // 9. impls
-       218 | 
-       220 | 
-       221 |         ensures h as nat == spec_cached_height(n),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:229: error: fn_missing_requires - fn size_fn — exec fn should have requires
-       219 |     fn height_fn<T: StT>(n: &Link<T>) -> (h: N)
+       702 |         {
+       703 |             proof {
+       705 |                 assume(spec_avltreeseqstper_wf(other.root));
+       706 |                 assume(obeys_feq_full::<T>());
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:705: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       700 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       227 |     }
-       228 | 
-       230 | 
-       231 |         ensures sz as nat == spec_cached_size(n),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:468: error: fn_missing_requires - fn inorder_collect — exec fn should have requires
-       424 |     fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
+       703 |             proof {
+       704 |                 assume(spec_avltreeseqstper_wf(self.root));
+       706 |                 assume(obeys_feq_full::<T>());
+       707 |             }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:706: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       700 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       466 |     }
-       467 | 
-       469 |         ensures true,
-       470 |         decreases *cur,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:479: error: fn_missing_requires - fn build_balanced_from_slice — exec fn should have requires
-       468 |     fn inorder_collect<T: StT>(cur: &Link<T>, out: &mut Vec<T>)
-            ...
-       477 |     }
-       478 | 
-       480 |         ensures
-       481 |             spec_avltreeseqstper_wf(link),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:686: error: fn_missing_requires - fn push_left_iter_stper — exec fn should have requires
-       681 |         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-            ...
-       684 |     // 10. iterators
-       685 | 
-       687 |         ensures true,
-       688 |         decreases cur,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:739: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       735 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       737 |         {
-       738 |             proof {
-       740 |                 assume(spec_avltreeseqstper_wf(other.root));
-       741 |                 assume(obeys_feq_full::<T>());
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:740: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       735 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       738 |             proof {
-       739 |                 assume(spec_avltreeseqstper_wf(self.root));
-       741 |                 assume(obeys_feq_full::<T>());
-       742 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:741: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       735 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       739 |                 assume(spec_avltreeseqstper_wf(self.root));
-       740 |                 assume(spec_avltreeseqstper_wf(other.root));
-       742 |             }
-       743 |             compare_trees(&self.root, &other.root)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:754: info: accept()
-   Holes: 2 total
-      2 × assume()
+       704 |                 assume(spec_avltreeseqstper_wf(self.root));
+       705 |                 assume(spec_avltreeseqstper_wf(other.root));
+       707 |             }
+       708 |             compare_trees(&self.root, &other.root)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:719: info: accept()
+   Holes: 4 total
+      1 × assume()
+      3 × external_body
    Info: 1 total
    Proof functions: 2 total (2 clean, 0 holed)
 ℹ BSTAVLMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:506: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:530: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:541: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:551: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:562: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:506: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:530: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:541: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:551: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:562: info: accept()
    Info: 5 total
    1 clean proof function
 ✓ BSTAVLStEph.rs
    2 clean proof functions
 ℹ BSTBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:321: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:345: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:356: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:366: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:377: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:321: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:345: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:356: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:366: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:377: info: accept()
    Info: 5 total
 ✓ BSTBBAlphaStEph.rs
 ℹ BSTPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:320: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:344: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:355: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:365: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:376: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:320: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:344: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:355: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:365: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:376: info: accept()
    Info: 5 total
 ✓ BSTPlainStEph.rs
    3 clean proof functions
 ❌ BSTRBMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:99: error: fn_missing_requires - fn new_node — exec fn should have requires
-        82 |     pub open spec fn link_height<T: StTInMtT + Ord>(link: Link<T>) -> nat
-            ...
-        97 |     // Verified RB tree algorithms (Layer 1).
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:100: warning: requires_true - requires true — vacuous precondition
         98 | 
-       100 | 
-       101 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:116: error: fn_missing_requires - fn is_red — exec fn should have requires
         99 |     fn new_node<T: StTInMtT + Ord>(key: T) -> (node: Node<T>)
-            ...
-       114 |     }
+       101 |         ensures
+       102 |             node.key == key,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:117: warning: requires_true - requires true — vacuous precondition
        115 | 
-       117 | 
-       118 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:127: error: fn_missing_requires - fn size_link — exec fn should have requires
        116 |     fn is_red<T: StTInMtT + Ord>(link: &Link<T>) -> (red: bool)
-            ...
-       125 |     }
+       118 |         ensures
+       119 |             (link is None) ==> !red,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:128: warning: requires_true - requires true — vacuous precondition
        126 | 
-       128 | 
-       129 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:138: error: fn_missing_requires - fn update — exec fn should have requires
        127 |     fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (size: N)
-            ...
-       136 |     }
+       129 |         ensures
+       130 |             (link is None) ==> size == 0,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:139: warning: requires_true - requires true — vacuous precondition
        137 | 
-       139 | 
-       140 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:153: error: fn_missing_requires - fn rotate_left — exec fn should have requires
        138 |     fn update<T: StTInMtT + Ord>(node: &mut Node<T>)
-            ...
-       151 |     }
+       140 |         ensures
+       141 |             node.left == old(node).left,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:154: warning: requires_true - requires true — vacuous precondition
        152 | 
-       154 | 
-       155 |         ensures link_spec_size(*link) == link_spec_size(*old(link)),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:179: error: fn_missing_requires - fn rotate_right — exec fn should have requires
        153 |     fn rotate_left<T: StTInMtT + Ord>(link: &mut Link<T>)
-            ...
-       177 |     }
+       155 |         ensures link_spec_size(*link) == link_spec_size(*old(link)),
+       156 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:180: warning: requires_true - requires true — vacuous precondition
        178 | 
-       180 | 
-       181 |         ensures link_spec_size(*link) == link_spec_size(*old(link)),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:205: error: fn_missing_requires - fn flip_colors — exec fn should have requires
        179 |     fn rotate_right<T: StTInMtT + Ord>(link: &mut Link<T>)
-            ...
-       203 |     }
+       181 |         ensures link_spec_size(*link) == link_spec_size(*old(link)),
+       182 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:206: warning: requires_true - requires true — vacuous precondition
        204 | 
-       206 | 
-       207 |         ensures link_spec_size(*link) == link_spec_size(*old(link)),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:229: error: fn_missing_requires - fn fix_up — exec fn should have requires
        205 |     fn flip_colors<T: StTInMtT + Ord>(link: &mut Link<T>)
-            ...
-       227 |     }
+       207 |         ensures link_spec_size(*link) == link_spec_size(*old(link)),
+       208 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:230: warning: requires_true - requires true — vacuous precondition
        228 | 
-       230 | 
-       231 |         ensures link_spec_size(*link) == link_spec_size(*old(link)),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:268: error: fn_missing_requires - fn insert_link — exec fn should have requires
        229 |     fn fix_up<T: StTInMtT + Ord>(link: &mut Link<T>)
-            ...
-       266 |     }
+       231 |         ensures link_spec_size(*link) == link_spec_size(*old(link)),
+       232 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:269: warning: requires_true - requires true — vacuous precondition
        267 | 
-       269 | 
-       270 |         ensures link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:288: error: fn_missing_requires - fn find_link — exec fn should have requires
        268 |     fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T)
-            ...
-       286 |     }
+       270 |         ensures link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
+       271 |         decreases old(link),
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:289: warning: requires_true - requires true — vacuous precondition
        287 | 
-       289 | 
-       290 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:308: error: fn_missing_requires - fn min_link — exec fn should have requires
        288 |     fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
-            ...
-       306 |     }
+       290 |         ensures
+       291 |             (link is None) ==> found is None,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:309: warning: requires_true - requires true — vacuous precondition
        307 | 
-       309 | 
-       310 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:324: error: fn_missing_requires - fn max_link — exec fn should have requires
        308 |     fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> (min: Option<&T>)
-            ...
-       322 |     }
+       310 |         ensures
+       311 |             (link is None) ==> min is None,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:325: warning: requires_true - requires true — vacuous precondition
        323 | 
-       325 | 
-       326 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:340: error: fn_missing_requires - fn in_order_collect — exec fn should have requires
        324 |     fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> (max: Option<&T>)
-            ...
-       338 |     }
+       326 |         ensures
+       327 |             (link is None) ==> max is None,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:341: warning: requires_true - requires true — vacuous precondition
        339 | 
-       341 | 
-       342 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:352: error: fn_missing_requires - fn pre_order_collect — exec fn should have requires
        340 |     fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
-            ...
-       350 |     }
+       342 |         ensures true,
+       343 |         decreases *link,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:353: warning: requires_true - requires true — vacuous precondition
        351 | 
-       353 | 
-       354 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:364: error: fn_missing_requires - fn in_order_parallel — exec fn should have requires
        352 |     fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
-            ...
-       362 |     }
+       354 |         ensures true,
+       355 |         decreases *link,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:365: warning: requires_true - requires true — vacuous precondition
        363 | 
-       365 | 
-       366 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:385: error: fn_missing_requires - fn pre_order_parallel — exec fn should have requires
        364 |     fn in_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> (result: Vec<T>)
-            ...
-       383 |     }
+       366 |         ensures true,
+       367 |         decreases *link,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:386: warning: requires_true - requires true — vacuous precondition
        384 | 
-       386 | 
-       387 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:406: error: fn_missing_requires - fn build_balanced — exec fn should have requires
        385 |     fn pre_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> (result: Vec<T>)
-            ...
-       404 |     }
+       387 |         ensures true,
+       388 |         decreases *link,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:407: warning: requires_true - requires true — vacuous precondition
        405 | 
-       407 | 
-       408 |         ensures link_spec_size(link) <= values@.len(),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:435: error: fn_missing_requires - fn filter_parallel — exec fn should have requires
        406 |     fn build_balanced<T: StTInMtT + Ord>(values: &[T]) -> (link: Link<T>)
-            ...
-       433 |     }
-       434 | 
-       436 |         where
-       437 |             F: Fn(&T) -> bool + Send + Sync,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:464: error: fn_missing_requires - fn reduce_parallel — exec fn should have requires
+       408 |         ensures link_spec_size(link) <= values@.len(),
+       409 |         decreases values.len(),
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:438: warning: requires_true - requires true — vacuous precondition
        435 |     fn filter_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
             ...
-       462 |     }
-       463 | 
-       465 |         where
-       466 |             F: Fn(T, T) -> T + Send + Sync,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:490: error: fn_missing_requires - fn height_rec — exec fn should have requires
+       436 |         where
+       437 |             F: Fn(&T) -> bool + Send + Sync,
+       439 |         ensures true,
+       440 |         decreases *link,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:467: warning: requires_true - requires true — vacuous precondition
        464 |     fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
             ...
-       488 |     }
+       465 |         where
+       466 |             F: Fn(T, T) -> T + Send + Sync,
+       468 |         ensures true,
+       469 |         decreases *link,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:491: warning: requires_true - requires true — vacuous precondition
        489 | 
-       491 | 
+       490 |     fn height_rec<T: StTInMtT + Ord>(link: &Link<T>) -> (h: N)
        492 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:631: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:652: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:661: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:670: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:679: info: accept()
+       493 |             (link is None) ==> h == 0,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:631: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:652: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:661: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:670: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTRBMtEph.rs:679: info: accept()
    Info: 5 total
 ✓ BSTRBStEph.rs
    1 clean proof function
 ❌ BSTSetAVLMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetAVLMtEph.rs:142: error: fn_missing_requires - fn values_vec — exec fn should have requires
-       135 |         fn iter(&self) -> (it: BSTSetAVLMtEphIter<T>)
-            ...
-       140 |     //	9. impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:143: warning: requires_true - requires true — vacuous precondition
        141 | 
-       143 | 
-       144 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetAVLMtEph.rs:149: error: fn_missing_requires - fn rebuild_from_vec — exec fn should have requires
        142 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTAVLMtEph<T>) -> (values: Vec<T>)
-            ...
-       147 |     }
+       144 |         ensures true,
+       145 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:150: warning: requires_true - requires true — vacuous precondition
        148 | 
-       150 | 
-       151 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetAVLMtEph.rs:160: error: fn_missing_requires - fn from_sorted_iter — exec fn should have requires
        149 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
+       151 |         ensures true,
+       152 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:163: warning: requires_true - requires true — vacuous precondition
+       160 |     fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetAVLMtEph<T>)
             ...
-       158 |     }
-       159 | 
        161 |     where
        162 |         I: IntoIterator<Item = T>,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetAVLMtEph.rs:407: info: accept()
+       164 |         ensures true,
+       165 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:470: warning: requires_true - requires true — vacuous precondition
+       468 |         type IntoIter = std::vec::IntoIter<T>;
+       469 |         fn into_iter(self) -> (it: Self::IntoIter)
+       471 |         {
+       472 |             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetAVLMtEph.rs:407: info: accept()
    Info: 1 total
 ❌ BSTSetBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetBBAlphaMtEph.rs:124: error: fn_missing_requires - fn values_vec — exec fn should have requires
-       119 |         fn iter(&self) -> (it: BSTSetBBAlphaMtEphIter<T>)
-            ...
-       122 |     }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:125: warning: requires_true - requires true — vacuous precondition
        123 | 
-       125 | 
-       126 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetBBAlphaMtEph.rs:130: error: fn_missing_requires - fn rebuild_from_vec — exec fn should have requires
        124 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTBBAlphaMtEph<T>) -> (values: Vec<T>)
-            ...
-       128 |         tree.in_order().iter().cloned().collect()
+       126 |         ensures true,
+       127 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:131: warning: requires_true - requires true — vacuous precondition
        129 |     }
-       131 | 
-       132 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetBBAlphaMtEph.rs:141: error: fn_missing_requires - fn from_sorted_iter — exec fn should have requires
        130 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTBBAlphaMtEph<T>)
+       132 |         ensures true,
+       133 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:144: warning: requires_true - requires true — vacuous precondition
+       141 |     fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetBBAlphaMtEph<T>)
             ...
-       139 |     }
-       140 | 
        142 |     where
        143 |         I: IntoIterator<Item = T>,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetBBAlphaMtEph.rs:333: info: accept()
+       145 |         ensures true,
+       146 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:396: warning: requires_true - requires true — vacuous precondition
+       394 |         type IntoIter = std::vec::IntoIter<T>;
+       395 |         fn into_iter(self) -> (it: Self::IntoIter)
+       397 |         {
+       398 |             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetBBAlphaMtEph.rs:333: info: accept()
    Info: 1 total
 ❌ BSTSetPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetPlainMtEph.rs:124: error: fn_missing_requires - fn values_vec — exec fn should have requires
-       119 |         fn iter(&self) -> (it: BSTSetPlainMtEphIter<T>)
-            ...
-       122 |     }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:125: warning: requires_true - requires true — vacuous precondition
        123 | 
-       125 | 
-       126 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetPlainMtEph.rs:130: error: fn_missing_requires - fn rebuild_from_vec — exec fn should have requires
        124 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTPlainMtEph<T>) -> (values: Vec<T>)
-            ...
-       128 |         tree.in_order().iter().cloned().collect()
+       126 |         ensures true,
+       127 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:131: warning: requires_true - requires true — vacuous precondition
        129 |     }
-       131 | 
-       132 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetPlainMtEph.rs:141: error: fn_missing_requires - fn from_sorted_iter — exec fn should have requires
        130 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTPlainMtEph<T>)
+       132 |         ensures true,
+       133 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:144: warning: requires_true - requires true — vacuous precondition
+       141 |     fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetPlainMtEph<T>)
             ...
-       139 |     }
-       140 | 
        142 |     where
        143 |         I: IntoIterator<Item = T>,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetPlainMtEph.rs:389: info: accept()
+       145 |         ensures true,
+       146 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:452: warning: requires_true - requires true — vacuous precondition
+       450 |         type IntoIter = std::vec::IntoIter<T>;
+       451 |         fn into_iter(self) -> (it: Self::IntoIter)
+       453 |         {
+       454 |             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetPlainMtEph.rs:389: info: accept()
    Info: 1 total
 ❌ BSTSetRBMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetRBMtEph.rs:124: error: fn_missing_requires - fn values_vec — exec fn should have requires
-       119 |         fn iter(&self) -> (it: BSTSetRBMtEphIter<T>)
-            ...
-       122 |     }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:125: warning: requires_true - requires true — vacuous precondition
        123 | 
-       125 | 
+       124 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTRBMtEph<T>) -> (values: Vec<T>)
        126 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetRBMtEph.rs:139: error: fn_missing_requires - fn from_sorted_iter — exec fn should have requires
-       131 |     fn copy_set<T: StTInMtT + Ord>(set: &BSTSetRBMtEph<T>) -> (out: BSTSetRBMtEph<T>)
-            ...
-       137 |     }
+       127 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:140: warning: requires_true - requires true — vacuous precondition
        138 | 
-       140 | 
+       139 |     fn from_sorted_iter<T: StTInMtT + Ord, I: IntoIterator<Item = T>>(values: I) -> (set: BSTSetRBMtEph<T>)
        141 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetRBMtEph.rs:409: info: accept()
+       142 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:472: warning: requires_true - requires true — vacuous precondition
+       470 |         type IntoIter = std::vec::IntoIter<T>;
+       471 |         fn into_iter(self) -> (it: Self::IntoIter)
+       473 |         {
+       474 |             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetRBMtEph.rs:409: info: accept()
    Info: 1 total
 ❌ BSTSetSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetSplayMtEph.rs:142: error: fn_missing_requires - fn values_vec — exec fn should have requires
-       135 |         fn iter(&self) -> (it: BSTSetSplayMtEphIter<T>)
-            ...
-       140 |     //	9. impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:143: warning: requires_true - requires true — vacuous precondition
        141 | 
-       143 | 
-       144 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetSplayMtEph.rs:149: error: fn_missing_requires - fn rebuild_from_vec — exec fn should have requires
        142 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
-            ...
-       147 |     }
+       144 |         ensures true,
+       145 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:150: warning: requires_true - requires true — vacuous precondition
        148 | 
-       150 | 
-       151 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetSplayMtEph.rs:160: error: fn_missing_requires - fn from_sorted_iter — exec fn should have requires
        149 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
+       151 |         ensures true,
+       152 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:163: warning: requires_true - requires true — vacuous precondition
+       160 |     fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetSplayMtEph<T>)
             ...
-       158 |     }
-       159 | 
        161 |     where
        162 |         I: IntoIterator<Item = T>,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetSplayMtEph.rs:407: info: accept()
+       164 |         ensures true,
+       165 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:470: warning: requires_true - requires true — vacuous precondition
+       468 |         type IntoIter = std::vec::IntoIter<T>;
+       469 |         fn into_iter(self) -> (it: Self::IntoIter)
+       471 |         {
+       472 |             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSetSplayMtEph.rs:407: info: accept()
    Info: 1 total
 ❌ BSTSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:92: error: fn_missing_requires - fn new_node — exec fn should have requires
-        75 |     pub open spec fn link_height<T: StTInMtT + Ord>(link: Link<T>) -> nat
-            ...
-        90 |     // Verified splay tree algorithms (Layer 1).
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:93: warning: requires_true - requires true — vacuous precondition
         91 | 
-        93 | 
-        94 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:108: error: fn_missing_requires - fn size_link — exec fn should have requires
         92 |     fn new_node<T: StTInMtT + Ord>(key: T) -> (node: Node<T>)
-            ...
-       106 |     }
+        94 |         ensures
+        95 |             node.key == key,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:109: warning: requires_true - requires true — vacuous precondition
        107 | 
-       109 | 
-       110 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:119: error: fn_missing_requires - fn update — exec fn should have requires
        108 |     fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (size: N)
-            ...
-       117 |     }
+       110 |         ensures
+       111 |             (link is None) ==> size == 0,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:120: warning: requires_true - requires true — vacuous precondition
        118 | 
-       120 | 
-       121 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:135: error: fn_missing_requires - fn splay — exec fn should have requires
        119 |     fn update<T: StTInMtT + Ord>(node: &mut Node<T>)
-            ...
-       133 |     // Bottom-up splay: bring target (or nearest key) toward the root using
+       121 |         ensures
+       122 |             node.left == old(node).left,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:136: warning: requires_true - requires true — vacuous precondition
        134 |     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
-       136 | 
-       137 |         ensures link_spec_size(Some(result)) == link_spec_size(Some(root)),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:252: error: fn_missing_requires - fn bst_insert — exec fn should have requires
        135 |     fn splay<T: StTInMtT + Ord>(root: Box<Node<T>>, target: &T) -> (result: Box<Node<T>>)
-            ...
-       250 |     }
+       137 |         ensures link_spec_size(Some(result)) == link_spec_size(Some(root)),
+       138 |         decreases root,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:253: warning: requires_true - requires true — vacuous precondition
        251 | 
-       253 | 
-       254 |         ensures link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:276: error: fn_missing_requires - fn insert_link — exec fn should have requires
        252 |     fn bst_insert<T: StTInMtT + Ord>(link: &mut Link<T>, value: T) -> (inserted: bool)
-            ...
-       274 |     }
+       254 |         ensures link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
+       255 |         decreases old(link),
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:277: warning: requires_true - requires true — vacuous precondition
        275 | 
-       277 | 
-       278 |         ensures link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:290: error: fn_missing_requires - fn find_link — exec fn should have requires
        276 |     fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T) -> (inserted: bool)
-            ...
-       288 |     }
+       278 |         ensures link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
+       279 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:291: warning: requires_true - requires true — vacuous precondition
        289 | 
-       291 | 
-       292 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:310: error: fn_missing_requires - fn min_link — exec fn should have requires
        290 |     fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
-            ...
-       308 |     }
+       292 |         ensures
+       293 |             (link is None) ==> found is None,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:311: warning: requires_true - requires true — vacuous precondition
        309 | 
-       311 | 
-       312 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:326: error: fn_missing_requires - fn max_link — exec fn should have requires
        310 |     fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> (min: Option<&T>)
-            ...
-       324 |     }
+       312 |         ensures
+       313 |             (link is None) ==> min is None,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:327: warning: requires_true - requires true — vacuous precondition
        325 | 
-       327 | 
-       328 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:342: error: fn_missing_requires - fn in_order_collect — exec fn should have requires
        326 |     fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> (max: Option<&T>)
-            ...
-       340 |     }
+       328 |         ensures
+       329 |             (link is None) ==> max is None,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:343: warning: requires_true - requires true — vacuous precondition
        341 | 
-       343 | 
-       344 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:354: error: fn_missing_requires - fn pre_order_collect — exec fn should have requires
        342 |     fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
-            ...
-       352 |     }
+       344 |         ensures true,
+       345 |         decreases *link,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:355: warning: requires_true - requires true — vacuous precondition
        353 | 
-       355 | 
-       356 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:366: error: fn_missing_requires - fn in_order_parallel — exec fn should have requires
        354 |     fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
-            ...
-       364 |     }
+       356 |         ensures true,
+       357 |         decreases *link,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:367: warning: requires_true - requires true — vacuous precondition
        365 | 
-       367 | 
-       368 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:387: error: fn_missing_requires - fn pre_order_parallel — exec fn should have requires
        366 |     fn in_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> (result: Vec<T>)
-            ...
-       385 |     }
+       368 |         ensures true,
+       369 |         decreases *link,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:388: warning: requires_true - requires true — vacuous precondition
        386 | 
-       388 | 
-       389 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:408: error: fn_missing_requires - fn build_balanced — exec fn should have requires
        387 |     fn pre_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> (result: Vec<T>)
-            ...
-       406 |     }
+       389 |         ensures true,
+       390 |         decreases *link,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:409: warning: requires_true - requires true — vacuous precondition
        407 | 
-       409 | 
-       410 |         ensures link_spec_size(link) <= values@.len(),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:436: error: fn_missing_requires - fn filter_parallel — exec fn should have requires
        408 |     fn build_balanced<T: StTInMtT + Ord>(values: &[T]) -> (link: Link<T>)
-            ...
-       434 |     }
-       435 | 
-       437 |         where
-       438 |             F: Fn(&T) -> bool + Send + Sync,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:465: error: fn_missing_requires - fn reduce_parallel — exec fn should have requires
+       410 |         ensures link_spec_size(link) <= values@.len(),
+       411 |         decreases values.len(),
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:439: warning: requires_true - requires true — vacuous precondition
        436 |     fn filter_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
             ...
-       463 |     }
-       464 | 
-       466 |         where
-       467 |             F: Fn(T, T) -> T + Send + Sync,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:491: error: fn_missing_requires - fn height_rec — exec fn should have requires
+       437 |         where
+       438 |             F: Fn(&T) -> bool + Send + Sync,
+       440 |         ensures true,
+       441 |         decreases *link,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:468: warning: requires_true - requires true — vacuous precondition
        465 |     fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
             ...
-       489 |     }
+       466 |         where
+       467 |             F: Fn(T, T) -> T + Send + Sync,
+       469 |         ensures true,
+       470 |         decreases *link,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:492: warning: requires_true - requires true — vacuous precondition
        490 | 
-       492 | 
+       491 |     fn height_rec<T: StTInMtT + Ord>(link: &Link<T>) -> (h: N)
        493 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:632: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:650: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:659: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:668: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:677: info: accept()
+       494 |             (link is None) ==> h == 0,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:632: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:650: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:659: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:668: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayMtEph.rs:677: info: accept()
    Info: 5 total
 ❌ BSTSplayStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:446: error: trivial_spec_wf - spec fn spec_bstsplaysteph_wf — trivial body { true } or { true; }, needs // accept hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:446: error: trivial_spec_wf - spec fn spec_bstsplaysteph_wf — trivial body { true } or { true; }, needs // accept hole
        444 |         open spec fn spec_height(self) -> nat { spec_height_link(&self.root) }
        445 |         open spec fn spec_contains(self, value: T) -> bool { spec_contains_link(&self.root, value) }
        447 | 
        448 |         fn new() -> (tree: Self) { BSTSplayStEph { root: None } }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:146: error: fn_missing_requires - fn new_node — exec fn should have requires
-       138 |         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
-            ...
-       144 |     //		9. impls
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:489: error: external_body - #[verifier::external_body]
+       490 |         fn clone(&self) -> (copy: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:147: warning: requires_true - requires true — vacuous precondition
        145 | 
-       147 | 
-       148 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:162: error: fn_missing_requires - fn size_link — exec fn should have requires
        146 |     fn new_node<T: TotalOrder + Clone>(key: T) -> (node: Node<T>)
-            ...
-       160 |     }
+       148 |         ensures
+       149 |             node.key == key,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:163: warning: requires_true - requires true — vacuous precondition
        161 | 
-       163 | 
+       162 |     fn size_link<T: TotalOrder + Clone>(link: &Link<T>) -> (size: N)
        164 |         ensures size as nat == spec_size_link(link),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:190: error: fn_missing_requires - fn update — exec fn should have requires
-       173 |     fn height_link<T: TotalOrder + Clone>(link: &Link<T>) -> (height: N)
-            ...
-       188 |     }
+       165 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:191: warning: requires_true - requires true — vacuous precondition
        189 | 
-       191 | 
-       192 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:207: error: fn_missing_requires - fn splay — exec fn should have requires
        190 |     fn update<T: TotalOrder + Clone>(node: &mut Node<T>)
-            ...
-       205 |     // Bottom-up splay: bring target (or nearest key) toward the root using
+       192 |         ensures
+       193 |             node.key == old(node).key,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:208: warning: requires_true - requires true — vacuous precondition
        206 |     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
-       208 | 
-       209 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:330: error: fn_missing_requires - fn bst_insert — exec fn should have requires
        207 |     fn splay<T: TotalOrder + Clone>(root: Box<Node<T>>, target: &T) -> (result: Box<Node<T>>)
-            ...
-       328 |     }
+       209 |         ensures true,
+       210 |         decreases root,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:331: warning: requires_true - requires true — vacuous precondition
        329 | 
-       331 | 
-       332 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:354: error: fn_missing_requires - fn insert_link — exec fn should have requires
        330 |     fn bst_insert<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)
-            ...
-       352 |     }
+       332 |         ensures true,
+       333 |         decreases old(link),
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:355: warning: requires_true - requires true — vacuous precondition
        353 | 
-       355 | 
-       356 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:368: error: fn_missing_requires - fn find_link — exec fn should have requires
        354 |     fn insert_link<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)
-            ...
-       366 |     }
+       356 |         ensures true,
+       357 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:369: warning: requires_true - requires true — vacuous precondition
        367 | 
-       369 | 
-       370 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:386: error: fn_missing_requires - fn min_link — exec fn should have requires
        368 |     fn find_link<'a, T: TotalOrder + Clone>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
-            ...
-       384 |     }
+       370 |         ensures
+       371 |             found.is_some() ==> *found.unwrap() == *target,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:387: warning: requires_true - requires true — vacuous precondition
        385 | 
-       387 | 
-       388 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:402: error: fn_missing_requires - fn max_link — exec fn should have requires
        386 |     fn min_link<T: TotalOrder + Clone>(link: &Link<T>) -> (min: Option<&T>)
-            ...
-       400 |     }
+       388 |         ensures
+       389 |             link.is_some() ==> min.is_some(),
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:403: warning: requires_true - requires true — vacuous precondition
        401 | 
-       403 | 
-       404 |         ensures
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:418: error: fn_missing_requires - fn in_order_collect — exec fn should have requires
        402 |     fn max_link<T: TotalOrder + Clone>(link: &Link<T>) -> (max: Option<&T>)
-            ...
-       416 |     }
+       404 |         ensures
+       405 |             link.is_some() ==> max.is_some(),
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:419: warning: requires_true - requires true — vacuous precondition
        417 | 
-       419 | 
-       420 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:430: error: fn_missing_requires - fn pre_order_collect — exec fn should have requires
        418 |     fn in_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
-            ...
-       428 |     }
+       420 |         ensures true,
+       421 |         decreases *link,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:431: warning: requires_true - requires true — vacuous precondition
        429 | 
-       431 | 
+       430 |     fn pre_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
        432 |         ensures true,
-   Holes: 1 total
+       433 |         decreases *link,
+   Holes: 2 total
+      1 × external_body
       1 × trivial spec*wf { true }
 
 =================================================================
@@ -802,8 +708,8 @@ BSTSplayStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   7 clean (no holes, no errors; 36%)
-   12 holed (holes or errors, 63%)
+   14 clean (no holes, no errors; 73%)
+   5 holed (holes or errors, 26%)
    19 total
 
 Proof Functions:
@@ -812,29 +718,31 @@ Proof Functions:
    16 total
 
 Function Specs:
-   675 exec fns with complete spec (requires+ensures) (70%)
-   75 exec fns missing spec (7%)
+   746 exec fns with complete spec (requires+ensures) (77%)
+   5 exec fns missing spec (0%)
    211 proof/spec fns clean (21%)
    0 proof/spec fns with holes (0%)
-   961 total fns
+   962 total fns
 
 
-Holes Found: 7 total
-   3 × assume() (42%)
-   3 × external_body (42%)
-   1 × trivial spec*wf { true } (14%)
+Holes Found: 15 total
+   2 × assume() (13%)
+   12 × external_body (80%)
+   1 × trivial spec*wf { true } (6%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 16:31:54 -07:00
-Ended:     2026-03-13 16:31:55 -07:00
-Duration:  154ms
+Started:   2026-03-13 16:53:53 -07:00
+Ended:     2026-03-13 16:53:53 -07:00
+Duration:  117ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
-026-03-13 16:31:54 -07:00
-Ended:     2026-03-13 16:31:55 -07:00
-Duration:  154ms
+========================
+
+Started:   2026-03-13 16:53:53 -07:00
+Ended:     2026-03-13 16:53:53 -07:00
+Duration:  117ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log

@@ -134,7 +134,11 @@
       "Bash(wc -l *)",
       "Bash(*&& wc *)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:willschenk.com)"
+      "WebFetch(domain:willschenk.com)",
+      "Bash(/tmp/loop_search.txt:*)",
+      "Bash(/tmp/analyze_algorithms.txt:*)",
+      "Bash(/tmp/loop_analysis.txt:*)",
+      "Bash(/tmp/final_report.txt:*)"
     ]
   }
 }

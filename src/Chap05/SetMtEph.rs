@@ -27,7 +27,7 @@
 pub mod SetMtEph {
 
     use vstd::prelude::*;
-    use crate::Concurrency::diverge;
+    use crate::Concurrency::*;
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
 
 verus! {

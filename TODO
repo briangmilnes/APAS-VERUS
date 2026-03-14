@@ -1,57 +1,59 @@
 
  21 Feb 2026
 
+0) Run verusfmt on all files after Round 9 merge.
 1) Clean up types, pair, concurrency.
 2) Deep_view review.
 3) Get the derives in use where they now work.
 4) Where have we turned clean tail recursion into loops that does not match APAS?
 
-13 Mar 2026 — 3856 verified, 382 holes, 35 clean, 11 holed.
+13 Mar 2026 — 3920 verified, 300 holes, 36 clean, 11 holed.
 
-Clean (35):
-src/Chap02/ - accepted. Fork-join scheduler.
-src/Chap03/ - clean. Insertion sort.
-src/Chap05/ - clean. Kleene, mappings, relations, sets.
-src/Chap06/ - clean. Directed graphs.
-src/Chap11/ - clean. Fibonacci.
-src/Chap12/ - clean. Exercises (asymptotic).
-src/Chap17/ - clean. MathSeq.
-src/Chap18/ - clean. ArraySeq.
-src/Chap19/ - clean. ArraySeq slices.
-src/Chap21/ - clean. Seq algorithms (merge, sort, filter, scan).
-src/Chap23/ - clean. Balanced binary trees, prim tree seq.
-src/Chap26/ - clean. Divide-and-conquer reduce, ETSP.
-src/Chap27/ - clean. Reduce/scan contract.
-src/Chap28/ - clean. Max contiguous subarray sum.
-src/Chap30/ - clean but stub. Probability.
-src/Chap35/ - clean. Order-statistic select.
-src/Chap36/ - clean. Quicksort.
-src/Chap40/ - clean. BST key-value, reduced, size.
-src/Chap44/ - clean. Document index.
-src/Chap49/ - clean. Min edit distance (DP).
-src/Chap51/ - clean. Bottom-up DP.
-src/Chap54/ - clean. BFS.
-src/Chap55/ - clean. DFS, SCC.
-src/Chap56/ - clean. All-pairs shortest paths.
-src/Chap57/ - clean. Dijkstra.
-src/Chap58/ - clean. Bellman-Ford.
-src/Chap59/ - clean. Johnson.
-src/Chap61/ - clean. Edge contraction.
-src/Chap62/ - clean. Star contraction.
-src/Chap63/ - clean. Connectivity.
-src/Chap64/ - clean. Spanning tree.
-src/Chap65/ - clean. Kruskal, Prim, union-find.
-src/Chap66/ - clean. Boruvka.
+Human Review of Clean Chapters (36):
+  [ ] src/Chap02/  2 files. Fork-join scheduler (accepted holes).
+  [ ] src/Chap03/  1 file.  Insertion sort.
+  [ ] src/Chap05/  5 files. Kleene, mappings, relations, sets.
+  [ ] src/Chap06/ 20 files. Directed graphs.
+  [ ] src/Chap11/  5 files. Fibonacci.
+  [ ] src/Chap12/  3 files. Exercises (asymptotic).
+  [ ] src/Chap17/  1 file.  MathSeq.
+  [ ] src/Chap18/  7 files. ArraySeq.
+  [ ] src/Chap19/  4 files. ArraySeq slices.
+  [ ] src/Chap21/ 12 files. Seq algorithms (merge, sort, filter, scan).
+  [ ] src/Chap23/  2 files. Balanced binary trees, prim tree seq.
+  [ ] src/Chap26/  8 files. Divide-and-conquer reduce, ETSP.
+  [ ] src/Chap27/  4 files. Reduce/scan contract.
+  [ ] src/Chap28/ 11 files. Max contiguous subarray sum.
+  [ ] src/Chap30/  1 file.  Probability (stub).
+  [ ] src/Chap35/  4 files. Order-statistic select.
+  [ ] src/Chap36/  3 files. Quicksort.
+  [ ] src/Chap40/  3 files. BST key-value, reduced, size.
+  [ ] src/Chap44/  2 files. Document index.
+  [ ] src/Chap49/  8 files. Min edit distance (DP).
+  [ ] src/Chap50/  8 files. Matrix chain (DP).
+  [ ] src/Chap51/  8 files. Bottom-up DP.
+  [ ] src/Chap54/  4 files. BFS.
+  [ ] src/Chap55/  8 files. DFS, SCC.
+  [ ] src/Chap56/ 12 files. All-pairs shortest paths.
+  [ ] src/Chap57/  3 files. Dijkstra.
+  [ ] src/Chap58/  2 files. Bellman-Ford.
+  [ ] src/Chap59/  4 files. Johnson.
+  [ ] src/Chap61/  4 files. Edge contraction.
+  [ ] src/Chap62/  4 files. Star contraction.
+  [ ] src/Chap63/  2 files. Connectivity.
+  [ ] src/Chap64/  3 files. Spanning tree.
+  [ ] src/Chap65/  3 files. Kruskal, Prim, union-find.
+  [ ] src/Chap66/  2 files. Boruvka.
 
 Holed (11):
-src/Chap37/ - 102 holes. BSTs (plain, AVL, red-black, BB-alpha, splay), AVLTreeSeq.
-src/Chap38/ - 20 holes. Augmented BSTs. Clean deps.
-src/Chap39/ - 37 holes. Treaps.
-src/Chap41/ - 77 holes. Sets (array, AVL tree). Blocked by Chap37.
-src/Chap42/ - 18 holes. Tables. Blocked by Chap41.
-src/Chap43/ - 145 holes. Augmented ordered tables. Blocked by Chap37, 41, 42.
-src/Chap45/ - 5 holes. Priority queues (balanced tree, binary heap). Blocked by Chap37.
-src/Chap47/ - 45 holes. Hash tables (chained, flat, parallel).
-src/Chap50/ - 3 holes. Matrix chain (DP). Clean deps.
-src/Chap52/ - 1 hole. Adjacency matrix graphs. Blocked by Chap41, 43.
-src/Chap53/ - 18 holes. Graph search, priority queue search. Blocked by Chap41.
+  src/Chap37/ -  20 holes, 19 files. BSTs (plain, AVL, RB, BB-alpha, splay), AVLTreeSeq. Clean deps.
+  src/Chap38/ -  18 holes,  2 files. Augmented BSTs (parallel). Clean deps.
+  src/Chap39/ -  15 holes,  4 files. Treaps. Internal deps.
+  src/Chap41/ -  62 holes,  7 files. Sets (array, AVL tree). Blocked by Chap37.
+  src/Chap42/ -  18 holes,  4 files. Tables. Blocked by Chap41.
+  src/Chap43/ - 145 holes, 11 files. Augmented ordered tables. Blocked by Chap37, 41, 42.
+  src/Chap45/ -   5 holes,  7 files. Priority queues (balanced tree, binary heap). Blocked by Chap37.
+  src/Chap47/ -  28 holes,  9 files. Hash tables (chained, flat, parallel). Internal deps.
+  src/Chap50/ -   2 holes,  8 files. Matrix chain (DP). Clean deps. (warnings only)
+  src/Chap52/ -   1 hole,  14 files. Edge-set graphs. Blocked by Chap41, 43.
+  src/Chap53/ -  18 holes,  5 files. Graph search, PQ search. Blocked by Chap41.

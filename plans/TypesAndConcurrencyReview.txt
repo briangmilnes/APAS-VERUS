@@ -1,0 +1,202 @@
+
+ Review Types.rs and Concurrency.rs.
+
+ In Types:
+  1) Are there definitions we are not using in the code base anymore.
+  2) Are there definitions we are not using systematically in the code base and should?
+  3) Are there definitions we are using in the code base and should not be using?
+
+ In Concurrency:
+  1) Are there definitions we are not using in the code base anymore.
+  2) Are there definitions we are not using systematically in the code base and should?
+  3) Are there definitions we are using in the code base and should not be using?
+
+=================================================================
+TYPES.RS
+=================================================================
+
+1. NOT USED IN THE CODEBASE (candidates for removal)
+-----------------------------------------------------------------
+
+| # | Definition               | Src Files | Tests | Verdict         |
+|---|--------------------------|-----------|-------|-----------------|
+| 1 | Triple<A,B,C>            | 0         | 1     | tests only      |
+| 2 | Quadruple<A,B,C,D>      | 0         | 0     | dead            |
+| 3 | KeyVal<K,V>              | 0         | 0     | dead            |
+| 4 | WeightedLabEdge<V,L,W>  | 0         | 0     | dead            |
+| 5 | PairIter / PairIterGhostIter | 0     | 0     | dead (comment says "currently unused") |
+| 6 | EdgeLit! macro           | 0         | 0     | dead            |
+| 7 | EdgeList! macro          | 0         | 0     | dead            |
+| 8 | PairList! macro          | 0         | 0     | dead            |
+| 9 | lemma_spec_graphview_wf_subset_arcs  | 0 | 0 | dead proof lemma |
+|10 | lemma_spec_labgraphview_wf_subset_arcs | 0 | 0 | dead proof lemma |
+|11 | group_WeightedLabEdge_axioms + valid_key_type_WeightedLabEdge | 0 | 0 | dead (type dead) |
+|12 | group_Triple_axioms + valid_key_type_Triple | 0 | 0 | dead (not used in src) |
+
+Triple: used only in tests/Chap06/TestWeighedDirGraphStEphInt.rs. That test
+constructs SetStEph<Triple<N,N,i32>> for weighted edges. But the source code uses
+WeightedEdge<V,W>, not Triple. The test should probably use WeightedEdge too. -! Get rid of triple in favor of WeightedEdge.
+
+Quadruple, KeyVal: fully dead. Never used anywhere. The codebase uses Pair<K,V>
+for key-value pairs and tuples for everything else. -! Delete.
+
+WeightedLabEdge: defined but never instantiated. No graph algorithm in APAS uses
+4-field edges. Remove unless there's a future chapter that needs it. -! Get rid of it.
+
+PairIter/PairIterGhostIterator: the code comment says "Currently unused due to
+Verus limitation." 90 lines of dead iterator infrastructure. -! Get rid of it.
+
+EdgeLit!, EdgeList!, PairList!: dead macros. -! Get rid of. 
+PairLit! is used in 3 test files (Chap05 tests) but not in src. -! 
+
+
+2. NOT USED SYSTEMATICALLY (should we use more?)
+-----------------------------------------------------------------
+
+| # | Definition    | Src Files | Note                                    |
+|---|---------------|-----------|-----------------------------------------|
+| 1 | HashOrd trait | 1         | Only Chap06/LabUnDirGraphStEph.rs       |
+| 2 | ArithmeticT   | 1         | Only Chap40/BSTReducedStEph.rs          |
+| 3 | PredSt<T>     | 5         | Chap41 (3), Chap43 (2)                  |
+| 4 | PairLit! macro| 0 src     | 3 test files only                       |
+
+HashOrd: bundles StT + Hash + Ord. Graph vertices already spell out these bounds
+manually. Either adopt HashOrd everywhere or drop it. It saves ~15 chars per bound. -! Adopt everywhere.
+
+ArithmeticT: used exactly once. Bundles StT + Add + Default + Copy. Only BSTReducedStEph
+uses it. Could be useful for reduce/scan but isn't adopted. -! delete.
+
+PredSt: used in Chap41/43 set/table filter operations. Chap21 seq filter uses
+raw Fn(&T) -> bool instead. Should filter operations standardize on PredSt? -! Yes. 
+
+
+3. USED BUT MAYBE SHOULD NOT BE
+-----------------------------------------------------------------
+
+| # | Definition  | Src Files | Issue                                     |
+|---|-------------|-----------|-------------------------------------------|
+| 1 | type N = usize | 104    | Legacy. CLAUDE.md says "do not use for Chap11+." |
+| 2 | type B = bool  | 72     | Adds nothing. bool is clearer.            |
+| 3 | O (Ordering)   | 20     | Adds nothing. Ordering is clearer.        |
+
+N: CLAUDE.md already says not to use it for new modules (Chap11+). But 104 files
+still use it. Many are in early chapters (Chap02-06) written before the rule, but
+some in later chapters too. Systematic cleanup would touch too many files at once.
+Suggest: enforce for new code, migrate chapter by chapter during human review.
+
+B: Just bool. No added value. Every Rust programmer knows bool. Using B makes the
+code harder to read for newcomers. Same migration strategy as N.
+
+O: Just std::cmp::Ordering. Using O is cryptic. The 20 files using it are mostly
+in Chap06 and Chap37-40 (BST comparisons).
+
+-! yes replace these old APAS stuff and also stated in the summary.
+
+
+=================================================================
+CONCURRENCY.RS
+=================================================================
+
+1. NOT USED IN THE CODEBASE (candidates for removal)
+-----------------------------------------------------------------
+
+| # | Definition              | Src Files | Verdict         |
+|---|-------------------------|-----------|-----------------|
+| 1 | MtFn<Args, Output>      | 0         | dead trait       |
+| 2 | MtFnClone<Args, Output> | 0         | dead trait       |
+| 3 | use std::sync::Mutex (line 6, module-level) | 0 | dead import |
+| 4 | use std::sync::Mutex (line 24, inside mod) | 0 | dead import |
+
+MtFn, MtFnClone: defined as trait aliases for Fn+Send+Sync+'static. Never used.
+Multi-threaded modules spell out the bounds directly. Remove. -! yes.
+
+Both Mutex imports: Concurrency.rs imports Mutex twice (lines 6 and 24) but never
+uses it. All locking in the codebase uses vstd RwLock, not std Mutex. Remove. -! yes.
+
+2. NOT USED SYSTEMATICALLY (should we use more?)
+-----------------------------------------------------------------
+
+| # | Definition    | Src Files | Note                                    |
+|---|---------------|-----------|-----------------------------------------|
+| 1 | MtReduceFn<V> | 1         | Only Chap43/AugOrderedTableMtEph.rs     |
+| 2 | PredVal<T>    | 1         | Only Chap41/ArraySetEnumMtEph.rs        |
+| 3 | PredMt<T>     | 3         | Chap41 (2), Chap43 (1)                  |
+| 4 | Pred (alias)  | 4         | Chap39 (2), Chap43 (2)                  |
+
+MtReduceFn: bundles Fn(&V,&V)->V + Clone + Send + Sync + 'static. Only one user.
+Other Mt reduce operations spell out the bounds.
+DECIDED: Delete. One user (AugOrderedTableMtEph) spells out bounds directly.
+
+PredMt vs Pred: both exist, Pred is just an alias. Some files use PredMt, some
+use Pred.
+DECIDED: Use PredMt everywhere (parallels PredSt). Drop Pred alias. Update 4 files.
+
+PredVal: takes T by value (not &T). Only one user (ArraySetEnumMtEph).
+Different signature from PredMt — Fn(T) vs Fn(&T).
+DECIDED: Delete. One user spells out bounds directly.
+
+
+3. USED BUT MAYBE SHOULD NOT BE
+-----------------------------------------------------------------
+
+No issues found. The core traits (StTInMtT, MtT, MtKey, MtVal) are well-used
+and structurally sound. diverge() is used correctly in 6 files for unreachable arms.
+
+
+=================================================================
+SUMMARY
+=================================================================
+
+REMOVE (dead code):
+  Types.rs:   Triple, Quadruple, KeyVal, WeightedLabEdge, PairIter/PairIterGhostIter,
+              EdgeLit!, EdgeList!, PairList!, lemma_*_subset_arcs (2),
+              group_WeightedLabEdge_axioms, group_Triple_axioms,
+              ArithmeticT (1 user spells out bounds)
+  Concurrency.rs: MtFn, MtFnClone, Pred alias, PredVal, MtReduceFn, both Mutex imports
+
+KEEP BUT REVIEW:
+  Triple -- used in 1 test file. Should that test use WeightedEdge instead? YES use weighted edge get rid of triple.
+  PairLit! -- used in 3 test files. Keep if tests need it. Keep
+  HashOrd -- DECIDED: Adopt in ~20 graph files. Replace V: StT + Hash + Ord with V: HashOrd.
+  ArithmeticT -- DECIDED: Delete. One user (BSTReducedStEph) spells out bounds directly.
+
+MIGRATE OVER TIME:
+  N -> usize (104 files, chapter by chapter during human review) -! delete them all
+  B -> bool (72 files, same)                                     -! delete them all
+  O -> Ordering (20 files, same)                                 -! delete them all
+
+STANDARDIZE:
+  PredMt -- use everywhere for Mt predicates. Drop Pred alias, PredVal, MtReduceFn.
+  PredSt -- adopt in all St filter operations.
+  HashOrd -- adopt in ~20 graph files (replace StT + Hash + Ord).
+
+=================================================================
+EFFORT ESTIMATE (single agent)
+=================================================================
+
+REMOVE dead code (Types.rs + Concurrency.rs):
+  Delete ~12 definitions, ~200 lines. Update 1 test file (Triple -> WeightedEdge).
+  Validate. Straightforward deletions, no ripple effects.
+  Estimate: 15-20 minutes.
+
+MIGRATE N/B/O (196 files total):
+  N -> usize: 104 files. Mechanical find-replace but each file needs validate.
+  B -> bool: 72 files. Same.
+  O -> Ordering: 20 files. Same.
+  Many files overlap (use N and B together), so ~120 unique files.
+  At ~2 min/file (replace + validate batch): ~4 hours.
+  Risk: some uses of N/B/O may collide with other identifiers. Needs care.
+  Estimate: 4-5 hours for a single agent doing batches of ~10 files.
+
+STANDARDIZE predicates (PredMt/Pred/PredSt):
+  Pick names, update ~12 files, validate.
+  Estimate: 20-30 minutes.
+
+ADOPT HashOrd in ~20 graph files (replace StT + Hash + Ord bounds):
+  Estimate: 20-30 minutes.
+
+TOTAL single-agent estimate:
+  Removals + standardize: ~1 hour (low risk, do first)
+  N/B/O migration: 4-5 hours (high volume, medium risk)
+  Adopt/drop decisions: 30-60 min (needs user input)
+  Overall: ~6 hours for one agent, or split N/B/O across 2 agents (~3 hours each).
