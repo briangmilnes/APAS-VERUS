@@ -194,7 +194,11 @@ pub mod AVLTreeSeqStPer {
             ensures single == (self.spec_seq().len() == 1);
 
         fn set(&self, index: N, item: T) -> (outcome: Result<Self, &'static str>)
-            requires self.spec_avltreeseqstper_wf(), (index as int) < self.spec_seq().len();
+            requires
+                self.spec_avltreeseqstper_wf(),
+                (index as int) < self.spec_seq().len(),
+                obeys_feq_clone::<T>(),
+            ;
 
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self)
             requires self.spec_avltreeseqstper_wf();
@@ -422,14 +426,16 @@ pub mod AVLTreeSeqStPer {
     }
 
     fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
-        requires spec_avltreeseqstper_wf(*cur), (index as int) < spec_inorder(*cur).len(),
+        requires
+            spec_avltreeseqstper_wf(*cur),
+            (index as int) < spec_inorder(*cur).len(),
+            obeys_feq_clone::<T>(),
         ensures
             outcome is Ok,
             spec_avltreeseqstper_wf(outcome.unwrap()),
             spec_cached_size(&outcome.unwrap()) == spec_cached_size(cur),
         decreases *cur,
     {
-        proof { assume(obeys_feq_clone::<T>()); }
         match cur {
             None => {
                 if index == 0 {

@@ -24,6 +24,7 @@ pub mod BalancedTreePQ {
     use crate::Types::Types::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::feq::feq::{feq, obeys_feq_full};
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
@@ -125,7 +126,7 @@ broadcast use {
                 ensures sorted@.len() == self@.len();
 
             fn contains(&self, element: &T) -> (found: bool)
-                requires self.spec_balancedtreepq_wf(),
+                requires self.spec_balancedtreepq_wf(), obeys_feq_full::<T>(),
                 ensures found == self@.contains(element@);
 
             fn remove(&self, element: &T) -> (rest_and_found: (Self, bool))
@@ -373,17 +374,29 @@ broadcast use {
             /// Already sorted — clone the backing tree.
             fn extract_all_sorted(&self) -> AVLTreeSeqStPerS<T> { self.elements.clone() }
 
-            #[verifier::external_body]
             fn contains(&self, element: &T) -> bool {
-                for i in 0..self.elements.length() {
+                let n = self.elements.length();
+                let mut i: usize = 0;
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                while i < n
+                    invariant
+                        i <= n,
+                        n as int == self@.len(),
+                        self.elements.spec_avltreeseqstper_wf(),
+                        obeys_feq_full::<T>(),
+                        !self@.subrange(0, i as int).contains(element@),
+                    decreases n - i,
+                {
                     let current = self.elements.nth(i);
-                    if current == element {
+                    let eq = feq(current, element);
+                    if eq {
+                        assert(self@[i as int] == element@);
                         return true;
                     }
-                    if current > element {
-                        break;
-                    }
+                    assert(self@[i as int] != element@);
+                    i = i + 1;
                 }
+                assert(self@.subrange(0, n as int) =~= self@);
                 false
             }
 
