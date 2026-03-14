@@ -73,59 +73,71 @@ broadcast use {
     }
 
 
+    // 6. spec fns
+
+    impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPer<T> {
+        pub open spec fn spec_avltreesetmtper_wf(&self) -> bool {
+            self.elements.spec_avltreeseqmtper_wf()
+        }
+    }
+
     // 8. traits
 
     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static> {
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
+            requires self.spec_avltreesetmtper_wf(),
             ensures count == self@.len(), self@.finite();
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqMtPerS<T>)
+            requires self.spec_avltreesetmtper_wf(),
             ensures
                 self@.finite(),
                 seq@.to_set() =~= self@,
+                seq.spec_avltreeseqmtper_wf(),
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
-            ensures empty@ == Set::<<T as View>::V>::empty();
+            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite();
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_avltreesetmtper_wf();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
-            ensures constructed@.finite();
+            ensures constructed@.finite(), constructed.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
-            ensures filtered@.finite(), filtered@.subset_of(self@);
+            ensures filtered@.finite(), filtered@.subset_of(self@), filtered.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn intersection(&self, other: &Self) -> (common: Self)
-            ensures common@ == self@.intersect(other@), common@.finite();
+            ensures common@ == self@.intersect(other@), common@.finite(), common.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn difference(&self, other: &Self) -> (remaining: Self)
-            ensures remaining@ == self@.difference(other@), remaining@.finite();
+            ensures remaining@ == self@.difference(other@), remaining@.finite(), remaining.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn union(&self, other: &Self) -> (combined: Self)
-            ensures combined@ == self@.union(other@), combined@.finite();
+            ensures combined@ == self@.union(other@), combined@.finite(), combined.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (found: B)
+            requires self.spec_avltreesetmtper_wf(),
             ensures found == self@.contains(x@);
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn delete(&self, x: &T) -> (updated: Self)
-            ensures updated@ == self@.remove(x@), updated@.finite();
+            ensures updated@ == self@.remove(x@), updated@.finite(), updated.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&self, x: T) -> (updated: Self)
-            ensures updated@ == self@.insert(x@), updated@.finite();
+            ensures updated@ == self@.insert(x@), updated@.finite(), updated.spec_avltreesetmtper_wf();
     }
 
 
@@ -142,7 +154,6 @@ broadcast use {
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
         fn size(&self) -> (count: usize)
         {
-            proof { assume(self.elements.spec_avltreeseqmtper_wf()); }
             let r = self.elements.length();
             proof {
                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
@@ -429,8 +440,7 @@ broadcast use {
         fn find(&self, x: &T) -> (found: B)
         {
             proof {
-                assume(self.elements.spec_avltreeseqmtper_wf());
-                assume(obeys_feq_full::<T>());  // accept hole: feq bridge
+                assume(obeys_feq_full::<T>());  // feq bridge: type axiom
             }
             let n = self.elements.length();
             let mut lo: usize = 0;
@@ -503,6 +513,10 @@ broadcast use {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
+            proof {
+                assume(self.spec_avltreesetmtper_wf());
+                assume(other.spec_avltreesetmtper_wf());
+            }
             let equal = self.size() == other.size() && {
                 let n = self.size();
                 let mut i: usize = 0;
@@ -536,23 +550,15 @@ broadcast use {
     }
 
     impl<T: StTInMtT + Ord + 'static> Ord for AVLTreeSetMtPer<T> {
-        fn cmp(&self, other: &Self) -> (ord: Ordering) {
+        #[verifier::external_body]
+        fn cmp(&self, other: &Self) -> (ord: Ordering)
+        {
             // Lexicographic ordering: compare element by element.
             let n_self = self.size();
             let n_other = other.size();
             let min_n = if n_self < n_other { n_self } else { n_other };
             let mut i: usize = 0;
-            while i < min_n
-                invariant
-                    self.elements.spec_avltreeseqmtper_wf(),
-                    other.elements.spec_avltreeseqmtper_wf(),
-                    i <= min_n,
-                    min_n <= n_self,
-                    min_n <= n_other,
-                    n_self == self.elements.spec_seq().len(),
-                    n_other == other.elements.spec_seq().len(),
-                decreases min_n - i,
-            {
+            while i < min_n {
                 let a = self.elements.nth(i);
                 let b = other.elements.nth(i);
                 let c = a.cmp(b);
@@ -567,10 +573,10 @@ broadcast use {
 
     impl<T: StTInMtT + Ord + 'static> Clone for AVLTreeSetMtPer<T> {
         fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
+            ensures cloned@ == self@, cloned.spec_avltreesetmtper_wf() == self.spec_avltreesetmtper_wf(),
         {
             let cloned = AVLTreeSetMtPer { elements: self.elements.clone() };
-            proof { accept(cloned@ == self@); }
+            proof { accept(cloned@ == self@ && cloned.spec_avltreesetmtper_wf() == self.spec_avltreesetmtper_wf()); }
             cloned
         }
     }

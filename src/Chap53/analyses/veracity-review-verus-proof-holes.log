@@ -20,16 +20,7 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ GraphSearchMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/GraphSearchMtPer.rs:138: error: assume() - proof { assume(frontier.elements.spec_avltreeseqmtper_wf());
-       114 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
-            ...
-       136 | 
-       137 |             let mut new_neighbors = AVLTreeSetMtPer::empty();
-       139 |             let nlen = frontier.elements.length();
-       140 |             let mut i: usize = 0;
-   Holes: 1 total
-      1 × assume()
+✓ GraphSearchMtPer.rs
 ✓ GraphSearchStEph.rs
 ✓ GraphSearchStPer.rs
 ✓ PQMinStEph.rs
@@ -64,8 +55,8 @@ PQMinStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 80%)
-   1 holed (holes or errors, 20%)
+   5 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    5 total
 
 Proof Functions:
@@ -81,15 +72,16 @@ Function Specs:
    65 total fns
 
 
-Holes Found: 1 total
-   1 × assume() (100%)
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 19:25:11 -07:00
-Ended:     2026-03-13 19:25:11 -07:00
-Duration:  20ms
+Started:   2026-03-13 23:24:27 -07:00
+Ended:     2026-03-13 23:24:27 -07:00
+Duration:  18ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log

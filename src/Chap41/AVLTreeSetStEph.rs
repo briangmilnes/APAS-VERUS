@@ -95,6 +95,7 @@ broadcast use {
                 tree.spec_avltreesetsteph_wf();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
+            requires seq.spec_avltreeseqsteph_wf(),
             ensures
                 constructed.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
@@ -218,7 +219,6 @@ broadcast use {
 
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
         {
-            proof { assume(seq.spec_avltreeseqsteph_wf()); }
             let mut constructed = Self::empty();
             let n = seq.length();
             let mut i: usize = 0;
@@ -259,9 +259,7 @@ broadcast use {
                 }
                 i += 1;
             }
-            proof {
-                assume(filtered@.subset_of(self@));
-            }
+            proof { assume(filtered@.subset_of(self@)); }
             filtered
         }
 
