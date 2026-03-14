@@ -1519,179 +1519,57 @@ Table of Contents:
    Info: 2 total
    Proof functions: 3 total (3 clean, 0 holed)
 ❌ src/Chap41/AVLTreeSetMtEph.rs
-<<<<<<< Updated upstream
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:206: error: external_body - #[verifier::external_body]
-       207 |         pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:225: error: trivial_spec_wf - spec fn spec_avltreesetmteph_wf — trivial body { true } or { true; }, needs // accept hole
-       215 |         open spec fn inv(self, v: AVLTreeSetStEph<T>) -> bool {
-            ...
-       223 |     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
-       224 |         // Unit Inv: no ghost↔exec fields to link. Trivially well-formed.
-       226 |             true
-       227 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:234: error: assume() - assume(count == self@.len());  // accept hole: reader value
-       229 |         fn size(&self) -> (count: usize)
-            ...
-       232 |             let count = handle.borrow().size();
-       233 |             proof {
-       235 |                 assume(self@.finite());
-       236 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:235: error: assume() - assume(self@.finite());
-       229 |         fn size(&self) -> (count: usize)
-            ...
-       233 |             proof {
-       234 |                 assume(count == self@.len());  // accept hole: reader value
-       236 |             }
-       237 |             handle.release_read();
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:241: error: external_body - #[verifier::external_body]
-       242 |         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:257: error: assume() - proof { assume(empty@ == Set::<<T as View>::V>::empty()); }
-       250 |         fn empty() -> (empty: Self)
-            ...
-       255 |                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
-       256 |             };
-       258 |             empty
-       259 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:270: error: assume() - assume(tree@ == Set::<<T as View>::V>::empty().insert(x_view
-       261 |         fn singleton(x: T) -> (tree: Self)
-            ...
-       268 |             };
-       269 |             proof {
-       271 |                 assume(tree@.finite());
-       272 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:271: error: assume() - assume(tree@.finite());
-       261 |         fn singleton(x: T) -> (tree: Self)
-            ...
-       269 |             proof {
-       270 |                 assume(tree@ == Set::<<T as View>::V>::empty().insert(x_view));
-       272 |             }
-       273 |             tree
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:283: error: assume() - proof { assume(constructed@.finite()); }
-       276 |         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
-            ...
-       281 |                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
-       282 |             };
-       284 |             constructed
-       285 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:289: error: external_body - #[verifier::external_body]
-       290 |         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:336: error: external_body - #[verifier::external_body]
-       337 |         fn intersection(&self, other: &Self) -> (common: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:399: error: external_body - #[verifier::external_body]
-       400 |         fn difference(&self, other: &Self) -> (remaining: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:409: error: external_body - #[verifier::external_body]
-       410 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:447: error: assume() - proof { assume(found == self@.contains(x@)); }  // accept ho
-       443 |         fn find(&self, x: &T) -> (found: B)
-            ...
-       445 |             let handle = self.inner.acquire_read();
-       446 |             let found = handle.borrow().find(x);
-       448 |             handle.release_read();
-       449 |             found
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:459: error: assume() - assume(self@ == old(self)@.remove(x@));
-       452 |         fn delete(&mut self, x: &T)
-            ...
-       457 |             write_handle.release_write(current);
-       458 |             proof {
-       460 |                 assume(self@.finite());
-       461 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:460: error: assume() - assume(self@.finite());
-       452 |         fn delete(&mut self, x: &T)
-            ...
-       458 |             proof {
-       459 |                 assume(self@ == old(self)@.remove(x@));
-       461 |             }
-       462 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:472: error: assume() - assume(self@ == old(self)@.insert(x_view));
-       464 |         fn insert(&mut self, x: T)
-            ...
-       470 |             write_handle.release_write(current);
-       471 |             proof {
-       473 |                 assume(self@.finite());
-       474 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:473: error: assume() - assume(self@.finite());
-       464 |         fn insert(&mut self, x: T)
-            ...
-       471 |             proof {
-       472 |                 assume(self@ == old(self)@.insert(x_view));
-       474 |             }
-       475 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:477: error: external_body - #[verifier::external_body]
-       478 |         fn iter(&self) -> (it: AVLTreeSetMtEphIter<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:303: error: fn_missing_requires_ensures - fn parallel_filter — exec fn should have requires and ensures
-       290 |         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
-            ...
-       301 |             };
-       302 | 
-       304 |                 let n = vals.len();
-       305 |                 if n == 0 {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:362: error: fn_missing_requires_ensures - fn parallel_intersect — exec fn should have requires and ensures
-       337 |         fn intersection(&self, other: &Self) -> (common: Self)
-            ...
-       360 |             };
-       361 | 
-       363 |                 let n = self_vals.len();
-       364 |                 if n == 0 {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:523: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:590: info: accept()
-   Holes: 19 total
-      11 × assume()
-      7 × external_body
-      1 × trivial spec*wf { true }
-   Info: 2 total
-=======
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:232: error: assume() - proof { assume(count == self@.len()); }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:232: error: assume() - proof { assume(count == self@.len()); }
        228 |         fn size(&self) -> (count: usize)
             ...
        230 |             let handle = self.inner.acquire_read();
        231 |             let count = handle.borrow().size();
        233 |             handle.release_read();
        234 |             count
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:237: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:237: error: external_body - #[verifier::external_body]
        238 |         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:281: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:281: error: external_body - #[verifier::external_body]
        282 |         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:328: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:328: error: external_body - #[verifier::external_body]
        329 |         fn intersection(&self, other: &Self) -> (common: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:391: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:391: error: external_body - #[verifier::external_body]
        392 |         fn difference(&self, other: &Self) -> (remaining: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:401: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:401: error: external_body - #[verifier::external_body]
        402 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:439: error: assume() - proof { assume(found == self@.contains(x@)); }  // accept ho
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:439: error: assume() - proof { assume(found == self@.contains(x@)); }  // accept ho
        435 |         fn find(&self, x: &T) -> (found: B)
             ...
        437 |             let handle = self.inner.acquire_read();
        438 |             let found = handle.borrow().find(x);
        440 |             handle.release_read();
        441 |             found
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:466: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:466: error: external_body - #[verifier::external_body]
        467 |         fn iter(&self) -> (it: AVLTreeSetMtEphIter<T>)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:588: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:588: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
        589 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:589: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:589: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
        590 | 
        591 |     // 12. macros
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:295: error: fn_missing_requires_ensures - fn parallel_filter — exec fn should have requires and ensures
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:295: error: fn_missing_requires_ensures - fn parallel_filter — exec fn should have requires and ensures
        282 |         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
             ...
        293 |             };
        294 | 
        296 |                 let n = vals.len();
        297 |                 if n == 0 {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:354: error: fn_missing_requires_ensures - fn parallel_intersect — exec fn should have requires and ensures
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:354: error: fn_missing_requires_ensures - fn parallel_intersect — exec fn should have requires and ensures
        329 |         fn intersection(&self, other: &Self) -> (common: Self)
             ...
        352 |             };
        353 | 
        355 |                 let n = self_vals.len();
        356 |                 if n == 0 {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:512: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:512: info: accept()
    Holes: 10 total
       2 × assume()
       2 × unsafe impl
       6 × external_body
    Info: 1 total
->>>>>>> Stashed changes
 ❌ src/Chap41/AVLTreeSetMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:145: error: assume() - proof { assume(self.elements.spec_avltreeseqmtper_wf()); }
        143 |         fn size(&self) -> (count: usize)
@@ -1754,207 +1632,132 @@ Table of Contents:
       7 × external_body
    Info: 2 total
 ❌ src/Chap41/AVLTreeSetStEph.rs
-<<<<<<< Updated upstream
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:172: error: assume() - assume(r == self@.len());
-       168 |         fn size(&self) -> (count: usize)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:174: error: assume() - assume(r == self@.len());
+       170 |         fn size(&self) -> (count: usize)
             ...
-       170 |             let r = self.elements.length();
-       171 |             proof {
-       173 |                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
-       174 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:200: error: assume() - proof { assume(obeys_feq_full::<T>()); }
-       197 |         fn singleton(x: T) -> (tree: Self)
+       172 |             let r = self.elements.length();
+       173 |             proof {
+       175 |                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+       176 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:202: error: assume() - proof { assume(obeys_feq_full::<T>()); }
+       199 |         fn singleton(x: T) -> (tree: Self)
             ...
-       198 |         {
-       199 |             let ghost x_view = x@;
-       201 |             let mut v: Vec<T> = Vec::new();
-       202 |             v.push(x);
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:219: error: assume() - proof { assume(seq.spec_avltreeseqsteph_wf()); }
-       217 |         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
-       218 |         {
-       220 |             let mut constructed = Self::empty();
-       221 |             let n = seq.length();
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:254: error: assume() - proof { assume(f.requires((&*elem,))); }
-       239 |         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
+       200 |         {
+       201 |             let ghost x_view = x@;
+       203 |             let mut v: Vec<T> = Vec::new();
+       204 |             v.push(x);
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:221: error: assume() - proof { assume(seq.spec_avltreeseqsteph_wf()); }
+       219 |         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
+       220 |         {
+       222 |             let mut constructed = Self::empty();
+       223 |             let n = seq.length();
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:263: error: assume() - assume(filtered@.subset_of(self@));
+       241 |         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
             ...
-       252 |             {
-       253 |                 let elem = self.elements.nth(i);
-       255 |                 if f(elem) {
-       256 |                     filtered.insert(elem.clone());
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:261: error: assume() - assume(filtered@.subset_of(self@));
-       239 |         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
+       261 |             }
+       262 |             proof {
+       264 |             }
+       265 |             filtered
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:290: error: assume() - assume(common@ == self@.intersect(other@));
+       268 |         fn intersection(&self, other: &Self) -> (common: Self)
             ...
-       259 |             }
-       260 |             proof {
-       262 |             }
-       263 |             filtered
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:288: error: assume() - assume(common@ == self@.intersect(other@));
-       266 |         fn intersection(&self, other: &Self) -> (common: Self)
+       288 |             }
+       289 |             proof {
+       291 |             }
+       292 |             common
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:317: error: assume() - assume(remaining@ == self@.difference(other@));
+       295 |         fn difference(&self, other: &Self) -> (remaining: Self)
             ...
-       286 |             }
-       287 |             proof {
-       289 |             }
-       290 |             common
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:315: error: assume() - assume(remaining@ == self@.difference(other@));
-       293 |         fn difference(&self, other: &Self) -> (remaining: Self)
+       315 |             }
+       316 |             proof {
+       318 |             }
+       319 |             remaining
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:354: error: assume() - assume(combined@ == self@.union(other@));
+       322 |         fn union(&self, other: &Self) -> (combined: Self)
             ...
-       313 |             }
-       314 |             proof {
-       316 |             }
-       317 |             remaining
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:352: error: assume() - assume(combined@ == self@.union(other@));
-       320 |         fn union(&self, other: &Self) -> (combined: Self)
+       352 |             }
+       353 |             proof {
+       355 |             }
+       356 |             combined
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:362: error: assume() - assume(obeys_feq_full::<T>());
+       359 |         fn find(&self, x: &T) -> (found: B)
             ...
-       350 |             }
-       351 |             proof {
-       353 |             }
-       354 |             combined
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:360: error: assume() - assume(obeys_feq_full::<T>());
-       357 |         fn find(&self, x: &T) -> (found: B)
+       360 |         {
+       361 |             proof {
+       363 |             }
+       364 |             let n = self.elements.length();
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:388: error: assume() - proof { assume(!self@.contains(x@)); }
+       359 |         fn find(&self, x: &T) -> (found: B)
             ...
-       358 |         {
-       359 |             proof {
-       361 |             }
-       362 |             let n = self.elements.length();
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:386: error: assume() - proof { assume(!self@.contains(x@)); }
-       357 |         fn find(&self, x: &T) -> (found: B)
+       386 |                 }
+       387 |             }
+       389 |             false
+       390 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:411: error: assume() - proof { assume(result_vec@.len() < usize::MAX); assume(obeys
+       392 |         fn delete(&mut self, x: &T)
             ...
-       384 |                 }
-       385 |             }
-       387 |             false
-       388 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:409: error: assume() - proof { assume(result_vec@.len() < usize::MAX); assume(obeys
-       390 |         fn delete(&mut self, x: &T)
+       409 |                 i += 1;
+       410 |             }
+       412 |             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
+       413 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:411: error: assume() - proof { assume(result_vec@.len() < usize::MAX); assume(obeys
+       392 |         fn delete(&mut self, x: &T)
             ...
-       407 |                 i += 1;
-       408 |             }
-       410 |             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
-       411 |             proof {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:409: error: assume() - proof { assume(result_vec@.len() < usize::MAX); assume(obeys
-       390 |         fn delete(&mut self, x: &T)
+       409 |                 i += 1;
+       410 |             }
+       412 |             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
+       413 |             proof {
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:414: error: assume() - assume(self@ == old(self)@.remove(x@));
+       392 |         fn delete(&mut self, x: &T)
             ...
-       407 |                 i += 1;
-       408 |             }
-       410 |             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
-       411 |             proof {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:412: error: assume() - assume(self@ == old(self)@.remove(x@));
-       390 |         fn delete(&mut self, x: &T)
+       412 |             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
+       413 |             proof {
+       415 |                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+       416 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:464: error: assume() - proof { assume(new_vec@.len() < usize::MAX); assume(obeys_fe
+       419 |         fn insert(&mut self, x: T)
             ...
-       410 |             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
-       411 |             proof {
-       413 |                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
-       414 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:462: error: assume() - proof { assume(new_vec@.len() < usize::MAX); assume(obeys_fe
-       417 |         fn insert(&mut self, x: T)
+       462 |                     j += 1;
+       463 |                 }
+       465 |                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
+       466 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:464: error: assume() - proof { assume(new_vec@.len() < usize::MAX); assume(obeys_fe
+       419 |         fn insert(&mut self, x: T)
             ...
-       460 |                     j += 1;
-       461 |                 }
-       463 |                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
-       464 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:462: error: assume() - proof { assume(new_vec@.len() < usize::MAX); assume(obeys_fe
-       417 |         fn insert(&mut self, x: T)
+       462 |                     j += 1;
+       463 |                 }
+       465 |                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
+       466 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:468: error: assume() - assume(self@ == old(self)@.insert(x_view));
+       419 |         fn insert(&mut self, x: T)
             ...
-       460 |                     j += 1;
-       461 |                 }
-       463 |                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
-       464 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:466: error: assume() - assume(self@ == old(self)@.insert(x_view));
-       417 |         fn insert(&mut self, x: T)
+       466 |             }
+       467 |             proof {
+       469 |                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+       470 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:496: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       492 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       464 |             }
-       465 |             proof {
-       467 |                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
-       468 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:494: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       490 |         fn eq(&self, other: &Self) -> (equal: bool)
+       494 |         {
+       495 |             proof {
+       497 |                 assume(other.elements.spec_avltreeseqsteph_wf());
+       498 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:497: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       492 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       492 |         {
-       493 |             proof {
-       495 |                 assume(other.elements.spec_avltreeseqsteph_wf());
-       496 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:495: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       490 |         fn eq(&self, other: &Self) -> (equal: bool)
+       495 |             proof {
+       496 |                 assume(self.elements.spec_avltreeseqsteph_wf());
+       498 |             }
+       499 |             let equal = self.size() == other.size() && {
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:519: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       492 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       493 |             proof {
-       494 |                 assume(self.elements.spec_avltreeseqsteph_wf());
-       496 |             }
-       497 |             let equal = self.size() == other.size() && {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:517: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       490 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       515 |                 all_found
-       516 |             };
-       518 |             equal
-       519 |         }
-   Holes: 16 total
-      16 × assume()
-=======
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:265: error: assume() - assume(filtered@.subset_of(self@));
-       243 |         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
-            ...
-       263 |             }
-       264 |             proof {
-       266 |             }
-       267 |             filtered
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:292: error: assume() - assume(common@ == self@.intersect(other@));
-       270 |         fn intersection(&self, other: &Self) -> (common: Self)
-            ...
-       290 |             }
-       291 |             proof {
-       293 |             }
-       294 |             common
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:319: error: assume() - assume(remaining@ == self@.difference(other@));
-       297 |         fn difference(&self, other: &Self) -> (remaining: Self)
-            ...
-       317 |             }
-       318 |             proof {
-       320 |             }
-       321 |             remaining
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:356: error: assume() - assume(combined@ == self@.union(other@));
-       324 |         fn union(&self, other: &Self) -> (combined: Self)
-            ...
-       354 |             }
-       355 |             proof {
-       357 |             }
-       358 |             combined
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:390: error: assume() - proof { assume(!self@.contains(x@)); }
-       361 |         fn find(&self, x: &T) -> (found: B)
-            ...
-       388 |                 }
-       389 |             }
-       391 |             false
-       392 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:415: error: assume() - assume(self@ == old(self)@.remove(x@));
-       394 |         fn delete(&mut self, x: &T)
-            ...
-       413 |             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
-       414 |             proof {
-       416 |                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
-       417 |             }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:469: error: assume() - assume(self@ == old(self)@.insert(x_view));
-       420 |         fn insert(&mut self, x: T)
-            ...
-       467 |             }
-       468 |             proof {
-       470 |                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
-       471 |             }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:175: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:187: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:204: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:223: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:364: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:412: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:412: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:465: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:465: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:497: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:498: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:520: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetStEph.rs:530: info: accept()
-   Holes: 7 total
-      7 × assume()
-   Info: 13 total
->>>>>>> Stashed changes
+       517 |                 all_found
+       518 |             };
+       520 |             equal
+       521 |         }
+   Holes: 15 total
+      15 × assume()
 ❌ src/Chap41/AVLTreeSetStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:158: error: assume() - assume(r == self@.len());
        154 |         fn size(&self) -> (count: usize)
@@ -2552,79 +2355,41 @@ Table of Contents:
       36 × assume()
       3 × external_body
 ❌ src/Chap43/OrderedSetStEph.rs
-<<<<<<< Updated upstream
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:278: error: assume() - assume(result@ =~= eph_seq@);  // accept hole: clone/view br
-       258 |         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
-            ...
-       276 |             proof {
-       277 |                 // T::clone preserves View (StT bound); from_vec maps values through View.
-       279 |             }
-       280 |             result
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:283: error: external_body - #[verifier::external_body]
-       284 |         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:298: error: external_body - #[verifier::external_body]
-       299 |         fn first(&self) -> (first: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:313: error: external_body - #[verifier::external_body]
-       314 |         fn last(&self) -> (last: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:329: error: external_body - #[verifier::external_body]
-       330 |         fn previous(&self, k: &T) -> (predecessor: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:347: error: external_body - #[verifier::external_body]
-       348 |         fn next(&self, k: &T) -> (successor: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:365: error: external_body - #[verifier::external_body]
-       366 |         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:408: error: external_body - #[verifier::external_body]
-       409 |         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:431: error: external_body - #[verifier::external_body]
-       432 |         fn rank(&self, k: &T) -> (rank: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:452: error: external_body - #[verifier::external_body]
-       453 |         fn select(&self, i: usize) -> (selected: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:467: error: external_body - #[verifier::external_body]
-       468 |         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:510: error: external_body - #[verifier::external_body]
-       511 |         pub fn iter(&self) -> (it: OrderedSetStEphIter<'_, T>)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:541: error: external_body - #[verifier::external_body]
-       542 |         fn next(&mut self) -> (next: Option<&'a T>)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:630: error: external_body - #[verifier::external_body]
-       631 |         fn into_iter(self) -> (it: Self::IntoIter)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:654: error: external_body - #[verifier::external_body]
-       655 |     pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)
-=======
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:280: error: assume() - assume(result@ =~= eph_seq@);  // accept hole: clone/view br
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:280: error: assume() - assume(result@ =~= eph_seq@);  // accept hole: clone/view br
        260 |         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
             ...
        278 |             proof {
        279 |                 // T::clone preserves View (StT bound); from_vec maps values through View.
        281 |             }
        282 |             result
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:285: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:285: error: external_body - #[verifier::external_body]
        286 |         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:300: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:300: error: external_body - #[verifier::external_body]
        301 |         fn first(&self) -> (first: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:315: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:315: error: external_body - #[verifier::external_body]
        316 |         fn last(&self) -> (last: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:331: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:331: error: external_body - #[verifier::external_body]
        332 |         fn previous(&self, k: &T) -> (predecessor: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:349: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:349: error: external_body - #[verifier::external_body]
        350 |         fn next(&self, k: &T) -> (successor: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:367: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:367: error: external_body - #[verifier::external_body]
        368 |         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:410: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:410: error: external_body - #[verifier::external_body]
        411 |         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:433: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:433: error: external_body - #[verifier::external_body]
        434 |         fn rank(&self, k: &T) -> (rank: usize)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:454: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:454: error: external_body - #[verifier::external_body]
        455 |         fn select(&self, i: usize) -> (selected: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:469: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:469: error: external_body - #[verifier::external_body]
        470 |         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:512: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:512: error: external_body - #[verifier::external_body]
        513 |         pub fn iter(&self) -> (it: OrderedSetStEphIter<'_, T>)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:543: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:543: error: external_body - #[verifier::external_body]
        544 |         fn next(&mut self) -> (next: Option<&'a T>)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:632: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:632: error: external_body - #[verifier::external_body]
        633 |         fn into_iter(self) -> (it: Self::IntoIter)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:656: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:656: error: external_body - #[verifier::external_body]
        657 |     pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)
->>>>>>> Stashed changes
    Holes: 15 total
       1 × assume()
       14 × external_body
@@ -2886,9 +2651,9 @@ Table of Contents:
 ✓ src/Chap44/Example44_1.rs
    1 clean proof function
 ❌ src/Chap45/BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:555: error: external - #[verifier::external]
-       556 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:606: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:557: error: external - #[verifier::external]
+       558 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:608: info: accept()
    Holes: 1 total
       1 × external
    Info: 1 total
@@ -3160,39 +2925,13 @@ Table of Contents:
 ✓ src/Chap52/EdgeSetGraphStEph.rs
 ✓ src/Chap52/EdgeSetGraphStPer.rs
 ❌ src/Chap53/GraphSearchMtPer.rs
-<<<<<<< Updated upstream
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:109: error: external_body - #[verifier::external_body]
-       110 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:98: error: fn_missing_requires - fn graph_search — exec fn should have requires
-        72 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B)) {
-            ...
-        96 |     }
-        97 | 
-        99 |     where
-       100 |         G: Fn(&V) -> AVLTreeSetMtPer<V>,
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:141: error: fn_missing_requires - fn graph_search_multi — exec fn should have requires
-       110 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
-            ...
-       139 | 
-       140 |     /// Generic graph search starting from multiple sources (Exercise 53.3).
-       142 |         graph: &G,
-       143 |         sources: AVLTreeSetMtPer<V>,
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:172: error: fn_missing_requires - fn reachable — exec fn should have requires
-       164 |         fn reachable<G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetMtPer<V>)
-            ...
-       170 |     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
-       171 |     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
-       173 |     where
-       174 |         G: Fn(&V) -> AVLTreeSetMtPer<V>,
-=======
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:138: error: assume() - proof { assume(frontier.elements.spec_avltreeseqmtper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:138: error: assume() - proof { assume(frontier.elements.spec_avltreeseqmtper_wf());
        114 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
             ...
        136 | 
        137 |             let mut new_neighbors = AVLTreeSetMtPer::empty();
        139 |             let nlen = frontier.elements.length();
        140 |             let mut i: usize = 0;
->>>>>>> Stashed changes
    Holes: 1 total
       1 × assume()
 ✓ src/Chap53/GraphSearchStEph.rs
@@ -3821,13 +3560,8 @@ src/ParaPairs.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-<<<<<<< Updated upstream
    208 clean (no holes, no errors; 80%)
    49 holed (holes or errors, 19%)
-=======
-   212 clean (no holes, no errors; 82%)
-   45 holed (holes or errors, 17%)
->>>>>>> Stashed changes
    257 total
 
 Proof Functions:
@@ -3836,29 +3570,17 @@ Proof Functions:
    317 total
 
 Function Specs:
-<<<<<<< Updated upstream
-   4978 exec fns with complete spec (requires+ensures) (70%)
-   92 exec fns missing spec (1%)
+   4981 exec fns with complete spec (requires+ensures) (70%)
+   89 exec fns missing spec (1%)
    2032 proof/spec fns clean (28%)
-=======
-   5051 exec fns with complete spec (requires+ensures) (71%)
-   21 exec fns missing spec (0%)
-   2026 proof/spec fns clean (28%)
->>>>>>> Stashed changes
    0 proof/spec fns with holes (0%)
    7102 total fns
 
 
-<<<<<<< Updated upstream
-Holes Found: 305 total
-   133 × assume() (43%)
-   168 × external_body (55%)
-=======
-Holes Found: 278 total
-   84 × assume() (30%)
+Holes Found: 295 total
+   124 × assume() (42%)
    2 × unsafe impl (0%)
-   189 × external_body (67%)
->>>>>>> Stashed changes
+   166 × external_body (56%)
    2 × external (0%)
    1 × trivial spec*wf { true } (0%)
 
@@ -3873,105 +3595,56 @@ Holes Found: 278 total
 =================================================================
 
    1  Chap43  (145 holes, 11 files)
-<<<<<<< Updated upstream
    2  Chap37  (80 holes, 19 files)
-   3  Chap41  (68 holes, 7 files)
+   3  Chap41  (58 holes, 7 files)
    4  Chap38  (36 holes, 2 files)
    5  Chap39  (26 holes, 4 files)
    6  Chap47  (18 holes, 9 files)
    7  Chap42  (16 holes, 4 files)
    8  Chap45  (4 holes, 7 files)
-   9  Chap53  (4 holes, 5 files)
-   10  Chap66  (0 holes, 2 files)
-   11  Chap62  (0 holes, 4 files)
-   12  Chap55  (0 holes, 8 files)
-   13  Chap03  (0 holes, 1 files)
-   14  Chap57  (0 holes, 3 files)
-   15  Chap06  (0 holes, 20 files)
-   16  Chap63  (0 holes, 2 files)
-   17  Chap54  (0 holes, 4 files)
-   18  Chap58  (0 holes, 2 files)
-   19  Chap12  (0 holes, 3 files)
-   20  Concurrency  (0 holes, 1 files)
-   21  Chap30  (0 holes, 1 files)
-   22  Chap11  (0 holes, 5 files)
-   23  Chap44  (0 holes, 2 files)
-   24  Chap52  (0 holes, 14 files)
-   25  Chap21  (0 holes, 12 files)
-   26  Chap28  (0 holes, 11 files)
-   27  Chap59  (0 holes, 4 files)
-   28  Chap18  (0 holes, 7 files)
-   29  Chap02  (0 holes, 2 files)
-   30  Chap56  (0 holes, 12 files)
-   31  Chap49  (0 holes, 8 files)
-   32  Chap36  (0 holes, 3 files)
-   33  Chap27  (0 holes, 4 files)
-   34  Chap64  (0 holes, 3 files)
-   35  Chap65  (0 holes, 3 files)
-   36  Chap40  (0 holes, 3 files)
-   37  ParaPairs  (0 holes, 1 files)
-   38  Chap26  (0 holes, 8 files)
-   39  Chap23  (0 holes, 2 files)
-   40  Chap17  (0 holes, 1 files)
-   41  Chap51  (0 holes, 8 files)
-   42  Chap50  (0 holes, 8 files)
-   43  Chap35  (0 holes, 4 files)
-   44  Chap19  (0 holes, 4 files)
-   45  Chap61  (0 holes, 4 files)
-   46  Chap05  (0 holes, 5 files)
-=======
-   2  Chap41  (46 holes, 7 files)
-   3  Chap47  (28 holes, 9 files)
-   4  Chap37  (20 holes, 19 files)
-   5  Chap38  (18 holes, 2 files)
-   6  Chap42  (18 holes, 4 files)
-   7  Chap39  (15 holes, 4 files)
-   8  Chap45  (5 holes, 7 files)
-   9  Chap50  (2 holes, 8 files)
-   10  Chap53  (1 holes, 5 files)
-   11  Chap52  (1 holes, 14 files)
-   12  Chap61  (0 holes, 4 files)
-   13  Chap35  (0 holes, 4 files)
-   14  Concurrency  (0 holes, 1 files)
-   15  Chap49  (0 holes, 8 files)
-   16  Chap27  (0 holes, 4 files)
-   17  Chap58  (0 holes, 2 files)
-   18  Chap26  (0 holes, 8 files)
-   19  Chap12  (0 holes, 3 files)
-   20  Chap28  (0 holes, 11 files)
-   21  Chap05  (0 holes, 5 files)
-   22  Chap55  (0 holes, 8 files)
-   23  Chap57  (0 holes, 3 files)
-   24  Chap65  (0 holes, 3 files)
-   25  Chap59  (0 holes, 4 files)
-   26  Chap17  (0 holes, 1 files)
-   27  Chap51  (0 holes, 8 files)
-   28  Chap44  (0 holes, 2 files)
-   29  Chap21  (0 holes, 12 files)
-   30  Chap30  (0 holes, 1 files)
-   31  Chap56  (0 holes, 12 files)
-   32  Chap19  (0 holes, 4 files)
-   33  Chap03  (0 holes, 1 files)
+   9  Chap53  (1 holes, 5 files)
+   10  Concurrency  (0 holes, 1 files)
+   11  Chap12  (0 holes, 3 files)
+   12  Chap28  (0 holes, 11 files)
+   13  Chap17  (0 holes, 1 files)
+   14  Chap59  (0 holes, 4 files)
+   15  Chap52  (0 holes, 14 files)
+   16  Chap51  (0 holes, 8 files)
+   17  Chap05  (0 holes, 5 files)
+   18  Chap44  (0 holes, 2 files)
+   19  Chap36  (0 holes, 3 files)
+   20  Chap54  (0 holes, 4 files)
+   21  Chap23  (0 holes, 2 files)
+   22  Chap21  (0 holes, 12 files)
+   23  Chap03  (0 holes, 1 files)
+   24  Chap58  (0 holes, 2 files)
+   25  Chap18  (0 holes, 7 files)
+   26  Chap19  (0 holes, 4 files)
+   27  Chap61  (0 holes, 4 files)
+   28  Chap57  (0 holes, 3 files)
+   29  Chap65  (0 holes, 3 files)
+   30  Chap62  (0 holes, 4 files)
+   31  Chap63  (0 holes, 2 files)
+   32  ParaPairs  (0 holes, 1 files)
+   33  Chap50  (0 holes, 8 files)
    34  Chap02  (0 holes, 2 files)
-   35  Chap06  (0 holes, 20 files)
-   36  Chap40  (0 holes, 3 files)
-   37  Chap54  (0 holes, 4 files)
-   38  ParaPairs  (0 holes, 1 files)
-   39  Chap36  (0 holes, 3 files)
-   40  Chap23  (0 holes, 2 files)
-   41  Chap66  (0 holes, 2 files)
-   42  Chap63  (0 holes, 2 files)
-   43  Chap64  (0 holes, 3 files)
-   44  Chap18  (0 holes, 7 files)
-   45  Chap62  (0 holes, 4 files)
-   46  Chap11  (0 holes, 5 files)
->>>>>>> Stashed changes
+   35  Chap55  (0 holes, 8 files)
+   36  Chap56  (0 holes, 12 files)
+   37  Chap26  (0 holes, 8 files)
+   38  Chap64  (0 holes, 3 files)
+   39  Chap06  (0 holes, 20 files)
+   40  Chap40  (0 holes, 3 files)
+   41  Chap30  (0 holes, 1 files)
+   42  Chap11  (0 holes, 5 files)
+   43  Chap66  (0 holes, 2 files)
+   44  Chap35  (0 holes, 4 files)
+   45  Chap49  (0 holes, 8 files)
+   46  Chap27  (0 holes, 4 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
-<<<<<<< Updated upstream
    1  src/Chap37/BSTRBMtEph.rs  (20 holes)
    2  src/Chap38/BSTParaStEph.rs  (19 holes)
    3  src/Chap38/BSTParaMtEph.rs  (17 holes)
@@ -3982,30 +3655,14 @@ Holes Found: 278 total
    8  src/Chap47/ParaHashTableStEph.rs  (7 holes)
    9  src/Chap37/AVLTreeSeqMtPer.rs  (6 holes)
    10  src/Chap37/AVLTreeSeqStPer.rs  (6 holes)
-   11  src/Chap37/AVLTreeSeqStEph.rs  (3 holes)
-   12  src/Chap37/BSTSetAVLMtEph.rs  (3 holes)
-   13  src/Chap37/BSTSetPlainMtEph.rs  (3 holes)
+   11  src/Chap41/ArraySetStEph.rs  (3 holes)
+   12  src/Chap37/BSTSetPlainMtEph.rs  (3 holes)
+   13  src/Chap37/BSTSetAVLMtEph.rs  (3 holes)
    14  src/Chap37/BSTSetBBAlphaMtEph.rs  (3 holes)
-   15  src/Chap41/ArraySetStEph.rs  (3 holes)
+   15  src/Chap37/AVLTreeSeqStEph.rs  (3 holes)
    16  src/Chap37/AVLTreeSeq.rs  (2 holes)
-   17  src/Chap45/BinaryHeapPQ.rs  (1 holes)
-   18  src/Chap41/ArraySetEnumMtEph.rs  (1 holes)
-=======
-   1  src/Chap38/BSTParaMtEph.rs  (17 holes)
-   2  src/Chap39/BSTParaTreapMtEph.rs  (15 holes)
-   3  src/Chap47/ParaHashTableStEph.rs  (8 holes)
-   4  src/Chap37/AVLTreeSeqStPer.rs  (6 holes)
-   5  src/Chap37/AVLTreeSeqStEph.rs  (5 holes)
-   6  src/Chap37/AVLTreeSeqMtPer.rs  (5 holes)
-   7  src/Chap41/ArraySetStEph.rs  (3 holes)
-   8  src/Chap37/AVLTreeSeq.rs  (2 holes)
-   9  src/Chap37/BSTSplayStEph.rs  (2 holes)
-   10  src/Chap38/BSTParaStEph.rs  (1 holes)
-   11  src/Chap45/BinaryHeapPQ.rs  (1 holes)
-   12  src/Chap41/ArraySetEnumMtEph.rs  (1 holes)
-   13  src/Chap50/OptBinSearchTreeMtEph.rs  (1 holes)
-   14  src/Chap50/OptBinSearchTreeMtPer.rs  (1 holes)
->>>>>>> Stashed changes
+   17  src/Chap41/ArraySetEnumMtEph.rs  (1 holes)
+   18  src/Chap45/BinaryHeapPQ.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -4029,11 +3686,7 @@ Holes Found: 278 total
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-<<<<<<< Updated upstream
-Chapter Status — 46 chapters, 37 clean, 9 holed, 305 holes (global), 257 modules
-=======
-Chapter Status — 46 chapters, 35 clean, 11 holed, 278 holes (global), 257 modules
->>>>>>> Stashed changes
+Chapter Status — 46 chapters, 37 clean, 9 holed, 295 holes (global), 257 modules
 
 CLEAN CHAPTERS (37)
   Chapter        Files
@@ -4076,35 +3729,18 @@ CLEAN CHAPTERS (37)
   Concurrency        1
   ParaPairs          1
 
-<<<<<<< Updated upstream
-HOLED CHAPTERS (9) — 397 holes
+HOLED CHAPTERS (9) — 384 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap37            80    19  internal  Chap37::BSTRBMtEph, Chap37::BSTSplayMtEph
+  Chap37            80    19  internal  Chap37::BSTSplayMtEph, Chap37::BSTRBMtEph
   Chap38            36     2  YES       
   Chap39            26     4  internal  Chap39::BSTParaTreapMtEph
-  Chap41            68     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqStPer, Chap37::AVLTreeSeqMtPer
+  Chap41            58     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStPer
   Chap42            16     4  NO        Chap41::ArraySetStEph
-  Chap43           145    11  NO        Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStPer, Chap42::TableStEph, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetStPer, Chap42::TableMtEph
+  Chap43           145    11  NO        Chap37::AVLTreeSeqStPer, Chap41::AVLTreeSetStPer, Chap41::ArraySetStEph, Chap42::TableStEph, Chap42::TableStPer, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph, Chap42::TableMtEph
   Chap45             4     7  NO        Chap37::AVLTreeSeqStPer
-  Chap47            18     9  internal  Chap47::FlatHashTable, Chap47::ParaHashTableStEph, Chap47::ChainedHashTable
-  Chap53             4     5  NO        Chap41::AVLTreeSetStPer, Chap41::AVLTreeSetMtPer, Chap41::AVLTreeSetStEph
-=======
-HOLED CHAPTERS (11) — 299 holes
-  Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
-  -------------- ----- -----  --------  -----------------------------------
-  Chap37            20    19  YES       
-  Chap38            18     2  YES       
-  Chap39            15     4  internal  Chap39::BSTParaTreapMtEph
-  Chap41            46     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStPer
-  Chap42            18     4  NO        Chap41::ArraySetStEph
-  Chap43           145    11  NO        Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph, Chap42::TableStEph, Chap41::AVLTreeSetStPer, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph, Chap42::TableStPer
-  Chap45             5     7  NO        Chap37::AVLTreeSeqStPer
-  Chap47            28     9  internal  Chap47::FlatHashTable, Chap47::ParaHashTableStEph, Chap47::ChainedHashTable
-  Chap50             2     8  YES       
-  Chap52             1    14  NO        Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetStPer, Chap41::ArraySetStEph, Chap43::OrderedTableStPer, Chap43::OrderedTableStEph, Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer
-  Chap53             1     5  NO        Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetMtPer, Chap41::AVLTreeSetStPer
->>>>>>> Stashed changes
+  Chap47            18     9  internal  Chap47::ParaHashTableStEph, Chap47::FlatHashTable, Chap47::ChainedHashTable
+  Chap53             1     5  NO        Chap41::AVLTreeSetStPer, Chap41::AVLTreeSetMtPer, Chap41::AVLTreeSetStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
@@ -4124,14 +3760,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-<<<<<<< Updated upstream
-Started:   2026-03-13 18:25:11 -07:00
-Ended:     2026-03-13 18:25:12 -07:00
-Duration:  1548ms
-=======
-Started:   2026-03-13 18:27:38 -07:00
-Ended:     2026-03-13 18:27:39 -07:00
-Duration:  1215ms
->>>>>>> Stashed changes
+Started:   2026-03-13 18:37:53 -07:00
+Ended:     2026-03-13 18:37:55 -07:00
+Duration:  1342ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

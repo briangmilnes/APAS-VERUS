@@ -21,39 +21,13 @@ Table of Contents:
 =================================================================
 
 ❌ GraphSearchMtPer.rs
-<<<<<<< Updated upstream
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:109: error: external_body - #[verifier::external_body]
-       110 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:98: error: fn_missing_requires - fn graph_search — exec fn should have requires
-        72 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B)) {
-            ...
-        96 |     }
-        97 | 
-        99 |     where
-       100 |         G: Fn(&V) -> AVLTreeSetMtPer<V>,
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:141: error: fn_missing_requires - fn graph_search_multi — exec fn should have requires
-       110 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
-            ...
-       139 | 
-       140 |     /// Generic graph search starting from multiple sources (Exercise 53.3).
-       142 |         graph: &G,
-       143 |         sources: AVLTreeSetMtPer<V>,
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:172: error: fn_missing_requires - fn reachable — exec fn should have requires
-       164 |         fn reachable<G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetMtPer<V>)
-            ...
-       170 |     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
-       171 |     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
-       173 |     where
-       174 |         G: Fn(&V) -> AVLTreeSetMtPer<V>,
-=======
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:138: error: assume() - proof { assume(frontier.elements.spec_avltreeseqmtper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:138: error: assume() - proof { assume(frontier.elements.spec_avltreeseqmtper_wf());
        114 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
             ...
        136 | 
        137 |             let mut new_neighbors = AVLTreeSetMtPer::empty();
        139 |             let nlen = frontier.elements.length();
        140 |             let mut i: usize = 0;
->>>>>>> Stashed changes
    Holes: 1 total
       1 × assume()
 ✓ GraphSearchStEph.rs
@@ -114,15 +88,9 @@ Holes Found: 1 total
 5. Started/Ended/Duration
 =================================================================
 
-<<<<<<< Updated upstream
-Started:   2026-03-13 18:25:10 -07:00
-Ended:     2026-03-13 18:25:10 -07:00
-Duration:  15ms
-=======
-Started:   2026-03-13 18:27:38 -07:00
-Ended:     2026-03-13 18:27:38 -07:00
-Duration:  14ms
->>>>>>> Stashed changes
+Started:   2026-03-13 18:37:53 -07:00
+Ended:     2026-03-13 18:37:53 -07:00
+Duration:  16ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log

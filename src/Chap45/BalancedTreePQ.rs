@@ -24,7 +24,9 @@ pub mod BalancedTreePQ {
     use crate::Types::Types::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::vstdplus::accept::accept;
-    use crate::vstdplus::feq::feq::{feq, obeys_feq_full};
+    use crate::vstdplus::feq::feq::feq;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {

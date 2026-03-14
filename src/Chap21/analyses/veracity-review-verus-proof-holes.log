@@ -126,15 +126,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-<<<<<<< Updated upstream
-Started:   2026-03-13 18:25:09 -07:00
-Ended:     2026-03-13 18:25:09 -07:00
-Duration:  22ms
-=======
-Started:   2026-03-13 18:27:37 -07:00
-Ended:     2026-03-13 18:27:37 -07:00
-Duration:  13ms
->>>>>>> Stashed changes
+Started:   2026-03-13 18:37:52 -07:00
+Ended:     2026-03-13 18:37:52 -07:00
+Duration:  14ms
 
 Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap21/analyses/veracity-review-verus-proof-holes.log

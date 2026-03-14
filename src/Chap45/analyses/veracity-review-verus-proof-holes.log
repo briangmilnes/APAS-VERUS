@@ -21,9 +21,9 @@ Table of Contents:
 =================================================================
 
 ❌ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:555: error: external - #[verifier::external]
-       556 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:606: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:557: error: external - #[verifier::external]
+       558 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:608: info: accept()
    Holes: 1 total
       1 × external
    Info: 1 total
@@ -145,18 +145,11 @@ Holes Found: 3 total
 5. Started/Ended/Duration
 =================================================================
 
-<<<<<<< Updated upstream
-Started:   2026-03-13 18:25:10 -07:00
-Ended:     2026-03-13 18:25:10 -07:00
-Duration:  70ms
+Started:   2026-03-13 18:37:53 -07:00
+Ended:     2026-03-13 18:37:53 -07:00
+Duration:  55ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
-on:  70ms
-=======
-Started:   2026-03-13 18:27:37 -07:00
-Ended:     2026-03-13 18:27:37 -07:00
-Duration:  54ms
->>>>>>> Stashed changes
+on:  55ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
