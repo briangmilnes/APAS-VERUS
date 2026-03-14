@@ -23,96 +23,93 @@ Table of Contents:
 ✓ Example42_1.rs
    1 clean proof function
 ❌ TableMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:358: error: assume() - proof { assume(obeys_feq_clone::<Pair<K, V>>()); }  // accep
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:358: error: assume() - proof { assume(obeys_feq_clone::<Pair<K, V>>()); }  // accep
        356 |         fn singleton(key: K, value: V) -> (tree: Self)
        357 |         {
        359 |             let entries = ArraySeqMtEphS::singleton(Pair(key, value));
        360 |             let tree = TableMtEph { entries };
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:374: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:374: error: external_body - #[verifier::external_body]
        375 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:408: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:408: error: external_body - #[verifier::external_body]
        409 |         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:467: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:467: error: external_body - #[verifier::external_body]
        468 |         fn map<F: Fn(&V) -> V + Send + Sync + 'static>(&mut self, f: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:521: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:521: error: external_body - #[verifier::external_body]
        522 |         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&mut self, f: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:573: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:573: error: external_body - #[verifier::external_body]
        574 |         fn intersection<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:601: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:601: error: external_body - #[verifier::external_body]
        602 |         fn union<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:645: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:645: error: external_body - #[verifier::external_body]
        646 |         fn difference(&mut self, other: &Self)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:709: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:709: error: external_body - #[verifier::external_body]
        710 |         fn delete(&mut self, key: &K)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:762: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:762: error: external_body - #[verifier::external_body]
        763 |         fn insert<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, key: K, value: V, combine: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:841: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:841: error: external_body - #[verifier::external_body]
        842 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:893: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:893: error: external_body - #[verifier::external_body]
        894 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:948: error: assume() - assume(obeys_feq_clone::<Pair<K, V>>());
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:948: error: assume() - assume(obeys_feq_clone::<Pair<K, V>>());
        945 |         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>) {
             ...
        946 |             let entries = self.entries.clone();
        947 |             proof {
        949 |                 lemma_seq_map_cloned_view_eq(
        950 |                     self.entries.seq@,
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:959: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:959: warning: requires_true - requires true — vacuous precondition
        957 | 
        958 |     pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (constructed: TableMtEph<K, V>)
        960 |         ensures constructed@.dom().finite()
        961 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:987: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:999: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:987: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:999: info: accept()
    Holes: 13 total
       2 × assume()
       11 × external_body
    Info: 2 total
    Proof functions: 6 total (6 clean, 0 holed)
 ❌ TableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1652: error: assume() - assume(obeys_feq_clone::<Pair<K, V>>());  // accept hole: Cl
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1652: error: assume() - assume(obeys_feq_clone::<Pair<K, V>>());  // accept hole: Cl
       1649 |         fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>) {
             ...
       1650 |             let entries = self.entries.clone();
       1651 |             proof {
       1653 |                 lemma_seq_map_cloned_view_eq(
       1654 |                     self.entries.seq@,
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1665: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1665: warning: requires_true - requires true — vacuous precondition
       1662 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
             ...
       1663 |         entries: Vec<Pair<K, V>>,
       1664 |     ) -> (cloned: TableStEph<K, V>)
       1666 |         ensures cloned@.dom().finite()
       1667 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1699: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:1699: info: accept()
    Holes: 1 total
       1 × assume()
    Info: 1 total
    Proof functions: 8 total (8 clean, 0 holed)
 ❌ TableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1727: error: assume() - assume(obeys_feq_clone::<Pair<K, V>>());  // accept hole: Cl
-      1723 |         fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1791: error: assume() - assume(obeys_feq_clone::<Pair<K, V>>());  // accept hole: Cl
+      1787 |         fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
             ...
-      1725 |             let collected = self.entries.clone();
-      1726 |             proof {
-      1728 |                 lemma_seq_map_cloned_view_eq(
-      1729 |                     self.entries.seq@,
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1755: error: external_body - #[verifier::external_body]
-      1756 |     pub fn collect_by_key<K: StT + Ord + Eq, V: StT>(
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1740: warning: requires_true - requires true — vacuous precondition
-      1737 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
+      1789 |             let collected = self.entries.clone();
+      1790 |             proof {
+      1792 |                 lemma_seq_map_cloned_view_eq(
+      1793 |                     self.entries.seq@,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1804: warning: requires_true - requires true — vacuous precondition
+      1801 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
             ...
-      1738 |         entries: Vec<Pair<K, V>>,
-      1739 |     ) -> (cloned: TableStPer<K, V>)
-      1741 |         ensures cloned@.dom().finite()
-      1742 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1800: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1811: info: accept()
-   Holes: 2 total
+      1802 |         entries: Vec<Pair<K, V>>,
+      1803 |     ) -> (cloned: TableStPer<K, V>)
+      1805 |         ensures cloned@.dom().finite()
+      1806 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1977: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:1988: info: accept()
+   Holes: 1 total
       1 × assume()
-      1 × external_body
    Info: 2 total
-   Proof functions: 8 total (8 clean, 0 holed)
+   Proof functions: 12 total (12 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -146,33 +143,28 @@ Modules:
    4 total
 
 Proof Functions:
-   23 clean (100%)
+   27 clean (100%)
    0 holed (0%)
-   23 total
+   27 total
 
 Function Specs:
-   107 exec fns with complete spec (requires+ensures) (69%)
+   107 exec fns with complete spec (requires+ensures) (67%)
    0 exec fns missing spec (0%)
-   48 proof/spec fns clean (30%)
+   52 proof/spec fns clean (32%)
    0 proof/spec fns with holes (0%)
-   155 total fns
+   159 total fns
 
 
-Holes Found: 16 total
-   4 × assume() (25%)
-   12 × external_body (75%)
+Holes Found: 15 total
+   4 × assume() (26%)
+   11 × external_body (73%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 18:37:53 -07:00
-Ended:     2026-03-13 18:37:53 -07:00
-Duration:  60ms
-
-Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
-18:37:53 -07:00
-Ended:     2026-03-13 18:37:53 -07:00
-Duration:  60ms
+Started:   2026-03-13 20:45:17 -07:00
+Ended:     2026-03-13 20:45:17 -07:00
+Duration:  48ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
