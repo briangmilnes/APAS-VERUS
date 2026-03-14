@@ -16,8 +16,8 @@ Close Chap37 (6 real holes), close Chap45 (4 holes), close Chap50 (2 fn_missing_
 **Chap45** (4 real holes):
 - `BinaryHeapPQ.rs` — 1 assume (sorted after extract_all_sorted)
 - `BalancedTreePQ.rs` — 1 external_body (contains)
-- `Example45_2.rs` — 1 external (external impl block)
-- `HeapsortExample.rs` — 1 fn_missing_ensures (is_vec_sorted_exec)
+- `Example45_2.rs` — SKIP (Example files are demo code, not worth proving)
+- `HeapsortExample.rs` — SKIP (Example file)
 
 **Chap50** (0 real holes, 2 fn_missing_ensures):
 - `OptBinSearchTreeMtEph.rs` — add ensures to obst_rec
@@ -54,10 +54,7 @@ For #5 and #6: if truly thread boundary, that's acceptable. Document what you tr
 - **BalancedTreePQ contains**: This is an AVL tree search returning whether element exists.
   The tree is sorted. Write the contains body as a tree traversal with `decreases`.
 
-- **Example45_2 external impl**: Look at what's in the impl. If it's just Display/Demo
-  code with String operations, it stays external. If it has algorithmic logic, prove it.
-
-- **HeapsortExample fn_missing_ensures**: Add `ensures result == ...` to is_vec_sorted_exec.
+- **Example45_2 and HeapsortExample**: SKIP. Example files are demo code, not proof targets.
 
 ### Chap50
 

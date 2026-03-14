@@ -13,7 +13,7 @@ Reduce Chap41 (64 holes — largest actionable chapter). Close Chap53 (1 hole).
 - `AVLTreeSetStPer.rs` — 10 holes
 - `AVLTreeSetMtEph.rs` — 19 holes
 - `AVLTreeSetMtPer.rs` — 12 holes
-- `Example41_3.rs` — 3 holes
+- `Example41_3.rs` — SKIP (Example files are demo code, not worth proving)
 
 **Chap53** (1 hole):
 - `GraphSearchMtPer.rs` — 1 external_body
@@ -26,8 +26,7 @@ Reduce Chap41 (64 holes — largest actionable chapter). Close Chap53 (1 hole).
 4. **AVLTreeSetStPer.rs** — 10 holes.
 5. **AVLTreeSetMtEph.rs** — 19 holes. You have context from Round 9.
 6. **AVLTreeSetMtPer.rs** — 12 holes. You barely touched this in Round 9.
-7. **Example41_3.rs** — 3 holes.
-8. **ArraySetEnumMtEph.rs** — 1 hole.
+7. **ArraySetEnumMtEph.rs** — 1 hole.
 
 ## Specific Guidance
 
@@ -84,11 +83,6 @@ includes enough info, spec_set_view can read from it.
 You got -1 in Round 9. This needs more work. Same Arc<RwLock> pattern as MtEph.
 The Persistent variant uses Arc (no RwLock) for structural sharing. Check if the
 patterns are different from MtEph.
-
-### Example41_3.rs (3 holes)
-
-Textbook example. Check what's in it — if it's just demo/exercise code, the holes
-may be acceptable external_body on non-algorithmic logic.
 
 ## Techniques from Round 9
 

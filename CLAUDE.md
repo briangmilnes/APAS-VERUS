@@ -26,6 +26,11 @@ is to get code to **verify (prove)** with Verus.
   chapter, file, or proof obligation as "permanently" unverifiable. If a proof is hard,
   say it is hard — not that it is impossible. Every `assume`, every `external_body` on
   algorithmic logic, every weak spec is a target, not a fixture.
+- **Skip Example files unless explicitly assigned.** Files named `Example*.rs` (e.g.,
+  `Example41_3.rs`, `Example45_2.rs`) are textbook demo/exercise code, not algorithmic
+  implementations. Do not spend time proving holes in Example files unless the user or
+  your prompt explicitly directs you to. Do not include them in hole counts or proof
+  targets. The proof effort belongs on the real algorithm files.
 
 ### Abbreviations
 

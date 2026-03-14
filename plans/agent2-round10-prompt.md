@@ -22,7 +22,7 @@ Continue Chap47 hash table proofs (11 remaining). Start Chap42 table proofs (18 
 - `TableStEph.rs`
 - `TableStPer.rs`
 - `TableMtEph.rs`
-- `Example42_1.rs`
+- `Example42_1.rs` — SKIP (Example files are demo code)
 
 ## Priority Order
 
