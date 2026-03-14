@@ -509,8 +509,8 @@ broadcast use {
 
     impl<T: StT + Ord> OrderedSetStEph<T> {
         /// Returns an iterator over the set elements in sorted order.
-        #[verifier::external_body]
         pub fn iter(&self) -> (it: OrderedSetStEphIter<'_, T>)
+            requires self.spec_orderedsetsteph_wf(),
             ensures
                 it@.0 == 0,
                 it@.1 == self.base_set.elements@,
@@ -561,7 +561,7 @@ broadcast use {
         {
             if self.pos < self.len {
                 let elem = self.seq.nth(self.pos);
-                self.pos += 1;
+                self.pos = self.pos + 1;
                 Some(elem)
             } else {
                 None

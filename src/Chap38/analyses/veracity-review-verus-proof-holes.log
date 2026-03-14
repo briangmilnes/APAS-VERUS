@@ -21,55 +21,55 @@ Table of Contents:
 =================================================================
 
 ❌ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:79: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:79: error: external_body - #[verifier::external_body]
         80 |         open spec fn view(&self) -> Set<<T as View>::V> { Set::empty() }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:163: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:163: error: external_body - #[verifier::external_body]
        164 |         fn new() -> (empty: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:168: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:168: error: external_body - #[verifier::external_body]
        169 |         fn singleton(key: T) -> (tree: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:177: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:177: error: external_body - #[verifier::external_body]
        178 |         fn expose(&self) -> (exposed: Exposed<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:182: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:182: error: external_body - #[verifier::external_body]
        183 |         fn join_mid(exposed: Exposed<T>) -> (joined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:187: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:187: error: external_body - #[verifier::external_body]
        188 |         fn size(&self) -> (count: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:201: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:201: error: external_body - #[verifier::external_body]
        202 |         fn insert(&self, key: T) {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:212: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:212: error: external_body - #[verifier::external_body]
        213 |         fn delete(&self, key: &T) {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:223: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:223: error: external_body - #[verifier::external_body]
        224 |         fn find(&self, key: &T) -> (found: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:237: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:237: error: external_body - #[verifier::external_body]
        238 |         fn split(&self, key: &T) -> (parts: (Self, B, Self))
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:245: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:245: error: external_body - #[verifier::external_body]
        246 |         fn join_pair(&self, other: Self) -> (joined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:250: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:250: error: external_body - #[verifier::external_body]
        251 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:255: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:255: error: external_body - #[verifier::external_body]
        256 |         fn intersect(&self, other: &Self) -> (common: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:260: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:260: error: external_body - #[verifier::external_body]
        261 |         fn difference(&self, other: &Self) -> (remaining: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:265: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:265: error: external_body - #[verifier::external_body]
        266 |         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(&self, predicate: F) -> (filtered: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:272: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:272: error: external_body - #[verifier::external_body]
        273 |         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:277: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:277: error: external_body - #[verifier::external_body]
        278 |         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:297: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:297: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        290 |         fn clone(&self) -> (cloned: Self)
             ...
        295 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
        296 |             };
        298 |             cloned
        299 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:312: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:312: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        303 |         fn clone(&self) -> (cloned: Self)
             ...
        310 |                 right: self.right.clone(),
        311 |             };
        313 |             cloned
        314 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:322: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:322: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        318 |         fn clone(&self) -> (cloned: Self)
             ...
        320 |         {
@@ -79,142 +79,142 @@ Table of Contents:
    Holes: 17 total
       17 × external_body
 ❌ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:417: error: assume() - proof { assume(self@ =~= Set::<<T as View>::V>::empty()); }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:417: error: assume() - proof { assume(self@ =~= Set::<<T as View>::V>::empty()); }
        398 |         fn expose(&self) -> (exposed: Exposed<T>)
             ...
        415 |             let exposed = match handle.borrow() {
        416 |                 | None => {
        418 |                     Exposed::Leaf
        419 |                 }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:425: error: assume() - proof { assume(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:425: error: assume() - proof { assume(
        398 |         fn expose(&self) -> (exposed: Exposed<T>)
             ...
        423 |                     let r = node.right.clone();
        424 |                     // Reader accept: cloned decomposition matches ghost state.
        426 |                         self@ =~= l@.union(r@).insert(k@)
        427 |                         && self@.finite()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:484: error: assume() - proof { assume(count as nat == self@.len() && self@.finite()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:484: error: assume() - proof { assume(count as nat == self@.len() && self@.finite()
        472 |         fn size(&self) -> (count: usize)
             ...
        482 |                 }
        483 |             };
        485 |             handle.release_read();
        486 |             count
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:500: error: assume() - assume(left@.len() + right@.len() < usize::MAX as nat);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:500: error: assume() - assume(left@.len() + right@.len() < usize::MAX as nat);
        493 |         fn insert(&mut self, key: T) {
             ...
        498 |                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
        499 |                 // left@ ∪ right@ =~= self@.remove(key@), so their combined len <= self@.len().
        501 |             }
        502 |             let rebuilt = Self::join_m(left, key, right);
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:508: error: assume() - proof { assume(self.locked_root.pred().inv(new_val)); }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:508: error: assume() - proof { assume(self.locked_root.pred().inv(new_val)); }
        493 |         fn insert(&mut self, key: T) {
             ...
        506 |             let (_, write_h) = self.locked_root.acquire_write();
        507 |             // Writer accept: clone preserves structural predicate through lock.
        509 |             self.ghost_locked_root = Ghost(old_view.insert(kv));
        510 |             write_h.release_write(new_val);
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:519: error: assume() - assume(left@.len() + right@.len() < usize::MAX as nat);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:519: error: assume() - assume(left@.len() + right@.len() < usize::MAX as nat);
        513 |         fn delete(&mut self, key: &T) {
             ...
        517 |             proof {
        518 |                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
        520 |                 // Split: left < key < right. Transitivity gives left < right.
        521 |                 assert forall|s: T, o: T| #![auto]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:534: error: assume() - proof { assume(self.locked_root.pred().inv(new_val)); }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:534: error: assume() - proof { assume(self.locked_root.pred().inv(new_val)); }
        513 |         fn delete(&mut self, key: &T) {
             ...
        532 |             let (_, write_h) = self.locked_root.acquire_write();
        533 |             // Writer accept: clone preserves structural predicate through lock.
        535 |             self.ghost_locked_root = Ghost(old_view.remove(key@));
        536 |             write_h.release_write(new_val);
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:852: error: assume() - assume(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:852: error: assume() - assume(
        819 |         fn union(&self, other: &Self) -> (combined: Self)
             ...
        850 |                         // join_m needs disjointness, non-containment, ordering, size bound.
        851 |                         // Accept cross-disjointness (T::V witness gap for ordering-based proof).
        853 |                             luv.disjoint(ruv)
        854 |                             && !luv.contains(akv) && !ruv.contains(akv)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:915: error: assume() - assume(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:915: error: assume() - assume(
        887 |         fn intersect(&self, other: &Self) -> (common: Self)
             ...
        913 |                         proof {
        914 |                             // Accept join_m preconditions (cross-disjointness from ordering).
        916 |                                 lrv.disjoint(rrv)
        917 |                                 && !lrv.contains(akv) && !rrv.contains(akv)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:942: error: assume() - assume(result@.contains(x));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:942: error: assume() - assume(result@.contains(x));
        887 |         fn intersect(&self, other: &Self) -> (common: Self)
             ...
        940 |                                     // x ∈ self ∧ x ∈ (bl ∪ br): cross-disjointness
        941 |                                     // ensures x lands in matching recursive result.
        943 |                                 }
        944 |                             };
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:951: error: assume() - assume(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:951: error: assume() - assume(
        887 |         fn intersect(&self, other: &Self) -> (common: Self)
             ...
        949 |                         proof {
        950 |                             // Accept join_pair preconditions.
        952 |                                 lrv.disjoint(rrv)
        953 |                                 && lrv.finite() && rrv.finite()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:974: error: assume() - assume(result@.contains(x));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:974: error: assume() - assume(result@.contains(x));
        887 |         fn intersect(&self, other: &Self) -> (common: Self)
             ...
        972 |                                     assert(other@.remove(akv).contains(x));
        973 |                                     assert(blv.union(brv).contains(x));
        975 |                                 }
        976 |                             };
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1017: error: assume() - assume(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:1017: error: assume() - assume(
        986 |         fn difference(&self, other: &Self) -> (remaining: Self)
             ...
       1015 |                     if found {
       1016 |                         proof {
       1018 |                                 lrv.disjoint(rrv)
       1019 |                                 && lrv.finite() && rrv.finite()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1032: error: assume() - assume(!other@.contains(x));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:1032: error: assume() - assume(!other@.contains(x));
        986 |         fn difference(&self, other: &Self) -> (remaining: Self)
             ...
       1030 |                                     assert(alv.contains(x) && !blv.contains(x));
       1031 |                                     assert(sv.contains(x));
       1033 |                                 }
       1034 |                                 if rrv.contains(x) {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1037: error: assume() - assume(!other@.contains(x));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:1037: error: assume() - assume(!other@.contains(x));
        986 |         fn difference(&self, other: &Self) -> (remaining: Self)
             ...
       1035 |                                     assert(arv.contains(x) && !brv.contains(x));
       1036 |                                     assert(sv.contains(x));
       1038 |                                 }
       1039 |                                 if sv.contains(x) && !other@.contains(x) {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1053: error: assume() - assume(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:1053: error: assume() - assume(
        986 |         fn difference(&self, other: &Self) -> (remaining: Self)
             ...
       1051 |                     } else {
       1052 |                         proof {
       1054 |                                 lrv.disjoint(rrv)
       1055 |                                 && !lrv.contains(akv) && !rrv.contains(akv)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1069: error: assume() - assume(!other@.contains(x));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:1069: error: assume() - assume(!other@.contains(x));
        986 |         fn difference(&self, other: &Self) -> (remaining: Self)
             ...
       1067 |                                     assert(alv.contains(x) && !blv.contains(x));
       1068 |                                     assert(sv.contains(x));
       1070 |                                 }
       1071 |                                 if rrv.contains(x) {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1074: error: assume() - assume(!other@.contains(x));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:1074: error: assume() - assume(!other@.contains(x));
        986 |         fn difference(&self, other: &Self) -> (remaining: Self)
             ...
       1072 |                                     assert(arv.contains(x) && !brv.contains(x));
       1073 |                                     assert(sv.contains(x));
       1075 |                                 }
       1076 |                                 if sv.contains(x) && !other@.contains(x) && x != akv {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1247: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:1247: error: external_body - #[verifier::external_body]
       1248 |         fn clone(&self) -> (cloned: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1226: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:1226: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1219 |         fn clone(&self) -> (cloned: Self)
             ...
       1224 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
       1225 |             };
       1227 |             cloned
       1228 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1241: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:1241: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1232 |         fn clone(&self) -> (cloned: Self)
             ...
       1239 |                 right: self.right.clone(),
@@ -274,13 +274,13 @@ Holes Found: 36 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 18:37:53 -07:00
-Ended:     2026-03-13 18:37:53 -07:00
-Duration:  24ms
+Started:   2026-03-13 19:36:18 -07:00
+Ended:     2026-03-13 19:36:19 -07:00
+Duration:  38ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
-37:53 -07:00
-Ended:     2026-03-13 18:37:53 -07:00
-Duration:  24ms
+26-03-13 19:36:18 -07:00
+Ended:     2026-03-13 19:36:19 -07:00
+Duration:  38ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log

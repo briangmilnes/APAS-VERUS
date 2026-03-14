@@ -64,11 +64,22 @@ broadcast use {
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty();
         fn singleton(k: K, v: V) -> (tree: Self)
+            requires obeys_feq_clone::<Pair<K, V>>()
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite();
         fn find(&self, k: &K) -> (found: Option<V>)
-            requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>();
+            requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            ensures
+                match found {
+                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],
+                    None => !self@.contains_key(k@),
+                };
         fn lookup(&self, k: &K) -> (value: Option<V>)
-            requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>();
+            requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            ensures
+                match value {
+                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],
+                    None => !self@.contains_key(k@),
+                };
         fn is_empty(&self) -> (is_empty: B)
             requires self.spec_orderedtablesteph_wf(),
             ensures is_empty == self@.dom().is_empty();
@@ -79,6 +90,11 @@ broadcast use {
                 obeys_feq_full::<Pair<K, V>>(),
             ensures self@.dom().finite();
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
+            requires
+                old(self).spec_orderedtablesteph_wf(),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<V>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures self@ == old(self)@.remove(k@), self@.dom().finite();
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             requires obeys_feq_clone::<K>()
@@ -206,13 +222,12 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn singleton(k: K, v: V) -> (tree: Self)
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite()
         {
-            OrderedTableStEph {
-                base_table: TableStEph::singleton(k, v),
-            }
+            let base = TableStEph::singleton(k, v);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
+            OrderedTableStEph { base_table: base }
         }
 
         fn find(&self, k: &K) -> (found: Option<V>) {
@@ -237,12 +252,16 @@ broadcast use {
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
         }
 
-        #[verifier::external_body]
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             ensures self@ == old(self)@.remove(k@), self@.dom().finite()
         {
             let old_value = self.find(k);
             self.base_table.delete(k);
+            proof {
+                assert(self.base_table@ =~= old(self).base_table@.remove(k@));
+                assert(self@ =~= old(self)@.remove(k@));
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@);
+            }
             old_value
         }
 

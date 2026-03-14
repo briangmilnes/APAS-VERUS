@@ -122,6 +122,7 @@ broadcast use {
         fn empty(reducer: F, identity: V) -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty();
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
+            requires obeys_feq_clone::<Pair<K, V>>()
             ensures tree@.dom().finite();
         fn find(&self, k: &K) -> (found: Option<V>)
             requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
@@ -147,7 +148,11 @@ broadcast use {
                 obeys_feq_full::<Pair<K, V>>(),
             ensures self@.dom().finite();
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
-            requires obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            requires
+                old(self).spec_augorderedtablesteph_wf(),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<V>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures self@.dom().finite();
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             requires obeys_feq_clone::<K>()
@@ -259,7 +264,6 @@ broadcast use {
             r
         }
 
-        #[verifier::external_body]
         fn find(&self, k: &K) -> (found: Option<V>)
             ensures
                 match found {
@@ -270,7 +274,6 @@ broadcast use {
             self.base_table.find(k)
         }
 
-        #[verifier::external_body]
         fn lookup(&self, k: &K) -> (value: Option<V>)
             ensures
                 match value {
