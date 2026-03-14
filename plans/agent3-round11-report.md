@@ -49,4 +49,4 @@ Target was 7 → ≤ 2: achieved (7 → 2 on target files, plus 2 bonus from Tab
 
 ## Commit
 
-TBD
+`23972f60` on `agent3/ready`
