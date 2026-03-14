@@ -109,9 +109,11 @@ broadcast use {
             ensures tabulated@.dom().finite();
 
         fn map<F: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: F) -> (mapped: Self)
+            requires forall|k: &K, v: &V| f.requires((k, v))
             ensures mapped@.dom().finite();
 
         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: F) -> (filtered: Self)
+            requires forall|k: &K, v: &V| f.requires((k, v))
             ensures filtered@.dom().finite();
 
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F)
@@ -130,6 +132,7 @@ broadcast use {
             ensures self@.dom().finite();
 
         fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (reduced: R)
+            requires forall|r: R, k: &K, v: &V| f.requires((r, k, v))
             ensures self@.dom().finite();
 
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
@@ -257,51 +260,75 @@ broadcast use {
             OrderedTableMtEph { base_table: base }
         }
 
-        #[verifier::external_body]
         fn map<F>(&self, f: F) -> (mapped: Self)
             where F: Fn(&K, &V) -> V + Send + Sync + 'static
             ensures mapped@.dom().finite()
         {
-            let mut mapped = self.clone();
             let entries = self.collect();
-            mapped.base_table = TableMtEph::empty();
-            for i in 0..entries.length() {
+            let size = entries.length();
+            let mut result_entries: Vec<Pair<K, V>> = Vec::new();
+            let mut i: usize = 0;
+            while i < size
+                invariant
+                    i <= size,
+                    size as nat == entries.spec_seq().len(),
+                    entries.spec_avltreeseqstper_wf(),
+                    forall|k: &K, v: &V| f.requires((k, v)),
+                decreases size - i,
+            {
                 let pair = entries.nth(i);
                 let new_value = f(&pair.0, &pair.1);
-                mapped
-                    .base_table
-                    .insert(pair.0.clone(), new_value, |_old, new| new.clone());
+                result_entries.push(Pair(pair.0.clone(), new_value));
+                i += 1;
             }
-            mapped
+            let result_seq = AVLTreeSeqStPerS::from_vec(result_entries);
+            from_sorted_entries(result_seq)
         }
 
-        #[verifier::external_body]
         fn filter<F>(&self, f: F) -> (filtered: Self)
             where F: Fn(&K, &V) -> B + Send + Sync + 'static
             ensures filtered@.dom().finite()
         {
-            let mut filtered = OrderedTableMtEph::empty();
             let entries = self.collect();
-            for i in 0..entries.length() {
+            let size = entries.length();
+            let mut result_entries: Vec<Pair<K, V>> = Vec::new();
+            let mut i: usize = 0;
+            while i < size
+                invariant
+                    i <= size,
+                    size as nat == entries.spec_seq().len(),
+                    entries.spec_avltreeseqstper_wf(),
+                    forall|k: &K, v: &V| f.requires((k, v)),
+                decreases size - i,
+            {
                 let pair = entries.nth(i);
                 if f(&pair.0, &pair.1) {
-                    filtered
-                        .base_table
-                        .insert(pair.0.clone(), pair.1.clone(), |_old, new| new.clone());
+                    result_entries.push(Pair(pair.0.clone(), pair.1.clone()));
                 }
+                i += 1;
             }
-            filtered
+            let result_seq = AVLTreeSeqStPerS::from_vec(result_entries);
+            from_sorted_entries(result_seq)
         }
 
-        #[verifier::external_body]
         fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (reduced: R)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
+            let size = entries.length();
             let mut reduced = init;
-            for i in 0..entries.length() {
+            let mut i: usize = 0;
+            while i < size
+                invariant
+                    i <= size,
+                    size as nat == entries.spec_seq().len(),
+                    entries.spec_avltreeseqstper_wf(),
+                    forall|r: R, k: &K, v: &V| f.requires((r, k, v)),
+                decreases size - i,
+            {
                 let pair = entries.nth(i);
                 reduced = f(reduced, &pair.0, &pair.1);
+                i += 1;
             }
             reduced
         }
@@ -343,16 +370,24 @@ broadcast use {
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
         }
 
-        #[verifier::external_body]
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf()
         {
             let array_seq = self.base_table.entries();
             let len = array_seq.length();
-            let mut elements = Vec::new();
-            for i in 0..len {
-                elements.push(array_seq.nth(i).clone());
+            let mut elements: Vec<Pair<K, V>> = Vec::new();
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len as int == array_seq.spec_len(),
+                decreases len - i,
+            {
+                let elem = array_seq.nth(i);
+                elements.push(Pair(elem.0.clone(), elem.1.clone()));
+                i += 1;
             }
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             AVLTreeSeqStPerS::from_vec(elements)
         }
 
@@ -381,58 +416,78 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
             let size = entries.length();
-
-            for i in (0..size).rev() {
+            let mut i: usize = size;
+            while i > 0
+                invariant
+                    i <= size,
+                    size as nat == entries.spec_seq().len(),
+                    entries.spec_avltreeseqstper_wf(),
+                    self@.dom().finite(),
+                decreases i,
+            {
+                i -= 1;
                 let pair = entries.nth(i);
-                if &pair.0 < k {
-                    return Some(pair.0.clone());
+                match pair.0.cmp(k) {
+                    std::cmp::Ordering::Less => return Some(pair.0.clone()),
+                    _ => {},
                 }
             }
             None
         }
 
-        #[verifier::external_body]
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
             let size = entries.length();
-
-            for i in 0..size {
+            let mut i: usize = 0;
+            while i < size
+                invariant
+                    i <= size,
+                    size as nat == entries.spec_seq().len(),
+                    entries.spec_avltreeseqstper_wf(),
+                    self@.dom().finite(),
+                decreases size - i,
+            {
                 let pair = entries.nth(i);
-                if &pair.0 > k {
-                    return Some(pair.0.clone());
+                match pair.0.cmp(k) {
+                    std::cmp::Ordering::Greater => return Some(pair.0.clone()),
+                    _ => {},
                 }
+                i += 1;
             }
             None
         }
 
-        #[verifier::external_body]
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
             ensures self@.dom().finite()
         {
             let entries = self.collect();
             let size = entries.length();
-            let mut left_entries = Vec::new();
-            let mut right_entries = Vec::new();
-            let mut found_value = None;
-
-            for i in 0..size {
+            let mut left_entries: Vec<Pair<K, V>> = Vec::new();
+            let mut right_entries: Vec<Pair<K, V>> = Vec::new();
+            let mut found_value: Option<V> = None;
+            let mut i: usize = 0;
+            while i < size
+                invariant
+                    i <= size,
+                    size as nat == entries.spec_seq().len(),
+                    entries.spec_avltreeseqstper_wf(),
+                decreases size - i,
+            {
                 let pair = entries.nth(i);
-                if &pair.0 < k {
-                    left_entries.push(pair.clone());
-                } else if &pair.0 > k {
-                    right_entries.push(pair.clone());
-                } else {
-                    found_value = Some(pair.1.clone());
+                match pair.0.cmp(k) {
+                    std::cmp::Ordering::Less => left_entries.push(Pair(pair.0.clone(), pair.1.clone())),
+                    std::cmp::Ordering::Greater => right_entries.push(Pair(pair.0.clone(), pair.1.clone())),
+                    std::cmp::Ordering::Equal => found_value = Some(pair.1.clone()),
                 }
+                i += 1;
             }
 
             let left_seq = AVLTreeSeqStPerS::from_vec(left_entries);
@@ -448,39 +503,63 @@ broadcast use {
             self.union(&other, |v1, _v2| v1.clone());
         }
 
-        #[verifier::external_body]
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures range@.dom().finite()
         {
             let entries = self.collect();
             let size = entries.length();
-            let mut range_entries = Vec::new();
-
-            for i in 0..size {
+            let mut range_entries: Vec<Pair<K, V>> = Vec::new();
+            let mut i: usize = 0;
+            while i < size
+                invariant
+                    i <= size,
+                    size as nat == entries.spec_seq().len(),
+                    entries.spec_avltreeseqstper_wf(),
+                decreases size - i,
+            {
                 let pair = entries.nth(i);
-                if &pair.0 >= k1 && &pair.0 <= k2 {
-                    range_entries.push(pair.clone());
+                let ge_k1 = match pair.0.cmp(k1) {
+                    std::cmp::Ordering::Less => false,
+                    _ => true,
+                };
+                let le_k2 = match pair.0.cmp(k2) {
+                    std::cmp::Ordering::Greater => false,
+                    _ => true,
+                };
+                if ge_k1 && le_k2 {
+                    range_entries.push(Pair(pair.0.clone(), pair.1.clone()));
                 }
+                i += 1;
             }
 
             let range_seq = AVLTreeSeqStPerS::from_vec(range_entries);
             from_sorted_entries(range_seq)
         }
 
-        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
             let size = entries.length();
-            let mut count = 0;
-
-            for i in 0..size {
+            let mut count: usize = 0;
+            let mut i: usize = 0;
+            while i < size
+                invariant
+                    i <= size,
+                    count <= i,
+                    size as nat == entries.spec_seq().len(),
+                    entries.spec_avltreeseqstper_wf(),
+                decreases size - i,
+            {
                 let pair = entries.nth(i);
-                if &pair.0 < k {
-                    count += 1;
-                } else {
-                    break;
+                match pair.0.cmp(k) {
+                    std::cmp::Ordering::Less => {
+                        count += 1;
+                        i += 1;
+                    },
+                    _ => {
+                        i = size;
+                    },
                 }
             }
             count
@@ -498,7 +577,6 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite()
@@ -512,14 +590,34 @@ broadcast use {
                 return (current, Self::empty());
             }
 
-            let mut left_entries = Vec::new();
-            let mut right_entries = Vec::new();
+            let mut left_entries: Vec<Pair<K, V>> = Vec::new();
+            let mut right_entries: Vec<Pair<K, V>> = Vec::new();
 
-            for j in 0..i {
-                left_entries.push(entries.nth(j).clone());
+            let mut j: usize = 0;
+            while j < i
+                invariant
+                    j <= i,
+                    i < size,
+                    size as nat == entries.spec_seq().len(),
+                    entries.spec_avltreeseqstper_wf(),
+                decreases i - j,
+            {
+                let elem = entries.nth(j);
+                left_entries.push(Pair(elem.0.clone(), elem.1.clone()));
+                j += 1;
             }
-            for j in i..size {
-                right_entries.push(entries.nth(j).clone());
+            let mut j: usize = i;
+            while j < size
+                invariant
+                    j <= size,
+                    i <= j,
+                    size as nat == entries.spec_seq().len(),
+                    entries.spec_avltreeseqstper_wf(),
+                decreases size - j,
+            {
+                let elem = entries.nth(j);
+                right_entries.push(Pair(elem.0.clone(), elem.1.clone()));
+                j += 1;
             }
 
             let left_seq = AVLTreeSeqStPerS::from_vec(left_entries);
@@ -669,14 +767,23 @@ broadcast use {
         }
     }
 
-    #[verifier::external_body]
     pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: AVLTreeSeqStPerS<Pair<K, V>>) -> (constructed: OrderedTableMtEph<K, V>)
+        requires entries.spec_avltreeseqstper_wf()
         ensures constructed@.dom().finite()
     {
         let len = entries.length();
-        let mut elements = Vec::new();
-        for i in 0..len {
-            elements.push(entries.nth(i).clone());
+        let mut elements: Vec<Pair<K, V>> = Vec::new();
+        let mut i: usize = 0;
+        while i < len
+            invariant
+                i <= len,
+                len as nat == entries.spec_seq().len(),
+                entries.spec_avltreeseqstper_wf(),
+            decreases len - i,
+        {
+            let elem = entries.nth(i);
+            elements.push(Pair(elem.0.clone(), elem.1.clone()));
+            i += 1;
         }
         OrderedTableMtEph {
             base_table: crate::Chap42::TableMtEph::TableMtEph::from_sorted_entries(elements),

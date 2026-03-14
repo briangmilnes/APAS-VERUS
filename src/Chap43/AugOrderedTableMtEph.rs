@@ -166,8 +166,10 @@ broadcast use {
             requires keys@.finite()
             ensures domain@.dom().finite();
         fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self)
+            requires forall|k: &K, v: &V| f.requires((k, v))
             ensures mapped@.dom().finite();
         fn filter<G: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: G) -> (filtered: Self)
+            requires forall|k: &K, v: &V| f.requires((k, v))
             ensures filtered@.dom().finite();
         fn intersection<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: G)
             ensures self@.dom().finite();
@@ -180,6 +182,7 @@ broadcast use {
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             ensures self@.dom().finite();
         fn reduce<R: StTInMtT + 'static, G: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: G) -> (reduced: R)
+            requires forall|r: R, k: &K, v: &V| f.requires((r, k, v))
             ensures self@.dom().finite();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf();
