@@ -100,7 +100,9 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
-            requires self.spec_avltreesetsteph_wf(),
+            requires
+                self.spec_avltreesetsteph_wf(),
+                forall|t: &T| #[trigger] f.requires((t,)),
             ensures
                 filtered@.subset_of(self@),
                 filtered.spec_avltreesetsteph_wf();
@@ -248,10 +250,10 @@ broadcast use {
                     i <= n,
                     filtered@.finite(),
                     filtered.spec_avltreesetsteph_wf(),
+                    forall|t: &T| #[trigger] f.requires((t,)),
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
-                proof { assume(f.requires((&*elem,))); }
                 if f(elem) {
                     filtered.insert(elem.clone());
                 }

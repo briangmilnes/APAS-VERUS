@@ -330,6 +330,7 @@ Table of Contents:
       36 × assume()
       3 × external_body
 ❌ OrderedSetStEph.rs
+<<<<<<< Updated upstream
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:278: error: assume() - assume(result@ =~= eph_seq@);  // accept hole: clone/view br
        258 |         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
             ...
@@ -365,6 +366,43 @@ Table of Contents:
        631 |         fn into_iter(self) -> (it: Self::IntoIter)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:654: error: external_body - #[verifier::external_body]
        655 |     pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)
+=======
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:280: error: assume() - assume(result@ =~= eph_seq@);  // accept hole: clone/view br
+       260 |         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
+            ...
+       278 |             proof {
+       279 |                 // T::clone preserves View (StT bound); from_vec maps values through View.
+       281 |             }
+       282 |             result
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:285: error: external_body - #[verifier::external_body]
+       286 |         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:300: error: external_body - #[verifier::external_body]
+       301 |         fn first(&self) -> (first: Option<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:315: error: external_body - #[verifier::external_body]
+       316 |         fn last(&self) -> (last: Option<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:331: error: external_body - #[verifier::external_body]
+       332 |         fn previous(&self, k: &T) -> (predecessor: Option<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:349: error: external_body - #[verifier::external_body]
+       350 |         fn next(&self, k: &T) -> (successor: Option<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:367: error: external_body - #[verifier::external_body]
+       368 |         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:410: error: external_body - #[verifier::external_body]
+       411 |         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:433: error: external_body - #[verifier::external_body]
+       434 |         fn rank(&self, k: &T) -> (rank: usize)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:454: error: external_body - #[verifier::external_body]
+       455 |         fn select(&self, i: usize) -> (selected: Option<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:469: error: external_body - #[verifier::external_body]
+       470 |         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:512: error: external_body - #[verifier::external_body]
+       513 |         pub fn iter(&self) -> (it: OrderedSetStEphIter<'_, T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:543: error: external_body - #[verifier::external_body]
+       544 |         fn next(&mut self) -> (next: Option<&'a T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:632: error: external_body - #[verifier::external_body]
+       633 |         fn into_iter(self) -> (it: Self::IntoIter)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:656: error: external_body - #[verifier::external_body]
+       657 |     pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)
+>>>>>>> Stashed changes
    Holes: 15 total
       1 × assume()
       14 × external_body
@@ -688,6 +726,7 @@ Holes Found: 143 total
 5. Started/Ended/Duration
 =================================================================
 
+<<<<<<< Updated upstream
 Started:   2026-03-13 18:25:10 -07:00
 Ended:     2026-03-13 18:25:10 -07:00
 Duration:  95ms
@@ -696,5 +735,15 @@ Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
 0
 Ended:     2026-03-13 18:25:10 -07:00
 Duration:  95ms
+=======
+Started:   2026-03-13 18:27:37 -07:00
+Ended:     2026-03-13 18:27:37 -07:00
+Duration:  66ms
+
+Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
+6-03-13 18:27:37 -07:00
+Ended:     2026-03-13 18:27:37 -07:00
+Duration:  66ms
+>>>>>>> Stashed changes
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log

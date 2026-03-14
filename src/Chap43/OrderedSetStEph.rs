@@ -92,7 +92,9 @@ broadcast use {
                 self.spec_orderedsetsteph_wf();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn filter<F: PredSt<T>>(&mut self, f: F)
-            requires old(self).spec_orderedsetsteph_wf(),
+            requires
+                old(self).spec_orderedsetsteph_wf(),
+                forall|t: &T| #[trigger] f.requires((t,)),
             ensures
                 self@.finite(),
                 self.spec_orderedsetsteph_wf();

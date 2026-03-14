@@ -21,6 +21,7 @@ Table of Contents:
 =================================================================
 
 ❌ GraphSearchMtPer.rs
+<<<<<<< Updated upstream
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:109: error: external_body - #[verifier::external_body]
        110 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:98: error: fn_missing_requires - fn graph_search — exec fn should have requires
@@ -44,8 +45,17 @@ Table of Contents:
        171 |     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
        173 |     where
        174 |         G: Fn(&V) -> AVLTreeSetMtPer<V>,
+=======
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/GraphSearchMtPer.rs:138: error: assume() - proof { assume(frontier.elements.spec_avltreeseqmtper_wf());
+       114 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
+            ...
+       136 | 
+       137 |             let mut new_neighbors = AVLTreeSetMtPer::empty();
+       139 |             let nlen = frontier.elements.length();
+       140 |             let mut i: usize = 0;
+>>>>>>> Stashed changes
    Holes: 1 total
-      1 × external_body
+      1 × assume()
 ✓ GraphSearchStEph.rs
 ✓ GraphSearchStPer.rs
 ✓ PQMinStEph.rs
@@ -90,23 +100,29 @@ Proof Functions:
    0 total
 
 Function Specs:
-   56 exec fns with complete spec (requires+ensures) (86%)
-   3 exec fns missing spec (4%)
+   59 exec fns with complete spec (requires+ensures) (90%)
+   0 exec fns missing spec (0%)
    6 proof/spec fns clean (9%)
    0 proof/spec fns with holes (0%)
    65 total fns
 
 
 Holes Found: 1 total
-   1 × external_body (100%)
+   1 × assume() (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
+<<<<<<< Updated upstream
 Started:   2026-03-13 18:25:10 -07:00
 Ended:     2026-03-13 18:25:10 -07:00
 Duration:  15ms
+=======
+Started:   2026-03-13 18:27:38 -07:00
+Ended:     2026-03-13 18:27:38 -07:00
+Duration:  14ms
+>>>>>>> Stashed changes
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap53/analyses/veracity-review-verus-proof-holes.log

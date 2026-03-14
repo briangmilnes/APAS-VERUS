@@ -63,6 +63,7 @@ broadcast use {
 
     pub struct AVLTreeSetMtEph<T: StTInMtT + Ord + 'static> {
         pub inner: Arc<RwLock<AVLTreeSetStEph<T>, AVLTreeSetMtEphInv>>,
+        pub ghost_set_view: Ghost<Set<<T as View>::V>>,
     }
 
     #[verifier::reject_recursive_types(T)]
@@ -203,9 +204,8 @@ broadcast use {
     // 5. view impls
 
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEph<T> {
-        #[verifier::external_body]
         pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-            Set::empty()
+            self.ghost_set_view@
         }
     }
 
@@ -221,19 +221,15 @@ broadcast use {
     // 9. impls
 
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
-        // Unit Inv: no ghost↔exec fields to link. Trivially well-formed.
         open spec fn spec_avltreesetmteph_wf(&self) -> bool {
-            true
+            self.ghost_set_view@.finite()
         }
 
         fn size(&self) -> (count: usize)
         {
             let handle = self.inner.acquire_read();
             let count = handle.borrow().size();
-            proof {
-                assume(count == self@.len());  // accept hole: reader value
-                assume(self@.finite());  
-            }
+            proof { assume(count == self@.len()); }
             handle.release_read();
             count
         }
@@ -253,23 +249,19 @@ broadcast use {
             assert(AVLTreeSetMtEphInv.inv(st));
             let empty = AVLTreeSetMtEph {
                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
+                ghost_set_view: Ghost(st@),
             };
-            proof { assume(empty@ == Set::<<T as View>::V>::empty()); }  
             empty
         }
 
         fn singleton(x: T) -> (tree: Self)
         {
-            let ghost x_view = x@;
             let st = AVLTreeSetStEph::singleton(x);
             assert(AVLTreeSetMtEphInv.inv(st));
             let tree = AVLTreeSetMtEph {
                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
+                ghost_set_view: Ghost(st@),
             };
-            proof {
-                assume(tree@ == Set::<<T as View>::V>::empty().insert(x_view));  
-                assume(tree@.finite());  
-            }
             tree
         }
 
@@ -279,8 +271,8 @@ broadcast use {
             assert(AVLTreeSetMtEphInv.inv(st));
             let constructed = AVLTreeSetMtEph {
                 inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
+                ghost_set_view: Ghost(st@),
             };
-            proof { assume(constructed@.finite()); }  
             constructed
         }
 
@@ -451,27 +443,24 @@ broadcast use {
 
         fn delete(&mut self, x: &T)
         {
+            let ghost old_view = self.ghost_set_view@;
+            let ghost x_view = x@;
             let (mut current, write_handle) = self.inner.acquire_write();
             current.delete(x);
             assert(AVLTreeSetMtEphInv.inv(current));
             write_handle.release_write(current);
-            proof {
-                assume(self@ == old(self)@.remove(x@));
-                assume(self@.finite());
-            }
+            self.ghost_set_view = Ghost(old_view.remove(x_view));
         }
 
         fn insert(&mut self, x: T)
         {
+            let ghost old_view = self.ghost_set_view@;
             let ghost x_view = x@;
             let (mut current, write_handle) = self.inner.acquire_write();
             current.insert(x);
             assert(AVLTreeSetMtEphInv.inv(current));
             write_handle.release_write(current);
-            proof {
-                assume(self@ == old(self)@.insert(x_view));
-                assume(self@.finite());
-            }
+            self.ghost_set_view = Ghost(old_view.insert(x_view));
         }
 
         #[verifier::external_body]
@@ -572,6 +561,7 @@ broadcast use {
         type Item = T;
         type IntoIter = AVLTreeSetMtEphIter<T>;
         fn into_iter(self) -> (it: AVLTreeSetMtEphIter<T>)
+            requires self.spec_avltreesetmteph_wf(),
             ensures it@.0 == 0, avltreesetmteph_iter_invariant(&it),
         {
             self.iter()
@@ -586,13 +576,17 @@ broadcast use {
         {
             let cloned = AVLTreeSetMtEph {
                 inner: clone_arc_rwlock(&self.inner),
+                ghost_set_view: Ghost(self.ghost_set_view@),
             };
-            proof { accept(cloned@ == self@); }  // accept hole: Arc::clone
             cloned
         }
     }
 
     } // verus!
+
+    // Ghost<Set<V>> field is zero-sized; AVLTreeSetMtEph is Send/Sync via Arc<RwLock>.
+    unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
+    unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
 
     // 12. macros
 

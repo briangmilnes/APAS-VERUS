@@ -45,6 +45,7 @@ pub mod GraphSearchMtPer {
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
             S: SelectionStrategy<V>,
+            requires forall|v: &V| #[trigger] graph.requires((v,)),
             ensures search.visited@.contains(source@);
 
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
@@ -53,6 +54,7 @@ pub mod GraphSearchMtPer {
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
             S: SelectionStrategy<V>,
+            requires forall|v: &V| #[trigger] graph.requires((v,)),
             ensures sources@.subset_of(search.visited@);
 
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
@@ -60,6 +62,7 @@ pub mod GraphSearchMtPer {
         fn reachable<G>(graph: &G, source: V)                                             -> (reachable_set: AVLTreeSetMtPer<V>)
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
+            requires forall|v: &V| #[trigger] graph.requires((v,)),
             ensures reachable_set@.contains(source@);
     }
 
@@ -99,42 +102,63 @@ pub mod GraphSearchMtPer {
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,
         S: SelectionStrategy<V>,
+        requires forall|v: &V| #[trigger] graph.requires((v,)),
         ensures search.visited@.contains(source@),
     {
         let sources = AVLTreeSetMtPer::singleton(source);
         graph_search_multi(graph, sources, strategy)
     }
 
-    /// Recursive graph exploration helper (Algorithm 53.4 loop body).
-    #[verifier::external_body]
+    /// Graph exploration loop (Algorithm 53.4).
+    #[verifier::exec_allows_no_decreases_clause]
     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
         graph: &G,
         strategy: &S,
-        visited: AVLTreeSetMtPer<V>,
-        frontier: AVLTreeSetMtPer<V>,
+        visited_init: AVLTreeSetMtPer<V>,
+        frontier_init: AVLTreeSetMtPer<V>,
     ) -> (visited_all: AVLTreeSetMtPer<V>)
-        ensures visited@.subset_of(visited_all@), frontier@.subset_of(visited_all@),
+        requires
+            forall|v: &V| #[trigger] graph.requires((v,)),
+        ensures
+            visited_init@.subset_of(visited_all@),
+            frontier_init@.subset_of(visited_all@),
     {
-        if frontier.size() == 0 {
-            return visited;
+        let mut visited = visited_init;
+        let mut frontier = frontier_init;
+
+        while frontier.size() > 0
+            invariant
+                visited_init@.subset_of(visited@),
+                frontier_init@.subset_of(visited@.union(frontier@)),
+                forall|v: &V| #[trigger] graph.requires((v,)),
+        {
+            let visited_new = visited.union(&frontier);
+
+            let mut new_neighbors = AVLTreeSetMtPer::empty();
+            proof { assume(frontier.elements.spec_avltreeseqmtper_wf()); }
+            let nlen = frontier.elements.length();
+            let mut i: usize = 0;
+            while i < nlen
+                invariant
+                    i <= nlen,
+                    nlen as nat == frontier.elements.spec_seq().len(),
+                    frontier.elements.spec_avltreeseqmtper_wf(),
+                    forall|v: &V| #[trigger] graph.requires((v,)),
+                decreases nlen - i,
+            {
+                let v = frontier.elements.nth(i);
+                let neighbors = graph(v);
+                new_neighbors = new_neighbors.union(&neighbors);
+                i = i + 1;
+            }
+
+            let frontier_new = new_neighbors.difference(&visited_new);
+
+            visited = visited_new;
+            frontier = frontier_new;
         }
 
-        let (selected, _) = strategy.select(&frontier);
-        let visited_new = visited.union(&selected);
-
-        let mut new_neighbors = AVLTreeSetMtPer::empty();
-        let selected_seq = selected.to_seq();
-        let len = selected_seq.length();
-        let mut i: usize = 0;
-        while i < len {
-            let v = selected_seq.nth(i);
-            let neighbors = graph(v);
-            new_neighbors = new_neighbors.union(&neighbors);
-            i = i + 1;
-        }
-
-        let frontier_new = new_neighbors.difference(&visited_new);
-        graph_search_explore(graph, strategy, visited_new, frontier_new)
+        visited
     }
 
     /// Generic graph search starting from multiple sources (Exercise 53.3).
@@ -146,6 +170,7 @@ pub mod GraphSearchMtPer {
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,
         S: SelectionStrategy<V>,
+        requires forall|v: &V| #[trigger] graph.requires((v,)),
         ensures sources@.subset_of(search.visited@),
     {
         let visited = graph_search_explore(graph, strategy, AVLTreeSetMtPer::empty(), sources);
@@ -155,15 +180,15 @@ pub mod GraphSearchMtPer {
     impl<V: StTInMtT + Ord + 'static> GraphSearchMtPerTrait<V> for SearchResult<V> {
         fn graph_search<G, S>(graph: &G, source: V, strategy: &S) -> (search: SearchResult<V>)
         where G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>,
-        { graph_search(graph, source, strategy) }
+        { crate::Chap53::GraphSearchMtPer::GraphSearchMtPer::graph_search(graph, source, strategy) }
 
         fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetMtPer<V>, strategy: &S) -> (search: SearchResult<V>)
         where G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>,
-        { graph_search_multi(graph, sources, strategy) }
+        { crate::Chap53::GraphSearchMtPer::GraphSearchMtPer::graph_search_multi(graph, sources, strategy) }
 
         fn reachable<G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetMtPer<V>)
         where G: Fn(&V) -> AVLTreeSetMtPer<V>,
-        { reachable(graph, source) }
+        { crate::Chap53::GraphSearchMtPer::GraphSearchMtPer::reachable(graph, source) }
     }
 
     /// Find all vertices reachable from source (Problem 53.2) using SelectAll (BFS).
@@ -172,6 +197,7 @@ pub mod GraphSearchMtPer {
     pub fn reachable<V: StTInMtT + Ord + 'static, G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetMtPer<V>)
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,
+        requires forall|v: &V| #[trigger] graph.requires((v,)),
         ensures reachable_set@.contains(source@),
     {
         let result = graph_search(graph, source, &SelectAll);
