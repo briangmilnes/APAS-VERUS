@@ -7,7 +7,6 @@ pub mod GraphSearchStEph {
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
@@ -40,6 +39,9 @@ pub mod GraphSearchStEph {
         where
             G: Fn(&V) -> AVLTreeSetStEph<V>,
             S: SelectionStrategy<V>,
+            requires
+                forall|v: &V| #[trigger] graph.requires((v,)),
+                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
             ensures search.visited@.contains(source@);
 
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
@@ -48,6 +50,10 @@ pub mod GraphSearchStEph {
         where
             G: Fn(&V) -> AVLTreeSetStEph<V>,
             S: SelectionStrategy<V>,
+            requires
+                sources.spec_avltreesetsteph_wf(),
+                forall|v: &V| #[trigger] graph.requires((v,)),
+                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
             ensures sources@.subset_of(search.visited@);
 
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
@@ -55,6 +61,9 @@ pub mod GraphSearchStEph {
         fn reachable<G>(graph: &G, source: V)                                             -> (reachable_set: AVLTreeSetStEph<V>)
         where
             G: Fn(&V) -> AVLTreeSetStEph<V>,
+            requires
+                forall|v: &V| #[trigger] graph.requires((v,)),
+                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
             ensures reachable_set@.contains(source@);
     }
 
@@ -94,46 +103,73 @@ pub mod GraphSearchStEph {
     where
         G: Fn(&V) -> AVLTreeSetStEph<V>,
         S: SelectionStrategy<V>,
+        requires
+            forall|v: &V| #[trigger] graph.requires((v,)),
+            forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
         ensures search.visited@.contains(source@),
     {
         let sources = AVLTreeSetStEph::singleton(source);
         graph_search_multi(graph, sources, strategy)
     }
 
-    
-    #[verifier::external_body]
+    /// Graph exploration loop (Algorithm 53.4).
+    #[verifier::exec_allows_no_decreases_clause]
     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
         graph: &G,
         strategy: &S,
-        visited: AVLTreeSetStEph<V>,
-        frontier: AVLTreeSetStEph<V>,
+        visited_init: AVLTreeSetStEph<V>,
+        frontier_init: AVLTreeSetStEph<V>,
     ) -> (visited_all: AVLTreeSetStEph<V>)
-        ensures visited@.subset_of(visited_all@), frontier@.subset_of(visited_all@),
+        requires
+            visited_init.spec_avltreesetsteph_wf(),
+            frontier_init.spec_avltreesetsteph_wf(),
+            forall|v: &V| #[trigger] graph.requires((v,)),
+            forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
+        ensures
+            visited_init@.subset_of(visited_all@),
+            frontier_init@.subset_of(visited_all@),
     {
-        if frontier.size() == 0 {
-            return visited;
-        }
+        let mut visited = visited_init;
+        let mut frontier = frontier_init;
 
-        let (selected, _) = strategy.select(&frontier);
-        let visited_new = visited.union(&selected);
-
-        let mut new_neighbors = AVLTreeSetStEph::empty();
-        let selected_seq = selected.to_seq();
-        let len = selected_seq.length();
-        let mut i: usize = 0;
-        while i < len
+        while frontier.size() > 0
             invariant
-                i <= len,
-            decreases len - i,
+                visited.spec_avltreesetsteph_wf(),
+                frontier.spec_avltreesetsteph_wf(),
+                visited_init@.subset_of(visited@),
+                frontier_init@.subset_of(visited@.union(frontier@)),
+                forall|v: &V| #[trigger] graph.requires((v,)),
+                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
         {
-            let v = selected_seq.nth(i);
-            let neighbors = graph(v);
-            new_neighbors = new_neighbors.union(&neighbors);
-            i = i + 1;
+            let visited_new = visited.union(&frontier);
+
+            let mut new_neighbors = AVLTreeSetStEph::empty();
+            let frontier_seq = frontier.to_seq();
+            let len = frontier_seq.length();
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len as nat == frontier_seq@.len(),
+                    frontier_seq.spec_avltreeseqsteph_wf(),
+                    new_neighbors.spec_avltreesetsteph_wf(),
+                    forall|v: &V| #[trigger] graph.requires((v,)),
+                    forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
+                decreases len - i,
+            {
+                let v = frontier_seq.nth(i);
+                let neighbors = graph(v);
+                new_neighbors = new_neighbors.union(&neighbors);
+                i = i + 1;
+            }
+
+            let frontier_new = new_neighbors.difference(&visited_new);
+
+            visited = visited_new;
+            frontier = frontier_new;
         }
 
-        let frontier_new = new_neighbors.difference(&visited_new);
-        graph_search_explore(graph, strategy, visited_new, frontier_new)
+        visited
     }
 
     /// Generic graph search starting from multiple sources (Exercise 53.3).
@@ -145,6 +181,10 @@ pub mod GraphSearchStEph {
     where
         G: Fn(&V) -> AVLTreeSetStEph<V>,
         S: SelectionStrategy<V>,
+        requires
+            sources.spec_avltreesetsteph_wf(),
+            forall|v: &V| #[trigger] graph.requires((v,)),
+            forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
         ensures sources@.subset_of(search.visited@),
     {
         let visited = graph_search_explore(graph, strategy, AVLTreeSetStEph::empty(), sources);
@@ -171,6 +211,9 @@ pub mod GraphSearchStEph {
     pub fn reachable<V: StT + Ord, G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetStEph<V>)
     where
         G: Fn(&V) -> AVLTreeSetStEph<V>,
+        requires
+            forall|v: &V| #[trigger] graph.requires((v,)),
+            forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
         ensures reachable_set@.contains(source@),
     {
         let result = graph_search(graph, source, &SelectAll);

@@ -23,39 +23,39 @@ Table of Contents:
 ✓ MCSSSpec.rs
    10 clean proof functions
 ❌ MaxContigSubSumBruteStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumBruteStEph.rs:70: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap28/MaxContigSubSumBruteStEph.rs:70: warning: requires_true - requires true — vacuous precondition
         68 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         69 |     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         71 |         ensures
         72 |             max == spec_max_opt_i32(a, b),
 ❌ MaxContigSubSumDivConMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConMtEph.rs:62: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap28/MaxContigSubSumDivConMtEph.rs:62: warning: requires_true - requires true — vacuous precondition
         60 | 
         61 |     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         63 |         ensures max == spec_max_opt_i32(a, b),
         64 |     {
 ❌ MaxContigSubSumDivConOptMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:68: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap28/MaxContigSubSumDivConOptMtEph.rs:68: warning: requires_true - requires true — vacuous precondition
         66 | 
         67 |     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         69 |         ensures max == spec_max_opt_i32(a, b),
         70 |     {
 ❌ MaxContigSubSumDivConOptStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConOptStEph.rs:278: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap28/MaxContigSubSumDivConOptStEph.rs:278: warning: requires_true - requires true — vacuous precondition
        276 | 
        277 |     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
        279 |         ensures max == spec_max_opt_i32(a, b),
        280 |     {
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ MaxContigSubSumDivConStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumDivConStEph.rs:169: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap28/MaxContigSubSumDivConStEph.rs:169: warning: requires_true - requires true — vacuous precondition
        167 | 
        168 |     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
        170 |         ensures max == spec_max_opt_i32(a, b),
        171 |     {
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ MaxContigSubSumIterStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumIterStEph.rs:148: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap28/MaxContigSubSumIterStEph.rs:148: warning: requires_true - requires true — vacuous precondition
        146 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
        147 |     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
        149 |         ensures max == spec_max_opt_i32(a, b),
@@ -65,13 +65,13 @@ Table of Contents:
 ✓ MaxContigSubSumOptStEph.rs
    1 clean proof function
 ❌ MaxContigSubSumReducedMcsseStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:69: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:69: warning: requires_true - requires true — vacuous precondition
         67 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         68 |     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         70 |         ensures max == spec_max_opt_i32(a, b),
         71 |     {
 ❌ MaxContigSubSumReducedStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap28/MaxContigSubSumReducedStEph.rs:66: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap28/MaxContigSubSumReducedStEph.rs:66: warning: requires_true - requires true — vacuous precondition
         64 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         65 |     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         67 |         ensures max == spec_max_opt_i32(a, b),
@@ -143,11 +143,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 16:41:35 -07:00
-Ended:     2026-03-13 16:41:35 -07:00
-Duration:  39ms
+Started:   2026-03-13 16:54:25 -07:00
+Ended:     2026-03-13 16:54:25 -07:00
+Duration:  22ms
 
 Full output: src/Chap28/analyses/veracity-review-verus-proof-holes.log
-Duration:  39ms
-
-Full output: src/Chap28/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap28/analyses/veracity-review-verus-proof-holes.log
