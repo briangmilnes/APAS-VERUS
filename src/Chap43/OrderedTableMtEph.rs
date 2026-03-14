@@ -95,6 +95,10 @@ broadcast use {
             ensures self@.dom().finite();
 
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
+            requires
+                old(self).spec_orderedtablemteph_wf(),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<V>(),
             ensures self@ == old(self)@.remove(k@), self@.dom().finite();
 
         fn domain(&self) -> (domain: ArraySetStEph<K>)
@@ -224,12 +228,16 @@ broadcast use {
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
         }
 
-        #[verifier::external_body]
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             ensures self@ == old(self)@.remove(k@), self@.dom().finite()
         {
             let old_value = self.find(k);
             self.base_table.delete(k);
+            proof {
+                assert(self.base_table@ =~= old(self).base_table@.remove(k@));
+                assert(self@ =~= old(self)@.remove(k@));
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@);
+            }
             old_value
         }
 

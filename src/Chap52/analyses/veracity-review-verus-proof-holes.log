@@ -27,7 +27,7 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    3 clean proof functions
 ℹ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:478: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjMatrixGraphStPer.rs:478: info: accept()
    Info: 1 total
    3 clean proof functions
 ✓ AdjSeqGraphMtEph.rs
@@ -37,7 +37,7 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
 ℹ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:514: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjSeqGraphStPer.rs:514: info: accept()
    Info: 1 total
    2 clean proof functions
 ✓ AdjTableGraphMtPer.rs
@@ -120,9 +120,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 18:37:53 -07:00
-Ended:     2026-03-13 18:37:53 -07:00
-Duration:  48ms
+Started:   2026-03-13 19:36:19 -07:00
+Ended:     2026-03-13 19:36:19 -07:00
+Duration:  87ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap52/analyses/veracity-review-verus-proof-holes.log

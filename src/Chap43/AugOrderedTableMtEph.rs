@@ -146,6 +146,10 @@ broadcast use {
         fn insert<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: G)
             ensures self@.dom().finite();
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
+            requires
+                old(self).spec_augorderedtablemteph_wf(),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<V>(),
             ensures self@.dom().finite();
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite();

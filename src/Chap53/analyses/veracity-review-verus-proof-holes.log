@@ -21,7 +21,7 @@ Table of Contents:
 =================================================================
 
 ❌ GraphSearchMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:138: error: assume() - proof { assume(frontier.elements.spec_avltreeseqmtper_wf());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchMtPer.rs:138: error: assume() - proof { assume(frontier.elements.spec_avltreeseqmtper_wf());
        114 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
             ...
        136 | 
@@ -88,9 +88,9 @@ Holes Found: 1 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 18:37:53 -07:00
-Ended:     2026-03-13 18:37:53 -07:00
-Duration:  16ms
+Started:   2026-03-13 19:36:19 -07:00
+Ended:     2026-03-13 19:36:19 -07:00
+Duration:  24ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap53/analyses/veracity-review-verus-proof-holes.log

@@ -470,8 +470,8 @@ broadcast use {
 
     impl<T: StT + Ord> OrderedSetStPer<T> {
         /// Returns an iterator over the set elements in sorted order.
-        #[verifier::external_body]
         pub fn iter(&self) -> (it: OrderedSetStPerIter<'_, T>)
+            requires self.spec_orderedsetstper_wf(),
             ensures
                 it@.0 == 0,
                 it@.1 == self.base_set.elements@,
