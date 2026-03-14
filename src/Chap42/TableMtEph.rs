@@ -34,8 +34,11 @@ pub mod TableMtEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::clone_plus::clone_plus::*;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{lemma_seq_map_cloned_view_eq, obeys_feq_clone};
+    use crate::vstdplus::feq::feq::{lemma_seq_map_cloned_view_eq, obeys_feq_clone, obeys_feq_full};
+    #[cfg(verus_keep_ghost)]
+    use vstd::laws_eq::obeys_view_eq;
 
     verus! {
 
@@ -122,6 +125,126 @@ broadcast use {
         }
     }
 
+    // If a key is in spec_entries_to_map, it appears in the seq.
+    proof fn lemma_entries_to_map_key_in_seq<KV, VV>(entries: Seq<(KV, VV)>, k: KV)
+        requires spec_entries_to_map(entries).contains_key(k)
+        ensures exists|i: int| 0 <= i < entries.len() && (#[trigger] entries[i]).0 == k
+        decreases entries.len()
+    {
+        if entries.len() > 0 {
+            let last = entries.last();
+            if last.0 == k {
+                assert(entries[entries.len() - 1].0 == k);
+            } else {
+                lemma_entries_to_map_key_in_seq::<KV, VV>(entries.drop_last(), k);
+                let prefix = entries.drop_last();
+                let i = choose|i: int| 0 <= i < prefix.len() && (#[trigger] prefix[i]).0 == k;
+                assert(entries[i].0 == k);
+            }
+        }
+    }
+
+    // If entries[idx] has key k, the map contains k.
+    proof fn lemma_entries_to_map_contains_key<KV, VV>(entries: Seq<(KV, VV)>, idx: int)
+        requires 0 <= idx < entries.len()
+        ensures spec_entries_to_map(entries).contains_key(entries[idx].0)
+        decreases entries.len()
+    {
+        if entries.len() > 0 {
+            if idx == entries.len() - 1 {
+            } else {
+                lemma_entries_to_map_contains_key::<KV, VV>(entries.drop_last(), idx);
+            }
+        }
+    }
+
+    // When keys are unique, spec_entries_to_map length equals seq length.
+    proof fn lemma_entries_to_map_len<KV, VV>(entries: Seq<(KV, VV)>)
+        requires spec_keys_no_dups(entries)
+        ensures spec_entries_to_map(entries).len() == entries.len()
+        decreases entries.len()
+    {
+        if entries.len() > 0 {
+            let prefix = entries.drop_last();
+            let last = entries.last();
+            let last_idx = entries.len() - 1;
+            assert(spec_keys_no_dups(prefix)) by {
+                assert forall|i: int, j: int|
+                    0 <= i < j < prefix.len()
+                    implies (#[trigger] prefix[i]).0 != (#[trigger] prefix[j]).0
+                by {
+                    assert(entries[i].0 != entries[j].0);
+                };
+            };
+            lemma_entries_to_map_len::<KV, VV>(prefix);
+            let prefix_map = spec_entries_to_map(prefix);
+            assert(!prefix_map.contains_key(last.0)) by {
+                if prefix_map.contains_key(last.0) {
+                    lemma_entries_to_map_key_in_seq(prefix, last.0);
+                    let idx = choose|i: int| 0 <= i < prefix.len() && (#[trigger] prefix[i]).0 == last.0;
+                    assert(entries[idx].0 == last.0);
+                    assert(entries[last_idx].0 == last.0);
+                    assert(idx != last_idx);
+                }
+            };
+            assert(prefix_map.dom().finite()) by {
+                lemma_entries_to_map_finite::<KV, VV>(prefix);
+            };
+            assert(spec_entries_to_map(entries) =~=
+                prefix_map.insert(last.0, last.1));
+            assert(prefix_map.insert(last.0, last.1).len() ==
+                prefix_map.len() + 1);
+        }
+    }
+
+    // If no entry has key k, spec_entries_to_map does not contain k.
+    proof fn lemma_entries_to_map_no_key<KV, VV>(entries: Seq<(KV, VV)>, k: KV)
+        requires forall|i: int| 0 <= i < entries.len() ==> (#[trigger] entries[i]).0 != k
+        ensures !spec_entries_to_map(entries).contains_key(k)
+    {
+        if spec_entries_to_map(entries).contains_key(k) {
+            lemma_entries_to_map_key_in_seq(entries, k);
+        }
+    }
+
+    // If entries[idx] = (k, v) and keys are unique, map contains k with value v.
+    proof fn lemma_entries_to_map_get<KV, VV>(entries: Seq<(KV, VV)>, idx: int)
+        requires
+            0 <= idx < entries.len(),
+            spec_keys_no_dups(entries),
+        ensures
+            spec_entries_to_map(entries).contains_key(entries[idx].0),
+            spec_entries_to_map(entries)[entries[idx].0] == entries[idx].1,
+        decreases entries.len(),
+    {
+        let k = entries[idx].0;
+        let v = entries[idx].1;
+        if entries.len() > 0 {
+            let last = entries.last();
+            let prefix = entries.drop_last();
+            if idx == entries.len() - 1 {
+            } else {
+                assert(spec_keys_no_dups(prefix)) by {
+                    assert forall|i: int, j: int|
+                        0 <= i < j < prefix.len()
+                        implies (#[trigger] prefix[i]).0 != (#[trigger] prefix[j]).0
+                    by {
+                        assert(i < entries.len());
+                        assert(j < entries.len());
+                        assert(entries[i].0 != entries[j].0);
+                    };
+                };
+                assert(prefix[idx] == entries[idx]);
+                lemma_entries_to_map_get::<KV, VV>(prefix, idx);
+                assert(last.0 != k) by {
+                    assert(entries[idx].0 == k);
+                    assert(entries[entries.len() - 1].0 == last.0);
+                    assert(idx < entries.len() - 1);
+                };
+            }
+        }
+    }
+
 
 //		8. traits
 
@@ -133,13 +256,14 @@ broadcast use {
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
+            requires self.spec_tablemteph_wf()
             ensures count == self@.dom().len();
         /// APAS: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty();
+            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_tablemteph_wf();
         /// APAS: Work Θ(1), Span Θ(1)
         fn singleton(key: K, value: V) -> (tree: Self)
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@);
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@), tree.spec_tablemteph_wf();
         /// APAS: Work Θ(|a|), Span Θ(lg |a|)
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures domain@ =~= self@.dom();
@@ -173,6 +297,7 @@ broadcast use {
                 forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k];
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn find(&self, key: &K) -> (found: Option<V>)
+            requires self.spec_tablemteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
                 match found {
                     Some(v) => self@.contains_key(key@) && self@[key@] == v@,
@@ -213,15 +338,15 @@ broadcast use {
             spec_keys_no_dups(self.entries@)
         }
 
-        #[verifier::external_body]
         fn size(&self) -> (count: usize)
-            ensures count == self@.dom().len()
         {
+            proof {
+                lemma_entries_to_map_len::<K::V, V::V>(self.entries@);
+            }
             self.entries.length()
         }
 
         fn empty() -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty()
         {
             let entries = ArraySeqMtEphS::empty();
             assert(entries@ =~= Seq::<(K::V, V::V)>::empty());
@@ -229,7 +354,6 @@ broadcast use {
         }
 
         fn singleton(key: K, value: V) -> (tree: Self)
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@)
         {
             proof { assume(obeys_feq_clone::<Pair<K, V>>()); }  // accept hole: Clone preserves feq
             let entries = ArraySeqMtEphS::singleton(Pair(key, value));
@@ -552,28 +676,33 @@ broadcast use {
             self.entries = ArraySeqMtEphS::from_vec(difference_entries);
         }
 
-        #[verifier::external_body]
         fn find(&self, key: &K) -> (found: Option<V>)
-            ensures
-                match found {
-                    Some(v) => self@.contains_key(key@) && self@[key@] == v@,
-                    None => !self@.contains_key(key@),
-                }
         {
-            let mut left = 0;
-            let mut right = self.entries.length();
-
-            while left < right {
-                let mid = left + (right - left) / 2;
-                let pair = self.entries.nth(mid).clone();
-
-                match key.cmp(&pair.0) {
-                    | Ordering::Less => right = mid,
-                    | Ordering::Greater => left = mid + 1,
-                    | Ordering::Equal => return Some(pair.1.clone()),
+            let mut i: usize = 0;
+            while i < self.entries.length()
+                invariant
+                    i <= self.entries.spec_len(),
+                    self.spec_tablemteph_wf(),
+                    forall|j: int| #![auto] 0 <= j < i as int ==>
+                        self.entries@[j].0 != key@,
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<V>(),
+                decreases self.entries.spec_len() - i,
+            {
+                let pair = self.entries.nth(i);
+                proof { reveal(obeys_view_eq); }
+                if pair.0.eq(key) {
+                    let v = pair.1.clone_plus();
+                    proof {
+                        lemma_entries_to_map_get::<K::V, V::V>(self.entries@, i as int);
+                    }
+                    return Some(v);
                 }
+                i += 1;
             }
-
+            proof {
+                lemma_entries_to_map_no_key::<K::V, V::V>(self.entries@, key@);
+            }
             None
         }
 

@@ -61,39 +61,37 @@ Table of Contents:
 ✓ LinkedListChainedHashTableStEph.rs
    1 clean proof function
 ❌ ParaHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:55: error: external_body - #[verifier::external_body]
-        56 |     fn compute_load_factor(num_elements: usize, current_size: usize) -> (lf: f64)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:63: error: external_body - #[verifier::external_body]
-        64 |     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize) -> (index: usize)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:72: error: external_body - #[verifier::external_body]
-        73 |     pub fn linear_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:82: error: external_body - #[verifier::external_body]
-        83 |     pub fn quadratic_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:92: error: external_body - #[verifier::external_body]
-        93 |     pub fn double_hash_probe<Key: std::hash::Hash, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:130: error: fn_missing_requires - fn createTable — exec fn should have requires
-       121 |         fn delete(&mut self, key: &Key) -> (deleted: bool);
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:56: error: external_body - #[verifier::external_body]
+        57 |     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize) -> (index: usize)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:65: error: external_body - #[verifier::external_body]
+        66 |     pub fn linear_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:75: error: external_body - #[verifier::external_body]
+        76 |     pub fn quadratic_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:85: error: external_body - #[verifier::external_body]
+        86 |     pub fn double_hash_probe<Key: std::hash::Hash, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:123: error: fn_missing_requires - fn createTable — exec fn should have requires
+       114 |         fn delete(&mut self, key: &Key) -> (deleted: bool);
             ...
-       128 |         /// - APAS: Work O(m), Span O(m) where m is initial size.
-       129 |         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
-       131 |             ensures
-       132 |                 table.initial_size == initial_size,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:195: error: fn_missing_requires - fn metrics — exec fn should have requires
-       184 |         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
+       121 |         /// - APAS: Work O(m), Span O(m) where m is initial size.
+       122 |         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
+       124 |             ensures
+       125 |                 table.initial_size == initial_size,
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:188: error: fn_missing_requires - fn metrics — exec fn should have requires
+       177 |         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
             ...
-       193 |         /// - APAS: N/A — Verus-specific scaffolding.
-       194 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
-       196 |             ensures m == &table.metrics,
-       197 |         { &table.metrics }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:203: error: fn_missing_requires - fn loadAndSize — exec fn should have requires
-       195 |         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
+       186 |         /// - APAS: N/A — Verus-specific scaffolding.
+       187 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
+       189 |             ensures m == &table.metrics,
+       190 |         { &table.metrics }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:196: error: fn_missing_requires - fn loadAndSize — exec fn should have requires
+       188 |         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
             ...
-       201 |         /// - APAS: Work O(1), Span O(1).
-       202 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads and one division.
-       204 |             ensures load_and_size.size == table.current_size,
-       205 |         {
-   Holes: 5 total
-      5 × external_body
+       194 |         /// - APAS: Work O(1), Span O(1).
+       195 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads only.
+       197 |             ensures
+       198 |                 load_and_size.size == table.current_size,
+   Holes: 4 total
+      4 × external_body
 ❌ QuadProbFlatHashTableStEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap47/QuadProbFlatHashTableStEph.rs:187: error: external_body - #[verifier::external_body]
        188 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> usize {
@@ -177,26 +175,27 @@ Proof Functions:
    4 total
 
 Function Specs:
-   77 exec fns with complete spec (requires+ensures) (77%)
+   76 exec fns with complete spec (requires+ensures) (77%)
    8 exec fns missing spec (8%)
    14 proof/spec fns clean (14%)
    0 proof/spec fns with holes (0%)
-   99 total fns
+   98 total fns
 
 
-Holes Found: 11 total
-   11 × external_body (100%)
+Holes Found: 10 total
+   10 × external_body (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 16:53:53 -07:00
-Ended:     2026-03-13 16:53:53 -07:00
-Duration:  21ms
+Started:   2026-03-13 18:11:38 -07:00
+Ended:     2026-03-13 18:11:38 -07:00
+Duration:  30ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
-ed:     2026-03-13 16:53:53 -07:00
-Duration:  21ms
+38 -07:00
+Ended:     2026-03-13 18:11:38 -07:00
+Duration:  30ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
