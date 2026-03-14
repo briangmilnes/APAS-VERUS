@@ -1,6 +1,6 @@
-Chapter Status — 46 chapters, 37 clean, 9 holed, 287 holes (global), 257 modules
+Chapter Status — 46 chapters, 38 clean, 8 holed, 272 holes (global), 257 modules
 
-CLEAN CHAPTERS (37)
+CLEAN CHAPTERS (38)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -26,6 +26,7 @@ CLEAN CHAPTERS (37)
   Chap50             8
   Chap51             8
   Chap52            14
+  Chap53             5
   Chap54             4
   Chap55             8
   Chap56            12
@@ -41,18 +42,17 @@ CLEAN CHAPTERS (37)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (9) — 375 holes
+HOLED CHAPTERS (8) — 360 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap37            80    19  internal  Chap37::BSTRBMtEph, Chap37::BSTSplayMtEph
-  Chap38            36     2  YES       
-  Chap39            26     4  internal  Chap39::BSTParaTreapMtEph
-  Chap41            58     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStPer
-  Chap42            16     4  NO        Chap41::ArraySetStEph
-  Chap43           136    11  NO        Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph, Chap42::TableStEph, Chap42::TableStPer, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetStPer
+  Chap38            32     2  YES       
+  Chap39            23     4  internal  Chap39::BSTParaTreapMtEph
+  Chap41            56     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStPer
+  Chap42            11     4  NO        Chap41::ArraySetStEph
+  Chap43           136    11  NO        Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetStPer
   Chap45             4     7  NO        Chap37::AVLTreeSeqStPer
   Chap47            18     9  internal  Chap47::ParaHashTableStEph, Chap47::FlatHashTable, Chap47::ChainedHashTable
-  Chap53             1     5  NO        Chap41::AVLTreeSetMtPer, Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetStPer
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
@@ -60,7 +60,7 @@ DEPENDENCY CHAIN (chapter-level, external only)
   Chap41          Chap37
   Chap42          Chap41
   Chap43          Chap37, Chap41, Chap42
-  Chap44          Chap37, Chap41, Chap42
+  Chap44          Chap37, Chap41
   Chap45          Chap37
   Chap52          Chap41, Chap43
   Chap53          Chap41
