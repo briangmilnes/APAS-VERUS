@@ -257,7 +257,9 @@ scripts/rtt.sh               # run time tests (cargo nextest)
 - **Read the verification output.** If you don't read the error, you can't fix the proof.
 - Always show full output in response text as a markdown code block.
 - **Run validate, rtt, and ptt sequentially, not in parallel.** They compete for CPU and
-  memory, making all three slower than running them one at a time.
+  memory. Verus holds large dependency graphs in memory; running concurrent builds can
+  exhaust system RAM and lock the machine. Always: `validate` first, then `rtt`, then `ptt`.
+  Never overlap them. Never run two validation passes at the same time.
 
 ### Validation Modes
 
