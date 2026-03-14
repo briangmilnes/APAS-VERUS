@@ -23,19 +23,19 @@ Table of Contents:
 ✓ KleeneStPer.rs
    9 clean proof functions
 ℹ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:592: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/MappingStEph.rs:592: info: accept()
    Info: 1 total
 ✓ RelationStEph.rs
 ℹ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1045: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1054: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1062: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1073: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1099: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1045: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1054: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1062: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1073: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1099: info: accept()
    Info: 5 total
    1 clean proof function
 ℹ SetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:896: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:896: info: accept()
    Info: 1 total
    1 clean proof function
 
@@ -93,11 +93,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-13 23:46:21 -07:00
-Ended:     2026-03-13 23:46:21 -07:00
-Duration:  26ms
+Started:   2026-03-14 00:30:03 -07:00
+Ended:     2026-03-14 00:30:03 -07:00
+Duration:  28ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
-Duration:  26ms
-
-Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap05/analyses/veracity-review-verus-proof-holes.log

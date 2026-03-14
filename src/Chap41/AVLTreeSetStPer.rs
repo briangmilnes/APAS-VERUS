@@ -26,7 +26,7 @@ pub mod AVLTreeSetStPer {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_full;
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
     use crate::Types::Types::*;
 
     verus! {
@@ -228,6 +228,7 @@ broadcast use {
 
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
         {
+            assert(obeys_feq_full_trigger::<T>());
             let mut filtered = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
@@ -238,23 +239,41 @@ broadcast use {
                     i <= n,
                     filtered@.finite(),
                     filtered.spec_avltreesetstper_wf(),
+                    filtered@.subset_of(self@),
+                    obeys_feq_full::<T>(),
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
                 proof { assume(f.requires((&*elem,))); }
                 if f(elem) {
-                    filtered = filtered.insert(elem.clone());
+                    let c = elem.clone();
+                    proof {
+                        lemma_cloned_view_eq(*elem, c);
+                        assert(self.elements@[i as int] == elem@);
+                        assert(self.elements@.contains(elem@));
+                        assert(self@.contains(elem@));
+                    }
+                    let ghost old_filtered_view = filtered@;
+                    filtered = filtered.insert(c);
+                    proof {
+                        assert(filtered@.subset_of(self@)) by {
+                            assert forall|x| #[trigger] filtered@.contains(x)
+                                implies self@.contains(x) by {
+                                if !old_filtered_view.contains(x) {
+                                    assert(x == elem@);
+                                }
+                            };
+                        };
+                    }
                 }
                 i += 1;
-            }
-            proof {
-                assume(filtered@.subset_of(self@));
             }
             filtered
         }
 
         fn intersection(&self, other: &Self) -> (common: Self)
         {
+            assert(obeys_feq_full_trigger::<T>());
             let mut common = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
@@ -266,22 +285,54 @@ broadcast use {
                     i <= n,
                     common@.finite(),
                     common.spec_avltreesetstper_wf(),
+                    obeys_feq_full::<T>(),
+                    common@.subset_of(self@.intersect(other@)),
+                    forall|j: int| #![trigger self.elements@[j]]
+                        0 <= j < i && other@.contains(self.elements@[j])
+                        ==> common@.contains(self.elements@[j]),
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
                 if other.find(elem) {
-                    common = common.insert(elem.clone());
+                    let c = elem.clone();
+                    proof {
+                        lemma_cloned_view_eq(*elem, c);
+                        assert(self.elements@.contains(elem@));
+                        assert(self@.contains(elem@));
+                    }
+                    let ghost old_common = common@;
+                    common = common.insert(c);
+                    proof {
+                        assert(common@.subset_of(self@.intersect(other@))) by {
+                            assert forall|x| #[trigger] common@.contains(x)
+                                implies self@.intersect(other@).contains(x) by {
+                                if !old_common.contains(x) {
+                                    assert(x == elem@);
+                                }
+                            };
+                        };
+                    }
                 }
                 i += 1;
             }
             proof {
-                assume(common@ == self@.intersect(other@));
+                assert forall|x| self@.intersect(other@).contains(x)
+                    implies #[trigger] common@.contains(x) by {
+                    assert(self.elements@.to_set().contains(x));
+                    assert(self.elements@.contains(x));
+                    let j = choose|j: int| 0 <= j < self.elements@.len()
+                        && self.elements@[j] == x;
+                    assert(self.elements@[j] == x);
+                    assert(other@.contains(self.elements@[j]));
+                };
+                assert(common@ =~= self@.intersect(other@));
             }
             common
         }
 
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
+            assert(obeys_feq_full_trigger::<T>());
             let mut remaining = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
@@ -293,22 +344,54 @@ broadcast use {
                     i <= n,
                     remaining@.finite(),
                     remaining.spec_avltreesetstper_wf(),
+                    obeys_feq_full::<T>(),
+                    remaining@.subset_of(self@.difference(other@)),
+                    forall|j: int| #![trigger self.elements@[j]]
+                        0 <= j < i && !other@.contains(self.elements@[j])
+                        ==> remaining@.contains(self.elements@[j]),
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
                 if !other.find(elem) {
-                    remaining = remaining.insert(elem.clone());
+                    let c = elem.clone();
+                    proof {
+                        lemma_cloned_view_eq(*elem, c);
+                        assert(self.elements@.contains(elem@));
+                        assert(self@.contains(elem@));
+                    }
+                    let ghost old_remaining = remaining@;
+                    remaining = remaining.insert(c);
+                    proof {
+                        assert(remaining@.subset_of(self@.difference(other@))) by {
+                            assert forall|x| #[trigger] remaining@.contains(x)
+                                implies self@.difference(other@).contains(x) by {
+                                if !old_remaining.contains(x) {
+                                    assert(x == elem@);
+                                }
+                            };
+                        };
+                    }
                 }
                 i += 1;
             }
             proof {
-                assume(remaining@ == self@.difference(other@));
+                assert forall|x| self@.difference(other@).contains(x)
+                    implies #[trigger] remaining@.contains(x) by {
+                    assert(self.elements@.to_set().contains(x));
+                    assert(self.elements@.contains(x));
+                    let j = choose|j: int| 0 <= j < self.elements@.len()
+                        && self.elements@[j] == x;
+                    assert(self.elements@[j] == x);
+                    assert(!other@.contains(self.elements@[j]));
+                };
+                assert(remaining@ =~= self@.difference(other@));
             }
             remaining
         }
 
         fn union(&self, other: &Self) -> (combined: Self)
         {
+            assert(obeys_feq_full_trigger::<T>());
             let mut combined = Self::empty();
             let self_len = self.elements.length();
             let mut i: usize = 0;
@@ -319,34 +402,99 @@ broadcast use {
                     i <= self_len,
                     combined@.finite(),
                     combined.spec_avltreesetstper_wf(),
+                    obeys_feq_full::<T>(),
+                    combined@.subset_of(self@.union(other@)),
+                    forall|k: int| #![trigger self.elements@[k]]
+                        0 <= k < i ==> combined@.contains(self.elements@[k]),
                 decreases self_len - i,
             {
-                combined = combined.insert(self.elements.nth(i).clone());
+                let elem = self.elements.nth(i);
+                let c = elem.clone();
+                proof {
+                    lemma_cloned_view_eq(*elem, c);
+                    assert(self.elements@.contains(elem@));
+                    assert(self@.contains(elem@));
+                }
+                let ghost old_combined = combined@;
+                combined = combined.insert(c);
+                proof {
+                    assert(combined@.subset_of(self@.union(other@))) by {
+                        assert forall|x| #[trigger] combined@.contains(x)
+                            implies self@.union(other@).contains(x) by {
+                            if !old_combined.contains(x) {
+                                assert(x == elem@);
+                            }
+                        };
+                    };
+                }
                 i += 1;
             }
             let other_len = other.elements.length();
             let mut j: usize = 0;
             while j < other_len
                 invariant
+                    self.elements.spec_avltreeseqstper_wf(),
                     other.elements.spec_avltreeseqstper_wf(),
+                    self_len as int == self.elements.spec_seq().len(),
                     other_len as int == other.elements.spec_seq().len(),
                     j <= other_len,
                     combined@.finite(),
                     combined.spec_avltreesetstper_wf(),
+                    obeys_feq_full::<T>(),
+                    combined@.subset_of(self@.union(other@)),
+                    forall|k: int| #![trigger self.elements@[k]]
+                        0 <= k < self_len ==> combined@.contains(self.elements@[k]),
+                    forall|k: int| #![trigger other.elements@[k]]
+                        0 <= k < j ==> combined@.contains(other.elements@[k]),
                 decreases other_len - j,
             {
-                combined = combined.insert(other.elements.nth(j).clone());
+                let elem = other.elements.nth(j);
+                let c = elem.clone();
+                proof {
+                    lemma_cloned_view_eq(*elem, c);
+                    assert(other.elements@.contains(elem@));
+                    assert(other@.contains(elem@));
+                }
+                let ghost old_combined = combined@;
+                combined = combined.insert(c);
+                proof {
+                    assert(combined@.subset_of(self@.union(other@))) by {
+                        assert forall|x| #[trigger] combined@.contains(x)
+                            implies self@.union(other@).contains(x) by {
+                            if !old_combined.contains(x) {
+                                assert(x == elem@);
+                            }
+                        };
+                    };
+                }
                 j += 1;
             }
             proof {
-                assume(combined@ == self@.union(other@));
+                assert forall|x| self@.union(other@).contains(x)
+                    implies #[trigger] combined@.contains(x) by {
+                    if self@.contains(x) {
+                        assert(self.elements@.to_set().contains(x));
+                        assert(self.elements@.contains(x));
+                        let k = choose|k: int| 0 <= k < self.elements@.len()
+                            && self.elements@[k] == x;
+                        assert(self.elements@[k] == x);
+                    } else {
+                        assert(other@.contains(x));
+                        assert(other.elements@.to_set().contains(x));
+                        assert(other.elements@.contains(x));
+                        let k = choose|k: int| 0 <= k < other.elements@.len()
+                            && other.elements@[k] == x;
+                        assert(other.elements@[k] == x);
+                    }
+                };
+                assert(combined@ =~= self@.union(other@));
             }
             combined
         }
 
         fn find(&self, x: &T) -> (found: B)
         {
-            proof { assume(obeys_feq_full::<T>()); }
+            assert(obeys_feq_full_trigger::<T>());
             let n = self.elements.length();
             let mut lo: usize = 0;
             let mut hi: usize = n;

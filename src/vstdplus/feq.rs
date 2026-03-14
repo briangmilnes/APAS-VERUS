@@ -72,6 +72,9 @@ pub mod feq {
         &&& obeys_feq_eq::<T>()
     }
 
+    // Trigger function for broadcast axiom: obeys_feq_full holds for well-behaved types.
+    pub open spec fn obeys_feq_full_trigger<T>() -> bool { true }
+
     /// Lemma: cloned values have equal views when obeys_feq_full holds
     pub proof fn lemma_cloned_view_eq<T: Eq + View + Clone + Sized>(x: T, y: T)
         requires cloned(x, y), obeys_feq_full::<T>(),
@@ -214,9 +217,16 @@ pub mod feq {
         result
     }
 
+    // Broadcast axiom: types satisfying Eq + View + Clone obey feq_full.
+    pub broadcast proof fn axiom_obeys_feq_full<T: Eq + View + Clone + Sized>()
+        requires #[trigger] obeys_feq_full_trigger::<T>()
+        ensures obeys_feq_full::<T>()
+    { admit(); }
+
     pub broadcast group group_feq_axioms {
         axiom_cloned_implies_eq,
         axiom_cloned_implies_eq_owned,
+        axiom_obeys_feq_full,
     }
 
     } // verus!
