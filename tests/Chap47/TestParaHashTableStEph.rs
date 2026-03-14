@@ -35,7 +35,7 @@ fn test_loadandsize_empty() {
     };
     let load_size =
         <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, (), HashFn>>::loadAndSize(&table);
-    assert_eq!(load_size.load, 0.0);
+    assert_eq!(load_size.load, 0); // 0 elements
     assert_eq!(load_size.size, 10);
 }
 
@@ -67,6 +67,6 @@ fn test_loadandsize_with_elements() {
     };
     let load_size =
         <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, (), HashFn>>::loadAndSize(&table);
-    assert_eq!(load_size.load, 0.5);
+    assert_eq!(load_size.load, 5); // 5 elements, α = 5/10 = 0.5
     assert_eq!(load_size.size, 10);
 }

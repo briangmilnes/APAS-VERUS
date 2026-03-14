@@ -12,6 +12,10 @@ pub mod OrderedTableMtEph {
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Chap42::TableMtEph::TableMtEph::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::laws_eq::obeys_view_eq;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full;
 
     verus! {
 
@@ -58,6 +62,7 @@ broadcast use {
         spec fn spec_orderedtablemteph_wf(&self) -> bool;
 
         fn size(&self) -> (count: usize)
+            requires self.spec_orderedtablemteph_wf()
             ensures count == self@.dom().len(), self@.dom().finite();
 
         fn empty() -> (empty: Self)
@@ -67,6 +72,7 @@ broadcast use {
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablemteph_wf();
 
         fn find(&self, k: &K) -> (found: Option<V>)
+            requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@),
@@ -74,6 +80,7 @@ broadcast use {
                 };
 
         fn lookup(&self, k: &K) -> (value: Option<V>)
+            requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
                 match value {
                     Some(v) => self@.contains_key(k@),
@@ -81,6 +88,7 @@ broadcast use {
                 };
 
         fn is_empty(&self) -> (is_empty: B)
+            requires self.spec_orderedtablemteph_wf()
             ensures is_empty == self@.dom().is_empty();
 
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F)
@@ -160,7 +168,7 @@ broadcast use {
 
     impl<K: MtKey, V: MtVal> OrderedTableMtEphTrait<K, V> for OrderedTableMtEph<K, V> {
         open spec fn spec_orderedtablemteph_wf(&self) -> bool {
-            self@.dom().finite()
+            self@.dom().finite() && self.base_table.spec_tablemteph_wf()
         }
 
         fn size(&self) -> (count: usize)

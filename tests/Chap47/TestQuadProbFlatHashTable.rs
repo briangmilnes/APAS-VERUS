@@ -261,12 +261,12 @@ fn test_load_and_size() {
         );
 
     let result = QuadProbFlatHashTableStEph::loadAndSize(&table);
-    assert_eq!(result.load, 0.0);
+    assert_eq!(result.load, 0); // 0 elements
     assert_eq!(result.size, 11);
 
     QuadProbFlatHashTableStEph::insert(&mut table, 1, "one".to_string());
     QuadProbFlatHashTableStEph::insert(&mut table, 2, "two".to_string());
     let result = QuadProbFlatHashTableStEph::loadAndSize(&table);
-    assert!((result.load - 0.18181818).abs() < 0.01); // 2/11 ≈ 0.182
+    assert_eq!(result.load, 2); // 2 elements, α = 2/11 ≈ 0.182
     assert_eq!(result.size, 11);
 }

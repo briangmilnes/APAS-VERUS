@@ -27,7 +27,7 @@ pub mod ParaHashTableStEph {
 
     #[derive(Clone, Copy, PartialEq)]
     pub struct LoadAndSize {
-        pub load: f64,
+        pub load: usize,
         pub size: usize,
     }
 
@@ -50,13 +50,6 @@ pub mod ParaHashTableStEph {
     }
 
     // 7. helpers
-
-    /// Load factor as f64; isolated because Verus does not support usize-to-f64 casts.
-    #[verifier::external_body]
-    fn compute_load_factor(num_elements: usize, current_size: usize) -> (lf: f64)
-    {
-        if current_size == 0 { 0.0 } else { num_elements as f64 / current_size as f64 }
-    }
 
     /// Calls the hash function and returns a bucket index.
     /// External_body because Verus cannot reason about opaque Fn closures.
@@ -196,16 +189,17 @@ pub mod ParaHashTableStEph {
             ensures m == &table.metrics,
         { &table.metrics }
 
-        /// Returns the load (number of entries) and size (table capacity).
-        /// Load factor α = load/size = num_elements/size
+        /// Returns the load (number of elements) and size (table capacity).
+        /// Load factor α = load/size.
         /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads and one division.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads only.
         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
-            ensures load_and_size.size == table.current_size,
+            ensures
+                load_and_size.size == table.current_size,
+                load_and_size.load == table.num_elements,
         {
-            let load_factor = compute_load_factor(table.num_elements, table.current_size);
             LoadAndSize {
-                load: load_factor,
+                load: table.num_elements,
                 size: table.current_size,
             }
         }
@@ -239,7 +233,8 @@ pub mod ParaHashTableStEph {
 
     impl std::fmt::Display for LoadAndSize {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "LoadAndSize(load={}, size={})", self.load, self.size)
+            write!(f, "LoadAndSize(load={}, size={}, α={:.3})", self.load, self.size,
+                if self.size == 0 { 0.0 } else { self.load as f64 / self.size as f64 })
         }
     }
 

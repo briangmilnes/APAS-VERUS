@@ -438,20 +438,20 @@ fn test_load_and_size() {
 
     // Initially empty
     let result = LinProbFlatHashTableStEph::loadAndSize(&table);
-    assert_eq!(result.load, 0.0);
+    assert_eq!(result.load, 0); // 0 elements
     assert_eq!(result.size, 10);
 
     // After inserting
     LinProbFlatHashTableStEph::insert(&mut table, 1, "one".to_string());
     LinProbFlatHashTableStEph::insert(&mut table, 2, "two".to_string());
     let result = LinProbFlatHashTableStEph::loadAndSize(&table);
-    assert_eq!(result.load, 0.2); // 2/10 = 0.2
+    assert_eq!(result.load, 2); // 2 elements, α = 2/10 = 0.2
     assert_eq!(result.size, 10);
 
     // After deleting
     LinProbFlatHashTableStEph::delete(&mut table, &1);
     let result = LinProbFlatHashTableStEph::loadAndSize(&table);
-    assert_eq!(result.load, 0.1); // 1/10 = 0.1
+    assert_eq!(result.load, 1); // 1 element, α = 1/10 = 0.1
     assert_eq!(result.size, 10);
 }
 
