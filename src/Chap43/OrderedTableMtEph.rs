@@ -133,7 +133,7 @@ broadcast use {
             ensures self@.dom().finite();
 
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite();
+            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf();
 
         fn first_key(&self) -> (first: Option<K>)
             ensures self@.dom().finite();
@@ -345,7 +345,7 @@ broadcast use {
 
         #[verifier::external_body]
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite()
+            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf()
         {
             let array_seq = self.base_table.entries();
             let len = array_seq.length();
@@ -356,11 +356,11 @@ broadcast use {
             AVLTreeSeqStPerS::from_vec(elements)
         }
 
-        #[verifier::external_body]
         fn first_key(&self) -> (first: Option<K>)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             if entries.length() == 0 {
                 None
             } else {
@@ -368,12 +368,12 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn last_key(&self) -> (last: Option<K>)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
             let size = entries.length();
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             if size == 0 {
                 None
             } else {
@@ -486,11 +486,11 @@ broadcast use {
             count
         }
 
-        #[verifier::external_body]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             if i >= entries.length() {
                 None
             } else {
@@ -658,12 +658,13 @@ broadcast use {
     // 11. derive impls in verus!
 
     impl<K: MtKey, V: MtVal> Clone for OrderedTableMtEph<K, V> {
-        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
+            let cloned_base = self.base_table.clone();
+            proof { assert(cloned_base@ == self.base_table@); }
             OrderedTableMtEph {
-                base_table: self.base_table.clone(),
+                base_table: cloned_base,
             }
         }
     }

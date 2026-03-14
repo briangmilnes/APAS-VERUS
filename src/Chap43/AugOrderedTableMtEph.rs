@@ -66,13 +66,17 @@ broadcast use {
 
     // 7. free functions (calculate_reduction, recalculate_reduction)
 
-    #[verifier::external_body]
     pub fn recalculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
         table: &AugOrderedTableMtEph<K, V, F>,
     ) -> (reduced: V)
     ensures table@.dom().finite()
     {
-        calculate_reduction(&table.base_table, &table.reducer, &table.identity)
+        let reduced = calculate_reduction(&table.base_table, &table.reducer, &table.identity);
+        proof {
+            lemma_aug_view(table);
+            lemma_entries_to_map_finite::<K::V, V::V>(table.base_table.base_table.entries@);
+        }
+        reduced
     }
 
     #[verifier::external_body]
@@ -178,7 +182,7 @@ broadcast use {
         fn reduce<R: StTInMtT + 'static, G: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: G) -> (reduced: R)
             ensures self@.dom().finite();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite();
+            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf();
         fn first_key(&self) -> (first: Option<K>)
             ensures self@.dom().finite();
         fn last_key(&self) -> (last: Option<K>)
@@ -394,7 +398,7 @@ broadcast use {
         }
 
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite()
+            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf()
         {
             proof { lemma_aug_view(self); }
             self.base_table.collect()
@@ -454,23 +458,12 @@ broadcast use {
             (left, found_value, right)
         }
 
-        #[verifier::external_body]
         fn join_key(&mut self, other: Self)
             ensures self@.dom().finite()
         {
-            let old_reduction = self.cached_reduction.clone();
-            let other_reduction = other.cached_reduction.clone();
-            let other_size = other.base_table.size();
-
             self.base_table.join_key(other.base_table);
-
-            if self.base_table.size() == 0 {
-                self.cached_reduction = other_reduction;
-            } else if other_size == 0 {
-                self.cached_reduction = old_reduction;
-            } else {
-                self.cached_reduction = (self.reducer)(&old_reduction, &other_reduction);
-            }
+            self.cached_reduction = recalculate_reduction(self);
+            proof { lemma_aug_view(self); }
         }
 
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
@@ -613,12 +606,13 @@ broadcast use {
     // 11. derive impls in verus!
 
     impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> Clone for AugOrderedTableMtEph<K, V, F> {
-        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
+            let cloned_base = self.base_table.clone();
+            proof { assert(cloned_base@ == self.base_table@); }
             Self {
-                base_table: self.base_table.clone(),
+                base_table: cloned_base,
                 cached_reduction: self.cached_reduction.clone(),
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),

@@ -50,6 +50,17 @@ pub mod OrderedTableMtPer {
         pub(crate) ghost_locked_table: Ghost<Map<K::V, V::V>>,
     }
 
+    impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPer<K, V> {
+        #[verifier::type_invariant]
+        spec fn inv(self) -> bool {
+            self.ghost_locked_table@.dom().finite()
+        }
+
+        pub closed spec fn spec_ghost_locked_table(self) -> Map<K::V, V::V> {
+            self.ghost_locked_table@
+        }
+    }
+
     // 6. spec fns
 
     /// Construct Mt wrapper from an St table.
@@ -73,8 +84,8 @@ pub mod OrderedTableMtPer {
 
     impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
         type V = Map<K::V, V::V>;
-        closed spec fn view(&self) -> Map<K::V, V::V> {
-            self.ghost_locked_table@
+        open spec fn view(&self) -> Map<K::V, V::V> {
+            self.spec_ghost_locked_table()
         }
     }
 
@@ -152,10 +163,9 @@ pub mod OrderedTableMtPer {
         fn size(&self) -> (count: usize) {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner.spec_orderedtablestper_wf()); }
             let count = inner.size();
             proof { assume(count == self@.dom().len()); }
-            proof { assume(self@.dom().finite()); }
+            proof { use_type_invariant(self); }
             read_handle.release_read();
             count
         }
@@ -163,7 +173,6 @@ pub mod OrderedTableMtPer {
         fn empty() -> (empty: Self) {
             let inner = OrderedTableStPer::empty();
             let ghost view = inner@;
-            proof { assume(inner.spec_orderedtablestper_wf()); }
             OrderedTableMtPer {
                 locked_table: RwLock::new(inner, Ghost(OrderedTableMtPerInv)),
                 ghost_locked_table: Ghost(view),
@@ -249,7 +258,7 @@ pub mod OrderedTableMtPer {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let first = inner.first_key();
-            proof { assume(self@.dom().finite()); }
+            proof { use_type_invariant(self); }
             read_handle.release_read();
             first
         }
@@ -258,7 +267,7 @@ pub mod OrderedTableMtPer {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let last = inner.last_key();
-            proof { assume(self@.dom().finite()); }
+            proof { use_type_invariant(self); }
             read_handle.release_read();
             last
         }
@@ -267,7 +276,7 @@ pub mod OrderedTableMtPer {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let predecessor = inner.previous_key(k);
-            proof { assume(self@.dom().finite()); }
+            proof { use_type_invariant(self); }
             read_handle.release_read();
             predecessor
         }
@@ -276,7 +285,7 @@ pub mod OrderedTableMtPer {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let successor = inner.next_key(k);
-            proof { assume(self@.dom().finite()); }
+            proof { use_type_invariant(self); }
             read_handle.release_read();
             successor
         }
@@ -285,7 +294,7 @@ pub mod OrderedTableMtPer {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let (left, val, right) = inner.split_key(k);
-            proof { assume(self@.dom().finite()); }
+            proof { use_type_invariant(self); }
             read_handle.release_read();
             (from_st_table(left), val, from_st_table(right))
         }
@@ -314,7 +323,7 @@ pub mod OrderedTableMtPer {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let rank = inner.rank_key(k);
-            proof { assume(self@.dom().finite()); }
+            proof { use_type_invariant(self); }
             read_handle.release_read();
             rank
         }
@@ -323,7 +332,7 @@ pub mod OrderedTableMtPer {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let selected = inner.select_key(i);
-            proof { assume(self@.dom().finite()); }
+            proof { use_type_invariant(self); }
             read_handle.release_read();
             selected
         }
@@ -332,7 +341,7 @@ pub mod OrderedTableMtPer {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let (left, right) = inner.split_rank_key(i);
-            proof { assume(self@.dom().finite()); }
+            proof { use_type_invariant(self); }
             read_handle.release_read();
             (from_st_table(left), from_st_table(right))
         }
