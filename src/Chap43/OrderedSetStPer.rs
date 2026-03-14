@@ -22,6 +22,9 @@ pub mod OrderedSetStPer {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::clone_plus::clone_plus::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
@@ -109,29 +112,34 @@ broadcast use {
         // Ordering operations (ADT 43.1)
         /// ADT 43.1 first(A) = min[|A|]. Work Θ(log n), Span Θ(log n).
         fn first(&self) -> (first: Option<T>)
+            requires self.spec_orderedsetstper_wf(), obeys_feq_clone::<T>(),
             ensures
                 self@.finite(),
                 self@.len() == 0 <==> first matches None,
                 first matches Some(v) ==> self@.contains(v@);
         /// ADT 43.1 last(A) = max[|A|]. Work Θ(log n), Span Θ(log n).
         fn last(&self) -> (last: Option<T>)
+            requires self.spec_orderedsetstper_wf(), obeys_feq_clone::<T>(),
             ensures
                 self@.finite(),
                 self@.len() == 0 <==> last matches None,
                 last matches Some(v) ==> self@.contains(v@);
         /// ADT 43.1 previous(A, k) = max{k' in A | k' < k}. Work Θ(log n), Span Θ(log n).
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
+            requires self.spec_orderedsetstper_wf(), obeys_feq_clone::<T>(),
             ensures
                 self@.finite(),
                 predecessor matches Some(v) ==> self@.contains(v@);
         /// ADT 43.1 next(A, k) = min{k' in A | k' > k}. Work Θ(log n), Span Θ(log n).
         fn next(&self, k: &T) -> (successor: Option<T>)
+            requires self.spec_orderedsetstper_wf(), obeys_feq_clone::<T>(),
             ensures
                 self@.finite(),
                 successor matches Some(v) ==> self@.contains(v@);
         /// ADT 43.1 split(A, k) = ({k' < k}, k in A, {k' > k}). Work Θ(log n), Span Θ(log n).
         fn split(&self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
+            requires self.spec_orderedsetstper_wf(),
             ensures
                 self@.finite(),
                 split.1 == self@.contains(k@),
@@ -146,17 +154,20 @@ broadcast use {
             ensures joined@ == left@.union(right@), joined@.finite();
         /// ADT 43.1 getRange(A, k1, k2) = {k in A | k1 <= k <= k2}. Work Θ(log n), Span Θ(log n).
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
+            requires self.spec_orderedsetstper_wf(),
             ensures
                 self@.finite(),
                 range@.finite(),
                 range@.subset_of(self@);
         /// ADT 43.1 rank(A, k) = |{k' in A | k' < k}|. Work Θ(log n), Span Θ(log n).
         fn rank(&self, k: &T) -> (rank: usize)
+            requires self.spec_orderedsetstper_wf(),
             ensures
                 self@.finite(),
                 rank <= self@.len();
         /// ADT 43.1 select(A, i) = k in A such that rank(A, k) = i. Work Θ(log n), Span Θ(log n).
         fn select(&self, i: usize) -> (selected: Option<T>)
+            requires self.spec_orderedsetstper_wf(), obeys_feq_clone::<T>(),
             ensures
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
@@ -164,6 +175,7 @@ broadcast use {
         /// ADT 43.1 splitRank(A, i). Work Θ(log n), Span Θ(log n).
         fn split_rank(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
+            requires self.spec_orderedsetstper_wf(),
             ensures
                 self@.finite(),
                 split.0@.finite(),
@@ -268,68 +280,115 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn first(&self) -> (first: Option<T>)
-            ensures
-                self@.finite(),
-                self@.len() == 0 <==> first matches None,
-                first matches Some(v) ==> self@.contains(v@),
         {
-            if self.size() == 0 {
+            let len = self.base_set.elements.length();
+            proof {
+                vstd::seq_lib::seq_to_set_is_finite::<T::V>(self.base_set.elements@);
+                self.base_set.elements@.lemma_cardinality_of_empty_set_is_0();
+            }
+            if len == 0 {
                 None
             } else {
-                let seq = self.to_seq();
-                Some(seq.nth(0).clone())
+                let elem = self.base_set.elements.nth(0);
+                let v = elem.clone_plus();
+                proof {
+                    let ghost s = self.base_set.elements@;
+                    assert(s[0] == elem@);
+                    assert(s.contains(elem@));
+                    assert(s.to_set().contains(elem@));
+                    assert(self@ =~= s.to_set());
+                }
+                Some(v)
             }
         }
 
-        #[verifier::external_body]
         fn last(&self) -> (last: Option<T>)
-            ensures
-                self@.finite(),
-                self@.len() == 0 <==> last matches None,
-                last matches Some(v) ==> self@.contains(v@),
         {
-            let size = self.size();
-            if size == 0 {
+            let len = self.base_set.elements.length();
+            proof {
+                vstd::seq_lib::seq_to_set_is_finite::<T::V>(self.base_set.elements@);
+                self.base_set.elements@.lemma_cardinality_of_empty_set_is_0();
+            }
+            if len == 0 {
                 None
             } else {
-                let seq = self.to_seq();
-                Some(seq.nth(size - 1).clone())
+                let elem = self.base_set.elements.nth(len - 1);
+                let v = elem.clone_plus();
+                proof {
+                    let ghost s = self.base_set.elements@;
+                    let ghost idx = (len - 1) as int;
+                    assert(s[idx] == elem@);
+                    assert(s.contains(elem@));
+                    assert(s.to_set().contains(elem@));
+                    assert(self@ =~= s.to_set());
+                }
+                Some(v)
             }
         }
 
-        #[verifier::external_body]
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
-            ensures
-                self@.finite(),
-                predecessor matches Some(v) ==> self@.contains(v@),
         {
-            let seq = self.to_seq();
-            let size = seq.length();
-
-            for i in (0..size).rev() {
-                let elem = seq.nth(i);
-                if elem < k {
-                    return Some(elem.clone());
+            let elements = &self.base_set.elements;
+            let size = elements.length();
+            let mut i: usize = size;
+            while i > 0
+                invariant
+                    i <= size,
+                    elements.spec_avltreeseqstper_wf(),
+                    size as nat == elements@.len(),
+                    self@.finite(),
+                    self@ =~= elements@.to_set(),
+                    obeys_feq_clone::<T>(),
+                decreases i,
+            {
+                i = i - 1;
+                let elem = elements.nth(i);
+                match elem.cmp(k) {
+                    std::cmp::Ordering::Less => {
+                        let v = elem.clone_plus();
+                        proof {
+                            let ghost s = elements@;
+                            assert(s[i as int] == elem@);
+                            assert(s.contains(elem@));
+                            assert(s.to_set().contains(elem@));
+                        }
+                        return Some(v);
+                    },
+                    _ => {},
                 }
             }
             None
         }
 
-        #[verifier::external_body]
         fn next(&self, k: &T) -> (successor: Option<T>)
-            ensures
-                self@.finite(),
-                successor matches Some(v) ==> self@.contains(v@),
         {
-            let seq = self.to_seq();
-            let size = seq.length();
-
-            for i in 0..size {
-                let elem = seq.nth(i);
-                if elem > k {
-                    return Some(elem.clone());
+            let elements = &self.base_set.elements;
+            let size = elements.length();
+            let mut i: usize = 0;
+            while i < size
+                invariant
+                    i <= size,
+                    elements.spec_avltreeseqstper_wf(),
+                    size as nat == elements@.len(),
+                    self@.finite(),
+                    self@ =~= elements@.to_set(),
+                    obeys_feq_clone::<T>(),
+                decreases size - i,
+            {
+                let elem = elements.nth(i);
+                match elem.cmp(k) {
+                    std::cmp::Ordering::Greater => {
+                        let v = elem.clone_plus();
+                        proof {
+                            let ghost s = elements@;
+                            assert(s[i as int] == elem@);
+                            assert(s.contains(elem@));
+                            assert(s.to_set().contains(elem@));
+                        }
+                        return Some(v);
+                    },
+                    _ => { i = i + 1; },
                 }
             }
             None
@@ -419,18 +478,26 @@ broadcast use {
             count
         }
 
-        #[verifier::external_body]
         fn select(&self, i: usize) -> (selected: Option<T>)
-            ensures
-                self@.finite(),
-                i >= self@.len() ==> selected matches None,
-                selected matches Some(v) ==> self@.contains(v@),
         {
-            let seq = self.to_seq();
-            if i >= seq.length() {
+            let sz = self.size();
+            if i >= sz {
                 None
             } else {
-                Some(seq.nth(i).clone())
+                proof {
+                    self.base_set.elements@.lemma_cardinality_of_set();
+                    assert((i as int) < self.base_set.elements@.len());
+                }
+                let elem = self.base_set.elements.nth(i);
+                let v = elem.clone_plus();
+                proof {
+                    let ghost s = self.base_set.elements@;
+                    assert(s[i as int] == elem@);
+                    assert(s.contains(elem@));
+                    assert(s.to_set().contains(elem@));
+                    assert(self@ =~= s.to_set());
+                }
+                Some(v)
             }
         }
 
@@ -458,9 +525,9 @@ broadcast use {
         }
     }
 
-    #[verifier::external_body]
     pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStPer<T>)
-        ensures constructed@.finite()
+        requires true,
+        ensures constructed@.finite(), constructed.spec_orderedsetstper_wf()
     {
         let seq = AVLTreeSeqStPerS::from_vec(elements);
         OrderedSetStPer::from_seq(seq)
@@ -590,8 +657,8 @@ broadcast use {
     impl<'a, T: StT + Ord> std::iter::IntoIterator for &'a OrderedSetStPer<T> {
         type Item = &'a T;
         type IntoIter = OrderedSetStPerIter<'a, T>;
-        #[verifier::external_body]
         fn into_iter(self) -> (it: Self::IntoIter)
+            requires self.spec_orderedsetstper_wf(),
             ensures
                 it@.0 == 0,
                 it@.1 == self.base_set.elements@,

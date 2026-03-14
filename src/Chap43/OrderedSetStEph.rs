@@ -24,6 +24,9 @@ pub mod OrderedSetStEph {
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::clone_plus::clone_plus::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     verus! {
 
@@ -135,12 +138,14 @@ broadcast use {
         // Ordering operations (ADT 43.1)
         /// ADT 43.1 first(A) = min[|A|]. Work Θ(log n), Span Θ(log n).
         fn first(&self) -> (first: Option<T>)
+            requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 self@.len() == 0 <==> first matches None,
                 first matches Some(v) ==> self@.contains(v@);
         /// ADT 43.1 last(A) = max[|A|]. Work Θ(log n), Span Θ(log n).
         fn last(&self) -> (last: Option<T>)
+            requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 self@.len() == 0 <==> last matches None,
@@ -184,6 +189,7 @@ broadcast use {
                 rank <= self@.len();
         /// ADT 43.1 select(A, i) = k in A such that rank(A, k) = i. Work Θ(log n), Span Θ(log n).
         fn select(&self, i: usize) -> (selected: Option<T>)
+            requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
@@ -304,11 +310,11 @@ broadcast use {
                 self@.len() == 0 <==> first matches None,
                 first matches Some(v) ==> self@.contains(v@),
         {
-            if self.size() == 0 {
+            let len = self.base_set.elements.length();
+            if len == 0 {
                 None
             } else {
-                let seq = self.to_seq();
-                Some(seq.nth(0).clone())
+                Some(self.base_set.elements.nth(0).clone())
             }
         }
 
@@ -323,8 +329,7 @@ broadcast use {
             if size == 0 {
                 None
             } else {
-                let seq = self.to_seq();
-                Some(seq.nth(size - 1).clone())
+                Some(self.base_set.elements.nth(size - 1).clone())
             }
         }
 
@@ -458,11 +463,11 @@ broadcast use {
                 i >= self@.len() ==> selected matches None,
                 selected matches Some(v) ==> self@.contains(v@),
         {
-            let seq = self.to_seq();
-            if i >= seq.length() {
+            let sz = self.size();
+            if i >= sz {
                 None
             } else {
-                Some(seq.nth(i).clone())
+                Some(self.base_set.elements.nth(i).clone())
             }
         }
 
@@ -629,8 +634,8 @@ broadcast use {
     impl<'a, T: StT + Ord> std::iter::IntoIterator for &'a OrderedSetStEph<T> {
         type Item = &'a T;
         type IntoIter = OrderedSetStEphIter<'a, T>;
-        #[verifier::external_body]
         fn into_iter(self) -> (it: Self::IntoIter)
+            requires self.spec_orderedsetsteph_wf(),
             ensures
                 it@.0 == 0,
                 it@.1 == self.base_set.elements@,
@@ -653,9 +658,8 @@ broadcast use {
         }
     }
 
-    #[verifier::external_body]
     pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)
-        ensures constructed@.finite()
+        ensures constructed@.finite(), constructed.spec_orderedsetsteph_wf()
     {
         let seq = AVLTreeSeqStPerS::from_vec(elements);
         OrderedSetStEph::from_seq(seq)

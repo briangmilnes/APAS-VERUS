@@ -124,7 +124,7 @@ pub mod OrderedTableStPer {
             requires self.spec_orderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
             ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite(), sorted_entries.spec_avltreeseqstper_wf();
+            ensures self@.dom().finite(), sorted_entries.spec_avltreeseqstper_wf(), sorted_entries@.len() == self@.dom().len();
         /// ADT 43.1 first_key. Work Θ(log n), Span Θ(log n).
         fn first_key(&self) -> (key: Option<K>)
             ensures
@@ -319,7 +319,7 @@ pub mod OrderedTableStPer {
 
         #[verifier::external_body]
         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite(), sorted_entries.spec_avltreeseqstper_wf()
+            ensures self@.dom().finite(), sorted_entries.spec_avltreeseqstper_wf(), sorted_entries@.len() == self@.dom().len()
         {
             let array_seq = self.base_table.collect();
             let len = array_seq.length();
@@ -474,21 +474,26 @@ pub mod OrderedTableStPer {
             from_sorted_entries(range_seq)
         }
 
-        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures
-                self@.dom().finite(),
-                rank <= self@.dom().len(),
         {
             let entries = self.collect();
             let size = entries.length();
             let mut count: usize = 0;
-
-            for i in 0..size {
+            let mut i: usize = 0;
+            while i < size
+                invariant
+                    count <= i,
+                    i <= size,
+                    entries.spec_avltreeseqstper_wf(),
+                    size as nat == entries@.len(),
+                    entries@.len() == self@.dom().len(),
+                    self@.dom().finite(),
+                decreases size - i,
+            {
                 let pair = entries.nth(i);
                 match pair.0.cmp(k) {
-                    std::cmp::Ordering::Less => { count += 1; },
-                    _ => { break; },
+                    std::cmp::Ordering::Less => { count = count + 1; i = i + 1; },
+                    _ => { i = size; },
                 }
             }
             count
