@@ -21,51 +21,51 @@ Table of Contents:
 =================================================================
 
 ❌ BSTKeyValueStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTKeyValueStEph.rs:365: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:365: warning: requires_true - requires true — vacuous precondition
        363 | 
        364 |     fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (cloned: Link<K, V>)
        366 |         ensures
        367 |             spec_content_link(&cloned) == spec_content_link(link),
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTKeyValueStEph.rs:486: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:486: warning: requires_true - requires true — vacuous precondition
        484 | 
        485 |     fn compare_kv_links<K: StT + Ord, V: StT>(a: &Link<K, V>, b: &Link<K, V>) -> (equal: bool)
        487 |         ensures
        488 |             (a is None && b is None) ==> equal,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTKeyValueStEph.rs:376: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTKeyValueStEph.rs:863: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:376: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:863: info: accept()
    Info: 2 total
    Proof functions: 7 total (7 clean, 0 holed)
 ❌ BSTReducedStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:374: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:374: warning: requires_true - requires true — vacuous precondition
        372 | 
        373 |     fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (cloned: Link<K, V, R>)
        375 |         ensures
        376 |             Lnk::spec_content_link(&cloned) == Lnk::spec_content_link(link),
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:475: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:475: warning: requires_true - requires true — vacuous precondition
        473 | 
        474 |     fn compare_reduced_links<K: StT + Ord, V: StT, R: StT>(a: &Link<K, V, R>, b: &Link<K, V, R>) -> (equal: bool)
        476 |         ensures
        477 |             (a is None && b is None) ==> equal,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:386: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:456: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:458: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:469: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:909: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:386: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:456: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:458: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:469: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:909: info: accept()
    Info: 5 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ BSTSizeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTSizeStEph.rs:414: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:414: warning: requires_true - requires true — vacuous precondition
        412 | 
        413 |     fn compare_links<T: StT + Ord>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
        415 |         ensures
        416 |             (a is None && b is None) ==> equal,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTSizeStEph.rs:816: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:816: warning: requires_true - requires true — vacuous precondition
        814 | 
        815 |     fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)
        817 |         ensures
        818 |             Lnk::spec_content_link(&c) == Lnk::spec_content_link(link),
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTSizeStEph.rs:827: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTSizeStEph.rs:882: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:827: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:882: info: accept()
    Info: 2 total
    Proof functions: 3 total (3 clean, 0 holed)
 
@@ -119,13 +119,12 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-14 21:00:07 -07:00
-Ended:     2026-03-14 21:00:07 -07:00
-Duration:  27ms
+Started:   2026-03-14 20:00:32 -07:00
+Ended:     2026-03-14 20:00:32 -07:00
+Duration:  28ms
 
 Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
-
-Ended:     2026-03-14 21:00:07 -07:00
-Duration:  27ms
+-14 20:00:32 -07:00
+Duration:  28ms
 
 Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log

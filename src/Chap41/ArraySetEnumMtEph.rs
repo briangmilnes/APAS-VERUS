@@ -219,7 +219,9 @@ broadcast use {
 
         /// - APAS Cost Spec 41.3: Work u + Σ W(f(x)), Span 1 + max S(f(x))
         fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (filtered: Self)
-            requires self.spec_arraysetenummteph_wf(),
+            requires
+                self.spec_arraysetenummteph_wf(),
+                forall|i: usize| i < self.spec_universe_size() ==> #[trigger] f.requires((i,)),
             ensures
                 filtered@.finite(),
                 filtered@.subset_of(self@),
@@ -566,7 +568,6 @@ broadcast use {
             constructed
         }
 
-        #[verifier::external_body]
         fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (filtered: Self)
             ensures
                 filtered@.finite(),
@@ -575,18 +576,93 @@ broadcast use {
                 filtered.spec_universe_size() == self.spec_universe_size(),
         {
             let word_count = self.bits.len();
-            let mut new_bits = vec![0u64; word_count];
-            for i in 0..self.universe_size {
+            let mut new_bits: Vec<u64> = Vec::new();
+            let mut j: usize = 0;
+            while j < word_count
+                invariant
+                    j <= word_count,
+                    new_bits@.len() == j as int,
+                    forall|k: int| 0 <= k < j as int ==> new_bits@[k] == 0u64,
+                decreases word_count - j,
+            {
+                new_bits.push(0u64);
+                j = j + 1;
+            }
+            // Establish: all bits in new_bits are zero (subset invariant holds vacuously).
+            proof {
+                assert forall|k: int, b: int| #![auto]
+                    0 <= k < word_count as int && 0 <= b < 64 && u64_view(new_bits@[k])[b]
+                    implies u64_view(self.bits@[k])[b] by
+                {
+                    assert(new_bits@[k] == 0u64);
+                    zero_bit_false(b as u64);
+                }
+            }
+            let mut i: usize = 0;
+            while i < self.universe_size
+                invariant
+                    i <= self.universe_size,
+                    new_bits@.len() == word_count as int,
+                    word_count == self.bits@.len(),
+                    word_count as int == num_words(self.universe_size as int),
+                    self.spec_arraysetenummteph_wf(),
+                    forall|k: int, b: int| #![auto]
+                        (0 <= k < word_count as int && 0 <= b < 64 && u64_view(new_bits@[k])[b])
+                        ==> u64_view(self.bits@[k])[b],
+                    forall|ii: usize| ii < self.spec_universe_size()
+                        ==> #[trigger] f.requires((ii,)),
+                decreases self.universe_size - i,
+            {
                 let word_idx = i / 64;
                 let bit_idx = (i % 64) as u64;
                 if get_bit64_macro!(self.bits[word_idx], bit_idx) && f(i) {
-                    new_bits[word_idx] = set_bit64_macro!(new_bits[word_idx], bit_idx, true);
+                    let ghost old_new_bits = new_bits@;
+                    let old_word = new_bits[word_idx];
+                    let new_word = set_bit64_macro!(old_word, bit_idx, true);
+                    proof {
+                        set_bit64_proof(new_word, old_word, bit_idx, true);
+                    }
+                    new_bits.set(word_idx, new_word);
+                    proof {
+                        assert forall|k: int, b: int| #![auto]
+                            0 <= k < word_count as int && 0 <= b < 64
+                                && u64_view(new_bits@[k])[b]
+                            implies u64_view(self.bits@[k])[b] by
+                        {
+                            if k == word_idx as int {
+                                if b == bit_idx as int {
+                                    // We set this bit; self.bits has it (checked by if condition).
+                                } else {
+                                    // Other bits in same word: preserved by set_bit64_proof.
+                                    assert(u64_view(new_word)[b] == u64_view(old_word)[b]);
+                                    assert(old_new_bits[k] == old_word);
+                                }
+                            } else {
+                                // Different word: unchanged by Vec::set.
+                                assert(new_bits@[k] == old_new_bits[k]);
+                            }
+                        }
+                    }
                 }
+                i = i + 1;
             }
-            ArraySetEnumMtEph {
-                bits: new_bits,
-                universe_size: self.universe_size,
+            let filtered = ArraySetEnumMtEph { bits: new_bits, universe_size: self.universe_size };
+            proof {
+                assert forall|elem: usize|
+                    #[trigger] filtered@.contains(elem)
+                    implies self@.contains(elem) by
+                {
+                    if (elem as int) < self.universe_size as int {
+                        let k = elem as int / 64;
+                        let b = elem as int % 64;
+                        assert(0 <= k < word_count as int);
+                        assert(0 <= b < 64);
+                    }
+                }
+                assert(filtered@.subset_of(self@));
+                lemma_view_finite(filtered.bits@, self.universe_size);
             }
+            filtered
         }
 
         fn intersection(&self, other: &Self) -> (common: Self)
