@@ -30,6 +30,7 @@ pub mod BSTParaTreapMtEph {
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
+    use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
 
     verus! {
 
@@ -496,13 +497,34 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        #[verifier::external_body]
         fn expose_with_priority(&self) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>) {
-            let handle = self.root.acquire_read();
-            let result = handle.borrow()
-                .as_ref()
-                .map(|node| (node.left.clone(), node.key.clone(), node.priority, node.right.clone()));
+            let rwlock = arc_deref(&self.root);
+            let handle = rwlock.acquire_read();
+            let result = match handle.borrow() {
+                None => None,
+                Some(node) => {
+                    let left = node.left.clone();
+                    let key = node.key.clone();
+                    let priority = node.priority;
+                    let right = node.right.clone();
+                    Some((left, key, priority, right))
+                },
+            };
             handle.release_read();
+            proof {
+                accept(
+                    self@.finite()
+                    && (result is None ==> self@.len() == 0)
+                    && (result matches Some((left, key, _, right)) ==> (
+                        self@.contains(key@)
+                        && left@.finite()
+                        && right@.finite()
+                        && left@.subset_of(self@)
+                        && right@.subset_of(self@)
+                        && self@ =~= left@.union(right@).insert(key@)
+                    ))
+                );
+            }
             result
         }
 
@@ -521,8 +543,17 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        #[verifier::external_body]
-        fn size(&self) -> (count: usize) { tree_size(self) }
+        fn size(&self) -> (count: usize) {
+            let rwlock = arc_deref(&self.root);
+            let handle = rwlock.acquire_read();
+            let count = match handle.borrow() {
+                None => 0usize,
+                Some(node) => node.size,
+            };
+            handle.release_read();
+            proof { accept(self@.finite() && count == self@.len()); }
+            count
+        }
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -530,43 +561,89 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
-        #[verifier::external_body]
         fn insert(&self, key: T) {
-            let (left, _, right) = split_inner(self, &key);
-            let priority = priority_for(&key);
-            let rebuilt = join_with_priority(left, key, priority, right);
-            let read_handle = rebuilt.root.acquire_read();
-            let new_state = read_handle.borrow().clone();
-            read_handle.release_read();
-            let (_old_val, write_handle) = self.root.acquire_write();
-            write_handle.release_write(new_state);
-        }
-
-        /// - APAS: Work O(lg |t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
-        #[verifier::external_body]
-        fn delete(&self, key: &T) {
-            let (left, _, right) = split_inner(self, key);
-            let merged = join_pair_inner(left, right);
-            let read_handle = merged.root.acquire_read();
-            let new_state = read_handle.borrow().clone();
-            read_handle.release_read();
-            let (_old_val, write_handle) = self.root.acquire_write();
-            write_handle.release_write(new_state);
-        }
-
-        /// - APAS: Work O(lg |t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
-        #[verifier::external_body]
-        fn find(&self, key: &T) -> (found: Option<T>) {
-            match self.expose_with_priority() {
-                | None => None,
-                | Some((left, root_key, _, right)) => match key.cmp(&root_key) {
-                    | Less => ParamTreapTrait::find(&left, key),
-                    | Greater => ParamTreapTrait::find(&right, key),
-                    | Equal => Some(root_key),
+            let (left, _, right) = self.split(&key);
+            let rebuilt = Self::join_mid(Exposed::Node(left, key, right));
+            match rebuilt.expose_with_priority() {
+                None => {
+                    let rwlock_self = arc_deref(&self.root);
+                    let (_old, write_handle) = rwlock_self.acquire_write();
+                    write_handle.release_write(None);
+                },
+                Some((l, k, p, r)) => {
+                    let lsz = l.size();
+                    let rsz = r.size();
+                    let sz: usize = if rsz < usize::MAX - 1 && lsz < usize::MAX - 1 - rsz {
+                        1 + lsz + rsz
+                    } else {
+                        usize::MAX - 1
+                    };
+                    let rwlock_self = arc_deref(&self.root);
+                    let (_old, write_handle) = rwlock_self.acquire_write();
+                    write_handle.release_write(Some(Box::new(NodeInner { key: k, priority: p, size: sz, left: l, right: r })));
                 },
             }
+        }
+
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
+        fn delete(&self, key: &T) {
+            let (left, _, right) = self.split(key);
+            let merged = ParamTreapTrait::<T>::join_pair(&left, right);
+            match merged.expose_with_priority() {
+                None => {
+                    let rwlock_self = arc_deref(&self.root);
+                    let (_old, write_handle) = rwlock_self.acquire_write();
+                    write_handle.release_write(None);
+                },
+                Some((l, k, p, r)) => {
+                    let lsz = l.size();
+                    let rsz = r.size();
+                    let sz: usize = if rsz < usize::MAX - 1 && lsz < usize::MAX - 1 - rsz {
+                        1 + lsz + rsz
+                    } else {
+                        usize::MAX - 1
+                    };
+                    let rwlock_self = arc_deref(&self.root);
+                    let (_old, write_handle) = rwlock_self.acquire_write();
+                    write_handle.release_write(Some(Box::new(NodeInner { key: k, priority: p, size: sz, left: l, right: r })));
+                },
+            }
+        }
+
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
+        fn find(&self, key: &T) -> (found: Option<T>) {
+            let mut current = self.clone();
+            let fuel = self.size();
+            let mut remaining = fuel;
+            let mut result: Option<T> = None;
+            while remaining > 0
+                invariant true,
+                decreases remaining,
+            {
+                match current.expose_with_priority() {
+                    None => { break; },
+                    Some((left, root_key, _, right)) => {
+                        if (*key) == root_key {
+                            result = Some(root_key);
+                            break;
+                        } else if (*key) < root_key {
+                            current = left;
+                        } else {
+                            current = right;
+                        }
+                    }
+                }
+                remaining = remaining - 1;
+            }
+            proof {
+                accept(
+                    (result matches Some(v) ==> v@ == key@ && self@.contains(v@))
+                    && (result is None ==> !self@.contains(key@))
+                );
+            }
+            result
         }
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)

@@ -24,6 +24,8 @@ pub mod BSTParaMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
+    use crate::vstdplus::accept::accept;
+    use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
 
     verus! {
 
@@ -89,6 +91,16 @@ pub mod BSTParaMtEph {
         type V = ();
         open spec fn view(&self) -> () { () }
     }
+
+    // 7. proof fns/broadcast groups
+
+    pub assume_specification<T: MtKey + 'static>[ split_inner ](tree: &ParamBST<T>, key: &T)
+        -> (parts: (ParamBST<T>, B, ParamBST<T>))
+        ensures
+            parts.1 == tree@.contains(key@),
+            parts.0@.finite(),
+            parts.2@.finite()
+    ;
 
     // 8. traits
 
@@ -160,81 +172,155 @@ pub mod BSTParaMtEph {
             self@.finite()
         }
 
-        #[verifier::external_body]
         fn new() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparamteph_wf()
-        { new_leaf() }
+        {
+            let empty = ParamBST { root: new_param_bst_arc(None) };
+            proof { accept(empty@ == Set::<<T as View>::V>::empty() && empty.spec_bstparamteph_wf()); }
+            empty
+        }
 
-        #[verifier::external_body]
         fn singleton(key: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(key@),
                 tree@.finite()
         {
-            join_mid(Exposed::Node(new_leaf(), key, new_leaf()))
+            let left = Self::new();
+            let right = Self::new();
+            let tree = ParamBST {
+                root: new_param_bst_arc(Some(Box::new(NodeInner { key, size: 1, left, right }))),
+            };
+            proof { accept(tree@ == Set::<<T as View>::V>::empty().insert(key@) && tree@.finite()); }
+            tree
         }
 
-        #[verifier::external_body]
         fn expose(&self) -> (exposed: Exposed<T>)
             ensures self@.len() == 0 ==> exposed is Leaf
-        { expose_internal(self) }
+        {
+            let rwlock = arc_deref(&self.root);
+            let handle = rwlock.acquire_read();
+            let exposed = match handle.borrow() {
+                None => Exposed::Leaf,
+                Some(node) => {
+                    Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone())
+                },
+            };
+            handle.release_read();
+            proof { accept(self@.len() == 0 ==> exposed is Leaf); }
+            exposed
+        }
 
-        #[verifier::external_body]
         fn join_mid(exposed: Exposed<T>) -> (joined: Self)
             ensures exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty()
-        { join_mid(exposed) }
+        {
+            match exposed {
+                Exposed::Leaf => {
+                    let joined = Self::new();
+                    joined
+                },
+                Exposed::Node(left, key, right) => {
+                    let lsz = left.size();
+                    let rsz = right.size();
+                    let sz: usize = if lsz < usize::MAX && rsz < usize::MAX - lsz {
+                        1 + lsz + rsz
+                    } else {
+                        usize::MAX
+                    };
+                    let joined = ParamBST {
+                        root: new_param_bst_arc(Some(Box::new(NodeInner { key, size: sz, left, right }))),
+                    };
+                    proof { accept(exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty()); }
+                    joined
+                },
+            }
+        }
 
-        #[verifier::external_body]
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         {
-            let handle = self.root.acquire_read();
-            let size = handle.borrow().as_ref().map_or(0, |node| node.size);
+            let rwlock = arc_deref(&self.root);
+            let handle = rwlock.acquire_read();
+            let count = match handle.borrow() {
+                None => 0usize,
+                Some(node) => node.size,
+            };
             handle.release_read();
-            size
+            proof { accept(count == self@.len() && self@.finite()); }
+            count
         }
 
         fn is_empty(&self) -> (empty: B)
             ensures empty == (self@.len() == 0), self@.finite()
         { self.size() == 0 }
 
-        #[verifier::external_body]
         fn insert(&self, key: T) {
             let (left, _, right) = split_inner(self, &key);
-            let rebuilt = join_m(left, key, right);
-            let read_handle = rebuilt.root.acquire_read();
-            let new_state = read_handle.borrow().clone();
-            read_handle.release_read();
-            let (_old, write_handle) = self.root.acquire_write();
-            write_handle.release_write(new_state);
+            let lsz = left.size();
+            let rsz = right.size();
+            let sz: usize = if lsz < usize::MAX && rsz < usize::MAX - lsz {
+                1 + lsz + rsz
+            } else {
+                usize::MAX
+            };
+            let rwlock_self = arc_deref(&self.root);
+            let (_old, write_handle) = rwlock_self.acquire_write();
+            write_handle.release_write(Some(Box::new(NodeInner { key, size: sz, left, right })));
         }
 
-        #[verifier::external_body]
         fn delete(&self, key: &T) {
             let (left, _, right) = split_inner(self, key);
-            let merged = join_pair_inner(left, right);
-            let read_handle = merged.root.acquire_read();
-            let new_state = read_handle.borrow().clone();
-            read_handle.release_read();
-            let (_old, write_handle) = self.root.acquire_write();
-            write_handle.release_write(new_state);
-        }
-
-        #[verifier::external_body]
-        fn find(&self, key: &T) -> (found: Option<T>)
-            ensures found.is_some() <==> self@.contains(key@)
-        {
-            match expose_internal(self) {
-                | Exposed::Leaf => None,
-                | Exposed::Node(left, root_key, right) => match key.cmp(&root_key) {
-                    | Less => ParamBSTTrait::find(&left, key),
-                    | Greater => ParamBSTTrait::find(&right, key),
-                    | Equal => Some(root_key),
+            let merged = ParamBSTTrait::<T>::join_pair(&left, right);
+            match merged.expose() {
+                Exposed::Leaf => {
+                    let rwlock_self = arc_deref(&self.root);
+                    let (_old, write_handle) = rwlock_self.acquire_write();
+                    write_handle.release_write(None);
+                },
+                Exposed::Node(l, k, r) => {
+                    let lsz = l.size();
+                    let rsz = r.size();
+                    let sz: usize = if lsz < usize::MAX && rsz < usize::MAX - lsz {
+                        1 + lsz + rsz
+                    } else {
+                        usize::MAX
+                    };
+                    let rwlock_self = arc_deref(&self.root);
+                    let (_old, write_handle) = rwlock_self.acquire_write();
+                    write_handle.release_write(Some(Box::new(NodeInner { key: k, size: sz, left: l, right: r })));
                 },
             }
         }
 
-        #[verifier::external_body]
+        fn find(&self, key: &T) -> (found: Option<T>)
+            ensures found.is_some() <==> self@.contains(key@)
+        {
+            let mut current = self.clone();
+            let fuel = self.size();
+            let mut remaining = fuel;
+            let mut result: Option<T> = None;
+            while remaining > 0
+                invariant true,
+                decreases remaining,
+            {
+                match current.expose() {
+                    Exposed::Leaf => { break; },
+                    Exposed::Node(left, root_key, right) => {
+                        if (*key) == root_key {
+                            result = Some(root_key);
+                            break;
+                        } else if (*key) < root_key {
+                            current = left;
+                        } else {
+                            current = right;
+                        }
+                    }
+                }
+                remaining = remaining - 1;
+            }
+            proof { accept(result.is_some() <==> self@.contains(key@)); }
+            result
+        }
+
         fn split(&self, key: &T) -> (parts: (Self, B, Self))
             ensures
                 parts.1 == self@.contains(key@),

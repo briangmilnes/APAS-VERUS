@@ -21,25 +21,25 @@ Table of Contents:
 =================================================================
 
 ℹ ChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ChainedHashTable.rs:137: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ChainedHashTable.rs:147: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ChainedHashTable.rs:137: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ChainedHashTable.rs:147: info: accept()
    Info: 2 total
    1 clean proof function
 ❌ DoubleHashFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/DoubleHashFlatHashTableStEph.rs:40: error: fn_missing_ensures - fn second_hash — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/DoubleHashFlatHashTableStEph.rs:40: error: fn_missing_ensures - fn second_hash — exec fn should have ensures
         38 |         /// Strategy: Always return an odd number (works for power-of-2 sizes),
         39 |         /// and for prime sizes, ensure < m and non-zero.
         41 |             requires table_size > 0,
         42 |         {
 ❌ FlatHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/FlatHashTable.rs:67: error: fn_missing_ensures - fn insert_with_probe — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/FlatHashTable.rs:67: error: fn_missing_ensures - fn insert_with_probe — exec fn should have ensures
         57 |         fn find_slot(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (slot: usize)
             ...
         65 |         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         66 |         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — delegates to find_slot then O(1) write.
         68 |             requires
         69 |                 old(table).current_size > 0,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/FlatHashTable.rs:81: error: fn_missing_ensures - fn lookup_with_probe — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/FlatHashTable.rs:81: error: fn_missing_ensures - fn lookup_with_probe — exec fn should have ensures
         67 |         fn insert_with_probe(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
             ...
         79 |         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
@@ -50,25 +50,25 @@ Table of Contents:
 ✓ LinkedListChainedHashTableStEph.rs
    1 clean proof function
 ❌ ParaHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:56: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:56: error: external_body - #[verifier::external_body]
         57 |     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize) -> (index: usize)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:84: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:84: error: external_body - #[verifier::external_body]
         85 |     pub fn compute_second_hash<Key: std::hash::Hash>(key: &Key, table_size: usize) -> (step: usize)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:141: error: fn_missing_requires - fn createTable — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:141: error: fn_missing_requires - fn createTable — exec fn should have requires
        132 |         fn clone_entry(&self) -> (cloned: Self);
             ...
        139 |         /// - APAS: Work O(m), Span O(m) where m is initial size.
        140 |         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
        142 |             ensures
        143 |                 table.initial_size == initial_size,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:206: error: fn_missing_requires - fn metrics — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:206: error: fn_missing_requires - fn metrics — exec fn should have requires
        195 |         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
             ...
        204 |         /// - APAS: N/A — Verus-specific scaffolding.
        205 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
        207 |             ensures m == &table.metrics,
        208 |         { &table.metrics }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:214: error: fn_missing_requires - fn loadAndSize — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:214: error: fn_missing_requires - fn loadAndSize — exec fn should have requires
        206 |         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
             ...
        212 |         /// - APAS: Work O(1), Span O(1).
@@ -79,31 +79,31 @@ Table of Contents:
       2 × external_body
 ✓ QuadProbFlatHashTableStEph.rs
 ❌ StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:103: error: fn_missing_requires - fn chain_insert — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:103: error: fn_missing_requires - fn chain_insert — exec fn should have requires
         99 |             fn default() -> Self { ChainList { head: None } }
             ...
        101 | 
        102 |         /// Inserts key-value into chain, updating if key exists, appending if not.
        104 |             chain: Option<Box<Node<Key, Value>>>,
        105 |             key: Key,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:136: error: fn_missing_requires - fn chain_lookup — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:136: error: fn_missing_requires - fn chain_lookup — exec fn should have requires
        103 |         fn chain_insert<Key: PartialEq, Value>(
             ...
        134 | 
        135 |         /// Looks up key in chain, returning value if found.
        137 |             chain: &Option<Box<Node<Key, Value>>>,
        138 |             key: &Key,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:157: error: fn_missing_requires - fn chain_delete — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:157: error: fn_missing_requires - fn chain_delete — exec fn should have requires
        136 |         fn chain_lookup<Key: PartialEq, Value: Clone>(
             ...
        155 | 
        156 |         /// Removes first node matching key, returns updated chain and whether found.
        158 |             chain: Option<Box<Node<Key, Value>>>,
        159 |             key: &Key,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:356: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:373: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:390: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:404: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:356: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:373: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:390: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:404: info: accept()
    Info: 4 total
    Proof functions: 1 total (1 clean, 0 holed)
 ✓ VecChainedHashTableStEph.rs
@@ -170,13 +170,12 @@ Holes Found: 2 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-14 19:44:28 -07:00
-Ended:     2026-03-14 19:44:28 -07:00
-Duration:  19ms
+Started:   2026-03-14 21:00:07 -07:00
+Ended:     2026-03-14 21:00:07 -07:00
+Duration:  18ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
-  2026-03-14 19:44:28 -07:00
-Ended:     2026-03-14 19:44:28 -07:00
-Duration:  19ms
+7 -07:00
+Duration:  18ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
