@@ -383,15 +383,47 @@ verus! {
             result
         }
 
-        #[verifier::external_body]
         fn from_vec(v: Vec<Pair<X, Y>>) -> MappingStEph<X, Y> {
+            let ghost v_seq = v@;
             let pairs = SetStEph::from_vec(v);
-            MappingStEph { mapping: RelationStEph::from_set(pairs) }
+            let result = MappingStEph { mapping: RelationStEph::from_set(pairs) };
+            proof {
+                // result.mapping@ == pairs@ == v_seq.map(|i, p: Pair<X, Y>| p@).to_set()
+                // is_functional_seq(v_seq) == is_functional_set(v_seq.map(|i, p| p@).to_set())
+                //                          == is_functional_set(result.mapping@)
+                assert(result.mapping@ =~= v_seq.map(|i: int, p: Pair<X, Y>| p@).to_set());
+                // Prove the domain/value ensures for each index.
+                assert forall |i: int| #![trigger v_seq[i]] 0 <= i < v_seq.len() implies
+                    result@.dom().contains(v_seq[i]@.0) && result@[v_seq[i]@.0] == v_seq[i]@.1 by {
+                    // v_seq[i]@ is in the mapped-to-set.
+                    lemma_seq_index_in_map_to_set(v_seq, i);
+                    let pair_view = v_seq[i]@;
+                    assert(result.mapping@.contains(pair_view));
+                    // So exists y such that (x, y) in mapping@ — domain containment.
+                    assert(result@.dom().contains(pair_view.0));
+                    // The chosen y must equal pair_view.1 by functionality.
+                    let chosen_y = choose |y: Y::V| result.mapping@.contains((pair_view.0, y));
+                    // is_functional_set gives y uniqueness.
+                }
+            }
+            result
         }
 
-        #[verifier::external_body]
         fn from_relation(r: &RelationStEph<X, Y>) -> MappingStEph<X, Y> {
-            MappingStEph { mapping: r.clone() }
+            let result = MappingStEph { mapping: r.clone() };
+            proof {
+                // result.mapping@ == r@ (from clone ensures).
+                // is_functional_relation(*r) == is_functional_set(r@) == is_functional_set(result.mapping@).
+                // Prove domain/value ensures.
+                assert forall |x: X::V, y: Y::V| r@.contains((x, y)) implies
+                    result@.dom().contains(x) && result@[x] == y by {
+                    assert(result.mapping@.contains((x, y)));
+                    assert(result@.dom().contains(x));
+                    // By functionality, the chosen y' must equal y.
+                    let chosen = choose |y2: Y::V| result.mapping@.contains((x, y2));
+                }
+            }
+            result
         }
 
         #[verifier::external_body]

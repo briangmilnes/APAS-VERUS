@@ -1272,44 +1272,118 @@ pub mod BSTParaStEph {
         }
 
         /// Algorithm 38.10 — sequential reduce. Folds `op(L', op(k, R'))`.
-        #[verifier::external_body]
         fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (result: T) {
             reduce_inner(self, &op, base)
         }
 
         fn collect_in_order(&self, out: &mut Vec<T>)
-            ensures out@.len() == old(out)@.len() + self@.len(),
+            ensures
+                out@.len() == old(out)@.len() + self@.len(),
+                forall|i: int| #![trigger out@[i]] 0 <= i < old(out)@.len() ==> out@[i] == old(out)@[i],
+                forall|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() ==> self@.contains(out@[i]@),
+                forall|v: T::V| self@.contains(v) ==>
+                    exists|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() && out@[i]@ == v,
             decreases self@.len(),
         {
             match self.expose() {
                 | Exposed::Leaf => {}
                 | Exposed::Node(left, key, right) => {
+                    let ghost g0 = out@.len();
+                    let ghost out_0 = out@;
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
                         assert(!left@.union(right@).contains(key@));
                         assert(self@.len() == left@.len() + right@.len() + 1);
                     }
                     left.collect_in_order(out);
+                    let ghost g1 = out@.len();
+                    let ghost out_1 = out@;
                     out.push(key);
+                    let ghost g2 = out@.len();
+                    let ghost out_2 = out@;
                     right.collect_in_order(out);
+                    proof {
+                        // Containment: new elements come from self@.
+                        assert forall|i: int| #![trigger out@[i]] g0 <= i < out@.len() implies
+                            self@.contains(out@[i]@) by {
+                            if i < g1 as int {
+                                // Element from left subtree, preserved through push and right.
+                                assert(out@[i] == out_2[i]);
+                                assert(out_2[i] == out_1[i]);
+                                assert(left@.contains(out_1[i]@));
+                            } else if i == g1 as int {
+                                // The key itself.
+                                assert(out@[i] == out_2[i]);
+                                assert(out_2[g1 as int] == key);
+                            } else if i < g2 as int {
+                                // Impossible: g2 == g1 + 1.
+                            } else {
+                                // Element from right subtree.
+                                assert(right@.contains(out@[i]@));
+                            }
+                        };
+                        // Completeness: all elements of self@ appear.
+                        assert forall|v: T::V| self@.contains(v) implies
+                            exists|i: int| #![trigger out@[i]] g0 <= i < out@.len() && out@[i]@ == v by {
+                            if left@.contains(v) {
+                                let i_left = choose|i: int| #![trigger out_1[i]] g0 <= i < g1 as int && out_1[i]@ == v;
+                                // Preserved through push and right.
+                                assert(out_2[i_left] == out_1[i_left]);
+                                assert(out@[i_left] == out_2[i_left]);
+                            } else if v == key@ {
+                                assert(out_2[g1 as int] == key);
+                                assert(out@[g1 as int] == out_2[g1 as int]);
+                            } else {
+                                assert(right@.contains(v));
+                            }
+                        };
+                        // Preservation: old elements unchanged.
+                        assert forall|i: int| #![trigger out@[i]] 0 <= i < g0 implies out@[i] == out_0[i] by {
+                            assert(out@[i] == out_2[i]);
+                            assert(out_2[i] == out_1[i]);
+                            assert(out_1[i] == out_0[i]);
+                        };
+                    }
                 }
             }
         }
 
-        #[verifier::external_body]
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
         {
             let count = self.size();
             let mut out = Vec::with_capacity(count);
             self.collect_in_order(&mut out);
-            ArraySeqStPerS::from_vec(out)
+            let result = ArraySeqStPerS::from_vec(out);
+            proof {
+                // seq@.len() == self@.len() follows from:
+                // collect_in_order: out@.len() == 0 + self@.len()
+                // from_vec: result.spec_len() == out@.len()
+                // And spec_len() == seq@.len() (map preserves length).
+
+                // Containment: self@.contains(v) <==> seq@.contains(v).
+                // Forward: self@.contains(v) ==> ∃i. out@[i]@ == v ==> seq@.contains(v).
+                assert forall|v: T::V| self@.contains(v) implies result@.contains(v) by {
+                    let i = choose|i: int| #![trigger out@[i]] 0 <= i < out@.len() && out@[i]@ == v;
+                    // result.spec_index(i) == out@[i], and result@[i] == out@[i]@.
+                    assert(result@[i] == result.spec_index(i)@);
+                    assert(result.spec_index(i) == out@[i]);
+                };
+                // Backward: seq@.contains(v) ==> ∃i. out@[i]@ == v ==> self@.contains(v).
+                assert forall|v: T::V| result@.contains(v) implies self@.contains(v) by {
+                    let i = choose|i: int| 0 <= i < result@.len() && result@[i] == v;
+                    assert(result@[i] == result.spec_index(i)@);
+                    assert(result.spec_index(i) == out@[i]);
+                    assert(out@[i]@ == v);
+                    assert(self@.contains(out@[i]@));
+                };
+            }
+            result
         }
     }
 
     // 10. free fns
 
     /// Algorithm 38.9 — sequential filter recursive helper (takes &F for recursion).
-    #[verifier::external_body]
     fn filter_inner<T: StT + Ord, F: Fn(&T) -> bool>(
         tree: &ParamBST<T>,
         predicate: &F,
@@ -1345,6 +1419,19 @@ pub mod BSTParaStEph {
                     proof {
                         vstd::set_lib::lemma_len_subset(left_filtered@, left@);
                         vstd::set_lib::lemma_len_subset(right_filtered@, right@);
+                        // Disjointness: subsets of disjoint sets.
+                        assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {
+                            if left_filtered@.contains(x) && right_filtered@.contains(x) {
+                                assert(left@.contains(x) && right@.contains(x));
+                            }
+                        };
+                        // Ordering: left_filtered ⊆ left (< key), right_filtered ⊆ right (> key).
+                        assert forall|t: T| #![auto] left_filtered@.contains(t@) implies t.cmp_spec(&key) == Less by {
+                            assert(left@.contains(t@));
+                        };
+                        assert forall|t: T| #![auto] right_filtered@.contains(t@) implies t.cmp_spec(&key) == Greater by {
+                            assert(right@.contains(t@));
+                        };
                     }
                     ParamBST::join_m(left_filtered, key, right_filtered)
                 } else {
@@ -1379,7 +1466,7 @@ pub mod BSTParaStEph {
         requires
             tree@.finite(),
             forall|a: T, b: T| op.requires((a, b)),
-        ensures true,
+        ensures tree@.len() == 0 ==> result@ == identity@,
         decreases tree@.len(),
     {
         match tree.expose() {
