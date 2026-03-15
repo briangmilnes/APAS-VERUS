@@ -110,7 +110,15 @@ pub mod OrderedSetMtEph {
         fn delete(&mut self, x: &T)
             ensures self@ == old(self)@.remove(x@), self@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn filter<F: Pred<T>>(&mut self, f: F)
+        fn filter<F: Pred<T>>(
+            &mut self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        )
+            requires
+                forall|t: &T| #[trigger] f.requires((t,)),
+                forall|x: T, keep: bool|
+                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn intersection(&mut self, other: &Self)
@@ -232,9 +240,13 @@ pub mod OrderedSetMtEph {
         }
 
         #[verifier::external_body]
-        fn filter<F: PredMt<T>>(&mut self, f: F) {
+        fn filter<F: PredMt<T>>(
+            &mut self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            locked_val.filter(f);
+            locked_val.filter(f, Ghost(spec_pred));
             self.ghost_locked_set = Ghost(locked_val@);
             write_handle.release_write(locked_val);
         }

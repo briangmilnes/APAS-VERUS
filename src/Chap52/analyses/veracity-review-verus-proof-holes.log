@@ -44,9 +44,25 @@ Table of Contents:
 ✓ AdjTableGraphStEph.rs
    1 clean proof function
 ✓ AdjTableGraphStPer.rs
-✓ EdgeSetGraphMtPer.rs
-✓ EdgeSetGraphStEph.rs
-✓ EdgeSetGraphStPer.rs
+❌ EdgeSetGraphMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphMtPer.rs:135: error: external_body - #[verifier::external_body]
+       136 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphMtPer.rs:177: error: external_body - #[verifier::external_body]
+       178 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+   Holes: 2 total
+      2 × external_body
+❌ EdgeSetGraphStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStEph.rs:146: error: external_body - #[verifier::external_body]
+       147 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
+   Holes: 1 total
+      1 × external_body
+❌ EdgeSetGraphStPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs:140: error: external_body - #[verifier::external_body]
+       141 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs:177: error: external_body - #[verifier::external_body]
+       178 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+   Holes: 2 total
+      2 × external_body
 
 =================================================================
 2. Depends Upon
@@ -95,8 +111,8 @@ EdgeSetGraphStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   14 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   11 clean (no holes, no errors; 78%)
+   3 holed (holes or errors, 21%)
    14 total
 
 Proof Functions:
@@ -112,17 +128,16 @@ Function Specs:
    434 total fns
 
 
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
+Holes Found: 5 total
+   5 × external_body (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 08:23:13 -07:00
-Ended:     2026-03-15 08:23:13 -07:00
-Duration:  51ms
+Started:   2026-03-15 09:54:53 -07:00
+Ended:     2026-03-15 09:54:53 -07:00
+Duration:  38ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log

@@ -1,6 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for Chapter 42 multi-threaded ephemeral table implementation.
 
+use vstd::prelude::Ghost;
+
 use apas_verus::Chap41::ArraySetStEph::ArraySetStEph::*;
 use apas_verus::Chap42::TableMtEph::TableMtEph::*;
 use apas_verus::TableMtEphLit;
@@ -124,7 +126,7 @@ fn test_table_filter_ephemeral() {
     table.insert(3, "three".to_string(), |_old, new| new.clone());
     table.insert(4, "four".to_string(), |_old, new| new.clone());
 
-    table.filter(|k, _v| *k % 2 == 0);
+    table.filter(|k, _v| *k % 2 == 0, Ghost::assume_new());
     assert_eq!(table.size(), 2);
     assert_eq!(table.find(&2), Some("two".to_string()));
     assert_eq!(table.find(&4), Some("four".to_string()));
@@ -289,7 +291,7 @@ fn test_table_parallel_operations() {
     }
 
     // Test parallel filter
-    table.filter(|k, _v| *k % 2 == 0);
+    table.filter(|k, _v| *k % 2 == 0, Ghost::assume_new());
     assert_eq!(table.size(), 25);
 
     for i in 0..50 {

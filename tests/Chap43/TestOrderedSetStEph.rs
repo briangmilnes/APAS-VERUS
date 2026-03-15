@@ -1,6 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Comprehensive tests for OrderedSetStEph - ephemeral ordered set implementation.
 
+use vstd::prelude::Ghost;
+
 use apas_verus::Chap43::OrderedSetStEph::OrderedSetStEph::*;
 use apas_verus::OrderedSetStEphLit;
 use apas_verus::Types::Types::*;
@@ -238,7 +240,7 @@ fn test_filter() {
     set.insert(4);
     set.insert(5);
 
-    set.filter(|x| *x % 2 == 0);
+    set.filter(|x| *x % 2 == 0, Ghost::assume_new());
     assert_eq!(set.size(), 2);
     assert!(set.find(&2));
     assert!(set.find(&4));

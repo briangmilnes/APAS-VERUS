@@ -1,6 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for ArraySetStEph
 
+use vstd::prelude::Ghost;
+
 use apas_verus::{ArraySeqStEphSLit, ArraySetStEphLit};
 use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::*;
 use apas_verus::Chap41::ArraySetStEph::ArraySetStEph::*;
@@ -95,7 +97,7 @@ fn test_array_set_from_seq() {
 #[test]
 fn test_array_set_filter() {
     let set = ArraySetStEphLit![1, 2, 3, 4, 5, 6];
-    let filtered = set.filter(|&x| x % 2 == 0);
+    let filtered = set.filter(|&x| x % 2 == 0, Ghost::assume_new());
 
     assert_eq!(filtered.size(), 3);
     assert!(filtered.find(&2));

@@ -157,8 +157,12 @@ broadcast use {
         fn map<G: Fn(&V) -> V>(&self, f: G) -> (mapped: Self)
             requires self.spec_augorderedtablestper_wf(), forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
             ensures mapped@.dom().finite(), mapped.spec_augorderedtablestper_wf();
-        fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (filtered: Self)
-            requires self.spec_augorderedtablestper_wf(), forall|k: &K, v: &V| f.requires((k, v)), obeys_feq_full::<Pair<K, V>>(),
+        fn filter<G: Fn(&K, &V) -> B>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
+            requires
+                self.spec_augorderedtablestper_wf(),
+                forall|k: &K, v: &V| f.requires((k, v)),
+                obeys_feq_full::<Pair<K, V>>(),
+                forall|k: K, v: V, keep: bool| f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
             ensures filtered@.dom().finite(), filtered.spec_augorderedtablestper_wf();
         fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (common: Self)
             requires
@@ -368,10 +372,10 @@ broadcast use {
             r
         }
 
-        fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (filtered: Self)
+        fn filter<G: Fn(&K, &V) -> B>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
             ensures filtered@.dom().finite(), filtered.spec_augorderedtablestper_wf()
         {
-            let new_base = self.base_table.filter(f);
+            let new_base = self.base_table.filter(f, Ghost(spec_pred));
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             let r = Self {

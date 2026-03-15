@@ -83,10 +83,16 @@ broadcast use {
             requires self.spec_orderedsetstper_wf(),
             ensures updated@ == self@.remove(x@), updated@.finite(), updated.spec_orderedsetstper_wf();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
+        fn filter<F: PredSt<T>>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
             requires
                 self.spec_orderedsetstper_wf(),
                 forall|t: &T| #[trigger] f.requires((t,)),
+                forall|x: T, keep: bool|
+                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures filtered@.finite(), filtered@.subset_of(self@), filtered.spec_orderedsetstper_wf();
         /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn intersection(&self, other: &Self) -> (common: Self)
@@ -237,11 +243,15 @@ broadcast use {
             }
         }
 
-        fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
+        fn filter<F: PredSt<T>>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
             ensures filtered@.finite(), filtered@.subset_of(self@)
         {
             OrderedSetStPer {
-                base_set: self.base_set.filter(f),
+                base_set: self.base_set.filter(f, Ghost(spec_pred)),
             }
         }
 

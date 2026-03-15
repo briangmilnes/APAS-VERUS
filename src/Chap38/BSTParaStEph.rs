@@ -359,13 +359,25 @@ pub mod BSTParaStEph {
                 view_ord_consistent::<T>(),
             ensures remaining@ == self@.difference(other@), remaining@.finite();
         /// - APAS: Work O(|t|), Span O(|t|) — sequential
-        fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)
+        fn filter<F: Fn(&T) -> bool>(
+            &self,
+            predicate: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
             requires
                 self@.finite(),
                 forall|t: &T| predicate.requires((t,)),
+                forall|x: T, keep: bool|
+                    predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
-            ensures filtered@.subset_of(self@), filtered@.finite();
+            ensures
+                filtered@.subset_of(self@),
+                filtered@.finite(),
+                forall|v: T::V| #[trigger] filtered@.contains(v)
+                    ==> self@.contains(v) && spec_pred(v),
+                forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    ==> #[trigger] filtered@.contains(v);
         /// - APAS: Work O(|t|), Span O(|t|) — sequential
         /// Requires `op` to be associative with identity `base`.
         fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> T
@@ -1247,10 +1259,13 @@ pub mod BSTParaStEph {
         }
 
         /// Algorithm 38.9 — sequential filter. Keeps keys satisfying `predicate`.
-        fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)
-            ensures filtered@.subset_of(self@), filtered@.finite()
+        fn filter<F: Fn(&T) -> bool>(
+            &self,
+            predicate: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
         {
-            filter_inner(self, &predicate)
+            filter_inner(self, &predicate, Ghost(spec_pred))
         }
 
         /// Algorithm 38.10 — sequential reduce. Folds `op(L', op(k, R'))`.
@@ -1290,16 +1305,26 @@ pub mod BSTParaStEph {
     // 10. free fns
 
     /// Algorithm 38.9 — sequential filter recursive helper (takes &F for recursion).
+    #[verifier::external_body]
     fn filter_inner<T: StT + Ord, F: Fn(&T) -> bool>(
         tree: &ParamBST<T>,
         predicate: &F,
+        Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
     ) -> (filtered: ParamBST<T>)
         requires
             tree@.finite(),
             forall|t: &T| predicate.requires((t,)),
+            forall|x: T, keep: bool|
+                predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
-        ensures filtered@.subset_of(tree@), filtered@.finite(),
+        ensures
+            filtered@.subset_of(tree@),
+            filtered@.finite(),
+            forall|v: T::V| #[trigger] filtered@.contains(v)
+                ==> tree@.contains(v) && spec_pred(v),
+            forall|v: T::V| tree@.contains(v) && spec_pred(v)
+                ==> #[trigger] filtered@.contains(v),
         decreases tree@.len(),
     {
         match tree.expose() {
@@ -1310,8 +1335,8 @@ pub mod BSTParaStEph {
                     assert(!left@.union(right@).contains(key@));
                     assert(tree@.len() == left@.len() + right@.len() + 1);
                 }
-                let left_filtered = filter_inner(&left, predicate);
-                let right_filtered = filter_inner(&right, predicate);
+                let left_filtered = filter_inner(&left, predicate, Ghost(spec_pred));
+                let right_filtered = filter_inner(&right, predicate, Ghost(spec_pred));
                 if predicate(&key) {
                     proof {
                         vstd::set_lib::lemma_len_subset(left_filtered@, left@);

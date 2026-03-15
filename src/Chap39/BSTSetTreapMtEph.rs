@@ -114,7 +114,15 @@ pub mod BSTSetTreapMtEph {
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)
             ensures joined@.finite(), joined@ =~= left@.union(right@).insert(pivot@);
         /// - APAS: Work Θ(n), Span O(lg n)
-        fn filter<F: Pred<T>>(&self, predicate: F) -> (filtered: Self)
+        fn filter<F: Pred<T>>(
+            &self,
+            predicate: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
+            requires
+                forall|t: &T| #[trigger] predicate.requires((t,)),
+                forall|x: T, keep: bool|
+                    predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures filtered@.finite();
         /// - APAS: Work Θ(n), Span O(lg n)
         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
@@ -250,8 +258,12 @@ pub mod BSTSetTreapMtEph {
             }
         }
 
-        fn filter<F: Pred<T>>(&self, predicate: F) -> (filtered: Self) {
-            BSTSetTreapMtEph { tree: self.tree.filter(predicate) }
+        fn filter<F: Pred<T>>(
+            &self,
+            predicate: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self) {
+            BSTSetTreapMtEph { tree: self.tree.filter(predicate, Ghost(spec_pred)) }
         }
 
         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)

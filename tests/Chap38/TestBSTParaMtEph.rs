@@ -1,4 +1,6 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+use vstd::prelude::Ghost;
+
 use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap38::BSTParaMtEph::BSTParaMtEph::*;
 use apas_verus::Types::Types::*;
@@ -93,7 +95,7 @@ fn para_intersect_and_difference() {
 fn para_filter_and_reduce() {
     let tree = make_tree(&[1, 2, 3, 4, 5, 6]);
 
-    let evens = tree.filter(|v| v % 2 == 0);
+    let evens = tree.filter(|v| v % 2 == 0, Ghost::assume_new());
     assert_eq!(evens.in_order(), ArraySeqStPerS::from_vec(vec![2, 4, 6]));
 
     let sum = tree.reduce(|a, b| a + b, 0);
@@ -134,7 +136,7 @@ fn para_intersect_and_difference_large() {
 fn para_filter_and_reduce_edge_cases() {
     let tree = make_range_tree(0, 64);
 
-    let odds = tree.filter(|v| v % 2 == 1);
+    let odds = tree.filter(|v| v % 2 == 1, Ghost::assume_new());
     let odd_values = odds.in_order().iter().copied().collect::<Vec<_>>();
     let expected_odds = (0..64).filter(|v| v % 2 == 1).collect::<Vec<_>>();
     assert_eq!(odd_values, expected_odds);
@@ -144,7 +146,7 @@ fn para_filter_and_reduce_edge_cases() {
     assert_eq!(sum_squares, expected_sum_squares);
 
     let single = make_tree(&[42]);
-    let filtered_single = single.filter(|v| *v == 42);
+    let filtered_single = single.filter(|v| *v == 42, Ghost::assume_new());
     assert_eq!(filtered_single.in_order().iter().copied().collect::<Vec<_>>(), vec![42]);
     let reduced_single = single.reduce(|a, b| a + b, 0);
     assert_eq!(reduced_single, 42);
@@ -375,7 +377,7 @@ fn para_concurrent_filter_reduce() {
     let barrier1 = Arc::clone(&barrier);
     handles.push(thread::spawn(move || {
         barrier1.wait();
-        let evens = tree1.filter(|x| x % 2 == 0);
+        let evens = tree1.filter(|x| x % 2 == 0, Ghost::assume_new());
         evens.size()
     }));
 
@@ -384,7 +386,7 @@ fn para_concurrent_filter_reduce() {
     let barrier2 = Arc::clone(&barrier);
     handles.push(thread::spawn(move || {
         barrier2.wait();
-        let odds = tree2.filter(|x| x % 2 == 1);
+        let odds = tree2.filter(|x| x % 2 == 1, Ghost::assume_new());
         odds.size()
     }));
 

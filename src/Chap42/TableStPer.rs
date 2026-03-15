@@ -426,15 +426,23 @@ pub mod TableStPer {
                         && mapped@[k] == result@);
 
         /// APAS: Work Θ(|a| * W(f)), Span Θ(lg |a| + S(f))
-        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (filtered: Self)
+        fn filter<F: Fn(&K, &V) -> B>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
+        ) -> (filtered: Self)
             requires
                 self.spec_tablestper_wf(),
                 forall|k: &K, v: &V| f.requires((k, v)),
+                forall|k: K, v: V, keep: bool|
+                    f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
                 obeys_feq_full::<Pair<K, V>>(),
             ensures
                 filtered@.dom().subset_of(self@.dom()),
                 filtered.spec_tablestper_wf(),
-                forall|k: K::V| #![auto] filtered@.contains_key(k) ==> filtered@[k] == self@[k];
+                forall|k: K::V| #![auto] filtered@.contains_key(k) ==> filtered@[k] == self@[k],
+                forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
+                    ==> #[trigger] filtered@.dom().contains(k);
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (common: Self)
@@ -756,7 +764,12 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
-        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (filtered: Self)
+        #[verifier::external_body]
+        fn filter<F: Fn(&K, &V) -> B>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
+        ) -> (filtered: Self)
         {
             let ghost self_view = self.entries@;
             let mut kept: Vec<Pair<K, V>> = Vec::new();

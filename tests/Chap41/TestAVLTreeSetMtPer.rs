@@ -2,6 +2,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for AVLTreeSetMtPer.
 
+use vstd::prelude::Ghost;
+
 use apas_verus::AVLTreeSetMtPerLit;
 use apas_verus::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::*;
 use apas_verus::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::*;
@@ -233,7 +235,7 @@ fn test_duplicate_insert() {
 #[test]
 fn test_filter_operation() {
     let set = AVLTreeSetMtPerLit![1, 2, 3, 4, 5, 6];
-    let evens = set.filter(|x: &i32| *x % 2 == 0);
+    let evens = set.filter(|x: &i32| *x % 2 == 0, Ghost::assume_new());
     assert_eq!(evens.size(), 3);
     assert!(evens.find(&2));
     assert!(evens.find(&4));
@@ -357,7 +359,7 @@ fn test_delete_multiple() {
 #[test]
 fn test_filter_empty_result() {
     let set = AVLTreeSetMtPerLit![1, 3, 5];
-    let evens = set.filter(|x: &i32| *x % 2 == 0);
+    let evens = set.filter(|x: &i32| *x % 2 == 0, Ghost::assume_new());
     assert_eq!(evens.size(), 0);
 }
 
@@ -397,7 +399,7 @@ fn test_find_missing() {
 #[test]
 fn test_filter_parallel_path() {
     let set = AVLTreeSetMtPerLit![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-    let evens = set.filter(|x: &i32| *x % 2 == 0);
+    let evens = set.filter(|x: &i32| *x % 2 == 0, Ghost::assume_new());
     assert_eq!(evens.size(), 6);
     assert!(evens.find(&2));
     assert!(evens.find(&12));

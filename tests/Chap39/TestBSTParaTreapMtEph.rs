@@ -1,6 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for BSTParaTreapMtEph.
 
+use vstd::prelude::Ghost;
+
 use apas_verus::Chap39::BSTParaTreapMtEph::BSTParaTreapMtEph::*;
 use apas_verus::ParamTreapLit;
 use apas_verus::Types::Types::*;
@@ -182,7 +184,7 @@ fn test_filter() {
     tree.insert(20);
     tree.insert(25);
 
-    let filtered = tree.filter(|&x| x > 10);
+    let filtered = tree.filter(|&x| x > 10, Ghost::assume_new());
     assert_eq!(filtered.size(), 3); // 15, 20, 25
     assert_eq!(filtered.find(&15), Some(15));
     assert_eq!(filtered.find(&5), None);
@@ -338,7 +340,7 @@ fn test_filter_all() {
     tree.insert(10);
     tree.insert(15);
 
-    let filtered = tree.filter(|&x| x > 0);
+    let filtered = tree.filter(|&x| x > 0, Ghost::assume_new());
     assert_eq!(filtered.size(), tree.size());
 }
 
@@ -349,7 +351,7 @@ fn test_filter_none() {
     tree.insert(10);
     tree.insert(15);
 
-    let filtered = tree.filter(|&x| x > 100);
+    let filtered = tree.filter(|&x| x > 100, Ghost::assume_new());
     assert_eq!(filtered.size(), 0);
 }
 

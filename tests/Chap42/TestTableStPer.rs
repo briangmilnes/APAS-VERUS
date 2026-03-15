@@ -1,6 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for Chapter 42 single-threaded persistent table implementation.
 
+use vstd::prelude::Ghost;
+
 use apas_verus::Chap41::ArraySetStEph::ArraySetStEph::*;
 use apas_verus::Chap42::TableStPer::TableStPer::*;
 use apas_verus::TableStPerLit;
@@ -115,7 +117,7 @@ fn test_table_filter() {
     let table = table.insert(3, 30, |_old, new| *new);
     let table = table.insert(4, 15, |_old, new| *new);
 
-    let filtered = table.filter(|_k, v| *v > 20);
+    let filtered = table.filter(|_k, v| *v > 20, Ghost::assume_new());
     assert_eq!(filtered.size(), 2);
     assert_eq!(filtered.find(&2), Some(25));
     assert_eq!(filtered.find(&3), Some(30));
@@ -260,7 +262,7 @@ fn test_table_empty_operations() {
     let mapped = empty.map(|s| s.to_uppercase());
     assert_eq!(mapped.size(), 0);
 
-    let filtered = empty.filter(|_k, _v| true);
+    let filtered = empty.filter(|_k, _v| true, Ghost::assume_new());
     assert_eq!(filtered.size(), 0);
 }
 

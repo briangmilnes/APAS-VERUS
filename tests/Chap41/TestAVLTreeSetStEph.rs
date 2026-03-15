@@ -1,6 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for AVLTreeSetStEph
 
+use vstd::prelude::Ghost;
+
 use apas_verus::AVLTreeSetStEphLit;
 use apas_verus::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
 
@@ -98,7 +100,7 @@ fn test_avl_tree_set_from_seq() {
 #[test]
 fn test_avl_tree_set_filter() {
     let set = AVLTreeSetStEphLit![1, 2, 3, 4, 5, 6];
-    let filtered = set.filter(|&x| x % 2 == 0);
+    let filtered = set.filter(|&x| x % 2 == 0, Ghost::assume_new());
 
     assert_eq!(filtered.size(), 3);
     assert!(filtered.find(&2));
@@ -252,14 +254,14 @@ fn test_difference_empty_sets() {
 #[test]
 fn test_filter_empty_set() {
     let empty = AVLTreeSetStEph::<i32>::empty();
-    let filtered = empty.filter(|&x| x > 5);
+    let filtered = empty.filter(|&x| x > 5, Ghost::assume_new());
     assert_eq!(filtered.size(), 0);
 }
 
 #[test]
 fn test_filter_all_match() {
     let set = AVLTreeSetStEphLit![2, 4, 6, 8];
-    let filtered = set.filter(|&x| x % 2 == 0);
+    let filtered = set.filter(|&x| x % 2 == 0, Ghost::assume_new());
     assert_eq!(filtered.size(), 4);
     for i in [2, 4, 6, 8] {
         assert!(filtered.find(&i));
@@ -269,7 +271,7 @@ fn test_filter_all_match() {
 #[test]
 fn test_filter_none_match() {
     let set = AVLTreeSetStEphLit![1, 3, 5, 7];
-    let filtered = set.filter(|&x| x % 2 == 0);
+    let filtered = set.filter(|&x| x % 2 == 0, Ghost::assume_new());
     assert_eq!(filtered.size(), 0);
 }
 

@@ -155,8 +155,22 @@ pub mod BSTParaMtEph {
         fn difference(&self, other: &Self) -> (remaining: Self)
             ensures remaining@ == self@.difference(other@), remaining@.finite();
         /// - APAS: Work O(|t|), Span O(lg |t|)
-        fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(&self, predicate: F) -> (filtered: Self)
-            ensures filtered@.subset_of(self@), filtered@.finite();
+        fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(
+            &self,
+            predicate: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
+            requires
+                forall|t: &T| #[trigger] predicate.requires((t,)),
+                forall|x: T, keep: bool|
+                    predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
+            ensures
+                filtered@.subset_of(self@),
+                filtered@.finite(),
+                forall|v: T::V| #[trigger] filtered@.contains(v)
+                    ==> self@.contains(v) && spec_pred(v),
+                forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    ==> #[trigger] filtered@.contains(v);
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// Requires `op` to be associative with identity `base`.
         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T;
@@ -349,8 +363,11 @@ pub mod BSTParaMtEph {
         { difference_inner(self, other) }
 
         #[verifier::external_body]
-        fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(&self, predicate: F) -> (filtered: Self)
-            ensures filtered@.subset_of(self@), filtered@.finite()
+        fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(
+            &self,
+            predicate: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
         {
             filter_parallel(self, predicate)
         }

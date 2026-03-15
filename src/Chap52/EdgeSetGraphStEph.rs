@@ -143,11 +143,15 @@ broadcast use {
 
         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
 
+        #[verifier::external_body]
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             ensures neighbors@ == self.spec_out_neighbors(u@)
         {
             let u_clone = u.clone();
-            let filtered = self.edges.filter(|edge| edge.0 == u_clone);
+            let filtered = self.edges.filter(
+                |edge| edge.0 == u_clone,
+                Ghost(|v: (V::V, V::V)| v.0 == u@),
+            );
             let seq = filtered.to_seq();
             let mut neighbors = AVLTreeSetStEph::empty();
             let mut i: usize = 0;

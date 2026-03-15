@@ -1,6 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Comprehensive tests for OrderedSetStPer - persistent ordered set implementation.
 
+use vstd::prelude::Ghost;
+
 use apas_verus::Chap43::OrderedSetStPer::OrderedSetStPer::*;
 use apas_verus::OrderedSetStPerLit;
 use apas_verus::Types::Types::*;
@@ -250,7 +252,7 @@ fn test_filter() {
         .insert(4)
         .insert(5);
 
-    let evens = set.filter(|x| *x % 2 == 0);
+    let evens = set.filter(|x| *x % 2 == 0, Ghost::assume_new());
     assert_eq!(evens.size(), 2);
     assert!(evens.find(&2));
     assert!(evens.find(&4));

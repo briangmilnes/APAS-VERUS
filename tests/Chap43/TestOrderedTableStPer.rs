@@ -1,6 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Comprehensive tests for OrderedTableStPer - persistent ordered table implementation.
 
+use vstd::prelude::Ghost;
+
 use apas_verus::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
 use apas_verus::Chap41::ArraySetStEph::ArraySetStEph::*;
 use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::*;
@@ -302,7 +304,7 @@ fn test_filter() {
         .insert(4, "four".to_string())
         .insert(5, "five".to_string());
 
-    let evens = table.filter(|k, _v| *k % 2 == 0);
+    let evens = table.filter(|k, _v| *k % 2 == 0, Ghost::assume_new());
     assert_eq!(evens.size(), 2);
     assert_eq!(evens.find(&2), Some("two".to_string()));
     assert_eq!(evens.find(&4), Some("four".to_string()));
@@ -535,7 +537,7 @@ fn test_large_dataset() {
     assert_eq!(table.rank_key(&50), 50);
 
     // Test filter on large dataset
-    let evens = table.filter(|k, _v| k % 2 == 0);
+    let evens = table.filter(|k, _v| k % 2 == 0, Ghost::assume_new());
     assert_eq!(evens.size(), 50);
 }
 

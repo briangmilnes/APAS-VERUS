@@ -455,8 +455,22 @@ pub mod BSTParaTreapMtEph {
             ensures diff@.finite(), diff@ == self@.difference(other@);
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
-        fn filter<F: Pred<T>>(&self, predicate: F) -> (filtered: Self)
-            ensures filtered@.finite();
+        fn filter<F: Pred<T>>(
+            &self,
+            predicate: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
+            requires
+                forall|t: &T| #[trigger] predicate.requires((t,)),
+                forall|x: T, keep: bool|
+                    predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
+            ensures
+                filtered@.finite(),
+                filtered@.subset_of(self@),
+                forall|v: T::V| #[trigger] filtered@.contains(v)
+                    ==> self@.contains(v) && spec_pred(v),
+                forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    ==> #[trigger] filtered@.contains(v);
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
@@ -674,7 +688,11 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
         #[verifier::external_body]
-        fn filter<F: Pred<T>>(&self, predicate: F) -> (filtered: Self) { filter_parallel(self, predicate) }
+        fn filter<F: Pred<T>>(
+            &self,
+            predicate: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self) { filter_parallel(self, predicate) }
 
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)

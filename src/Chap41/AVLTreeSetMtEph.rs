@@ -145,12 +145,24 @@ broadcast use {
                 constructed.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
-            requires self.spec_avltreesetmteph_wf(),
+        fn filter<F: PredMt<T> + Clone>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
+            requires
+                self.spec_avltreesetmteph_wf(),
+                forall|t: &T| #[trigger] f.requires((t,)),
+                forall|x: T, keep: bool|
+                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures
                 filtered@.finite(),
                 filtered@.subset_of(self@),
-                filtered.spec_avltreesetmteph_wf();
+                filtered.spec_avltreesetmteph_wf(),
+                forall|v: T::V| #[trigger] filtered@.contains(v)
+                    ==> self@.contains(v) && spec_pred(v),
+                forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    ==> #[trigger] filtered@.contains(v);
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn intersection(&self, other: &Self) -> (common: Self)
@@ -280,7 +292,11 @@ broadcast use {
         
         // Work: Θ(n), Span: Θ(log n)
         #[verifier::external_body]
-        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
+        fn filter<F: PredMt<T> + Clone>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
         {
             let vals = {
                 let handle = self.inner.acquire_read();
@@ -393,7 +409,8 @@ broadcast use {
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
             let other_clone = other.clone();
-            self.filter(move |x| !other_clone.find(x))
+            let ghost other_view = other@;
+            self.filter(move |x| !other_clone.find(x), Ghost(|v: T::V| !other_view.contains(v)))
         }
 
         // PARALLEL: union using extract-parallelize-rebuild pattern (unconditionally parallel)

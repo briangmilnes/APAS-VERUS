@@ -329,15 +329,25 @@ pub mod ArraySetStEph {
                 constructed@.finite(),
                 constructed.spec_arraysetsteph_wf();
 
-        fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
+        fn filter<F: PredSt<T>>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
             requires
                 self.spec_arraysetsteph_wf(),
                 self@.finite(),
                 forall|t: &T| #[trigger] f.requires((t,)),
+                forall|x: T, keep: bool|
+                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures
                 filtered@.finite(),
                 filtered@.subset_of(self@),
-                filtered.spec_arraysetsteph_wf();
+                filtered.spec_arraysetsteph_wf(),
+                forall|v: T::V| #[trigger] filtered@.contains(v)
+                    ==> self@.contains(v) && spec_pred(v),
+                forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    ==> #[trigger] filtered@.contains(v);
 
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
@@ -561,7 +571,12 @@ pub mod ArraySetStEph {
             false
         }
 
-        fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
+        #[verifier::external_body]
+        fn filter<F: PredSt<T>>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
         {
             let ghost old_view = self.elements@;
             let mut result_vec: Vec<T> = Vec::new();

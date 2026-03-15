@@ -163,8 +163,10 @@ broadcast use {
         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (mapped: Self)
             requires forall|k: &K, v: &V| f.requires((k, v))
             ensures mapped@.dom().finite();
-        fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (filtered: Self)
-            requires forall|k: &K, v: &V| f.requires((k, v))
+        fn filter<G: Fn(&K, &V) -> B>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
+            requires
+                forall|k: &K, v: &V| f.requires((k, v)),
+                forall|k: K, v: V, keep: bool| f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
             ensures filtered@.dom().finite();
         fn reduce<R, G: Fn(R, &K, &V) -> R>(&self, init: R, f: G) -> (reduced: R)
             requires forall|r: R, k: &K, v: &V| f.requires((r, k, v))
@@ -353,10 +355,10 @@ broadcast use {
             r
         }
 
-        fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (filtered: Self)
+        fn filter<G: Fn(&K, &V) -> B>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
             ensures filtered@.dom().finite()
         {
-            let new_base = self.base_table.filter(f);
+            let new_base = self.base_table.filter(f, Ghost(spec_pred));
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             let r = Self {

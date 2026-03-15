@@ -1,6 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for BSTSetTreapMtEph.
 
+use vstd::prelude::Ghost;
+
 use apas_verus::BSTSetTreapMtEphLit;
 use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
@@ -134,7 +136,7 @@ fn test_filter() {
     for i in 1..=10 {
         set.insert(i);
     }
-    let evens = set.filter(|x: &i32| x % 2 == 0);
+    let evens = set.filter(|x: &i32| x % 2 == 0, Ghost::assume_new());
     assert_eq!(evens.size(), 5);
     assert!(evens.contains(&2));
     assert!(evens.contains(&4));
@@ -451,7 +453,7 @@ fn test_trait_impl_filter() {
     set.insert(2);
     set.insert(3);
 
-    let result = <BSTSetTreapMtEph<i32> as BSTSetTreapMtEphTrait<i32>>::filter(&set, |x: &i32| x % 2 == 1);
+    let result = <BSTSetTreapMtEph<i32> as BSTSetTreapMtEphTrait<i32>>::filter(&set, |x: &i32| x % 2 == 1, Ghost::assume_new());
     assert_eq!(result.size(), 2);
 }
 

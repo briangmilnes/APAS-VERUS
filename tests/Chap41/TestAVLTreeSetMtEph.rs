@@ -1,6 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for AVLTreeSetMtEph with parallelism verification
 
+use vstd::prelude::Ghost;
+
 use apas_verus::AVLTreeSetMtEphLit;
 use apas_verus::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
 use apas_verus::Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::*;
@@ -70,7 +72,7 @@ fn test_filter_small() {
         s.insert(i);
     }
 
-    let evens = s.filter(|x| x % 2 == 0);
+    let evens = s.filter(|x| x % 2 == 0, Ghost::assume_new());
     assert_eq!(evens.size(), 5);
     assert!(evens.find(&2));
     assert!(evens.find(&4));
@@ -85,7 +87,7 @@ fn test_filter_large_parallel() {
         s.insert(i);
     }
 
-    let evens = s.filter(|x| x % 2 == 0);
+    let evens = s.filter(|x| x % 2 == 0, Ghost::assume_new());
     assert_eq!(evens.size(), 100);
     for i in 1..=100 {
         assert!(evens.find(&(i * 2)));
@@ -304,21 +306,21 @@ fn test_difference_empty_sets() {
 #[test]
 fn test_filter_empty() {
     let empty = AVLTreeSetMtEph::<i32>::empty();
-    let filtered = empty.filter(|x| x % 2 == 0);
+    let filtered = empty.filter(|x| x % 2 == 0, Ghost::assume_new());
     assert_eq!(filtered.size(), 0);
 }
 
 #[test]
 fn test_filter_all_match() {
     let s = AVLTreeSetMtEphLit![2, 4, 6, 8];
-    let filtered = s.filter(|x| x % 2 == 0);
+    let filtered = s.filter(|x| x % 2 == 0, Ghost::assume_new());
     assert_eq!(filtered.size(), 4);
 }
 
 #[test]
 fn test_filter_none_match() {
     let s = AVLTreeSetMtEphLit![1, 3, 5, 7];
-    let filtered = s.filter(|x| x % 2 == 0);
+    let filtered = s.filter(|x| x % 2 == 0, Ghost::assume_new());
     assert_eq!(filtered.size(), 0);
 }
 
