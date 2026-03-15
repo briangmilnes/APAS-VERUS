@@ -337,6 +337,17 @@ proof hole as-is and flag it for review. Do NOT "fix" a failing proof by adding 
 Do NOT "clean up" assumes by converting them to accepts. Do NOT sprinkle accepts around
 like confetti at a parade. The human has to clean up after you and it is not fun.
 
+**DO NOT WEAKEN `ensures` TO MAKE PROOFS EASIER.** If a function's trait declares
+`ensures key matches Some(k) ==> self@.dom().contains(k@)`, you must PROVE that
+postcondition — not delete it and replace it with `ensures self@.dom().finite()`. Weakening
+ensures to just `finite()` or `true` to avoid the hard proof is worse than leaving the
+`external_body` in place. An `external_body` with a strong spec is a placeholder for a real
+proof. A real body with a gutted spec is a regression — it destroys the contract that
+callers depend on and that the textbook specifies. The specs come from APAS: `first(A) =
+min[|A|]`, `previous(A,k) = max{k' | k' < k}`, etc. Those are the postconditions. If you
+can't prove them, leave the `external_body` and report what you tried. Never gut the spec
+to inflate your hole count.
+
 ### Search Locations ("The Usual Suspects")
 
 1. **veracity-search** — vstd + APAS-VERUS function index (searched by default)
