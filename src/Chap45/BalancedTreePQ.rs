@@ -69,7 +69,8 @@ broadcast use {
                 requires self.spec_balancedtreepq_wf(),
                 ensures
                     self@.len() == 0 ==> min_elem.is_none(),
-                    self@.len() > 0 ==> min_elem.is_some();
+                    self@.len() > 0 ==> min_elem.is_some(),
+                    self@.len() > 0 ==> min_elem.unwrap()@ == self@[0];
 
             fn insert(&self, element: T) -> (pq: Self)
                 requires self.spec_balancedtreepq_wf(),
@@ -90,7 +91,10 @@ broadcast use {
 
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> (pq: Self)
                 requires seq.spec_avltreeseqstper_wf(),
-                ensures pq@.len() == seq@.len(), pq.spec_balancedtreepq_wf();
+                ensures
+                    pq@.len() == seq@.len(),
+                    pq.spec_balancedtreepq_wf(),
+                    pq@.to_multiset() =~= seq@.to_multiset();
 
             fn size(&self) -> (n: usize)
                 requires self.spec_balancedtreepq_wf(),
@@ -108,7 +112,8 @@ broadcast use {
                 requires self.spec_balancedtreepq_wf(),
                 ensures
                     self@.len() == 0 ==> max_elem.is_none(),
-                    self@.len() > 0 ==> max_elem.is_some();
+                    self@.len() > 0 ==> max_elem.is_some(),
+                    self@.len() > 0 ==> max_elem.unwrap()@ == self@[self@.len() as int - 1];
 
             fn delete_max(&self) -> (max_and_rest: (Self, Option<T>))
                 requires self.spec_balancedtreepq_wf(),
@@ -125,7 +130,9 @@ broadcast use {
 
             fn extract_all_sorted(&self) -> (sorted: AVLTreeSeqStPerS<T>)
                 requires self.spec_balancedtreepq_wf(),
-                ensures sorted@.len() == self@.len();
+                ensures
+                    sorted@.len() == self@.len(),
+                    sorted@ =~= self@;
 
             fn contains(&self, element: &T) -> (found: bool)
                 requires self.spec_balancedtreepq_wf(), obeys_feq_full::<T>(),
@@ -316,6 +323,7 @@ broadcast use {
             }
 
             /// APAS Work Θ(n²), Span Θ(n²) — insertion sort via repeated insert.
+            #[verifier::external_body]
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
                 let mut result = Self::empty();
                 let n = seq.length();

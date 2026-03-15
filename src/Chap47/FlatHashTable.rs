@@ -68,6 +68,9 @@ pub mod FlatHashTable {
             requires
                 old(table).current_size > 0,
                 old(table).table@.len() == old(table).current_size as int,
+            ensures
+                table.table@.len() == table.current_size as int,
+                table.current_size == old(table).current_size,
         {
             let slot = Self::find_slot(table, &key);
             let mut entry = Entry::new();
