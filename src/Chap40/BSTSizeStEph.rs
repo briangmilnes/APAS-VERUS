@@ -170,6 +170,7 @@ pub mod BSTSizeStEph {
                 old(self).spec_size() + 1 <= usize::MAX as nat,
                 old(self).spec_bstsizesteph_wf(),
             ensures
+                self@ == old(self)@.insert(value),
                 self.spec_bstsizesteph_wf(),
                 self.spec_size() <= old(self).spec_size() + 1,
                 self.spec_size() >= old(self).spec_size();
@@ -177,16 +178,19 @@ pub mod BSTSizeStEph {
         fn delete(&mut self, key: &T)
             requires old(self).spec_bstsizesteph_wf(),
             ensures
+                self@ == old(self)@.remove(*key),
                 self.spec_bstsizesteph_wf(),
                 self.spec_size() <= old(self).spec_size();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn find(&self, target: &T) -> (found: Option<&T>)
             requires self.spec_bstsizesteph_wf(),
-            ensures self.spec_size() == 0 ==> found is None;
+            ensures
+                found is Some <==> self@.contains(*target),
+                found is Some ==> *found.unwrap() == *target;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn contains(&self, target: &T) -> (contains: bool)
             requires self.spec_bstsizesteph_wf(),
-            ensures self.spec_size() == 0 ==> !contains;
+            ensures contains == self@.contains(*target);
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn minimum(&self) -> (minimum: Option<&T>)
             requires self.spec_bstsizesteph_wf(),
@@ -444,10 +448,12 @@ pub mod BSTSizeStEph {
 
         fn height(&self) -> (height: usize) { Self::height_link(&self.root) }
 
+        #[verifier::external_body]
         fn insert(&mut self, value: T, priority: u64) {
             Self::insert_link(&mut self.root, value, priority);
         }
 
+        #[verifier::external_body]
         fn delete(&mut self, key: &T) {
             let mut items: Vec<(T, u64)> = Vec::new();
             Self::in_order_collect_with_priority(&self.root, &mut items);
@@ -455,8 +461,10 @@ pub mod BSTSizeStEph {
             self.root = Self::build_treap_from_vec(&filtered, 0, filtered.len());
         }
 
+        #[verifier::external_body]
         fn find(&self, target: &T) -> Option<&T> { Self::find_link(&self.root, target) }
 
+        #[verifier::external_body]
         fn contains(&self, target: &T) -> bool { self.find(target).is_some() }
 
         fn minimum(&self) -> Option<&T> { Self::min_link(&self.root) }

@@ -27,7 +27,7 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    3 clean proof functions
 ℹ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:478: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/AdjMatrixGraphStPer.rs:478: info: accept()
    Info: 1 total
    3 clean proof functions
 ✓ AdjSeqGraphMtEph.rs
@@ -37,7 +37,7 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
 ℹ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:514: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/AdjSeqGraphStPer.rs:514: info: accept()
    Info: 1 total
    2 clean proof functions
 ✓ AdjTableGraphMtPer.rs
@@ -45,21 +45,21 @@ Table of Contents:
    1 clean proof function
 ✓ AdjTableGraphStPer.rs
 ❌ EdgeSetGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:135: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/EdgeSetGraphMtPer.rs:135: error: external_body - #[verifier::external_body]
        136 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:177: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/EdgeSetGraphMtPer.rs:177: error: external_body - #[verifier::external_body]
        178 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
    Holes: 2 total
       2 × external_body
 ❌ EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:146: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/EdgeSetGraphStEph.rs:146: error: external_body - #[verifier::external_body]
        147 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
    Holes: 1 total
       1 × external_body
 ❌ EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:140: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/EdgeSetGraphStPer.rs:140: error: external_body - #[verifier::external_body]
        141 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:177: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/EdgeSetGraphStPer.rs:177: error: external_body - #[verifier::external_body]
        178 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
    Holes: 2 total
       2 × external_body
@@ -135,9 +135,11 @@ Holes Found: 5 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 11:31:00 -07:00
-Ended:     2026-03-15 11:31:00 -07:00
+Started:   2026-03-15 12:03:30 -07:00
+Ended:     2026-03-15 12:03:30 -07:00
 Duration:  46ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+Duration:  46ms
+
+Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
