@@ -11,10 +11,32 @@ APAS-VERUS formally verifies all algorithms from "A Practical Approach to Data S
 (APAS, by Guy Blelloch) using Verus, a Rust verification framework. The primary objective
 is to get code to **verify (prove)** with Verus.
 
-- **Read `src/standards/*.rs` before writing or modifying any code.** These 15 files
-  define the project's patterns for modules, views, iterators, closures, eq/clone,
-  spec_wf, multi-struct types, RwLock predicates, and more. If you skip the standards,
-  you will write code that violates project conventions and has to be reverted.
+- **Read the relevant standards before writing or modifying any code.** The standards
+  in `src/standards/` define the project's patterns. If you skip them, you will write
+  code that violates project conventions and has to be reverted.
+
+### Standards Index
+
+| # | Standard | Read when... |
+|---|----------|-------------|
+| 1 | `mod_standard.rs` | Creating or restructuring a module |
+| 2 | `view_standard.rs` | Adding or modifying a `View` impl |
+| 3 | `deep_view_standard.rs` | Adding or modifying a `DeepView` impl |
+| 4 | `spec_wf_standard.rs` | Adding or modifying `spec_wf` predicates |
+| 5 | `spec_naming_convention.rs` | Naming any spec function |
+| 6 | `multi_struct_standard.rs` | Working with tree/enum types (multiple structs + enum) |
+| 7 | `partial_eq_eq_clone_standard.rs` | Adding PartialEq, Eq, or Clone impls |
+| 8 | `using_closures_standard.rs` | Writing code with closures, `Fn`, filter, map, tabulate, join |
+| 9 | `total_order_standard.rs` | Writing ordering specs (min, max, find, rank, sorted) |
+| 10 | `iterators_standard.rs` | Adding iterators to a collection |
+| 11 | `wrapping_iterators_standard.rs` | Wrapping an existing iterator |
+| 12 | `table_of_contents_standard.rs` | Reordering sections in a file |
+| 13 | `mut_standard.rs` | Working with `&mut` parameters in Verus |
+| 14 | `arc_usage_standard.rs` | Using `Arc` in verified code |
+| 15 | `hfscheduler_standard.rs` | Using HFScheduler for fork-join parallelism |
+| 16 | `toplevel_coarse_rwlocks_for_mt_modules.rs` | Writing Mt modules with RwLock |
+| 17 | `tsm_standard.rs` | Thread-safe memory patterns |
+| 18 | `finite_sets_standard.rs` | Working with finite sets in specs |
 - Run `scripts/validate.sh` after making changes
 - Fix verification errors before moving on
 - Prefer verified code over unverified code, even if it requires restructuring
@@ -143,6 +165,7 @@ minor). You bring:
 | `scripts/rebase-agents.sh` | Rebase all agent worktrees onto `origin/main` and force-push. Requires main pushed first |
 | `scripts/reset-agent-to-main.sh` | Reset an agent branch to match main (for starting fresh) |
 | `scripts/survey-agents.sh` | Show commit summary for all agent branches |
+| `scripts/show-agent-reports.sh <round> [lines]` | Show all 4 agent reports for a round |
 
 **Merge workflow** (run from main worktree):
 1. `scripts/merge-agent.sh agent1/ready` — merge + validate

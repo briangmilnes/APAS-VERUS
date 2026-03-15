@@ -23,16 +23,16 @@ Table of Contents:
 ✓ FibonacciHFScheduler.rs
    5 clean proof functions
 ℹ HFSchedulerMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap02/HFSchedulerMtEph.rs:75: info: external_type_specification_accept_hole
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap02/HFSchedulerMtEph.rs:76: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap02/HFSchedulerMtEph.rs:87: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap02/HFSchedulerMtEph.rs:97: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap02/HFSchedulerMtEph.rs:124: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap02/HFSchedulerMtEph.rs:143: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap02/HFSchedulerMtEph.rs:155: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap02/HFSchedulerMtEph.rs:177: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap02/HFSchedulerMtEph.rs:19: info: struct_outside_verus_accept_hole
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap02/HFSchedulerMtEph.rs:25: info: enum_outside_verus_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:75: info: external_type_specification_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:76: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:87: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:97: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:124: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:143: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:155: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:177: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:19: info: struct_outside_verus_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:25: info: enum_outside_verus_accept_hole
    Info: 10 total
 
 =================================================================
@@ -83,12 +83,12 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 08:25:06 -07:00
-Ended:     2026-03-15 08:25:06 -07:00
-Duration:  6ms
+Started:   2026-03-15 09:06:35 -07:00
+Ended:     2026-03-15 09:06:35 -07:00
+Duration:  2ms
 
 Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
-2026-03-15 08:25:06 -07:00
-Duration:  6ms
+
+Duration:  2ms
 
 Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log

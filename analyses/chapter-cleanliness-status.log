@@ -1,4 +1,4 @@
-Chapter Status — 46 chapters, 38 clean, 8 holed, 103 holes (global), 257 modules
+Chapter Status — 46 chapters, 38 clean, 8 holed, 128 holes (global), 257 modules
 
 CLEAN CHAPTERS (38)
   Chapter        Files
@@ -42,24 +42,24 @@ CLEAN CHAPTERS (38)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (8) — 194 holes
+HOLED CHAPTERS (8) — 218 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap37            79    19  internal  Chap37::BSTRBMtEph, Chap37::BSTSplayMtEph
-  Chap38            14     2  YES       
-  Chap39            16     4  internal  Chap39::BSTParaTreapMtEph
+  Chap37            90    19  internal  Chap37::BSTRBMtEph, Chap37::BSTSplayMtEph
+  Chap38            15     2  YES       
+  Chap39            18     4  internal  Chap39::BSTParaTreapMtEph
   Chap41            26     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStPer
-  Chap42             4     4  internal  Chap42::TableMtEph
-  Chap43            40    11  NO        Chap37::AVLTreeSeqStPer, Chap42::TableMtEph, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph
-  Chap45             4     7  NO        Chap37::AVLTreeSeqStPer
-  Chap47            11     9  internal  Chap47::ParaHashTableStEph, Chap47::FlatHashTable
+  Chap42            13     4  internal  Chap42::TableMtEph, Chap42::TableStEph, Chap42::TableStPer
+  Chap43            41    11  NO        Chap37::AVLTreeSeqStPer, Chap42::TableMtEph, Chap42::TableStEph, Chap42::TableStPer, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph
+  Chap45             5     7  NO        Chap37::AVLTreeSeqStPer
+  Chap47            10     9  internal  Chap47::ParaHashTableStEph, Chap47::FlatHashTable
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
   --------------  -------------------
   Chap41          Chap37
   Chap43          Chap37, Chap42, Chap41
-  Chap44          Chap37
+  Chap44          Chap37, Chap42
   Chap45          Chap37
   Chap52          Chap41, Chap43
   Chap53          Chap41
