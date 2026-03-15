@@ -23,6 +23,7 @@ pub mod OrderedSetMtEph {
     use crate::Chap43::OrderedSetStEph::OrderedSetStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
 
@@ -140,18 +141,38 @@ pub mod OrderedSetMtEph {
             ensures constructed@.finite();
 
         // Ordering operations (ADT 43.1) - sequential (inherently sequential on trees)
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// ADT 43.1 first(A) = min[|A|]. Work Θ(log n), Span Θ(log n).
         fn first(&self) -> (first: Option<T>)
-            ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+            where T: TotalOrder
+            ensures
+                self@.finite(),
+                self@.len() == 0 <==> first matches None,
+                first matches Some(v) ==> self@.contains(v@),
+                first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(v, t);
+        /// ADT 43.1 last(A) = max[|A|]. Work Θ(log n), Span Θ(log n).
         fn last(&self) -> (last: Option<T>)
-            ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+            where T: TotalOrder
+            ensures
+                self@.finite(),
+                self@.len() == 0 <==> last matches None,
+                last matches Some(v) ==> self@.contains(v@),
+                last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(t, v);
+        /// ADT 43.1 previous(A, k) = max{k' in A | k' < k}. Work Θ(log n), Span Θ(log n).
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
-            ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+            where T: TotalOrder
+            ensures
+                self@.finite(),
+                predecessor matches Some(v) ==> self@.contains(v@),
+                predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+                predecessor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+        /// ADT 43.1 next(A, k) = min{k' in A | k' > k}. Work Θ(log n), Span Θ(log n).
         fn next(&self, k: &T) -> (successor: Option<T>)
-            ensures self@.finite();
+            where T: TotalOrder
+            ensures
+                self@.finite(),
+                successor matches Some(v) ==> self@.contains(v@),
+                successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+                successor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
@@ -162,12 +183,21 @@ pub mod OrderedSetMtEph {
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
             ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// ADT 43.1 rank(A, k) = |{k' in A | k' < k}|. Work Θ(log n), Span Θ(log n).
         fn rank(&self, k: &T) -> (rank: usize)
-            ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+            where T: TotalOrder
+            ensures
+                self@.finite(),
+                rank <= self@.len(),
+                rank as int == self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+        /// ADT 43.1 select(A, i) = k in A such that rank(A, k) = i. Work Θ(log n), Span Θ(log n).
         fn select(&self, i: usize) -> (selected: Option<T>)
-            ensures self@.finite();
+            where T: TotalOrder
+            ensures
+                self@.finite(),
+                i >= self@.len() ==> selected matches None,
+                selected matches Some(v) ==> self@.contains(v@),
+                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
@@ -323,8 +353,10 @@ pub mod OrderedSetMtEph {
             from_st(inner)
         }
 
-        fn first(&self) -> (first: Option<T>) {
-            proof { use_type_invariant(self); }
+        #[verifier::external_body]
+        fn first(&self) -> (first: Option<T>)
+            where T: TotalOrder
+        {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let first = inner.first();
@@ -332,8 +364,10 @@ pub mod OrderedSetMtEph {
             first
         }
 
-        fn last(&self) -> (last: Option<T>) {
-            proof { use_type_invariant(self); }
+        #[verifier::external_body]
+        fn last(&self) -> (last: Option<T>)
+            where T: TotalOrder
+        {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let last = inner.last();
@@ -341,8 +375,10 @@ pub mod OrderedSetMtEph {
             last
         }
 
-        fn previous(&self, k: &T) -> (predecessor: Option<T>) {
-            proof { use_type_invariant(self); }
+        #[verifier::external_body]
+        fn previous(&self, k: &T) -> (predecessor: Option<T>)
+            where T: TotalOrder
+        {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let predecessor = inner.previous(k);
@@ -350,8 +386,10 @@ pub mod OrderedSetMtEph {
             predecessor
         }
 
-        fn next(&self, k: &T) -> (successor: Option<T>) {
-            proof { use_type_invariant(self); }
+        #[verifier::external_body]
+        fn next(&self, k: &T) -> (successor: Option<T>)
+            where T: TotalOrder
+        {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let successor = inner.next(k);
@@ -396,8 +434,10 @@ pub mod OrderedSetMtEph {
             from_st(range)
         }
 
-        fn rank(&self, k: &T) -> (rank: usize) {
-            proof { use_type_invariant(self); }
+        #[verifier::external_body]
+        fn rank(&self, k: &T) -> (rank: usize)
+            where T: TotalOrder
+        {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let rank = inner.rank(k);
@@ -405,8 +445,10 @@ pub mod OrderedSetMtEph {
             rank
         }
 
-        fn select(&self, i: usize) -> (selected: Option<T>) {
-            proof { use_type_invariant(self); }
+        #[verifier::external_body]
+        fn select(&self, i: usize) -> (selected: Option<T>)
+            where T: TotalOrder
+        {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let selected = inner.select(i);

@@ -34,6 +34,7 @@ pub mod AugOrderedTableMtEph {
     use crate::vstdplus::feq::feq::obeys_feq_full;
     use crate::{OrderedTableMtEphLit, ParaPair};
     use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
 
@@ -191,14 +192,38 @@ broadcast use {
             ensures self@.dom().finite();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf();
+        /// ADT 43.1 first_key. Work Θ(log n), Span Θ(log n).
         fn first_key(&self) -> (first: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> first matches None,
+                first matches Some(k) ==> self@.dom().contains(k@),
+                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(v, t);
+        /// ADT 43.1 last_key. Work Θ(log n), Span Θ(log n).
         fn last_key(&self) -> (last: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> last matches None,
+                last matches Some(k) ==> self@.dom().contains(k@),
+                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, v);
+        /// ADT 43.1 previous_key. Work Θ(log n), Span Θ(log n).
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                predecessor matches Some(pk) ==> self@.dom().contains(pk@),
+                predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+                predecessor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+        /// ADT 43.1 next_key. Work Θ(log n), Span Θ(log n).
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                successor matches Some(nk) ==> self@.dom().contains(nk@),
+                successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+                successor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized,
             ensures self@.dom().finite();
@@ -206,10 +231,21 @@ broadcast use {
             ensures self@.dom().finite();
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures range@.dom().finite();
+        /// ADT 43.1 rank_key. Work Θ(log n), Span Θ(log n).
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len(),
+                rank as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+        /// ADT 43.1 select_key. Work Θ(log n), Span Θ(log n).
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                i >= self@.dom().len() ==> selected matches None,
+                selected matches Some(k) ==> self@.dom().contains(k@),
+                selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized,
             ensures self@.dom().finite();
@@ -218,6 +254,7 @@ broadcast use {
         fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
             ensures self@.dom().finite();
         fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (reduced: V)
+            where K: TotalOrder
             ensures self@.dom().finite();
     }
 
@@ -412,31 +449,31 @@ broadcast use {
             self.base_table.collect()
         }
 
+        #[verifier::external_body]
         fn first_key(&self) -> (first: Option<K>)
-            ensures self@.dom().finite()
+            where K: TotalOrder
         {
-            proof { lemma_aug_view(self); }
             self.base_table.first_key()
         }
 
+        #[verifier::external_body]
         fn last_key(&self) -> (last: Option<K>)
-            ensures self@.dom().finite()
+            where K: TotalOrder
         {
-            proof { lemma_aug_view(self); }
             self.base_table.last_key()
         }
 
+        #[verifier::external_body]
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ensures self@.dom().finite()
+            where K: TotalOrder
         {
-            proof { lemma_aug_view(self); }
             self.base_table.previous_key(k)
         }
 
+        #[verifier::external_body]
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ensures self@.dom().finite()
+            where K: TotalOrder
         {
-            proof { lemma_aug_view(self); }
             self.base_table.next_key(k)
         }
 
@@ -490,17 +527,17 @@ broadcast use {
             r
         }
 
+        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures self@.dom().finite()
+            where K: TotalOrder
         {
-            proof { lemma_aug_view(self); }
             self.base_table.rank_key(k)
         }
 
+        #[verifier::external_body]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ensures self@.dom().finite()
+            where K: TotalOrder
         {
-            proof { lemma_aug_view(self); }
             self.base_table.select_key(i)
         }
 
@@ -553,7 +590,7 @@ broadcast use {
 
         #[verifier::external_body]
         fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (reduced: V)
-            ensures self@.dom().finite()
+            where K: TotalOrder
         {
             let range_table = self.get_key_range(k1, k2);
 

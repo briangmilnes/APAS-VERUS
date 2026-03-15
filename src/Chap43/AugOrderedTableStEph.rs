@@ -25,6 +25,7 @@ pub mod AugOrderedTableStEph {
     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::*;
     use crate::OrderedTableStEphLit;
     use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
@@ -197,26 +198,36 @@ broadcast use {
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len();
         /// ADT 43.1 first_key = min key in dom. Work Θ(log n), Span Θ(log n).
         fn first_key(&self) -> (first: Option<K>)
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
-                first matches Some(k) ==> self@.dom().contains(k@);
+                first matches Some(k) ==> self@.dom().contains(k@),
+                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(v, t);
         /// ADT 43.1 last_key = max key in dom. Work Θ(log n), Span Θ(log n).
         fn last_key(&self) -> (last: Option<K>)
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
-                last matches Some(k) ==> self@.dom().contains(k@);
+                last matches Some(k) ==> self@.dom().contains(k@),
+                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, v);
         /// ADT 43.1 previous_key = max{k' in dom | k' < k}. Work Θ(log n), Span Θ(log n).
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
-                predecessor matches Some(pk) ==> self@.dom().contains(pk@);
+                predecessor matches Some(pk) ==> self@.dom().contains(pk@),
+                predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+                predecessor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
         /// ADT 43.1 next_key = min{k' in dom | k' > k}. Work Θ(log n), Span Θ(log n).
         fn next_key(&self, k: &K) -> (successor: Option<K>)
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
-                successor matches Some(nk) ==> self@.dom().contains(nk@);
+                successor matches Some(nk) ==> self@.dom().contains(nk@),
+                successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+                successor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         /// ADT 43.1 split_key. Work Θ(log n), Span Θ(log n).
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized,
@@ -237,15 +248,19 @@ broadcast use {
                 range@.dom().subset_of(self@.dom());
         /// ADT 43.1 rank_key. Work Θ(log n), Span Θ(log n).
         fn rank_key(&self, k: &K) -> (rank: usize)
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
-                rank <= self@.dom().len();
+                rank <= self@.dom().len(),
+                rank as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// ADT 43.1 select_key. Work Θ(log n), Span Θ(log n).
         fn select_key(&self, i: usize) -> (selected: Option<K>)
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,
-                selected matches Some(k) ==> self@.dom().contains(k@);
+                selected matches Some(k) ==> self@.dom().contains(k@),
+                selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
         /// ADT 43.1 split_rank_key. Work Θ(log n), Span Θ(log n).
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized,
@@ -461,41 +476,51 @@ broadcast use {
             self.base_table.collect()
         }
 
+        #[verifier::external_body]
         fn first_key(&self) -> (first: Option<K>)
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
                 first matches Some(k) ==> self@.dom().contains(k@),
+                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(v, t),
         {
-            proof { lemma_aug_view(self); }
             self.base_table.first_key()
         }
 
+        #[verifier::external_body]
         fn last_key(&self) -> (last: Option<K>)
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
+                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, v),
         {
-            proof { lemma_aug_view(self); }
             self.base_table.last_key()
         }
 
+        #[verifier::external_body]
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
+                predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+                predecessor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
         {
-            proof { lemma_aug_view(self); }
             self.base_table.previous_key(k)
         }
 
+        #[verifier::external_body]
         fn next_key(&self, k: &K) -> (successor: Option<K>)
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
+                successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+                successor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
         {
-            proof { lemma_aug_view(self); }
             self.base_table.next_key(k)
         }
 
@@ -575,22 +600,26 @@ broadcast use {
             r
         }
 
+        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
+                rank as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
         {
-            proof { lemma_aug_view(self); }
             self.base_table.rank_key(k)
         }
 
+        #[verifier::external_body]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,
                 selected matches Some(k) ==> self@.dom().contains(k@),
+                selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int,
         {
-            proof { lemma_aug_view(self); }
             self.base_table.select_key(i)
         }
 

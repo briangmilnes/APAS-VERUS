@@ -162,6 +162,8 @@
       "Bash(for *; do\n*)",
       "Bash(for * in *; do *)",
       "Bash(for * in *; do\n*)",
+      "Bash(for *\ndo\n*)",
+      "Bash(for *\ndo *)",
       "Bash(for *do *done)",
       "Bash(for * do *)",
       "Bash(diff <(*) *)",

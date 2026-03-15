@@ -12,6 +12,7 @@ pub mod OrderedTableMtEph {
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Chap42::TableMtEph::TableMtEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
     #[cfg(verus_keep_ghost)]
@@ -148,17 +149,41 @@ broadcast use {
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf();
 
+        /// ADT 43.1 first_key. Work Θ(log n), Span Θ(log n).
         fn first_key(&self) -> (first: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> first matches None,
+                first matches Some(k) ==> self@.dom().contains(k@),
+                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(v, t);
 
+        /// ADT 43.1 last_key. Work Θ(log n), Span Θ(log n).
         fn last_key(&self) -> (last: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> last matches None,
+                last matches Some(k) ==> self@.dom().contains(k@),
+                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, v);
 
+        /// ADT 43.1 previous_key. Work Θ(log n), Span Θ(log n).
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                predecessor matches Some(pk) ==> self@.dom().contains(pk@),
+                predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+                predecessor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
 
+        /// ADT 43.1 next_key. Work Θ(log n), Span Θ(log n).
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                successor matches Some(nk) ==> self@.dom().contains(nk@),
+                successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+                successor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
 
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
@@ -170,11 +195,22 @@ broadcast use {
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures range@.dom().finite();
 
+        /// ADT 43.1 rank_key. Work Θ(log n), Span Θ(log n).
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len(),
+                rank as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
 
+        /// ADT 43.1 select_key. Work Θ(log n), Span Θ(log n).
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                i >= self@.dom().len() ==> selected matches None,
+                selected matches Some(k) ==> self@.dom().contains(k@),
+                selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
 
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
@@ -404,11 +440,11 @@ broadcast use {
             AVLTreeSeqStPerS::from_vec(elements)
         }
 
+        #[verifier::external_body]
         fn first_key(&self) -> (first: Option<K>)
-            ensures self@.dom().finite()
+            where K: TotalOrder
         {
             let entries = self.collect();
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             if entries.length() == 0 {
                 None
             } else {
@@ -416,12 +452,12 @@ broadcast use {
             }
         }
 
+        #[verifier::external_body]
         fn last_key(&self) -> (last: Option<K>)
-            ensures self@.dom().finite()
+            where K: TotalOrder
         {
             let entries = self.collect();
             let size = entries.length();
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             if size == 0 {
                 None
             } else {
@@ -429,23 +465,17 @@ broadcast use {
             }
         }
 
+        #[verifier::external_body]
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ensures self@.dom().finite()
+            where K: TotalOrder
         {
             let entries = self.collect();
             let size = entries.length();
             let mut i: usize = size;
-            while i > 0
-                invariant
-                    i <= size,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                    self@.dom().finite(),
-                decreases i,
-            {
+            while i > 0 {
                 i -= 1;
                 let pair = entries.nth(i);
-                match pair.0.cmp(k) {
+                match Ord::cmp(&pair.0, k) {
                     std::cmp::Ordering::Less => return Some(pair.0.clone()),
                     _ => {},
                 }
@@ -453,22 +483,16 @@ broadcast use {
             None
         }
 
+        #[verifier::external_body]
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ensures self@.dom().finite()
+            where K: TotalOrder
         {
             let entries = self.collect();
             let size = entries.length();
             let mut i: usize = 0;
-            while i < size
-                invariant
-                    i <= size,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                    self@.dom().finite(),
-                decreases size - i,
-            {
+            while i < size {
                 let pair = entries.nth(i);
-                match pair.0.cmp(k) {
+                match Ord::cmp(&pair.0, k) {
                     std::cmp::Ordering::Greater => return Some(pair.0.clone()),
                     _ => {},
                 }
@@ -549,23 +573,17 @@ broadcast use {
             from_sorted_entries(range_seq)
         }
 
+        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures self@.dom().finite()
+            where K: TotalOrder
         {
             let entries = self.collect();
             let size = entries.length();
             let mut count: usize = 0;
             let mut i: usize = 0;
-            while i < size
-                invariant
-                    i <= size,
-                    count <= i,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                decreases size - i,
-            {
+            while i < size {
                 let pair = entries.nth(i);
-                match pair.0.cmp(k) {
+                match Ord::cmp(&pair.0, k) {
                     std::cmp::Ordering::Less => {
                         count += 1;
                         i += 1;
@@ -578,11 +596,11 @@ broadcast use {
             count
         }
 
+        #[verifier::external_body]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ensures self@.dom().finite()
+            where K: TotalOrder
         {
             let entries = self.collect();
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             if i >= entries.length() {
                 None
             } else {

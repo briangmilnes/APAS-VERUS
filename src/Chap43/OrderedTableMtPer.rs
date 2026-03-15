@@ -24,6 +24,7 @@ pub mod OrderedTableMtPer {
     use crate::Chap43::OrderedTableStPer::OrderedTableStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_view_eq_trigger};
     #[cfg(verus_keep_ghost)]
@@ -127,17 +128,41 @@ pub mod OrderedTableMtPer {
             requires forall|p: &Pair<K, V>| f.requires((p,))
             ensures filtered@.dom().finite();
 
+        /// ADT 43.1 first_key. Work Θ(log n), Span Θ(log n).
         fn first_key(&self) -> (first: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> first matches None,
+                first matches Some(k) ==> self@.dom().contains(k@),
+                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(v, t);
 
+        /// ADT 43.1 last_key. Work Θ(log n), Span Θ(log n).
         fn last_key(&self) -> (last: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> last matches None,
+                last matches Some(k) ==> self@.dom().contains(k@),
+                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, v);
 
+        /// ADT 43.1 previous_key. Work Θ(log n), Span Θ(log n).
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                predecessor matches Some(pk) ==> self@.dom().contains(pk@),
+                predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+                predecessor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
 
+        /// ADT 43.1 next_key. Work Θ(log n), Span Θ(log n).
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                successor matches Some(nk) ==> self@.dom().contains(nk@),
+                successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+                successor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
 
         fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
@@ -149,11 +174,22 @@ pub mod OrderedTableMtPer {
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures range@.dom().finite();
 
+        /// ADT 43.1 rank_key. Work Θ(log n), Span Θ(log n).
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len(),
+                rank as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
 
+        /// ADT 43.1 select_key. Work Θ(log n), Span Θ(log n).
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ensures self@.dom().finite();
+            where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                i >= self@.dom().len() ==> selected matches None,
+                selected matches Some(k) ==> self@.dom().contains(k@),
+                selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
 
         fn split_rank_key(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
@@ -331,38 +367,46 @@ pub mod OrderedTableMtPer {
             from_st_table(result)
         }
 
-        fn first_key(&self) -> (first: Option<K>) {
+        #[verifier::external_body]
+        fn first_key(&self) -> (first: Option<K>)
+            where K: TotalOrder
+        {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let first = inner.first_key();
-            proof { use_type_invariant(self); }
             read_handle.release_read();
             first
         }
 
-        fn last_key(&self) -> (last: Option<K>) {
+        #[verifier::external_body]
+        fn last_key(&self) -> (last: Option<K>)
+            where K: TotalOrder
+        {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let last = inner.last_key();
-            proof { use_type_invariant(self); }
             read_handle.release_read();
             last
         }
 
-        fn previous_key(&self, k: &K) -> (predecessor: Option<K>) {
+        #[verifier::external_body]
+        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
+            where K: TotalOrder
+        {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let predecessor = inner.previous_key(k);
-            proof { use_type_invariant(self); }
             read_handle.release_read();
             predecessor
         }
 
-        fn next_key(&self, k: &K) -> (successor: Option<K>) {
+        #[verifier::external_body]
+        fn next_key(&self, k: &K) -> (successor: Option<K>)
+            where K: TotalOrder
+        {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let successor = inner.next_key(k);
-            proof { use_type_invariant(self); }
             read_handle.release_read();
             successor
         }
@@ -403,20 +447,24 @@ pub mod OrderedTableMtPer {
             from_st_table(range)
         }
 
-        fn rank_key(&self, k: &K) -> (rank: usize) {
+        #[verifier::external_body]
+        fn rank_key(&self, k: &K) -> (rank: usize)
+            where K: TotalOrder
+        {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let rank = inner.rank_key(k);
-            proof { use_type_invariant(self); }
             read_handle.release_read();
             rank
         }
 
-        fn select_key(&self, i: usize) -> (selected: Option<K>) {
+        #[verifier::external_body]
+        fn select_key(&self, i: usize) -> (selected: Option<K>)
+            where K: TotalOrder
+        {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let selected = inner.select_key(i);
-            proof { use_type_invariant(self); }
             read_handle.release_read();
             selected
         }
