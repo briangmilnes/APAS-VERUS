@@ -612,6 +612,7 @@ broadcast use {
         ensures constructed@.finite(), constructed.spec_orderedsetstper_wf()
     {
         let seq = AVLTreeSeqStPerS::from_vec(elements);
+        // from_vec ensures seq.spec_avltreeseqstper_wf(), which from_seq requires.
         OrderedSetStPer::from_seq(seq)
     }
 

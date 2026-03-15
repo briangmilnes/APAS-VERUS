@@ -126,7 +126,8 @@ pub mod BinaryHeapPQ {
             fn find_min(&self) -> (min_elem: Option<&T>)
                 ensures
                     self@.len() == 0 ==> min_elem.is_none(),
-                    self@.len() > 0 ==> min_elem.is_some();
+                    self@.len() > 0 ==> min_elem.is_some(),
+                    self@.len() > 0 ==> min_elem.unwrap()@ == self@[0];
 
             fn insert(&self, element: T) -> (pq: Self)
                 requires
@@ -162,7 +163,8 @@ pub mod BinaryHeapPQ {
                     obeys_feq_clone::<T>(),
                     seq@.len() * 2 <= usize::MAX as int,
                 ensures
-                    pq@.len() == seq@.len();
+                    pq@.len() == seq@.len(),
+                    pq@.to_multiset() =~= seq@.to_multiset();
 
             fn size(&self) -> (n: usize)
                 ensures n as int == self.spec_size();

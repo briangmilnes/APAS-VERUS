@@ -21,15 +21,15 @@ Table of Contents:
 =================================================================
 
 ℹ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:52: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaMtEph.rs:52: info: accept()
    Info: 1 total
 ❌ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:101: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaStEph.rs:101: warning: requires_true - requires true — vacuous precondition
         99 |     /// Deterministic coin flip from seed and vertex iteration index.
        100 |     fn coin_flip(seed: u64, index: usize) -> (flip: bool)
        102 |         ensures flip == (((seed ^ (index as u64)) & 1u64) == 1u64)
        103 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:67: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaStEph.rs:67: info: accept()
    Info: 1 total
 
 =================================================================
@@ -80,9 +80,11 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 07:54:39 -07:00
-Ended:     2026-03-15 07:54:39 -07:00
-Duration:  7ms
+Started:   2026-03-15 08:25:08 -07:00
+Ended:     2026-03-15 08:25:08 -07:00
+Duration:  11ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
+Duration:  11ms
+
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
