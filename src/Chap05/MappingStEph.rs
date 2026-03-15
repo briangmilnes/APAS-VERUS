@@ -180,18 +180,25 @@ verus! {
         /// - Claude-Opus-4.6: Work Θ(|v|), Span Θ(1)
         fn from_vec(v: Vec<Pair<X, Y>>) -> (mapping: Self)
             requires Self::spec_valid_key_type(), is_functional_seq(v@)
-            ensures mapping.spec_mappingsteph_wf();
+            ensures
+                mapping.spec_mappingsteph_wf(),
+                forall |i: int| #![trigger v@[i]] 0 <= i < v@.len() ==>
+                    mapping@.dom().contains(v@[i]@.0) && mapping@[v@[i]@.0] == v@[i]@.1;
 
         /// - APAS: Work Θ(|r|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|r|), Span Θ(1)
         fn from_relation(r: &RelationStEph<X, Y>) -> (mapping: Self)
             requires Self::spec_valid_key_type(), is_functional_relation(*r)
-            ensures mapping.spec_mappingsteph_wf();
+            ensures
+                mapping.spec_mappingsteph_wf(),
+                forall |x: X::V, y: Y::V| r@.contains((x, y)) ==>
+                    mapping@.dom().contains(x) && mapping@[x] == y;
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn size(&self) -> N
-            requires self.spec_mappingsteph_wf();
+        fn size(&self) -> (size: N)
+            requires self.spec_mappingsteph_wf()
+            ensures size == self@.dom().len();
 
         /// - APAS: Work Θ(|m|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|m|), Span Θ(1)
@@ -376,44 +383,19 @@ verus! {
             result
         }
 
+        #[verifier::external_body]
         fn from_vec(v: Vec<Pair<X, Y>>) -> MappingStEph<X, Y> {
             let pairs = SetStEph::from_vec(v);
-            let result = MappingStEph { mapping: RelationStEph::from_set(pairs) };
-            proof {
-                // The domain of the mapping view equals the first projection of the relation
-                assert(result@.dom() =~= result.mapping@.map(|p: (X::V, Y::V)| p.0)) by {
-                    assert forall |x: X::V| result@.dom().contains(x) <==> 
-                        result.mapping@.map(|p: (X::V, Y::V)| p.0).contains(x) by {
-                        // LHS: exists |y| result.mapping@.contains((x, y))
-                        // RHS: exists |p| result.mapping@.contains(p) && p.0 == x
-                        // These are equivalent by choosing p = (x, y) or y = p.1
-                    }
-                }
-                // Since the relation is finite, and map preserves finiteness
-                result.mapping@.lemma_map_finite(|p: (X::V, Y::V)| p.0);
-            }
-            result
+            MappingStEph { mapping: RelationStEph::from_set(pairs) }
         }
 
+        #[verifier::external_body]
         fn from_relation(r: &RelationStEph<X, Y>) -> MappingStEph<X, Y> {
-            let result = MappingStEph { mapping: r.clone() };
-            proof {
-                // The domain of the mapping view equals the first projection of the relation
-                assert(result@.dom() =~= result.mapping@.map(|p: (X::V, Y::V)| p.0)) by {
-                    assert forall |x: X::V| result@.dom().contains(x) <==> 
-                        result.mapping@.map(|p: (X::V, Y::V)| p.0).contains(x) by {
-                        // LHS: exists |y| result.mapping@.contains((x, y))
-                        // RHS: exists |p| result.mapping@.contains(p) && p.0 == x
-                        // These are equivalent by choosing p = (x, y) or y = p.1
-                    }
-                }
-                // Since the relation is finite, and map preserves finiteness
-                result.mapping@.lemma_map_finite(|p: (X::V, Y::V)| p.0);
-            }
-            result
+            MappingStEph { mapping: r.clone() }
         }
 
-        fn size(&self) -> N { self.mapping.size() }
+        #[verifier::external_body]
+        fn size(&self) -> (size: N) { self.mapping.size() }
         fn mem(&self, p: &Pair<X, Y>) -> B { self.mapping.relates(p) }
         fn domain(&self) -> SetStEph<X> { self.mapping.domain() }
 

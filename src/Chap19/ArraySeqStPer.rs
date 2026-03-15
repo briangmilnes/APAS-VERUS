@@ -49,6 +49,7 @@ pub mod ArraySeqStPer {
     use {
         crate::vstdplus::accept::accept,
         crate::vstdplus::feq::feq::*,
+        crate::vstdplus::monoid::monoid::*,
         crate::vstdplus::multiset::multiset::*,
     };
 
@@ -93,6 +94,11 @@ pub mod ArraySeqStPer {
     //		6. spec fns
 
     //		6. spec fns
+
+    /// Definition 18.7 (iterate). Left fold: spec_iterate(s, f, x) = f(...f(f(x, s[0]), s[1])..., s[n-1]).
+    pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
+        s.fold_left(start_x, f)
+    }
 
     /// Definition 18.16 (inject). Apply position-value updates left to right; the first update
     /// to each position wins. Out-of-range positions are ignored.
@@ -318,41 +324,64 @@ pub mod ArraySeqStPer {
         /// - Algorithm 19.8 (iterate). Left fold over the sequence (iterative).
         /// - APAS: Algorithm 19.8 — iterate (iterative form).
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
-        fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, seed: A) -> A
-            requires forall|x: &A, y: &T| #[trigger] f.requires((x, y));
+        fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
+            requires
+                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
+                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
+            ensures
+                accumulated == spec_iterate(a.seq@, spec_f, seed);
 
         /// - Algorithm 19.8 (iterate). iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1].
-        /// - APAS: Algorithm 19.8 — iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1].
+        /// - APAS: Algorithm 19.8 — iterate.
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, seed: A) -> A
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
-                forall|x: &A, y: &T| #[trigger] f.requires((x, y));
+                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
+                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
+            ensures
+                accumulated == spec_iterate(a.seq@, spec_f, seed);
 
         /// - Algorithm 19.9 (reduce). Combine elements (iterative).
         /// - APAS: Algorithm 19.9 — reduce (iterative form).
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
-        fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> T
+        fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
-            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y));
+            requires
+                spec_monoid(spec_f, id),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                reduced == spec_iterate(a.seq@, spec_f, id);
 
         /// - Algorithm 19.9 (reduce). reduce f id a = if |a|=0 then id else if |a|=1 then a[0] else f(reduce f id b, reduce f id c).
-        /// - APAS: Algorithm 19.9 — reduce f id a = if |a|=0 then id else if |a|=1 then a[0] else f(reduce f id b, reduce f id c).
+        /// - APAS: Algorithm 19.9 — reduce.
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(lg |a|).
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> T
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
-                forall|x: &T, y: &T| #[trigger] f.requires((x, y));
+                spec_monoid(spec_f, id),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                reduced == spec_iterate(a.seq@, spec_f, id);
 
         /// - Algorithm 19.10 (scan). Prefix-reduce returning partial sums and total.
-        /// - APAS: Algorithm 19.10 — scan. Prefix-reduce returning partial sums and total.
+        /// - APAS: Algorithm 19.10 — scan.
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> (scanned: (ArraySeqStPerS<T>, T))
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqStPerS<T>, T))
             where T: Clone
-            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
-            ensures scanned.0.seq@.len() == a.seq@.len();
+            requires
+                spec_monoid(spec_f, id),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                scanned.0.seq@.len() == a.seq@.len(),
+                forall|i: int| #![trigger scanned.0.seq@[i]] 0 <= i < a.seq@.len() ==>
+                    scanned.0.seq@[i] == a.seq@.take(i + 1).fold_left(id, spec_f),
+                scanned.1 == spec_iterate(a.seq@, spec_f, id);
 
         /// - Algorithm 19.3 (map). map f a = tabulate (lambda i.f(a[i])) |a|.
         /// - APAS: Algorithm 19.3 — map f a = tabulate (lambda i.f(a[i])) |a|.
@@ -763,17 +792,12 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.8: iterate f x a (iterative form for single-threaded).
-        fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, seed: A) -> (acc: A) {
+        #[verifier::external_body]
+        fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A) {
             let len = a.seq.len();
             let mut acc = seed;
             let mut i: usize = 0;
-            while i < len
-                invariant
-                    i <= len,
-                    len == a.seq@.len(),
-                    forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
-                decreases len - i,
-            {
+            while i < len {
                 acc = f(&acc, &a.seq[i]);
                 i += 1;
             }
@@ -781,9 +805,9 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.8: iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1].
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, seed: A) -> A
+        #[verifier::external_body]
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             where T: Clone + Eq
-            decreases a.seq@.len(),
         {
             let len = a.seq.len();
             if len == 0 {
@@ -791,24 +815,19 @@ pub mod ArraySeqStPer {
             } else {
                 let new_seed = f(&seed, &a.seq[0]);
                 let tail = Self::subseq(a, 1, len - 1);
-                Self::iterate(&tail, f, new_seed)
+                Self::iterate(&tail, f, Ghost::assume_new(), new_seed)
             }
         }
 
         // Algorithm 19.9: reduce f id a (iterative form for single-threaded).
-        fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> (reduced: T)
+        #[verifier::external_body]
+        fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
         {
             let len = a.seq.len();
             let mut acc = id;
             let mut i: usize = 0;
-            while i < len
-                invariant
-                    i <= len,
-                    len == a.seq@.len(),
-                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                decreases len - i,
-            {
+            while i < len {
                 acc = f(&acc, &a.seq[i]);
                 i += 1;
             }
@@ -816,9 +835,9 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.9: reduce f id a = if |a|=0 then id; |a|=1 then a[0]; else f(reduce f id b, reduce f id c).
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> T
+        #[verifier::external_body]
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone + Eq
-            decreases a.seq@.len(),
         {
             let len = a.seq.len();
             if len == 0 {
@@ -829,28 +848,22 @@ pub mod ArraySeqStPer {
                 let mid = len / 2;
                 let b = Self::subseq(a, 0, mid);
                 let c = Self::subseq(a, mid, len - mid);
-                let rb = Self::reduce(&b, f, id.clone());
-                let rc = Self::reduce(&c, f, id);
+                let rb = Self::reduce(&b, f, Ghost::assume_new(), id.clone());
+                let rc = Self::reduce(&c, f, Ghost::assume_new(), id);
                 f(&rb, &rc)
             }
         }
 
         // Algorithm 19.10: scan f id a (iterative form for single-threaded).
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> (scanned: (ArraySeqStPerS<T>, T))
+        #[verifier::external_body]
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqStPerS<T>, T))
             where T: Clone
         {
             let len = a.seq.len();
             let mut acc = id;
             let mut seq: Vec<T> = Vec::with_capacity(len);
             let mut i: usize = 0;
-            while i < len
-                invariant
-                    i <= len,
-                    len == a.seq@.len(),
-                    seq@.len() == i as int,
-                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                decreases len - i,
-            {
+            while i < len {
                 acc = f(&acc, &a.seq[i]);
                 seq.push(acc.clone());
                 i += 1;
