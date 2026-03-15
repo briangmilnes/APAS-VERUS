@@ -45,7 +45,7 @@ fn test_default() {
 
 #[test]
 fn test_insert_and_size() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(5, rand_priority());
     assert_eq!(tree.size(), 1);
     tree.insert(3, rand_priority());
@@ -55,7 +55,7 @@ fn test_insert_and_size() {
 
 #[test]
 fn test_find() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(5, rand_priority());
     tree.insert(3, rand_priority());
     tree.insert(7, rand_priority());
@@ -68,7 +68,7 @@ fn test_find() {
 
 #[test]
 fn test_contains() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(5, rand_priority());
     tree.insert(3, rand_priority());
     tree.insert(7, rand_priority());
@@ -82,7 +82,7 @@ fn test_contains() {
 
 #[test]
 fn test_is_empty() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     assert!(tree.is_empty());
     tree.insert(5, rand_priority());
     assert!(!tree.is_empty());
@@ -90,7 +90,7 @@ fn test_is_empty() {
 
 #[test]
 fn test_minimum() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     assert_eq!(tree.minimum(), None);
 
     tree.insert(5, rand_priority());
@@ -104,7 +104,7 @@ fn test_minimum() {
 
 #[test]
 fn test_maximum() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     assert_eq!(tree.maximum(), None);
 
     tree.insert(5, rand_priority());
@@ -118,7 +118,7 @@ fn test_maximum() {
 
 #[test]
 fn test_height() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     assert_eq!(tree.height(), 0);
 
     tree.insert(5, rand_priority());
@@ -131,7 +131,7 @@ fn test_height() {
 
 #[test]
 fn test_height_balanced() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     for i in 0..64 {
         tree.insert(i, rand_priority());
     }
@@ -141,7 +141,7 @@ fn test_height_balanced() {
 
 #[test]
 fn test_in_order() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(5, rand_priority());
     tree.insert(3, rand_priority());
     tree.insert(7, rand_priority());
@@ -158,7 +158,7 @@ fn test_in_order() {
 
 #[test]
 fn test_pre_order() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(5, rand_priority());
     tree.insert(3, rand_priority());
     tree.insert(7, rand_priority());
@@ -169,7 +169,7 @@ fn test_pre_order() {
 
 #[test]
 fn test_duplicate_insert() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(5, rand_priority());
     tree.insert(5, rand_priority());
     tree.insert(5, rand_priority());
@@ -180,7 +180,7 @@ fn test_duplicate_insert() {
 
 #[test]
 fn test_single_element() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(42, rand_priority());
 
     assert_eq!(tree.size(), 1);
@@ -191,7 +191,7 @@ fn test_single_element() {
 
 #[test]
 fn test_large_tree() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     for i in 0..100 {
         tree.insert(i, rand_priority());
     }
@@ -202,7 +202,7 @@ fn test_large_tree() {
 
 #[test]
 fn test_negative_numbers() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(-5, rand_priority());
     tree.insert(-10, rand_priority());
     tree.insert(-3, rand_priority());
@@ -216,7 +216,7 @@ fn test_negative_numbers() {
 
 #[test]
 fn test_mixed_positive_negative() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(5, rand_priority());
     tree.insert(-3, rand_priority());
     tree.insert(0, rand_priority());
@@ -246,7 +246,7 @@ fn test_empty_operations() {
 
 #[test]
 fn test_clone_independent_copy() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(5, rand_priority());
     let cloned = tree.clone();
 
@@ -259,7 +259,7 @@ fn test_clone_independent_copy() {
 
 #[test]
 fn test_string_keys() {
-    let tree: BSTTreapMtEph<String> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<String> = BSTTreapMtEph::new();
     tree.insert("dog".to_string(), rand_priority());
     tree.insert("cat".to_string(), rand_priority());
     tree.insert("elephant".to_string(), rand_priority());
@@ -273,7 +273,7 @@ fn test_string_keys() {
 
 #[test]
 fn test_extremes() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(i32::MAX, rand_priority());
     tree.insert(i32::MIN, rand_priority());
     tree.insert(0, rand_priority());
@@ -288,7 +288,7 @@ fn test_extremes() {
 fn test_concurrent_readers() {
     use std::thread;
 
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     for i in 0..50 {
         tree.insert(i, rand_priority());
     }
@@ -310,25 +310,17 @@ fn test_concurrent_readers() {
 
 #[test]
 #[cfg_attr(miri, ignore)]
-fn test_concurrent_writer_and_readers() {
-    use std::sync::Arc;
+fn test_concurrent_readers_after_build() {
     use std::thread;
 
-    let tree: BSTTreapMtEph<i64> = BSTTreapMtEph::new();
-    let tree_arc = Arc::new(tree);
+    // Build the tree on the main thread, then share read-only clones.
+    let mut tree: BSTTreapMtEph<i64> = BSTTreapMtEph::new();
+    for i in 0..100i64 {
+        tree.insert(i, rand_priority());
+    }
 
-    let writer = {
-        let t = tree_arc.clone();
-        thread::spawn(move || {
-            for i in 0..100i64 {
-                t.insert(i, rand_priority());
-                thread::sleep(Duration::from_micros(10));
-            }
-        })
-    };
-
-    let readers: Vec<_> = (0..3).map(|_| {
-        let t = tree_arc.clone();
+    let readers: Vec<_> = (0..4).map(|_| {
+        let t = tree.clone();
         thread::spawn(move || {
             for _ in 0..50 {
                 let _sz = t.size();
@@ -339,12 +331,11 @@ fn test_concurrent_writer_and_readers() {
         })
     }).collect();
 
-    writer.join().expect("writer thread panicked");
     for r in readers {
         r.join().expect("reader thread panicked");
     }
 
-    assert_eq!(tree_arc.size(), 100);
+    assert_eq!(tree.size(), 100);
 }
 
 #[test]
@@ -360,7 +351,7 @@ fn test_traversal_empty() {
 
 #[test]
 fn test_singleton_traversal() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(42, rand_priority());
 
     let in_seq = tree.in_order();
@@ -374,7 +365,7 @@ fn test_singleton_traversal() {
 
 #[test]
 fn test_reverse_order_insert() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(5, rand_priority());
     tree.insert(4, rand_priority());
     tree.insert(3, rand_priority());
@@ -388,7 +379,7 @@ fn test_reverse_order_insert() {
 
 #[test]
 fn test_contains_step_pattern() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     for i in (0..100).step_by(3) {
         tree.insert(i, rand_priority());
     }
@@ -404,7 +395,7 @@ fn test_contains_step_pattern() {
 
 #[test]
 fn test_delete_basic() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(10, rand_priority());
     tree.insert(5, rand_priority());
     tree.insert(15, rand_priority());
@@ -424,7 +415,7 @@ fn test_delete_basic() {
 
 #[test]
 fn test_delete_root() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(10, rand_priority());
     tree.insert(5, rand_priority());
     tree.insert(15, rand_priority());
@@ -438,7 +429,7 @@ fn test_delete_root() {
 
 #[test]
 fn test_delete_leaf() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(10, rand_priority());
     tree.insert(5, rand_priority());
     tree.insert(15, rand_priority());
@@ -450,7 +441,7 @@ fn test_delete_leaf() {
 
 #[test]
 fn test_delete_nonexistent() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(10, rand_priority());
     tree.insert(5, rand_priority());
 
@@ -462,7 +453,7 @@ fn test_delete_nonexistent() {
 
 #[test]
 fn test_delete_all() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     for i in 0..10 {
         tree.insert(i, rand_priority());
     }
@@ -477,7 +468,7 @@ fn test_delete_all() {
 
 #[test]
 fn test_delete_then_reinsert() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.insert(10, rand_priority());
     tree.insert(5, rand_priority());
 
@@ -491,7 +482,7 @@ fn test_delete_then_reinsert() {
 
 #[test]
 fn test_delete_from_empty() {
-    let tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
+    let mut tree: BSTTreapMtEph<i32> = BSTTreapMtEph::new();
     tree.delete(&5);
     assert_eq!(tree.size(), 0);
 }

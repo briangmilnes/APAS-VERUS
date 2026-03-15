@@ -209,13 +209,13 @@ pub mod BSTTreapMtEph {
         fn new() -> (empty_tree: Self)
             ensures empty_tree@ == Set::<<T as View>::V>::empty(), empty_tree.spec_bsttreapmteph_wf();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
-        fn insert(&self, value: T, priority: u64)
+        fn insert(&mut self, value: T, priority: u64)
             requires T::obeys_partial_cmp_spec(),
-            ensures self@.contains(value@);
+            ensures self@.contains(value@), self.spec_bsttreapmteph_wf();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
-        fn delete(&self, target: &T)
+        fn delete(&mut self, target: &T)
             requires T::obeys_partial_cmp_spec(),
-            ensures !self@.contains(target@);
+            ensures !self@.contains(target@), self.spec_bsttreapmteph_wf();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn find(&self, target: &T) -> (found: Option<T>)
             ensures found.is_some() <==> self@.contains(target@);
@@ -945,26 +945,31 @@ pub mod BSTTreapMtEph {
             }
         }
 
-        fn insert(&self, value: T, priority: u64)
-            ensures self@.contains(value@)
+        fn insert(&mut self, value: T, priority: u64)
+            ensures self@.contains(value@), self.spec_bsttreapmteph_wf()
         {
+            proof { use_type_invariant(&*self); }
             let ghost value_view = value@;
+            let ghost old_set = self.ghost_locked_root@;
             let (mut current, write_handle) = self.locked_root.acquire_write();
             let sz = size_link(&current);
             if sz + 1 < usize::MAX {
                 insert_link(&mut current, value, priority);
             }
             write_handle.release_write(current);
-            proof { assume(self@.contains(value_view)); }
+            self.ghost_locked_root = Ghost(old_set.insert(value_view));
         }
 
-        fn delete(&self, target: &T)
-            ensures !self@.contains(target@)
+        fn delete(&mut self, target: &T)
+            ensures !self@.contains(target@), self.spec_bsttreapmteph_wf()
         {
+            proof { use_type_invariant(&*self); }
+            let ghost target_view = target@;
+            let ghost old_set = self.ghost_locked_root@;
             let (mut current, write_handle) = self.locked_root.acquire_write();
             delete_link(&mut current, target);
             write_handle.release_write(current);
-            proof { assume(!self@.contains(target@)); }
+            self.ghost_locked_root = Ghost(old_set.remove(target_view));
         }
 
         fn find(&self, target: &T) -> (found: Option<T>)
@@ -1107,7 +1112,7 @@ pub mod BSTTreapMtEph {
         };
         ( $( $x:expr ),* $(,)? ) => {{
             use std::hash::{Hash, Hasher};
-            let __tree = < $crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::BSTTreapMtEph<_> as $crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::BSTTreapMtEphTrait<_> >::new();
+            let mut __tree = < $crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::BSTTreapMtEph<_> as $crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::BSTTreapMtEphTrait<_> >::new();
             $( {
                 let __val = $x;
                 let mut __h = ::std::collections::hash_map::DefaultHasher::new();
