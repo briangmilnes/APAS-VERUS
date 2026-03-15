@@ -32,7 +32,7 @@ pub mod AVLTreeSetMtPer {
     use crate::vstdplus::accept::accept;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_full;
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger};
     use crate::ParaPair;
     use crate::Types::Types::*;
 
@@ -440,7 +440,7 @@ broadcast use {
         fn find(&self, x: &T) -> (found: B)
         {
             proof {
-                assume(obeys_feq_full::<T>());  // feq bridge: type axiom
+                assert(obeys_feq_full_trigger::<T>());
             }
             let n = self.elements.length();
             let mut lo: usize = 0;
