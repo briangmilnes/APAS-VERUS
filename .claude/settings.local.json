@@ -142,7 +142,14 @@
       "Bash(cat /home/milnes/.claude/*)",
       "Bash(cat /home/milnes/.claude/**)",
       "Bash(grep * /home/milnes/.claude/*)",
-      "Bash(grep * /home/milnes/.claude/**)"
+      "Bash(grep * /home/milnes/.claude/**)",
+      "Bash(*; cd /home/milnes/projects/APAS-VERUS*)",
+      "Bash(*&& cd /home/milnes/projects/APAS-VERUS*)",
+      "Bash(cd /home/milnes/projects/APAS-VERUS* *)",
+      "Bash(*; done *)",
+      "Bash(*; done)",
+      "Bash(rm *)",
+      "Bash(touch *)"
     ]
   }
 }
