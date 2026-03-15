@@ -30,6 +30,8 @@ pub mod HFSchedulerMtEph {
     /// - The configured parallelism level. None means use the number of CPUs minus one, minimum one.
     static PARALLELISM: RwLock<Option<usize>> = RwLock::new(None);
 
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reads config, creates mutex/condvar.
     fn init_pool() -> PoolState {
         let n = PARALLELISM.read().unwrap();
         let threads = n.unwrap_or_else(|| {
@@ -46,6 +48,8 @@ pub mod HFSchedulerMtEph {
 
     static POOL: LazyLock<PoolState> = LazyLock::new(init_pool);
 
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — lock, check, unlock.
     fn try_acquire() -> bool {
         let mut available = POOL.available_tasks.lock().unwrap();
         if *available > 0 {
@@ -56,6 +60,8 @@ pub mod HFSchedulerMtEph {
         }
     }
 
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work Θ(1) amortized, Span Θ(1) amortized — waits on condvar.
     fn acquire() {
         let mut available = POOL.available_tasks.lock().unwrap();
         while *available == 0 {
@@ -64,6 +70,8 @@ pub mod HFSchedulerMtEph {
         *available -= 1;
     }
 
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — lock, increment, notify, unlock.
     fn release() {
         let mut available = POOL.available_tasks.lock().unwrap();
         *available += 1;

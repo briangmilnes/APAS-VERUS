@@ -38,65 +38,76 @@ verus! {
         open spec fn spec_total_weight(&self) -> int 
          { self@.A.fold(0int, |acc: int, t: (V::V, V::V, i32)| acc + t.2 as int) }
 
-        /// APAS: Work Θ(|V| + |E|), Span Θ(1)
+        /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) -- sequential
         fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i32>>) -> (g: WeightedDirGraphStEphI32<V>)
-            requires 
+            requires
                 valid_key_type_WeightedEdge::<V, i32>(),
                 edges@.finite(),
-                forall |u: V::V, w: V::V, weight: i32| 
-                    #[trigger] edges@.contains((u, w, weight)) ==> 
+                forall |u: V::V, w: V::V, weight: i32|
+                    #[trigger] edges@.contains((u, w, weight)) ==>
                         vertices@.contains(u) && vertices@.contains(w),
             ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn add_weighed_edge(&mut self, from: V, to: V, weight: i32)
             requires valid_key_type_WeightedEdge::<V, i32>()
-            ensures 
+            ensures
                 self@.V == old(self)@.V.insert(from@).insert(to@),
                 self@.A == old(self)@.A.insert((from@, to@, weight));
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) -- sequential search
         fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i32>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i32>()
-            ensures 
+            ensures
                 weight.is_some() == (exists |w: i32| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),
                 weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) -- sequential iteration
         fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i32>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i32>()
-            ensures 
+            ensures
                 forall |t: (V::V, V::V, i32)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) -- sequential filter
         fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i32>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i32>()
-            ensures 
-                forall |p: (V::V, i32)| out_neighbors@.contains(p) == 
+            ensures
+                forall |p: (V::V, i32)| out_neighbors@.contains(p) ==
                     (exists |w: i32| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) -- sequential filter
         fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i32>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i32>()
-            ensures 
-                forall |p: (V::V, i32)| in_neighbors@.contains(p) == 
+            ensures
+                forall |p: (V::V, i32)| in_neighbors@.contains(p) ==
                     (exists |w: i32| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) -- sequential fold
         fn total_weight(&self) -> (total_weight: CheckedI32)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i32>()
             ensures total_weight@ == self.spec_total_weight();
 
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) -- sequential filter
         fn edges_above_weight(&self, threshold: i32) -> (edges_above: SetStEph<WeightedEdge<V, i32>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i32>()
-            ensures 
-                forall |t: (V::V, V::V, i32)| #[trigger] edges_above@.contains(t) == 
+            ensures
+                forall |t: (V::V, V::V, i32)| #[trigger] edges_above@.contains(t) ==
                     (self@.A.contains(t) && t.2 > threshold);
 
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) -- sequential filter
         fn edges_below_weight(&self, threshold: i32) -> (edges_below: SetStEph<WeightedEdge<V, i32>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, i32>()
-            ensures 
-                forall |t: (V::V, V::V, i32)| #[trigger] edges_below@.contains(t) == 
+            ensures
+                forall |t: (V::V, V::V, i32)| #[trigger] edges_below@.contains(t) ==
                     (self@.A.contains(t) && t.2 < threshold);
     }
 
