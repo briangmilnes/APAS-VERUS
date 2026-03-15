@@ -161,10 +161,13 @@ broadcast use {
             requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>()
             ensures tabulated@.dom().finite();
         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (mapped: Self)
+            requires forall|k: &K, v: &V| f.requires((k, v))
             ensures mapped@.dom().finite();
         fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (filtered: Self)
+            requires forall|k: &K, v: &V| f.requires((k, v))
             ensures filtered@.dom().finite();
         fn reduce<R, G: Fn(R, &K, &V) -> R>(&self, init: R, f: G) -> (reduced: R)
+            requires forall|r: R, k: &K, v: &V| f.requires((r, k, v))
             ensures self@.dom().finite();
         fn intersection<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
             requires
