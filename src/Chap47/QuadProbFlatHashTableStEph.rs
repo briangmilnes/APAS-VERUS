@@ -35,6 +35,7 @@ pub mod QuadProbFlatHashTableStEph {
     {
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe find_slot then set.
+        #[verifier::external_body]
         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
             let mut attempt: usize = 0;
             while attempt < table.current_size
@@ -65,7 +66,8 @@ pub mod QuadProbFlatHashTableStEph {
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe sequence until found or empty.
-        fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {
+        #[verifier::external_body]
+        fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             let mut attempt: usize = 0;
             while attempt < table.current_size
                 invariant
@@ -89,6 +91,7 @@ pub mod QuadProbFlatHashTableStEph {
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe until found or empty, then tombstone.
+        #[verifier::external_body]
         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
             let mut attempt: usize = 0;
             while attempt < table.current_size
@@ -118,6 +121,7 @@ pub mod QuadProbFlatHashTableStEph {
 
         /// - APAS: Work O(n + m + m'), Span O(n + m + m').
         /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs from m slots, creates m' new slots, reinserts n pairs.
+        #[verifier::external_body]
         fn resize(
             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
             new_size: usize,
