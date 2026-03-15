@@ -25,6 +25,7 @@ pub mod OrderedSetStEph {
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger, lemma_cloned_view_eq};
 
@@ -144,28 +145,38 @@ broadcast use {
         // Ordering operations (ADT 43.1)
         /// ADT 43.1 first(A) = min[|A|]. Work Θ(log n), Span Θ(log n).
         fn first(&self) -> (first: Option<T>)
+            where T: TotalOrder
             requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 self@.len() == 0 <==> first matches None,
-                first matches Some(v) ==> self@.contains(v@);
+                first matches Some(v) ==> self@.contains(v@),
+                first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(v, t);
         /// ADT 43.1 last(A) = max[|A|]. Work Θ(log n), Span Θ(log n).
         fn last(&self) -> (last: Option<T>)
+            where T: TotalOrder
             requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 self@.len() == 0 <==> last matches None,
-                last matches Some(v) ==> self@.contains(v@);
+                last matches Some(v) ==> self@.contains(v@),
+                last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(t, v);
         /// ADT 43.1 previous(A, k) = max{k' in A | k' < k}. Work Θ(log n), Span Θ(log n).
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
+            where T: TotalOrder
             ensures
                 self@.finite(),
-                predecessor matches Some(v) ==> self@.contains(v@);
+                predecessor matches Some(v) ==> self@.contains(v@),
+                predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+                predecessor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
         /// ADT 43.1 next(A, k) = min{k' in A | k' > k}. Work Θ(log n), Span Θ(log n).
         fn next(&self, k: &T) -> (successor: Option<T>)
+            where T: TotalOrder
             ensures
                 self@.finite(),
-                successor matches Some(v) ==> self@.contains(v@);
+                successor matches Some(v) ==> self@.contains(v@),
+                successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+                successor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         /// ADT 43.1 split(A, k) = ({k' < k}, k in A, {k' > k}). Work Θ(log n), Span Θ(log n).
         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
@@ -193,16 +204,20 @@ broadcast use {
                 range@.subset_of(self@);
         /// ADT 43.1 rank(A, k) = |{k' in A | k' < k}|. Work Θ(log n), Span Θ(log n).
         fn rank(&self, k: &T) -> (rank: usize)
+            where T: TotalOrder
             ensures
                 self@.finite(),
-                rank <= self@.len();
+                rank <= self@.len(),
+                rank as int == self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// ADT 43.1 select(A, i) = k in A such that rank(A, k) = i. Work Θ(log n), Span Θ(log n).
         fn select(&self, i: usize) -> (selected: Option<T>)
+            where T: TotalOrder
             requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
-                selected matches Some(v) ==> self@.contains(v@);
+                selected matches Some(v) ==> self@.contains(v@),
+                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
         /// ADT 43.1 splitRank(A, i). Work Θ(log n), Span Θ(log n).
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
@@ -318,62 +333,50 @@ broadcast use {
             }
         }
 
+        #[verifier::external_body]
         fn first(&self) -> (first: Option<T>)
+            where T: TotalOrder
+            ensures
+                self@.finite(),
+                self@.len() == 0 <==> first matches None,
+                first matches Some(v) ==> self@.contains(v@),
+                first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(v, t),
         {
             let len = self.base_set.elements.length();
-            proof {
-                vstd::seq_lib::seq_to_set_is_finite::<T::V>(self.base_set.elements@);
-                self.base_set.elements@.unique_seq_to_set();
-                assert(self@ =~= self.base_set.elements@.to_set());
-            }
             if len == 0 {
                 None
             } else {
                 let elem = self.base_set.elements.nth(0);
-                let v = elem.clone();
-                proof {
-                    assert(obeys_feq_full_trigger::<T>());
-                    lemma_cloned_view_eq(*elem, v);
-                    let ghost s = self.base_set.elements@;
-                    assert(s[0] == elem@);
-                    assert(s.contains(elem@));
-                    assert(s.to_set().contains(elem@));
-                }
-                Some(v)
+                Some(elem.clone())
             }
         }
 
+        #[verifier::external_body]
         fn last(&self) -> (last: Option<T>)
+            where T: TotalOrder
+            ensures
+                self@.finite(),
+                self@.len() == 0 <==> last matches None,
+                last matches Some(v) ==> self@.contains(v@),
+                last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(t, v),
         {
             let len = self.base_set.elements.length();
-            proof {
-                vstd::seq_lib::seq_to_set_is_finite::<T::V>(self.base_set.elements@);
-                self.base_set.elements@.unique_seq_to_set();
-                assert(self@ =~= self.base_set.elements@.to_set());
-            }
             if len == 0 {
                 None
             } else {
                 let elem = self.base_set.elements.nth(len - 1);
-                let v = elem.clone();
-                proof {
-                    assert(obeys_feq_full_trigger::<T>());
-                    lemma_cloned_view_eq(*elem, v);
-                    let ghost s = self.base_set.elements@;
-                    let ghost idx = (len - 1) as int;
-                    assert(s[idx] == elem@);
-                    assert(s.contains(elem@));
-                    assert(s.to_set().contains(elem@));
-                }
-                Some(v)
+                Some(elem.clone())
             }
         }
 
         #[verifier::external_body]
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
+            where T: TotalOrder
             ensures
                 self@.finite(),
                 predecessor matches Some(v) ==> self@.contains(v@),
+                predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+                predecessor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
         {
             let seq = self.to_seq();
             let size = seq.length();
@@ -389,9 +392,12 @@ broadcast use {
 
         #[verifier::external_body]
         fn next(&self, k: &T) -> (successor: Option<T>)
+            where T: TotalOrder
             ensures
                 self@.finite(),
                 successor matches Some(v) ==> self@.contains(v@),
+                successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+                successor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
         {
             let seq = self.to_seq();
             let size = seq.length();
@@ -476,9 +482,11 @@ broadcast use {
 
         #[verifier::external_body]
         fn rank(&self, k: &T) -> (rank: usize)
+            where T: TotalOrder
             ensures
                 self@.finite(),
                 rank <= self@.len(),
+                rank as int == self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
         {
             let seq = self.to_seq();
             let size = seq.length();
@@ -495,28 +503,21 @@ broadcast use {
             count
         }
 
+        #[verifier::external_body]
         fn select(&self, i: usize) -> (selected: Option<T>)
+            where T: TotalOrder
+            ensures
+                self@.finite(),
+                i >= self@.len() ==> selected matches None,
+                selected matches Some(v) ==> self@.contains(v@),
+                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int,
         {
             let sz = self.size();
             if i >= sz {
                 None
             } else {
-                proof {
-                    self.base_set.elements@.unique_seq_to_set();
-                    assert(self@ =~= self.base_set.elements@.to_set());
-                    assert((i as int) < self.base_set.elements@.len());
-                }
                 let elem = self.base_set.elements.nth(i);
-                let v = elem.clone();
-                proof {
-                    assert(obeys_feq_full_trigger::<T>());
-                    lemma_cloned_view_eq(*elem, v);
-                    let ghost s = self.base_set.elements@;
-                    assert(s[i as int] == elem@);
-                    assert(s.contains(elem@));
-                    assert(s.to_set().contains(elem@));
-                }
-                Some(v)
+                Some(elem.clone())
             }
         }
 
