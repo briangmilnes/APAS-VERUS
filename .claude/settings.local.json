@@ -63,6 +63,7 @@
       "Bash(for * in *; do\n*)",
       "Bash(for *\ndo *)",
       "Bash(for * done)",
+      "Bash(for *\n*)",
       "Bash(for *\ndo\n*)",
       "Bash(*| gawk *)",
       "Bash(*|gawk *)",
@@ -73,8 +74,18 @@
       "Bash(*&& git commit *)",
       "Bash(git *; echo *)",
       "Bash(git *; ls *)",
+      "Bash(git * && echo * && git *)",
+      "Bash(git * && echo * && ls *)",
+      "Bash(for * if *)",
+      "Bash(for * do *)",
+      "Bash(for ch *)",
+      "Bash(for d *)",
+      "Bash(for d in *)",
+      "Bash(for f *)",
+      "Bash(for i *)",
       "Bash(GIT_EDITOR=true *)",
       "Bash(*&& git status *)",
+      "Bash(git status * && *)",
       "Bash(git status *| *)",
       "Bash(git status *|*)",
       "Bash(*&& grep *)",
@@ -144,6 +155,10 @@
       "Bash(timeout *)",
       "Bash(*> /tmp/*)",
       "Bash(*>> /tmp/*)",
+      "Bash(cat * /tmp/*)",
+      "Bash(cat */tmp/*)",
+      "Bash(cat << *)",
+      "Bash(cat <<*)",
       "Bash(/tmp/analyze_algorithms.txt:*)",
       "Bash(/tmp/final_report.txt:*)",
       "Bash(/tmp/loop_analysis.txt:*)",
@@ -197,7 +212,9 @@
       "Write(/home/milnes/.claude/**)",
       "Write(/home/milnes/projects/APAS-VERUS*/**)",
       "Write(~/projects/APAS-VERUS*/**)",
-      "Write(/tmp/**)"
+      "Write(/tmp/**)",
+      "Bash(fi)",
+      "Bash(/tmp/gap_table.txt:*)"
     ]
   }
 }

@@ -196,7 +196,10 @@ minor). You bring:
 - **Agent status reports**: When finishing a round, write your summary to
   `plans/agent{N}-round{R}-report.md` (e.g., `plans/agent3-round7-report.md`).
   Include: holes before/after per file (table), chapters closed, verification counts,
-  techniques used, remaining holes with what blocks them, commit hash.
+  techniques used, remaining holes with what blocks them.
+- **Do not amend commits to backfill commit hashes into reports.** Writing a report,
+  committing, then amending the commit to insert the hash into the report is pointless
+  churn that requires a force-push. Just commit once. The hash is in `git log`.
 - **Every table in agent reports that references files or functions MUST include a Chap
   column.** This is the same rule as Output Formatting above but agents keep violating it.
   A table row like `| 1 | BSTParaStEph.rs | 8 | 5 |` is WRONG — which chapter is that?

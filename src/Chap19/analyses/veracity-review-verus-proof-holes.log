@@ -21,19 +21,19 @@ Table of Contents:
 =================================================================
 
 ℹ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqMtEph.rs:478: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqMtEph.rs:1481: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:478: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1481: info: accept()
    Info: 2 total
    6 clean proof functions
 ✓ ArraySeqMtEphSlice.rs
 ℹ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqStEph.rs:452: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqStEph.rs:1201: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:452: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1201: info: accept()
    Info: 2 total
    4 clean proof functions
 ℹ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqStPer.rs:438: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqStPer.rs:1201: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:438: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1201: info: accept()
    Info: 2 total
    3 clean proof functions
 
@@ -89,9 +89,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 15:10:37 -07:00
-Ended:     2026-03-15 15:10:37 -07:00
-Duration:  46ms
+Started:   2026-03-15 15:35:05 -07:00
+Ended:     2026-03-15 15:35:05 -07:00
+Duration:  43ms
 
 Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
