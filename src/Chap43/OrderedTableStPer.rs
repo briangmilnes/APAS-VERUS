@@ -63,14 +63,22 @@ pub mod OrderedTableStPer {
     pub trait OrderedTableStPerTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_orderedtablestper_wf(&self) -> bool;
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- delegates to TableStPer.size
         fn size(&self) -> (count: usize)
             requires self.spec_orderedtablestper_wf(),
             ensures count == self@.dom().len(), self@.dom().finite();
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- constructs empty TableStPer
         fn empty() -> (table: Self)
             ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf();
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps TableStPer.singleton
         fn singleton(k: K, v: V) -> (table: Self)
             requires obeys_feq_clone::<Pair<K, V>>(),
             ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table@.dom().finite(), table.spec_orderedtablestper_wf();
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableStPer.find (linear scan)
         fn find(&self, k: &K) -> (found: Option<V>)
             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
@@ -78,12 +86,16 @@ pub mod OrderedTableStPer {
                     Some(v) => self@.contains_key(k@) && self@[k@] == v@,
                     None => !self@.contains_key(k@),
                 };
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableStPer.insert (linear dup check)
         fn insert(&self, k: K, v: V) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
             ensures
                 table@.dom() =~= self@.dom().insert(k@),
                 table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableStPer.delete (linear scan)
         fn delete(&self, k: &K) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -91,9 +103,13 @@ pub mod OrderedTableStPer {
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
             ensures table@ == self@.remove(k@), table@.dom().finite(), table.spec_orderedtablestper_wf();
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableStPer.domain
         fn domain(&self) -> (keys: ArraySetStEph<K>)
             requires obeys_feq_clone::<K>()
             ensures keys@ =~= self@.dom(), self@.dom().finite();
+        /// - APAS: Work Θ(n log n), Span Θ(n log n)
+        /// - Claude-Opus-4.6: Work Θ(n^2), Span Θ(n^2) -- delegates to TableStPer.tabulate (sequential insert loop)
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (table: Self)
             requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),
             ensures
@@ -104,6 +120,8 @@ pub mod OrderedTableStPer {
                         key_arg@ == k && f.ensures((&key_arg,), result)
                         && table@[k] == result@),
                 table@.dom().finite();
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableStPer.map (linear iteration)
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
             ensures
@@ -115,6 +133,8 @@ pub mod OrderedTableStPer {
                         && table@[k] == result@),
                 table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableStPer.filter (linear iteration)
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -128,6 +148,8 @@ pub mod OrderedTableStPer {
                     ==> #[trigger] table@.dom().contains(k),
                 table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableStPer.intersection (linear scan)
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -143,6 +165,8 @@ pub mod OrderedTableStPer {
                         && table@[k] == r@),
                 table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableStPer.union (linear merge)
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -163,6 +187,8 @@ pub mod OrderedTableStPer {
                         && table@[k] == r@),
                 table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableStPer.difference (linear scan)
         fn difference(&self, other: &Self) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
             ensures
@@ -170,6 +196,8 @@ pub mod OrderedTableStPer {
                 forall|k: K::V| #![auto] table@.contains_key(k) ==> table@[k] == self@[k],
                 table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
             ensures
@@ -177,6 +205,8 @@ pub mod OrderedTableStPer {
                 forall|k: K::V| #![auto] table@.contains_key(k) ==> table@[k] == self@[k],
                 table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
             ensures
@@ -184,9 +214,12 @@ pub mod OrderedTableStPer {
                 forall|k: K::V| #![auto] table@.contains_key(k) ==> table@[k] == self@[k],
                 table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
+        /// - APAS: Work Θ(n log n), Span Θ(n log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects entries and sorts by key
         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), sorted_entries.spec_avltreeseqstper_wf(), sorted_entries@.len() == self@.dom().len();
-        /// ADT 43.1 first_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns first element
         fn first_key(&self) -> (key: Option<K>)
             where K: TotalOrder
             ensures
@@ -194,7 +227,8 @@ pub mod OrderedTableStPer {
                 self@.dom().len() == 0 <==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
                 key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(v, t);
-        /// ADT 43.1 last_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns last element
         fn last_key(&self) -> (key: Option<K>)
             where K: TotalOrder
             ensures
@@ -202,7 +236,8 @@ pub mod OrderedTableStPer {
                 self@.dom().len() == 0 <==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
                 key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, v);
-        /// ADT 43.1 previous_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans for predecessor
         fn previous_key(&self, k: &K) -> (key: Option<K>)
             where K: TotalOrder
             ensures
@@ -210,7 +245,8 @@ pub mod OrderedTableStPer {
                 key matches Some(pk) ==> self@.dom().contains(pk@),
                 key matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
-        /// ADT 43.1 next_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans for successor
         fn next_key(&self, k: &K) -> (key: Option<K>)
             where K: TotalOrder
             ensures
@@ -218,7 +254,8 @@ pub mod OrderedTableStPer {
                 key matches Some(nk) ==> self@.dom().contains(nk@),
                 key matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
-        /// ADT 43.1 split_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then partitions by key
         fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))
             where Self: Sized
             ensures
@@ -233,7 +270,8 @@ pub mod OrderedTableStPer {
                 parts.2@.dom().subset_of(self@.dom()),
                 parts.0@.dom().disjoint(parts.2@.dom()),
                 forall|key| self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@;
-        /// ADT 43.1 join_key. Work Θ(log(|left|+|right|)), Span Θ(log(|left|+|right|)).
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to union (linear merge)
         fn join_key(left: &Self, right: &Self) -> (table: Self)
             requires
                 left.spec_orderedtablestper_wf(),
@@ -244,20 +282,23 @@ pub mod OrderedTableStPer {
                 table@.dom() =~= left@.dom().union(right@.dom()),
                 table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
-        /// ADT 43.1 get_key_range. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n + m), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then filters by range
         fn get_key_range(&self, k1: &K, k2: &K) -> (table: Self)
             ensures
                 table@.dom().finite(),
                 table@.dom().subset_of(self@.dom()),
                 forall|key| table@.dom().contains(key) ==> table@[key] == self@[key];
-        /// ADT 43.1 rank_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then counts elements < k
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
-        /// ADT 43.1 select_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then indexes
         fn select_key(&self, i: usize) -> (key: Option<K>)
             where K: TotalOrder
             ensures
@@ -265,7 +306,8 @@ pub mod OrderedTableStPer {
                 i >= self@.dom().len() ==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
                 key matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
-        /// ADT 43.1 split_rank_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then partitions by rank
         fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
             where Self: Sized
             ensures

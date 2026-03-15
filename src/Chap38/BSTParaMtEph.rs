@@ -108,53 +108,68 @@ pub mod BSTParaMtEph {
         spec fn spec_bstparamteph_wf(&self) -> bool;
 
         /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
         fn new() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparamteph_wf();
         /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
         fn singleton(key: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(key@),
                 tree@.finite();
         /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
         fn expose(&self) -> (exposed: Exposed<T>)
             ensures self@.len() == 0 ==> exposed is Leaf;
         /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
         fn join_mid(exposed: Exposed<T>) -> (joined: Self)
             ensures exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty();
         /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite();
         /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
         fn is_empty(&self) -> (empty: B)
             ensures empty == (self@.len() == 0), self@.finite();
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
         /// Interior mutability via RwLock precludes `old()` specs on `&self`.
         fn insert(&self, key: T);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
         /// Interior mutability via RwLock precludes `old()` specs on `&self`.
         fn delete(&self, key: &T);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
         fn find(&self, key: &T) -> (found: Option<T>)
             ensures found.is_some() <==> self@.contains(key@);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
         fn split(&self, key: &T) -> (parts: (Self, B, Self))
             ensures
                 parts.1 == self@.contains(key@),
                 parts.0@.finite(),
                 parts.2@.finite();
         /// - APAS: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|))
+        /// - Claude-Opus-4.6: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|)) -- agrees with APAS.
         fn join_pair(&self, other: Self) -> (joined: Self)
             ensures joined@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n) -- agrees with APAS; parallel.
         fn union(&self, other: &Self) -> (combined: Self)
             ensures combined@ == self@.union(other@), combined@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n) -- agrees with APAS; parallel.
         fn intersect(&self, other: &Self) -> (common: Self)
             ensures common@ == self@.intersect(other@), common@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n) -- agrees with APAS; parallel.
         fn difference(&self, other: &Self) -> (remaining: Self)
             ensures remaining@ == self@.difference(other@), remaining@.finite();
         /// - APAS: Work O(|t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|) -- agrees with APAS; parallel.
         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(
             &self,
             predicate: F,
@@ -172,9 +187,11 @@ pub mod BSTParaMtEph {
                 forall|v: T::V| self@.contains(v) && spec_pred(v)
                     ==> #[trigger] filtered@.contains(v);
         /// - APAS: Work O(|t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|) -- agrees with APAS; parallel.
         /// Requires `op` to be associative with identity `base`.
         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T;
         /// - APAS: Work O(|t|), Span O(|t|)
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|) -- agrees with APAS; sequential DFS traversal.
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             ensures seq@.len() == self@.len();
     }

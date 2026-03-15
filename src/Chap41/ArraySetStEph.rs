@@ -306,10 +306,14 @@ pub mod ArraySetStEph {
     pub trait ArraySetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_arraysetsteph_wf(&self) -> bool;
 
+        /// - APAS: no cost spec (unordered array set, not in Cost Spec 41.3 or 41.4)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- cached length via backing ArraySeq.
         fn size(&self) -> (count: usize)
             requires self.spec_arraysetsteph_wf()
             ensures count == self@.len(), self@.finite();
 
+        /// - APAS: no cost spec (unordered array set)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- clones backing seq.
         fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
             requires self.spec_arraysetsteph_wf(),
             ensures
@@ -317,18 +321,26 @@ pub mod ArraySetStEph {
                 seq@.no_duplicates(),
                 seq@.to_set() =~= self@;
 
+        /// - APAS: no cost spec (unordered array set)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn empty() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_arraysetsteph_wf();
 
+        /// - APAS: no cost spec (unordered array set)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn singleton(x: T) -> (tree: Self)
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_arraysetsteph_wf();
 
+        /// - APAS: no cost spec (unordered array set)
+        /// - Claude-Opus-4.6: Work Θ(n^2), Span Θ(n^2) -- inserts each element with linear find.
         fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)
             ensures
                 constructed@ =~= seq@.to_set(),
                 constructed@.finite(),
                 constructed.spec_arraysetsteph_wf();
 
+        /// - APAS: no cost spec (unordered array set)
+        /// - Claude-Opus-4.6: Work Θ(n * W(f)), Span Θ(n * W(f)) -- sequential scan.
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -349,6 +361,8 @@ pub mod ArraySetStEph {
                 forall|v: T::V| self@.contains(v) && spec_pred(v)
                     ==> #[trigger] filtered@.contains(v);
 
+        /// - APAS: no cost spec (unordered array set)
+        /// - Claude-Opus-4.6: Work Θ(|self| * |other|), Span Θ(|self| * |other|) -- linear scan per element.
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_arraysetsteph_wf(),
@@ -360,6 +374,8 @@ pub mod ArraySetStEph {
                 common@.finite(),
                 common.spec_arraysetsteph_wf();
 
+        /// - APAS: no cost spec (unordered array set)
+        /// - Claude-Opus-4.6: Work Θ(|self| * |other|), Span Θ(|self| * |other|) -- linear scan per element.
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_arraysetsteph_wf(),
@@ -371,6 +387,8 @@ pub mod ArraySetStEph {
                 remaining@.finite(),
                 remaining.spec_arraysetsteph_wf();
 
+        /// - APAS: no cost spec (unordered array set)
+        /// - Claude-Opus-4.6: Work Θ(|self| * |other| + |other|), Span same -- linear scan per element.
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_arraysetsteph_wf(),
@@ -382,10 +400,14 @@ pub mod ArraySetStEph {
                 combined@.finite(),
                 combined.spec_arraysetsteph_wf();
 
+        /// - APAS: no cost spec (unordered array set)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan.
         fn find(&self, x: &T) -> (found: B)
             requires self@.finite(),
             ensures found == self@.contains(x@);
 
+        /// - APAS: no cost spec (unordered array set)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- filter and rebuild.
         fn delete(&mut self, x: &T)
             requires
                 old(self).spec_arraysetsteph_wf(),
@@ -395,6 +417,8 @@ pub mod ArraySetStEph {
                 self@.finite(),
                 self.spec_arraysetsteph_wf();
 
+        /// - APAS: no cost spec (unordered array set)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear find + append.
         fn insert(&mut self, x: T)
             requires
                 old(self).spec_arraysetsteph_wf(),

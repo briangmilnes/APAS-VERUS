@@ -757,7 +757,8 @@ broadcast use {
                 if n <= 0 { 0nat } else { Self::spec_total_size(heaps, n - 1) + heaps[n - 1].spec_size() }
             }
 
-            /// APAS Work Θ(1), Span Θ(1).
+            /// - APAS: Work O(1), Span O(1).
+            /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time Leaf construction.
             fn empty() -> (pq: Self) {
                 let pq = LeftistHeapPQ { root: LeftistHeapNode::Leaf };
                 assert(pq.root.spec_is_leftist());
@@ -767,7 +768,8 @@ broadcast use {
                 pq
             }
 
-            /// APAS Work Θ(1), Span Θ(1).
+            /// - APAS: Work O(1), Span O(1).
+            /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time Node construction.
             fn singleton(element: T) -> (pq: Self) {
                 let pq = LeftistHeapPQ {
                     root: LeftistHeapNode::Node {
@@ -791,7 +793,8 @@ broadcast use {
                 pq
             }
 
-            /// APAS Work Θ(1), Span Θ(1) — root access.
+            /// - APAS: Work O(1), Span O(1).
+            /// - Claude-Opus-4.6: Work O(1), Span O(1) — root access by heap property.
             fn find_min(&self) -> (min_elem: Option<&T>) {
                 match &self.root {
                     LeftistHeapNode::Leaf => {
@@ -820,7 +823,8 @@ broadcast use {
                 }
             }
 
-            /// APAS Work Θ(log n), Span Θ(log n).
+            /// - APAS: Work O(log n), Span O(log n).
+            /// - Claude-Opus-4.6: Work O(log n), Span O(log n) — singleton then meld along right spines.
             fn insert(&self, element: T) -> (pq: Self) {
                 let singleton = Self::singleton(element);
                 let pq = self.meld(&singleton);
@@ -835,7 +839,8 @@ broadcast use {
                 pq
             }
 
-            /// APAS Work Θ(log n), Span Θ(log n).
+            /// - APAS: Work O(log n), Span O(log n).
+            /// - Claude-Opus-4.6: Work O(log n), Span O(log n) — remove root, meld children.
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
                 match &self.root {
                     LeftistHeapNode::Leaf => (self.clone(), None),
@@ -893,7 +898,8 @@ broadcast use {
                 }
             }
 
-            /// APAS Work Θ(log m + log n), Span Θ(log m + log n).
+            /// - APAS: Work O(log m + log n), Span O(log m + log n).
+            /// - Claude-Opus-4.6: Work O(log m + log n), Span O(log m + log n) — recursive meld along right spines.
             fn meld(&self, other: &Self) -> (pq: Self) {
                 let pq = LeftistHeapPQ {
                     root: LeftistHeapNode::meld_nodes(self.root.clone(), other.root.clone()),
@@ -902,7 +908,8 @@ broadcast use {
                 pq
             }
 
-            /// APAS Work Θ(n log n), Span Θ(n log n) — sequential insert.
+            /// - APAS: Work O(n), Span O(n).
+            /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) — sequential insert, not reduce-based.
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self) {
                 let n = seq.length();
                 let mut pq = Self::empty();
