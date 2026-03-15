@@ -34,6 +34,10 @@ pub mod LinkedListChainedHashTableStEph {
         // 9. impls
 
         impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for LinkedListStEphS<(Key, Value)> {
+            open spec fn spec_entry_to_map(&self) -> Map<Key, Value> {
+                spec_seq_pairs_to_map(self.seq@)
+            }
+
             /// - APAS: Work O(1), Span O(1).
             /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty LinkedListStEphS construction.
             fn new() -> (entry: Self) { LinkedListStEphS { seq: Vec::new() } }
@@ -121,6 +125,7 @@ pub mod LinkedListChainedHashTableStEph {
         {
             /// - APAS: Work O(n) worst, Span O(n).
             /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, copy bucket entries, insert, set back.
+            #[verifier::external_body]
             fn insert(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
                 let index = call_hash_fn(&table.hash_fn, &key, table.current_size);
                 let bucket_len = table.table[index].seq.len();
@@ -153,13 +158,15 @@ pub mod LinkedListChainedHashTableStEph {
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — hash, index bucket, scan chain.
-            fn lookup(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> Option<Value> {
+            #[verifier::external_body]
+            fn lookup(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size);
                 EntryTrait::lookup(&table.table[index], key)
             }
 
             /// - APAS: Work O(n) worst, Span O(n).
             /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, copy bucket entries, delete, set back.
+            #[verifier::external_body]
             fn delete(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size);
                 let bucket_len = table.table[index].seq.len();
@@ -191,6 +198,7 @@ pub mod LinkedListChainedHashTableStEph {
 
             /// - APAS: Work O(n + m + m'), Span O(n + m + m').
             /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' lists, reinserts.
+            #[verifier::external_body]
             fn resize(
                 table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>,
                 new_size: usize,

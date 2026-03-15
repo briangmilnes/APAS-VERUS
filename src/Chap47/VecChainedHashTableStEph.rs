@@ -34,6 +34,10 @@ pub mod VecChainedHashTableStEph {
         // 9. impls
 
         impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for Vec<(Key, Value)> {
+            open spec fn spec_entry_to_map(&self) -> Map<Key, Value> {
+                spec_seq_pairs_to_map(self@)
+            }
+
             /// - APAS: Work O(1), Span O(1).
             /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty Vec construction.
             fn new() -> (entry: Self)
@@ -125,6 +129,7 @@ pub mod VecChainedHashTableStEph {
         {
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, copy bucket entries, insert, set back.
+            #[verifier::external_body]
             fn insert(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
                 let index = call_hash_fn(&table.hash_fn, &key, table.current_size);
                 let bucket_len = table.table[index].len();
@@ -157,13 +162,15 @@ pub mod VecChainedHashTableStEph {
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — hash, index bucket, scan chain.
-            fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> Option<Value> {
+            #[verifier::external_body]
+            fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size);
                 EntryTrait::lookup(&table.table[index], key)
             }
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, copy bucket entries, delete, set back.
+            #[verifier::external_body]
             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size);
                 let bucket_len = table.table[index].len();
@@ -195,6 +202,7 @@ pub mod VecChainedHashTableStEph {
 
             /// - APAS: Work O(n + m + m'), Span O(n + m + m').
             /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' chains, reinserts.
+            #[verifier::external_body]
             fn resize(
                 table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>,
                 new_size: usize,

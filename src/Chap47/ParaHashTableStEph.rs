@@ -10,8 +10,9 @@ pub mod ParaHashTableStEph {
     // 1. module
     // 2. imports
     // 4. type definitions (inside verus!: LoadAndSize, HashTable)
-    // 6. spec fns
+    // 6. spec fns (inside verus!: spec_hashtable_wf, spec_seq_pairs_to_map, spec_table_to_map)
     // 8. traits (inside verus!: EntryTrait, ParaHashTableStEphTrait)
+    // 9. impls (inside verus!: View for HashTable)
     // 13. derive impls outside verus!
 
     // 2. imports
@@ -49,6 +50,34 @@ pub mod ParaHashTableStEph {
         table.table@.len() == table.current_size as int
     }
 
+    /// Maps a sequence of key-value pairs to its abstract Map representation.
+    pub open spec fn spec_seq_pairs_to_map<Key, Value>(
+        pairs: Seq<(Key, Value)>,
+    ) -> Map<Key, Value>
+        decreases pairs.len(),
+    {
+        if pairs.len() == 0 {
+            Map::empty()
+        } else {
+            spec_seq_pairs_to_map(pairs.drop_last()).insert(pairs.last().0, pairs.last().1)
+        }
+    }
+
+    /// Maps a table (sequence of entries) to its abstract Map representation.
+    pub open spec fn spec_table_to_map<Key, Value, Entry: EntryTrait<Key, Value>>(
+        table: Seq<Entry>,
+    ) -> Map<Key, Value>
+        decreases table.len(),
+    {
+        if table.len() == 0 {
+            Map::empty()
+        } else {
+            spec_table_to_map(table.drop_last()).union_prefer_right(
+                table.last().spec_entry_to_map()
+            )
+        }
+    }
+
     // 7. helpers
 
     /// Calls the hash function and returns a bucket index.
@@ -84,6 +113,7 @@ pub mod ParaHashTableStEph {
     #[verifier::external_body]
     pub fn compute_second_hash<Key: std::hash::Hash>(key: &Key, table_size: usize) -> (step: usize)
         requires table_size > 0,
+        ensures step >= 1,
     {
         use std::collections::hash_map::DefaultHasher;
         use std::hash::Hasher;
@@ -116,9 +146,12 @@ pub mod ParaHashTableStEph {
     /// Trait for parametric nested hash tables.
     /// Entry type must implement this trait to define how Key and Value are stored.
     pub trait EntryTrait<Key, Value> : Sized {
+        /// Abstract map view of this entry's key-value content.
+        spec fn spec_entry_to_map(&self) -> Map<Key, Value>;
         /// - APAS: N/A — inner table interface, cost depends on implementation.
         /// - Claude-Opus-4.6: N/A — abstract trait method.
-        fn new() -> (entry: Self);
+        fn new() -> (entry: Self)
+            ensures entry.spec_entry_to_map() == Map::<Key, Value>::empty();
         /// - APAS: N/A — inner table interface, cost depends on implementation.
         /// - Claude-Opus-4.6: N/A — abstract trait method.
         fn insert(&mut self, key: Key, value: Value);
@@ -130,6 +163,15 @@ pub mod ParaHashTableStEph {
         fn delete(&mut self, key: &Key) -> (deleted: bool);
         /// Element-wise clone that avoids Verus tuple-Clone limitation.
         fn clone_entry(&self) -> (cloned: Self);
+    }
+
+    // 9. impls
+
+    impl<Key, Value, Entry: EntryTrait<Key, Value>, Metrics, H> View for HashTable<Key, Value, Entry, Metrics, H> {
+        type V = Map<Key, Value>;
+        open spec fn view(&self) -> Map<Key, Value> {
+            spec_table_to_map(self.table@)
+        }
     }
 
     /// Trait for parametric nested hash tables.
@@ -177,6 +219,7 @@ pub mod ParaHashTableStEph {
                 old(table).table@.len() == old(table).current_size as int,
                 old(table).num_elements < usize::MAX,
             ensures
+                table@ == old(table)@.insert(key, value),
                 table.table@.len() == table.current_size as int,
                 table.current_size == old(table).current_size,
                 table.num_elements <= old(table).num_elements + 1;
@@ -184,10 +227,13 @@ pub mod ParaHashTableStEph {
         /// Looks up a key in the hash table, returning its value if found.
         /// - APAS: Work O(1) expected, Span O(1).
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
-        fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value>
+        fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
             requires
                 table.current_size > 0,
-                table.table@.len() == table.current_size as int;
+                table.table@.len() == table.current_size as int,
+            ensures
+                table@.dom().contains(*key) ==> found == Some(table@[*key]),
+                !table@.dom().contains(*key) ==> found is None;
 
         /// Deletes a key from the hash table if it exists.
         /// - APAS: Work O(1) expected, Span O(1).
@@ -197,6 +243,8 @@ pub mod ParaHashTableStEph {
                 old(table).current_size > 0,
                 old(table).table@.len() == old(table).current_size as int,
             ensures
+                deleted == old(table)@.dom().contains(*key),
+                table@ == old(table)@.remove(*key),
                 table.table@.len() == table.current_size as int,
                 table.current_size == old(table).current_size;
 
@@ -232,6 +280,7 @@ pub mod ParaHashTableStEph {
                 new_size > 0,
                 spec_hashtable_wf(table),
             ensures
+                resized@ == table@,
                 resized.current_size == new_size,
                 resized.table@.len() == new_size as int;
     }

@@ -107,6 +107,14 @@ pub mod FlatHashTable {
     // 9. impls
 
     impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for FlatEntry<Key, Value> {
+        open spec fn spec_entry_to_map(&self) -> Map<Key, Value> {
+            match *self {
+                FlatEntry::Empty => Map::empty(),
+                FlatEntry::Deleted => Map::empty(),
+                FlatEntry::Occupied(k, v) => Map::empty().insert(k, v),
+            }
+        }
+
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time enum construction.
         fn new() -> (entry: Self)
