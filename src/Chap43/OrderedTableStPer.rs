@@ -155,7 +155,13 @@ pub mod OrderedTableStPer {
                 parts.0@.dom().finite(),
                 parts.2@.dom().finite(),
                 parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
-                parts.1 matches None ==> !self@.contains_key(k@);
+                parts.1 matches None ==> !self@.contains_key(k@),
+                !parts.0@.dom().contains(k@),
+                !parts.2@.dom().contains(k@),
+                parts.0@.dom().subset_of(self@.dom()),
+                parts.2@.dom().subset_of(self@.dom()),
+                parts.0@.dom().disjoint(parts.2@.dom()),
+                forall|key| self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@;
         /// ADT 43.1 join_key. Work Θ(log(|left|+|right|)), Span Θ(log(|left|+|right|)).
         fn join_key(left: &Self, right: &Self) -> (table: Self)
             requires
@@ -168,7 +174,8 @@ pub mod OrderedTableStPer {
         fn get_key_range(&self, k1: &K, k2: &K) -> (table: Self)
             ensures
                 table@.dom().finite(),
-                table@.dom().subset_of(self@.dom());
+                table@.dom().subset_of(self@.dom()),
+                forall|key| table@.dom().contains(key) ==> table@[key] == self@[key];
         /// ADT 43.1 rank_key. Work Θ(log n), Span Θ(log n).
         fn rank_key(&self, k: &K) -> (rank: usize)
             ensures
@@ -188,7 +195,9 @@ pub mod OrderedTableStPer {
                 parts.0@.dom().finite(),
                 parts.1@.dom().finite(),
                 parts.0@.dom().subset_of(self@.dom()),
-                parts.1@.dom().subset_of(self@.dom());
+                parts.1@.dom().subset_of(self@.dom()),
+                parts.0@.dom().disjoint(parts.1@.dom()),
+                forall|key| self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.1@.dom().contains(key);
     }
 
     // 9. impls
@@ -448,6 +457,12 @@ pub mod OrderedTableStPer {
                 parts.2@.dom().finite(),
                 parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
                 parts.1 matches None ==> !self@.contains_key(k@),
+                !parts.0@.dom().contains(k@),
+                !parts.2@.dom().contains(k@),
+                parts.0@.dom().subset_of(self@.dom()),
+                parts.2@.dom().subset_of(self@.dom()),
+                parts.0@.dom().disjoint(parts.2@.dom()),
+                forall|key| self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@,
         {
             let entries = self.collect();
             let size = entries.length();
@@ -487,6 +502,7 @@ pub mod OrderedTableStPer {
             ensures
                 table@.dom().finite(),
                 table@.dom().subset_of(self@.dom()),
+                forall|key| table@.dom().contains(key) ==> table@[key] == self@[key],
         {
             let entries = self.collect();
             let size = entries.length();
@@ -564,6 +580,8 @@ pub mod OrderedTableStPer {
                 parts.1@.dom().finite(),
                 parts.0@.dom().subset_of(self@.dom()),
                 parts.1@.dom().subset_of(self@.dom()),
+                parts.0@.dom().disjoint(parts.1@.dom()),
+                forall|key| self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.1@.dom().contains(key),
         {
             let entries = self.collect();
             let size = entries.length();

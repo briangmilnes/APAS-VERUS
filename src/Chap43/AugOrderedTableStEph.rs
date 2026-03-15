@@ -192,30 +192,68 @@ broadcast use {
             requires old(self).spec_augorderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>()
             ensures self@.dom().finite();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite();
+            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len();
+        /// ADT 43.1 first_key = min key in dom. Work Θ(log n), Span Θ(log n).
         fn first_key(&self) -> (first: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> first matches None,
+                first matches Some(k) ==> self@.dom().contains(k@);
+        /// ADT 43.1 last_key = max key in dom. Work Θ(log n), Span Θ(log n).
         fn last_key(&self) -> (last: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> last matches None,
+                last matches Some(k) ==> self@.dom().contains(k@);
+        /// ADT 43.1 previous_key = max{k' in dom | k' < k}. Work Θ(log n), Span Θ(log n).
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                predecessor matches Some(pk) ==> self@.dom().contains(pk@);
+        /// ADT 43.1 next_key = min{k' in dom | k' > k}. Work Θ(log n), Span Θ(log n).
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                successor matches Some(nk) ==> self@.dom().contains(nk@);
+        /// ADT 43.1 split_key. Work Θ(log n), Span Θ(log n).
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized,
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.2@.dom().finite(),
+                split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],
+                split.1 matches None ==> !old(self)@.contains_key(k@);
         fn join_key(&mut self, other: Self)
             requires obeys_feq_clone::<K>(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
             ensures self@.dom().finite();
+        /// ADT 43.1 get_key_range. Work Θ(log n), Span Θ(log n).
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
-            ensures range@.dom().finite();
+            ensures
+                range@.dom().finite(),
+                range@.dom().subset_of(self@.dom());
+        /// ADT 43.1 rank_key. Work Θ(log n), Span Θ(log n).
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len();
+        /// ADT 43.1 select_key. Work Θ(log n), Span Θ(log n).
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                i >= self@.dom().len() ==> selected matches None,
+                selected matches Some(k) ==> self@.dom().contains(k@);
+        /// ADT 43.1 split_rank_key. Work Θ(log n), Span Θ(log n).
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized,
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.1@.dom().finite(),
+                split.0@.dom().subset_of(old(self)@.dom()),
+                split.1@.dom().subset_of(old(self)@.dom());
         fn reduce_val(&self) -> (reduced: V)
             ensures self@.dom().finite();
         fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
@@ -415,42 +453,58 @@ broadcast use {
         }
 
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite()
+            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len()
         {
             proof { lemma_aug_view(self); }
             self.base_table.collect()
         }
 
         fn first_key(&self) -> (first: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> first matches None,
+                first matches Some(k) ==> self@.dom().contains(k@),
         {
             proof { lemma_aug_view(self); }
             self.base_table.first_key()
         }
 
         fn last_key(&self) -> (last: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> last matches None,
+                last matches Some(k) ==> self@.dom().contains(k@),
         {
             proof { lemma_aug_view(self); }
             self.base_table.last_key()
         }
 
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                predecessor matches Some(pk) ==> self@.dom().contains(pk@),
         {
             proof { lemma_aug_view(self); }
             self.base_table.previous_key(k)
         }
 
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                successor matches Some(nk) ==> self@.dom().contains(nk@),
         {
             proof { lemma_aug_view(self); }
             self.base_table.next_key(k)
         }
 
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.2@.dom().finite(),
+                split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],
+                split.1 matches None ==> !old(self)@.contains_key(k@),
         {
             let (left_base, found_value, right_base) = self.base_table.split_key(k);
 
@@ -471,7 +525,11 @@ broadcast use {
                 identity: self.identity.clone(),
             };
 
-            proof { lemma_aug_view(self); }
+            proof {
+                lemma_aug_view(self);
+                lemma_aug_view(&left);
+                lemma_aug_view(&right);
+            }
             (left, found_value, right)
         }
 
@@ -495,7 +553,9 @@ broadcast use {
         }
 
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
-            ensures range@.dom().finite()
+            ensures
+                range@.dom().finite(),
+                range@.dom().subset_of(self@.dom()),
         {
             let new_base = self.base_table.get_key_range(k1, k2);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -506,26 +566,40 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof {
+                lemma_aug_view(self);
+                lemma_aug_view(&r);
+            }
             r
         }
 
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len(),
         {
             proof { lemma_aug_view(self); }
             self.base_table.rank_key(k)
         }
 
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                i >= self@.dom().len() ==> selected matches None,
+                selected matches Some(k) ==> self@.dom().contains(k@),
         {
             proof { lemma_aug_view(self); }
             self.base_table.select_key(i)
         }
 
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.1@.dom().finite(),
+                split.0@.dom().subset_of(old(self)@.dom()),
+                split.1@.dom().subset_of(old(self)@.dom()),
         {
             let (left_base, right_base) = self.base_table.split_rank_key(i);
 
@@ -546,7 +620,11 @@ broadcast use {
                 identity: self.identity.clone(),
             };
 
-            proof { lemma_aug_view(self); }
+            proof {
+                lemma_aug_view(self);
+                lemma_aug_view(&left);
+                lemma_aug_view(&right);
+            }
             (left, right)
         }
 

@@ -167,7 +167,13 @@ broadcast use {
                 split.0@.dom().finite(),
                 split.2@.dom().finite(),
                 split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],
-                split.1 matches None ==> !old(self)@.contains_key(k@);
+                split.1 matches None ==> !old(self)@.contains_key(k@),
+                !split.0@.dom().contains(k@),
+                !split.2@.dom().contains(k@),
+                split.0@.dom().subset_of(old(self)@.dom()),
+                split.2@.dom().subset_of(old(self)@.dom()),
+                split.0@.dom().disjoint(split.2@.dom()),
+                forall|key| old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.2@.dom().contains(key) || key == k@;
         /// ADT 43.1 join_key. Work Θ(log(|left|+|right|)), Span Θ(log(|left|+|right|)).
         fn join_key(&mut self, other: Self)
             requires obeys_feq_clone::<K>(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
@@ -176,7 +182,8 @@ broadcast use {
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures
                 range@.dom().finite(),
-                range@.dom().subset_of(self@.dom());
+                range@.dom().subset_of(self@.dom()),
+                forall|key| range@.dom().contains(key) ==> range@[key] == self@[key];
         /// ADT 43.1 rank_key. Work Θ(log n), Span Θ(log n).
         fn rank_key(&self, k: &K) -> (rank: usize)
             ensures
@@ -197,7 +204,9 @@ broadcast use {
                 split.0@.dom().finite(),
                 split.1@.dom().finite(),
                 split.0@.dom().subset_of(old(self)@.dom()),
-                split.1@.dom().subset_of(old(self)@.dom());
+                split.1@.dom().subset_of(old(self)@.dom()),
+                split.0@.dom().disjoint(split.1@.dom()),
+                forall|key| old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key);
     }
 
     // 9. impls
@@ -519,6 +528,12 @@ broadcast use {
                 split.2@.dom().finite(),
                 split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],
                 split.1 matches None ==> !old(self)@.contains_key(k@),
+                !split.0@.dom().contains(k@),
+                !split.2@.dom().contains(k@),
+                split.0@.dom().subset_of(old(self)@.dom()),
+                split.2@.dom().subset_of(old(self)@.dom()),
+                split.0@.dom().disjoint(split.2@.dom()),
+                forall|key| old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.2@.dom().contains(key) || key == k@,
         {
             let entries = self.collect();
             let size = entries.length();
@@ -560,6 +575,7 @@ broadcast use {
             ensures
                 range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
+                forall|key| range@.dom().contains(key) ==> range@[key] == self@[key],
         {
             let entries = self.collect();
             let size = entries.length();
@@ -629,6 +645,8 @@ broadcast use {
                 split.1@.dom().finite(),
                 split.0@.dom().subset_of(old(self)@.dom()),
                 split.1@.dom().subset_of(old(self)@.dom()),
+                split.0@.dom().disjoint(split.1@.dom()),
+                forall|key| old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
         {
             let entries = self.collect();
             let size = entries.length();
