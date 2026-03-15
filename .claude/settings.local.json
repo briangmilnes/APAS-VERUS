@@ -158,7 +158,12 @@
       "Bash(grep * <(*))",
       "Bash(*|| *)",
       "Bash(ls *| *)",
-      "Bash(ls *|*)"
+      "Bash(ls *|*)",
+      "Bash(for *; do\n*)",
+      "Bash(for * in *; do *)",
+      "Bash(for * in *; do\n*)",
+      "Bash(for *do *done)",
+      "Bash(for * do *)"
     ]
   }
 }

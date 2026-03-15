@@ -87,6 +87,7 @@ broadcast use {
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             requires seq.spec_avltreeseqstper_wf(),
             ensures
+                constructed@ =~= seq@.to_set(),
                 constructed.spec_avltreesetstper_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
@@ -211,6 +212,7 @@ broadcast use {
 
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
         {
+            assert(obeys_feq_full_trigger::<T>());
             let mut constructed = Self::empty();
             let n = seq.length();
             let mut i: usize = 0;
@@ -221,11 +223,52 @@ broadcast use {
                     i <= n,
                     constructed@.finite(),
                     constructed.spec_avltreesetstper_wf(),
+                    obeys_feq_full::<T>(),
+                    forall|j: int| 0 <= j < i ==> constructed@.contains(seq@[j]),
+                    forall|v: <T as View>::V| constructed@.contains(v) ==>
+                        (exists|j: int| 0 <= j < i && seq@[j] == v),
                 decreases n - i,
             {
-                let elem = seq.nth(i).clone();
+                let r = seq.nth(i);
+                let elem = r.clone();
+                proof {
+                    lemma_cloned_view_eq(*r, elem);
+                }
+                let ghost old_view = constructed@;
                 constructed = constructed.insert(elem);
+                proof {
+                    assert forall|j: int| 0 <= j < i + 1
+                        implies constructed@.contains(seq@[j]) by {
+                        if j < i as int {
+                            assert(old_view.contains(seq@[j]));
+                        }
+                    };
+                    assert forall|v: <T as View>::V|
+                        constructed@.contains(v) implies
+                        (exists|j: int| 0 <= j < i + 1 && seq@[j] == v) by {
+                        if !old_view.contains(v) {
+                            assert(v == seq@[i as int]);
+                        } else {
+                            let j = choose|j: int| 0 <= j < i && seq@[j] == v;
+                            assert(j < i + 1);
+                        }
+                    };
+                }
                 i += 1;
+            }
+            proof {
+                assert forall|v: <T as View>::V|
+                    constructed@.contains(v) == seq@.to_set().contains(v) by {
+                    if constructed@.contains(v) {
+                        let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == v;
+                        assert(seq@.contains(v));
+                    }
+                    if seq@.to_set().contains(v) {
+                        assert(seq@.contains(v));
+                        let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == v;
+                        assert(constructed@.contains(seq@[j]));
+                    }
+                };
             }
             constructed
         }
