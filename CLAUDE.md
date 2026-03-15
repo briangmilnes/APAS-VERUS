@@ -194,6 +194,11 @@ minor). You bring:
   `plans/agent{N}-round{R}-report.md` (e.g., `plans/agent3-round7-report.md`).
   Include: holes before/after per file (table), chapters closed, verification counts,
   techniques used, remaining holes with what blocks them, commit hash.
+- **Every table in agent reports that references files or functions MUST include a Chap
+  column.** This is the same rule as Output Formatting above but agents keep violating it.
+  A table row like `| 1 | BSTParaStEph.rs | 8 | 5 |` is WRONG — which chapter is that?
+  Correct: `| 1 | 38 | BSTParaStEph.rs | 8 | 5 |`. The Chap column is just the number
+  (e.g. `38`), placed immediately after the `#` index column. No exceptions.
 
 ---
 

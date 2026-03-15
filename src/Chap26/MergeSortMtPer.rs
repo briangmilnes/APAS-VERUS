@@ -203,7 +203,9 @@ pub mod MergeSortMtPer {
 
     //		9. impls
 
-    /// Binary search in a sorted array: find the count of elements ≤ pivot.
+    /// Binary search in a sorted array: find the count of elements <= pivot.
+    /// - APAS: Work Θ(lg n), Span Θ(lg n) — standard binary search.
+    /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
     fn binary_search_upper_bound(arr: &ArraySeqMtPerS<N>, pivot: N) -> (pos: usize)
         requires spec_sorted(Seq::new(arr.spec_len(), |i: int| arr.spec_index(i))),
         ensures
@@ -261,6 +263,8 @@ pub mod MergeSortMtPer {
 
     /// Parallel binary-search merge. Picks the median of left, binary searches in right,
     /// then recursively merges both halves in parallel via join().
+    /// - APAS: Work Θ(n), Span Θ(lg n) — parallel merge via binary search and recursive halving.
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — Vec concat at each level is Θ(n), dominating span.
     fn merge_dc(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (merged: ArraySeqMtPerS<N>)
         requires
             spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),

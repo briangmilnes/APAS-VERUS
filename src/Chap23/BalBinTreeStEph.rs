@@ -560,6 +560,8 @@ pub mod BalBinTreeStEph {
     impl<T> std::iter::Iterator for InOrderIter<T> {
         type Item = T;
 
+        /// - APAS: N/A — iterator scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
         fn next(&mut self) -> (next: Option<T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
@@ -585,6 +587,8 @@ pub mod BalBinTreeStEph {
     impl<T> std::iter::Iterator for PreOrderIter<T> {
         type Item = T;
 
+        /// - APAS: N/A — iterator scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
         fn next(&mut self) -> (next: Option<T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
@@ -610,6 +614,8 @@ pub mod BalBinTreeStEph {
     impl<T> std::iter::Iterator for PostOrderIter<T> {
         type Item = T;
 
+        /// - APAS: N/A — iterator scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
         fn next(&mut self) -> (next: Option<T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
@@ -775,6 +781,8 @@ pub mod BalBinTreeStEph {
     impl<T: Eq> Eq for BalBinTree<T> {}
 
     impl<T: PartialEq> PartialEq for BalBinTree<T> {
+        /// - APAS: N/A — derive scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — recursive structural comparison.
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (*self == *other)
             decreases self,
@@ -794,6 +802,8 @@ pub mod BalBinTreeStEph {
     impl<T: Eq> Eq for BalBinNode<T> {}
 
     impl<T: PartialEq> PartialEq for BalBinNode<T> {
+        /// - APAS: N/A — derive scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — compares subtrees recursively.
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (*self == *other)
         {
@@ -804,6 +814,8 @@ pub mod BalBinTreeStEph {
     }
 
 
+    /// - APAS: N/A — derive scaffolding.
+    /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — recursive deep clone.
     fn clone_tree<T: Clone>(t: &BalBinTree<T>) -> (c: BalBinTree<T>)
         requires true,
         ensures c == *t
@@ -822,6 +834,8 @@ pub mod BalBinTreeStEph {
     }
 
     impl<T: Clone> Clone for BalBinTree<T> {
+        /// - APAS: N/A — derive scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — delegates to clone_tree.
         fn clone(&self) -> (cloned: Self)
             ensures cloned == *self
         {
@@ -830,6 +844,8 @@ pub mod BalBinTreeStEph {
     }
 
     impl<T: Clone> Clone for BalBinNode<T> {
+        /// - APAS: N/A — derive scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — clones left/right subtrees recursively.
         fn clone(&self) -> (cloned: Self)
             ensures cloned == *self
         {

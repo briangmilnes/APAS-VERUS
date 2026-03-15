@@ -62,6 +62,7 @@
       "Bash(for * in *; do *)",
       "Bash(for * in *; do\n*)",
       "Bash(for *\ndo *)",
+      "Bash(for * done)",
       "Bash(for *\ndo\n*)",
       "Bash(*| gawk *)",
       "Bash(*|gawk *)",

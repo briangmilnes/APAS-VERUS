@@ -104,7 +104,9 @@ pub mod ScanDCMtPer {
 
     //		9. impls
 
-    // Parallel prefix sums: structural logic verified, recursion parallelized.
+    /// Parallel prefix sums inner recursion. Structural logic verified, recursion parallelized.
+    /// - APAS: Work Θ(n lg n), Span Θ(lg n) — Algorithm 26.5, parallel recursive calls + O(n)/O(1) combine.
+    /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n) — parallel recursion via join(), sequential Θ(n) combine: S(n) = S(n/2) + Θ(n) = Θ(n).
     fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<N>) -> (sums: (ArraySeqMtPerS<N>, N))
         requires a.spec_len() <= usize::MAX,
         ensures

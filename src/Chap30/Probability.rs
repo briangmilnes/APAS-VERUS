@@ -27,20 +27,20 @@ pub mod Probability {
     // 8. traits
     /// Trait for probability operations
     pub trait ProbabilityTrait: Sized {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 wrapper construction
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 wrapper construction.
         fn new(p: f64) -> Self;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 field access
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 field access.
         fn value(&self) -> f64;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 constant construction
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 constant construction.
         fn infinity() -> Self;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 constant construction
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 constant construction.
         fn zero() -> Self;
     }
 
@@ -55,12 +55,14 @@ pub mod Probability {
 
     // 11. derive impls
     impl Default for Probability {
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to zero().
         fn default() -> Self { <Probability as ProbabilityTrait>::zero() }
     }
 
     impl PartialEq for Probability {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — bit-level f64 comparison
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — bit-level f64 comparison.
 
         #[verifier::external_body] // accept hole
         fn eq(&self, other: &Self) -> bool {
@@ -71,13 +73,15 @@ pub mod Probability {
     impl Eq for Probability {}
 
     impl PartialOrd for Probability {
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to cmp().
         #[verifier::external_body] // accept hole
         fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
     }
 
     impl Ord for Probability {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — NaN-aware f64 comparison
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — NaN-aware f64 comparison.
 
         #[verifier::external_body] // accept hole
         fn cmp(&self, other: &Self) -> Ordering {
@@ -99,23 +103,23 @@ pub mod Probability {
     }
 
     impl Hash for Probability {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — hash f64 bits
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — hash f64 bits.
 
         #[verifier::external_body]  // accept hole
         fn hash<H: Hasher>(&self, state: &mut H) { self.0.to_bits().hash(state); }
     }
 
     impl From<f64> for Probability {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 wrapping
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 wrapping.
         #[verifier::external_body] // accept hole
         fn from(value: f64) -> Self { Probability(value) }
     }
 
     impl From<Probability> for f64 {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 unwrapping
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 unwrapping.
         #[verifier::external_body] // accept hole
         fn from(prob: Probability) -> Self { prob.0 }
     }
@@ -123,20 +127,26 @@ pub mod Probability {
     impl Add for Probability {
         type Output = Self;
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 addition.
         #[verifier::external_body] // accept hole
         fn add(self, other: Self) -> Self { Probability(self.0 + other.0) }
     }
 
     impl Sub for Probability {
         type Output = Self;
-        #[verifier::external_body] // accept hole
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 subtraction.
+        #[verifier::external_body] // accept hole
         fn sub(self, other: Self) -> Self { Probability(self.0 - other.0) }
     }
 
     impl Mul for Probability {
         type Output = Self;
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 multiplication.
         #[verifier::external_body] // accept hole
         fn mul(self, other: Self) -> Self { Probability(self.0 * other.0) }
     }
@@ -144,6 +154,8 @@ pub mod Probability {
     impl Div for Probability {
         type Output = Self;
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 division.
         #[verifier::external_body] // accept hole
         fn div(self, other: Self) -> Self { Probability(self.0 / other.0) }
     }
@@ -159,14 +171,14 @@ pub mod Probability {
 
     // 13. derive impls outside verus!
     impl Debug for Probability {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format f64 to debug string
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — format f64 to debug string.
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "Probability({})", self.0) }
     }
 
     impl Display for Probability {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format f64 to display string
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — format f64 to display string.
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "{}", self.0) }
     }
 
