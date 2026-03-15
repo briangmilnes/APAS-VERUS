@@ -165,6 +165,7 @@ broadcast use {
     impl<T: StT + Ord> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
         open spec fn spec_avltreesetsteph_wf(&self) -> bool {
             self.elements.spec_avltreeseqsteph_wf()
+            && self.elements@.no_duplicates()
             && self@.finite()
         }
 
@@ -172,8 +173,7 @@ broadcast use {
         {
             let r = self.elements.length();
             proof {
-                assume(r == self@.len());
-                vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+                self.elements@.unique_seq_to_set();
             }
             r
         }
@@ -508,65 +508,180 @@ broadcast use {
         {
             assert(obeys_feq_full_trigger::<T>());
             let n = self.elements.length();
-            let mut lo: usize = 0;
-            let mut hi: usize = n;
-            while lo < hi
+            let mut i: usize = 0;
+            while i < n
                 invariant
                     self.elements.spec_avltreeseqsteph_wf(),
                     obeys_feq_full::<T>(),
                     n as int == self.elements.spec_seq().len(),
-                    lo <= hi, hi <= n,
-                decreases hi - lo,
+                    i <= n,
+                    forall|k: int| #![trigger self.elements@[k]]
+                        0 <= k < i ==> self.elements@[k] != x@,
+                decreases n - i,
             {
-                let mid = lo + (hi - lo) / 2;
-                let elem = self.elements.nth(mid);
+                let elem = self.elements.nth(i);
                 if feq(elem, x) {
-                    assert(self.elements@[mid as int] == x@);
+                    assert(self.elements@[i as int] == x@);
                     assert(self.elements@.contains(x@));
                     return true;
                 }
-                if *elem < *x {
-                    lo = mid + 1;
-                } else {
-                    hi = mid;
+                i += 1;
+            }
+            proof {
+                if self@.contains(x@) {
+                    assert(self.elements@.to_set().contains(x@));
+                    assert(self.elements@.contains(x@));
+                    let k = choose|k: int| 0 <= k < self.elements@.len()
+                        && self.elements@[k] == x@;
+                    assert(false);
                 }
             }
-            proof { assume(!self@.contains(x@)); }
             false
         }
 
         fn delete(&mut self, x: &T)
         {
+            assert(obeys_feq_full_trigger::<T>());
             let n = self.elements.length();
+            let ghost orig_elems = self.elements@;
+            let ghost orig_set = self@;
             let mut result_vec: Vec<T> = Vec::new();
             let mut i: usize = 0;
+            let ghost mut skipped: int = 0;
+            let ghost mut skip_idx: int = -1;
+            let ghost mut result_views: Seq<<T as View>::V> = Seq::empty();
             while i < n
                 invariant
                     self.elements.spec_avltreeseqsteph_wf(),
+                    self.elements@.no_duplicates(),
+                    obeys_feq_full::<T>(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
-                    result_vec@.len() <= i as int,
+                    result_vec@.len() == i as int - skipped,
+                    0 <= skipped <= 1,
+                    skipped > 0 ==> (0 <= skip_idx < i && self.elements@[skip_idx] == x@),
+                    forall|k: int| #![trigger self.elements@[k]]
+                        0 <= k < i && self.elements@[k] == x@ ==> skipped > 0,
+                    // Invariant: orig_elems is the original backing seq.
+                    orig_elems == self.elements@,
+                    orig_set == orig_elems.to_set(),
+                    // Ghost view tracking.
+                    result_views.len() == result_vec@.len(),
+                    forall|k: int| #![trigger result_views[k]]
+                        0 <= k < result_views.len() ==> result_views[k] == result_vec@[k]@,
+                    forall|k: int| #![trigger result_views[k]]
+                        0 <= k < result_views.len() ==> (
+                            result_views[k] != x@
+                            && orig_set.contains(result_views[k])
+                        ),
+                    forall|k: int| #![trigger orig_elems[k]]
+                        0 <= k < i && orig_elems[k] != x@
+                        ==> result_views.contains(orig_elems[k]),
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
-                if *elem != *x {
-                    result_vec.push(elem.clone());
+                if !feq(elem, x) {
+                    let c = elem.clone();
+                    let ghost old_result_views = result_views;
+                    let ghost old_rv_len = result_views.len() as int;
+                    proof {
+                        lemma_cloned_view_eq(*elem, c);
+                        assert(self.elements@.contains(elem@));
+                        result_views = result_views.push(elem@);
+                    }
+                    result_vec.push(c);
+                    proof {
+                        // Prove coverage for the full range 0..=i.
+                        assert forall|k: int|
+                            #![trigger orig_elems[k]]
+                            0 <= k <= i && orig_elems[k] != x@
+                            implies result_views.contains(orig_elems[k]) by {
+                            if k < i as int {
+                                assert(old_result_views.contains(orig_elems[k]));
+                                let j = choose|j: int| 0 <= j < old_result_views.len()
+                                    && old_result_views[j] == orig_elems[k];
+                                assert(result_views[j] == orig_elems[k]);
+                            } else {
+                                assert(result_views[old_rv_len] == elem@);
+                            }
+                        };
+                    }
+                } else {
+                    proof {
+                        if skipped > 0 {
+                            assert(self.elements@[skip_idx] != self.elements@[i as int]);
+                        }
+                        skip_idx = i as int;
+                        skipped = skipped + 1;
+                    }
                 }
                 i += 1;
             }
+            let ghost result_len = result_vec@.len();
+            // Assert connection before from_vec consumes result_vec.
+            proof {
+                assert forall|k: int| 0 <= k < result_views.len()
+                    implies result_views[k] == result_vec@.map_values(|t: T| t@)[k] by {
+                    assert(result_vec@.map_values(|t: T| t@)[k] == result_vec@[k]@);
+                };
+                assert(result_views =~= result_vec@.map_values(|t: T| t@));
+            }
             proof { assume(result_vec@.len() < usize::MAX); }
-            assert(obeys_feq_full_trigger::<T>());
             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
             proof {
-                assume(self@ == old(self)@.remove(x@));
+                // self.elements@ =~= result_vec@.map_values(...) =~= result_views.
+                assert(self.elements@ =~= result_views);
                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+                // Prove self@ == old(self)@.remove(x@).
+                assert forall|v|
+                    self.elements@.to_set().contains(v)
+                    <==> #[trigger] old(self)@.remove(x@).contains(v) by {
+                    if self.elements@.to_set().contains(v) {
+                        assert(result_views.to_set().contains(v));
+                        assert(result_views.contains(v));
+                        let k = choose|k: int| 0 <= k < result_views.len()
+                            && result_views[k] == v;
+                        assert(result_views[k] == v);
+                        assert(orig_set.contains(v));
+                    }
+                    if old(self)@.remove(x@).contains(v) {
+                        assert(old(self)@.contains(v) && v != x@);
+                        assert(orig_elems.to_set().contains(v));
+                        assert(orig_elems.contains(v));
+                        let k = choose|k: int| 0 <= k < orig_elems.len()
+                            && orig_elems[k] == v;
+                        assert(orig_elems[k] != x@);
+                        assert(result_views.contains(orig_elems[k]));
+                    }
+                };
+                assert(self@ =~= old(self)@.remove(x@));
+                // Prove no_duplicates via cardinality.
+                old(self).elements@.unique_seq_to_set();
+                assert(self.elements@.len() == result_len);
+                if old(self)@.contains(x@) {
+                    assert(orig_elems.to_set().contains(x@));
+                    assert(orig_elems.contains(x@));
+                    let witness = choose|k: int| 0 <= k < orig_elems.len()
+                        && orig_elems[k] == x@;
+                    assert(orig_elems[witness] == x@);
+                    assert(skipped == 1);
+                } else {
+                    assert(skipped == 0);
+                }
+                assert(self.elements@.to_set().len() == self.elements@.len());
+                self.elements@.lemma_no_dup_set_cardinality();
             }
         }
 
         fn insert(&mut self, x: T)
         {
             let ghost x_view = x@;
-            if !self.find(&x) {
+            let ghost old_seq_len = self.elements@.len();
+            let ghost orig_elems = self.elements@;
+            let ghost orig_set = self@;
+            let found = self.find(&x);
+            if !found {
+                assert(obeys_feq_full_trigger::<T>());
                 let n = self.elements.length();
                 let mut lo: usize = 0;
                 let mut hi: usize = n;
@@ -585,36 +700,196 @@ broadcast use {
                     }
                 }
                 let mut new_vec: Vec<T> = Vec::new();
+                let ghost mut rv: Seq<<T as View>::V> = Seq::empty();
                 let mut i: usize = 0;
                 while i < lo
                     invariant
                         self.elements.spec_avltreeseqsteph_wf(),
+                        obeys_feq_full::<T>(),
                         n as int == self.elements.spec_seq().len(),
                         i <= lo, lo <= n,
+                        new_vec@.len() == i as int,
+                        rv.len() == new_vec@.len(),
+                        orig_elems == self.elements@,
+                        orig_set == self.elements@.to_set(),
+                        forall|k: int| #![trigger rv[k]]
+                            0 <= k < rv.len() ==> rv[k] == new_vec@[k]@,
+                        forall|k: int| #![trigger rv[k]]
+                            0 <= k < rv.len() ==> orig_set.contains(rv[k]),
+                        forall|k: int| #![trigger orig_elems[k]]
+                            0 <= k < i ==> rv.contains(orig_elems[k]),
                     decreases lo - i,
                 {
-                    new_vec.push(self.elements.nth(i).clone());
+                    let elem = self.elements.nth(i);
+                    let c = elem.clone();
+                    let ghost old_rv = rv;
+                    let ghost old_rv_len = rv.len() as int;
+                    proof {
+                        lemma_cloned_view_eq(*elem, c);
+                        assert(self.elements@.contains(elem@));
+                        assert(orig_set.contains(elem@));
+                        rv = rv.push(elem@);
+                    }
+                    new_vec.push(c);
+                    proof {
+                        assert forall|k: int|
+                            #![trigger orig_elems[k]]
+                            0 <= k <= i && true
+                            implies rv.contains(orig_elems[k]) by {
+                            if k < i as int {
+                                assert(old_rv.contains(orig_elems[k]));
+                                let j = choose|j: int| 0 <= j < old_rv.len()
+                                    && old_rv[j] == orig_elems[k];
+                                assert(rv[j] == orig_elems[k]);
+                            } else {
+                                assert(rv[old_rv_len] == elem@);
+                            }
+                        };
+                    }
                     i += 1;
                 }
+                // Push x into the sequence.
+                let ghost pre_x_rv = rv;
+                let ghost pre_x_rv_len = rv.len() as int;
+                proof { rv = rv.push(x_view); }
                 new_vec.push(x);
+                proof {
+                    assert(rv[pre_x_rv_len] == x_view);
+                    assert(rv.contains(x_view));
+                    assert forall|k: int|
+                        #![trigger orig_elems[k]]
+                        0 <= k < lo
+                        implies rv.contains(orig_elems[k]) by {
+                        assert(pre_x_rv.contains(orig_elems[k]));
+                        let w = choose|w: int| 0 <= w < pre_x_rv.len()
+                            && pre_x_rv[w] == orig_elems[k];
+                        assert(rv[w] == orig_elems[k]);
+                    };
+                }
                 let mut j: usize = lo;
                 while j < n
                     invariant
                         self.elements.spec_avltreeseqsteph_wf(),
+                        obeys_feq_full::<T>(),
                         n as int == self.elements.spec_seq().len(),
                         lo <= j, j <= n,
+                        new_vec@.len() == (j + 1) as int,
+                        rv.len() == new_vec@.len(),
+                        orig_elems == self.elements@,
+                        orig_set == self.elements@.to_set(),
+                        forall|k: int| #![trigger rv[k]]
+                            0 <= k < rv.len() ==> rv[k] == new_vec@[k]@,
+                        forall|k: int| #![trigger rv[k]]
+                            0 <= k < rv.len() ==> (
+                                orig_set.contains(rv[k]) || rv[k] == x_view
+                            ),
+                        forall|k: int| #![trigger orig_elems[k]]
+                            0 <= k < lo ==> rv.contains(orig_elems[k]),
+                        rv.contains(x_view),
+                        forall|k: int| #![trigger orig_elems[k]]
+                            lo <= k < j ==> rv.contains(orig_elems[k]),
                     decreases n - j,
                 {
-                    new_vec.push(self.elements.nth(j).clone());
+                    let elem = self.elements.nth(j);
+                    let c = elem.clone();
+                    let ghost old_rv = rv;
+                    let ghost old_rv_len = rv.len() as int;
+                    proof {
+                        lemma_cloned_view_eq(*elem, c);
+                        assert(self.elements@.contains(elem@));
+                        assert(orig_set.contains(elem@));
+                        rv = rv.push(elem@);
+                    }
+                    new_vec.push(c);
+                    proof {
+                        assert forall|k: int|
+                            #![trigger orig_elems[k]]
+                            lo <= k <= j && true
+                            implies rv.contains(orig_elems[k]) by {
+                            if k < j as int {
+                                assert(old_rv.contains(orig_elems[k]));
+                                let w = choose|w: int| 0 <= w < old_rv.len()
+                                    && old_rv[w] == orig_elems[k];
+                                assert(rv[w] == orig_elems[k]);
+                            } else {
+                                assert(rv[old_rv_len] == elem@);
+                            }
+                        };
+                        assert forall|k: int|
+                            #![trigger orig_elems[k]]
+                            0 <= k < lo
+                            implies rv.contains(orig_elems[k]) by {
+                            assert(old_rv.contains(orig_elems[k]));
+                            let w = choose|w: int| 0 <= w < old_rv.len()
+                                && old_rv[w] == orig_elems[k];
+                            assert(rv[w] == orig_elems[k]);
+                        };
+                        assert(old_rv.contains(x_view));
+                        let w = choose|w: int| 0 <= w < old_rv.len() && old_rv[w] == x_view;
+                        assert(rv[w] == x_view);
+                    }
                     j += 1;
                 }
+                // Assert connection before from_vec consumes new_vec.
+                proof {
+                    assert forall|k: int| 0 <= k < rv.len()
+                        implies rv[k] == new_vec@.map_values(|t: T| t@)[k] by {
+                        assert(new_vec@.map_values(|t: T| t@)[k] == new_vec@[k]@);
+                    };
+                    assert(rv =~= new_vec@.map_values(|t: T| t@));
+                }
                 proof { assume(new_vec@.len() < usize::MAX); }
-                assert(obeys_feq_full_trigger::<T>());
                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
+                proof {
+                    assert(self.elements@ =~= rv);
+                    // Prove self@ == orig_set.insert(x_view).
+                    assert forall|v|
+                        self.elements@.to_set().contains(v)
+                        <==> #[trigger] orig_set.insert(x_view).contains(v) by {
+                        if self.elements@.to_set().contains(v) {
+                            assert(rv.to_set().contains(v));
+                            assert(rv.contains(v));
+                            let k = choose|k: int| 0 <= k < rv.len() && rv[k] == v;
+                            assert(rv[k] == v);
+                        }
+                        if orig_set.insert(x_view).contains(v) {
+                            if v == x_view {
+                                assert(rv.contains(x_view));
+                            } else {
+                                assert(orig_set.contains(v));
+                                assert(orig_elems.to_set().contains(v));
+                                assert(orig_elems.contains(v));
+                                let k = choose|k: int| 0 <= k < orig_elems.len()
+                                    && orig_elems[k] == v;
+                                if k < lo as int {
+                                    assert(rv.contains(orig_elems[k]));
+                                } else {
+                                    assert(rv.contains(orig_elems[k]));
+                                }
+                            }
+                        }
+                    };
+                    assert(self@ =~= orig_set.insert(x_view));
+                }
             }
             proof {
-                assume(self@ == old(self)@.insert(x_view));
+                assert(self@ =~= old(self)@.insert(x_view));
                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+                // Prove no_duplicates via set cardinality.
+                old(self).elements@.unique_seq_to_set();
+                assert(old(self).elements@.len() == old(self)@.len());
+                assert(old_seq_len == old(self)@.len());
+                if found {
+                    assert(self.elements@.len() == old_seq_len);
+                    assert(self@.len() == old(self)@.len());
+                    assert(self.elements@.to_set().len() == self.elements@.len());
+                } else {
+                    assert(self.elements@.len() == old_seq_len + 1);
+                    assert(!old(self)@.contains(x_view));
+                    assert(self@.len() == old(self)@.len() + 1);
+                    assert(self.elements@.to_set().len() == self.elements@.len());
+                }
+                self.elements@.lemma_no_dup_set_cardinality();
             }
         }
     }
@@ -641,8 +916,8 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             proof {
-                assume(self.elements.spec_avltreeseqsteph_wf());
-                assume(other.elements.spec_avltreeseqsteph_wf());
+                assume(self.spec_avltreesetsteph_wf());
+                assume(other.spec_avltreesetsteph_wf());
             }
             let equal = self.size() == other.size() && {
                 let n = self.elements.length();
@@ -650,8 +925,8 @@ broadcast use {
                 let mut all_found = true;
                 while i < n
                     invariant
-                        self.elements.spec_avltreeseqsteph_wf(),
-                        other.elements.spec_avltreeseqsteph_wf(),
+                        self.spec_avltreesetsteph_wf(),
+                        other.spec_avltreesetsteph_wf(),
                         n == self.elements.spec_seq().len(),
                         i <= n,
                     decreases n - i,
