@@ -8,6 +8,7 @@ pub mod OrderedTableStEph {
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Chap42::TableStEph::TableStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::clone_plus::clone_plus::*;
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -131,7 +132,7 @@ broadcast use {
             requires old(self).spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>()
             ensures self@.dom().finite();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite();
+            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len();
         /// ADT 43.1 first_key. Work Θ(log n), Span Θ(log n).
         fn first_key(&self) -> (first: Option<K>)
             ensures
@@ -359,7 +360,7 @@ broadcast use {
 
         #[verifier::external_body]
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite()
+            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len()
         {
             let array_seq = self.base_table.entries();
             let len = array_seq.length();
@@ -504,22 +505,26 @@ broadcast use {
             from_sorted_entries(range_seq)
         }
 
-        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures
-                self@.dom().finite(),
-                rank <= self@.dom().len(),
         {
             let entries = self.collect();
             let size = entries.length();
-            let mut count = 0;
-
-            for i in 0..size {
+            let mut count: usize = 0;
+            let mut i: usize = 0;
+            while i < size
+                invariant
+                    count <= i,
+                    i <= size,
+                    entries.spec_avltreeseqstper_wf(),
+                    size as nat == entries@.len(),
+                    entries@.len() == self@.dom().len(),
+                    self@.dom().finite(),
+                decreases size - i,
+            {
                 let pair = entries.nth(i);
-                if &pair.0 < k {
-                    count += 1;
-                } else {
-                    break;
+                match pair.0.cmp(k) {
+                    std::cmp::Ordering::Less => { count = count + 1; i = i + 1; },
+                    _ => { i = size; },
                 }
             }
             count
@@ -713,14 +718,23 @@ broadcast use {
         }
     }
 
-    #[verifier::external_body]
     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
-    ) -> (cloned: OrderedTableStEph<K, V>) {
+    ) -> (cloned: OrderedTableStEph<K, V>)
+        requires entries.spec_avltreeseqstper_wf(),
+    {
         let len = entries.length();
-        let mut elements = Vec::new();
-        for i in 0..len {
-            elements.push(entries.nth(i).clone());
+        let mut elements: Vec<Pair<K, V>> = Vec::new();
+        let mut i: usize = 0;
+        while i < len
+            invariant
+                entries.spec_avltreeseqstper_wf(),
+                len as nat == entries@.len(),
+                i <= len,
+            decreases len - i,
+        {
+            elements.push(entries.nth(i).clone_plus());
+            i = i + 1;
         }
         OrderedTableStEph {
             base_table: crate::Chap42::TableStEph::TableStEph::from_sorted_entries(elements),
