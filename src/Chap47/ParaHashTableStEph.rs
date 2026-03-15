@@ -78,7 +78,68 @@ pub mod ParaHashTableStEph {
         }
     }
 
-    // 7. helpers
+    // 7. proof fns
+
+    /// All-empty entries produce an empty map when composed by spec_table_to_map.
+    proof fn lemma_table_to_map_push_empty<Key, Value, Entry: EntryTrait<Key, Value>>(
+        table: Seq<Entry>,
+        entry: Entry,
+    )
+        requires
+            spec_table_to_map(table) == Map::<Key, Value>::empty(),
+            entry.spec_entry_to_map() == Map::<Key, Value>::empty(),
+        ensures
+            spec_table_to_map(table.push(entry)) == Map::<Key, Value>::empty(),
+    {
+        assert(table.push(entry).drop_last() == table);
+        assert(table.push(entry).last() == entry);
+        // spec_table_to_map(table.push(entry))
+        //   = spec_table_to_map(table).union_prefer_right(entry.spec_entry_to_map())
+        //   = Map::empty().union_prefer_right(Map::empty())
+        //   = Map::empty()
+        assert(Map::<Key, Value>::empty().union_prefer_right(Map::<Key, Value>::empty()) =~= Map::<Key, Value>::empty());
+    }
+
+    /// If the new entry's map contains key, so does spec_table_to_map after the update.
+    pub proof fn lemma_table_to_map_update_contains<Key, Value, Entry: EntryTrait<Key, Value>>(
+        table: Seq<Entry>,
+        index: int,
+        new_entry: Entry,
+        key: Key,
+    )
+        requires
+            0 <= index < table.len(),
+            new_entry.spec_entry_to_map().dom().contains(key),
+        ensures
+            spec_table_to_map(table.update(index, new_entry)).dom().contains(key),
+        decreases table.len(),
+    {
+        let updated = table.update(index, new_entry);
+        if index == table.len() - 1 {
+            // Updated element is the last: union_prefer_right includes its domain.
+            assert(updated.drop_last() == table.drop_last());
+            assert(updated.last() == new_entry);
+            assert(spec_table_to_map(updated) ==
+                spec_table_to_map(table.drop_last()).union_prefer_right(
+                    new_entry.spec_entry_to_map()));
+            assert(spec_table_to_map(updated).dom() =~=
+                spec_table_to_map(table.drop_last()).dom().union(
+                    new_entry.spec_entry_to_map().dom()));
+        } else {
+            // Updated element is before last: recurse on drop_last.
+            assert(updated.drop_last() == table.drop_last().update(index, new_entry));
+            assert(updated.last() == table.last());
+            lemma_table_to_map_update_contains(table.drop_last(), index, new_entry, key);
+            assert(spec_table_to_map(updated) ==
+                spec_table_to_map(table.drop_last().update(index, new_entry)).union_prefer_right(
+                    table.last().spec_entry_to_map()));
+            assert(spec_table_to_map(updated).dom() =~=
+                spec_table_to_map(table.drop_last().update(index, new_entry)).dom().union(
+                    table.last().spec_entry_to_map().dom()));
+        }
+    }
+
+    // 7a. helpers
 
     /// Calls the hash function and returns a bucket index.
     /// External_body because Verus cannot reason about opaque Fn closures.
@@ -154,13 +215,15 @@ pub mod ParaHashTableStEph {
             ensures entry.spec_entry_to_map() == Map::<Key, Value>::empty();
         /// - APAS: N/A — inner table interface, cost depends on implementation.
         /// - Claude-Opus-4.6: N/A — abstract trait method.
-        fn insert(&mut self, key: Key, value: Value);
+        fn insert(&mut self, key: Key, value: Value)
+            ensures self.spec_entry_to_map().dom().contains(key);
         /// - APAS: N/A — inner table interface, cost depends on implementation.
         /// - Claude-Opus-4.6: N/A — abstract trait method.
         fn lookup(&self, key: &Key) -> (found: Option<Value>);
         /// - APAS: N/A — inner table interface, cost depends on implementation.
         /// - Claude-Opus-4.6: N/A — abstract trait method.
-        fn delete(&mut self, key: &Key) -> (deleted: bool);
+        fn delete(&mut self, key: &Key) -> (deleted: bool)
+            ensures !deleted ==> self.spec_entry_to_map() == old(self).spec_entry_to_map();
         /// Element-wise clone that avoids Verus tuple-Clone limitation.
         fn clone_entry(&self) -> (cloned: Self);
     }
@@ -181,12 +244,15 @@ pub mod ParaHashTableStEph {
         /// - APAS: Work O(m), Span O(m) where m is initial size.
         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
         fn createTable(hash_fn: H, initial_size: usize) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
+            requires
+                initial_size > 0,
             ensures
                 table.initial_size == initial_size,
                 table.current_size == initial_size,
                 table.num_elements == 0,
                 table.table@.len() == initial_size as int,
                 spec_hashtable_wf(&table),
+                table@ == Map::<Key, Value>::empty(),
         {
             let mut table_vec: Vec<Entry> = Vec::new();
             let mut i: usize = 0;
@@ -194,9 +260,15 @@ pub mod ParaHashTableStEph {
                 invariant
                     i <= initial_size,
                     table_vec@.len() == i as int,
+                    spec_table_to_map::<Key, Value, Entry>(table_vec@) == Map::<Key, Value>::empty(),
                 decreases initial_size - i,
             {
+                let ghost old_view = table_vec@;
                 table_vec.push(Entry::new());
+                proof {
+                    lemma_table_to_map_push_empty::<Key, Value, Entry>(old_view, table_vec@.last());
+                    assert(table_vec@ == old_view.push(table_vec@.last()));
+                }
                 i += 1;
             }
             HashTable {
@@ -252,6 +324,7 @@ pub mod ParaHashTableStEph {
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
+            requires true,
             ensures m == &table.metrics,
         { &table.metrics }
 
@@ -260,6 +333,7 @@ pub mod ParaHashTableStEph {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads only.
         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
+            requires true,
             ensures
                 load_and_size.size == table.current_size,
                 load_and_size.load == table.num_elements,
