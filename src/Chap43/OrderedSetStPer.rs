@@ -149,7 +149,10 @@ broadcast use {
                 split.2@.finite(),
                 split.0@.subset_of(self@),
                 split.2@.subset_of(self@),
-                split.0@.disjoint(split.2@);
+                split.0@.disjoint(split.2@),
+                !split.0@.contains(k@),
+                !split.2@.contains(k@),
+                forall|x| self@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
         /// ADT 43.1 join(A1, A2) = A1 union A2. Work Θ(log(|left|+|right|)), Span Θ(log(|left|+|right|)).
         fn join(left: &Self, right: &Self) -> (joined: Self)
             requires left.spec_orderedsetstper_wf(), right.spec_orderedsetstper_wf(),
@@ -183,7 +186,9 @@ broadcast use {
                 split.0@.finite(),
                 split.1@.finite(),
                 split.0@.subset_of(self@),
-                split.1@.subset_of(self@);
+                split.1@.subset_of(self@),
+                split.0@.disjoint(split.1@),
+                forall|x| self@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x);
     }
 
     // 9. impls
@@ -407,6 +412,9 @@ broadcast use {
                 split.0@.subset_of(self@),
                 split.2@.subset_of(self@),
                 split.0@.disjoint(split.2@),
+                !split.0@.contains(k@),
+                !split.2@.contains(k@),
+                forall|x| self@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@,
         {
             let seq = self.to_seq();
 
@@ -541,8 +549,17 @@ broadcast use {
             }
         }
 
+        #[verifier::external_body]
         fn split_rank(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
+            ensures
+                self@.finite(),
+                split.0@.finite(),
+                split.1@.finite(),
+                split.0@.subset_of(self@),
+                split.1@.subset_of(self@),
+                split.0@.disjoint(split.1@),
+                forall|x| self@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x),
         {
             let elements = &self.base_set.elements;
             let size = elements.length();
@@ -612,6 +629,7 @@ broadcast use {
         ensures constructed@.finite(), constructed.spec_orderedsetstper_wf()
     {
         let seq = AVLTreeSeqStPerS::from_vec(elements);
+        // from_vec ensures seq.spec_avltreeseqstper_wf(), which from_seq requires.
         OrderedSetStPer::from_seq(seq)
     }
 

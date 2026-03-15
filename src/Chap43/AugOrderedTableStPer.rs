@@ -211,7 +211,13 @@ broadcast use {
                 parts.0@.dom().finite(),
                 parts.2@.dom().finite(),
                 parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
-                parts.1 matches None ==> !self@.contains_key(k@);
+                parts.1 matches None ==> !self@.contains_key(k@),
+                !parts.0@.dom().contains(k@),
+                !parts.2@.dom().contains(k@),
+                parts.0@.dom().subset_of(self@.dom()),
+                parts.2@.dom().subset_of(self@.dom()),
+                parts.0@.dom().disjoint(parts.2@.dom()),
+                forall|key| self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@;
         fn join_key(left: &Self, right: &Self) -> (joined: Self)
             requires
                 left.spec_augorderedtablestper_wf(),
@@ -222,7 +228,8 @@ broadcast use {
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures
                 range@.dom().finite(),
-                range@.dom().subset_of(self@.dom());
+                range@.dom().subset_of(self@.dom()),
+                forall|key| range@.dom().contains(key) ==> range@[key] == self@[key];
         fn rank_key(&self, k: &K) -> (rank: usize)
             ensures
                 self@.dom().finite(),
@@ -239,7 +246,9 @@ broadcast use {
                 split.0@.dom().finite(),
                 split.0@.dom().subset_of(self@.dom()),
                 split.1@.dom().finite(),
-                split.1@.dom().subset_of(self@.dom());
+                split.1@.dom().subset_of(self@.dom()),
+                split.0@.dom().disjoint(split.1@.dom()),
+                forall|key| self@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key);
         fn reduce_val(&self) -> (reduced: V)
             ensures self@.dom().finite();
         fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
@@ -516,6 +525,12 @@ broadcast use {
                 parts.2@.dom().finite(),
                 parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
                 parts.1 matches None ==> !self@.contains_key(k@),
+                !parts.0@.dom().contains(k@),
+                !parts.2@.dom().contains(k@),
+                parts.0@.dom().subset_of(self@.dom()),
+                parts.2@.dom().subset_of(self@.dom()),
+                parts.0@.dom().disjoint(parts.2@.dom()),
+                forall|key| self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@,
         {
             let (left_base, middle, right_base) = self.base_table.split_key(k);
 
@@ -572,6 +587,7 @@ broadcast use {
             ensures
                 range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
+                forall|key| range@.dom().contains(key) ==> range@[key] == self@[key],
         {
             let new_base = self.base_table.get_key_range(k1, k2);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -615,6 +631,8 @@ broadcast use {
                 split.0@.dom().subset_of(self@.dom()),
                 split.1@.dom().finite(),
                 split.1@.dom().subset_of(self@.dom()),
+                split.0@.dom().disjoint(split.1@.dom()),
+                forall|key| self@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
         {
             let (left_base, right_base) = self.base_table.split_rank_key(i);
 

@@ -171,11 +171,14 @@ broadcast use {
                 split.2@.finite(),
                 split.0@.subset_of(old(self)@),
                 split.2@.subset_of(old(self)@),
-                split.0@.disjoint(split.2@);
+                split.0@.disjoint(split.2@),
+                !split.0@.contains(k@),
+                !split.2@.contains(k@),
+                forall|x| old(self)@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
         /// ADT 43.1 join(A1, A2) = A1 union A2. Work Θ(log(|left|+|right|)), Span Θ(log(|left|+|right|)).
         fn join(&mut self, other: Self)
             requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
-            ensures self@.finite(), self.spec_orderedsetsteph_wf();
+            ensures self@ == old(self)@.union(other@), self@.finite(), self.spec_orderedsetsteph_wf();
         /// ADT 43.1 getRange(A, k1, k2) = {k in A | k1 <= k <= k2}. Work Θ(log n), Span Θ(log n).
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
             ensures
@@ -203,7 +206,9 @@ broadcast use {
                 split.0@.finite(),
                 split.1@.finite(),
                 split.0@.subset_of(old(self)@),
-                split.1@.subset_of(old(self)@);
+                split.1@.subset_of(old(self)@),
+                split.0@.disjoint(split.1@),
+                forall|x| old(self)@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x);
     }
 
     // 9. impls
@@ -402,6 +407,9 @@ broadcast use {
                 split.0@.subset_of(old(self)@),
                 split.2@.subset_of(old(self)@),
                 split.0@.disjoint(split.2@),
+                !split.0@.contains(k@),
+                !split.2@.contains(k@),
+                forall|x| old(self)@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@,
         {
             let seq = self.to_seq();
 
@@ -430,7 +438,7 @@ broadcast use {
         }
 
         fn join(&mut self, other: Self)
-            ensures self@.finite()
+            ensures self@ == old(self)@.union(other@), self@.finite(), self.spec_orderedsetsteph_wf()
         { self.union(&other); }
 
         #[verifier::external_body]
@@ -512,6 +520,8 @@ broadcast use {
                 split.1@.finite(),
                 split.0@.subset_of(old(self)@),
                 split.1@.subset_of(old(self)@),
+                split.0@.disjoint(split.1@),
+                forall|x| old(self)@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x),
         {
             let seq = self.to_seq();
             let size = seq.length();
