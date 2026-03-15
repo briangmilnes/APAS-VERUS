@@ -1,0 +1,106 @@
+[
+  {
+    "id": 1,
+    "function": "partial_cmp",
+    "file": "Chap57/DijkstraStEphF64.rs",
+    "lines": "33-35",
+    "spec_strength": "",
+    "snippet": "        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {\n            Some(self.cmp(other))\n        }"
+  },
+  {
+    "id": 2,
+    "function": "cmp",
+    "file": "Chap57/DijkstraStEphF64.rs",
+    "lines": "39-42",
+    "spec_strength": "",
+    "snippet": "        fn cmp(&self, other: &Self) -> std::cmp::Ordering {\n            self.dist.val.partial_cmp(&other.dist.val)\n                .unwrap_or(std::cmp::Ordering::Equal)\n        }"
+  },
+  {
+    "id": 3,
+    "function": "dijkstra",
+    "file": "Chap57/DijkstraStEphI64.rs",
+    "lines": "63",
+    "spec_strength": "unknown",
+    "snippet": "        fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64;"
+  },
+  {
+    "id": 4,
+    "function": "pq_entry_new",
+    "file": "Chap57/DijkstraStEphI64.rs",
+    "lines": "68-70",
+    "spec_strength": "unknown",
+    "snippet": "    fn pq_entry_new(dist: i64, vertex: usize) -> (r: PQEntry)\n        requires true,\n        ensures r.dist == dist, r.vertex == vertex,"
+  },
+  {
+    "id": 5,
+    "function": "cmp",
+    "file": "Chap57/DijkstraStEphI64.rs",
+    "lines": "76",
+    "spec_strength": "",
+    "snippet": "        fn cmp(&self, other: &Self) -> (r: Ordering) {"
+  },
+  {
+    "id": 6,
+    "function": "partial_cmp",
+    "file": "Chap57/DijkstraStEphI64.rs",
+    "lines": "88",
+    "spec_strength": "",
+    "snippet": "        fn partial_cmp(&self, other: &Self) -> (r: Option<Ordering>) {"
+  },
+  {
+    "id": 7,
+    "function": "new",
+    "file": "Chap57/StackStEph.rs",
+    "lines": "65-66",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (empty: Self)\n            ensures empty.spec_stacksteph_wf();"
+  },
+  {
+    "id": 8,
+    "function": "push",
+    "file": "Chap57/StackStEph.rs",
+    "lines": "68-72",
+    "spec_strength": "unknown",
+    "snippet": "        fn push(&mut self, item: T)\n            requires\n                old(self).spec_stacksteph_wf(),\n                old(self)@.len() < usize::MAX as int,\n            ensures self.spec_stacksteph_wf();"
+  },
+  {
+    "id": 9,
+    "function": "pop",
+    "file": "Chap57/StackStEph.rs",
+    "lines": "74-76",
+    "spec_strength": "unknown",
+    "snippet": "        fn pop(&mut self) -> (popped: Option<T>)\n            requires old(self).spec_stacksteph_wf()\n            ensures self.spec_stacksteph_wf();"
+  },
+  {
+    "id": 10,
+    "function": "peek",
+    "file": "Chap57/StackStEph.rs",
+    "lines": "78-79",
+    "spec_strength": "unknown",
+    "snippet": "        fn peek(&self) -> (top: Option<&T>)\n            requires self.spec_stacksteph_wf();"
+  },
+  {
+    "id": 11,
+    "function": "is_empty",
+    "file": "Chap57/StackStEph.rs",
+    "lines": "81-82",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (is_empty: bool)\n            requires self.spec_stacksteph_wf();"
+  },
+  {
+    "id": 12,
+    "function": "size",
+    "file": "Chap57/StackStEph.rs",
+    "lines": "84-85",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (count: N)\n            requires self.spec_stacksteph_wf();"
+  },
+  {
+    "id": 13,
+    "function": "default",
+    "file": "Chap57/StackStEph.rs",
+    "lines": "140-141",
+    "spec_strength": "unknown",
+    "snippet": "        fn default() -> (default_val: Self)\n            ensures default_val@ == Seq::<T>::empty(),"
+  }
+]

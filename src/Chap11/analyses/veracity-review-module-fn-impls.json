@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "function": "fib_2threads",
+    "file": "Chap11/FibonacciMtEph2Threads.rs",
+    "lines": "101-103",
+    "spec_strength": "unknown",
+    "snippet": "pub fn fib_2threads(n: u64) -> (fibonacci: u64)\n    requires n >= 2 && n <= 46\n    ensures fibonacci == spec_fib(n as nat)"
+  },
+  {
+    "id": 2,
+    "function": "fib_recomputes",
+    "file": "Chap11/FibonacciMtEphRecomputes.rs",
+    "lines": "93-96",
+    "spec_strength": "unknown",
+    "snippet": "pub fn fib_recomputes(n: u64) -> (fibonacci: u64)\n    requires n <= 46\n    ensures fibonacci == spec_fib(n as nat)\n    decreases n"
+  },
+  {
+    "id": 3,
+    "function": "fib",
+    "file": "Chap11/FibonacciMtPerAllThreads.rs",
+    "lines": "21-26",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn fib(n: u64) -> (fibonacci: u64)\n            requires\n                n <= 46,\n            ensures\n                fibonacci == spec_fib(n as nat),\n            decreases n,"
+  },
+  {
+    "id": 4,
+    "function": "fib",
+    "file": "Chap11/FibonacciMtPerTSM.rs",
+    "lines": "87-90",
+    "spec_strength": "unknown",
+    "snippet": "pub fn fib(n: u64) -> (fibonacci: u64)\n    requires n <= 46\n    ensures fibonacci == spec_fib(n as nat)\n    decreases n"
+  },
+  {
+    "id": 5,
+    "function": "lemma_fib_bound",
+    "file": "Chap11/FibonacciStEph.rs",
+    "lines": "48-50",
+    "spec_strength": "unknown",
+    "snippet": "        proof fn lemma_fib_bound(n: nat)\n            ensures spec_fib(n) < pow2(n),\n            decreases n,"
+  },
+  {
+    "id": 6,
+    "function": "lemma_fib_fits_u64",
+    "file": "Chap11/FibonacciStEph.rs",
+    "lines": "66-68",
+    "spec_strength": "unknown",
+    "snippet": "        proof fn lemma_fib_fits_u64(n: nat)\n            requires n <= 46,\n            ensures spec_fib(n) <= u64::MAX as nat,"
+  },
+  {
+    "id": 7,
+    "function": "lemma_fib_sum_fits_u64",
+    "file": "Chap11/FibonacciStEph.rs",
+    "lines": "76-78",
+    "spec_strength": "unknown",
+    "snippet": "        pub proof fn lemma_fib_sum_fits_u64(n: nat)\n            requires 2 <= n <= 46,\n            ensures spec_fib((n-1) as nat) + spec_fib((n-2) as nat) <= u64::MAX as nat,"
+  },
+  {
+    "id": 8,
+    "function": "fib",
+    "file": "Chap11/FibonacciStEph.rs",
+    "lines": "89-93",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn fib(n: u64) -> (fibonacci: u64)\n            requires\n                n <= 46,\n            ensures\n                fibonacci == spec_fib(n as nat),"
+  },
+  {
+    "id": 9,
+    "function": "fib_recursive",
+    "file": "Chap11/FibonacciStEph.rs",
+    "lines": "127-132",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn fib_recursive(n: u64) -> (fibonacci: u64)\n            requires\n                n <= 46,\n            ensures\n                fibonacci == spec_fib(n as nat),\n            decreases n,"
+  }
+]

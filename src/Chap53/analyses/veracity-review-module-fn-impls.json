@@ -1,0 +1,186 @@
+[
+  {
+    "id": 1,
+    "function": "select`",
+    "file": "Chap53/GraphSearchMtPer.rs",
+    "lines": "36-38",
+    "spec_strength": "unknown",
+    "snippet": "        fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B))\n            requires obeys_feq_clone::<V>(),\n            ensures selected.0@.subset_of(frontier@);"
+  },
+  {
+    "id": 2,
+    "function": "graph_search",
+    "file": "Chap53/GraphSearchMtPer.rs",
+    "lines": "44-49",
+    "spec_strength": "unknown",
+    "snippet": "        fn graph_search<G, S>(graph: &G, source: V, strategy: &S)                         -> (search: SearchResult<V>)\n        where\n            G: Fn(&V) -> AVLTreeSetMtPer<V>,\n            S: SelectionStrategy<V>,\n            requires forall|v: &V| #[trigger] graph.requires((v,)),\n            ensures search.visited@.contains(source@);"
+  },
+  {
+    "id": 3,
+    "function": "graph_search_multi",
+    "file": "Chap53/GraphSearchMtPer.rs",
+    "lines": "53-60",
+    "spec_strength": "unknown",
+    "snippet": "        fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetMtPer<V>, strategy: &S) -> (search: SearchResult<V>)\n        where\n            G: Fn(&V) -> AVLTreeSetMtPer<V>,\n            S: SelectionStrategy<V>,\n            requires\n                forall|v: &V| #[trigger] graph.requires((v,)),\n                sources.spec_avltreesetmtper_wf(),\n            ensures sources@.subset_of(search.visited@);"
+  },
+  {
+    "id": 4,
+    "function": "reachable",
+    "file": "Chap53/GraphSearchMtPer.rs",
+    "lines": "64-68",
+    "spec_strength": "unknown",
+    "snippet": "        fn reachable<G>(graph: &G, source: V)                                             -> (reachable_set: AVLTreeSetMtPer<V>)\n        where\n            G: Fn(&V) -> AVLTreeSetMtPer<V>,\n            requires forall|v: &V| #[trigger] graph.requires((v,)),\n            ensures reachable_set@.contains(source@);"
+  },
+  {
+    "id": 5,
+    "function": "graph_search_explore",
+    "file": "Chap53/GraphSearchMtPer.rs",
+    "lines": "116-129",
+    "spec_strength": "unknown",
+    "snippet": "    fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(\n        graph: &G,\n        strategy: &S,\n        visited_init: AVLTreeSetMtPer<V>,\n        frontier_init: AVLTreeSetMtPer<V>,\n    ) -> (visited_all: AVLTreeSetMtPer<V>)\n        requires\n            forall|v: &V| #[trigger] graph.requires((v,)),\n            visited_init.spec_avltreesetmtper_wf(),\n            frontier_init.spec_avltreesetmtper_wf(),\n        ensures\n            visited_init@.subset_of(visited_all@),\n            frontier_init@.subset_of(visited_all@),\n            visited_all.spec_avltreesetmtper_wf(),"
+  },
+  {
+    "id": 6,
+    "function": "select`",
+    "file": "Chap53/GraphSearchStEph.rs",
+    "lines": "28-32",
+    "spec_strength": "unknown",
+    "snippet": "        fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, B))\n            requires\n                frontier.spec_avltreesetsteph_wf(),\n                obeys_feq_clone::<V>(),\n            ensures selected.0@.subset_of(frontier@);"
+  },
+  {
+    "id": 7,
+    "function": "graph_search",
+    "file": "Chap53/GraphSearchStEph.rs",
+    "lines": "38-45",
+    "spec_strength": "unknown",
+    "snippet": "        fn graph_search<G, S>(graph: &G, source: V, strategy: &S)                         -> (search: SearchResult<V>)\n        where\n            G: Fn(&V) -> AVLTreeSetStEph<V>,\n            S: SelectionStrategy<V>,\n            requires\n                forall|v: &V| #[trigger] graph.requires((v,)),\n                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),\n            ensures search.visited@.contains(source@);"
+  },
+  {
+    "id": 8,
+    "function": "graph_search_multi",
+    "file": "Chap53/GraphSearchStEph.rs",
+    "lines": "49-57",
+    "spec_strength": "unknown",
+    "snippet": "        fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStEph<V>, strategy: &S) -> (search: SearchResult<V>)\n        where\n            G: Fn(&V) -> AVLTreeSetStEph<V>,\n            S: SelectionStrategy<V>,\n            requires\n                sources.spec_avltreesetsteph_wf(),\n                forall|v: &V| #[trigger] graph.requires((v,)),\n                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),\n            ensures sources@.subset_of(search.visited@);"
+  },
+  {
+    "id": 9,
+    "function": "reachable",
+    "file": "Chap53/GraphSearchStEph.rs",
+    "lines": "61-67",
+    "spec_strength": "unknown",
+    "snippet": "        fn reachable<G>(graph: &G, source: V)                                             -> (reachable_set: AVLTreeSetStEph<V>)\n        where\n            G: Fn(&V) -> AVLTreeSetStEph<V>,\n            requires\n                forall|v: &V| #[trigger] graph.requires((v,)),\n                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),\n            ensures reachable_set@.contains(source@);"
+  },
+  {
+    "id": 10,
+    "function": "graph_search_explore",
+    "file": "Chap53/GraphSearchStEph.rs",
+    "lines": "117-130",
+    "spec_strength": "unknown",
+    "snippet": "    fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(\n        graph: &G,\n        strategy: &S,\n        visited_init: AVLTreeSetStEph<V>,\n        frontier_init: AVLTreeSetStEph<V>,\n    ) -> (visited_all: AVLTreeSetStEph<V>)\n        requires\n            visited_init.spec_avltreesetsteph_wf(),\n            frontier_init.spec_avltreesetsteph_wf(),\n            forall|v: &V| #[trigger] graph.requires((v,)),\n            forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),\n        ensures\n            visited_init@.subset_of(visited_all@),\n            frontier_init@.subset_of(visited_all@),"
+  },
+  {
+    "id": 11,
+    "function": "select`",
+    "file": "Chap53/GraphSearchStPer.rs",
+    "lines": "37-41",
+    "spec_strength": "unknown",
+    "snippet": "        fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B))\n            requires\n                frontier.spec_avltreesetstper_wf(),\n                obeys_feq_clone::<V>(),\n            ensures selected.0@.subset_of(frontier@);"
+  },
+  {
+    "id": 12,
+    "function": "graph_search",
+    "file": "Chap53/GraphSearchStPer.rs",
+    "lines": "47-54",
+    "spec_strength": "unknown",
+    "snippet": "        fn graph_search<G, S>(graph: &G, source: V, strategy: &S)                         -> (search: SearchResult<V>)\n        where\n            G: Fn(&V) -> AVLTreeSetStPer<V>,\n            S: SelectionStrategy<V>,\n            requires\n                forall|v: &V| #[trigger] graph.requires((v,)),\n                forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),\n            ensures search.visited@.contains(source@);"
+  },
+  {
+    "id": 13,
+    "function": "graph_search_multi",
+    "file": "Chap53/GraphSearchStPer.rs",
+    "lines": "58-66",
+    "spec_strength": "unknown",
+    "snippet": "        fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStPer<V>, strategy: &S) -> (search: SearchResult<V>)\n        where\n            G: Fn(&V) -> AVLTreeSetStPer<V>,\n            S: SelectionStrategy<V>,\n            requires\n                sources.spec_avltreesetstper_wf(),\n                forall|v: &V| #[trigger] graph.requires((v,)),\n                forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),\n            ensures sources@.subset_of(search.visited@);"
+  },
+  {
+    "id": 14,
+    "function": "reachable",
+    "file": "Chap53/GraphSearchStPer.rs",
+    "lines": "70-76",
+    "spec_strength": "unknown",
+    "snippet": "        fn reachable<G>(graph: &G, source: V)                                             -> (reachable_set: AVLTreeSetStPer<V>)\n        where\n            G: Fn(&V) -> AVLTreeSetStPer<V>,\n            requires\n                forall|v: &V| #[trigger] graph.requires((v,)),\n                forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),\n            ensures reachable_set@.contains(source@);"
+  },
+  {
+    "id": 15,
+    "function": "graph_search_explore",
+    "file": "Chap53/GraphSearchStPer.rs",
+    "lines": "125-138",
+    "spec_strength": "unknown",
+    "snippet": "    fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>>(\n        graph: &G,\n        strategy: &S,\n        visited_init: AVLTreeSetStPer<V>,\n        frontier_init: AVLTreeSetStPer<V>,\n    ) -> (visited_all: AVLTreeSetStPer<V>)\n        requires\n            visited_init.spec_avltreesetstper_wf(),\n            frontier_init.spec_avltreesetstper_wf(),\n            forall|v: &V| #[trigger] graph.requires((v,)),\n            forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),\n        ensures\n            visited_init@.subset_of(visited_all@),\n            frontier_init@.subset_of(visited_all@),"
+  },
+  {
+    "id": 16,
+    "function": "pq_min",
+    "file": "Chap53/PQMinStEph.rs",
+    "lines": "39-49",
+    "spec_strength": "unknown",
+    "snippet": "        fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF)                         -> (search: PQMinResult<V, P>)\n        where\n            G: Fn(&V) -> AVLTreeSetStEph<V>,\n            PF: Fn(&V) -> P,\n            requires\n                forall|v: &V| #[trigger] graph.requires((v,)),\n                forall|v: &V| #[trigger] priority_fn.requires((v,)),\n                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),\n            ensures\n                spec_pqminsteph_wf_generic(&search),\n                search.visited@.contains(source@);"
+  },
+  {
+    "id": 17,
+    "function": "pq_min_multi",
+    "file": "Chap53/PQMinStEph.rs",
+    "lines": "53-64",
+    "spec_strength": "unknown",
+    "snippet": "        fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStEph<V>, priority_fn: &PF) -> (search: PQMinResult<V, P>)\n        where\n            G: Fn(&V) -> AVLTreeSetStEph<V>,\n            PF: Fn(&V) -> P,\n            requires\n                sources.spec_avltreesetsteph_wf(),\n                forall|v: &V| #[trigger] graph.requires((v,)),\n                forall|v: &V| #[trigger] priority_fn.requires((v,)),\n                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),\n            ensures\n                spec_pqminsteph_wf_generic(&search),\n                sources@.subset_of(search.visited@);"
+  },
+  {
+    "id": 18,
+    "function": "pq_find_min_priority",
+    "file": "Chap53/PQMinStEph.rs",
+    "lines": "102-110",
+    "spec_strength": "unknown",
+    "snippet": "    fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(\n        frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,\n    ) -> (result: Option<V>)\n        requires\n            frontier.spec_avltreesetsteph_wf(),\n            obeys_feq_clone::<V>(),\n        ensures\n            frontier@.len() == 0 ==> result.is_none(),\n            frontier@.len() > 0 ==> result.is_some(),"
+  },
+  {
+    "id": 19,
+    "function": "pq_explore",
+    "file": "Chap53/PQMinStEph.rs",
+    "lines": "129-144",
+    "spec_strength": "unknown",
+    "snippet": "    fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(\n        graph: &G,\n        priority_fn: &PF,\n        visited_init: AVLTreeSetStEph<V>,\n        frontier_init: AVLTreeSetStEph<Pair<Pair<P, V>, V>>,\n    ) -> (result: (AVLTreeSetStEph<V>, AVLTreeSetStEph<Pair<V, P>>))\n        requires\n            visited_init.spec_avltreesetsteph_wf(),\n            frontier_init.spec_avltreesetsteph_wf(),\n            forall|v: &V| #[trigger] graph.requires((v,)),\n            forall|v: &V| #[trigger] priority_fn.requires((v,)),\n            forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),\n        ensures\n            result.0.spec_avltreesetsteph_wf(),\n            result.1.spec_avltreesetsteph_wf(),\n            visited_init@.subset_of(result.0@),"
+  },
+  {
+    "id": 20,
+    "function": "pq_min",
+    "file": "Chap53/PQMinStPer.rs",
+    "lines": "43-53",
+    "spec_strength": "unknown",
+    "snippet": "        fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF)                         -> (search: PQMinResult<V, P>)\n        where\n            G: Fn(&V) -> AVLTreeSetStPer<V>,\n            PF: Fn(&V) -> P,\n            requires\n                forall|v: &V| #[trigger] graph.requires((v,)),\n                forall|v: &V| #[trigger] priority_fn.requires((v,)),\n                forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),\n            ensures\n                spec_pqminstper_wf_generic(&search),\n                search.visited@.contains(source@);"
+  },
+  {
+    "id": 21,
+    "function": "pq_min_multi",
+    "file": "Chap53/PQMinStPer.rs",
+    "lines": "57-68",
+    "spec_strength": "unknown",
+    "snippet": "        fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStPer<V>, priority_fn: &PF) -> (search: PQMinResult<V, P>)\n        where\n            G: Fn(&V) -> AVLTreeSetStPer<V>,\n            PF: Fn(&V) -> P,\n            requires\n                sources.spec_avltreesetstper_wf(),\n                forall|v: &V| #[trigger] graph.requires((v,)),\n                forall|v: &V| #[trigger] priority_fn.requires((v,)),\n                forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),\n            ensures\n                spec_pqminstper_wf_generic(&search),\n                sources@.subset_of(search.visited@);"
+  },
+  {
+    "id": 22,
+    "function": "pq_find_min_priority",
+    "file": "Chap53/PQMinStPer.rs",
+    "lines": "104-112",
+    "spec_strength": "unknown",
+    "snippet": "    fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(\n        frontier: &AVLTreeSetStPer<Pair<Pair<P, V>, V>>,\n    ) -> (result: Option<V>)\n        requires\n            frontier.spec_avltreesetstper_wf(),\n            obeys_feq_clone::<V>(),\n        ensures\n            frontier.elements.spec_seq().len() == 0 ==> result.is_none(),\n            frontier.elements.spec_seq().len() > 0 ==> result.is_some(),"
+  },
+  {
+    "id": 23,
+    "function": "pq_explore",
+    "file": "Chap53/PQMinStPer.rs",
+    "lines": "125-140",
+    "spec_strength": "unknown",
+    "snippet": "    fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(\n        graph: &G,\n        priority_fn: &PF,\n        visited_init: AVLTreeSetStPer<V>,\n        frontier_init: AVLTreeSetStPer<Pair<Pair<P, V>, V>>,\n    ) -> (result: (AVLTreeSetStPer<V>, AVLTreeSetStPer<Pair<V, P>>))\n        requires\n            visited_init.spec_avltreesetstper_wf(),\n            frontier_init.spec_avltreesetstper_wf(),\n            forall|v: &V| #[trigger] graph.requires((v,)),\n            forall|v: &V| #[trigger] priority_fn.requires((v,)),\n            forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),\n        ensures\n            result.0.spec_avltreesetstper_wf(),\n            result.1.spec_avltreesetstper_wf(),\n            visited_init@.subset_of(result.0@),"
+  }
+]
