@@ -185,7 +185,13 @@
       "Bash(*; false)",
       "Bash(*2>/dev/null*)",
       "Bash(*; printf *)",
-      "Bash(*&& printf *)"
+      "Bash(*&& printf *)",
+      "Bash(git status *| *)",
+      "Bash(git status *|*)",
+      "Bash(*| xargs git *)",
+      "Bash(*|xargs git *)",
+      "Bash(*&& git status *)",
+      "Bash(*&& git commit *)"
     ]
   }
 }
