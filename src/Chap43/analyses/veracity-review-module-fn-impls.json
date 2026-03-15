@@ -461,53 +461,53 @@
     "file": "Chap43/AugOrderedTableStEph.rs",
     "lines": "194-195",
     "spec_strength": "unknown",
-    "snippet": "        fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)\n            ensures self@.dom().finite();"
+    "snippet": "        fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)\n            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len();"
   },
   {
     "id": 59,
     "function": "first_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "196-197",
+    "lines": "197-201",
     "spec_strength": "unknown",
-    "snippet": "        fn first_key(&self) -> (first: Option<K>)\n            ensures self@.dom().finite();"
+    "snippet": "        fn first_key(&self) -> (first: Option<K>)\n            ensures\n                self@.dom().finite(),\n                self@.dom().len() == 0 <==> first matches None,\n                first matches Some(k) ==> self@.dom().contains(k@);"
   },
   {
     "id": 60,
     "function": "last_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "198-199",
+    "lines": "203-207",
     "spec_strength": "unknown",
-    "snippet": "        fn last_key(&self) -> (last: Option<K>)\n            ensures self@.dom().finite();"
+    "snippet": "        fn last_key(&self) -> (last: Option<K>)\n            ensures\n                self@.dom().finite(),\n                self@.dom().len() == 0 <==> last matches None,\n                last matches Some(k) ==> self@.dom().contains(k@);"
   },
   {
     "id": 61,
     "function": "previous_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "200-201",
+    "lines": "209-212",
     "spec_strength": "unknown",
-    "snippet": "        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)\n            ensures self@.dom().finite();"
+    "snippet": "        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)\n            ensures\n                self@.dom().finite(),\n                predecessor matches Some(pk) ==> self@.dom().contains(pk@);"
   },
   {
     "id": 62,
     "function": "next_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "202-203",
+    "lines": "214-217",
     "spec_strength": "unknown",
-    "snippet": "        fn next_key(&self, k: &K) -> (successor: Option<K>)\n            ensures self@.dom().finite();"
+    "snippet": "        fn next_key(&self, k: &K) -> (successor: Option<K>)\n            ensures\n                self@.dom().finite(),\n                successor matches Some(nk) ==> self@.dom().contains(nk@);"
   },
   {
     "id": 63,
     "function": "split_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "204-206",
+    "lines": "219-227",
     "spec_strength": "unknown",
-    "snippet": "        fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))\n            where Self: Sized,\n            ensures self@.dom().finite();"
+    "snippet": "        fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))\n            where Self: Sized,\n            ensures\n                self@.dom().finite(),\n                old(self)@.dom().finite(),\n                split.0@.dom().finite(),\n                split.2@.dom().finite(),\n                split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],\n                split.1 matches None ==> !old(self)@.contains_key(k@);"
   },
   {
     "id": 64,
     "function": "join_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "207-209",
+    "lines": "228-230",
     "spec_strength": "hole",
     "snippet": "        fn join_key(&mut self, other: Self)\n            requires obeys_feq_clone::<K>(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()\n            ensures self@.dom().finite();"
   },
@@ -515,39 +515,39 @@
     "id": 65,
     "function": "get_key_range",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "210-211",
+    "lines": "232-235",
     "spec_strength": "unknown",
-    "snippet": "        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)\n            ensures range@.dom().finite();"
+    "snippet": "        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)\n            ensures\n                range@.dom().finite(),\n                range@.dom().subset_of(self@.dom());"
   },
   {
     "id": 66,
     "function": "rank_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "212-213",
+    "lines": "237-240",
     "spec_strength": "unknown",
-    "snippet": "        fn rank_key(&self, k: &K) -> (rank: usize)\n            ensures self@.dom().finite();"
+    "snippet": "        fn rank_key(&self, k: &K) -> (rank: usize)\n            ensures\n                self@.dom().finite(),\n                rank <= self@.dom().len();"
   },
   {
     "id": 67,
     "function": "select_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "214-215",
+    "lines": "242-246",
     "spec_strength": "unknown",
-    "snippet": "        fn select_key(&self, i: usize) -> (selected: Option<K>)\n            ensures self@.dom().finite();"
+    "snippet": "        fn select_key(&self, i: usize) -> (selected: Option<K>)\n            ensures\n                self@.dom().finite(),\n                i >= self@.dom().len() ==> selected matches None,\n                selected matches Some(k) ==> self@.dom().contains(k@);"
   },
   {
     "id": 68,
     "function": "split_rank_key",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "216-218",
+    "lines": "248-256",
     "spec_strength": "unknown",
-    "snippet": "        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))\n            where Self: Sized,\n            ensures self@.dom().finite();"
+    "snippet": "        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))\n            where Self: Sized,\n            ensures\n                self@.dom().finite(),\n                old(self)@.dom().finite(),\n                split.0@.dom().finite(),\n                split.1@.dom().finite(),\n                split.0@.dom().subset_of(old(self)@.dom()),\n                split.1@.dom().subset_of(old(self)@.dom());"
   },
   {
     "id": 69,
     "function": "reduce_val",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "219-220",
+    "lines": "257-258",
     "spec_strength": "unknown",
     "snippet": "        fn reduce_val(&self) -> (reduced: V)\n            ensures self@.dom().finite();"
   },
@@ -555,7 +555,7 @@
     "id": 70,
     "function": "reduce_range",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "221-222",
+    "lines": "259-260",
     "spec_strength": "unknown",
     "snippet": "        fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)\n            ensures self@.dom().finite();"
   },
@@ -563,7 +563,7 @@
     "id": 71,
     "function": "iter",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "579-583",
+    "lines": "657-661",
     "spec_strength": "unknown",
     "snippet": "        pub fn iter(&self) -> (it: OrderedTableStEphIter<'_, K, V>)\n            ensures\n                it@.0 == 0,\n                it@.1 == self.base_table.base_table.entries.seq@,\n                iter_invariant(&it),"
   },
@@ -571,7 +571,7 @@
     "id": 72,
     "function": "eq",
     "file": "Chap43/AugOrderedTableStEph.rs",
-    "lines": "629-632",
+    "lines": "707-710",
     "spec_strength": "",
     "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.base_table == other.base_table\n                && self.cached_reduction == other.cached_reduction\n        }"
   },
@@ -755,15 +755,15 @@
     "id": 95,
     "function": "split_key",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "207-214",
+    "lines": "207-220",
     "spec_strength": "unknown",
-    "snippet": "        fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))\n            where Self: Sized\n            ensures\n                self@.dom().finite(),\n                parts.0@.dom().finite(),\n                parts.2@.dom().finite(),\n                parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],\n                parts.1 matches None ==> !self@.contains_key(k@);"
+    "snippet": "        fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))\n            where Self: Sized\n            ensures\n                self@.dom().finite(),\n                parts.0@.dom().finite(),\n                parts.2@.dom().finite(),\n                parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],\n                parts.1 matches None ==> !self@.contains_key(k@),\n                !parts.0@.dom().contains(k@),\n                !parts.2@.dom().contains(k@),\n                parts.0@.dom().subset_of(self@.dom()),\n                parts.2@.dom().subset_of(self@.dom()),\n                parts.0@.dom().disjoint(parts.2@.dom()),\n                forall|key| self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@;"
   },
   {
     "id": 96,
     "function": "join_key",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "215-221",
+    "lines": "221-227",
     "spec_strength": "hole",
     "snippet": "        fn join_key(left: &Self, right: &Self) -> (joined: Self)\n            requires\n                left.spec_augorderedtablestper_wf(),\n                right.spec_augorderedtablestper_wf(),\n                obeys_view_eq::<K>(),\n                obeys_feq_full::<Pair<K, V>>(),\n            ensures joined@.dom().finite(), joined.spec_augorderedtablestper_wf();"
   },
@@ -771,15 +771,15 @@
     "id": 97,
     "function": "get_key_range",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "222-225",
+    "lines": "228-232",
     "spec_strength": "unknown",
-    "snippet": "        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)\n            ensures\n                range@.dom().finite(),\n                range@.dom().subset_of(self@.dom());"
+    "snippet": "        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)\n            ensures\n                range@.dom().finite(),\n                range@.dom().subset_of(self@.dom()),\n                forall|key| range@.dom().contains(key) ==> range@[key] == self@[key];"
   },
   {
     "id": 98,
     "function": "rank_key",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "226-229",
+    "lines": "233-236",
     "spec_strength": "unknown",
     "snippet": "        fn rank_key(&self, k: &K) -> (rank: usize)\n            ensures\n                self@.dom().finite(),\n                rank <= self@.dom().len();"
   },
@@ -787,7 +787,7 @@
     "id": 99,
     "function": "select_key",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "230-234",
+    "lines": "237-241",
     "spec_strength": "unknown",
     "snippet": "        fn select_key(&self, i: usize) -> (selected: Option<K>)\n            ensures\n                self@.dom().finite(),\n                i >= self@.dom().len() ==> selected matches None,\n                selected matches Some(k) ==> self@.dom().contains(k@);"
   },
@@ -795,15 +795,15 @@
     "id": 100,
     "function": "split_rank_key",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "235-242",
+    "lines": "242-251",
     "spec_strength": "unknown",
-    "snippet": "        fn split_rank_key(&self, i: usize) -> (split: (Self, Self))\n            where Self: Sized\n            ensures\n                self@.dom().finite(),\n                split.0@.dom().finite(),\n                split.0@.dom().subset_of(self@.dom()),\n                split.1@.dom().finite(),\n                split.1@.dom().subset_of(self@.dom());"
+    "snippet": "        fn split_rank_key(&self, i: usize) -> (split: (Self, Self))\n            where Self: Sized\n            ensures\n                self@.dom().finite(),\n                split.0@.dom().finite(),\n                split.0@.dom().subset_of(self@.dom()),\n                split.1@.dom().finite(),\n                split.1@.dom().subset_of(self@.dom()),\n                split.0@.dom().disjoint(split.1@.dom()),\n                forall|key| self@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key);"
   },
   {
     "id": 101,
     "function": "reduce_val",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "243-244",
+    "lines": "252-253",
     "spec_strength": "unknown",
     "snippet": "        fn reduce_val(&self) -> (reduced: V)\n            ensures self@.dom().finite();"
   },
@@ -811,7 +811,7 @@
     "id": 102,
     "function": "reduce_range",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "245-246",
+    "lines": "254-255",
     "spec_strength": "unknown",
     "snippet": "        fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)\n            ensures self@.dom().finite();"
   },
@@ -819,7 +819,7 @@
     "id": 103,
     "function": "iter",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "672-676",
+    "lines": "690-694",
     "spec_strength": "unknown",
     "snippet": "        pub fn iter(&self) -> (it: OrderedTableStPerIter<'_, K, V>)\n            ensures\n                it@.0 == 0,\n                it@.1 == self.base_table.base_table.entries.seq@,\n                iter_invariant(&it),"
   },
@@ -827,7 +827,7 @@
     "id": 104,
     "function": "eq",
     "file": "Chap43/AugOrderedTableStPer.rs",
-    "lines": "706-707",
+    "lines": "724-725",
     "spec_strength": "unknown",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
@@ -1179,23 +1179,23 @@
     "id": 148,
     "function": "split",
     "file": "Chap43/OrderedSetStEph.rs",
-    "lines": "164-174",
+    "lines": "164-177",
     "spec_strength": "hole",
-    "snippet": "        fn split(&mut self, k: &T) -> (split: (Self, B, Self))\n            where Self: Sized\n            ensures\n                self@.finite(),\n                old(self)@.finite(),\n                split.1 == old(self)@.contains(k@),\n                split.0@.finite(),\n                split.2@.finite(),\n                split.0@.subset_of(old(self)@),\n                split.2@.subset_of(old(self)@),\n                split.0@.disjoint(split.2@);"
+    "snippet": "        fn split(&mut self, k: &T) -> (split: (Self, B, Self))\n            where Self: Sized\n            ensures\n                self@.finite(),\n                old(self)@.finite(),\n                split.1 == old(self)@.contains(k@),\n                split.0@.finite(),\n                split.2@.finite(),\n                split.0@.subset_of(old(self)@),\n                split.2@.subset_of(old(self)@),\n                split.0@.disjoint(split.2@),\n                !split.0@.contains(k@),\n                !split.2@.contains(k@),\n                forall|x| old(self)@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;"
   },
   {
     "id": 149,
     "function": "join",
     "file": "Chap43/OrderedSetStEph.rs",
-    "lines": "176-178",
+    "lines": "179-181",
     "spec_strength": "unknown",
-    "snippet": "        fn join(&mut self, other: Self)\n            requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),\n            ensures self@.finite(), self.spec_orderedsetsteph_wf();"
+    "snippet": "        fn join(&mut self, other: Self)\n            requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),\n            ensures self@ == old(self)@.union(other@), self@.finite(), self.spec_orderedsetsteph_wf();"
   },
   {
     "id": 150,
     "function": "get_range",
     "file": "Chap43/OrderedSetStEph.rs",
-    "lines": "180-184",
+    "lines": "183-187",
     "spec_strength": "hole",
     "snippet": "        fn get_range(&self, k1: &T, k2: &T) -> (range: Self)\n            ensures\n                self@.finite(),\n                range@.finite(),\n                range@.subset_of(self@);"
   },
@@ -1203,7 +1203,7 @@
     "id": 151,
     "function": "rank",
     "file": "Chap43/OrderedSetStEph.rs",
-    "lines": "186-189",
+    "lines": "189-192",
     "spec_strength": "hole",
     "snippet": "        fn rank(&self, k: &T) -> (rank: usize)\n            ensures\n                self@.finite(),\n                rank <= self@.len();"
   },
@@ -1211,7 +1211,7 @@
     "id": 152,
     "function": "select",
     "file": "Chap43/OrderedSetStEph.rs",
-    "lines": "191-196",
+    "lines": "194-199",
     "spec_strength": "unknown",
     "snippet": "        fn select(&self, i: usize) -> (selected: Option<T>)\n            requires self.spec_orderedsetsteph_wf(),\n            ensures\n                self@.finite(),\n                i >= self@.len() ==> selected matches None,\n                selected matches Some(v) ==> self@.contains(v@);"
   },
@@ -1219,15 +1219,15 @@
     "id": 153,
     "function": "split_rank",
     "file": "Chap43/OrderedSetStEph.rs",
-    "lines": "198-206",
+    "lines": "201-211",
     "spec_strength": "hole",
-    "snippet": "        fn split_rank(&mut self, i: usize) -> (split: (Self, Self))\n            where Self: Sized\n            ensures\n                self@.finite(),\n                old(self)@.finite(),\n                split.0@.finite(),\n                split.1@.finite(),\n                split.0@.subset_of(old(self)@),\n                split.1@.subset_of(old(self)@);"
+    "snippet": "        fn split_rank(&mut self, i: usize) -> (split: (Self, Self))\n            where Self: Sized\n            ensures\n                self@.finite(),\n                old(self)@.finite(),\n                split.0@.finite(),\n                split.1@.finite(),\n                split.0@.subset_of(old(self)@),\n                split.1@.subset_of(old(self)@),\n                split.0@.disjoint(split.1@),\n                forall|x| old(self)@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x);"
   },
   {
     "id": 154,
     "function": "iter",
     "file": "Chap43/OrderedSetStEph.rs",
-    "lines": "548-553",
+    "lines": "558-563",
     "spec_strength": "unknown",
     "snippet": "        pub fn iter(&self) -> (it: OrderedSetStEphIter<'_, T>)\n            requires self.spec_orderedsetsteph_wf(),\n            ensures\n                it@.0 == 0,\n                it@.1 == self.base_set.elements@,\n                iter_invariant(&it),"
   },
@@ -1235,7 +1235,7 @@
     "id": 155,
     "function": "from_sorted_elements",
     "file": "Chap43/OrderedSetStEph.rs",
-    "lines": "692-693",
+    "lines": "702-703",
     "spec_strength": "unknown",
     "snippet": "    pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)\n        ensures constructed@.finite(), constructed.spec_orderedsetsteph_wf()"
   },
@@ -1243,7 +1243,7 @@
     "id": 156,
     "function": "default",
     "file": "Chap43/OrderedSetStEph.rs",
-    "lines": "717",
+    "lines": "727",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::empty() }"
   },
@@ -1251,7 +1251,7 @@
     "id": 157,
     "function": "eq",
     "file": "Chap43/OrderedSetStEph.rs",
-    "lines": "721-731",
+    "lines": "731-741",
     "spec_strength": "",
     "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.size() == other.size() && {\n                let seq = self.to_seq();\n                for i in 0..seq.length() {\n                    if !other.find(seq.nth(i)) {\n                        return false;\n                    }\n                }\n                true\n            }\n        }"
   },
@@ -1387,15 +1387,15 @@
     "id": 174,
     "function": "split",
     "file": "Chap43/OrderedSetStPer.rs",
-    "lines": "142-152",
+    "lines": "142-155",
     "spec_strength": "hole",
-    "snippet": "        fn split(&self, k: &T) -> (split: (Self, B, Self))\n            where Self: Sized\n            requires self.spec_orderedsetstper_wf(),\n            ensures\n                self@.finite(),\n                split.1 == self@.contains(k@),\n                split.0@.finite(),\n                split.2@.finite(),\n                split.0@.subset_of(self@),\n                split.2@.subset_of(self@),\n                split.0@.disjoint(split.2@);"
+    "snippet": "        fn split(&self, k: &T) -> (split: (Self, B, Self))\n            where Self: Sized\n            requires self.spec_orderedsetstper_wf(),\n            ensures\n                self@.finite(),\n                split.1 == self@.contains(k@),\n                split.0@.finite(),\n                split.2@.finite(),\n                split.0@.subset_of(self@),\n                split.2@.subset_of(self@),\n                split.0@.disjoint(split.2@),\n                !split.0@.contains(k@),\n                !split.2@.contains(k@),\n                forall|x| self@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;"
   },
   {
     "id": 175,
     "function": "join",
     "file": "Chap43/OrderedSetStPer.rs",
-    "lines": "154-156",
+    "lines": "157-159",
     "spec_strength": "unknown",
     "snippet": "        fn join(left: &Self, right: &Self) -> (joined: Self)\n            requires left.spec_orderedsetstper_wf(), right.spec_orderedsetstper_wf(),\n            ensures joined@ == left@.union(right@), joined@.finite();"
   },
@@ -1403,7 +1403,7 @@
     "id": 176,
     "function": "get_range",
     "file": "Chap43/OrderedSetStPer.rs",
-    "lines": "158-163",
+    "lines": "161-166",
     "spec_strength": "unknown",
     "snippet": "        fn get_range(&self, k1: &T, k2: &T) -> (range: Self)\n            requires self.spec_orderedsetstper_wf(),\n            ensures\n                self@.finite(),\n                range@.finite(),\n                range@.subset_of(self@);"
   },
@@ -1411,7 +1411,7 @@
     "id": 177,
     "function": "rank",
     "file": "Chap43/OrderedSetStPer.rs",
-    "lines": "165-169",
+    "lines": "168-172",
     "spec_strength": "unknown",
     "snippet": "        fn rank(&self, k: &T) -> (rank: usize)\n            requires self.spec_orderedsetstper_wf(),\n            ensures\n                self@.finite(),\n                rank <= self@.len();"
   },
@@ -1419,7 +1419,7 @@
     "id": 178,
     "function": "select",
     "file": "Chap43/OrderedSetStPer.rs",
-    "lines": "171-176",
+    "lines": "174-179",
     "spec_strength": "unknown",
     "snippet": "        fn select(&self, i: usize) -> (selected: Option<T>)\n            requires self.spec_orderedsetstper_wf(), obeys_feq_clone::<T>(),\n            ensures\n                self@.finite(),\n                i >= self@.len() ==> selected matches None,\n                selected matches Some(v) ==> self@.contains(v@);"
   },
@@ -1427,15 +1427,15 @@
     "id": 179,
     "function": "split_rank",
     "file": "Chap43/OrderedSetStPer.rs",
-    "lines": "178-186",
-    "spec_strength": "unknown",
-    "snippet": "        fn split_rank(&self, i: usize) -> (split: (Self, Self))\n            where Self: Sized\n            requires self.spec_orderedsetstper_wf(),\n            ensures\n                self@.finite(),\n                split.0@.finite(),\n                split.1@.finite(),\n                split.0@.subset_of(self@),\n                split.1@.subset_of(self@);"
+    "lines": "181-191",
+    "spec_strength": "hole",
+    "snippet": "        fn split_rank(&self, i: usize) -> (split: (Self, Self))\n            where Self: Sized\n            requires self.spec_orderedsetstper_wf(),\n            ensures\n                self@.finite(),\n                split.0@.finite(),\n                split.1@.finite(),\n                split.0@.subset_of(self@),\n                split.1@.subset_of(self@),\n                split.0@.disjoint(split.1@),\n                forall|x| self@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x);"
   },
   {
     "id": 180,
     "function": "from_sorted_elements",
     "file": "Chap43/OrderedSetStPer.rs",
-    "lines": "610-612",
+    "lines": "627-629",
     "spec_strength": "unknown",
     "snippet": "    pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStPer<T>)\n        requires true,\n        ensures constructed@.finite(), constructed.spec_orderedsetstper_wf()"
   },
@@ -1443,7 +1443,7 @@
     "id": 181,
     "function": "iter",
     "file": "Chap43/OrderedSetStPer.rs",
-    "lines": "622-627",
+    "lines": "640-645",
     "spec_strength": "unknown",
     "snippet": "        pub fn iter(&self) -> (it: OrderedSetStPerIter<'_, T>)\n            requires self.spec_orderedsetstper_wf(),\n            ensures\n                it@.0 == 0,\n                it@.1 == self.base_set.elements@,\n                iter_invariant(&it),"
   },
@@ -1451,7 +1451,7 @@
     "id": 182,
     "function": "default",
     "file": "Chap43/OrderedSetStPer.rs",
-    "lines": "767-768",
+    "lines": "785-786",
     "spec_strength": "unknown",
     "snippet": "        fn default() -> (d: Self)\n            ensures d@.finite(), d@.len() == 0"
   },
@@ -1459,7 +1459,7 @@
     "id": 183,
     "function": "eq",
     "file": "Chap43/OrderedSetStPer.rs",
-    "lines": "800-802",
+    "lines": "818-820",
     "spec_strength": "",
     "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.base_set == other.base_set\n        }"
   },
@@ -2083,15 +2083,15 @@
     "id": 261,
     "function": "split_key",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "162-170",
+    "lines": "162-176",
     "spec_strength": "hole",
-    "snippet": "        fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))\n            where Self: Sized\n            ensures\n                self@.dom().finite(),\n                old(self)@.dom().finite(),\n                split.0@.dom().finite(),\n                split.2@.dom().finite(),\n                split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],\n                split.1 matches None ==> !old(self)@.contains_key(k@);"
+    "snippet": "        fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))\n            where Self: Sized\n            ensures\n                self@.dom().finite(),\n                old(self)@.dom().finite(),\n                split.0@.dom().finite(),\n                split.2@.dom().finite(),\n                split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],\n                split.1 matches None ==> !old(self)@.contains_key(k@),\n                !split.0@.dom().contains(k@),\n                !split.2@.dom().contains(k@),\n                split.0@.dom().subset_of(old(self)@.dom()),\n                split.2@.dom().subset_of(old(self)@.dom()),\n                split.0@.dom().disjoint(split.2@.dom()),\n                forall|key| old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.2@.dom().contains(key) || key == k@;"
   },
   {
     "id": 262,
     "function": "join_key",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "172-174",
+    "lines": "178-180",
     "spec_strength": "unknown",
     "snippet": "        fn join_key(&mut self, other: Self)\n            requires obeys_feq_clone::<K>(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()\n            ensures self@.dom().finite();"
   },
@@ -2099,15 +2099,15 @@
     "id": 263,
     "function": "get_key_range",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "176-179",
+    "lines": "182-186",
     "spec_strength": "hole",
-    "snippet": "        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)\n            ensures\n                range@.dom().finite(),\n                range@.dom().subset_of(self@.dom());"
+    "snippet": "        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)\n            ensures\n                range@.dom().finite(),\n                range@.dom().subset_of(self@.dom()),\n                forall|key| range@.dom().contains(key) ==> range@[key] == self@[key];"
   },
   {
     "id": 264,
     "function": "rank_key",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "181-184",
+    "lines": "188-191",
     "spec_strength": "unknown",
     "snippet": "        fn rank_key(&self, k: &K) -> (rank: usize)\n            ensures\n                self@.dom().finite(),\n                rank <= self@.dom().len();"
   },
@@ -2115,7 +2115,7 @@
     "id": 265,
     "function": "select_key",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "186-190",
+    "lines": "193-197",
     "spec_strength": "unknown",
     "snippet": "        fn select_key(&self, i: usize) -> (selected: Option<K>)\n            ensures\n                self@.dom().finite(),\n                i >= self@.dom().len() ==> selected matches None,\n                selected matches Some(k) ==> self@.dom().contains(k@);"
   },
@@ -2123,15 +2123,15 @@
     "id": 266,
     "function": "split_rank_key",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "192-200",
+    "lines": "199-209",
     "spec_strength": "hole",
-    "snippet": "        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))\n            where Self: Sized\n            ensures\n                self@.dom().finite(),\n                old(self)@.dom().finite(),\n                split.0@.dom().finite(),\n                split.1@.dom().finite(),\n                split.0@.dom().subset_of(old(self)@.dom()),\n                split.1@.dom().subset_of(old(self)@.dom());"
+    "snippet": "        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))\n            where Self: Sized\n            ensures\n                self@.dom().finite(),\n                old(self)@.dom().finite(),\n                split.0@.dom().finite(),\n                split.1@.dom().finite(),\n                split.0@.dom().subset_of(old(self)@.dom()),\n                split.1@.dom().subset_of(old(self)@.dom()),\n                split.0@.dom().disjoint(split.1@.dom()),\n                forall|key| old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key);"
   },
   {
     "id": 267,
     "function": "iter",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "665-669",
+    "lines": "683-687",
     "spec_strength": "unknown",
     "snippet": "        pub fn iter(&self) -> (it: OrderedTableStEphIter<'_, K, V>)\n            ensures\n                it@.0 == 0,\n                it@.1 == self.base_table.entries.seq@,\n                iter_invariant(&it),"
   },
@@ -2139,7 +2139,7 @@
     "id": 268,
     "function": "next",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "693-709",
+    "lines": "711-727",
     "spec_strength": "unknown",
     "snippet": "        fn next(&mut self) -> (next: Option<&'a Pair<K, V>>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
   },
@@ -2147,7 +2147,7 @@
     "id": 269,
     "function": "from_sorted_entries",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "796-800",
+    "lines": "814-818",
     "spec_strength": "unknown",
     "snippet": "    pub fn from_sorted_entries<K: StT + Ord, V: StT>(\n        entries: AVLTreeSeqStPerS<Pair<K, V>>,\n    ) -> (cloned: OrderedTableStEph<K, V>)\n        requires entries.spec_avltreeseqstper_wf(),\n        ensures cloned@.dom().finite(),"
   },
@@ -2155,7 +2155,7 @@
     "id": 270,
     "function": "eq",
     "file": "Chap43/OrderedTableStEph.rs",
-    "lines": "827-829",
+    "lines": "845-847",
     "spec_strength": "",
     "snippet": "        fn eq(&self, other: &Self) -> bool {\n            self.base_table == other.base_table\n        }"
   },
@@ -2323,15 +2323,15 @@
     "id": 291,
     "function": "split_key",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "151-158",
+    "lines": "151-164",
     "spec_strength": "hole",
-    "snippet": "        fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))\n            where Self: Sized\n            ensures\n                self@.dom().finite(),\n                parts.0@.dom().finite(),\n                parts.2@.dom().finite(),\n                parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],\n                parts.1 matches None ==> !self@.contains_key(k@);"
+    "snippet": "        fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))\n            where Self: Sized\n            ensures\n                self@.dom().finite(),\n                parts.0@.dom().finite(),\n                parts.2@.dom().finite(),\n                parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],\n                parts.1 matches None ==> !self@.contains_key(k@),\n                !parts.0@.dom().contains(k@),\n                !parts.2@.dom().contains(k@),\n                parts.0@.dom().subset_of(self@.dom()),\n                parts.2@.dom().subset_of(self@.dom()),\n                parts.0@.dom().disjoint(parts.2@.dom()),\n                forall|key| self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@;"
   },
   {
     "id": 292,
     "function": "join_key",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "160-166",
+    "lines": "166-172",
     "spec_strength": "unknown",
     "snippet": "        fn join_key(left: &Self, right: &Self) -> (table: Self)\n            requires\n                left.spec_orderedtablestper_wf(),\n                right.spec_orderedtablestper_wf(),\n                obeys_view_eq::<K>(),\n                obeys_feq_full::<Pair<K, V>>(),\n            ensures table@.dom().finite(), table.spec_orderedtablestper_wf();"
   },
@@ -2339,15 +2339,15 @@
     "id": 293,
     "function": "get_key_range",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "168-171",
+    "lines": "174-178",
     "spec_strength": "hole",
-    "snippet": "        fn get_key_range(&self, k1: &K, k2: &K) -> (table: Self)\n            ensures\n                table@.dom().finite(),\n                table@.dom().subset_of(self@.dom());"
+    "snippet": "        fn get_key_range(&self, k1: &K, k2: &K) -> (table: Self)\n            ensures\n                table@.dom().finite(),\n                table@.dom().subset_of(self@.dom()),\n                forall|key| table@.dom().contains(key) ==> table@[key] == self@[key];"
   },
   {
     "id": 294,
     "function": "rank_key",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "173-176",
+    "lines": "180-183",
     "spec_strength": "unknown",
     "snippet": "        fn rank_key(&self, k: &K) -> (rank: usize)\n            ensures\n                self@.dom().finite(),\n                rank <= self@.dom().len();"
   },
@@ -2355,7 +2355,7 @@
     "id": 295,
     "function": "select_key",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "178-182",
+    "lines": "185-189",
     "spec_strength": "unknown",
     "snippet": "        fn select_key(&self, i: usize) -> (key: Option<K>)\n            ensures\n                self@.dom().finite(),\n                i >= self@.dom().len() ==> key matches None,\n                key matches Some(k) ==> self@.dom().contains(k@);"
   },
@@ -2363,15 +2363,15 @@
     "id": 296,
     "function": "split_rank_key",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "184-191",
+    "lines": "191-200",
     "spec_strength": "hole",
-    "snippet": "        fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))\n            where Self: Sized\n            ensures\n                self@.dom().finite(),\n                parts.0@.dom().finite(),\n                parts.1@.dom().finite(),\n                parts.0@.dom().subset_of(self@.dom()),\n                parts.1@.dom().subset_of(self@.dom());"
+    "snippet": "        fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))\n            where Self: Sized\n            ensures\n                self@.dom().finite(),\n                parts.0@.dom().finite(),\n                parts.1@.dom().finite(),\n                parts.0@.dom().subset_of(self@.dom()),\n                parts.1@.dom().subset_of(self@.dom()),\n                parts.0@.dom().disjoint(parts.1@.dom()),\n                forall|key| self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.1@.dom().contains(key);"
   },
   {
     "id": 297,
     "function": "from_sorted_entries",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "592-596",
+    "lines": "610-614",
     "spec_strength": "unknown",
     "snippet": "    pub fn from_sorted_entries<K: StT + Ord, V: StT>(\n        entries: AVLTreeSeqStPerS<Pair<K, V>>,\n    ) -> (table: OrderedTableStPer<K, V>)\n        requires entries.spec_avltreeseqstper_wf(),\n        ensures table@.dom().finite()"
   },
@@ -2379,7 +2379,7 @@
     "id": 298,
     "function": "iter",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "620-624",
+    "lines": "638-642",
     "spec_strength": "unknown",
     "snippet": "        pub fn iter(&self) -> (it: OrderedTableStPerIter<'_, K, V>)\n            ensures\n                it@.0 == 0,\n                it@.1 == self.base_table.entries.seq@,\n                iter_invariant(&it),"
   },
@@ -2387,7 +2387,7 @@
     "id": 299,
     "function": "next",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "648-664",
+    "lines": "666-682",
     "spec_strength": "unknown",
     "snippet": "        fn next(&mut self) -> (next: Option<&'a Pair<K, V>>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
   },
@@ -2395,7 +2395,7 @@
     "id": 300,
     "function": "eq",
     "file": "Chap43/OrderedTableStPer.rs",
-    "lines": "752-753",
+    "lines": "770-771",
     "spec_strength": "unknown",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   }

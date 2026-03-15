@@ -25,13 +25,13 @@ Table of Contents:
 ✓ DFSStEph.rs
 ✓ DFSStPer.rs
 ❌ SCCStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap55/SCCStEph.rs:170: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:170: warning: requires_true - requires true — vacuous precondition
        168 |     /// Runtime check that all neighbor indices are valid vertex indices.
        169 |     fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (valid: bool)
        171 |         ensures valid ==> spec_toposortsteph_wf(graph),
        172 |     {
 ❌ SCCStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap55/SCCStPer.rs:247: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:247: warning: requires_true - requires true — vacuous precondition
        245 |     /// Runtime check that all neighbor indices are valid vertex indices.
        246 |     fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (valid: bool)
        248 |         ensures valid ==> spec_toposortstper_wf(graph),
@@ -100,9 +100,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 09:54:53 -07:00
-Ended:     2026-03-15 09:54:53 -07:00
-Duration:  22ms
+Started:   2026-03-15 09:55:20 -07:00
+Ended:     2026-03-15 09:55:20 -07:00
+Duration:  21ms
 
 Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
+ll output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
