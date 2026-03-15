@@ -29,7 +29,7 @@ pub mod AVLTreeSeqStPer {
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{lemma_cloned_view_eq, obeys_feq_clone, obeys_feq_full};
+    use crate::vstdplus::feq::feq::{lemma_cloned_view_eq, obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger};
 
     verus! {
 
@@ -503,7 +503,8 @@ pub mod AVLTreeSeqStPer {
             lemma_size_eq_inorder_len::<T>(&right);
             lemma_height_le_size::<T>(&left);
             lemma_height_le_size::<T>(&right);
-            assume(val@ == a@[mid as int]@);
+            assert(obeys_feq_full_trigger::<T>());
+            assert(cloned(a@[mid as int], val));
         }
         let node = mk(val, left, right);
         proof {

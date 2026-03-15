@@ -61,6 +61,26 @@ broadcast use {
     }
 
 
+    // 7. proof fns
+
+    /// Under wf, cached size equals inorder length, both < usize::MAX.
+    proof fn lemma_wf_implies_len_bound<T: StT>(link: &Link<T>)
+        requires spec_avltreeseqsteph_wf(*link),
+        ensures
+            spec_cached_size(link) == spec_inorder(*link).len(),
+            spec_inorder(*link).len() < usize::MAX,
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_wf_implies_len_bound::<T>(&node.left);
+                lemma_wf_implies_len_bound::<T>(&node.right);
+            }
+        }
+    }
+
+
     // 8. traits
 
     // 8. traits
@@ -626,7 +646,11 @@ broadcast use {
                 };
                 assert(result_views =~= result_vec@.map_values(|t: T| t@));
             }
-            proof { assume(result_vec@.len() < usize::MAX); }
+            proof {
+                // result_vec@.len() == n - skipped <= n.
+                // From tree wf: self.elements@.len() < usize::MAX.
+                lemma_wf_implies_len_bound::<T>(&self.elements.root);
+            }
             self.elements = AVLTreeSeqStEphS::from_vec(result_vec);
             proof {
                 // self.elements@ =~= result_vec@.map_values(...) =~= result_views.
