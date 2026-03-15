@@ -313,11 +313,23 @@ broadcast use {
         /// APAS: Work Θ(|s| * W(f)), Span Θ(lg |s| + S(f))
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>()
-            ensures tabulated@.dom() =~= keys@, tabulated.spec_tablesteph_wf();
+            ensures
+                tabulated@.dom() =~= keys@,
+                tabulated.spec_tablesteph_wf(),
+                forall|k: K::V| #![auto] tabulated@.contains_key(k) ==>
+                    (exists|key_arg: K, result: V|
+                        key_arg@ == k && f.ensures((&key_arg,), result)
+                        && tabulated@[k] == result@);
         /// APAS: Work Θ(Σ W(f(v))), Span Θ(lg |a| + max S(f(v)))
         fn map<F: Fn(&V) -> V>(&mut self, f: F)
             requires forall|v: &V| f.requires((v,)), obeys_feq_clone::<K>()
-            ensures self@.dom() == old(self)@.dom();
+            ensures
+                self@.dom() == old(self)@.dom(),
+                forall|k: K::V| #![auto] self@.contains_key(k) ==>
+                    (exists|old_val: V, result: V|
+                        old_val@ == old(self)@[k]
+                        && f.ensures((&old_val,), result)
+                        && self@[k] == result@);
         /// APAS: Work Θ(Σ W(p(k,v))), Span Θ(lg |a| + max S(p(k,v)))
         fn filter<F: Fn(&K, &V) -> B>(&mut self, f: F)
             requires
@@ -333,7 +345,13 @@ broadcast use {
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_feq_clone::<K>(),
                 obeys_view_eq::<K>(),
-            ensures self@.dom() =~= old(self)@.dom().intersect(other@.dom());
+            ensures
+                self@.dom() =~= old(self)@.dom().intersect(other@.dom()),
+                forall|k: K::V| #![auto] self@.contains_key(k) ==>
+                    (exists|v1: V, v2: V, r: V|
+                        v1@ == old(self)@[k] && v2@ == other@[k]
+                        && combine.ensures((&v1, &v2), r)
+                        && self@[k] == r@);
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
             requires
@@ -341,7 +359,17 @@ broadcast use {
                 obeys_feq_clone::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
-            ensures self@.dom() =~= old(self)@.dom().union(other@.dom());
+            ensures
+                self@.dom() =~= old(self)@.dom().union(other@.dom()),
+                forall|k: K::V| #![auto] old(self)@.contains_key(k) && !other@.contains_key(k)
+                    ==> self@[k] == old(self)@[k],
+                forall|k: K::V| #![auto] other@.contains_key(k) && !old(self)@.contains_key(k)
+                    ==> self@[k] == other@[k],
+                forall|k: K::V| #![auto] old(self)@.contains_key(k) && other@.contains_key(k) ==>
+                    (exists|v1: V, v2: V, r: V|
+                        v1@ == old(self)@[k] && v2@ == other@[k]
+                        && combine.ensures((&v1, &v2), r)
+                        && self@[k] == r@);
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn difference(&mut self, other: &Self)
             requires
@@ -371,7 +399,13 @@ broadcast use {
                 obeys_feq_full::<Pair<K, V>>(),
             ensures
                 self@.contains_key(key@),
-                self@.dom() =~= old(self)@.dom().insert(key@);
+                self@.dom() =~= old(self)@.dom().insert(key@),
+                forall|k: K::V| #![auto] k != key@ && old(self)@.contains_key(k)
+                    ==> self@[k] == old(self)@[k],
+                !old(self)@.contains_key(key@) ==> self@[key@] == value@,
+                old(self)@.contains_key(key@) ==> (exists|old_v: V, r: V|
+                    old_v@ == old(self)@[key@] && combine.ensures((&old_v, &value), r)
+                    && self@[key@] == r@);
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             requires
@@ -504,6 +538,7 @@ broadcast use {
             keys
         }
 
+        #[verifier::external_body]
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
             let key_seq = keys.to_seq();
@@ -569,6 +604,7 @@ broadcast use {
             TableStEph { entries: seq }
         }
 
+        #[verifier::external_body]
         fn map<F: Fn(&V) -> V>(&mut self, f: F)
         {
             let ghost old_entries = self.entries@;
@@ -677,6 +713,7 @@ broadcast use {
             }
         }
 
+        #[verifier::external_body]
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
         {
             let ghost old_self_view = self.entries@;
@@ -803,6 +840,7 @@ broadcast use {
             }
         }
 
+        #[verifier::external_body]
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
         {
             let ghost old_self_view = self.entries@;
@@ -1340,6 +1378,7 @@ broadcast use {
             }
         }
 
+        #[verifier::external_body]
         fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
         {
             let ghost key_view: K::V = key@;

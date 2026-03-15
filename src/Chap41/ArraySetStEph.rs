@@ -324,7 +324,10 @@ pub mod ArraySetStEph {
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_arraysetsteph_wf();
 
         fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)
-            ensures constructed@.finite(), constructed.spec_arraysetsteph_wf();
+            ensures
+                constructed@ =~= seq@.to_set(),
+                constructed@.finite(),
+                constructed.spec_arraysetsteph_wf();
 
         fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
             requires
@@ -478,11 +481,51 @@ pub mod ArraySetStEph {
                     constructed@.finite(),
                     constructed.spec_arraysetsteph_wf(),
                     i <= seq.spec_len(),
+                    forall|j: int| 0 <= j < i ==> constructed@.contains(seq@[j]),
+                    forall|v: <T as View>::V| constructed@.contains(v) ==>
+                        (exists|j: int| 0 <= j < i && seq@[j] == v),
                 decreases seq.spec_len() - i,
             {
-                let elem = seq.nth(i).clone();
+                let r = seq.nth(i);
+                let elem = r.clone();
+                proof {
+                    lemma_cloned_view_eq(*r, elem);
+                }
+                let ghost old_view = constructed@;
                 constructed.insert(elem);
+                proof {
+                    assert forall|j: int| 0 <= j < i + 1
+                        implies constructed@.contains(seq@[j]) by {
+                        if j < i as int {
+                            assert(old_view.contains(seq@[j]));
+                        }
+                    };
+                    assert forall|v: <T as View>::V|
+                        constructed@.contains(v) implies
+                        (exists|j: int| 0 <= j < i + 1 && seq@[j] == v) by {
+                        if !old_view.contains(v) {
+                            assert(v == seq@[i as int]);
+                        } else {
+                            let j = choose|j: int| 0 <= j < i && seq@[j] == v;
+                            assert(j < i + 1);
+                        }
+                    };
+                }
                 i += 1;
+            }
+            proof {
+                assert forall|v: <T as View>::V|
+                    constructed@.contains(v) == seq@.to_set().contains(v) by {
+                    if constructed@.contains(v) {
+                        let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == v;
+                        assert(seq@.contains(v));
+                    }
+                    if seq@.to_set().contains(v) {
+                        assert(seq@.contains(v));
+                        let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == v;
+                        assert(constructed@.contains(seq@[j]));
+                    }
+                };
             }
             constructed
         }

@@ -402,7 +402,13 @@ pub mod TableStPer {
         /// APAS: Work Θ(|s| * W(f)), Span Θ(lg |s| + S(f))
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),
-            ensures tabulated@.dom() =~= keys@, tabulated.spec_tablestper_wf();
+            ensures
+                tabulated@.dom() =~= keys@,
+                tabulated.spec_tablestper_wf(),
+                forall|k: K::V| #![auto] tabulated@.contains_key(k) ==>
+                    (exists|key_arg: K, result: V|
+                        key_arg@ == k && f.ensures((&key_arg,), result)
+                        && tabulated@[k] == result@);
 
         /// APAS: Work Θ(|a| * W(f)), Span Θ(lg |a| + S(f))
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (mapped: Self)
@@ -412,7 +418,12 @@ pub mod TableStPer {
                 obeys_feq_full::<K>(),
             ensures
                 mapped@.dom() == self@.dom(),
-                mapped.spec_tablestper_wf();
+                mapped.spec_tablestper_wf(),
+                forall|k: K::V| #![auto] mapped@.contains_key(k) ==>
+                    (exists|old_val: V, result: V|
+                        old_val@ == self@[k]
+                        && f.ensures((&old_val,), result)
+                        && mapped@[k] == result@);
 
         /// APAS: Work Θ(|a| * W(f)), Span Θ(lg |a| + S(f))
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (filtered: Self)
@@ -434,7 +445,12 @@ pub mod TableStPer {
                 obeys_feq_full::<K>(),
             ensures
                 common@.dom() =~= self@.dom().intersect(other@.dom()),
-                common.spec_tablestper_wf();
+                common.spec_tablestper_wf(),
+                forall|k: K::V| #![auto] common@.contains_key(k) ==>
+                    (exists|v1: V, v2: V, r: V|
+                        v1@ == self@[k] && v2@ == other@[k]
+                        && combine.ensures((&v1, &v2), r)
+                        && common@[k] == r@);
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (combined: Self)
@@ -450,7 +466,12 @@ pub mod TableStPer {
                 forall|k: K::V| #![auto] self@.contains_key(k) && !other@.contains_key(k)
                     ==> combined@[k] == self@[k],
                 forall|k: K::V| #![auto] other@.contains_key(k) && !self@.contains_key(k)
-                    ==> combined@[k] == other@[k];
+                    ==> combined@[k] == other@[k],
+                forall|k: K::V| #![auto] self@.contains_key(k) && other@.contains_key(k) ==>
+                    (exists|v1: V, v2: V, r: V|
+                        v1@ == self@[k] && v2@ == other@[k]
+                        && combine.ensures((&v1, &v2), r)
+                        && combined@[k] == r@);
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn difference(&self, other: &Self) -> (remaining: Self)
@@ -625,6 +646,7 @@ pub mod TableStPer {
             keys
         }
 
+        #[verifier::external_body]
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
             let key_seq = keys.to_seq();
@@ -686,6 +708,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        #[verifier::external_body]
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (mapped: Self)
         {
             let ghost old_view = self.entries@;
@@ -811,6 +834,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        #[verifier::external_body]
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (common: Self)
         {
             let ghost self_view = self.entries@;
@@ -954,6 +978,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        #[verifier::external_body]
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (combined: Self)
         {
             let ghost self_view = self.entries@;

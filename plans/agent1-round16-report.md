@@ -67,4 +67,4 @@ All use `join()` for fork-join parallelism (thread boundaries):
 - **AVLTreeSetMtPer external_body**: All structural (ParaPair! thread spawning) or dependent on structural holes
 
 ## Commit
-Pending — will commit and push to agent1/ready.
+`3e3d5b5b` — pushed to `agent1/ready`.
