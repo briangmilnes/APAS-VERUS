@@ -20,124 +20,22 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:826: error: external_body - #[verifier::external_body]
-       827 |         fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A) {
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:839: error: external_body - #[verifier::external_body]
-       840 |         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:849: error: assume_new() - Self::iterate(&tail, f, Ghost::assume_new(), new_seed)
-       840 |         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
-            ...
-       847 |                 let new_seed = f(&seed, &a.seq[0]);
-       848 |                 let tail = Self::subseq(a, 1, len - 1);
-       850 |             }
-       851 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:854: error: external_body - #[verifier::external_body]
-       855 |         fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:869: error: external_body - #[verifier::external_body]
-       870 |         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:882: error: assume_new() - let rb = Self::reduce(&b, f, Ghost::assume_new(), id.clone()
-       870 |         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-            ...
-       880 |                 let b = Self::subseq(a, 0, mid);
-       881 |                 let c = Self::subseq(a, mid, len - mid);
-       883 |                 let rc = Self::reduce(&c, f, Ghost::assume_new(), id);
-       884 |                 f(&rb, &rc)
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:883: error: assume_new() - let rc = Self::reduce(&c, f, Ghost::assume_new(), id);
-       870 |         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-            ...
-       881 |                 let c = Self::subseq(a, mid, len - mid);
-       882 |                 let rb = Self::reduce(&b, f, Ghost::assume_new(), id.clone());
-       884 |                 f(&rb, &rc)
-       885 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:889: error: external_body - #[verifier::external_body]
-       890 |         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtEphS<T>, T))
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:478: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1436: info: accept()
-   Holes: 8 total
-      3 × Tracked::assume_new()
-      5 × external_body
+ℹ ArraySeqMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:478: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1481: info: accept()
    Info: 2 total
-   Proof functions: 6 total (6 clean, 0 holed)
+   6 clean proof functions
 ✓ ArraySeqMtEphSlice.rs
-❌ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:786: error: external_body - #[verifier::external_body]
-       787 |         fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A) {
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:799: error: external_body - #[verifier::external_body]
-       800 |         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:809: error: assume_new() - Self::iterate(&tail, f, Ghost::assume_new(), new_seed)
-       800 |         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
-            ...
-       807 |                 let new_seed = f(&seed, &a.seq[0]);
-       808 |                 let tail = Self::subseq(a, 1, len - 1);
-       810 |             }
-       811 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:814: error: external_body - #[verifier::external_body]
-       815 |         fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqStEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:829: error: external_body - #[verifier::external_body]
-       830 |         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:842: error: assume_new() - let rb = Self::reduce(&b, f, Ghost::assume_new(), id.clone()
-       830 |         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-            ...
-       840 |                 let b = Self::subseq(a, 0, mid);
-       841 |                 let c = Self::subseq(a, mid, len - mid);
-       843 |                 let rc = Self::reduce(&c, f, Ghost::assume_new(), id);
-       844 |                 f(&rb, &rc)
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:843: error: assume_new() - let rc = Self::reduce(&c, f, Ghost::assume_new(), id);
-       830 |         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-            ...
-       841 |                 let c = Self::subseq(a, mid, len - mid);
-       842 |                 let rb = Self::reduce(&b, f, Ghost::assume_new(), id.clone());
-       844 |                 f(&rb, &rc)
-       845 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:849: error: external_body - #[verifier::external_body]
-       850 |         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStEphS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqStEphS<T>, T))
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:451: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1155: info: accept()
-   Holes: 8 total
-      3 × Tracked::assume_new()
-      5 × external_body
+ℹ ArraySeqStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:452: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:1201: info: accept()
    Info: 2 total
-   Proof functions: 4 total (4 clean, 0 holed)
-❌ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:795: error: external_body - #[verifier::external_body]
-       796 |         fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A) {
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:808: error: external_body - #[verifier::external_body]
-       809 |         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:818: error: assume_new() - Self::iterate(&tail, f, Ghost::assume_new(), new_seed)
-       809 |         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
-            ...
-       816 |                 let new_seed = f(&seed, &a.seq[0]);
-       817 |                 let tail = Self::subseq(a, 1, len - 1);
-       819 |             }
-       820 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:823: error: external_body - #[verifier::external_body]
-       824 |         fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:838: error: external_body - #[verifier::external_body]
-       839 |         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:851: error: assume_new() - let rb = Self::reduce(&b, f, Ghost::assume_new(), id.clone()
-       839 |         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-            ...
-       849 |                 let b = Self::subseq(a, 0, mid);
-       850 |                 let c = Self::subseq(a, mid, len - mid);
-       852 |                 let rc = Self::reduce(&c, f, Ghost::assume_new(), id);
-       853 |                 f(&rb, &rc)
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:852: error: assume_new() - let rc = Self::reduce(&c, f, Ghost::assume_new(), id);
-       839 |         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-            ...
-       850 |                 let c = Self::subseq(a, mid, len - mid);
-       851 |                 let rb = Self::reduce(&b, f, Ghost::assume_new(), id.clone());
-       853 |                 f(&rb, &rc)
-       854 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:858: error: external_body - #[verifier::external_body]
-       859 |         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqStPerS<T>, T))
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:438: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1156: info: accept()
-   Holes: 8 total
-      3 × Tracked::assume_new()
-      5 × external_body
+   4 clean proof functions
+ℹ ArraySeqStPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:438: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:1201: info: accept()
    Info: 2 total
-   Proof functions: 3 total (3 clean, 0 holed)
+   3 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -166,8 +64,8 @@ ArraySeqStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 25%)
-   3 holed (holes or errors, 75%)
+   4 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    4 total
 
 Proof Functions:
@@ -183,16 +81,16 @@ Function Specs:
    268 total fns
 
 
-Holes Found: 24 total
-   9 × Tracked::assume_new() (37%)
-   15 × external_body (62%)
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 11:37:30 -07:00
-Ended:     2026-03-15 11:37:30 -07:00
-Duration:  40ms
+Started:   2026-03-15 12:15:30 -07:00
+Ended:     2026-03-15 12:15:30 -07:00
+Duration:  38ms
 
 Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log

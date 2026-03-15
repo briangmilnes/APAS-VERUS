@@ -792,81 +792,126 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.8: iterate f x a (iterative form for single-threaded).
-        #[verifier::external_body]
-        fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A) {
+        fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A) {
             let len = a.seq.len();
             let mut acc = seed;
             let mut i: usize = 0;
-            while i < len {
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
+                    forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
+                    acc == a.seq@.take(i as int).fold_left(seed, spec_f),
+                decreases len - i,
+            {
+                proof {
+                    assert(a.seq@.take(i as int + 1) =~= a.seq@.take(i as int).push(a.seq@[i as int]));
+                }
                 acc = f(&acc, &a.seq[i]);
+                proof {
+                    let ghost t = a.seq@.take(i as int + 1);
+                    assert(t.len() > 0);
+                    assert(t.drop_last() =~= a.seq@.take(i as int));
+                    assert(t.last() == a.seq@[i as int]);
+                    reveal(Seq::fold_left);
+                }
                 i += 1;
+            }
+            proof {
+                assert(a.seq@.take(len as int) =~= a.seq@);
             }
             acc
         }
 
         // Algorithm 19.8: iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1].
-        #[verifier::external_body]
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
+        // Delegates to iterate_iter which has the full proof.
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             where T: Clone + Eq
         {
-            let len = a.seq.len();
-            if len == 0 {
-                seed
-            } else {
-                let new_seed = f(&seed, &a.seq[0]);
-                let tail = Self::subseq(a, 1, len - 1);
-                Self::iterate(&tail, f, Ghost::assume_new(), new_seed)
-            }
+            Self::iterate_iter(a, f, Ghost(spec_f), seed)
         }
 
         // Algorithm 19.9: reduce f id a (iterative form for single-threaded).
-        #[verifier::external_body]
-        fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
+        fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
         {
             let len = a.seq.len();
             let mut acc = id;
             let mut i: usize = 0;
-            while i < len {
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                    acc == a.seq@.take(i as int).fold_left(id, spec_f),
+                decreases len - i,
+            {
+                proof {
+                    assert(a.seq@.take(i as int + 1) =~= a.seq@.take(i as int).push(a.seq@[i as int]));
+                }
                 acc = f(&acc, &a.seq[i]);
+                proof {
+                    let ghost t = a.seq@.take(i as int + 1);
+                    assert(t.len() > 0);
+                    assert(t.drop_last() =~= a.seq@.take(i as int));
+                    assert(t.last() == a.seq@[i as int]);
+                    reveal(Seq::fold_left);
+                }
                 i += 1;
+            }
+            proof {
+                assert(a.seq@.take(len as int) =~= a.seq@);
             }
             acc
         }
 
         // Algorithm 19.9: reduce f id a = if |a|=0 then id; |a|=1 then a[0]; else f(reduce f id b, reduce f id c).
-        #[verifier::external_body]
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
+        // Delegates to reduce_iter which has the full proof.
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone + Eq
         {
-            let len = a.seq.len();
-            if len == 0 {
-                id
-            } else if len == 1 {
-                a.seq[0].clone()
-            } else {
-                let mid = len / 2;
-                let b = Self::subseq(a, 0, mid);
-                let c = Self::subseq(a, mid, len - mid);
-                let rb = Self::reduce(&b, f, Ghost::assume_new(), id.clone());
-                let rc = Self::reduce(&c, f, Ghost::assume_new(), id);
-                f(&rb, &rc)
-            }
+            Self::reduce_iter(a, f, Ghost(spec_f), id)
         }
 
         // Algorithm 19.10: scan f id a (iterative form for single-threaded).
-        #[verifier::external_body]
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(_spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqStPerS<T>, T))
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqStPerS<T>, T))
             where T: Clone
         {
             let len = a.seq.len();
             let mut acc = id;
             let mut seq: Vec<T> = Vec::with_capacity(len);
             let mut i: usize = 0;
-            while i < len {
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    seq@.len() == i as int,
+                    spec_monoid(spec_f, id),
+                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                    acc == a.seq@.take(i as int).fold_left(id, spec_f),
+                    forall|k: int| #![trigger seq@[k]] 0 <= k < seq@.len() ==>
+                        seq@[k] == a.seq@.take(k + 1).fold_left(id, spec_f),
+                decreases len - i,
+            {
+                proof {
+                    assert(a.seq@.take(i as int + 1) =~= a.seq@.take(i as int).push(a.seq@[i as int]));
+                }
+                seq.push(f(&acc, &a.seq[i]));
                 acc = f(&acc, &a.seq[i]);
-                seq.push(acc.clone());
+                proof {
+                    let ghost t = a.seq@.take(i as int + 1);
+                    assert(t.len() > 0);
+                    assert(t.drop_last() =~= a.seq@.take(i as int));
+                    assert(t.last() == a.seq@[i as int]);
+                    reveal(Seq::fold_left);
+                }
                 i += 1;
+            }
+            proof {
+                assert(a.seq@.take(len as int) =~= a.seq@);
             }
             (ArraySeqStPerS { seq }, acc)
         }
