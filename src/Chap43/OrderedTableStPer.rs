@@ -96,8 +96,12 @@ pub mod OrderedTableStPer {
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
             ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
-        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (table: Self)
-            requires self.spec_orderedtablestper_wf(), forall|k: &K, v: &V| f.requires((k, v)), obeys_feq_full::<Pair<K, V>>(),
+        fn filter<F: Fn(&K, &V) -> B>(&self, f: F, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (table: Self)
+            requires
+                self.spec_orderedtablestper_wf(),
+                forall|k: &K, v: &V| f.requires((k, v)),
+                obeys_feq_full::<Pair<K, V>>(),
+                forall|k: K, v: V, keep: bool| f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
             ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
             requires
@@ -278,10 +282,10 @@ pub mod OrderedTableStPer {
             OrderedTableStPer { base_table: base }
         }
 
-        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (table: Self)
+        fn filter<F: Fn(&K, &V) -> B>(&self, f: F, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (table: Self)
             ensures table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
-            let base = self.base_table.filter(f);
+            let base = self.base_table.filter(f, Ghost(spec_pred));
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
             OrderedTableStPer { base_table: base }
         }

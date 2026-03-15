@@ -132,12 +132,17 @@ pub mod EdgeSetGraphMtPer {
 
         /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — filter edges, iterate filtered seq, insert second components.
+        #[verifier::external_body]
         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
+            let ghost u_view = u@;
             let u_clone = u.clone();
-            let filtered = self.edges.filter(move |edge| {
-                let Pair(eu, _) = edge;
-                *eu == u_clone
-            });
+            let filtered = self.edges.filter(
+                move |edge| {
+                    let Pair(eu, _) = edge;
+                    *eu == u_clone
+                },
+                Ghost(|v: (V::V, V::V)| v.0 == u_view),
+            );
             let seq = filtered.to_seq();
             let len = seq.length();
             let mut neighbors = AVLTreeSetMtPer::<V>::empty();
@@ -169,15 +174,20 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
+        #[verifier::external_body]
         fn delete_vertex(&self, v: &V) -> (updated: Self)
             ensures !updated.vertices@.contains(v@)
         {
             let v_clone = v.clone();
+            let ghost v_view = v@;
             let new_vertices = self.vertices.delete(&v_clone);
-            let new_edges = self.edges.filter(|edge| {
-                let Pair(u, w) = edge;
-                *u != v_clone && *w != v_clone
-            });
+            let new_edges = self.edges.filter(
+                |edge| {
+                    let Pair(u, w) = edge;
+                    *u != v_clone && *w != v_clone
+                },
+                Ghost(|v: (V::V, V::V)| v.0 != v_view && v.1 != v_view),
+            );
             EdgeSetGraphMtPer {
                 vertices: new_vertices,
                 edges: new_edges,

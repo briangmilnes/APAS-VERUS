@@ -1,6 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for AVLTreeSetStPer
 
+use vstd::prelude::Ghost;
+
 use apas_verus::{AVLTreeSeqStPerLit, AVLTreeSetStPerLit};
 use apas_verus::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
 use apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
@@ -108,7 +110,7 @@ fn test_avl_tree_set_per_from_seq() {
 #[test]
 fn test_avl_tree_set_per_filter() {
     let set = AVLTreeSetStPerLit![1, 2, 3, 4, 5, 6];
-    let filtered = set.filter(|&x| x % 2 == 0);
+    let filtered = set.filter(|&x| x % 2 == 0, Ghost::assume_new());
 
     assert_eq!(filtered.size(), 3);
     assert!(filtered.find(&2));
@@ -168,7 +170,7 @@ fn test_avl_tree_set_per_persistence() {
     assert!(original.find(&2));
     assert!(!without_two.find(&2));
 
-    let filtered = original.filter(|&x| x > 1);
+    let filtered = original.filter(|&x| x > 1, Ghost::assume_new());
     assert_eq!(original.size(), 3);
     assert_eq!(filtered.size(), 2);
     assert!(original.find(&1));

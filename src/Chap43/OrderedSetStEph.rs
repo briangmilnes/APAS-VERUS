@@ -94,10 +94,16 @@ broadcast use {
                 self@.finite(),
                 self.spec_orderedsetsteph_wf();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn filter<F: PredSt<T>>(&mut self, f: F)
+        fn filter<F: PredSt<T>>(
+            &mut self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        )
             requires
                 old(self).spec_orderedsetsteph_wf(),
                 forall|t: &T| #[trigger] f.requires((t,)),
+                forall|x: T, keep: bool|
+                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures
                 self@.finite(),
                 self.spec_orderedsetsteph_wf();
@@ -244,9 +250,13 @@ broadcast use {
         fn delete(&mut self, x: &T)
         { self.base_set.delete(x); }
 
-        fn filter<F: PredSt<T>>(&mut self, f: F)
+        fn filter<F: PredSt<T>>(
+            &mut self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        )
         {
-            let found = self.base_set.filter(f);
+            let found = self.base_set.filter(f, Ghost(spec_pred));
             self.base_set = found;
         }
 

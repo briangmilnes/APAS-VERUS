@@ -548,10 +548,20 @@ broadcast use {
         fn map<F: Fn(&V) -> V + Send + Sync + 'static>(&mut self, f: F)
             ensures self@.dom() == old(self)@.dom();
         /// APAS: Work Θ(Σ W(p(k,v))), Span Θ(lg |a| + max S(p(k,v)))
-        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&mut self, f: F)
+        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(
+            &mut self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
+        )
+            requires
+                forall|k: &K, v: &V| f.requires((k, v)),
+                forall|k: K, v: V, keep: bool|
+                    f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
             ensures
                 self@.dom().subset_of(old(self)@.dom()),
-                forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k];
+                forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k],
+                forall|k: K::V| old(self)@.dom().contains(k) && spec_pred(k, old(self)@[k])
+                    ==> #[trigger] self@.dom().contains(k);
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F)
             requires
@@ -827,7 +837,11 @@ broadcast use {
         }
 
         #[verifier::external_body]
-        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&mut self, f: F)
+        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(
+            &mut self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
+        )
         {
             let f = Arc::new(f);
             let len = self.entries.length();

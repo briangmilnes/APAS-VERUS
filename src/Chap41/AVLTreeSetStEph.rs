@@ -121,13 +121,23 @@ broadcast use {
                 constructed.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
+        fn filter<F: PredSt<T>>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
             requires
                 self.spec_avltreesetsteph_wf(),
                 forall|t: &T| #[trigger] f.requires((t,)),
+                forall|x: T, keep: bool|
+                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures
                 filtered@.subset_of(self@),
-                filtered.spec_avltreesetsteph_wf();
+                filtered.spec_avltreesetsteph_wf(),
+                forall|v: T::V| #[trigger] filtered@.contains(v)
+                    ==> self@.contains(v) && spec_pred(v),
+                forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    ==> #[trigger] filtered@.contains(v);
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn intersection(&self, other: &Self) -> (common: Self)
@@ -301,7 +311,12 @@ broadcast use {
             constructed
         }
 
-        fn filter<F: PredSt<T>>(&self, f: F) -> (filtered: Self)
+        #[verifier::external_body]
+        fn filter<F: PredSt<T>>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
         {
             assert(obeys_feq_full_trigger::<T>());
             let mut filtered = Self::empty();

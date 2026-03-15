@@ -4,6 +4,8 @@
 use std::sync::Arc;
 use std::thread;
 
+use vstd::prelude::Ghost;
+
 use apas_verus::Chap43::OrderedSetMtEph::OrderedSetMtEph::*;
 use apas_verus::OrderedSetMtEphLit;
 use apas_verus::Types::Types::*;
@@ -241,7 +243,7 @@ fn test_filter() {
     set.insert(4);
     set.insert(5);
 
-    set.filter(|x| *x % 2 == 0);
+    set.filter(|x| *x % 2 == 0, Ghost::assume_new());
     assert_eq!(set.size(), 2);
     assert!(set.find(&2));
     assert!(set.find(&4));
@@ -362,7 +364,7 @@ fn test_parallel_operations() {
     }
 
     // Test parallel filter
-    set1.filter(|x| *x < 20);
+    set1.filter(|x| *x < 20, Ghost::assume_new());
     assert_eq!(set1.size(), 20);
 
     for i in 0..20 {
@@ -449,7 +451,7 @@ fn test_large_dataset_performance() {
     assert_eq!(set.last(), Some(99));
 
     // Test parallel filter on large dataset
-    set.filter(|x| *x % 10 == 0);
+    set.filter(|x| *x % 10 == 0, Ghost::assume_new());
     assert_eq!(set.size(), 10);
 
     for i in 0..10 {

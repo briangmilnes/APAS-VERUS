@@ -1,6 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for Chap43 OrderedTableStEph.
 
+use vstd::prelude::Ghost;
+
 use apas_verus::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
 use apas_verus::Chap41::ArraySetStEph::ArraySetStEph::*;
 use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::*;
@@ -224,7 +226,7 @@ fn test_ordered_table_st_eph_filter() {
     table.insert(3, "three".to_string(), |_old, new| new.clone());
     table.insert(4, "four".to_string(), |_old, new| new.clone());
 
-    let filtered = table.filter(|k, _v| k % 2 == 0);
+    let filtered = table.filter(|k, _v| k % 2 == 0, Ghost::assume_new());
 
     assert_eq!(filtered.size(), 2);
     assert_eq!(filtered.lookup(&2), Some("two".to_string()));
@@ -582,7 +584,7 @@ fn test_ordered_table_st_eph_large_dataset() {
     }
 
     // Test filter operation
-    let even_filtered = table.filter(|k, _v| k % 2 == 0);
+    let even_filtered = table.filter(|k, _v| k % 2 == 0, Ghost::assume_new());
     assert_eq!(even_filtered.size(), 100);
 
     // Test map operation

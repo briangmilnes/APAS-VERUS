@@ -113,8 +113,15 @@ broadcast use {
             requires forall|k: &K, v: &V| f.requires((k, v))
             ensures mapped@.dom().finite();
 
-        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: F) -> (filtered: Self)
-            requires forall|k: &K, v: &V| f.requires((k, v))
+        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
+        ) -> (filtered: Self)
+            requires
+                forall|k: &K, v: &V| f.requires((k, v)),
+                forall|k: K, v: V, keep: bool|
+                    f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
             ensures filtered@.dom().finite();
 
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F)
@@ -288,9 +295,12 @@ broadcast use {
             from_sorted_entries(result_seq)
         }
 
-        fn filter<F>(&self, f: F) -> (filtered: Self)
-            where F: Fn(&K, &V) -> B + Send + Sync + 'static
-            ensures filtered@.dom().finite()
+        #[verifier::external_body]
+        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
+        ) -> (filtered: Self)
         {
             let entries = self.collect();
             let size = entries.length();

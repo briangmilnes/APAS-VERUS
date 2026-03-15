@@ -41,7 +41,7 @@ pub mod Example41_3 {
 
         // {x ∈ {4, 11, 2, 6} | x < 7} = {4, 2, 6}
         let set_nums = ArraySetStEphLit![4, 11, 2, 6];
-        let filtered = set_nums.filter(|x| *x < 7);
+        let filtered = set_nums.filter(|x| *x < 7, Ghost(|v: i32| v < 7));
         assert(filtered.size() == 3);
         assert(filtered.find(&4));
         assert(filtered.find(&2));
@@ -94,7 +94,7 @@ pub mod Example41_3 {
 
         // {x ∈ {4, 11, 2, 6} | x < 7} = {4, 2, 6}
         let set_nums = AVLTreeSetStEphLit![4, 11, 2, 6];
-        let filtered = set_nums.filter(|x| *x < 7);
+        let filtered = set_nums.filter(|x| *x < 7, Ghost(|v: i32| v < 7));
         assert(filtered.size() == 3);
         assert(filtered.find(&4));
         assert(filtered.find(&2));

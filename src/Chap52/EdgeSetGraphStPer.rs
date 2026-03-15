@@ -137,11 +137,15 @@ broadcast use {
 
         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
 
+        #[verifier::external_body]
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
             ensures neighbors@ == self.spec_out_neighbors(u@)
         {
             let u_clone = u.clone();
-            let filtered = self.edges.filter(|edge| edge.0 == u_clone);
+            let filtered = self.edges.filter(
+                |edge| edge.0 == u_clone,
+                Ghost(|v: (V::V, V::V)| v.0 == u@),
+            );
             let seq = filtered.to_seq();
             let mut neighbors = AVLTreeSetStPer::empty();
             let mut i: usize = 0;
@@ -170,15 +174,20 @@ broadcast use {
             }
         }
 
+        #[verifier::external_body]
         fn delete_vertex(&self, v: &V) -> (updated: Self)
             ensures !updated.vertices@.contains(v@)
         {
             let v_clone = v.clone();
+            let ghost v_view = v@;
             let new_vertices = self.vertices.delete(&v_clone);
-            let new_edges = self.edges.filter(|edge| {
-                let Pair(u, w) = edge;
-                *u != v_clone && *w != v_clone
-            });
+            let new_edges = self.edges.filter(
+                |edge| {
+                    let Pair(u, w) = edge;
+                    *u != v_clone && *w != v_clone
+                },
+                Ghost(|v: (V::V, V::V)| v.0 != v_view && v.1 != v_view),
+            );
             EdgeSetGraphStPer {
                 vertices: new_vertices,
                 edges: new_edges,

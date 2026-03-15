@@ -163,7 +163,29 @@
       "Bash(for * in *; do *)",
       "Bash(for * in *; do\n*)",
       "Bash(for *do *done)",
-      "Bash(for * do *)"
+      "Bash(for * do *)",
+      "Bash(diff <(*) *)",
+      "Bash(diff <(*)*)",
+      "Bash(*; diff *)",
+      "Bash(*&& diff *)",
+      "Bash(*diff <(*)*)",
+      "Bash(printf *)",
+      "Bash(test *)",
+      "Bash(tee *)",
+      "Bash(cut *)",
+      "Bash(tr *)",
+      "Bash(basename *)",
+      "Bash(dirname *)",
+      "Bash(realpath *)",
+      "Bash(if *)",
+      "Bash(true)",
+      "Bash(false)",
+      "Bash(mkdir *)",
+      "Bash(*; true)",
+      "Bash(*; false)",
+      "Bash(*2>/dev/null*)",
+      "Bash(*; printf *)",
+      "Bash(*&& printf *)"
     ]
   }
 }

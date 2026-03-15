@@ -112,8 +112,23 @@ broadcast use {
             ensures constructed@.finite(), constructed.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
-            ensures filtered@.finite(), filtered@.subset_of(self@), filtered.spec_avltreesetmtper_wf();
+        fn filter<F: PredMt<T> + Clone>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
+            requires
+                forall|t: &T| #[trigger] f.requires((t,)),
+                forall|x: T, keep: bool|
+                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),
+            ensures
+                filtered@.finite(),
+                filtered@.subset_of(self@),
+                filtered.spec_avltreesetmtper_wf(),
+                forall|v: T::V| #[trigger] filtered@.contains(v)
+                    ==> self@.contains(v) && spec_pred(v),
+                forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    ==> #[trigger] filtered@.contains(v);
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn intersection(&self, other: &Self) -> (common: Self)
@@ -258,8 +273,11 @@ broadcast use {
         // PARALLEL: filter using divide-and-conquer with sequential cutoff
         // Work: Θ(n), Span: Θ(log n) when parallel
         #[verifier::external_body]
-        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (filtered: Self)
-            ensures filtered@.finite(), filtered@.subset_of(self@)
+        fn filter<F: PredMt<T> + Clone>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
         {
             let n = self.size();
 
@@ -303,7 +321,7 @@ broadcast use {
             let f_right = f;
 
             let Pair(left_result, right_result) =
-                ParaPair!(move || left_set.filter(f_left), move || right_set.filter(f_right));
+                ParaPair!(move || left_set.filter(f_left, Ghost(spec_pred)), move || right_set.filter(f_right, Ghost(spec_pred)));
 
             // Sequential merge of results to avoid nested parallel recursion
             let mut vals = left_result.elements.values_in_order();
@@ -380,7 +398,8 @@ broadcast use {
             ensures remaining@ == self@.difference(other@), remaining@.finite()
         {
             let other_clone = other.clone();
-            self.filter(move |x| !other_clone.find(x))
+            let ghost other_view = other@;
+            self.filter(move |x| !other_clone.find(x), Ghost(|v: T::V| !other_view.contains(v)))
         }
 
         // PARALLEL: union using divide-and-conquer with sequential cutoff
@@ -477,7 +496,8 @@ broadcast use {
         {
             
             let x_clone = x.clone();
-            self.filter(move |v| v != &x_clone)
+            let ghost x_view = x@;
+            self.filter(move |v| v != &x_clone, Ghost(|v: T::V| v != x_view))
         }
 
         #[verifier::external_body]

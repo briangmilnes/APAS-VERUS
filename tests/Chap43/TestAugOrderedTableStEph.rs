@@ -1,6 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for single-threaded ephemeral reducer-augmented ordered table implementation.
 
+use vstd::prelude::Ghost;
+
 use apas_verus::AugOrderedTableStEphLit;
 use apas_verus::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
 use apas_verus::Chap41::ArraySetStEph::ArraySetStEph::*;
@@ -242,7 +244,7 @@ fn test_filter_operation() {
     assert_eq!(table.reduce_val(), 550);
 
     // Filter even keys (creates new table)
-    let even_table = table.filter(|k, _v| k % 2 == 0);
+    let even_table = table.filter(|k, _v| k % 2 == 0, Ghost::assume_new());
 
     // Even keys: 2,4,6,8,10 with values 20,40,60,80,100
     let expected_sum = 20 + 40 + 60 + 80 + 100;

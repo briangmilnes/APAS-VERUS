@@ -4,6 +4,8 @@
 use std::sync::Arc;
 use std::thread;
 
+use vstd::prelude::Ghost;
+
 use apas_verus::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
 use apas_verus::Chap41::ArraySetStEph::ArraySetStEph::*;
 use apas_verus::Chap43::OrderedTableMtEph::OrderedTableMtEph::*;
@@ -51,7 +53,7 @@ fn test_ordered_table_mt_eph_parallel_operations() {
     }
 
     // Test parallel filter
-    let filtered = table.filter(|k, _v| k % 2 == 0);
+    let filtered = table.filter(|k, _v| k % 2 == 0, Ghost::assume_new());
     assert_eq!(filtered.size(), 50);
 
     // Test parallel map
@@ -318,7 +320,7 @@ fn test_ordered_table_mt_eph_large_dataset_parallel() {
     }
 
     // Test parallel operations on dataset
-    let even_filtered = table.filter(|k, _v| k % 2 == 0);
+    let even_filtered = table.filter(|k, _v| k % 2 == 0, Ghost::assume_new());
     assert_eq!(even_filtered.size(), 100);
 
     let mapped = table.map(|k, v| format!("mapped_{k}:{v}"));

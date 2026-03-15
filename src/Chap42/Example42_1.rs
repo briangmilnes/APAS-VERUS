@@ -97,16 +97,16 @@ pub mod Example42_1 {
 
         // Demonstrate filter operation
         println!("\n--- Filter Operations ---");
-        let table_per_filtered = table_per_new.filter(|k, _v| *k <= 2);
+        let table_per_filtered = table_per_new.filter(|k, _v| *k <= 2, Ghost::assume_new());
         println!(
             "Persistent table after filter (keys <= 2): size = {}",
             table_per_filtered.size()
         );
 
-        table_eph.filter(|k, _v| *k <= 2);
+        table_eph.filter(|k, _v| *k <= 2, Ghost::assume_new());
         println!("Ephemeral table after filter (keys <= 2): size = {}", table_eph.size());
 
-        table_mt.filter(|k, _v| *k <= 2);
+        table_mt.filter(|k, _v| *k <= 2, Ghost::assume_new());
         println!(
             "Multi-threaded table after filter (keys <= 2): size = {}",
             table_mt.size()
