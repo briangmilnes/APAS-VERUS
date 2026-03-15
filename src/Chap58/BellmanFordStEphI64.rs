@@ -29,6 +29,10 @@ pub mod BellmanFordStEphI64 {
 
     } // verus!
 
+    /// Bellman-Ford single-source shortest path algorithm.
+    ///
+    /// - APAS: Work O(nm), Span O(n lg n) where n = |V|, m = |E| (with sequences).
+    /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — sequential implementation, no parallelism in inner loop.
     #[cfg(not(verus_keep_ghost))]
     pub fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> Result<SSSPResultStEphI64, String> {
         let n = graph.vertices().size();
@@ -68,6 +72,10 @@ pub mod BellmanFordStEphI64 {
         Err("Algorithm error: max rounds exceeded".to_string())
     }
 
+    /// Reconstruct predecessor array from converged distances.
+    ///
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — iterates vertices, then in-neighbors per vertex.
     #[cfg(not(verus_keep_ghost))]
     fn reconstruct_predecessors(
         graph: &WeightedDirGraphStEphI128<usize>,

@@ -28,8 +28,9 @@ pub mod DFSStEph {
     // 8. traits
 
     pub trait DFSStEphTrait {
-        /// Performs DFS from source vertex s on adjacency list graph G
-        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        /// Performs DFS from source vertex s on adjacency list graph G.
+        /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|) [Cost Spec 55.8, array sequences]
+        /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
         fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (reachable: AVLTreeSetStEph<N>)
             requires
                 source < graph@.len(),

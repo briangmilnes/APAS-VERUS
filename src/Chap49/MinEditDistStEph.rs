@@ -84,7 +84,8 @@ pub mod MinEditDistStEph {
         spec fn spec_target_len(&self) -> nat;
 
         /// Create new minimum edit distance solver.
-        /// - APAS: not specified
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- allocate empty structures.
         fn new() -> (result: Self)
         where
             T: Default
@@ -92,14 +93,16 @@ pub mod MinEditDistStEph {
             ensures result.spec_source_len() == 0, result.spec_target_len() == 0;
 
         /// Create from source and target sequences.
-        /// - APAS: not specified
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequences into struct.
         fn from_sequences(source: ArraySeqStEphS<T>, target: ArraySeqStEphS<T>) -> (result: Self)
             ensures
                 result.spec_source_len() == source.spec_len(),
                 result.spec_target_len() == target.spec_len();
 
         /// Compute minimum edit distance.
-        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
+        /// - APAS: Work O(|S|*|T|), Span O(|S|+|T|)
+        /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|+|T|) -- agrees with APAS.
         fn min_edit_distance(&mut self) -> (dist: usize)
             requires old(self).spec_source_len() + old(self).spec_target_len() < usize::MAX,
             ensures
@@ -107,17 +110,20 @@ pub mod MinEditDistStEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Get the source sequence.
-        /// - APAS: not specified
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return reference.
         fn source(&self) -> (s: &ArraySeqStEphS<T>)
             ensures s.spec_len() == self.spec_source_len();
 
         /// Get the target sequence.
-        /// - APAS: not specified
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return reference.
         fn target(&self) -> (t: &ArraySeqStEphS<T>)
             ensures t.spec_len() == self.spec_target_len();
 
         /// Set element in source sequence.
-        /// - APAS: not specified
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- array set plus memo clear.
         fn set_source(&mut self, index: usize, value: T)
             requires index < old(self).spec_source_len(),
             ensures
@@ -125,7 +131,8 @@ pub mod MinEditDistStEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Set element in target sequence.
-        /// - APAS: not specified
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- array set plus memo clear.
         fn set_target(&mut self, index: usize, value: T)
             requires index < old(self).spec_target_len(),
             ensures
@@ -133,21 +140,24 @@ pub mod MinEditDistStEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Clear memoization table.
-        /// - APAS: not specified
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- clear hash map.
         fn clear_memo(&mut self)
             ensures
                 self.spec_source_len() == old(self).spec_source_len(),
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Get memoization table size.
-        /// - APAS: not specified
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn memo_size(&self) -> (count: usize);
     }
 
     // 9. impls
 
     /// Recursive memoized minimum edit distance solver.
-    /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
+    /// - APAS: Work O(|S|*|T|), Span O(|S|+|T|)
+    /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|+|T|) -- agrees with APAS.
     fn min_edit_distance_rec<T: StT>(
         table: &mut MinEditDistStEphS<T>,
         i: usize,
@@ -268,11 +278,13 @@ pub mod MinEditDistStEph {
     /// Trait for methods returning &mut (not supported inside verus!).
     pub trait MinEditDistStEphMutTrait<T: StT> {
         /// Get mutable source sequence (ephemeral allows mutation).
-        /// - APAS: not specified
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return mutable reference.
         fn source_mut(&mut self) -> &mut ArraySeqStEphS<T>;
 
         /// Get mutable target sequence (ephemeral allows mutation).
-        /// - APAS: not specified
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return mutable reference.
         fn target_mut(&mut self) -> &mut ArraySeqStEphS<T>;
     }
 

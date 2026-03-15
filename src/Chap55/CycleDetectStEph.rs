@@ -27,8 +27,9 @@ pub mod CycleDetectStEph {
     // 8. traits
 
     pub trait CycleDetectStEphTrait {
-        /// Detects if a directed graph contains a cycle (Algorithm 55.10)
-        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        /// Detects if a directed graph contains a cycle (Algorithm 55.10).
+        /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|) [Cost Spec 55.8, array sequences]
+        /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
         fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (has_cycle: B)
             requires
                 spec_toposortsteph_wf(graph),

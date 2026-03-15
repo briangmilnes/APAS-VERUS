@@ -107,7 +107,8 @@ broadcast use {
         spec fn spec_edge(&self, u: int, v: int) -> bool
             recommends 0 <= u < self.spec_n(), 0 <= v < self.spec_n();
 
-        /// Work Theta(n^2), Span Theta(n^2)
+        /// - APAS: (no explicit new cost; matrix init is n^2)
+        /// - Claude-Opus-4.6: Work Theta(n^2), Span Theta(n^2) — tabulate n rows of n booleans.
         fn new(n: N) -> (empty: Self)
             ensures
                 empty.spec_adjmatrixgraphsteph_wf(),
@@ -115,7 +116,8 @@ broadcast use {
                 forall|u: int, v: int|
                     0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);
 
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps existing matrix.
         fn from_matrix(matrix: ArraySeqStEphS<ArraySeqStEphS<bool>>) -> (constructed: Self)
             requires
                 forall|i: int| 0 <= i < matrix.spec_len() ==>
@@ -127,12 +129,14 @@ broadcast use {
                     0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()
                     ==> #[trigger] constructed.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);
 
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: (no explicit cost; constant-time field access)
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — returns stored n.
         fn num_vertices(&self) -> (n: N)
             requires self.spec_adjmatrixgraphsteph_wf()
             ensures n as nat == self.spec_n();
 
-        /// Work Theta(n^2), Span Theta(n^2)
+        /// - APAS: Work Theta(n^2), Span Theta(1) [Cost Spec 52.6, map edges]
+        /// - Claude-Opus-4.6: Work Theta(n^2), Span Theta(n^2) — sequential double loop.
         fn num_edges(&self) -> (m: N)
             requires
                 self.spec_adjmatrixgraphsteph_wf(),
@@ -146,12 +150,14 @@ broadcast use {
                     |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
                 );
 
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.6]
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees with APAS.
         fn has_edge(&self, u: N, v: N) -> (found: B)
             requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n(), v < self.spec_n()
             ensures found == self.spec_edge(u as int, v as int);
 
-        /// Work Theta(n), Span Theta(n)
+        /// - APAS: Work Theta(n), Span Theta(1) [Cost Spec 52.6, map over neighbors]
+        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — sequential scan of row.
         fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqStEphS<N>)
             requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n()
             ensures
@@ -162,7 +168,8 @@ broadcast use {
                     ==> exists|k: int|
                         0 <= k < neighbors.spec_len() && #[trigger] neighbors.spec_index(k) == v as N;
 
-        /// Work Theta(n), Span Theta(n)
+        /// - APAS: Work Theta(n), Span Theta(lg n) [Cost Spec 52.6, degree]
+        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — sequential count loop.
         fn out_degree(&self, u: N) -> (d: N)
             requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n()
             ensures d as nat == spec_count_true(
@@ -170,7 +177,8 @@ broadcast use {
                 self.spec_n() as int,
             );
 
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: Work Theta(n), Span Theta(1) [Cost Spec 52.6, insert/delete edge with ephemeral]
+        /// - Claude-Opus-4.6: Work Theta(n^2), Span Theta(n^2) — rebuilds entire matrix via tabulate.
         fn set_edge(&mut self, u: N, v: N, exists: B)
             requires
                 old(self).spec_adjmatrixgraphsteph_wf(),
@@ -185,7 +193,8 @@ broadcast use {
                     && !(i == u as int && j == v as int)
                     ==> #[trigger] self.spec_edge(i, j) == old(self).spec_edge(i, j);
 
-        /// Work Theta(n^2), Span Theta(n^2)
+        /// - APAS: (Exercise 52.6: complement in constant span)
+        /// - Claude-Opus-4.6: Work Theta(n^2), Span Theta(n^2) — sequential nested tabulate.
         fn complement(&self) -> (complemented: Self)
             requires self.spec_adjmatrixgraphsteph_wf()
             ensures

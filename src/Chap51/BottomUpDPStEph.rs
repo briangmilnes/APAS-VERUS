@@ -51,6 +51,8 @@ pub mod BottomUpDPStEph {
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
 
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequences into struct.
         fn new(s: ArraySeqStEphS<char>, t: ArraySeqStEphS<char>) -> (dp: Self)
             ensures
                 dp.spec_s() == s@,
@@ -58,25 +60,37 @@ pub mod BottomUpDPStEph {
                 dp.spec_s_len() == s.spec_len(),
                 dp.spec_t_len() == t.spec_len();
 
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn s_length(&self) -> (len: usize)
             ensures len as nat == self.spec_s_len();
 
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn t_length(&self) -> (len: usize)
             ensures len as nat == self.spec_t_len();
 
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- two length checks.
         fn is_empty(&self) -> (empty: bool)
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
         fn set_s(&mut self, s: ArraySeqStEphS<char>)
             ensures
                 self.spec_s() == s@,
                 self.spec_t() == old(self).spec_t();
 
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
         fn set_t(&mut self, t: ArraySeqStEphS<char>)
             ensures
                 self.spec_s() == old(self).spec_s(),
                 self.spec_t() == t@;
 
+        /// - APAS: Work O(|S|*|T|), Span O(|S|+|T|) (Algorithm 51.1)
+        /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|*|T|) -- sequential row fill, no parallelism.
         fn med_bottom_up(&mut self) -> (distance: usize)
             requires old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,
             ensures
@@ -87,6 +101,8 @@ pub mod BottomUpDPStEph {
                 self.spec_s() == old(self).spec_s(),
                 self.spec_t() == old(self).spec_t();
 
+        /// - APAS: N/A -- Verus-specific helper (table initialization).
+        /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|*|T|) -- allocate (|S|+1)*(|T|+1) cells.
         fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>)
             requires
                 self.spec_s_len() < usize::MAX,
@@ -103,6 +119,8 @@ pub mod BottomUpDPStEph {
                     0 <= j <= self.spec_t_len() as int ==>
                     table@[0]@[j] == j as nat;
 
+        /// - APAS: N/A -- Verus-specific helper (single cell computation).
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- two array lookups plus comparison.
         fn compute_cell_value(
             &self,
             table: &Vec<Vec<usize>>,

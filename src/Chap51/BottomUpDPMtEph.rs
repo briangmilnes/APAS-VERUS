@@ -52,6 +52,8 @@ pub mod BottomUpDPMtEph {
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
 
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequences into struct.
         fn new(s: ArraySeqMtEphS<char>, t: ArraySeqMtEphS<char>) -> (dp: Self)
             ensures
                 dp.spec_s() == s@,
@@ -59,25 +61,37 @@ pub mod BottomUpDPMtEph {
                 dp.spec_s_len() == s.spec_len(),
                 dp.spec_t_len() == t.spec_len();
 
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn s_length(&self) -> (len: usize)
             ensures len as nat == self.spec_s_len();
 
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn t_length(&self) -> (len: usize)
             ensures len as nat == self.spec_t_len();
 
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- two length checks.
         fn is_empty(&self) -> (empty: bool)
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
         fn set_s(&mut self, s: ArraySeqMtEphS<char>)
             ensures
                 self.spec_s() == s@,
                 self.spec_t() == old(self).spec_t();
 
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
         fn set_t(&mut self, t: ArraySeqMtEphS<char>)
             ensures
                 self.spec_s() == old(self).spec_s(),
                 self.spec_t() == t@;
 
+        /// - APAS: Work O(|S|*|T|), Span O(|S|+|T|) (Algorithm 51.1, diagonal parallel)
+        /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|*|T|) -- sequential row fill, not parallel.
         fn med_bottom_up_parallel(&mut self) -> (distance: usize)
             requires old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,
             ensures

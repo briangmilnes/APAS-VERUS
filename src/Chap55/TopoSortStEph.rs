@@ -175,8 +175,9 @@ broadcast use {
     // 8. traits
 
     pub trait TopoSortStEphTrait {
-        /// Computes topological sort of a DAG (Algorithm 55.13)
-        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        /// Computes topological sort of a DAG (Algorithm 55.13).
+        /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|) [Exercise 55.6]
+        /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
         fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (order: AVLTreeSeqStEphS<N>)
             requires
                 spec_toposortsteph_wf(graph),

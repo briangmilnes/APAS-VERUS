@@ -36,32 +36,46 @@ pub mod AllPairsResultStPerF64 {
 
         spec fn spec_n(&self) -> usize;
 
+        /// - APAS: (no cost stated) — data structure scaffolding.
+        /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — initializes n x n distance and predecessor matrices.
         fn new(n: usize) -> (empty: Self)
             ensures
                 empty.spec_allpairsresultstperf64_wf(),
                 empty.spec_n() == n;
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — two array index lookups.
         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
             requires self.spec_allpairsresultstperf64_wf();
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) — clones row, updates cell, replaces row (persistent: returns new struct).
         fn set_distance(self, u: usize, v: usize, dist: WrappedF64) -> (updated: Self)
             requires self.spec_allpairsresultstperf64_wf(),
             ensures
                 updated.spec_allpairsresultstperf64_wf(),
                 updated.spec_n() == self.spec_n();
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — two array index lookups.
         fn get_predecessor(&self, u: usize, v: usize) -> (predecessor: Option<usize>)
             requires self.spec_allpairsresultstperf64_wf();
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) — clones row, updates cell, replaces row (persistent: returns new struct).
         fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self)
             requires self.spec_allpairsresultstperf64_wf(),
             ensures
                 updated.spec_allpairsresultstperf64_wf(),
                 updated.spec_n() == self.spec_n();
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — comparison with sentinel.
         fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool)
             requires self.spec_allpairsresultstperf64_wf();
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) — predecessor chain traversal + reversal.
         fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
             requires self.spec_allpairsresultstperf64_wf();
     }
