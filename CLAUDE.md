@@ -148,6 +148,9 @@ minor). You bring:
   The committed state must match the validated on-disk state.
 - Each agent works ONLY in its own worktree. Never cd into another agent's worktree.
 - Agents push their own branches (`git push origin agentN/<topic>`). Main merges agent branches.
+- **Agents pick up `.claude/settings.local.json` only on rebase.** Do not copy settings
+  to agent worktrees mid-run — they won't re-read it. Edit settings on main, commit,
+  and agents get the update on the next `scripts/rebase-agents.sh`.
 - See `.cursor/rules/git/merge-worktree.mdc` for the full merge workflow (phases 0–7,
   including Phase 5.5: regenerate analyses before rebasing agents).
 - After commits on main, run `scripts/rebase-agents.sh` to rebase all agents onto main
@@ -194,6 +197,11 @@ minor). You bring:
   `plans/agent{N}-round{R}-report.md` (e.g., `plans/agent3-round7-report.md`).
   Include: holes before/after per file (table), chapters closed, verification counts,
   techniques used, remaining holes with what blocks them, commit hash.
+- **Every table in agent reports that references files or functions MUST include a Chap
+  column.** This is the same rule as Output Formatting above but agents keep violating it.
+  A table row like `| 1 | BSTParaStEph.rs | 8 | 5 |` is WRONG — which chapter is that?
+  Correct: `| 1 | 38 | BSTParaStEph.rs | 8 | 5 |`. The Chap column is just the number
+  (e.g. `38`), placed immediately after the `#` index column. No exceptions.
 
 ---
 

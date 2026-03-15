@@ -1,0 +1,271 @@
+Chapter 30
+Probability Spaces
+This chapter introduces the basics of discrete probability theory.
+1 Probability Spaces and Events
+Probability theory is a mathematical study of uncertain situations such as a dice game. In
+probability theory, we model a situation with an uncertain outcome as an experiment and
+reason carefully about the likelihood of various outcomes in precise mathematical terms.
+Example 30.1. Suppose we have two fair dice, meaning that each is equally likely to land
+on any of its six sides. If we toss the dice, what is the chance that their numbers sum to
+4? To determine the probability we first notice that there are a total of 6 × 6 = 36 distinct
+outcomes. Of these, only three outcomes sum to 4 (1 and 3, 2 and 2, and 3 and 1). The
+probability of the event that the number sum up to 4 is therefore
+# of outcomes that sum to 4
+# of total possible outcomes = 3
+36 = 1
+12
+Sample Spaces and Events. A sample space Ω is an arbitrary and possibly infinite (but
+countable) set of possible outcomes of a probabilistic experiment. Any experiment will
+return exactly one outcome from the set. For the dice game, the sample space is the 36 pos-
+sible outcomes of the dice, and an experiment (roll of the dice) will return one of them. An
+event is any subset of Ω, and most often representing some property common to multiple
+outcomes. For example, an event could correspond to outcomes in which the dice add to
+4—this subset would be of size 3. We typically denote events by capital letters from the
+start of the alphabet, e.g. A, B, C. We often refer to the individual elements of Ω as elemen-
+tary events. We assign a probability to each event. Our model for probability is defined as
+follows.
+203
+204 CHAPTER 30. PROBABILITY SPACES
+Definition 30.1 (Probability Space). A probability space consists of a sample space Ω rep-
+resenting the set of possible outcomes, and a probability measure, which is a function P
+from all subsets of Ω (the events) to a probability (real number). These must satisfy the
+following axioms.
+• Nonnegativity: P [A] ∈ [0, 1].
+• Additivity: for any two disjoint events A and B (i.e., A ∩ B = ∅),
+P [A ∪ B] = P [A] + P [B] .
+• Normalization: P [Ω] = 1.
+Note (Infinite Spaces). Probability spaces can have countably infinite outcomes. The addi-
+tivity rule generalizes to infinite sums, e.g., the probability of the event consisting of the
+union of infinitely many number of disjoint events is the infinite sum of the probability of
+each event.
+Note. When defining the probability space, we have not specified carefully the exact nature
+of events, because they may differ based on the experiment and what we are interested in.
+We do, however, need to take care when setting up the probabilistic model so that we can
+reason about the experiment correctly. For example, each outcome of the sample space
+must correspond to one unique actual outcome of the experiment. In other words, they
+must be mutually exclusive. Similarly, any actual outcome of the experiment must have a
+corresponding representation in the sample space.
+Example 30.2 (Throwing Dice). For our example of throwing two dice, the sample space
+consists of all of the 36 possible pairs of values of the dice:
+Ω = {(1, 1), (1, 2), . . . , (2, 1), . . . , (6, 6)}.
+Each pair in the sample space corresponds to an outcome of the experiment. The outcomes
+are mutually exclusive and cover all possible outcomes of the experiment.
+For example, having the first dice show up 1 and the second 4 is an outcome and corre-
+sponds to the element (1, 4) of the sample space Ω.
+The event that the “the first dice is 3” corresponds to the set
+A = {(d1, d2) ∈ Ω | d1 = 3}
+= {(3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6)} .
+The event that “the dice sum to 4” corresponds to the set
+B = {(d1, d2) ∈ Ω | d1 + d2 = 4}
+= {(1, 3), (2, 2), (3, 1)} .
+Assuming the dice are unbiased, the probability measure is defined by all elementary
+events having equal probability, i.e.,
+∀x ∈ Ω, P [{x}] = 1
+36 .
+2. PROPERTIES OF PROBABILITY SPACES 205
+The probability of the event A (that the first dice is 3) is thus
+P [A] = ∑
+x∈A
+P [{x}] = 6
+36 = 1
+6 .
+If the dice were biased so the probability of a given value is proportional to that value, then
+the probability measure would be P [{(x, y)}] = x
+21 × y
+21 , and the probability of the event
+B (that the dice add to 4) would be
+P [B] = ∑
+x∈B
+P [{x}] = 1 × 3 + 2 × 2 + 3 × 1
+21 × 21 = 10
+441 .
+2 Properties of Probability Spaces
+Given a probability space, we can prove several properties of probability measures by us-
+ing the three axioms that they must satisfy.
+For example, if for two events A and B. We have
+• if A ⊆ B, then P [A] ≤ P [B],
+• P [A ∪ B] = P [A] + P [B] − P [A ∩ B].
+2.1 The Union Bound
+The union bound, also known as Boole’s inequality, is a simple way to obtain an upper
+bound on the probability of any of a collection of events happening. Specifically for a
+collection of events A0, A2, . . . , An−1 the bound is:
+P
+
+ ⋃
+0≤i<n
+Ai
+
+ ≤
+n−1∑
+i=0
+P [Ai]
+This bound is true unconditionally. To see why the bound holds we note that the elemen-
+tary events in the union on the left are all included in the sum on the right (since the union
+comes from the same set of events). In fact they might be included multiple times in the
+sum on the right, hence the inequality. In fact the sum on the right could add to more than
+one, in which case the bound is not useful. The union bound can be useful in generating
+high-probability bounds for algorithms. For example, when the probability of each of n
+events is very low, e.g. 1/n5 and the sum remains very low, e.g. 1/n4.
+206 CHAPTER 30. PROBABILITY SPACES
+2.2 Conditional Probability
+Conditional probability allows us to reason about dependencies between observations. For
+example, suppose that your friend rolled a pair of dice and told you that they sum up to
+6, what is the probability that one of dice has come up 1? Conditional probability has
+many practical applications. For example, given that a medical test for a disease comes up
+positive, we might want to know the probability that the patient has the disease. Or, given
+that your computer has been working fine for the past 2 years, you might want to know
+the probability that it will continue working for one more year.
+Definition 30.2 (Conditional Probability). For a given probability space, we define the con-
+ditional probability of an event A given B, as the probability of A occurring given that B
+occurs as
+P [A | B] = P [A ∩ B]
+P [B] .
+The conditional probability measures the probability that the event A occurs given that B
+does. It is defined only when P [B] > 0.
+Conditional Probability is a Probability Measure. Conditional probability satisfies the
+three axioms of probability measures and is itself a probability measure. We can thus treat
+conditional probabilities just as ordinary probabilities. Intuitively, conditional probability
+can be thought as a focusing and re-normalization of the probabilities on the assumed event
+B.
+Example 30.3. Consider throwing two fair dice and calculate the probability that the first
+dice comes us 1 given that the sum of the two dice is 4. Let A be the event that the first dice
+comes up 1 and B the event that the sum is 4. We can write A and B in terms of outcomes
+as
+A = {(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6)} and
+B = {(1, 3), (2, 2), (3, 1)}.
+We thus have A ∩ B = {(1, 3)}. Since each outcome is equally likely,
+P [A | B] = P [A ∩ B]
+P [B] = |A ∩ B|
+|B| = 1
+3 .
+2.3 Law of Total Probability
+Conditional probabilities can be useful in estimating the probability of an event that may
+depend on a selection of choices. The total probability theorem can be handy in such cir-
+cumstances.
+2. PROPERTIES OF PROBABILITY SPACES 207
+Theorem 30.1 (Law of Total Probability). Consider a probabilistic space with sample space
+Ω and let A0, . . . , An−1 be a partition of Ω such that P [Ai] > 0 for all 0 ≤ i < n. For any
+event B the following holds:
+P [B] =
+n−1∑
+i=0
+P [B ∩ Ai]
+=
+n−1∑
+i=0
+P [Ai] P [B | Ai]
+Example 30.4. Your favorite social network partitions your connections into two kinds,
+near and far. The social network has calculated that the probability that you react to a post
+by one of your far connections is 0.1 but the same probability is 0.8 for a post by one of
+your near connections. Suppose that the social network shows you a post by a near and far
+connection with probability 0.6 and 0.4 respectively.
+Let’s calculate the probability that you react to a post that you see on the network. Let
+A0 and A1 be the event that the post is near and far respectively. We have P [A0] = 0.6
+and P [A1] = 0.4. Let B the event that you react, we know that P [B | A0] = 0.8 and
+P [B | A1] = 0.1.
+We want to calculate P [B], which by total probability theorem we know to be
+P [B] = P [B ∩ A0] + P [B ∩ A1]
+= P [A0] P [B | A0] + P [A1] P [B | A1] .
+= 0.6 · 0.8 + 0.4 · 0.1
+= 0.52.
+2.4 Independence
+It is sometimes important to reason about the dependency relationship between events.
+Intuitively we say that two events are independent if the occurrence of one does not affect
+the probability of the other. More precisely, we define independence as follows.
+Definition 30.3 (Independence). Two events A and B are independent if
+P [A ∩ B] = P [A] · P [B] .
+We say that multiple events A0, . . . , An−1 are mutually independent if and only if, for any
+non-empty subset I ⊆ {0, . . . , n − 1},
+P
+[⋂
+i∈I
+Ai
+]
+= ∏
+i∈I
+P [Ai] .
+208 CHAPTER 30. PROBABILITY SPACES
+Independence and Conditional Probability. Recall that P [A | B] = P[A∩B]
+P[B] when P [B] >
+0. Thus if P [A | B] = P [A] then P [A ∩ B] = P [A]·P [B]. We can thus define independence
+in terms of conditional probability but this works only when P [B] > 0.
+Example 30.5. For two dice, the events A = {(d1, d2) ∈ Ω | d1 = 1} (the first dice is 1) and
+B = {(d1, d2) ∈ Ω | d2 = 1} (the second dice is 1) are independent since
+P [A] × P [B] = 1
+6 × 1
+6 = 1
+36
+= P [A ∩ B] = P [{(1, 1)}] = 1
+36 .
+However, the event C ≡ {X = 4} (the dice add to 4) is not independent of A since
+P [A] × P [C] = 1
+6 × 3
+36 = 1
+72
+6
+= P [A ∩ C] = P [{(1, 3)}] = 1
+36 .
+A and C are not independent since the fact that the first dice is 1 increases the probability
+they sum to 4 (from 1
+12 to 1
+6 ).
+Exercise 30.1. For two dice, let A be the event that first roll is 1 and B be the event that the
+sum of the rolls is 5. Are A and B independent? Prove or disprove.
+Consider now the same question but this time define B to be the event that the sum of the
+rolls is 7.
+Chapter 31
+Random Variables
+This chapter introduces the random variables and their use in probability theory.
+Definition 31.1 (Random Variable). A random variable X is a real-valued function on the
+outcomes of an experiment, i.e., X : Ω → R, i.e., it assigns a real number to each outcome.
+For a given probability space there can be many random variables, each keeping track of
+different quantities. We typically denote random variables by capital letters from the end
+of the alphabet, e.g. X, Y , and Z. We say that a random variable is discrete if its range
+is finite or countable infinite. Throughout this book, we only consider discrete random
+variables.
+Example 31.1. For throwing two dice, we can define random variable as the sum of the
+two dice
+X(d1, d2) = d1 + d2 ,
+the product of two dice
+Y (d1, d2) = d1 × d2 ,
+or the value of the first dice the two dice:
+Z(d1, d2) = d1 .
+Definition 31.2 (Indicator Random Variable). A random variable is called an indicator
+random variable if it takes on the value 1 when some condition is true and 0 otherwise.
+Example 31.2. For throwing two dice, we can define indicator random variable as getting
+doubles
+Y (d1, d2) =
+{ 1 if d1 = d2
+0 if d1 6 = d2 .
+Using our shorthand, the event {X = 4} corresponds to the event “the dice sum to 4”.
+209
+210 CHAPTER 31. RANDOM VARIABLES
+Notation. For a random variable X and a value x ∈ R, we use the following shorthand
+for the event corresponding to X equaling x:
+{X = x} ≡ {y ∈ Ω | X(y) = x} ,
+and when applying the probability measure we use the further shorthand
+P [X = x] ≡ P [{X = x}] .
+Example 31.3. For throwing two dice, and X being a random variable representing the
+sum of the two dice, {X = 4} corresponds to the event “the dice sum to 4”, i.e. the set
+{y ∈ Ω | X(y) = 4} = {(1, 3), (2, 2), (3, 1)} .
+Assuming unbiased coins, we have that
+P [X = 4] = 1/12 .
+Remark. The term random variable might seem counter-intuitive because it is actually a
+function not a variable. As such, a random variable is not really random, because it is
+a well defined deterministic function on the sample space. However, when thought in
+conjunction with the random experiment that selects the events, a random variable takes
+on its value based on a random process.
+1 Probability Mass Function
+Definition 31.3 (Probability Mass Function). For a discrete random variable X, we define
+its probability mass function or PMF, written PX (·), for short as a function mapping each
+element x in the range of the random variable to the probability of the event {X = x}, i.e.,
+PX (x) = P [X = x] .
+Example 31.4. The probability mass function for the indicator random variable X indicat-
+ing whether the outcome of a roll of dice is comes up even is
+PX (0) = P [{X = 0}] = P [{1, 3, 5}] = 1/2, and
+PX (1) = P [{X = 1}] = P [{2, 4, 6}] = 1/2.
+The probability mass function for the random variable X that maps each outcome in a roll
+of dice to the smallest Mersenne prime number no less than the outcome is
+PX (3) = P [{X = 3}] = P [{1, 2, 3}] = 1/2, and
+PX (7) = P [{X = 7}] = P [{4, 5, 6}] = 1/2.
+
