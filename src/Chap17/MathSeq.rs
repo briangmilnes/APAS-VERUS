@@ -237,7 +237,9 @@ pub mod MathSeq {
             /// - APAS: no cost spec.
             /// - Claude-Opus-4.6: O(n) — builds index vector.
             fn domain(&self) -> (domain: Vec<N>)
-                ensures domain@.len() == self.spec_len();
+                ensures
+                    domain@.len() == self.spec_len(),
+                    forall|i: int| 0 <= i < domain@.len() ==> domain@[i] == i as usize;
 
             /// - APAS: no cost spec.
             /// - Claude-Opus-4.6: O(n) expected — hash set dedup.
@@ -386,6 +388,7 @@ pub mod MathSeq {
                     invariant
                     i <= len,
                     v@.len() == i as int,
+                    forall|k: int| 0 <= k < v@.len() ==> v@[k] == k as usize,
                     decreases len - i,
                 {
                     v.push(i);

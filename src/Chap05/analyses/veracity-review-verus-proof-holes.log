@@ -23,27 +23,27 @@ Table of Contents:
 ✓ KleeneStPer.rs
    9 clean proof functions
 ❌ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/MappingStEph.rs:386: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:386: error: external_body - #[verifier::external_body]
        387 |         fn from_vec(v: Vec<Pair<X, Y>>) -> MappingStEph<X, Y> {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/MappingStEph.rs:392: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:392: error: external_body - #[verifier::external_body]
        393 |         fn from_relation(r: &RelationStEph<X, Y>) -> MappingStEph<X, Y> {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/MappingStEph.rs:397: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:397: error: external_body - #[verifier::external_body]
        398 |         fn size(&self) -> (size: N) { self.mapping.size() }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/MappingStEph.rs:574: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:574: info: accept()
    Holes: 3 total
       3 × external_body
    Info: 1 total
 ✓ RelationStEph.rs
 ℹ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1045: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1054: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1062: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1073: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1099: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1045: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1054: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1062: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1073: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1099: info: accept()
    Info: 5 total
    1 clean proof function
 ℹ SetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:896: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:896: info: accept()
    Info: 1 total
    1 clean proof function
 
@@ -100,9 +100,9 @@ Holes Found: 3 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 12:10:23 -07:00
-Ended:     2026-03-15 12:10:23 -07:00
-Duration:  29ms
+Started:   2026-03-15 12:03:28 -07:00
+Ended:     2026-03-15 12:03:28 -07:00
+Duration:  45ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log

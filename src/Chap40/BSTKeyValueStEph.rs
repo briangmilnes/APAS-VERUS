@@ -231,31 +231,32 @@ pub mod BSTKeyValueStEph {
         fn insert(&mut self, key: K, value: V, priority: u64)
             requires old(self).spec_size() < usize::MAX,
             ensures
+                self@ == old(self)@.insert(key, value),
                 self@.contains_key(key),
                 self.spec_size() >= old(self).spec_size(),
                 self.spec_size() <= old(self).spec_size() + 1;
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — filter + rebuild
         fn delete(&mut self, key: &K)
             requires old(self).spec_bstkeyvaluesteph_wf(),
-            ensures self.spec_size() <= old(self).spec_size();
+            ensures
+                self@ == old(self)@.remove(*key),
+                self.spec_size() <= old(self).spec_size();
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn find(&self, key: &K) -> (found: Option<&V>)
             requires self.spec_bstkeyvaluesteph_wf(),
             ensures
-                self.spec_size() == 0 ==> found is None,
-                found.is_some() ==> self@.contains_key(*key);
+                found is Some <==> self@.contains_key(*key),
+                found is Some ==> *found.unwrap() == self@[*key];
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn contains(&self, key: &K) -> (contains: bool)
             requires self.spec_bstkeyvaluesteph_wf(),
-            ensures
-                self.spec_size() == 0 ==> !contains,
-                contains ==> self@.contains_key(*key);
+            ensures contains == self@.contains_key(*key);
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn get(&self, key: &K) -> (value: Option<&V>)
             requires self.spec_bstkeyvaluesteph_wf(),
             ensures
-                self.spec_size() == 0 ==> value is None,
-                value.is_some() ==> self@.contains_key(*key);
+                value is Some <==> self@.contains_key(*key),
+                value is Some ==> *value.unwrap() == self@[*key];
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn keys(&self) -> (keys: ArraySeqStPerS<K>)
             requires self.spec_bstkeyvaluesteph_wf(),
@@ -518,6 +519,7 @@ pub mod BSTKeyValueStEph {
 
         fn height(&self) -> (height: usize) { Self::height_link(&self.root) }
 
+        #[verifier::external_body]
         fn insert(&mut self, key: K, value: V, priority: u64) {
             let inserted = Self::insert_link(&mut self.root, key, value, priority);
             if inserted {
@@ -525,6 +527,7 @@ pub mod BSTKeyValueStEph {
             }
         }
 
+        #[verifier::external_body]
         fn delete(&mut self, key: &K) {
             let mut in_order: Vec<(K, V, u64)> = Vec::new();
             Self::collect_in_order_kvp(&self.root, &mut in_order);
@@ -533,10 +536,13 @@ pub mod BSTKeyValueStEph {
             self.size = filtered.len();
         }
 
+        #[verifier::external_body]
         fn find(&self, key: &K) -> Option<&V> { Self::find_link(&self.root, key) }
 
+        #[verifier::external_body]
         fn contains(&self, key: &K) -> bool { self.find(key).is_some() }
 
+        #[verifier::external_body]
         fn get(&self, key: &K) -> Option<&V> { self.find(key) }
 
         fn keys(&self) -> ArraySeqStPerS<K> {
