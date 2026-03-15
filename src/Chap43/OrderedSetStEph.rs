@@ -26,7 +26,7 @@ pub mod OrderedSetStEph {
     use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::*;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_clone;
+    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger, lemma_cloned_view_eq};
 
     verus! {
 
@@ -303,33 +303,54 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn first(&self) -> (first: Option<T>)
-            ensures
-                self@.finite(),
-                self@.len() == 0 <==> first matches None,
-                first matches Some(v) ==> self@.contains(v@),
         {
             let len = self.base_set.elements.length();
+            proof {
+                vstd::seq_lib::seq_to_set_is_finite::<T::V>(self.base_set.elements@);
+                self.base_set.elements@.unique_seq_to_set();
+                assert(self@ =~= self.base_set.elements@.to_set());
+            }
             if len == 0 {
                 None
             } else {
-                Some(self.base_set.elements.nth(0).clone())
+                let elem = self.base_set.elements.nth(0);
+                let v = elem.clone();
+                proof {
+                    assert(obeys_feq_full_trigger::<T>());
+                    lemma_cloned_view_eq(*elem, v);
+                    let ghost s = self.base_set.elements@;
+                    assert(s[0] == elem@);
+                    assert(s.contains(elem@));
+                    assert(s.to_set().contains(elem@));
+                }
+                Some(v)
             }
         }
 
-        #[verifier::external_body]
         fn last(&self) -> (last: Option<T>)
-            ensures
-                self@.finite(),
-                self@.len() == 0 <==> last matches None,
-                last matches Some(v) ==> self@.contains(v@),
         {
-            let size = self.size();
-            if size == 0 {
+            let len = self.base_set.elements.length();
+            proof {
+                vstd::seq_lib::seq_to_set_is_finite::<T::V>(self.base_set.elements@);
+                self.base_set.elements@.unique_seq_to_set();
+                assert(self@ =~= self.base_set.elements@.to_set());
+            }
+            if len == 0 {
                 None
             } else {
-                Some(self.base_set.elements.nth(size - 1).clone())
+                let elem = self.base_set.elements.nth(len - 1);
+                let v = elem.clone();
+                proof {
+                    assert(obeys_feq_full_trigger::<T>());
+                    lemma_cloned_view_eq(*elem, v);
+                    let ghost s = self.base_set.elements@;
+                    let ghost idx = (len - 1) as int;
+                    assert(s[idx] == elem@);
+                    assert(s.contains(elem@));
+                    assert(s.to_set().contains(elem@));
+                }
+                Some(v)
             }
         }
 
@@ -456,18 +477,28 @@ broadcast use {
             count
         }
 
-        #[verifier::external_body]
         fn select(&self, i: usize) -> (selected: Option<T>)
-            ensures
-                self@.finite(),
-                i >= self@.len() ==> selected matches None,
-                selected matches Some(v) ==> self@.contains(v@),
         {
             let sz = self.size();
             if i >= sz {
                 None
             } else {
-                Some(self.base_set.elements.nth(i).clone())
+                proof {
+                    self.base_set.elements@.unique_seq_to_set();
+                    assert(self@ =~= self.base_set.elements@.to_set());
+                    assert((i as int) < self.base_set.elements@.len());
+                }
+                let elem = self.base_set.elements.nth(i);
+                let v = elem.clone();
+                proof {
+                    assert(obeys_feq_full_trigger::<T>());
+                    lemma_cloned_view_eq(*elem, v);
+                    let ghost s = self.base_set.elements@;
+                    assert(s[i as int] == elem@);
+                    assert(s.contains(elem@));
+                    assert(s.to_set().contains(elem@));
+                }
+                Some(v)
             }
         }
 

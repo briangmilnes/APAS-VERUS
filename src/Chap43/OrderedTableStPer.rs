@@ -319,7 +319,11 @@ pub mod OrderedTableStPer {
 
         #[verifier::external_body]
         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite(), sorted_entries.spec_avltreeseqstper_wf(), sorted_entries@.len() == self@.dom().len()
+            ensures
+                self@.dom().finite(),
+                sorted_entries.spec_avltreeseqstper_wf(),
+                sorted_entries@.len() == self@.dom().len(),
+                forall|i: int| 0 <= i < sorted_entries@.len() ==> self@.dom().contains((#[trigger] sorted_entries@[i]).0),
         {
             let array_seq = self.base_table.collect();
             let len = array_seq.length();
@@ -331,73 +335,106 @@ pub mod OrderedTableStPer {
             AVLTreeSeqStPerS::from_vec(elements)
         }
 
-        #[verifier::external_body]
         fn first_key(&self) -> (key: Option<K>)
-            ensures
-                self@.dom().finite(),
-                self@.dom().len() == 0 <==> key matches None,
-                key matches Some(k) ==> self@.dom().contains(k@),
-        {
-            let entries = self.collect();
-            if entries.length() == 0 {
-                None
-            } else {
-                Some(entries.nth(0).0.clone())
-            }
-        }
-
-        #[verifier::external_body]
-        fn last_key(&self) -> (key: Option<K>)
-            ensures
-                self@.dom().finite(),
-                self@.dom().len() == 0 <==> key matches None,
-                key matches Some(k) ==> self@.dom().contains(k@),
         {
             let entries = self.collect();
             let size = entries.length();
             if size == 0 {
                 None
             } else {
-                Some(entries.nth(size - 1).0.clone())
+                let pair = entries.nth(0);
+                let k = pair.0.clone();
+                proof {
+                    assert(obeys_feq_full_trigger::<K>());
+                    lemma_cloned_view_eq(pair.0, k);
+                    assert(entries@[0].0 == pair.0@);
+                    assert(k@ == pair.0@);
+                }
+                Some(k)
             }
         }
 
-        #[verifier::external_body]
+        fn last_key(&self) -> (key: Option<K>)
+        {
+            let entries = self.collect();
+            let size = entries.length();
+            if size == 0 {
+                None
+            } else {
+                let pair = entries.nth(size - 1);
+                let k = pair.0.clone();
+                proof {
+                    assert(obeys_feq_full_trigger::<K>());
+                    lemma_cloned_view_eq(pair.0, k);
+                    let ghost idx = (size - 1) as int;
+                    assert(entries@[idx].0 == pair.0@);
+                    assert(k@ == pair.0@);
+                }
+                Some(k)
+            }
+        }
+
         fn previous_key(&self, k: &K) -> (key: Option<K>)
-            ensures
-                self@.dom().finite(),
-                key matches Some(pk) ==> self@.dom().contains(pk@),
         {
             let entries = self.collect();
             let size = entries.length();
             let mut i: usize = size;
-            while i > 0 {
-                i -= 1;
+            while i > 0
+                invariant
+                    i <= size,
+                    entries.spec_avltreeseqstper_wf(),
+                    size as nat == entries@.len(),
+                    self@.dom().finite(),
+                    forall|j: int| 0 <= j < entries@.len() ==> self@.dom().contains((#[trigger] entries@[j]).0),
+                decreases i,
+            {
+                i = i - 1;
                 let pair = entries.nth(i);
                 match pair.0.cmp(k) {
-                    std::cmp::Ordering::Less => return Some(pair.0.clone()),
+                    std::cmp::Ordering::Less => {
+                        let pk = pair.0.clone();
+                        proof {
+                            assert(obeys_feq_full_trigger::<K>());
+                            lemma_cloned_view_eq(pair.0, pk);
+                            assert(entries@[i as int].0 == pair.0@);
+                            assert(pk@ == pair.0@);
+                        }
+                        return Some(pk);
+                    },
                     _ => {},
                 }
             }
             None
         }
 
-        #[verifier::external_body]
         fn next_key(&self, k: &K) -> (key: Option<K>)
-            ensures
-                self@.dom().finite(),
-                key matches Some(nk) ==> self@.dom().contains(nk@),
         {
             let entries = self.collect();
             let size = entries.length();
             let mut i: usize = 0;
-            while i < size {
+            while i < size
+                invariant
+                    i <= size,
+                    entries.spec_avltreeseqstper_wf(),
+                    size as nat == entries@.len(),
+                    self@.dom().finite(),
+                    forall|j: int| 0 <= j < entries@.len() ==> self@.dom().contains((#[trigger] entries@[j]).0),
+                decreases size - i,
+            {
                 let pair = entries.nth(i);
                 match pair.0.cmp(k) {
-                    std::cmp::Ordering::Greater => return Some(pair.0.clone()),
-                    _ => {},
+                    std::cmp::Ordering::Greater => {
+                        let nk = pair.0.clone();
+                        proof {
+                            assert(obeys_feq_full_trigger::<K>());
+                            lemma_cloned_view_eq(pair.0, nk);
+                            assert(entries@[i as int].0 == pair.0@);
+                            assert(nk@ == pair.0@);
+                        }
+                        return Some(nk);
+                    },
+                    _ => { i = i + 1; },
                 }
-                i += 1;
             }
             None
         }
@@ -499,18 +536,22 @@ pub mod OrderedTableStPer {
             count
         }
 
-        #[verifier::external_body]
         fn select_key(&self, i: usize) -> (key: Option<K>)
-            ensures
-                self@.dom().finite(),
-                i >= self@.dom().len() ==> key matches None,
-                key matches Some(k) ==> self@.dom().contains(k@),
         {
             let entries = self.collect();
-            if i >= entries.length() {
+            let size = entries.length();
+            if i >= size {
                 None
             } else {
-                Some(entries.nth(i).0.clone())
+                let pair = entries.nth(i);
+                let k = pair.0.clone();
+                proof {
+                    assert(obeys_feq_full_trigger::<K>());
+                    lemma_cloned_view_eq(pair.0, k);
+                    assert(entries@[i as int].0 == pair.0@);
+                    assert(k@ == pair.0@);
+                }
+                Some(k)
             }
         }
 
