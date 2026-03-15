@@ -78,6 +78,7 @@ broadcast use {
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPer<T> {
         pub open spec fn spec_avltreesetmtper_wf(&self) -> bool {
             self.elements.spec_avltreeseqmtper_wf()
+            && self.elements@.no_duplicates()
         }
     }
 
@@ -157,7 +158,7 @@ broadcast use {
             let r = self.elements.length();
             proof {
                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
-                assume(r == self@.len());
+                self.elements@.unique_seq_to_set();
             }
             r
         }

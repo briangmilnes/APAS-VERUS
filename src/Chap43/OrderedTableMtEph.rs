@@ -92,6 +92,7 @@ broadcast use {
             ensures is_empty == self@.dom().is_empty();
 
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F)
+            requires forall|v1: &V, v2: &V| combine.requires((v1, v2)),
             ensures self@.dom().finite();
 
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
@@ -117,9 +118,11 @@ broadcast use {
             ensures filtered@.dom().finite();
 
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F)
+            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures self@.dom().finite();
 
         fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F)
+            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures self@.dom().finite();
 
         fn difference(&mut self, other: &Self)

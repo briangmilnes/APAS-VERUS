@@ -23,50 +23,46 @@ Table of Contents:
 ✓ Example42_1.rs
    1 clean proof function
 ❌ TableMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:584: error: external_body - #[verifier::external_body]
-       585 |         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:643: error: external_body - #[verifier::external_body]
-       644 |         fn map<F: Fn(&V) -> V + Send + Sync + 'static>(&mut self, f: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:697: error: external_body - #[verifier::external_body]
-       698 |         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&mut self, f: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:749: error: external_body - #[verifier::external_body]
-       750 |         fn intersection<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:777: error: external_body - #[verifier::external_body]
-       778 |         fn union<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1089: error: external_body - #[verifier::external_body]
-      1090 |         fn insert<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, key: K, value: V, combine: F)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1367: warning: requires_true - requires true — vacuous precondition
-      1365 | 
-      1366 |     pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (constructed: TableMtEph<K, V>)
-      1368 |         ensures constructed@.dom().finite()
-      1369 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1395: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:1407: info: accept()
-   Holes: 6 total
-      6 × external_body
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:716: error: external_body - #[verifier::external_body]
+       717 |         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:775: error: external_body - #[verifier::external_body]
+       776 |         fn map<F: Fn(&V) -> V + Send + Sync + 'static>(&mut self, f: F)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:829: error: external_body - #[verifier::external_body]
+       830 |         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&mut self, f: F)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:1638: error: external_body - #[verifier::external_body]
+      1639 |         fn insert<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, key: K, value: V, combine: F)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:1916: warning: requires_true - requires true — vacuous precondition
+      1914 | 
+      1915 |     pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (constructed: TableMtEph<K, V>)
+      1917 |         ensures constructed@.dom().finite()
+      1918 |     {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:1944: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:1956: info: accept()
+   Holes: 4 total
+      4 × external_body
    Info: 2 total
-   Proof functions: 7 total (7 clean, 0 holed)
+   Proof functions: 10 total (10 clean, 0 holed)
 ❌ TableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1666: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStEph.rs:1666: warning: requires_true - requires true — vacuous precondition
       1663 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
             ...
       1664 |         entries: Vec<Pair<K, V>>,
       1665 |     ) -> (cloned: TableStEph<K, V>)
       1667 |         ensures cloned@.dom().finite()
       1668 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:1700: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStEph.rs:1700: info: accept()
    Info: 1 total
    Proof functions: 8 total (8 clean, 0 holed)
 ❌ TableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1805: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:1805: warning: requires_true - requires true — vacuous precondition
       1802 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
             ...
       1803 |         entries: Vec<Pair<K, V>>,
       1804 |     ) -> (cloned: TableStPer<K, V>)
       1806 |         ensures cloned@.dom().finite()
       1807 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1978: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:1989: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:1978: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:1989: info: accept()
    Info: 2 total
    Proof functions: 12 total (12 clean, 0 holed)
 
@@ -102,28 +98,28 @@ Modules:
    4 total
 
 Proof Functions:
-   28 clean (100%)
+   31 clean (100%)
    0 holed (0%)
-   28 total
+   31 total
 
 Function Specs:
-   107 exec fns with complete spec (requires+ensures) (66%)
+   107 exec fns with complete spec (requires+ensures) (65%)
    0 exec fns missing spec (0%)
-   53 proof/spec fns clean (33%)
+   56 proof/spec fns clean (34%)
    0 proof/spec fns with holes (0%)
-   160 total fns
+   163 total fns
 
 
-Holes Found: 6 total
-   6 × external_body (100%)
+Holes Found: 4 total
+   4 × external_body (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-14 18:51:57 -07:00
-Ended:     2026-03-14 18:51:57 -07:00
-Duration:  60ms
+Started:   2026-03-14 20:03:37 -07:00
+Ended:     2026-03-14 20:03:37 -07:00
+Duration:  62ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap42/analyses/veracity-review-verus-proof-holes.log

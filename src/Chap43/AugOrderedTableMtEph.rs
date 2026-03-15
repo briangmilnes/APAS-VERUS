@@ -148,6 +148,7 @@ broadcast use {
             requires self.spec_augorderedtablemteph_wf()
             ensures is_empty == self@.dom().is_empty(), self@.dom().finite();
         fn insert<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: G)
+            requires forall|v1: &V, v2: &V| combine.requires((v1, v2)),
             ensures self@.dom().finite();
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             requires
@@ -172,8 +173,10 @@ broadcast use {
             requires forall|k: &K, v: &V| f.requires((k, v))
             ensures filtered@.dom().finite();
         fn intersection<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: G)
+            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures self@.dom().finite();
         fn union<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: G)
+            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures self@.dom().finite();
         fn difference(&mut self, other: &Self)
             ensures self@.dom().finite();
