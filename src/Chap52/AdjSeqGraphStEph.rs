@@ -84,14 +84,16 @@ broadcast use {
         spec fn spec_neighbor(&self, u: int, j: int) -> N
             recommends 0 <= u < self.spec_num_vertices(), 0 <= j < self.spec_degree(u);
 
-        /// Work Theta(n), Span Theta(n)
+        /// - APAS: Work Theta(n), Span Theta(n) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — agrees; tabulate over n empty sequences.
         fn new(n: N) -> (empty: Self)
             ensures
                 empty.spec_adjseqgraphsteph_wf(),
                 empty.spec_num_vertices() == n,
                 forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;
 
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: Work Theta(1), Span Theta(1)
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps existing array.
         fn from_seq(adj: ArraySeqStEphS<ArraySeqStEphS<N>>) -> (constructed: Self)
             requires
                 forall|u: int, j: int|
@@ -107,12 +109,14 @@ broadcast use {
                     && 0 <= j < adj.spec_index(i).spec_len()
                     ==> #[trigger] constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);
 
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; array length.
         fn num_vertices(&self) -> (n: N)
             requires self.spec_adjseqgraphsteph_wf()
             ensures n as nat == self.spec_num_vertices();
 
-        /// Work Theta(n + m), Span Theta(n + m)
+        /// - APAS: Work Theta(n + m), Span Theta(n + m)
+        /// - Claude-Opus-4.6: Work Theta(n + m), Span Theta(n + m) — agrees; sums all neighbor lengths.
         fn num_edges(&self) -> (m: N)
             requires
                 self.spec_adjseqgraphsteph_wf(),
@@ -126,14 +130,16 @@ broadcast use {
                     |i: int| self.spec_degree(i),
                 );
 
-        /// Work Theta(deg(u)), Span Theta(deg(u))
+        /// - APAS: Work Theta(deg(u)), Span Theta(deg(u)) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Theta(deg(u)), Span Theta(deg(u)) — agrees; linear scan of neighbor list.
         fn has_edge(&self, u: N, v: N) -> (found: B)
             requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()
             ensures found == exists|j: int|
                 0 <= j < self.spec_degree(u as int)
                 && #[trigger] self.spec_neighbor(u as int, j) == v;
 
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Theta(deg(u)), Span Theta(deg(u)) — tabulate copies neighbor list.
         fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqStEphS<N>)
             requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()
             ensures
@@ -141,12 +147,14 @@ broadcast use {
                 forall|j: int| 0 <= j < neighbors.spec_len()
                     ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);
 
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; neighbor array length.
         fn out_degree(&self, u: N) -> (d: N)
             requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()
             ensures d as nat == self.spec_degree(u as int);
 
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; single array set.
         fn set_neighbors(&mut self, v: N, neighbors: ArraySeqStEphS<N>)
             requires
                 old(self).spec_adjseqgraphsteph_wf(),
@@ -166,7 +174,8 @@ broadcast use {
                     && 0 <= j < old(self).spec_degree(i)
                     ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j);
 
-        /// Work Theta(deg(u)), Span Theta(deg(u))
+        /// - APAS: Work Theta(deg(u)), Span Theta(deg(u)) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Theta(deg(u)), Span Theta(deg(u)) — agrees; rebuilds neighbor list.
         fn set_edge(&mut self, u: N, v: N, exists: B)
             requires
                 old(self).spec_adjseqgraphsteph_wf(),

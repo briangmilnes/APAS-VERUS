@@ -65,6 +65,8 @@ pub mod DijkstraStEphI64 {
 
     // 9. impls
 
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work O(1), Span O(1).
     fn pq_entry_new(dist: i64, vertex: usize) -> (r: PQEntry)
         requires true,
         ensures r.dist == dist, r.vertex == vertex,

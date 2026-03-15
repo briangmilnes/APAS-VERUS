@@ -51,51 +51,64 @@ broadcast use {
         spec fn spec_edges(&self) -> Set<(<V as View>::V, <V as View>::V)>;
         spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V>;
 
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; creates empty sets.
         fn empty() -> (out: Self)
             ensures out.spec_edgesetgraphsteph_wf();
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: Work Theta(1), Span Theta(1)
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps existing sets.
         fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self)
             requires
                 forall|u: <V as View>::V, w: <V as View>::V|
                     #[trigger] e@.contains((u, w))
                     ==> v@.contains(u) && v@.contains(w),
             ensures out.spec_edgesetgraphsteph_wf();
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; vertex set size.
         fn num_vertices(&self) -> N
             requires self.spec_edgesetgraphsteph_wf();
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; edge set size.
         fn num_edges(&self) -> N
             requires self.spec_edgesetgraphsteph_wf();
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; returns reference.
         fn vertices(&self) -> &AVLTreeSetStEph<V>
             requires self.spec_edgesetgraphsteph_wf();
-        /// Work Theta(1), Span Theta(1)
+        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; returns reference.
         fn edges(&self) -> &AVLTreeSetStEph<Pair<V, V>>
             requires self.spec_edgesetgraphsteph_wf();
-        /// Work Theta(log |E|), Span Theta(log |E|)
+        /// - APAS: Work Theta(lg m), Span Theta(lg m) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Theta(lg m), Span Theta(lg m) — agrees; AVL set find.
         fn has_edge(&self, u: &V, v: &V) -> B
             requires self.spec_edgesetgraphsteph_wf();
-        /// Work Theta(|E| log |V|), Span Theta(|E| log |V|)
+        /// - APAS: Work Theta(m lg n), Span Theta(m lg n) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Theta(m lg n), Span Theta(m lg n) — agrees; filter edges + build set.
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             requires self.spec_edgesetgraphsteph_wf()
             ensures neighbors@ == self.spec_out_neighbors(u@);
-        /// Work Theta(|E|), Span Theta(|E|)
+        /// - APAS: Work Theta(m), Span Theta(m) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Theta(m lg n), Span Theta(m lg n) — delegates to out_neighbors.
         fn out_degree(&self, u: &V) -> N
             requires self.spec_edgesetgraphsteph_wf();
-        /// Work Theta(log |V|), Span Theta(log |V|)
+        /// - APAS: Work Theta(lg n), Span Theta(lg n) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Theta(lg n), Span Theta(lg n) — agrees; AVL set insert.
         fn insert_vertex(&mut self, v: V)
             requires old(self).spec_edgesetgraphsteph_wf()
             ensures self.spec_edgesetgraphsteph_wf();
-        /// Work Theta(|E| log |E|), Span Theta(|E| log |E|)
+        /// - APAS: Work Theta(m lg m), Span Theta(m lg m) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Theta(m lg m), Span Theta(m lg m) — agrees; filter and rebuild edge set.
         fn delete_vertex(&mut self, v: &V)
             requires old(self).spec_edgesetgraphsteph_wf()
             ensures self.spec_edgesetgraphsteph_wf(), !self.spec_vertices().contains(v@);
-        /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
+        /// - APAS: Work Theta(lg n + lg m), Span Theta(lg n + lg m) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; vertex insert + edge insert.
         fn insert_edge(&mut self, u: V, v: V)
             requires old(self).spec_edgesetgraphsteph_wf()
             ensures self.spec_edgesetgraphsteph_wf();
-        /// Work Theta(log |E|), Span Theta(log |E|)
+        /// - APAS: Work Theta(lg m), Span Theta(lg m) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Theta(lg m), Span Theta(lg m) — agrees; AVL set delete.
         fn delete_edge(&mut self, u: &V, v: &V)
             requires old(self).spec_edgesetgraphsteph_wf()
             ensures self.spec_edgesetgraphsteph_wf();
