@@ -156,7 +156,9 @@
       "Bash(*| gawk *)",
       "Bash(*|gawk *)",
       "Bash(grep * <(*))",
-      "Bash(*|| *)"
+      "Bash(*|| *)",
+      "Bash(ls *| *)",
+      "Bash(ls *|*)"
     ]
   }
 }
