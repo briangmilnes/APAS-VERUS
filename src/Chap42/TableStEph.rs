@@ -295,22 +295,27 @@ broadcast use {
     pub trait TableStEphTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_tablesteph_wf(&self) -> bool;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS Cost Spec 42.5: Work 1, Span 1
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS; cached length via backing ArraySeq.
         fn size(&self) -> (count: usize)
             requires self.spec_tablesteph_wf()
             ensures count == self@.len();
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS Cost Spec 42.5: Work 1, Span 1
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS.
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty();
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS Cost Spec 42.5: Work 1, Span 1
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS.
         fn singleton(key: K, value: V) -> (tree: Self)
             requires obeys_feq_clone::<Pair<K, V>>()
             ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@);
-        /// APAS: Work Θ(|a|), Span Θ(lg |a|)
+        /// - APAS Cost Spec 42.5: Work |a|, Span lg |a|
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- sequential scan; disagrees with APAS span (no parallelism).
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             requires obeys_feq_clone::<K>()
             ensures domain@ =~= self@.dom();
-        /// APAS: Work Θ(|s| * W(f)), Span Θ(lg |s| + S(f))
+        /// - APAS Cost Spec 42.5: Work |s| * W(f), Span lg |s| + S(f)
+        /// - Claude-Opus-4.6: Work Θ(|s| * W(f)), Span Θ(|s| * W(f)) -- sequential; disagrees with APAS span.
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>()
             ensures
@@ -320,7 +325,8 @@ broadcast use {
                     (exists|key_arg: K, result: V|
                         key_arg@ == k && f.ensures((&key_arg,), result)
                         && tabulated@[k] == result@);
-        /// APAS: Work Θ(Σ W(f(v))), Span Θ(lg |a| + max S(f(v)))
+        /// - APAS Cost Spec 42.5: Work Σ W(f(v)), Span lg |a| + max S(f(v))
+        /// - Claude-Opus-4.6: Work Θ(Σ W(f(v))), Span Θ(Σ W(f(v))) -- sequential; disagrees with APAS span.
         fn map<F: Fn(&V) -> V>(&mut self, f: F)
             requires forall|v: &V| f.requires((v,)), obeys_feq_clone::<K>()
             ensures
@@ -330,7 +336,8 @@ broadcast use {
                         old_val@ == old(self)@[k]
                         && f.ensures((&old_val,), result)
                         && self@[k] == result@);
-        /// APAS: Work Θ(Σ W(p(k,v))), Span Θ(lg |a| + max S(p(k,v)))
+        /// - APAS Cost Spec 42.5: Work Σ W(p(k,v)), Span lg |a| + max S(p(k,v))
+        /// - Claude-Opus-4.6: Work Θ(n * W(p)), Span Θ(n * W(p)) -- sequential; disagrees with APAS span.
         fn filter<F: Fn(&K, &V) -> B>(
             &mut self,
             f: F,
@@ -347,7 +354,8 @@ broadcast use {
                 forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k],
                 forall|k: K::V| old(self)@.dom().contains(k) && spec_pred(k, old(self)@[k])
                     ==> #[trigger] self@.dom().contains(k);
-        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
+        /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
+        /// - Claude-Opus-4.6: Work Θ(|self| * |other|), Span same -- linear scan; disagrees with APAS (not tree-based).
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
             requires
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
@@ -360,7 +368,8 @@ broadcast use {
                         v1@ == old(self)@[k] && v2@ == other@[k]
                         && combine.ensures((&v1, &v2), r)
                         && self@[k] == r@);
-        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
+        /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
+        /// - Claude-Opus-4.6: Work Θ(|self| * |other|), Span same -- linear scan; disagrees with APAS (not tree-based).
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
             requires
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
@@ -378,7 +387,8 @@ broadcast use {
                         v1@ == old(self)@[k] && v2@ == other@[k]
                         && combine.ensures((&v1, &v2), r)
                         && self@[k] == r@);
-        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
+        /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
+        /// - Claude-Opus-4.6: Work Θ(|self| * |other|), Span same -- linear scan; disagrees with APAS (not tree-based).
         fn difference(&mut self, other: &Self)
             requires
                 old(self).spec_tablesteph_wf(),
@@ -387,7 +397,8 @@ broadcast use {
             ensures
                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
                 forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k];
-        /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
+        /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan; disagrees with APAS (not tree-based).
         fn find(&self, key: &K) -> (found: Option<V>)
             requires self.spec_tablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
@@ -395,11 +406,13 @@ broadcast use {
                     Some(v) => self@.contains_key(key@) && self@[key@] == v@,
                     None => !self@.contains_key(key@),
                 };
-        /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
+        /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan + rebuild; disagrees with APAS (not tree-based).
         fn delete(&mut self, key: &K)
             requires old(self).spec_tablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>()
             ensures self@ =~= old(self)@.remove(key@);
-        /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
+        /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan + rebuild; disagrees with APAS (not tree-based).
         fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
             requires
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
@@ -414,7 +427,8 @@ broadcast use {
                 old(self)@.contains_key(key@) ==> (exists|old_v: V, r: V|
                     old_v@ == old(self)@[key@] && combine.ensures((&old_v, &value), r)
                     && self@[key@] == r@);
-        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
+        /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
+        /// - Claude-Opus-4.6: Work Θ(|self| * |keys|), Span same -- linear scan; disagrees with APAS.
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             requires
                 old(self).spec_tablesteph_wf(),
@@ -423,7 +437,8 @@ broadcast use {
             ensures
                 self@.dom() =~= old(self)@.dom().intersect(keys@),
                 forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k];
-        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
+        /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
+        /// - Claude-Opus-4.6: Work Θ(|self| * |keys|), Span same -- linear scan; disagrees with APAS.
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             requires
                 old(self).spec_tablesteph_wf(),

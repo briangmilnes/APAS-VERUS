@@ -174,7 +174,7 @@ broadcast use {
         spec fn spec_arraysetenummteph_wf(&self) -> bool;
         spec fn spec_universe_size(&self) -> usize;
 
-        /// Work Θ(u/w), Span Θ(u/w) where w is word size.
+        /// - Claude-Opus-4.6: Work Θ(u/w), Span Θ(u/w) -- allocates u/64 words.
         fn new(u: usize) -> (empty: Self)
             ensures
                 empty@ == Set::<usize>::empty(),
@@ -182,11 +182,13 @@ broadcast use {
                 empty.spec_universe_size() == u;
 
         /// - APAS Cost Spec 41.3: Work u, Span 1
+        /// - Claude-Opus-4.6: Work Θ(u), Span Θ(1) -- agrees with APAS; popcount over u/w words.
         fn size(&self) -> (count: usize)
             requires self.spec_arraysetenummteph_wf(),
             ensures count == self@.len(), self@.finite();
 
         /// - APAS Cost Spec 41.3: Work u, Span 1
+        /// - Claude-Opus-4.6: Work Θ(u), Span Θ(1) -- agrees with APAS; scans all words.
         fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)
             requires self.spec_arraysetenummteph_wf(),
             ensures
@@ -194,7 +196,7 @@ broadcast use {
                 seq@.to_set() =~= self@,
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
 
-        /// Work Θ(u/w), Span Θ(u/w).
+        /// - Claude-Opus-4.6: Work Θ(u/w), Span Θ(u/w) -- same as new.
         fn empty(u: usize) -> (empty: Self)
             ensures
                 empty@ == Set::<usize>::empty(),
@@ -202,6 +204,7 @@ broadcast use {
                 empty.spec_universe_size() == u;
 
         /// - APAS Cost Spec 41.3: Work u, Span 1
+        /// - Claude-Opus-4.6: Work Θ(u/w), Span Θ(1) -- allocate + set one bit; better than APAS bound.
         fn singleton(u: usize, x: usize) -> (tree: Self)
             ensures
                 (x < u ==> tree@ == Set::<usize>::empty().insert(x)),
@@ -210,7 +213,7 @@ broadcast use {
                 tree.spec_arraysetenummteph_wf(),
                 tree.spec_universe_size() == u;
 
-        /// Work Θ(u + |seq|), Span Θ(1).
+        /// - Claude-Opus-4.6: Work Θ(u/w + |seq|), Span Θ(1) -- allocate + set bits.
         fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)
             ensures
                 constructed@.finite(),
@@ -218,6 +221,7 @@ broadcast use {
                 constructed.spec_universe_size() == u;
 
         /// - APAS Cost Spec 41.3: Work u + Σ W(f(x)), Span 1 + max S(f(x))
+        /// - Claude-Opus-4.6: Work Θ(u + Σ W(f(x))), Span Θ(1 + max S(f(x))) -- agrees with APAS; parallel filter via join().
         fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (filtered: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -229,6 +233,7 @@ broadcast use {
                 filtered.spec_universe_size() == self.spec_universe_size();
 
         /// - APAS Cost Spec 41.3: Work u/w, Span u/w
+        /// - Claude-Opus-4.6: Work Θ(u/w), Span Θ(u/w) -- agrees with APAS; bitwise AND per word.
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -241,6 +246,7 @@ broadcast use {
                 common.spec_universe_size() == self.spec_universe_size();
 
         /// - APAS Cost Spec 41.3: Work u/w, Span u/w
+        /// - Claude-Opus-4.6: Work Θ(u/w), Span Θ(u/w) -- agrees with APAS; bitwise AND-NOT per word.
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -253,6 +259,7 @@ broadcast use {
                 remaining.spec_universe_size() == self.spec_universe_size();
 
         /// - APAS Cost Spec 41.3: Work u/w, Span u/w
+        /// - Claude-Opus-4.6: Work Θ(u/w), Span Θ(u/w) -- agrees with APAS; bitwise OR per word.
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -265,11 +272,13 @@ broadcast use {
                 combined.spec_universe_size() == self.spec_universe_size();
 
         /// - APAS Cost Spec 41.3: Work 1, Span 1
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS; single bit test.
         fn find(&self, x: usize) -> (found: B)
             requires self.spec_arraysetenummteph_wf(),
             ensures found == self@.contains(x);
 
         /// - APAS Cost Spec 41.3: Work 1, Span 1
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS; single bit clear.
         fn delete(&mut self, x: usize)
             requires old(self).spec_arraysetenummteph_wf(),
             ensures
@@ -279,6 +288,7 @@ broadcast use {
                 self.spec_universe_size() == old(self).spec_universe_size();
 
         /// - APAS Cost Spec 41.3: Work 1, Span 1
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS; single bit set.
         fn insert(&mut self, x: usize)
             requires old(self).spec_arraysetenummteph_wf(),
             ensures

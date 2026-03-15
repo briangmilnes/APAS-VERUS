@@ -62,16 +62,24 @@ broadcast use {
     pub trait OrderedTableMtEphTrait<K: MtKey, V: MtVal>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_orderedtablemteph_wf(&self) -> bool;
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- delegates to TableMtEph.size
         fn size(&self) -> (count: usize)
             requires self.spec_orderedtablemteph_wf()
             ensures count == self@.dom().len(), self@.dom().finite();
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- constructs empty TableMtEph
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_orderedtablemteph_wf();
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps TableMtEph.singleton
         fn singleton(k: K, v: V) -> (tree: Self)
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablemteph_wf();
 
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.find (linear scan)
         fn find(&self, k: &K) -> (found: Option<V>)
             requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
@@ -80,6 +88,8 @@ broadcast use {
                     None => !self@.contains_key(k@),
                 };
 
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to find (linear scan)
         fn lookup(&self, k: &K) -> (value: Option<V>)
             requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
@@ -88,14 +98,20 @@ broadcast use {
                     None => !self@.contains_key(k@),
                 };
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- compares size to 0
         fn is_empty(&self) -> (is_empty: B)
             requires self.spec_orderedtablemteph_wf()
             ensures is_empty == self@.dom().is_empty();
 
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.insert (linear dup check)
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F)
             requires forall|v1: &V, v2: &V| combine.requires((v1, v2)),
             ensures self@.dom().finite();
 
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.delete (linear scan)
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             requires
                 old(self).spec_orderedtablemteph_wf(),
@@ -103,17 +119,25 @@ broadcast use {
                 obeys_feq_full::<V>(),
             ensures self@ == old(self)@.remove(k@), self@.dom().finite();
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.domain
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite();
 
+        /// - APAS: Work Θ(n log n), Span Θ(n log n)
+        /// - Claude-Opus-4.6: Work Θ(n^2), Span Θ(n^2) -- delegates to TableMtEph.tabulate (sequential insert loop)
         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             requires keys@.finite()
             ensures tabulated@.dom().finite();
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.map (linear iteration)
         fn map<F: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: F) -> (mapped: Self)
             requires forall|k: &K, v: &V| f.requires((k, v))
             ensures mapped@.dom().finite();
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.filter (linear iteration)
         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(
             &self,
             f: F,
@@ -125,31 +149,46 @@ broadcast use {
                     f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
             ensures filtered@.dom().finite();
 
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableMtEph.intersection (linear scan)
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F)
             requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures self@.dom().finite();
 
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableMtEph.union (linear merge)
         fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F)
             requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures self@.dom().finite();
 
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableMtEph.difference (linear scan)
         fn difference(&mut self, other: &Self)
             ensures self@.dom().finite();
 
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             ensures self@.dom().finite();
 
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             ensures self@.dom().finite();
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.reduce (linear fold)
         fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (reduced: R)
             requires forall|r: R, k: &K, v: &V| f.requires((r, k, v))
             ensures self@.dom().finite();
 
+        /// - APAS: Work Θ(n log n), Span Θ(n log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects entries and sorts by key
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf();
 
-        /// ADT 43.1 first_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns first element
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
             ensures
@@ -158,7 +197,8 @@ broadcast use {
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(v, t);
 
-        /// ADT 43.1 last_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns last element
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
             ensures
@@ -167,7 +207,8 @@ broadcast use {
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, v);
 
-        /// ADT 43.1 previous_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans for predecessor
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             ensures
@@ -176,7 +217,8 @@ broadcast use {
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
 
-        /// ADT 43.1 next_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans for successor
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             ensures
@@ -185,17 +227,24 @@ broadcast use {
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
 
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then partitions by key
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
             ensures self@.dom().finite();
 
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to union (linear merge)
         fn join_key(&mut self, other: Self)
             ensures self@.dom().finite();
 
+        /// - APAS: Work Θ(log n + m), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then filters by range
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures range@.dom().finite();
 
-        /// ADT 43.1 rank_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then counts elements < k
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             ensures
@@ -203,7 +252,8 @@ broadcast use {
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
 
-        /// ADT 43.1 select_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then indexes
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
             ensures
@@ -212,6 +262,8 @@ broadcast use {
                 selected matches Some(k) ==> self@.dom().contains(k@),
                 selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
 
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then partitions by rank
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite();

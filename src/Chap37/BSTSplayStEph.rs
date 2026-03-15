@@ -192,6 +192,8 @@ pub mod BSTSplayStEph {
 
     //		9. impls
 
+    /// - APAS: N/A -- Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constant-time allocation.
     fn new_node<T: TotalOrder + Clone>(key: T) -> (node: Node<T>)
 
         ensures
@@ -208,6 +210,8 @@ pub mod BSTSplayStEph {
         }
     }
 
+    /// - APAS: N/A -- Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work O(1), Span O(1) -- cached size field.
     fn size_link<T: TotalOrder + Clone>(link: &Link<T>) -> (size: N)
 
         ensures size as nat == spec_size_link(link),
@@ -219,6 +223,8 @@ pub mod BSTSplayStEph {
         }
     }
 
+    /// - APAS: (no cost stated)
+    /// - Claude-Opus-4.6: Work O(n), Span O(n) -- recursive tree traversal.
     fn height_link<T: TotalOrder + Clone>(link: &Link<T>) -> (height: N)
         requires spec_height_link(link) < usize::MAX as nat,
         ensures height as nat == spec_height_link(link),
@@ -236,6 +242,8 @@ pub mod BSTSplayStEph {
         }
     }
 
+    /// - APAS: N/A -- Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work O(1), Span O(1) -- recomputes cached size.
     fn update<T: TotalOrder + Clone>(node: &mut Node<T>)
 
         ensures
@@ -253,6 +261,8 @@ pub mod BSTSplayStEph {
 
     // Bottom-up splay: bring target (or nearest key) toward the root using
     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
+    /// - APAS: Work O(lg n) amortized, Span O(lg n) amortized
+    /// - Claude-Opus-4.6: Work O(lg n) amortized, Span O(lg n) amortized -- agrees with APAS.
     fn splay<T: TotalOrder + Clone>(root: Box<Node<T>>, target: &T) -> (result: Box<Node<T>>)
 
         ensures true,
@@ -376,6 +386,8 @@ pub mod BSTSplayStEph {
         }
     }
 
+    /// - APAS: Work O(h(T)), Span O(h(T))
+    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- standard BST insert path.
     fn bst_insert<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)
 
         ensures true,
@@ -400,6 +412,8 @@ pub mod BSTSplayStEph {
         }
     }
 
+    /// - APAS: Work O(lg n) amortized, Span O(lg n) amortized
+    /// - Claude-Opus-4.6: Work O(lg n) amortized, Span O(lg n) amortized -- bst_insert + splay.
     fn insert_link<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)
 
         ensures true,
@@ -414,6 +428,8 @@ pub mod BSTSplayStEph {
         inserted
     }
 
+    /// - APAS: Work O(h(T)), Span O(h(T))
+    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- standard BST search.
     fn find_link<'a, T: TotalOrder + Clone>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
 
         ensures
@@ -432,6 +448,8 @@ pub mod BSTSplayStEph {
         }
     }
 
+    /// - APAS: (no cost stated)
+    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends leftmost path.
     fn min_link<T: TotalOrder + Clone>(link: &Link<T>) -> (min: Option<&T>)
 
         ensures
@@ -448,6 +466,8 @@ pub mod BSTSplayStEph {
         }
     }
 
+    /// - APAS: (no cost stated)
+    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends rightmost path.
     fn max_link<T: TotalOrder + Clone>(link: &Link<T>) -> (max: Option<&T>)
 
         ensures
@@ -464,6 +484,8 @@ pub mod BSTSplayStEph {
         }
     }
 
+    /// - APAS: Work O(n), Span O(n)
+    /// - Claude-Opus-4.6: Work O(n), Span O(n) -- visits every node.
     fn in_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
 
         ensures true,
@@ -476,6 +498,8 @@ pub mod BSTSplayStEph {
         }
     }
 
+    /// - APAS: Work O(n), Span O(n)
+    /// - Claude-Opus-4.6: Work O(n), Span O(n) -- visits every node.
     fn pre_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
 
         ensures true,
@@ -497,30 +521,50 @@ pub mod BSTSplayStEph {
         open spec fn spec_in_order(self) -> Seq<T> { spec_in_order_link(&self.root) }
         open spec fn spec_pre_order(self) -> Seq<T> { spec_pre_order_link(&self.root) }
 
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
         fn new() -> (tree: Self) { BSTSplayStEph { root: None } }
 
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- cached size field.
         fn size(&self) -> (n: N) { size_link(&self.root) }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- compares cached size.
         fn is_empty(&self) -> (b: B) { self.size() == 0 }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- recursive tree traversal.
         fn height(&self) -> (h: N) {
             height_link(&self.root)
         }
 
+        /// - APAS: Work O(lg n) amortized, Span O(lg n) amortized
+        /// - Claude-Opus-4.6: Work O(lg n) amortized, Span O(lg n) amortized -- agrees with APAS.
         #[verifier::external_body]
         fn insert(&mut self, value: T) { insert_link(&mut self.root, value); }
 
+        /// - APAS: Work O(h(T)), Span O(h(T))
+        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
         #[verifier::external_body]
         fn find(&self, target: &T) -> (found: Option<&T>) { find_link(&self.root, target) }
 
+        /// - APAS: Work O(h(T)), Span O(h(T))
+        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- delegates to find.
         fn contains(&self, target: &T) -> (found: B) { self.find(target).is_some() }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends leftmost path.
         #[verifier::external_body]
         fn minimum(&self) -> (min: Option<&T>) { min_link(&self.root) }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends rightmost path.
         #[verifier::external_body]
         fn maximum(&self) -> (max: Option<&T>) { max_link(&self.root) }
 
+        /// - APAS: Work O(n), Span O(n)
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- in-order traversal.
         #[verifier::external_body]
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
@@ -528,6 +572,8 @@ pub mod BSTSplayStEph {
             ArraySeqStPerS::from_vec(out)
         }
 
+        /// - APAS: Work O(n), Span O(n)
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- pre-order traversal.
         #[verifier::external_body]
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());

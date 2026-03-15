@@ -61,40 +61,47 @@ broadcast use {
         spec fn spec_orderedsetsteph_wf(&self) -> bool;
 
         // Base set operations (ADT 41.1) - ephemeral semantics
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- delegates to AVLTreeSetStEph.size
         fn size(&self) -> (count: usize)
             requires self.spec_orderedsetsteph_wf(),
             ensures count == self@.len(), self@.finite();
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- constructs empty AVLTreeSetStEph
         fn empty() -> (empty: Self)
             ensures
                 empty@ == Set::<<T as View>::V>::empty(),
                 empty.spec_orderedsetsteph_wf();
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps AVLTreeSetStEph.singleton
         fn singleton(x: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(x@),
                 tree@.finite(),
                 tree.spec_orderedsetsteph_wf();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- delegates to AVLTreeSetStEph.find (BST search)
         fn find(&self, x: &T) -> (found: B)
             requires self.spec_orderedsetsteph_wf(),
             ensures found == self@.contains(x@);
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- delegates to AVLTreeSetStEph.insert (BST insert)
         fn insert(&mut self, x: T)
             requires old(self).spec_orderedsetsteph_wf(),
             ensures
                 self@ == old(self)@.insert(x@),
                 self@.finite(),
                 self.spec_orderedsetsteph_wf();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- delegates to AVLTreeSetStEph.delete (BST delete)
         fn delete(&mut self, x: &T)
             requires old(self).spec_orderedsetsteph_wf(),
             ensures
                 self@ == old(self)@.remove(x@),
                 self@.finite(),
                 self.spec_orderedsetsteph_wf();
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to AVLTreeSetStEph.filter
         fn filter<F: PredSt<T>>(
             &mut self,
             f: F,
@@ -108,42 +115,48 @@ broadcast use {
             ensures
                 self@.finite(),
                 self.spec_orderedsetsteph_wf();
-        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- delegates to AVLTreeSetStEph.intersection (sequential)
         fn intersection(&mut self, other: &Self)
             requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
             ensures
                 self@ == old(self)@.intersect(other@),
                 self@.finite(),
                 self.spec_orderedsetsteph_wf();
-        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- delegates to AVLTreeSetStEph.union (sequential)
         fn union(&mut self, other: &Self)
             requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
             ensures
                 self@ == old(self)@.union(other@),
                 self@.finite(),
                 self.spec_orderedsetsteph_wf();
-        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- delegates to AVLTreeSetStEph.difference (sequential)
         fn difference(&mut self, other: &Self)
             requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
             ensures
                 self@ == old(self)@.difference(other@),
                 self@.finite(),
                 self.spec_orderedsetsteph_wf();
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to AVLTreeSetStEph.to_seq (in-order traversal)
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 seq@.to_set() =~= self@,
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
-        /// claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
+        /// - APAS: Work Θ(n log n), Span Θ(n log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to AVLTreeSetStEph.from_seq (n inserts)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             ensures
                 constructed@.finite(),
                 constructed.spec_orderedsetsteph_wf();
 
         // Ordering operations (ADT 43.1)
-        /// ADT 43.1 first(A) = min[|A|]. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then returns first element
         fn first(&self) -> (first: Option<T>)
             where T: TotalOrder
             requires self.spec_orderedsetsteph_wf(),
@@ -152,7 +165,8 @@ broadcast use {
                 self@.len() == 0 <==> first matches None,
                 first matches Some(v) ==> self@.contains(v@),
                 first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(v, t);
-        /// ADT 43.1 last(A) = max[|A|]. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then returns last element
         fn last(&self) -> (last: Option<T>)
             where T: TotalOrder
             requires self.spec_orderedsetsteph_wf(),
@@ -161,7 +175,8 @@ broadcast use {
                 self@.len() == 0 <==> last matches None,
                 last matches Some(v) ==> self@.contains(v@),
                 last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(t, v);
-        /// ADT 43.1 previous(A, k) = max{k' in A | k' < k}. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then scans for predecessor
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
             where T: TotalOrder
             ensures
@@ -169,7 +184,8 @@ broadcast use {
                 predecessor matches Some(v) ==> self@.contains(v@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
-        /// ADT 43.1 next(A, k) = min{k' in A | k' > k}. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then scans for successor
         fn next(&self, k: &T) -> (successor: Option<T>)
             where T: TotalOrder
             ensures
@@ -177,7 +193,8 @@ broadcast use {
                 successor matches Some(v) ==> self@.contains(v@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
-        /// ADT 43.1 split(A, k) = ({k' < k}, k in A, {k' > k}). Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then partitions into two sets
         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
             ensures
@@ -192,24 +209,28 @@ broadcast use {
                 !split.0@.contains(k@),
                 !split.2@.contains(k@),
                 forall|x| old(self)@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
-        /// ADT 43.1 join(A1, A2) = A1 union A2. Work Θ(log(|left|+|right|)), Span Θ(log(|left|+|right|)).
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- delegates to union (sequential)
         fn join(&mut self, other: Self)
             requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
             ensures self@ == old(self)@.union(other@), self@.finite(), self.spec_orderedsetsteph_wf();
-        /// ADT 43.1 getRange(A, k1, k2) = {k in A | k1 <= k <= k2}. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n + m), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then filters by range
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
             ensures
                 self@.finite(),
                 range@.finite(),
                 range@.subset_of(self@);
-        /// ADT 43.1 rank(A, k) = |{k' in A | k' < k}|. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then counts elements < k
         fn rank(&self, k: &T) -> (rank: usize)
             where T: TotalOrder
             ensures
                 self@.finite(),
                 rank <= self@.len(),
                 rank as int == self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
-        /// ADT 43.1 select(A, i) = k in A such that rank(A, k) = i. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then indexes
         fn select(&self, i: usize) -> (selected: Option<T>)
             where T: TotalOrder
             requires self.spec_orderedsetsteph_wf(),
@@ -218,7 +239,8 @@ broadcast use {
                 i >= self@.len() ==> selected matches None,
                 selected matches Some(v) ==> self@.contains(v@),
                 selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
-        /// ADT 43.1 splitRank(A, i). Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then partitions by rank
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             ensures

@@ -92,25 +92,32 @@ pub mod OrderedSetMtEph {
         spec fn spec_orderedsetmteph_wf(&self) -> bool;
 
         // Base set operations (ADT 41.1) - ephemeral semantics with parallelism
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- acquires read lock, delegates to StEph.size
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite();
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- constructs empty StEph + RwLock
         fn empty() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_orderedsetmteph_wf();
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps StEph.singleton + RwLock
         fn singleton(x: T) -> (tree: Self)
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_orderedsetmteph_wf();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.find (BST search)
         fn find(&self, x: &T) -> (found: B)
             ensures found == self@.contains(x@);
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.insert (BST insert)
         fn insert(&mut self, x: T)
             ensures self@ == old(self)@.insert(x@), self@.finite();
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.delete (BST delete)
         fn delete(&mut self, x: &T)
             ensures self@ == old(self)@.remove(x@), self@.finite();
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph.filter
         fn filter<F: Pred<T>>(
             &mut self,
             f: F,
@@ -121,27 +128,33 @@ pub mod OrderedSetMtEph {
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures self@.finite();
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.intersection (sequential)
         fn intersection(&mut self, other: &Self)
             ensures self@ == old(self)@.intersect(other@), self@.finite();
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.union (sequential)
         fn union(&mut self, other: &Self)
             ensures self@ == old(self)@.union(other@), self@.finite();
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.difference (sequential)
         fn difference(&mut self, other: &Self)
             ensures self@ == old(self)@.difference(other@), self@.finite();
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph.to_seq
         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)
             ensures
                 self@.finite(),
                 seq@.to_set() =~= self@,
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
-        /// claude-4-sonet: Work Θ(n lg n), Span Θ(lg n), Parallelism Θ(1)
+        /// - APAS: Work Θ(n log n), Span Θ(n log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to StEph.from_seq (n inserts)
         fn from_seq(seq: ArraySeqStPerS<T>) -> (constructed: Self)
             ensures constructed@.finite();
 
-        // Ordering operations (ADT 43.1) - sequential (inherently sequential on trees)
-        /// ADT 43.1 first(A) = min[|A|]. Work Θ(log n), Span Θ(log n).
+        // Ordering operations (ADT 43.1)
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + first)
         fn first(&self) -> (first: Option<T>)
             where T: TotalOrder
             ensures
@@ -149,7 +162,8 @@ pub mod OrderedSetMtEph {
                 self@.len() == 0 <==> first matches None,
                 first matches Some(v) ==> self@.contains(v@),
                 first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(v, t);
-        /// ADT 43.1 last(A) = max[|A|]. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + last)
         fn last(&self) -> (last: Option<T>)
             where T: TotalOrder
             ensures
@@ -157,7 +171,8 @@ pub mod OrderedSetMtEph {
                 self@.len() == 0 <==> last matches None,
                 last matches Some(v) ==> self@.contains(v@),
                 last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(t, v);
-        /// ADT 43.1 previous(A, k) = max{k' in A | k' < k}. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + scan)
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
             where T: TotalOrder
             ensures
@@ -165,7 +180,8 @@ pub mod OrderedSetMtEph {
                 predecessor matches Some(v) ==> self@.contains(v@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
-        /// ADT 43.1 next(A, k) = min{k' in A | k' > k}. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + scan)
         fn next(&self, k: &T) -> (successor: Option<T>)
             where T: TotalOrder
             ensures
@@ -173,24 +189,29 @@ pub mod OrderedSetMtEph {
                 successor matches Some(v) ==> self@.contains(v@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + partition)
         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
             ensures self@.finite();
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.join (union)
         fn join(&mut self, other: Self)
             ensures self@.finite();
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// - APAS: Work Θ(log n + m), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + filter)
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
             ensures self@.finite();
-        /// ADT 43.1 rank(A, k) = |{k' in A | k' < k}|. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + count)
         fn rank(&self, k: &T) -> (rank: usize)
             where T: TotalOrder
             ensures
                 self@.finite(),
                 rank <= self@.len(),
                 rank as int == self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
-        /// ADT 43.1 select(A, i) = k in A such that rank(A, k) = i. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + index)
         fn select(&self, i: usize) -> (selected: Option<T>)
             where T: TotalOrder
             ensures
@@ -198,7 +219,8 @@ pub mod OrderedSetMtEph {
                 i >= self@.len() ==> selected matches None,
                 selected matches Some(v) ==> self@.contains(v@),
                 selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + partition)
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             ensures self@.finite();

@@ -171,6 +171,8 @@ pub mod BSTAVLStEph {
 
     // 9. impls
 
+    /// - APAS: Work O(1), Span O(1)
+    /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
     fn rotate_right<T: TotalOrder>(tree: BalBinTree<T>) -> (rotated: BalBinTree<T>)
         requires
             tree.tree_is_bst(),
@@ -327,6 +329,8 @@ pub mod BSTAVLStEph {
         }
     }
 
+    /// - APAS: Work O(1), Span O(1)
+    /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
     fn rotate_left<T: TotalOrder>(tree: BalBinTree<T>) -> (rotated: BalBinTree<T>)
         requires
             tree.tree_is_bst(),
@@ -488,6 +492,8 @@ pub mod BSTAVLStEph {
     // - lemma_rotate_height: rotate_right/rotate_left do not increase height
     // - lemma_rotate_avl: after rotation on left-heavy (balance=2) or right-heavy
     //   (balance=-2) tree, result has |h(left)-h(right)| <= 1 at every node
+    /// - APAS: Work O(1), Span O(1)
+    /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constant-number of rotations.
     fn rebalance<T: TotalOrder>(tree: BalBinTree<T>) -> (balanced: BalBinTree<T>)
         requires
             tree.tree_is_bst(),
@@ -774,6 +780,8 @@ pub mod BSTAVLStEph {
         }
     }
 
+    /// - APAS: Work O(lg n), Span O(lg n)
+    /// - Claude-Opus-4.6: Work O(lg n), Span O(lg n) -- agrees with APAS; AVL height is O(lg n).
     fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)
         requires
             tree_is_avl::<T>(node),
@@ -928,6 +936,8 @@ pub mod BSTAVLStEph {
         }
     }
 
+    /// - APAS: Work O(lg n), Span O(lg n)
+    /// - Claude-Opus-4.6: Work O(lg n), Span O(lg n) -- agrees with APAS.
     fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)
         requires (*node).tree_is_bst(),
         ensures found == (*node).tree_contains(*target),
@@ -961,6 +971,8 @@ pub mod BSTAVLStEph {
         }
     }
 
+    /// - APAS: Work O(lg n), Span O(lg n)
+    /// - Claude-Opus-4.6: Work O(lg n), Span O(lg n) -- agrees with APAS.
     fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)
         requires (*node).tree_is_bst(),
         ensures
@@ -996,6 +1008,8 @@ pub mod BSTAVLStEph {
         }
     }
 
+    /// - APAS: (no cost stated)
+    /// - Claude-Opus-4.6: Work O(lg n), Span O(lg n) -- descends leftmost path; AVL balanced.
     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
         requires (*node).tree_is_bst(),
         ensures
@@ -1016,6 +1030,8 @@ pub mod BSTAVLStEph {
         }
     }
 
+    /// - APAS: (no cost stated)
+    /// - Claude-Opus-4.6: Work O(lg n), Span O(lg n) -- descends rightmost path; AVL balanced.
     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
         requires (*node).tree_is_bst(),
         ensures
@@ -1040,30 +1056,44 @@ pub mod BSTAVLStEph {
         open spec fn spec_root(self) -> BalBinTree<T> { self.root }
         open spec fn spec_bstavlsteph_wf(&self) -> bool { tree_is_avl::<T>(self.spec_root()) }
 
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
         fn new() -> (tree: Self) {
             BSTAVLStEph { root: BalBinTree::Leaf }
         }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to BalBinTree::size.
         fn size(&self) -> (n: usize) {
             self.root.size()
         }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- leaf check.
         fn is_empty(&self) -> (b: bool) {
             self.root.is_leaf()
         }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to BalBinTree::height.
         fn height(&self) -> (h: usize) {
             self.root.height()
         }
 
+        /// - APAS: Work O(lg n), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(lg n), Span O(lg n) -- agrees with APAS; AVL guarantees h = O(lg n).
         fn insert(self, value: T) -> (inserted: Self) {
             BSTAVLStEph { root: insert_node(self.root, value) }
         }
 
+        /// - APAS: Work O(lg n), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(lg n), Span O(lg n) -- agrees with APAS; AVL guarantees h = O(lg n).
         fn contains(&self, target: &T) -> (found: bool) {
             contains_node(&self.root, target)
         }
 
+        /// - APAS: Work O(lg n), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(lg n), Span O(lg n) -- agrees with APAS; AVL guarantees h = O(lg n).
         fn find(&self, target: &T) -> (found: Option<&T>) {
             find_node(&self.root, target)
         }

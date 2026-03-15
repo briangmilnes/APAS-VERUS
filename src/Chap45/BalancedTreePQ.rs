@@ -192,21 +192,24 @@ broadcast use {
                 self.elements.spec_avltreeseqstper_wf()
             }
 
-            /// APAS Work Θ(1), Span Θ(1).
+            /// - APAS: Work O(1), Span O(1).
+            /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time empty construction.
             fn empty() -> Self {
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::empty(),
                 }
             }
 
-            /// APAS Work Θ(1), Span Θ(1).
+            /// - APAS: Work O(1), Span O(1).
+            /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time singleton construction.
             fn singleton(element: T) -> Self {
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::singleton(element),
                 }
             }
 
-            /// APAS Work Θ(1), Span Θ(1) — indexed access to first element.
+            /// - APAS: Work O(log n), Span O(log n).
+            /// - Claude-Opus-4.6: Work O(1), Span O(1) — indexed access to first element of sorted seq.
             fn find_min(&self) -> Option<&T> {
                 if self.elements.length() == 0 {
                     None
@@ -215,7 +218,8 @@ broadcast use {
                 }
             }
 
-            /// APAS Work Θ(n), Span Θ(n) — linear scan for position, rebuild.
+            /// - APAS: Work O(log n), Span O(log n).
+            /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan for position, rebuild via from_vec.
             #[verifier::external_body]
             fn insert(&self, element: T) -> Self {
                 let n = self.elements.length();
@@ -243,7 +247,8 @@ broadcast use {
                 }
             }
 
-            /// APAS Work Θ(n), Span Θ(n) — clone elements 1..n, rebuild.
+            /// - APAS: Work O(log n), Span O(log n).
+            /// - Claude-Opus-4.6: Work O(n), Span O(n) — clone elements 1..n, rebuild via from_vec.
             fn delete_min(&self) -> (Self, Option<T>) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
@@ -263,7 +268,8 @@ broadcast use {
                 (BalancedTreePQ { elements: remaining }, Some(min_element))
             }
 
-            /// APAS Work Θ(m+n), Span Θ(m+n) — merge two sorted sequences, rebuild.
+            /// - APAS: Work O(m log(1+n/m)), Span O(m log(1+n/m)).
+            /// - Claude-Opus-4.6: Work O(m+n), Span O(m+n) — merge two sorted sequences, rebuild via from_vec.
             fn meld(&self, other: &Self) -> Self {
                 let n1 = self.elements.length();
                 let n2 = other.elements.length();
@@ -321,7 +327,8 @@ broadcast use {
                 }
             }
 
-            /// APAS Work Θ(n²), Span Θ(n²) — insertion sort via repeated insert.
+            /// - APAS: Work O(n log n), Span O(n log n).
+            /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — n calls to insert, each O(n).
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
                 let mut result = Self::empty();
                 let n = seq.length();
@@ -353,7 +360,8 @@ broadcast use {
                 }
             }
 
-            /// APAS Work Θ(n), Span Θ(n) — clone elements 0..n-1, rebuild.
+            /// - APAS: Work O(log n), Span O(log n).
+            /// - Claude-Opus-4.6: Work O(n), Span O(n) — clone elements 0..n-1, rebuild via from_vec.
             fn delete_max(&self) -> (Self, Option<T>) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);

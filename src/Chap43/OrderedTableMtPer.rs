@@ -100,35 +100,54 @@ pub mod OrderedTableMtPer {
     pub trait OrderedTableMtPerTrait<K: MtKey + 'static, V: StTInMtT + Ord + 'static>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_orderedtablemtper_wf(&self) -> bool;
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- acquires read lock, delegates to StPer.size
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite();
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- constructs empty StPer + RwLock
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_orderedtablemtper_wf();
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps StPer.singleton + RwLock
         fn singleton(k: K, v: V) -> (tree: Self)
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablemtper_wf();
 
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.find (linear scan)
         fn find(&self, k: &K) -> (found: Option<V>);
 
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.insert (linear dup check)
         fn insert(&self, k: K, v: V) -> (updated: Self)
             ensures updated@.dom().finite();
 
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.delete (linear scan)
         fn delete(&self, k: &K) -> (updated: Self)
             ensures updated@.dom().finite();
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.domain
         fn domain(&self) -> (domain: OrderedSetMtEph<K>)
             ensures self@.dom().finite();
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.map
         fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self)
             requires forall|k: &K, v: &V| f.requires((k, v))
             ensures mapped@.dom().finite();
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.filter
         fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (filtered: Self)
             requires forall|p: &Pair<K, V>| f.requires((p,))
             ensures filtered@.dom().finite();
 
-        /// ADT 43.1 first_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + first)
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
             ensures
@@ -137,7 +156,8 @@ pub mod OrderedTableMtPer {
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(v, t);
 
-        /// ADT 43.1 last_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + last)
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
             ensures
@@ -146,7 +166,8 @@ pub mod OrderedTableMtPer {
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, v);
 
-        /// ADT 43.1 previous_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + scan)
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             ensures
@@ -155,7 +176,8 @@ pub mod OrderedTableMtPer {
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
 
-        /// ADT 43.1 next_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + scan)
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             ensures
@@ -164,17 +186,24 @@ pub mod OrderedTableMtPer {
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
 
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + partition)
         fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
             ensures self@.dom().finite();
 
+        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- acquires lock, delegates to StPer.join_key (union)
         fn join_key(&self, other: &Self) -> (joined: Self)
             ensures joined@.dom().finite();
 
+        /// - APAS: Work Θ(log n + m), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + filter)
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures range@.dom().finite();
 
-        /// ADT 43.1 rank_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + count)
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             ensures
@@ -182,7 +211,8 @@ pub mod OrderedTableMtPer {
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
 
-        /// ADT 43.1 select_key. Work Θ(log n), Span Θ(log n).
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + index)
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
             ensures
@@ -191,6 +221,8 @@ pub mod OrderedTableMtPer {
                 selected matches Some(k) ==> self@.dom().contains(k@),
                 selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
 
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + partition)
         fn split_rank_key(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite();

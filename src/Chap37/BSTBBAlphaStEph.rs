@@ -143,47 +143,69 @@ pub mod BSTBBAlphaStEph {
         open spec fn spec_root(self) -> BalBinTree<T> { self.root }
         open spec fn spec_bstbbalphasteph_wf(&self) -> bool { self.spec_root().tree_is_bst() }
 
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
         fn new() -> (tree: Self) {
             BSTBBAlphaStEph { root: BalBinTree::Leaf }
         }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- recursive tree traversal.
         fn size(&self) -> (n: usize) {
             self.root.size()
         }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- leaf check.
         fn is_empty(&self) -> (b: bool) {
             self.root.is_leaf()
         }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- recursive tree traversal.
         fn height(&self) -> (h: usize) {
             self.root.height()
         }
 
+        /// - APAS: Work O(h(T)), Span O(h(T))
+        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
         fn insert(self, value: T) -> (inserted: Self) {
             BSTBBAlphaStEph { root: insert_node(self.root, value) }
         }
 
+        /// - APAS: Work O(h(T)), Span O(h(T))
+        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
         fn contains(&self, target: &T) -> (found: bool) {
             contains_node(&self.root, target)
         }
 
+        /// - APAS: Work O(h(T)), Span O(h(T))
+        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
         fn find(&self, target: &T) -> (found: Option<&T>) {
             find_node(&self.root, target)
         }
 
+        /// - APAS: Work O(h(T)), Span O(h(T))
+        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
         fn delete(self, target: &T) -> (deleted: Self) {
             BSTBBAlphaStEph { root: delete_node(self.root, target) }
         }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends leftmost path.
         fn minimum(&self) -> (min: Option<&T>) {
             min_node(&self.root)
         }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends rightmost path.
         fn maximum(&self) -> (max: Option<&T>) {
             max_node(&self.root)
         }
     }
 
+    /// - APAS: Work O(h(T)), Span O(h(T))
+    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
     fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)
         requires node.tree_is_bst(),
         ensures
@@ -319,6 +341,8 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
+    /// - APAS: Work O(h(T)), Span O(h(T))
+    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
     fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)
         requires (*node).tree_is_bst(),
         ensures found == (*node).tree_contains(*target),
@@ -352,6 +376,8 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
+    /// - APAS: Work O(h(T)), Span O(h(T))
+    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
     fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)
         requires (*node).tree_is_bst(),
         ensures
@@ -387,6 +413,8 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
+    /// - APAS: (no cost stated)
+    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends leftmost path.
     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
         requires (*node).tree_is_bst(),
         ensures
@@ -407,6 +435,8 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
+    /// - APAS: (no cost stated)
+    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends rightmost path.
     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
         requires (*node).tree_is_bst(),
         ensures
@@ -428,6 +458,8 @@ pub mod BSTBBAlphaStEph {
     }
 
     /// Remove and return the minimum element from a non-empty BST subtree.
+    /// - APAS: (no cost stated)
+    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends leftmost path.
     fn delete_min_node<T: TotalOrder>(node: BalBinTree<T>) -> (pair: (BalBinTree<T>, T))
         requires
             node.spec_size() > 0,
@@ -544,6 +576,8 @@ pub mod BSTBBAlphaStEph {
     }
 
     /// Delete a key from the BST, returning the modified tree.
+    /// - APAS: Work O(h(T)), Span O(h(T))
+    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
     fn delete_node<T: TotalOrder>(node: BalBinTree<T>, target: &T) -> (deleted: BalBinTree<T>)
         requires node.tree_is_bst(),
         ensures
