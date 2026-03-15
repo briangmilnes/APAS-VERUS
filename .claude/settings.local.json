@@ -149,7 +149,12 @@
       "Bash(*; done *)",
       "Bash(*; done)",
       "Bash(rm *)",
-      "Bash(touch *)"
+      "Bash(touch *)",
+      "Bash(grep * /home/milnes/projects/APAS-VERUS*/*)",
+      "Bash(grep * /home/milnes/projects/APAS-VERUS*/**)",
+      "Bash(gawk *)",
+      "Bash(*| gawk *)",
+      "Bash(*|gawk *)"
     ]
   }
 }
