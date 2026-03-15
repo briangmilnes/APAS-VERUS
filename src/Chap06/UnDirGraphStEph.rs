@@ -91,7 +91,8 @@ verus! {
             self.spec_ng(v).len()
         }
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn empty() -> (g: UnDirGraphStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures
@@ -99,7 +100,8 @@ verus! {
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
 
-        /// APAS: Work Θ(|V| + |E|), Span Θ(1)
+        /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) -- sequential
         fn from_sets(vertices: SetStEph<V>, edges: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>)
             requires
                 forall |u: V::V, w: V::V| 
@@ -131,7 +133,8 @@ verus! {
             requires valid_key_type_Edge::<V>()
             ensures n == self@.A.len();
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: B)
             requires 
                 spec_graphview_wf(self@),
@@ -140,7 +143,8 @@ verus! {
                 self@.V.contains(v@),
             ensures b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)));
 
-        /// APAS: Work Θ(|E|), Span Θ(1)
+        /// - APAS: Work Θ(|E|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) -- sequential filter
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires 
                 spec_graphview_wf(self@),
@@ -150,7 +154,8 @@ verus! {
                 neighbors@ == self.spec_ng(v@),
                 neighbors@ <= self@.V;
 
-        /// APAS: Work Θ(|u_set| × |E|), Span Θ(1)
+        /// - APAS: Work Θ(|u_set| x |E|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|u_set| x |E|), Span Θ(|u_set| x |E|) -- nested iteration
         fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires 
                 spec_graphview_wf(self@),
@@ -160,12 +165,14 @@ verus! {
                 neighbors@ == self.spec_ng_of_vertices(vertices@),
                 neighbors@ <= self@.V;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: B)
             requires valid_key_type_Edge::<V>()
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
-        /// APAS: Work Θ(|E|), Span Θ(1)
+        /// - APAS: Work Θ(|E|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) -- sequential filter
         fn degree(&self, v: &V) -> (n: N)
             requires 
                 spec_graphview_wf(self@),
