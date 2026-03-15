@@ -79,7 +79,10 @@ pub mod OrderedTableStPer {
                 };
         fn insert(&self, k: K, v: V) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
+            ensures
+                table@.dom() =~= self@.dom().insert(k@),
+                table@.dom().finite(),
+                table.spec_orderedtablestper_wf();
         fn delete(&self, k: &K) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -89,27 +92,56 @@ pub mod OrderedTableStPer {
             ensures table@ == self@.remove(k@), table@.dom().finite(), table.spec_orderedtablestper_wf();
         fn domain(&self) -> (keys: ArraySetStEph<K>)
             requires obeys_feq_clone::<K>()
-            ensures self@.dom().finite();
+            ensures keys@ =~= self@.dom(), self@.dom().finite();
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (table: Self)
             requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),
-            ensures table@.dom().finite();
+            ensures
+                table@.dom() =~= keys@,
+                table.spec_orderedtablestper_wf(),
+                forall|k: K::V| #![auto] table@.contains_key(k) ==>
+                    (exists|key_arg: K, result: V|
+                        key_arg@ == k && f.ensures((&key_arg,), result)
+                        && table@[k] == result@),
+                table@.dom().finite();
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
+            ensures
+                table@.dom() == self@.dom(),
+                forall|k: K::V| #![auto] table@.contains_key(k) ==>
+                    (exists|old_val: V, result: V|
+                        old_val@ == self@[k]
+                        && f.ensures((&old_val,), result)
+                        && table@[k] == result@),
+                table@.dom().finite(),
+                table.spec_orderedtablestper_wf();
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
                 forall|k: &K, v: &V| f.requires((k, v)),
                 obeys_feq_full::<Pair<K, V>>(),
                 forall|k: K, v: V, keep: bool| f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
+            ensures
+                table@.dom().subset_of(self@.dom()),
+                forall|k: K::V| #![auto] table@.contains_key(k) ==> table@[k] == self@[k],
+                forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
+                    ==> #[trigger] table@.dom().contains(k),
+                table@.dom().finite(),
+                table.spec_orderedtablestper_wf();
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<K>(),
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
+            ensures
+                table@.dom() =~= self@.dom().intersect(other@.dom()),
+                forall|k: K::V| #![auto] table@.contains_key(k) ==>
+                    (exists|v1: V, v2: V, r: V|
+                        v1@ == self@[k] && v2@ == other@[k]
+                        && f.ensures((&v1, &v2), r)
+                        && table@[k] == r@),
+                table@.dom().finite(),
+                table.spec_orderedtablestper_wf();
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -117,16 +149,40 @@ pub mod OrderedTableStPer {
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
+            ensures
+                table@.dom() =~= self@.dom().union(other@.dom()),
+                forall|k: K::V| #![auto] self@.contains_key(k) && !other@.contains_key(k)
+                    ==> table@[k] == self@[k],
+                forall|k: K::V| #![auto] other@.contains_key(k) && !self@.contains_key(k)
+                    ==> table@[k] == other@[k],
+                forall|k: K::V| #![auto] self@.contains_key(k) && other@.contains_key(k) ==>
+                    (exists|v1: V, v2: V, r: V|
+                        v1@ == self@[k] && v2@ == other@[k]
+                        && f.ensures((&v1, &v2), r)
+                        && table@[k] == r@),
+                table@.dom().finite(),
+                table.spec_orderedtablestper_wf();
         fn difference(&self, other: &Self) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
+            ensures
+                table@.dom() =~= self@.dom().difference(other@.dom()),
+                forall|k: K::V| #![auto] table@.contains_key(k) ==> table@[k] == self@[k],
+                table@.dom().finite(),
+                table.spec_orderedtablestper_wf();
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
+            ensures
+                table@.dom() =~= self@.dom().intersect(keys@),
+                forall|k: K::V| #![auto] table@.contains_key(k) ==> table@[k] == self@[k],
+                table@.dom().finite(),
+                table.spec_orderedtablestper_wf();
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
+            ensures
+                table@.dom() =~= self@.dom().difference(keys@),
+                forall|k: K::V| #![auto] table@.contains_key(k) ==> table@[k] == self@[k],
+                table@.dom().finite(),
+                table.spec_orderedtablestper_wf();
         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), sorted_entries.spec_avltreeseqstper_wf(), sorted_entries@.len() == self@.dom().len();
         /// ADT 43.1 first_key. Work Θ(log n), Span Θ(log n).
@@ -173,7 +229,10 @@ pub mod OrderedTableStPer {
                 right.spec_orderedtablestper_wf(),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf();
+            ensures
+                table@.dom() =~= left@.dom().union(right@.dom()),
+                table@.dom().finite(),
+                table.spec_orderedtablestper_wf();
         /// ADT 43.1 get_key_range. Work Θ(log n), Span Θ(log n).
         fn get_key_range(&self, k1: &K, k2: &K) -> (table: Self)
             ensures
@@ -241,7 +300,6 @@ pub mod OrderedTableStPer {
         }
 
         fn insert(&self, k: K, v: V) -> (table: Self)
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
             let base = self.base_table.insert(k, v, |_old: &V, new: &V| -> (r: V) { new.clone() });
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
@@ -260,14 +318,12 @@ pub mod OrderedTableStPer {
         }
 
         fn domain(&self) -> (keys: ArraySetStEph<K>)
-            ensures self@.dom().finite()
         {
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             self.base_table.domain()
         }
 
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (table: Self)
-            ensures table@.dom().finite()
         {
             let base = TableStPer::tabulate(f, keys);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
@@ -275,7 +331,6 @@ pub mod OrderedTableStPer {
         }
 
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self)
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
             let base = self.base_table.map(f);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
@@ -283,7 +338,6 @@ pub mod OrderedTableStPer {
         }
 
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (table: Self)
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
             let base = self.base_table.filter(f, Ghost(spec_pred));
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
@@ -291,7 +345,6 @@ pub mod OrderedTableStPer {
         }
 
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
             let base = self.base_table.intersection(&other.base_table, f);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
@@ -299,7 +352,6 @@ pub mod OrderedTableStPer {
         }
 
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
             let base = self.base_table.union(&other.base_table, f);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
@@ -307,7 +359,6 @@ pub mod OrderedTableStPer {
         }
 
         fn difference(&self, other: &Self) -> (table: Self)
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
             let base = self.base_table.difference(&other.base_table);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
@@ -315,7 +366,6 @@ pub mod OrderedTableStPer {
         }
 
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self)
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
             let base = self.base_table.restrict(keys);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
@@ -323,7 +373,6 @@ pub mod OrderedTableStPer {
         }
 
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self)
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
             let base = self.base_table.subtract(keys);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
@@ -496,7 +545,6 @@ pub mod OrderedTableStPer {
         }
 
         fn join_key(left: &Self, right: &Self) -> (table: Self)
-            ensures table@.dom().finite(), table.spec_orderedtablestper_wf()
         {
             left.union(right, |v1: &V, _v2: &V| -> (r: V) { v1.clone() })
         }
