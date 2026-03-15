@@ -89,7 +89,14 @@ broadcast use {
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
-            ensures self@.dom().finite();
+            ensures
+                self@.contains_key(k@),
+                self@.dom() =~= old(self)@.dom().insert(k@),
+                forall|key: K::V| #![auto] key != k@ && old(self)@.contains_key(key) ==> self@[key] == old(self)@[key],
+                !old(self)@.contains_key(k@) ==> self@[k@] == v@,
+                old(self)@.contains_key(k@) ==> (exists|old_v: V, r: V|
+                    old_v@ == old(self)@[k@] && combine.ensures((&old_v, &v), r) && self@[k@] == r@),
+                self@.dom().finite();
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             requires
                 old(self).spec_orderedtablesteph_wf(),
@@ -99,13 +106,20 @@ broadcast use {
             ensures self@ == old(self)@.remove(k@), self@.dom().finite();
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             requires obeys_feq_clone::<K>()
-            ensures self@.dom().finite();
+            ensures domain@ =~= self@.dom(), self@.dom().finite();
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>()
-            ensures tabulated@.dom().finite();
+            ensures
+                tabulated@.dom() =~= keys@,
+                tabulated.spec_orderedtablesteph_wf(),
+                forall|k: K::V| #![auto] tabulated@.contains_key(k) ==>
+                    (exists|key_arg: K, result: V|
+                        key_arg@ == k && f.ensures((&key_arg,), result)
+                        && tabulated@[k] == result@),
+                tabulated@.dom().finite();
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
             requires forall|k: &K, v: &V| f.requires((k, v))
-            ensures mapped@.dom().finite();
+            ensures mapped@.dom() =~= self@.dom(), mapped@.dom().finite();
         fn filter<F: Fn(&K, &V) -> B>(
             &self,
             f: F,
@@ -115,7 +129,12 @@ broadcast use {
                 forall|k: &K, v: &V| f.requires((k, v)),
                 forall|k: K, v: V, keep: bool|
                     f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
-            ensures filtered@.dom().finite();
+            ensures
+                filtered@.dom().subset_of(self@.dom()),
+                forall|k: K::V| #![auto] filtered@.contains_key(k) ==> filtered@[k] == self@[k],
+                forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
+                    ==> #[trigger] filtered@.dom().contains(k),
+                filtered@.dom().finite();
         fn reduce<R, F: Fn(R, &K, &V) -> R>(&self, init: R, f: F) -> (reduced: R)
             requires forall|r: R, k: &K, v: &V| f.requires((r, k, v))
             ensures self@.dom().finite();
@@ -124,23 +143,50 @@ broadcast use {
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_feq_clone::<K>(),
                 obeys_view_eq::<K>(),
-            ensures self@.dom().finite();
+            ensures
+                self@.dom() =~= old(self)@.dom().intersect(other@.dom()),
+                forall|k: K::V| #![auto] self@.contains_key(k) ==>
+                    (exists|v1: V, v2: V, r: V|
+                        v1@ == old(self)@[k] && v2@ == other@[k]
+                        && f.ensures((&v1, &v2), r)
+                        && self@[k] == r@),
+                self@.dom().finite();
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
             requires
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_feq_clone::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
-            ensures self@.dom().finite();
+            ensures
+                self@.dom() =~= old(self)@.dom().union(other@.dom()),
+                forall|k: K::V| #![auto] old(self)@.contains_key(k) && !other@.contains_key(k)
+                    ==> self@[k] == old(self)@[k],
+                forall|k: K::V| #![auto] other@.contains_key(k) && !old(self)@.contains_key(k)
+                    ==> self@[k] == other@[k],
+                forall|k: K::V| #![auto] old(self)@.contains_key(k) && other@.contains_key(k) ==>
+                    (exists|v1: V, v2: V, r: V|
+                        v1@ == old(self)@[k] && v2@ == other@[k]
+                        && f.ensures((&v1, &v2), r)
+                        && self@[k] == r@),
+                self@.dom().finite();
         fn difference(&mut self, other: &Self)
             requires old(self).spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
-            ensures self@.dom().finite();
+            ensures
+                self@.dom() =~= old(self)@.dom().difference(other@.dom()),
+                forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k],
+                self@.dom().finite();
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             requires old(self).spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>()
-            ensures self@.dom().finite();
+            ensures
+                self@.dom() =~= old(self)@.dom().intersect(keys@),
+                forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k],
+                self@.dom().finite();
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             requires old(self).spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>()
-            ensures self@.dom().finite();
+            ensures
+                self@.dom() =~= old(self)@.dom().difference(keys@),
+                forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k],
+                self@.dom().finite();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len();
         /// ADT 43.1 first_key. Work Θ(log n), Span Θ(log n).
@@ -184,7 +230,9 @@ broadcast use {
         /// ADT 43.1 join_key. Work Θ(log(|left|+|right|)), Span Θ(log(|left|+|right|)).
         fn join_key(&mut self, other: Self)
             requires obeys_feq_clone::<K>(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
-            ensures self@.dom().finite();
+            ensures
+                self@.dom() =~= old(self)@.dom().union(other@.dom()),
+                self@.dom().finite();
         /// ADT 43.1 get_key_range. Work Θ(log n), Span Θ(log n).
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures
@@ -266,7 +314,6 @@ broadcast use {
         }
 
         fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
-            ensures self@.dom().finite()
         {
             self.base_table.insert(k, v, combine);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
@@ -286,22 +333,20 @@ broadcast use {
         }
 
         fn domain(&self) -> (domain: ArraySetStEph<K>)
-            ensures self@.dom().finite()
         {
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             self.base_table.domain()
         }
 
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            ensures tabulated@.dom().finite()
         {
             let base = TableStEph::tabulate(f, keys);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
             OrderedTableStEph { base_table: base }
         }
 
+        #[verifier::external_body]
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
-            ensures mapped@.dom().finite()
         {
             let entries = self.collect();
             let size = entries.length();
@@ -388,21 +433,18 @@ broadcast use {
         }
 
         fn difference(&mut self, other: &Self)
-            ensures self@.dom().finite()
         {
             self.base_table.difference(&other.base_table);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
         }
 
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            ensures self@.dom().finite()
         {
             self.base_table.restrict(keys);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
         }
 
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            ensures self@.dom().finite()
         {
             self.base_table.subtract(keys);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
@@ -576,7 +618,6 @@ broadcast use {
         }
 
         fn join_key(&mut self, other: Self)
-            ensures self@.dom().finite()
         {
             self.union(&other, |v1, _v2| v1.clone());
         }
