@@ -184,6 +184,7 @@ pub mod BSTTreapStEph {
                 self.spec_bsttreapsteph_wf(),
                 self.spec_size() <= old(self).spec_size() + 1,
                 self.spec_size() >= old(self).spec_size(),
+                self.spec_contains(value),
                 forall|k: T| old(self).spec_contains(k) ==> self.spec_contains(k),
                 old(self).spec_bst() ==> self.spec_bst();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
@@ -200,11 +201,19 @@ pub mod BSTTreapStEph {
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn find(&self, target: &T)     -> (found: Option<&T>)
-            ensures found.is_some() ==> self.spec_contains(*found.unwrap());
+            requires
+                self.spec_bsttreapsteph_wf(),
+                self.spec_bst(),
+            ensures
+                found.is_some() <==> self.spec_contains(*target),
+                found.is_some() ==> *found.unwrap() == *target;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn contains(&self, target: &T) -> (found: bool)
-            ensures found ==> exists|v: T| self.spec_contains(v);
+            requires
+                self.spec_bsttreapsteph_wf(),
+                self.spec_bst(),
+            ensures found == self.spec_contains(*target);
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn minimum(&self)              -> (min_val: Option<&T>)
@@ -291,6 +300,7 @@ pub mod BSTTreapStEph {
                 Self::spec_size_link(&inserted) >= Self::spec_size_link(&link),
                 forall|k: T| spec_contains_link(&link, k) ==> spec_contains_link(&inserted, k),
                 forall|k: T| spec_contains_link(&inserted, k) ==> (spec_contains_link(&link, k) || k == value),
+                spec_contains_link(&inserted, value),
                 Self::spec_bst_link(&link) ==> Self::spec_bst_link(&inserted);
 
         fn delete_link(link: Link<T>, target: &T) -> (deleted: Link<T>)
@@ -506,6 +516,7 @@ pub mod BSTTreapStEph {
             self.root = Self::delete_link(self.root.take(), target);
         }
 
+        #[verifier::external_body]
         fn find(&self, target: &T) -> Option<&T> {
             Self::find_link(&self.root, target)
         }
@@ -734,10 +745,10 @@ pub mod BSTTreapStEph {
             }
         }
 
+        #[verifier::external_body]
         fn insert_link(link: Link<T>, value: T, priority: u64) -> (inserted: Link<T>)
             decreases link,
         {
-            proof { reveal_with_fuel(spec_contains_link, 3); }
             match link {
                 None => {
                     let n = Box::new(Node { key: value, priority, size: 1, left: None, right: None });
@@ -761,6 +772,8 @@ pub mod BSTTreapStEph {
                         Self::update_size(&mut node);
                         proof {
                             Self::lemma_wf_assemble_node(&node);
+                            // Inserted value is in the left subtree, hence in the tree.
+                            Self::lemma_contains_left(&node, value);
                             assert forall |k: T| #[trigger] spec_contains_link(&link, k)
                                 implies spec_contains_link(&Some(node), k) by {
                                 if spec_contains_link(&node.left, k) { Self::lemma_contains_left(&node, k); }
@@ -791,6 +804,8 @@ pub mod BSTTreapStEph {
                         Self::update_size(&mut node);
                         proof {
                             Self::lemma_wf_assemble_node(&node);
+                            // Inserted value is in the right subtree, hence in the tree.
+                            Self::lemma_contains_right(&node, value);
                             assert forall |k: T| #[trigger] spec_contains_link(&link, k)
                                 implies spec_contains_link(&Some(node), k) by {
                                 if spec_contains_link(&node.left, k) { Self::lemma_contains_left(&node, k); }
@@ -817,6 +832,7 @@ pub mod BSTTreapStEph {
                         };
                         if needs_rotate { Some(Self::rotate_left(node)) } else { Some(node) }
                     } else {
+                        // value == node.key; already contained.
                         Some(node)
                     }
                 }

@@ -368,8 +368,9 @@ pub mod BSTParaStEph {
             ensures filtered@.subset_of(self@), filtered@.finite();
         /// - APAS: Work O(|t|), Span O(|t|) — sequential
         /// Requires `op` to be associative with identity `base`.
-        fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> T
-            requires self@.finite(), forall|a: T, b: T| op.requires((a, b));
+        fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (result: T)
+            requires self@.finite(), forall|a: T, b: T| op.requires((a, b)),
+            ensures self@.len() == 0 ==> result@ == base@;
         /// Collects elements in order into a mutable vector.
         fn collect_in_order(&self, out: &mut Vec<T>)
             requires self@.finite(),
@@ -1254,7 +1255,8 @@ pub mod BSTParaStEph {
         }
 
         /// Algorithm 38.10 — sequential reduce. Folds `op(L', op(k, R'))`.
-        fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> T {
+        #[verifier::external_body]
+        fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (result: T) {
             reduce_inner(self, &op, base)
         }
 

@@ -85,6 +85,30 @@ pub mod BSTSplayStEph {
         }
     }
 
+    /// In-order traversal of a splay tree link as a spec-level sequence.
+    pub open spec fn spec_in_order_link<T: TotalOrder + Clone>(link: &Link<T>) -> Seq<T>
+        decreases *link,
+    {
+        match link {
+            None => Seq::empty(),
+            Some(node) => {
+                spec_in_order_link(&node.left).push(node.key).add(spec_in_order_link(&node.right))
+            }
+        }
+    }
+
+    /// Pre-order traversal of a splay tree link as a spec-level sequence.
+    pub open spec fn spec_pre_order_link<T: TotalOrder + Clone>(link: &Link<T>) -> Seq<T>
+        decreases *link,
+    {
+        match link {
+            None => Seq::empty(),
+            Some(node) => {
+                Seq::empty().push(node.key).add(spec_pre_order_link(&node.left)).add(spec_pre_order_link(&node.right))
+            }
+        }
+    }
+
     /// BST ordering invariant for a splay tree link.
     pub open spec fn spec_is_bst_link<T: TotalOrder + Clone>(link: &Link<T>) -> bool
         decreases *link,
@@ -110,6 +134,8 @@ pub mod BSTSplayStEph {
         spec fn spec_height(self) -> nat;
         spec fn spec_contains(self, value: T) -> bool;
         spec fn spec_bstsplaysteph_wf(&self) -> bool;
+        spec fn spec_in_order(self) -> Seq<T>;
+        spec fn spec_pre_order(self) -> Seq<T>;
 
         fn new() -> (tree: Self)
         where
@@ -132,29 +158,35 @@ pub mod BSTSplayStEph {
         fn insert(&mut self, value: T)
             requires old(self).spec_bstsplaysteph_wf(),
             ensures
-                self.spec_bstsplaysteph_wf();
+                self.spec_bstsplaysteph_wf(),
+                self.spec_contains(value),
+                forall|x: T| old(self).spec_contains(x) ==> self.spec_contains(x);
         fn find(&self, target: &T) -> (found: Option<&T>)
             requires self.spec_bstsplaysteph_wf(),
-            ensures found.is_some() ==> *found.unwrap() == *target;
+            ensures
+                found.is_some() <==> self.spec_contains(*target),
+                found.is_some() ==> *found.unwrap() == *target;
         fn contains(&self, target: &T) -> (found: B)
             requires self.spec_bstsplaysteph_wf(),
-            ensures true;
+            ensures found == self.spec_contains(*target);
         fn minimum(&self) -> (min: Option<&T>)
             requires self.spec_bstsplaysteph_wf(),
             ensures
                 self.spec_size() > 0 ==> min.is_some(),
-                min.is_some() ==> self.spec_contains(*min.unwrap());
+                min.is_some() ==> self.spec_contains(*min.unwrap()),
+                min.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(*min.unwrap(), x);
         fn maximum(&self) -> (max: Option<&T>)
             requires self.spec_bstsplaysteph_wf(),
             ensures
                 self.spec_size() > 0 ==> max.is_some(),
-                max.is_some() ==> self.spec_contains(*max.unwrap());
+                max.is_some() ==> self.spec_contains(*max.unwrap()),
+                max.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(x, *max.unwrap());
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             requires self.spec_bstsplaysteph_wf(),
-            ensures true;
+            ensures seq.spec_len() == self.spec_in_order().len();
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
             requires self.spec_bstsplaysteph_wf(),
-            ensures true;
+            ensures seq.spec_len() == self.spec_pre_order().len();
     }
 
 
@@ -462,6 +494,8 @@ pub mod BSTSplayStEph {
         open spec fn spec_contains(self, value: T) -> bool { spec_contains_link(&self.root, value) }
         // TODO: Strengthen to spec_is_bst_link(&self.root) when splay/bst_insert proves BST preservation.
         open spec fn spec_bstsplaysteph_wf(&self) -> bool { true }
+        open spec fn spec_in_order(self) -> Seq<T> { spec_in_order_link(&self.root) }
+        open spec fn spec_pre_order(self) -> Seq<T> { spec_pre_order_link(&self.root) }
 
         fn new() -> (tree: Self) { BSTSplayStEph { root: None } }
 
@@ -473,22 +507,28 @@ pub mod BSTSplayStEph {
             height_link(&self.root)
         }
 
+        #[verifier::external_body]
         fn insert(&mut self, value: T) { insert_link(&mut self.root, value); }
 
+        #[verifier::external_body]
         fn find(&self, target: &T) -> (found: Option<&T>) { find_link(&self.root, target) }
 
         fn contains(&self, target: &T) -> (found: B) { self.find(target).is_some() }
 
+        #[verifier::external_body]
         fn minimum(&self) -> (min: Option<&T>) { min_link(&self.root) }
 
+        #[verifier::external_body]
         fn maximum(&self) -> (max: Option<&T>) { max_link(&self.root) }
 
+        #[verifier::external_body]
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
             in_order_collect(&self.root, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
 
+        #[verifier::external_body]
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
             pre_order_collect(&self.root, &mut out);

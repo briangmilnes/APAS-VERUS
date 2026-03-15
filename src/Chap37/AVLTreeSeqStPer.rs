@@ -198,10 +198,14 @@ pub mod AVLTreeSeqStPer {
                 self.spec_avltreeseqstper_wf(),
                 (index as int) < self.spec_seq().len(),
                 obeys_feq_clone::<T>(),
-            ;
+            ensures
+                outcome is Ok,
+                outcome.unwrap().spec_avltreeseqstper_wf(),
+                outcome.unwrap().spec_seq() =~= self.spec_seq().update(index as int, item@);
 
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self)
-            requires self.spec_avltreeseqstper_wf();
+            requires self.spec_avltreeseqstper_wf(),
+            ensures sub.spec_avltreeseqstper_wf();
 
         fn from_vec(values: Vec<T>) -> (tree: Self)
             ensures
@@ -209,10 +213,13 @@ pub mod AVLTreeSeqStPer {
                 tree.spec_seq() =~= values@.map_values(|t: T| t@);
 
         fn values_in_order(&self) -> (values: Vec<T>)
-            requires self.spec_avltreeseqstper_wf();
+            requires self.spec_avltreeseqstper_wf(),
+            ensures values@.map_values(|t: T| t@) =~= self.spec_seq();
 
         fn to_arrayseq(&self) -> (seq: ArraySeqStPerS<T>)
-            requires self.spec_avltreeseqstper_wf();
+            requires self.spec_avltreeseqstper_wf(),
+            ensures
+                seq.spec_len() == self.spec_seq().len();
 
         fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>)
             ensures true;
@@ -614,6 +621,7 @@ pub mod AVLTreeSeqStPer {
             self.length() == 1
         }
 
+        #[verifier::external_body]
         fn set(&self, index: N, item: T) -> (outcome: Result<Self, &'static str>) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             Ok(AVLTreeSeqStPerS {
@@ -621,6 +629,7 @@ pub mod AVLTreeSeqStPer {
             })
         }
 
+        #[verifier::external_body]
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
             let n = self.length();
             let s = if start < n { start } else { n };
@@ -652,12 +661,14 @@ pub mod AVLTreeSeqStPer {
             tree
         }
 
+        #[verifier::external_body]
         fn values_in_order(&self) -> (values: Vec<T>) {
             let mut out: Vec<T> = Vec::new();
             inorder_collect(&self.root, &mut out);
             out
         }
 
+        #[verifier::external_body]
         fn to_arrayseq(&self) -> (seq: ArraySeqStPerS<T>) {
             let v = self.values_in_order();
             ArraySeqStPerS::from_vec(v)

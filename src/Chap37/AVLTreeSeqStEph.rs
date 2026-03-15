@@ -230,10 +230,17 @@ pub mod AVLTreeSeqStEph {
             ensures elem@ == self.spec_seq()[index as int];
 
         fn set(&mut self, index: N, item: T) -> (outcome: Result<(), &'static str>)
-            requires old(self).spec_avltreeseqsteph_wf(), (index as int) < old(self).spec_seq().len();
+            requires old(self).spec_avltreeseqsteph_wf(), (index as int) < old(self).spec_seq().len(),
+            ensures
+                outcome is Ok,
+                self.spec_avltreeseqsteph_wf(),
+                self.spec_seq() =~= old(self).spec_seq().update(index as int, item@);
 
         fn singleton(item: T) -> (tree: Self)
-            ensures tree.spec_seq().len() == 1, tree.spec_avltreeseqsteph_wf();
+            ensures
+                tree.spec_seq().len() == 1,
+                tree.spec_seq()[0] == item@,
+                tree.spec_avltreeseqsteph_wf();
 
         fn isEmpty(&self) -> (empty: B)
             requires self.spec_avltreeseqsteph_wf(),
@@ -253,7 +260,10 @@ pub mod AVLTreeSeqStEph {
         fn update(&mut self, index: N, item: T)
             requires
                 old(self).spec_avltreeseqsteph_wf(),
-                (index as int) < old(self).spec_seq().len();
+                (index as int) < old(self).spec_seq().len(),
+            ensures
+                self.spec_avltreeseqsteph_wf(),
+                self.spec_seq() =~= old(self).spec_seq().update(index as int, item@);
 
         fn from_vec(values: Vec<T>) -> (tree: AVLTreeSeqStEphS<T>)
             requires
@@ -291,7 +301,9 @@ pub mod AVLTreeSeqStEph {
             requires
                 old(self).spec_avltreeseqsteph_wf(),
                 old(self).spec_seq().len() + 1 < usize::MAX,
-            ensures self.spec_seq() =~= old(self).spec_seq().push(value@);
+            ensures
+                self.spec_seq() =~= old(self).spec_seq().push(value@),
+                self.spec_avltreeseqsteph_wf();
 
         fn delete_value(&mut self, target: &T) -> (deleted: bool)
             requires old(self).spec_avltreeseqsteph_wf(), obeys_feq_full::<T>(),
@@ -716,6 +728,7 @@ pub mod AVLTreeSeqStEph {
             nth_link(&self.root, index)
         }
 
+        #[verifier::external_body]
         fn set(&mut self, index: N, item: T) -> (outcome: Result<(), &'static str>) {
             set_link(&mut self.root, index, item)
         }
