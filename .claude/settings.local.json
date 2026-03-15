@@ -154,7 +154,9 @@
       "Bash(grep * /home/milnes/projects/APAS-VERUS*/**)",
       "Bash(gawk *)",
       "Bash(*| gawk *)",
-      "Bash(*|gawk *)"
+      "Bash(*|gawk *)",
+      "Bash(grep * <(*))",
+      "Bash(*|| *)"
     ]
   }
 }

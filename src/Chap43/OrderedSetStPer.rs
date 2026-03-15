@@ -24,7 +24,7 @@ pub mod OrderedSetStPer {
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_clone;
+    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger, lemma_cloned_view_eq};
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
@@ -436,46 +436,84 @@ broadcast use {
             ensures joined@ == left@.union(right@), joined@.finite()
         { left.union(right) }
 
-        #[verifier::external_body]
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
-            ensures
-                self@.finite(),
-                range@.finite(),
-                range@.subset_of(self@),
         {
-            let seq = self.to_seq();
-
-            let array_seq = ArraySeqStPerS::tabulate(&|i| seq.nth(i).clone(), seq.length());
-
-            let mut range_vec = Vec::new();
-            for i in 0..array_seq.length() {
-                let elem = array_seq.nth(i).clone();
-                if elem >= *k1 && elem <= *k2 {
-                    range_vec.push(elem);
+            let elements = &self.base_set.elements;
+            let size = elements.length();
+            let mut result = Self::empty();
+            let mut i: usize = 0;
+            while i < size
+                invariant
+                    i <= size,
+                    elements.spec_avltreeseqstper_wf(),
+                    size as nat == elements@.len(),
+                    self@.finite(),
+                    self@ =~= elements@.to_set(),
+                    result@.finite(),
+                    result@.subset_of(self@),
+                    result.spec_orderedsetstper_wf(),
+                decreases size - i,
+            {
+                let elem = elements.nth(i);
+                let ge_k1 = match elem.cmp(k1) {
+                    std::cmp::Ordering::Less => false,
+                    _ => true,
+                };
+                let le_k2 = match elem.cmp(k2) {
+                    std::cmp::Ordering::Greater => false,
+                    _ => true,
+                };
+                if ge_k1 && le_k2 {
+                    assert(obeys_feq_full_trigger::<T>());
+                    let v = elem.clone();
+                    proof {
+                        lemma_cloned_view_eq(*elem, v);
+                        let ghost s = elements@;
+                        assert(s[i as int] == elem@);
+                        assert(s.contains(elem@));
+                        assert(s.to_set().contains(elem@));
+                    }
+                    let ghost old_result_view = result@;
+                    result = result.insert(v);
+                    proof {
+                        assert(result@.subset_of(self@)) by {
+                            assert forall|x| #[trigger] result@.contains(x) implies self@.contains(x) by {
+                                if !old_result_view.contains(x) {
+                                    assert(x == elem@);
+                                }
+                            };
+                        };
+                    }
                 }
+                i = i + 1;
             }
-
-            let range_seq = AVLTreeSeqStPerS::from_vec(range_vec);
-            Self::from_seq(range_seq)
+            result
         }
 
-        #[verifier::external_body]
         fn rank(&self, k: &T) -> (rank: usize)
-            ensures
-                self@.finite(),
-                rank <= self@.len(),
         {
-            let seq = self.to_seq();
-            let size = seq.length();
-            let mut count = 0;
-
-            for i in 0..size {
-                let elem = seq.nth(i);
-                if elem < k {
-                    count += 1;
-                } else {
-                    break;
+            let elements = &self.base_set.elements;
+            let size = elements.length();
+            let mut count: usize = 0;
+            let mut i: usize = 0;
+            while i < size
+                invariant
+                    count <= i,
+                    i <= size,
+                    elements.spec_avltreeseqstper_wf(),
+                    size as nat == elements@.len(),
+                    self@.finite(),
+                decreases size - i,
+            {
+                let elem = elements.nth(i);
+                match elem.cmp(k) {
+                    std::cmp::Ordering::Less => { count = count + 1; i = i + 1; },
+                    _ => { i = size; },
                 }
+            }
+            proof {
+                self.base_set.elements@.unique_seq_to_set();
+                assert(self@ =~= self.base_set.elements@.to_set());
             }
             count
         }
@@ -503,27 +541,69 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn split_rank(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
-            ensures
-                self@.finite(),
-                split.0@.finite(),
-                split.1@.finite(),
-                split.0@.subset_of(self@),
-                split.1@.subset_of(self@),
         {
-            let seq = self.to_seq();
-            let size = seq.length();
-
-            if i >= size {
-                return (self.clone(), Self::empty());
+            let elements = &self.base_set.elements;
+            let size = elements.length();
+            let mut left = Self::empty();
+            let mut right = Self::empty();
+            let split_at = if i >= size { size } else { i };
+            let mut j: usize = 0;
+            while j < size
+                invariant
+                    j <= size,
+                    elements.spec_avltreeseqstper_wf(),
+                    size as nat == elements@.len(),
+                    self@.finite(),
+                    self@ =~= elements@.to_set(),
+                    left@.finite(),
+                    right@.finite(),
+                    left@.subset_of(self@),
+                    right@.subset_of(self@),
+                    left.spec_orderedsetstper_wf(),
+                    right.spec_orderedsetstper_wf(),
+                    split_at <= size,
+                decreases size - j,
+            {
+                assert(obeys_feq_full_trigger::<T>());
+                let elem = elements.nth(j);
+                let v = elem.clone();
+                proof {
+                    lemma_cloned_view_eq(*elem, v);
+                    let ghost s = elements@;
+                    assert(s[j as int] == elem@);
+                    assert(s.contains(elem@));
+                    assert(s.to_set().contains(elem@));
+                }
+                if j < split_at {
+                    let ghost old_left_view = left@;
+                    left = left.insert(v);
+                    proof {
+                        assert(left@.subset_of(self@)) by {
+                            assert forall|x| #[trigger] left@.contains(x) implies self@.contains(x) by {
+                                if !old_left_view.contains(x) {
+                                    assert(x == elem@);
+                                }
+                            };
+                        };
+                    }
+                } else {
+                    let ghost old_right_view = right@;
+                    right = right.insert(v);
+                    proof {
+                        assert(right@.subset_of(self@)) by {
+                            assert forall|x| #[trigger] right@.contains(x) implies self@.contains(x) by {
+                                if !old_right_view.contains(x) {
+                                    assert(x == elem@);
+                                }
+                            };
+                        };
+                    }
+                }
+                j = j + 1;
             }
-
-            let left_seq = seq.subseq_copy(0, i);
-            let right_seq = seq.subseq_copy(i, size - i);
-
-            (Self::from_seq(left_seq), Self::from_seq(right_seq))
+            (left, right)
         }
     }
 
