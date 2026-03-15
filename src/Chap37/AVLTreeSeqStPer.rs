@@ -441,6 +441,7 @@ pub mod AVLTreeSeqStPer {
             outcome is Ok,
             spec_avltreeseqstper_wf(outcome.unwrap()),
             spec_cached_size(&outcome.unwrap()) == spec_cached_size(cur),
+            spec_inorder(outcome.unwrap()) =~= spec_inorder(*cur).update(index as int, value@),
         decreases *cur,
     {
         match cur {
@@ -458,6 +459,8 @@ pub mod AVLTreeSeqStPer {
                     let new_left = set_rec(&n.left, index, value)?;
                     let n_val = n.value.clone_plus();
                     proof {
+                        assert(obeys_feq_full_trigger::<T>());
+                        assert(n_val@ == n.value@);
                         lemma_height_le_size::<T>(&new_left);
                         lemma_height_le_size::<T>(&n.right);
                     }
@@ -469,6 +472,8 @@ pub mod AVLTreeSeqStPer {
                     let new_right = set_rec(&n.right, index - ls - 1, value)?;
                     let n_val = n.value.clone_plus();
                     proof {
+                        assert(obeys_feq_full_trigger::<T>());
+                        assert(n_val@ == n.value@);
                         lemma_height_le_size::<T>(&n.left);
                         lemma_height_le_size::<T>(&new_right);
                     }
@@ -621,7 +626,6 @@ pub mod AVLTreeSeqStPer {
             self.length() == 1
         }
 
-        #[verifier::external_body]
         fn set(&self, index: N, item: T) -> (outcome: Result<Self, &'static str>) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             Ok(AVLTreeSeqStPerS {
@@ -629,7 +633,6 @@ pub mod AVLTreeSeqStPer {
             })
         }
 
-        #[verifier::external_body]
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
             let n = self.length();
             let s = if start < n { start } else { n };
@@ -661,14 +664,36 @@ pub mod AVLTreeSeqStPer {
             tree
         }
 
-        #[verifier::external_body]
         fn values_in_order(&self) -> (values: Vec<T>) {
-            let mut out: Vec<T> = Vec::new();
-            inorder_collect(&self.root, &mut out);
-            out
+            let n = self.length();
+            let mut vals: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            while i < n
+                invariant
+                    self.spec_avltreeseqstper_wf(),
+                    n as int == self.spec_seq().len(),
+                    0 <= i <= n,
+                    vals@.len() == i as nat,
+                    forall|j: int| 0 <= j < i as int ==> (#[trigger] vals@[j])@ == self.spec_seq()[j],
+                decreases n - i,
+            {
+                let elem = self.nth(i);
+                let val = elem.clone_plus();
+                proof {
+                    assert(obeys_feq_full_trigger::<T>());
+                    assert(cloned(*elem, val));
+                    lemma_cloned_view_eq::<T>(*elem, val);
+                }
+                vals.push(val);
+                i += 1;
+            }
+            proof {
+                assert(vals@.map_values(|t: T| t@) =~= self.spec_seq());
+            }
+            vals
         }
 
-        #[verifier::external_body]
         fn to_arrayseq(&self) -> (seq: ArraySeqStPerS<T>) {
             let v = self.values_in_order();
             ArraySeqStPerS::from_vec(v)

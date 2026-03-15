@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap56/SSSPResultStEphI64.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap56/
 Full output: src/Chap56/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,7 +20,22 @@ Table of Contents:
 1. File Holes
 =================================================================
 
+✓ AllPairsResultStEphF64.rs
+✓ AllPairsResultStEphI64.rs
+✓ AllPairsResultStPerF64.rs
+✓ AllPairsResultStPerI64.rs
+ℹ Example56_1.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_1.rs:43: info: external_accept_hole
+   Info: 1 total
+ℹ Example56_3.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_3.rs:40: info: external_accept_hole
+   Info: 1 total
+✓ PathWeightUtilsStEph.rs
+✓ PathWeightUtilsStPer.rs
+✓ SSSPResultStEphF64.rs
 ✓ SSSPResultStEphI64.rs
+✓ SSSPResultStPerF64.rs
+✓ SSSPResultStPerI64.rs
 
 =================================================================
 2. Depends Upon
@@ -30,22 +45,44 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
+AllPairsResultStEphF64  depends upon only clean modules
+AllPairsResultStEphI64  depends upon only clean modules
+AllPairsResultStPerF64  depends upon only clean modules
+AllPairsResultStPerI64  depends upon only clean modules
+Example56_1  depends upon only clean modules
+Example56_3  depends upon only clean modules
+PathWeightUtilsStEph  depends upon only clean modules
+PathWeightUtilsStPer  depends upon only clean modules
+SSSPResultStEphF64  depends upon only clean modules
 SSSPResultStEphI64  depends upon only clean modules
+SSSPResultStPerF64  depends upon only clean modules
+SSSPResultStPerI64  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
+AllPairsResultStEphF64.rs  depends upon only clean modules
+AllPairsResultStEphI64.rs  depends upon only clean modules
+AllPairsResultStPerF64.rs  depends upon only clean modules
+AllPairsResultStPerI64.rs  depends upon only clean modules
+Example56_1.rs  depends upon only clean modules
+Example56_3.rs  depends upon only clean modules
+PathWeightUtilsStEph.rs  depends upon only clean modules
+PathWeightUtilsStPer.rs  depends upon only clean modules
+SSSPResultStEphF64.rs  depends upon only clean modules
 SSSPResultStEphI64.rs  depends upon only clean modules
+SSSPResultStPerF64.rs  depends upon only clean modules
+SSSPResultStPerI64.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 100%)
+   12 clean (no holes, no errors; 100%)
    0 holed (holes or errors, 0%)
-   1 total
+   12 total
 
 Proof Functions:
    0 clean (0%)
@@ -53,11 +90,11 @@ Proof Functions:
    0 total
 
 Function Specs:
-   14 exec fns with complete spec (requires+ensures) (63%)
+   138 exec fns with complete spec (requires+ensures) (63%)
    0 exec fns missing spec (0%)
-   8 proof/spec fns clean (36%)
+   81 proof/spec fns clean (36%)
    0 proof/spec fns with holes (0%)
-   22 total fns
+   219 total fns
 
 
 Holes Found: 0 total
@@ -68,8 +105,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 15:52:14 -07:00
-Ended:     2026-03-15 15:52:14 -07:00
-Duration:  2ms
+Started:   2026-03-15 16:41:23 -07:00
+Ended:     2026-03-15 16:41:23 -07:00
+Duration:  25ms
 
 Full output: src/Chap56/analyses/veracity-review-verus-proof-holes.log
+yses/veracity-review-verus-proof-holes.log

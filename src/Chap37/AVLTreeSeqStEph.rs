@@ -602,6 +602,7 @@ pub mod AVLTreeSeqStEph {
             spec_cached_size(node) == spec_cached_size(old(node)),
             spec_cached_height(node) == spec_cached_height(old(node)),
             outcome is Ok,
+            spec_inorder(*node) =~= spec_inorder(*old(node)).update(index as int, value@),
         decreases *old(node),
     {
         let cur = node.take();
@@ -611,6 +612,7 @@ pub mod AVLTreeSeqStEph {
                 Err("Index out of bounds")
             }
             Some(mut n) => {
+                let ghost old_n = *n;
                 proof { lemma_size_eq_inorder_len::<T>(&n.left); }
                 proof { lemma_size_eq_inorder_len::<T>(&n.right); }
                 let left_size = n.left_size;
@@ -728,8 +730,8 @@ pub mod AVLTreeSeqStEph {
             nth_link(&self.root, index)
         }
 
-        #[verifier::external_body]
         fn set(&mut self, index: N, item: T) -> (outcome: Result<(), &'static str>) {
+            proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             set_link(&mut self.root, index, item)
         }
 
