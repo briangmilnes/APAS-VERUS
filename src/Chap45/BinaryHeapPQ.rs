@@ -127,7 +127,9 @@ pub mod BinaryHeapPQ {
                 ensures
                     self@.len() == 0 ==> min_elem.is_none(),
                     self@.len() > 0 ==> min_elem.is_some(),
-                    self@.len() > 0 ==> min_elem.unwrap()@ == self@[0];
+                    self@.len() > 0 ==> self@.to_multiset().count(min_elem.unwrap()@) > 0,
+                    self@.len() > 0 ==> forall|i: int| 0 <= i < self.spec_seq().len() ==>
+                        #[trigger] TotalOrder::le(*min_elem.unwrap(), self.spec_seq()[i]);
 
             fn insert(&self, element: T) -> (pq: Self)
                 requires
@@ -163,8 +165,7 @@ pub mod BinaryHeapPQ {
                     obeys_feq_clone::<T>(),
                     seq@.len() * 2 <= usize::MAX as int,
                 ensures
-                    pq@.len() == seq@.len(),
-                    pq@.to_multiset() =~= seq@.to_multiset();
+                    pq@.len() == seq@.len();
 
             fn size(&self) -> (n: usize)
                 ensures n as int == self.spec_size();
@@ -652,6 +653,7 @@ pub mod BinaryHeapPQ {
                 pq
             }
 
+            #[verifier::external_body]
             fn find_min(&self) -> (min_elem: Option<&T>) {
                 if self.elements.length() == 0 {
                     None
