@@ -1,17 +1,15 @@
-Chapter Status — 46 chapters, 37 clean, 9 holed, 167 holes (global), 257 modules
+Chapter Status — 46 chapters, 35 clean, 11 holed, 253 holes (global), 257 modules
 
-CLEAN CHAPTERS (37)
+CLEAN CHAPTERS (35)
   Chapter        Files
   -------------- -----
   Chap02             2
   Chap03             1
-  Chap05             5
   Chap06            20
   Chap11             5
   Chap12             3
   Chap17             1
   Chap18             7
-  Chap19             4
   Chap21            12
   Chap23             2
   Chap26             8
@@ -41,29 +39,41 @@ CLEAN CHAPTERS (37)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (9) — 256 holes
+HOLED CHAPTERS (11) — 342 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap37            90    19  internal  Chap37::BSTRBMtEph, Chap37::BSTSplayMtEph
+  Chap05             3     5  YES       
+  Chap19            24     4  YES       
+  Chap37            90    19  NO        Chap19::ArraySeqStEph
   Chap38            17     2  YES       
   Chap39            18     4  internal  Chap39::BSTParaTreapMtEph
-  Chap41            29     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStPer
-  Chap42            15     4  NO        Chap41::ArraySetStEph
-  Chap43            43    11  NO        Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph, Chap42::TableStEph, Chap42::TableStPer, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetStPer
-  Chap45             6     7  NO        Chap37::AVLTreeSeqStPer
+  Chap41            29     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStPer, Chap19::ArraySeqMtEph, Chap19::ArraySeqStEph
+  Chap42            15     4  NO        Chap41::ArraySetStEph, Chap19::ArraySeqMtEph, Chap19::ArraySeqStEph, Chap19::ArraySeqStPer
+  Chap43           102    11  NO        Chap19::ArraySeqMtEph, Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph, Chap42::TableStEph, Chap42::TableStPer, Chap19::ArraySeqStPer, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetStPer, Chap19::ArraySeqStEph
+  Chap45             6     7  NO        Chap37::AVLTreeSeqStPer, Chap19::ArraySeqStPer
   Chap47            33     9  internal  Chap47::ParaHashTableStEph, Chap47::FlatHashTable
-  Chap52             5    14  NO        Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer, Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph, Chap41::AVLTreeSetStPer, Chap41::ArraySetStEph, Chap43::OrderedTableStPer
+  Chap52             5    14  NO        Chap19::ArraySeqMtEph, Chap19::ArraySeqStEph, Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer, Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph, Chap41::AVLTreeSetStPer, Chap41::ArraySetStEph, Chap43::OrderedTableStPer
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
   --------------  -------------------
-  Chap41          Chap37
-  Chap42          Chap41
-  Chap43          Chap37, Chap41, Chap42
-  Chap44          Chap37, Chap41, Chap42
-  Chap45          Chap37
-  Chap52          Chap41, Chap43
+  Chap28          Chap19
+  Chap37          Chap19
+  Chap41          Chap37, Chap19
+  Chap42          Chap41, Chap19
+  Chap43          Chap19, Chap37, Chap41, Chap42
+  Chap44          Chap19, Chap37, Chap41, Chap42
+  Chap45          Chap37, Chap19
+  Chap49          Chap19
+  Chap51          Chap19
+  Chap52          Chap19, Chap41, Chap43
   Chap53          Chap41
-  Chap55          Chap41, Chap37
+  Chap54          Chap19
+  Chap55          Chap19, Chap41, Chap37
+  Chap56          Chap19
   Chap57          Chap45
+  Chap59          Chap19
+  Chap61          Chap19
+  Chap62          Chap19
+  Chap63          Chap19
   Chap65          Chap45
