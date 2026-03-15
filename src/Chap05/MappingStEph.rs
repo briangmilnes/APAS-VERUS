@@ -426,8 +426,24 @@ verus! {
             result
         }
 
-        #[verifier::external_body]
-        fn size(&self) -> (size: N) { self.mapping.size() }
+        fn size(&self) -> (size: N) {
+            let size = self.mapping.size();
+            proof {
+                let s = self.mapping@;
+                let proj = |p: (X::V, Y::V)| -> X::V { p.0 };
+                // Projection is injective on s because is_functional_set(s).
+                assert forall |p1: (X::V, Y::V), p2: (X::V, Y::V)|
+                    s.contains(p1) && s.contains(p2) && #[trigger] proj(p1) == #[trigger] proj(p2)
+                    implies p1 == p2 by {
+                    // p1.0 == p2.0. By functionality, p1.1 == p2.1. So p1 == p2.
+                }
+                assert(vstd::relations::injective_on(proj, s));
+                // s.map(proj) == self@.dom()
+                assert(s.map(proj) =~= self@.dom());
+                vstd::set_lib::lemma_map_size(s, self@.dom(), proj);
+            }
+            size
+        }
         fn mem(&self, p: &Pair<X, Y>) -> B { self.mapping.relates(p) }
         fn domain(&self) -> SetStEph<X> { self.mapping.domain() }
 
