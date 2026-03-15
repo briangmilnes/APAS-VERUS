@@ -21,94 +21,100 @@ Table of Contents:
 =================================================================
 
 ❌ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:81: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:81: error: external_body - #[verifier::external_body]
         82 |         open spec fn view(&self) -> Set<<T as View>::V> { Set::empty() }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:97: error: assume_specification - pub assume_specification<T: MtKey + 'static>[ split_inner ](
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:97: error: assume_specification - pub assume_specification<T: MtKey + 'static>[ split_inner ](
         92 |         open spec fn view(&self) -> () { () }
             ...
         95 |     // 7. proof fns/broadcast groups
         96 | 
         98 |         -> (parts: (ParamBST<T>, B, ParamBST<T>))
         99 |         ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:345: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:345: error: external_body - #[verifier::external_body]
        346 |         fn join_pair(&self, other: Self) -> (joined: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:350: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:350: error: external_body - #[verifier::external_body]
        351 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:355: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:355: error: external_body - #[verifier::external_body]
        356 |         fn intersect(&self, other: &Self) -> (common: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:360: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:360: error: external_body - #[verifier::external_body]
        361 |         fn difference(&self, other: &Self) -> (remaining: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:365: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:365: error: external_body - #[verifier::external_body]
        366 |         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:375: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:375: error: external_body - #[verifier::external_body]
        376 |         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:380: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:380: error: external_body - #[verifier::external_body]
        381 |         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:400: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:400: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        393 |         fn clone(&self) -> (cloned: Self)
             ...
        398 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
        399 |             };
        401 |             cloned
        402 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:415: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:415: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        406 |         fn clone(&self) -> (cloned: Self)
             ...
        413 |                 right: self.right.clone(),
        414 |             };
        416 |             cloned
        417 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:425: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:425: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        421 |         fn clone(&self) -> (cloned: Self)
             ...
        423 |         {
        424 |             let cloned = ParamBST { root: clone_arc_rwlock(&self.root) };
        426 |             cloned
        427 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:193: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:207: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:223: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:246: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:262: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:334: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:193: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:207: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:223: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:246: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:262: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:334: info: accept()
    Holes: 9 total
       1 × assume_specification
       8 × external_body
    Info: 6 total
 ❌ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:446: error: assume() - proof { assume(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaStEph.rs:446: error: assume() - proof { assume(
        419 |         fn expose(&self) -> (exposed: Exposed<T>)
             ...
        444 |                     let r = node.right.clone();
        445 |                     // T::clone has no verified ensures; cmp_spec(k) vs cmp_spec(node.key) unresolvable.
        447 |                         k@ == node.key@
        448 |                         && (forall|t: T| #![auto] l@.contains(t@) ==> t.cmp_spec(&k) == Less)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:530: error: assume() - assume(left@.len() + right@.len() < usize::MAX as nat);
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaStEph.rs:530: error: assume() - assume(left@.len() + right@.len() < usize::MAX as nat);
        524 |         fn insert(&mut self, key: T) {
             ...
        528 |             proof {
        529 |                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
        531 |             }
        532 |             *self = Self::join_m(left, key, right);
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:541: error: assume() - assume(left@.len() + right@.len() < usize::MAX as nat);
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaStEph.rs:541: error: assume() - assume(left@.len() + right@.len() < usize::MAX as nat);
        535 |         fn delete(&mut self, key: &T) {
             ...
        539 |             proof {
        540 |                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
        542 |                 assert forall|s: T, o: T| #![auto]
        543 |                     left@.contains(s@) && right@.contains(o@) implies
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:892: error: assume() - assume(luv.len() + ruv.len() < usize::MAX as nat);
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaStEph.rs:892: error: assume() - assume(luv.len() + ruv.len() < usize::MAX as nat);
        832 |         fn union(&self, other: &Self) -> (combined: Self)
             ...
        890 |                         };
        891 |                         // Size: not provable without input bounds.
        893 |                     }
        894 |                     let result = Self::join_m(left_union, ak, right_union);
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:1515: error: external_body - #[verifier::external_body]
-      1516 |         fn clone(&self) -> (cloned: Self)
-   Holes: 5 total
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaStEph.rs:1275: error: external_body - #[verifier::external_body]
+      1276 |         fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (result: T) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaStEph.rs:1299: error: external_body - #[verifier::external_body]
+      1300 |         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaStEph.rs:1312: error: external_body - #[verifier::external_body]
+      1313 |     fn filter_inner<T: StT + Ord, F: Fn(&T) -> bool>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaStEph.rs:1428: error: external_body - #[verifier::external_body]
+      1429 |         fn clone(&self) -> (cloned: Self)
+   Holes: 8 total
       4 × assume()
-      1 × external_body
+      4 × external_body
    Proof functions: 5 total (5 clean, 0 holed)
 
 =================================================================
@@ -151,24 +157,24 @@ Function Specs:
    104 total fns
 
 
-Holes Found: 14 total
-   4 × assume() (28%)
-   1 × assume_specification (7%)
-   9 × external_body (64%)
+Holes Found: 17 total
+   4 × assume() (23%)
+   1 × assume_specification (5%)
+   12 × external_body (70%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 12:07:57 -07:00
-Ended:     2026-03-15 12:07:57 -07:00
-Duration:  24ms
+Started:   2026-03-15 12:10:23 -07:00
+Ended:     2026-03-15 12:10:23 -07:00
+Duration:  26ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
 =====================
 
-Started:   2026-03-15 12:07:57 -07:00
-Ended:     2026-03-15 12:07:57 -07:00
-Duration:  24ms
+Started:   2026-03-15 12:10:23 -07:00
+Ended:     2026-03-15 12:10:23 -07:00
+Duration:  26ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log

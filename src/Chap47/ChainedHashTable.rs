@@ -68,12 +68,19 @@ pub mod ChainedHashTable {
                     old(table).num_elements < usize::MAX,
                 ensures
                     table.table@.len() == table.current_size as int,
+                    table@.dom().contains(key),
             {
                 let index = Self::hash_index(table, &key);
                 let existed = table.table[index].lookup(&key).is_some();
+                let ghost old_table_vec = table.table@;
                 let mut entry = table.table[index].clone_entry();
                 entry.insert(key, value);
+                let ghost entry_ghost = entry;
                 table.table.set(index, entry);
+                proof {
+                    lemma_table_to_map_update_contains::<Key, Value, Entry>(
+                        old_table_vec, index as int, entry_ghost, key);
+                }
                 if !existed {
                     table.num_elements = table.num_elements + 1;
                 }

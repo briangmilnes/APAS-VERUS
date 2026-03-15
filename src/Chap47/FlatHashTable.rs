@@ -71,20 +71,28 @@ pub mod FlatHashTable {
             ensures
                 table.table@.len() == table.current_size as int,
                 table.current_size == old(table).current_size,
+                table@.dom().contains(key),
         {
             let slot = Self::find_slot(table, &key);
+            let ghost old_table_vec = table.table@;
             let mut entry = Entry::new();
             EntryTrait::insert(&mut entry, key, value);
+            let ghost entry_ghost = entry;
             table.table.set(slot, entry);
+            proof {
+                lemma_table_to_map_update_contains::<Key, Value, Entry>(
+                    old_table_vec, slot as int, entry_ghost, key);
+            }
         }
 
         /// Looks up using probe sequence.
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — iterates probe sequence until found or empty.
-        fn lookup_with_probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value>
+        fn lookup_with_probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
             requires
                 table.current_size > 0,
                 table.table@.len() == table.current_size as int,
+            ensures true,
         {
             let mut attempt: usize = 0;
             while attempt < table.current_size
