@@ -51,6 +51,8 @@ pub mod VecChainedHashTableStEph {
                     self@.len() >= 1,
                     old(self)@.len() <= self@.len(),
                     self@.len() <= old(self)@.len() + 1,
+                    self@.last() == (key, value),
+                    self.spec_entry_to_map()[key] == value,
             {
                 let mut i: usize = 0;
                 while i < self.len()
@@ -87,7 +89,9 @@ pub mod VecChainedHashTableStEph {
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + Vec::remove (shifts elements), n = chain length.
             fn delete(&mut self, key: &Key) -> (deleted: bool)
-                ensures !deleted ==> self@ == old(self)@,
+                ensures
+                    !deleted ==> self@ == old(self)@,
+                    deleted ==> self@.len() + 1 == old(self)@.len(),
             {
                 let mut i: usize = 0;
                 while i < self.len()

@@ -49,6 +49,8 @@ pub mod LinkedListChainedHashTableStEph {
                     self.seq@.len() >= 1,
                     old(self).seq@.len() <= self.seq@.len(),
                     self.seq@.len() <= old(self).seq@.len() + 1,
+                    self.seq@.last() == (key, value),
+                    self.spec_entry_to_map()[key] == value,
             {
                 let mut i: usize = 0;
                 while i < self.seq.len()
@@ -85,7 +87,9 @@ pub mod LinkedListChainedHashTableStEph {
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + Vec::remove, n = chain length.
             fn delete(&mut self, key: &Key) -> (deleted: bool)
-                ensures !deleted ==> self.seq@ == old(self).seq@,
+                ensures
+                    !deleted ==> self.seq@ == old(self).seq@,
+                    deleted ==> self.seq@.len() + 1 == old(self).seq@.len(),
             {
                 let mut i: usize = 0;
                 while i < self.seq.len()

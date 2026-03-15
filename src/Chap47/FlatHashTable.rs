@@ -132,7 +132,9 @@ pub mod FlatHashTable {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time enum assignment.
         fn insert(&mut self, key: Key, value: Value)
-            ensures *self == FlatEntry::<Key, Value>::Occupied(key, value),
+            ensures
+                *self == FlatEntry::<Key, Value>::Occupied(key, value),
+                self.spec_entry_to_map()[key] == value,
         { *self = FlatEntry::Occupied(key, value); }
 
         /// - APAS: Work O(1), Span O(1).
@@ -155,6 +157,7 @@ pub mod FlatHashTable {
         fn delete(&mut self, key: &Key) -> (deleted: bool)
             ensures
                 deleted ==> *self is Deleted,
+                deleted ==> self.spec_entry_to_map() == Map::<Key, Value>::empty(),
                 !deleted ==> *self == *old(self),
         {
             let is_match = if let FlatEntry::Occupied(k, _) = &*self {

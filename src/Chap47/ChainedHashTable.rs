@@ -68,6 +68,8 @@ pub mod ChainedHashTable {
                     old(table).num_elements < usize::MAX,
                 ensures
                     table.table@.len() == table.current_size as int,
+                    table.current_size == old(table).current_size,
+                    table.num_elements <= old(table).num_elements + 1,
                     table@.dom().contains(key),
             {
                 let index = Self::hash_index(table, &key);
@@ -112,6 +114,7 @@ pub mod ChainedHashTable {
                     old(table).table@.len() == old(table).current_size as int,
                 ensures
                     table.table@.len() == table.current_size as int,
+                    table.current_size == old(table).current_size,
             {
                 let index = Self::hash_index(table, key);
                 if index < table.table.len() {
