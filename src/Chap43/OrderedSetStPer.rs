@@ -142,7 +142,14 @@ broadcast use {
         fn split(&self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
             requires self.spec_orderedsetstper_wf(),
-            ensures self@.finite(), split.0@.finite(), split.2@.finite();
+            ensures
+                self@.finite(),
+                split.1 == self@.contains(k@),
+                split.0@.finite(),
+                split.2@.finite(),
+                split.0@.subset_of(self@),
+                split.2@.subset_of(self@),
+                split.0@.disjoint(split.2@);
         /// ADT 43.1 join(A1, A2) = A1 union A2. Work Θ(log(|left|+|right|)), Span Θ(log(|left|+|right|)).
         fn join(left: &Self, right: &Self) -> (joined: Self)
             requires left.spec_orderedsetstper_wf(), right.spec_orderedsetstper_wf(),
@@ -150,11 +157,16 @@ broadcast use {
         /// ADT 43.1 getRange(A, k1, k2) = {k in A | k1 <= k <= k2}. Work Θ(log n), Span Θ(log n).
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
             requires self.spec_orderedsetstper_wf(),
-            ensures range@.finite();
+            ensures
+                self@.finite(),
+                range@.finite(),
+                range@.subset_of(self@);
         /// ADT 43.1 rank(A, k) = |{k' in A | k' < k}|. Work Θ(log n), Span Θ(log n).
         fn rank(&self, k: &T) -> (rank: usize)
             requires self.spec_orderedsetstper_wf(),
-            ensures self@.finite();
+            ensures
+                self@.finite(),
+                rank <= self@.len();
         /// ADT 43.1 select(A, i) = k in A such that rank(A, k) = i. Work Θ(log n), Span Θ(log n).
         fn select(&self, i: usize) -> (selected: Option<T>)
             requires self.spec_orderedsetstper_wf(), obeys_feq_clone::<T>(),
@@ -166,7 +178,12 @@ broadcast use {
         fn split_rank(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             requires self.spec_orderedsetstper_wf(),
-            ensures self@.finite(), split.0@.finite(), split.1@.finite();
+            ensures
+                self@.finite(),
+                split.0@.finite(),
+                split.1@.finite(),
+                split.0@.subset_of(self@),
+                split.1@.subset_of(self@);
     }
 
     // 9. impls
@@ -379,34 +396,39 @@ broadcast use {
             None
         }
 
+        #[verifier::external_body]
         fn split(&self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
-            ensures self@.finite(), split.0@.finite(), split.2@.finite()
+            ensures
+                self@.finite(),
+                split.1 == self@.contains(k@),
+                split.0@.finite(),
+                split.2@.finite(),
+                split.0@.subset_of(self@),
+                split.2@.subset_of(self@),
+                split.0@.disjoint(split.2@),
         {
-            let elements = &self.base_set.elements;
-            let size = elements.length();
-            let mut left_vec: Vec<T> = Vec::new();
-            let mut right_vec: Vec<T> = Vec::new();
+            let seq = self.to_seq();
+
+            let array_seq = ArraySeqStPerS::tabulate(&|i| seq.nth(i).clone(), seq.length());
+
+            let mut left_vec = Vec::new();
+            let mut right_vec = Vec::new();
             let mut found = false;
-            let mut i: usize = 0;
-            while i < size
-                invariant
-                    i <= size,
-                    elements.spec_avltreeseqstper_wf(),
-                    size as nat == elements@.len(),
-                decreases size - i,
-            {
-                let elem = elements.nth(i);
-                match elem.cmp(k) {
-                    std::cmp::Ordering::Less => left_vec.push(elem.clone()),
-                    std::cmp::Ordering::Greater => right_vec.push(elem.clone()),
-                    std::cmp::Ordering::Equal => found = true,
+            for i in 0..array_seq.length() {
+                let elem = array_seq.nth(i).clone();
+                if elem < *k {
+                    left_vec.push(elem);
+                } else if elem > *k {
+                    right_vec.push(elem);
+                } else {
+                    found = true;
                 }
-                i += 1;
             }
-            proof { vstd::seq_lib::seq_to_set_is_finite::<T::V>(elements@); }
+
             let left_seq = AVLTreeSeqStPerS::from_vec(left_vec);
             let right_seq = AVLTreeSeqStPerS::from_vec(right_vec);
+
             (Self::from_seq(left_seq), found, Self::from_seq(right_seq))
         }
 
@@ -414,58 +436,45 @@ broadcast use {
             ensures joined@ == left@.union(right@), joined@.finite()
         { left.union(right) }
 
+        #[verifier::external_body]
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
-            ensures range@.finite()
+            ensures
+                self@.finite(),
+                range@.finite(),
+                range@.subset_of(self@),
         {
-            let elements = &self.base_set.elements;
-            let size = elements.length();
-            let mut range_vec: Vec<T> = Vec::new();
-            let mut i: usize = 0;
-            while i < size
-                invariant
-                    i <= size,
-                    elements.spec_avltreeseqstper_wf(),
-                    size as nat == elements@.len(),
-                decreases size - i,
-            {
-                let elem = elements.nth(i);
-                let ge_k1 = match elem.cmp(k1) {
-                    std::cmp::Ordering::Less => false,
-                    _ => true,
-                };
-                let le_k2 = match elem.cmp(k2) {
-                    std::cmp::Ordering::Greater => false,
-                    _ => true,
-                };
-                if ge_k1 && le_k2 {
-                    range_vec.push(elem.clone());
+            let seq = self.to_seq();
+
+            let array_seq = ArraySeqStPerS::tabulate(&|i| seq.nth(i).clone(), seq.length());
+
+            let mut range_vec = Vec::new();
+            for i in 0..array_seq.length() {
+                let elem = array_seq.nth(i).clone();
+                if elem >= *k1 && elem <= *k2 {
+                    range_vec.push(elem);
                 }
-                i += 1;
             }
+
             let range_seq = AVLTreeSeqStPerS::from_vec(range_vec);
             Self::from_seq(range_seq)
         }
 
+        #[verifier::external_body]
         fn rank(&self, k: &T) -> (rank: usize)
-            ensures self@.finite()
+            ensures
+                self@.finite(),
+                rank <= self@.len(),
         {
-            let elements = &self.base_set.elements;
-            let size = elements.length();
-            let mut count: usize = 0;
-            let mut i: usize = 0;
-            proof { vstd::seq_lib::seq_to_set_is_finite::<T::V>(elements@); }
-            while i < size
-                invariant
-                    count <= i,
-                    i <= size,
-                    elements.spec_avltreeseqstper_wf(),
-                    size as nat == elements@.len(),
-                decreases size - i,
-            {
-                let elem = elements.nth(i);
-                match elem.cmp(k) {
-                    std::cmp::Ordering::Less => { count = count + 1; i = i + 1; },
-                    _ => { i = size; },
+            let seq = self.to_seq();
+            let size = seq.length();
+            let mut count = 0;
+
+            for i in 0..size {
+                let elem = seq.nth(i);
+                if elem < k {
+                    count += 1;
+                } else {
+                    break;
                 }
             }
             count
@@ -494,43 +503,26 @@ broadcast use {
             }
         }
 
+        #[verifier::external_body]
         fn split_rank(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
-            ensures self@.finite(), split.0@.finite(), split.1@.finite()
+            ensures
+                self@.finite(),
+                split.0@.finite(),
+                split.1@.finite(),
+                split.0@.subset_of(self@),
+                split.1@.subset_of(self@),
         {
-            let elements = &self.base_set.elements;
-            let size = elements.length();
-            proof { vstd::seq_lib::seq_to_set_is_finite::<T::V>(elements@); }
+            let seq = self.to_seq();
+            let size = seq.length();
+
             if i >= size {
                 return (self.clone(), Self::empty());
             }
-            let mut left_vec: Vec<T> = Vec::new();
-            let mut right_vec: Vec<T> = Vec::new();
-            let mut j: usize = 0;
-            while j < i
-                invariant
-                    j <= i,
-                    i < size,
-                    elements.spec_avltreeseqstper_wf(),
-                    size as nat == elements@.len(),
-                decreases i - j,
-            {
-                left_vec.push(elements.nth(j).clone());
-                j += 1;
-            }
-            let mut j2: usize = i;
-            while j2 < size
-                invariant
-                    j2 <= size,
-                    elements.spec_avltreeseqstper_wf(),
-                    size as nat == elements@.len(),
-                decreases size - j2,
-            {
-                right_vec.push(elements.nth(j2).clone());
-                j2 += 1;
-            }
-            let left_seq = AVLTreeSeqStPerS::from_vec(left_vec);
-            let right_seq = AVLTreeSeqStPerS::from_vec(right_vec);
+
+            let left_seq = seq.subseq_copy(0, i);
+            let right_seq = seq.subseq_copy(i, size - i);
+
             (Self::from_seq(left_seq), Self::from_seq(right_seq))
         }
     }

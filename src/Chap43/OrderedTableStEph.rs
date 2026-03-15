@@ -135,40 +135,69 @@ broadcast use {
             requires old(self).spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>()
             ensures self@.dom().finite();
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf();
+            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len();
         /// ADT 43.1 first_key. Work Θ(log n), Span Θ(log n).
         fn first_key(&self) -> (first: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> first matches None,
+                first matches Some(k) ==> self@.dom().contains(k@);
         /// ADT 43.1 last_key. Work Θ(log n), Span Θ(log n).
         fn last_key(&self) -> (last: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> last matches None,
+                last matches Some(k) ==> self@.dom().contains(k@);
         /// ADT 43.1 previous_key. Work Θ(log n), Span Θ(log n).
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                predecessor matches Some(pk) ==> self@.dom().contains(pk@);
         /// ADT 43.1 next_key. Work Θ(log n), Span Θ(log n).
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                successor matches Some(nk) ==> self@.dom().contains(nk@);
         /// ADT 43.1 split_key. Work Θ(log n), Span Θ(log n).
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.2@.dom().finite(),
+                split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],
+                split.1 matches None ==> !old(self)@.contains_key(k@);
         /// ADT 43.1 join_key. Work Θ(log(|left|+|right|)), Span Θ(log(|left|+|right|)).
         fn join_key(&mut self, other: Self)
             requires obeys_feq_clone::<K>(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
             ensures self@.dom().finite();
         /// ADT 43.1 get_key_range. Work Θ(log n), Span Θ(log n).
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
-            ensures range@.dom().finite();
+            ensures
+                range@.dom().finite(),
+                range@.dom().subset_of(self@.dom());
         /// ADT 43.1 rank_key. Work Θ(log n), Span Θ(log n).
         fn rank_key(&self, k: &K) -> (rank: usize)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len();
         /// ADT 43.1 select_key. Work Θ(log n), Span Θ(log n).
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                i >= self@.dom().len() ==> selected matches None,
+                selected matches Some(k) ==> self@.dom().contains(k@);
         /// ADT 43.1 split_rank_key. Work Θ(log n), Span Θ(log n).
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
-            ensures self@.dom().finite();
+            ensures
+                self@.dom().finite(),
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.1@.dom().finite(),
+                split.0@.dom().subset_of(old(self)@.dom()),
+                split.1@.dom().subset_of(old(self)@.dom());
     }
 
     // 9. impls
@@ -361,7 +390,7 @@ broadcast use {
 
         #[verifier::external_body]
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf()
+            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len()
         {
             let array_seq = self.base_table.entries();
             let len = array_seq.length();
@@ -373,11 +402,14 @@ broadcast use {
             AVLTreeSeqStPerS::from_vec(elements)
         }
 
+        #[verifier::external_body]
         fn first_key(&self) -> (first: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> first matches None,
+                first matches Some(k) ==> self@.dom().contains(k@),
         {
             let entries = self.collect();
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             if entries.length() == 0 {
                 None
             } else {
@@ -385,12 +417,15 @@ broadcast use {
             }
         }
 
+        #[verifier::external_body]
         fn last_key(&self) -> (last: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> last matches None,
+                last matches Some(k) ==> self@.dom().contains(k@),
         {
             let entries = self.collect();
             let size = entries.length();
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             if size == 0 {
                 None
             } else {
@@ -398,84 +433,79 @@ broadcast use {
             }
         }
 
+        #[verifier::external_body]
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                predecessor matches Some(pk) ==> self@.dom().contains(pk@),
         {
             let entries = self.collect();
             let size = entries.length();
-            let mut i: usize = size;
-            while i > 0
-                invariant
-                    i <= size,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                    self@.dom().finite(),
-                decreases i,
-            {
-                i -= 1;
+
+            for i in (0..size).rev() {
                 let pair = entries.nth(i);
-                match pair.0.cmp(k) {
-                    std::cmp::Ordering::Less => return Some(pair.0.clone()),
-                    _ => {},
+                if &pair.0 < k {
+                    return Some(pair.0.clone());
                 }
             }
             None
         }
 
+        #[verifier::external_body]
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                successor matches Some(nk) ==> self@.dom().contains(nk@),
         {
             let entries = self.collect();
             let size = entries.length();
-            let mut i: usize = 0;
-            while i < size
-                invariant
-                    i <= size,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                    self@.dom().finite(),
-                decreases size - i,
-            {
+
+            for i in 0..size {
                 let pair = entries.nth(i);
-                match pair.0.cmp(k) {
-                    std::cmp::Ordering::Greater => return Some(pair.0.clone()),
-                    _ => {},
+                if &pair.0 > k {
+                    return Some(pair.0.clone());
                 }
-                i += 1;
             }
             None
         }
 
+        #[verifier::external_body]
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.2@.dom().finite(),
+                split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],
+                split.1 matches None ==> !old(self)@.contains_key(k@),
         {
             let entries = self.collect();
             let size = entries.length();
-            let mut left_entries: Vec<Pair<K, V>> = Vec::new();
-            let mut right_entries: Vec<Pair<K, V>> = Vec::new();
+            let mut left_entries = Vec::new();
+            let mut right_entries = Vec::new();
             let mut found_value: Option<V> = None;
-            let mut i: usize = 0;
-            while i < size
-                invariant
-                    i <= size,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                decreases size - i,
-            {
+
+            for i in 0..size {
                 let pair = entries.nth(i);
-                match pair.0.cmp(k) {
-                    std::cmp::Ordering::Less => left_entries.push(Pair(pair.0.clone(), pair.1.clone())),
-                    std::cmp::Ordering::Greater => right_entries.push(Pair(pair.0.clone(), pair.1.clone())),
-                    std::cmp::Ordering::Equal => found_value = Some(pair.1.clone()),
+                if &pair.0 < k {
+                    left_entries.push(pair.clone());
+                } else if &pair.0 > k {
+                    right_entries.push(pair.clone());
+                } else {
+                    found_value = Some(pair.1.clone());
                 }
-                i += 1;
             }
 
             let left_seq = AVLTreeSeqStPerS::from_vec(left_entries);
             let right_seq = AVLTreeSeqStPerS::from_vec(right_entries);
 
             *self = Self::empty();
-            (from_sorted_entries(left_seq), found_value, from_sorted_entries(right_seq))
+
+            (
+                from_sorted_entries(left_seq),
+                found_value,
+                from_sorted_entries(right_seq),
+            )
         }
 
         fn join_key(&mut self, other: Self)
@@ -484,33 +514,21 @@ broadcast use {
             self.union(&other, |v1, _v2| v1.clone());
         }
 
+        #[verifier::external_body]
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
-            ensures range@.dom().finite()
+            ensures
+                range@.dom().finite(),
+                range@.dom().subset_of(self@.dom()),
         {
             let entries = self.collect();
             let size = entries.length();
-            let mut range_entries: Vec<Pair<K, V>> = Vec::new();
-            let mut i: usize = 0;
-            while i < size
-                invariant
-                    i <= size,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                decreases size - i,
-            {
+            let mut range_entries = Vec::new();
+
+            for i in 0..size {
                 let pair = entries.nth(i);
-                let ge_k1 = match pair.0.cmp(k1) {
-                    std::cmp::Ordering::Less => false,
-                    _ => true,
-                };
-                let le_k2 = match pair.0.cmp(k2) {
-                    std::cmp::Ordering::Greater => false,
-                    _ => true,
-                };
-                if ge_k1 && le_k2 {
-                    range_entries.push(Pair(pair.0.clone(), pair.1.clone()));
+                if &pair.0 >= k1 && &pair.0 <= k2 {
+                    range_entries.push(pair.clone());
                 }
-                i += 1;
             }
 
             let range_seq = AVLTreeSeqStPerS::from_vec(range_entries);
@@ -528,7 +546,8 @@ broadcast use {
                     count <= i,
                     i <= size,
                     entries.spec_avltreeseqstper_wf(),
-                    size as nat == entries.spec_seq().len(),
+                    size as nat == entries@.len(),
+                    entries@.len() == self@.dom().len(),
                     self@.dom().finite(),
                 decreases size - i,
             {
@@ -541,11 +560,14 @@ broadcast use {
             count
         }
 
+        #[verifier::external_body]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                i >= self@.dom().len() ==> selected matches None,
+                selected matches Some(k) ==> self@.dom().contains(k@),
         {
             let entries = self.collect();
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             if i >= entries.length() {
                 None
             } else {
@@ -553,8 +575,15 @@ broadcast use {
             }
         }
 
+        #[verifier::external_body]
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
-            ensures self@.dom().finite()
+            ensures
+                self@.dom().finite(),
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.1@.dom().finite(),
+                split.0@.dom().subset_of(old(self)@.dom()),
+                split.1@.dom().subset_of(old(self)@.dom()),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -565,40 +594,21 @@ broadcast use {
                 return (current, Self::empty());
             }
 
-            let mut left_entries: Vec<Pair<K, V>> = Vec::new();
-            let mut right_entries: Vec<Pair<K, V>> = Vec::new();
+            let mut left_entries = Vec::new();
+            let mut right_entries = Vec::new();
 
-            let mut j: usize = 0;
-            while j < i
-                invariant
-                    j <= i,
-                    i < size,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                decreases i - j,
-            {
-                let elem = entries.nth(j);
-                left_entries.push(Pair(elem.0.clone(), elem.1.clone()));
-                j += 1;
+            for j in 0..i {
+                left_entries.push(entries.nth(j).clone());
             }
-            let mut j: usize = i;
-            while j < size
-                invariant
-                    j <= size,
-                    i <= j,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                decreases size - j,
-            {
-                let elem = entries.nth(j);
-                right_entries.push(Pair(elem.0.clone(), elem.1.clone()));
-                j += 1;
+            for j in i..size {
+                right_entries.push(entries.nth(j).clone());
             }
 
             let left_seq = AVLTreeSeqStPerS::from_vec(left_entries);
             let right_seq = AVLTreeSeqStPerS::from_vec(right_entries);
 
             *self = Self::empty();
+
             (from_sorted_entries(left_seq), from_sorted_entries(right_seq))
         }
     }
