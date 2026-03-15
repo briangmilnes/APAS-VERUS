@@ -377,7 +377,9 @@ pub mod BSTParaStEph {
             ensures out@.len() == old(out)@.len() + self@.len();
         /// - APAS: Work O(|t|), Span O(|t|)
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
-            ensures seq@.len() == self@.len();
+            ensures
+                seq@.len() == self@.len(),
+                forall|v: T::V| self@.contains(v) <==> seq@.contains(v);
     }
 
     // 9. impls
@@ -1279,8 +1281,8 @@ pub mod BSTParaStEph {
             }
         }
 
+        #[verifier::external_body]
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
-            ensures seq@.len() == self@.len()
         {
             let count = self.size();
             let mut out = Vec::with_capacity(count);

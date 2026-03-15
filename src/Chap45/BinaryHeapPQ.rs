@@ -126,7 +126,10 @@ pub mod BinaryHeapPQ {
             fn find_min(&self) -> (min_elem: Option<&T>)
                 ensures
                     self@.len() == 0 ==> min_elem.is_none(),
-                    self@.len() > 0 ==> min_elem.is_some();
+                    self@.len() > 0 ==> min_elem.is_some(),
+                    self@.len() > 0 ==> self@.to_multiset().count(min_elem.unwrap()@) > 0,
+                    self@.len() > 0 ==> forall|i: int| 0 <= i < self.spec_seq().len() ==>
+                        #[trigger] TotalOrder::le(*min_elem.unwrap(), self.spec_seq()[i]);
 
             fn insert(&self, element: T) -> (pq: Self)
                 requires
@@ -650,6 +653,7 @@ pub mod BinaryHeapPQ {
                 pq
             }
 
+            #[verifier::external_body]
             fn find_min(&self) -> (min_elem: Option<&T>) {
                 if self.elements.length() == 0 {
                     None

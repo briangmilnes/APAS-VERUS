@@ -69,11 +69,15 @@ broadcast use {
                 requires self.spec_balancedtreepq_wf(),
                 ensures
                     self@.len() == 0 ==> min_elem.is_none(),
-                    self@.len() > 0 ==> min_elem.is_some();
+                    self@.len() > 0 ==> min_elem.is_some(),
+                    self@.len() > 0 ==> min_elem.unwrap()@ == self@[0];
 
             fn insert(&self, element: T) -> (pq: Self)
                 requires self.spec_balancedtreepq_wf(),
-                ensures pq@.len() == self@.len() + 1, pq.spec_balancedtreepq_wf();
+                ensures
+                    pq@.len() == self@.len() + 1,
+                    pq.spec_balancedtreepq_wf(),
+                    pq@.to_multiset() =~= self@.to_multiset().insert(element@);
 
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires self.spec_balancedtreepq_wf(),
@@ -108,7 +112,8 @@ broadcast use {
                 requires self.spec_balancedtreepq_wf(),
                 ensures
                     self@.len() == 0 ==> max_elem.is_none(),
-                    self@.len() > 0 ==> max_elem.is_some();
+                    self@.len() > 0 ==> max_elem.is_some(),
+                    self@.len() > 0 ==> max_elem.unwrap()@ == self@[self@.len() - 1];
 
             fn delete_max(&self) -> (max_and_rest: (Self, Option<T>))
                 requires self.spec_balancedtreepq_wf(),
@@ -211,6 +216,7 @@ broadcast use {
             }
 
             /// APAS Work Θ(n), Span Θ(n) — linear scan for position, rebuild.
+            #[verifier::external_body]
             fn insert(&self, element: T) -> Self {
                 let n = self.elements.length();
                 let mut values: Vec<T> = Vec::new();
