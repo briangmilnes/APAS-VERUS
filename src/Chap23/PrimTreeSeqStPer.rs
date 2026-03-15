@@ -780,6 +780,8 @@ pub mod PrimTreeSeqStPer {
     impl<'a, T> std::iter::Iterator for PrimTreeSeqStIter<'a, T> {
         type Item = &'a T;
 
+        /// - APAS: N/A — iterator scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — delegates to slice::Iter::next.
         fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
@@ -847,6 +849,8 @@ pub mod PrimTreeSeqStPer {
     impl<'a, T> std::iter::IntoIterator for &'a PrimTreeSeqStS<T> {
         type Item = &'a T;
         type IntoIter = PrimTreeSeqStIter<'a, T>;
+        /// - APAS: N/A — iterator scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps slice::Iter.
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
                 it@.0 == 0,
@@ -860,6 +864,8 @@ pub mod PrimTreeSeqStPer {
     impl<T> std::iter::IntoIterator for PrimTreeSeqStS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
+        /// - APAS: N/A — iterator scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — consumes Vec into IntoIter.
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
                 it@.0 == 0,
@@ -872,6 +878,8 @@ pub mod PrimTreeSeqStPer {
     //		11. derive impls in verus!
 
     impl<T: Clone> Clone for PrimTreeSeqStS<T> {
+        /// - APAS: N/A — derive scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — clones inner Vec.
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -882,6 +890,8 @@ pub mod PrimTreeSeqStPer {
     }
 
     impl<T: PartialEq + View> PartialEq for PrimTreeSeqStS<T> {
+        /// - APAS: N/A — derive scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — delegates to Vec::eq.
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
@@ -894,6 +904,8 @@ pub mod PrimTreeSeqStPer {
     impl<T: Eq + View> Eq for PrimTreeSeqStS<T> {}
 
     impl<T: Clone> Clone for PrimTreeSeqStTree<T> {
+        /// - APAS: N/A — derive scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — clones variant contents.
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -908,6 +920,8 @@ pub mod PrimTreeSeqStPer {
     }
 
     impl<T: PartialEq + View> PartialEq for PrimTreeSeqStTree<T> {
+        /// - APAS: N/A — derive scaffolding.
+        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — compares variant contents.
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {

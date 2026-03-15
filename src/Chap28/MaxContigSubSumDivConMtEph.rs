@@ -58,6 +58,8 @@ pub mod MaxContigSubSumDivConMtEph {
 
     //		9. impls
 
+    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         requires true,
         ensures max == spec_max_opt_i32(a, b),
@@ -70,6 +72,9 @@ pub mod MaxContigSubSumDivConMtEph {
         }
     }
 
+    /// Find max suffix sum (MCSSE problem, Algorithm 28.12).
+    /// - APAS: Work Θ(n), Span Θ(log n)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- sequential loop
     fn max_suffix_sum(a: &ArraySeqMtEphS<i32>) -> (mss: i32)
         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
         ensures is_max_suffix_sum(a.seq@, mss as int),
@@ -120,6 +125,9 @@ pub mod MaxContigSubSumDivConMtEph {
         running_sum - min_prefix
     }
 
+    /// Find max prefix sum (MCSSS problem, Algorithm 28.11).
+    /// - APAS: Work Θ(n), Span Θ(log n)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- sequential loop
     fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (mps: i32)
         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
         ensures is_max_prefix_sum(a.seq@, mps as int),

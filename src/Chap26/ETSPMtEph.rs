@@ -320,6 +320,9 @@ pub mod ETSPMtEph {
 
     //		9. impls
 
+    /// Parallel eTSP inner recursion. Structural logic verified; threading via join().
+    /// - APAS: Work Θ(n²), Span Θ(lg² n) — Algorithm 26.7 with parallel recur + parallel minVal.
+    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — O(n²) swap search dominates span.
     fn etsp_parallel_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)
         requires
             points@.len() >= 2,
@@ -504,6 +507,8 @@ pub mod ETSPMtEph {
     //		10. verified helpers
 
     /// Split points at midpoint. Verified: every output point traces to the input.
+    /// - APAS: Work Θ(n), Span Θ(n) — linear partition (simplified from sort-based split).
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential copy into halves.
     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
         requires points@.len() >= 4,
         ensures
@@ -565,6 +570,8 @@ pub mod ETSPMtEph {
     }
 
     /// Find swap indices. Verified: returned indices are within bounds.
+    /// - APAS: Work Θ(n²), Span Θ(lg n) — parallel minVal over all edge pairs.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — stub returning (0,0); real search in find_best_swap_impl.
     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
         requires
             left_tour@.len() >= 2,

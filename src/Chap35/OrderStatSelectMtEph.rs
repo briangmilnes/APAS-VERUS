@@ -107,7 +107,9 @@ pub mod OrderStatSelectMtEph {
 
     pub trait OrderStatSelectMtEphTrait<T: TotalOrder> {
         /// Find the kth smallest element (0-indexed) using contraction-based selection.
-        /// - APAS: Work O(n) expected, Span O(lg^2 n) expected — Algorithm 35.2.
+        /// - APAS: Work O(n) expected, Span O(lg^2 n) w.h.p. — Algorithm 35.2.
+        /// - Claude-Opus-4.6: Work O(n) expected, Span O(n) expected — partition filters
+        ///   are sequential loops inside join(), so each round is O(n) span not O(lg n).
         fn select(a: &ArraySeqMtEphS<T>, k: usize) -> (found: Option<T>)
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -121,6 +123,9 @@ pub mod OrderStatSelectMtEph {
     /// Parallel three-way partition: splits array into (elements < pivot, eq_count, elements > pivot).
     /// Uses join() for genuine parallelism: left and right filters run concurrently.
     /// Both filter closures and the post-join multiset assembly are fully verified.
+    /// - APAS: Work O(n), Span O(lg n) — uses parallel filter.
+    /// - Claude-Opus-4.6: Work O(n), Span O(n) — filter closures use sequential loops,
+    ///   so each half is O(n); join halves the constant but span class is still O(n).
     fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
         a: &ArraySeqMtEphS<T>, pivot: T, pivot_idx: usize, n: usize,
     ) -> (partition: (Vec<T>, usize, Vec<T>))
@@ -396,6 +401,10 @@ pub mod OrderStatSelectMtEph {
         }
     }
 
+    /// Recursive core of contraction-based select.
+    /// - APAS: Work O(n) expected, Span O(lg^2 n) w.h.p. — Algorithm 35.2.
+    /// - Claude-Opus-4.6: Work O(n) expected, Span O(n) expected — partition is O(n) span
+    ///   per round; geometric shrinkage over O(lg n) expected rounds sums to O(n).
     fn select_inner<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
         a: &ArraySeqMtEphS<T>, k: usize,
     ) -> (found: Option<T>)

@@ -64,6 +64,8 @@ pub mod MaxContigSubSumDivConOptMtEph {
 
     //		9. impls
 
+    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         requires true,
         ensures max == spec_max_opt_i32(a, b),
@@ -76,6 +78,9 @@ pub mod MaxContigSubSumDivConOptMtEph {
         }
     }
 
+    /// Auxiliary function: returns (mcss, max_prefix, max_suffix, total).
+    /// - APAS: Work Θ(n), Span Θ(log n)
+    /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n) -- subseq_copy O(n) per level; sequential
     fn max_contig_sub_sum_aux(a: &ArraySeqMtEphS<i32>) -> (mcss: StrengthResult)
         requires a.seq@.len() > 0, sums_fit_i32(a.seq@), obeys_feq_clone::<i32>(),
         ensures
