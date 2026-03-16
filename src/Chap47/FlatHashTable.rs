@@ -8,6 +8,7 @@ pub mod FlatHashTable {
     // 1. module
     // 2. imports
     // 4. type definitions (inside verus!: FlatEntry)
+    // 6. spec fns (inside verus!: spec_flat_has_key)
     // 8. traits (inside verus!: FlatHashTable)
     // 9. impls (inside verus!: EntryTrait for FlatEntry)
     // 11. derive impls in verus!
@@ -32,6 +33,17 @@ pub mod FlatHashTable {
         Occupied(Key, Value),
         /// Deleted slot - previously occupied, now available for insertion
         Deleted,
+    }
+
+    // 6. spec fns
+
+    /// Whether a flat entry slot contains the given key.
+    /// Avoids EntryTrait bounds so wf specs can use it with unconstrained type params.
+    pub open spec fn spec_flat_has_key<Key, Value>(entry: FlatEntry<Key, Value>, k: Key) -> bool {
+        match entry {
+            FlatEntry::Occupied(ek, _) => ek == k,
+            _ => false,
+        }
     }
 
     // 8. traits

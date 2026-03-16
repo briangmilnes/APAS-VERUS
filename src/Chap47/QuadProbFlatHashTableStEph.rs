@@ -8,6 +8,7 @@ pub mod QuadProbFlatHashTableStEph {
     // 1. module
     // 2. imports
     // 4. type definitions (inside verus!)
+    // 6. spec fns (inside verus!)
     // 9. impls (inside verus!)
     // 13. derive impls outside verus!
 
@@ -26,6 +27,38 @@ pub mod QuadProbFlatHashTableStEph {
     /// Quadratic Probing Flat Hash Table implementation.
     /// Probe sequence: h_i(k) = (h(k) + i²) mod m
     pub struct QuadProbFlatHashTableStEph;
+
+    // 6. spec fns
+
+    /// Well-formedness for quadratic probing flat hash tables.
+    /// Quadratic probe sequence: slot (h + j²) % m for attempt j = 0, 1, 2, ...
+    /// (1) No duplicate keys across slots.
+    /// (2) Every occupied key is reachable via quadratic probing from its hash:
+    ///     there exists an attempt n placing the key at its slot, and all earlier
+    ///     probe positions are not Empty.
+    pub open spec fn spec_quadprobflathashsteph_wf<Key, Value, Metrics, H>(
+        table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+    ) -> bool {
+        let m = table.current_size as int;
+        table.table@.len() == m
+        && m > 0
+        // No duplicate keys.
+        && (forall |i: int, j: int, k: Key|
+            0 <= i < m && 0 <= j < m && i != j
+            && #[trigger] spec_flat_has_key(table.table@[i], k)
+            ==> !#[trigger] spec_flat_has_key(table.table@[j], k))
+        // Probe chain integrity for quadratic probing.
+        && (forall |i: int, k: Key|
+            0 <= i < m
+            && #[trigger] spec_flat_has_key(table.table@[i], k)
+            ==> {
+                let h = (table.spec_hash@)(k) as int % m;
+                exists |n: int| #![trigger table.table@[(h + n * n) % m]] 0 <= n < m
+                    && (h + n * n) % m == i
+                    && forall |j: int| 0 <= j < n
+                        ==> !(#[trigger] table.table@[(h + j * j) % m] is Empty)
+            })
+    }
 
     // 9. impls
 
