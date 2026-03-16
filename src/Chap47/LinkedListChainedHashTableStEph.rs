@@ -33,6 +33,7 @@ pub mod LinkedListChainedHashTableStEph {
 
         /// Clones a LinkedListStEphS<(Key, Value)> with sequence equality ensures.
         /// Clone bridges inside this function follow the approved clone body pattern.
+        // veracity: no_requires — loop bounded by entry.seq.len(), handles all inputs.
         fn clone_linked_list_entry<Key: Clone, Value: Clone>(
             entry: &LinkedListStEphS<(Key, Value)>,
         ) -> (cloned: LinkedListStEphS<(Key, Value)>)

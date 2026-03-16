@@ -248,6 +248,7 @@ pub mod BSTSplayStEph {
 
     /// - APAS: N/A -- Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constant-time allocation.
+    // veracity: no_requires — constructor, no precondition.
     fn new_node<T: TotalOrder + Clone>(key: T) -> (node: Node<T>)
 
         ensures
@@ -266,6 +267,7 @@ pub mod BSTSplayStEph {
 
     /// - APAS: N/A -- Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1) -- cached size field.
+    // veracity: no_requires — structural accessor on Option.
     fn size_link<T: TotalOrder + Clone>(link: &Link<T>) -> (size: N)
         ensures size as nat == spec_size_link(link),
     {
@@ -297,6 +299,7 @@ pub mod BSTSplayStEph {
 
     /// - APAS: N/A -- Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1) -- recomputes cached size.
+    // veracity: no_requires — recomputes cached size, no precondition.
     fn update<T: TotalOrder + Clone>(node: &mut Node<T>)
         ensures
             node.key == old(node).key,
@@ -1600,6 +1603,7 @@ pub mod BSTSplayStEph {
 
     /// - APAS: Work O(n), Span O(n)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) -- visits every node.
+    // veracity: no_requires — recursive traversal, handles all inputs.
     fn in_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
         ensures out@.len() == old(out)@.len() + spec_in_order_link(link).len(),
         decreases *link,
@@ -1613,6 +1617,7 @@ pub mod BSTSplayStEph {
 
     /// - APAS: Work O(n), Span O(n)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) -- visits every node.
+    // veracity: no_requires — recursive traversal, handles all inputs.
     fn pre_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
         ensures out@.len() == old(out)@.len() + spec_pre_order_link(link).len(),
         decreases *link,

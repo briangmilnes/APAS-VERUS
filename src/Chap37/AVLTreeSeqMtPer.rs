@@ -494,6 +494,7 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
+    // veracity: no_requires — recursive traversal, handles all inputs.
     fn inorder_collect<T: StTInMtT>(cur: &Link<T>, out: &mut Vec<T>)
         ensures true,
         decreases *cur,

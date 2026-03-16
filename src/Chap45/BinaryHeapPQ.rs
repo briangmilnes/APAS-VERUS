@@ -281,6 +281,7 @@ pub mod BinaryHeapPQ {
             2 * i + 2
         }
 
+        // veracity: no_requires — handles i=0 explicitly, works for all usize.
         fn parent(i: usize) -> (parent_idx: usize)
             ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
         {

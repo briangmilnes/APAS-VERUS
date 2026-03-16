@@ -81,6 +81,7 @@ broadcast use {
         proof fn _leftist_heap_pq_verified() {}
 
         /// Exec comparison with spec ensures connecting to TotalOrder::le.
+        // veracity: no_requires — TotalOrder::cmp has no precondition.
         fn total_order_le<T: StT + Ord + TotalOrder>(a: &T, b: &T) -> (le: bool)
             ensures le <==> TotalOrder::le(*a, *b)
         {
