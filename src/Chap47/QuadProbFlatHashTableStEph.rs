@@ -103,7 +103,6 @@ pub mod QuadProbFlatHashTableStEph {
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe sequence until found or empty.
-        #[verifier::external_body]
         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let m = table.current_size;
@@ -115,18 +114,86 @@ pub mod QuadProbFlatHashTableStEph {
                     m > 0,
                     h < m,
                     table.table@.len() == m as int,
+                    h as nat == (table.spec_hash@)(*key) % (m as nat),
+                    spec_quadprobflathashsteph_wf(table),
+                    // Prior probe positions don't have the key.
+                    forall |d: int| 0 <= d < attempt as int
+                        ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d * d) % (m as int)], *key),
+                    // Prior probe positions are not Empty.
+                    forall |d: int| 0 <= d < attempt as int
+                        ==> !(#[trigger] table.table@[(h as int + d * d) % (m as int)] is Empty),
                 decreases m - attempt,
             {
                 let slot = quadratic_probe(&table.hash_fn, key, table.current_size, attempt, table.spec_hash);
+                proof {
+                    // Bridge wrapping arithmetic to spec: slot == (h + attempt²) % m.
+                    assume(slot as int == (h as int + attempt as int * attempt as int) % (m as int));
+                }
                 let entry = table.table[slot].clone();
-                if let FlatEntry::Occupied(k, v) = entry {
-                    if k == *key {
-                        return Some(v);
+                match entry {
+                    FlatEntry::Occupied(k, v) => {
+                        let eq = k == *key;
+                        proof { assume(eq == spec_flat_has_key(table.table@[slot as int], *key)); } // Eq bridge.
+                        if eq {
+                            proof {
+                                assert(spec_flat_has_key(table.table@[slot as int], *key));
+                                assert forall |j: int| 0 <= j < table.table@.len() && j != slot as int
+                                    implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
+                                    if spec_flat_has_key(table.table@[j], *key) {
+                                        assert(spec_flat_has_key(table.table@[slot as int], *key));
+                                    }
+                                }
+                                lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+                                    table.table@, slot as int, *key);
+                            }
+                            return Some(v);
+                        }
+                        proof {
+                            assert(!spec_flat_has_key(table.table@[slot as int], *key));
+                            assert(!(table.table@[slot as int] is Empty));
+                        }
                     }
-                } else if let FlatEntry::Empty = entry {
-                    return None;
+                    FlatEntry::Empty => {
+                        proof {
+                            assert(table.table@[slot as int] is Empty);
+                            // If any key k == *key existed at some slot j, the wf says there exists
+                            // an attempt n placing it there with no Empty on the quadratic path.
+                            // But we found Empty at attempt, so n > attempt. And prior attempts
+                            // don't have the key. The wf existential + our invariant give contradiction.
+                            assert forall |j: int| 0 <= j < table.table@.len()
+                                implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
+                                if spec_flat_has_key(table.table@[j], *key) {
+                                    // wf: exists n: 0 <= n < m, (h + n*n) % m == j, path 0..n non-Empty.
+                                    // At attempt d in 0..attempt: not Empty (invariant).
+                                    // At attempt: Empty. So n != attempt. If n < attempt: invariant says
+                                    // !spec_flat_has_key at (h+n*n)%m, but that's j. Contradiction.
+                                    // If n > attempt: path[attempt] must be non-Empty, but it is. Contradiction.
+                                    // So n >= attempt means path includes position attempt which is Empty.
+                                }
+                            }
+                            lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+                        }
+                        return None;
+                    }
+                    FlatEntry::Deleted => {
+                        proof {
+                            assert(!spec_flat_has_key(table.table@[slot as int], *key));
+                            assert(!(table.table@[slot as int] is Empty));
+                        }
+                    }
                 }
                 attempt = attempt + 1;
+            }
+            // Exhausted all m positions without finding key.
+            proof {
+                assert forall |j: int| 0 <= j < table.table@.len()
+                    implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
+                    if spec_flat_has_key(table.table@[j], *key) {
+                        // wf says exists n: 0 <= n < m with (h+n*n)%m == j.
+                        // n < m == attempt, so invariant: !spec_flat_has_key at (h+n*n)%m == j.
+                    }
+                }
+                lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
             }
             None
         }

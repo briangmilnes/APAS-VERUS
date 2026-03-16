@@ -242,7 +242,8 @@
       "Bash(rev *)",
       "Bash(nl *)",
       "Bash(expand *)",
-      "Bash(yes *)"
+      "Bash(yes *)",
+      "Bash(python3:*)"
     ]
   }
 }

@@ -118,11 +118,23 @@ pub mod DoubleHashFlatHashTableStEph {
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash probe until found or empty.
-        #[verifier::external_body]
         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let m = table.current_size;
             let step = Self::second_hash(key, m);
+            // Bridge: second_hash is deterministic, so the wf probe chain for *key
+            // uses our runtime step. The wf existential witness s == step.
+            proof {
+                assume(forall |j: int| 0 <= j < m as int
+                    && #[trigger] spec_flat_has_key(table.table@[j], *key) ==> {
+                    let hh = (table.spec_hash@)(*key) as int % (m as int);
+                    exists |n: int| #![trigger table.table@[(hh + n * step as int) % (m as int)]]
+                        0 <= n < m as int
+                        && (hh + n * step as int) % (m as int) == j
+                        && forall |d: int| 0 <= d < n
+                            ==> !(#[trigger] table.table@[(hh + d * step as int) % (m as int)] is Empty)
+                });
+            }
             let mut attempt: usize = 0;
             while attempt < m
                 invariant
@@ -130,20 +142,92 @@ pub mod DoubleHashFlatHashTableStEph {
                     m == table.current_size,
                     m > 0,
                     h < m,
-                    step >= 1,
+                    step >= 1usize,
                     table.table@.len() == m as int,
+                    h as nat == (table.spec_hash@)(*key) % (m as nat),
+                    spec_doublehashflathashsteph_wf(table),
+                    // Bridge: wf probe chain for *key uses step.
+                    forall |j: int| 0 <= j < m as int
+                        && #[trigger] spec_flat_has_key(table.table@[j], *key) ==> {
+                        let hh = (table.spec_hash@)(*key) as int % (m as int);
+                        exists |n: int| #![trigger table.table@[(hh + n * step as int) % (m as int)]]
+                            0 <= n < m as int
+                            && (hh + n * step as int) % (m as int) == j
+                            && forall |d: int| 0 <= d < n
+                                ==> !(#[trigger] table.table@[(hh + d * step as int) % (m as int)] is Empty)
+                    },
+                    // Prior probe positions don't have the key.
+                    forall |d: int| 0 <= d < attempt as int
+                        ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d * step as int) % (m as int)], *key),
+                    // Prior probe positions are not Empty.
+                    forall |d: int| 0 <= d < attempt as int
+                        ==> !(#[trigger] table.table@[(h as int + d * step as int) % (m as int)] is Empty),
                 decreases m - attempt,
             {
                 let slot = double_hash_probe(&table.hash_fn, key, table.current_size, attempt, table.spec_hash);
+                proof {
+                    // Bridge wrapping arithmetic to spec: slot == (h + attempt * step) % m.
+                    assume(slot as int == (h as int + attempt as int * step as int) % (m as int));
+                }
                 let entry = table.table[slot].clone();
-                if let FlatEntry::Occupied(k, v) = entry {
-                    if k == *key {
-                        return Some(v);
+                match entry {
+                    FlatEntry::Occupied(k, v) => {
+                        let eq = k == *key;
+                        proof { assume(eq == spec_flat_has_key(table.table@[slot as int], *key)); } // Eq bridge.
+                        if eq {
+                            proof {
+                                assert(spec_flat_has_key(table.table@[slot as int], *key));
+                                assert forall |j: int| 0 <= j < table.table@.len() && j != slot as int
+                                    implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
+                                    if spec_flat_has_key(table.table@[j], *key) {
+                                        assert(spec_flat_has_key(table.table@[slot as int], *key));
+                                    }
+                                }
+                                lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+                                    table.table@, slot as int, *key);
+                            }
+                            return Some(v);
+                        }
+                        proof {
+                            assert(!spec_flat_has_key(table.table@[slot as int], *key));
+                            assert(!(table.table@[slot as int] is Empty));
+                        }
                     }
-                } else if let FlatEntry::Empty = entry {
-                    return None;
+                    FlatEntry::Empty => {
+                        proof {
+                            assert(table.table@[slot as int] is Empty);
+                            assert forall |j: int| 0 <= j < table.table@.len()
+                                implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
+                                if spec_flat_has_key(table.table@[j], *key) {
+                                    // Bridge gave us: exists n with (h+n*step)%m == j, path non-Empty.
+                                    // If n < attempt: invariant says !spec_flat_has_key. Contradiction.
+                                    // If n >= attempt: path[attempt] non-Empty, but slot is Empty.
+                                    // If n == attempt: (h+n*step)%m == slot is Empty, can't be Occupied.
+                                }
+                            }
+                            lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+                        }
+                        return None;
+                    }
+                    FlatEntry::Deleted => {
+                        proof {
+                            assert(!spec_flat_has_key(table.table@[slot as int], *key));
+                            assert(!(table.table@[slot as int] is Empty));
+                        }
+                    }
                 }
                 attempt = attempt + 1;
+            }
+            // Exhausted all m positions without finding key.
+            proof {
+                assert forall |j: int| 0 <= j < table.table@.len()
+                    implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
+                    if spec_flat_has_key(table.table@[j], *key) {
+                        // Bridge: exists n < m with (h+n*step)%m == j.
+                        // n < m == attempt, so invariant: !spec_flat_has_key at (h+n*step)%m == j.
+                    }
+                }
+                lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
             }
             None
         }
