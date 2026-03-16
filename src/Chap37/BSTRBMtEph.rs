@@ -169,15 +169,42 @@ pub mod BSTRBMtEph {
     }
 
     fn rotate_left<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
-
-        ensures link_spec_size(*link) == link_spec_size(*old(link)),
+        requires spec_is_bst_link(*old(link)),
+        ensures
+            spec_is_bst_link(*link),
+            forall|z: T| link_contains(*link, z) <==> link_contains(*old(link), z),
     {
         let ghost old_link = *link;
         if let Some(mut h) = link.take() {
+            let ghost h_key = h.key;
             let ghost old_h_left = h.left;
+            let ghost old_h_right = h.right;
+            proof {
+                reveal_with_fuel(spec_is_bst_link, 3);
+                reveal_with_fuel(link_contains, 3);
+                assert forall|z: T| link_contains(old_h_left, z) implies
+                    (T::le(z, h_key) && z != h_key) by {};
+                assert forall|z: T| link_contains(old_h_right, z) implies
+                    (T::le(h_key, z) && z != h_key) by {};
+            }
             if let Some(mut x) = h.right.take() {
+                let ghost x_key = x.key;
                 let ghost old_x_left = x.left;
                 let ghost old_x_right = x.right;
+                proof {
+                    reveal_with_fuel(spec_is_bst_link, 2);
+                    reveal_with_fuel(link_contains, 2);
+                    assert(link_contains(old_h_right, x_key));
+                    assert(T::le(h_key, x_key) && x_key != h_key);
+                    assert forall|z: T| link_contains(old_x_left, z) implies
+                        (T::le(z, x_key) && z != x_key) by {};
+                    assert forall|z: T| link_contains(old_x_right, z) implies
+                        (T::le(x_key, z) && z != x_key) by {};
+                    assert forall|z: T| link_contains(old_x_left, z) implies
+                        (T::le(h_key, z) && z != h_key) by {
+                        assert(link_contains(old_h_right, z));
+                    };
+                }
                 h.right = x.left.take();
                 update(&mut h);
                 x.color = h.color;
@@ -188,6 +215,36 @@ pub mod BSTRBMtEph {
                 }
                 update(&mut x);
                 *link = Some(x);
+                proof {
+                    reveal_with_fuel(spec_is_bst_link, 3);
+                    reveal_with_fuel(link_contains, 4);
+                    assert(x.key == x_key);
+                    assert(x.right == old_x_right);
+                    assert(spec_is_bst_link(old_h_left));
+                    assert(spec_is_bst_link(old_x_left));
+                    assert(spec_is_bst_link(old_x_right));
+                    assert forall|z: T| link_contains(Some(h), z) implies
+                        (T::le(z, x_key) && z != x_key)
+                    by {
+                        reveal_with_fuel(link_contains, 2);
+                        if z == h_key {
+                        } else if link_contains(old_h_left, z) {
+                            T::transitive(z, h_key, x_key);
+                            if z == x_key { T::antisymmetric(h_key, x_key); }
+                        } else {
+                            assert(link_contains(old_x_left, z));
+                        }
+                    };
+                    assert(spec_is_bst_link(Some(h))) by {
+                        reveal_with_fuel(spec_is_bst_link, 2);
+                    };
+                    assert(spec_is_bst_link(*link)) by {
+                        reveal_with_fuel(spec_is_bst_link, 2);
+                    };
+                    assert forall|z: T| link_contains(*link, z) <==> link_contains(old_link, z) by {
+                        reveal_with_fuel(link_contains, 4);
+                    };
+                }
             } else {
                 *link = Some(h);
             }
@@ -195,15 +252,42 @@ pub mod BSTRBMtEph {
     }
 
     fn rotate_right<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
-
-        ensures link_spec_size(*link) == link_spec_size(*old(link)),
+        requires spec_is_bst_link(*old(link)),
+        ensures
+            spec_is_bst_link(*link),
+            forall|z: T| link_contains(*link, z) <==> link_contains(*old(link), z),
     {
         let ghost old_link = *link;
         if let Some(mut h) = link.take() {
+            let ghost h_key = h.key;
+            let ghost old_h_left = h.left;
             let ghost old_h_right = h.right;
+            proof {
+                reveal_with_fuel(spec_is_bst_link, 3);
+                reveal_with_fuel(link_contains, 3);
+                assert forall|z: T| link_contains(old_h_left, z) implies
+                    (T::le(z, h_key) && z != h_key) by {};
+                assert forall|z: T| link_contains(old_h_right, z) implies
+                    (T::le(h_key, z) && z != h_key) by {};
+            }
             if let Some(mut x) = h.left.take() {
+                let ghost x_key = x.key;
                 let ghost old_x_left = x.left;
                 let ghost old_x_right = x.right;
+                proof {
+                    reveal_with_fuel(spec_is_bst_link, 2);
+                    reveal_with_fuel(link_contains, 2);
+                    assert(link_contains(old_h_left, x_key));
+                    assert(T::le(x_key, h_key) && x_key != h_key);
+                    assert forall|z: T| link_contains(old_x_left, z) implies
+                        (T::le(z, x_key) && z != x_key) by {};
+                    assert forall|z: T| link_contains(old_x_right, z) implies
+                        (T::le(x_key, z) && z != x_key) by {};
+                    assert forall|z: T| link_contains(old_x_right, z) implies
+                        (T::le(z, h_key) && z != h_key) by {
+                        assert(link_contains(old_h_left, z));
+                    };
+                }
                 h.left = x.right.take();
                 update(&mut h);
                 x.color = h.color;
@@ -214,6 +298,36 @@ pub mod BSTRBMtEph {
                 }
                 update(&mut x);
                 *link = Some(x);
+                proof {
+                    reveal_with_fuel(spec_is_bst_link, 3);
+                    reveal_with_fuel(link_contains, 4);
+                    assert(x.key == x_key);
+                    assert(x.left == old_x_left);
+                    assert(spec_is_bst_link(old_h_right));
+                    assert(spec_is_bst_link(old_x_left));
+                    assert(spec_is_bst_link(old_x_right));
+                    assert forall|z: T| link_contains(Some(h), z) implies
+                        (T::le(x_key, z) && z != x_key)
+                    by {
+                        reveal_with_fuel(link_contains, 2);
+                        if z == h_key {
+                        } else if link_contains(old_h_right, z) {
+                            T::transitive(x_key, h_key, z);
+                            if z == x_key { T::antisymmetric(x_key, h_key); }
+                        } else {
+                            assert(link_contains(old_x_right, z));
+                        }
+                    };
+                    assert(spec_is_bst_link(Some(h))) by {
+                        reveal_with_fuel(spec_is_bst_link, 2);
+                    };
+                    assert(spec_is_bst_link(*link)) by {
+                        reveal_with_fuel(spec_is_bst_link, 2);
+                    };
+                    assert forall|z: T| link_contains(*link, z) <==> link_contains(old_link, z) by {
+                        reveal_with_fuel(link_contains, 4);
+                    };
+                }
             } else {
                 *link = Some(h);
             }
@@ -221,8 +335,10 @@ pub mod BSTRBMtEph {
     }
 
     fn flip_colors<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
-
-        ensures link_spec_size(*link) == link_spec_size(*old(link)),
+        requires spec_is_bst_link(*old(link)),
+        ensures
+            spec_is_bst_link(*link),
+            forall|z: T| link_contains(*link, z) <==> link_contains(*old(link), z),
     {
         if let Some(node) = link.as_mut() {
             node.color = match node.color {
@@ -245,8 +361,10 @@ pub mod BSTRBMtEph {
     }
 
     fn fix_up<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
-
-        ensures link_spec_size(*link) == link_spec_size(*old(link)),
+        requires spec_is_bst_link(*old(link)),
+        ensures
+            spec_is_bst_link(*link),
+            forall|z: T| link_contains(*link, z) <==> link_contains(*old(link), z),
     {
         let rotate_left_needed = match link {
             | Some(node) => is_red(&node.right) && !is_red(&node.left),
@@ -284,73 +402,256 @@ pub mod BSTRBMtEph {
     }
 
     fn insert_link<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>, value: T)
-
-        ensures link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
+        requires spec_is_bst_link(*old(link)),
+        ensures
+            spec_is_bst_link(*link),
+            link_contains(*link, value),
+            forall|x: T| link_contains(*old(link), x) ==> link_contains(*link, x),
+            forall|x: T| link_contains(*link, x) ==> (link_contains(*old(link), x) || x == value),
         decreases old(link),
     {
-        if let Some(node) = link.as_mut() {
-            if value < node.key {
-                insert_link(&mut node.left, value);
-            } else if value > node.key {
-                insert_link(&mut node.right, value);
-            } else {
+        let cur = link.take();
+        match cur {
+            | None => {
+                *link = Some(Box::new(new_node(value)));
+                proof {
+                    reveal_with_fuel(spec_is_bst_link, 2);
+                    reveal_with_fuel(link_contains, 2);
+                }
                 return;
             }
-        } else {
-            *link = Some(Box::new(new_node(value)));
-            return;
+            | Some(mut node) => {
+                let ghost old_left = node.left;
+                let ghost old_right = node.right;
+                let ghost node_key = node.key;
+                match TotalOrder::cmp(&value, &node.key) {
+                    core::cmp::Ordering::Less => {
+                        insert_link(&mut node.left, value);
+                        update(&mut node);
+                        *link = Some(node);
+                        proof {
+                            reveal_with_fuel(spec_is_bst_link, 2);
+                            reveal_with_fuel(link_contains, 2);
+                            assert forall|x: T| link_contains(node.left, x) implies
+                                (T::le(x, node.key) && x != node.key)
+                            by {
+                                if link_contains(old_left, x) {
+                                } else {
+                                    assert(x == value);
+                                }
+                            };
+                            assert forall|x: T| link_contains(*old(link), x) implies
+                                (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
+                            by {
+                                reveal_with_fuel(link_contains, 2);
+                            };
+                            assert forall|x: T| link_contains(*old(link), x) implies
+                                link_contains(*link, x)
+                            by {
+                                reveal_with_fuel(link_contains, 2);
+                                if node_key == x {
+                                } else if link_contains(old_left, x) {
+                                    assert(link_contains(node.left, x));
+                                }
+                            };
+                            assert forall|x: T| link_contains(*link, x) implies
+                                (link_contains(*old(link), x) || x == value)
+                            by {
+                                reveal_with_fuel(link_contains, 2);
+                                if node.key == x {
+                                    assert(node_key == x);
+                                } else if link_contains(node.left, x) {
+                                    if link_contains(old_left, x) {
+                                    }
+                                }
+                            };
+                        }
+                    }
+                    core::cmp::Ordering::Greater => {
+                        insert_link(&mut node.right, value);
+                        update(&mut node);
+                        *link = Some(node);
+                        proof {
+                            reveal_with_fuel(spec_is_bst_link, 2);
+                            reveal_with_fuel(link_contains, 2);
+                            assert forall|x: T| link_contains(node.right, x) implies
+                                (T::le(node.key, x) && x != node.key)
+                            by {
+                                if link_contains(old_right, x) {
+                                } else {
+                                    assert(x == value);
+                                }
+                            };
+                            assert forall|x: T| link_contains(*old(link), x) implies
+                                (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
+                            by {
+                                reveal_with_fuel(link_contains, 2);
+                            };
+                            assert forall|x: T| link_contains(*old(link), x) implies
+                                link_contains(*link, x)
+                            by {
+                                reveal_with_fuel(link_contains, 2);
+                                if node_key == x {
+                                } else if link_contains(old_right, x) {
+                                    assert(link_contains(node.right, x));
+                                }
+                            };
+                            assert forall|x: T| link_contains(*link, x) implies
+                                (link_contains(*old(link), x) || x == value)
+                            by {
+                                reveal_with_fuel(link_contains, 2);
+                                if node.key == x {
+                                    assert(node_key == x);
+                                } else if link_contains(node.right, x) {
+                                    if link_contains(old_right, x) {
+                                    }
+                                }
+                            };
+                        }
+                    }
+                    core::cmp::Ordering::Equal => {
+                        *link = Some(node);
+                        proof {
+                            reveal_with_fuel(spec_is_bst_link, 2);
+                            reveal_with_fuel(link_contains, 2);
+                        }
+                        return;
+                    }
+                }
+            }
         }
         fix_up(link);
     }
 
     fn find_link<'a, T: StTInMtT + Ord + TotalOrder>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
-
+        requires spec_is_bst_link(*link),
         ensures
-            (link is None) ==> found is None,
+            found.is_some() <==> link_contains(*link, *target),
+            found.is_some() ==> *found.unwrap() == *target,
         decreases *link,
     {
         match link {
             | None => None,
             | Some(node) => {
-                if *target == node.key {
-                    Some(&node.key)
-                } else if *target < node.key {
-                    find_link(&node.left, target)
-                } else {
-                    find_link(&node.right, target)
+                match TotalOrder::cmp(target, &node.key) {
+                    core::cmp::Ordering::Equal => Some(&node.key),
+                    core::cmp::Ordering::Less => {
+                        proof {
+                            assert(!link_contains(node.right, *target)) by {
+                                if link_contains(node.right, *target) {
+                                    T::antisymmetric(*target, node.key);
+                                }
+                            };
+                        }
+                        find_link(&node.left, target)
+                    }
+                    core::cmp::Ordering::Greater => {
+                        proof {
+                            assert(!link_contains(node.left, *target)) by {
+                                if link_contains(node.left, *target) {
+                                    T::antisymmetric(node.key, *target);
+                                }
+                            };
+                        }
+                        find_link(&node.right, target)
+                    }
                 }
             }
         }
     }
 
     fn min_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (min: Option<&T>)
-
+        requires spec_is_bst_link(*link),
         ensures
-            (link is None) ==> min is None,
-            (link is Some) ==> min is Some,
+            link.is_some() ==> min.is_some(),
+            min.is_some() ==> link_contains(*link, *min.unwrap()),
+            min.is_some() ==> forall|x: T| link_contains(*link, x) ==> T::le(*min.unwrap(), x),
         decreases *link,
     {
         match link {
             | None => None,
             | Some(node) => match node.left {
-                | None => Some(&node.key),
-                | Some(_) => min_link(&node.left),
+                | None => {
+                    proof {
+                        assert forall|x: T| link_contains(*link, x) implies T::le(node.key, x) by {
+                            reveal_with_fuel(spec_is_bst_link, 2);
+                            reveal_with_fuel(link_contains, 2);
+                            if x == node.key {
+                                T::reflexive(x);
+                            } else {
+                                assert(link_contains(node.right, x));
+                            }
+                        };
+                    }
+                    Some(&node.key)
+                }
+                | Some(_) => {
+                    let min = min_link(&node.left);
+                    proof {
+                        reveal_with_fuel(spec_is_bst_link, 2);
+                        reveal_with_fuel(link_contains, 2);
+                        assert(link_contains(node.left, *min.unwrap()));
+                        assert forall|x: T| link_contains(*link, x) implies T::le(*min.unwrap(), x) by {
+                            reveal_with_fuel(spec_is_bst_link, 2);
+                            reveal_with_fuel(link_contains, 2);
+                            if link_contains(node.left, x) {
+                            } else if x == node.key {
+                            } else {
+                                assert(link_contains(node.right, x));
+                                T::transitive(*min.unwrap(), node.key, x);
+                            }
+                        };
+                    }
+                    min
+                }
             },
         }
     }
 
     fn max_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (max: Option<&T>)
-
+        requires spec_is_bst_link(*link),
         ensures
-            (link is None) ==> max is None,
-            (link is Some) ==> max is Some,
+            link.is_some() ==> max.is_some(),
+            max.is_some() ==> link_contains(*link, *max.unwrap()),
+            max.is_some() ==> forall|x: T| link_contains(*link, x) ==> T::le(x, *max.unwrap()),
         decreases *link,
     {
         match link {
             | None => None,
             | Some(node) => match node.right {
-                | None => Some(&node.key),
-                | Some(_) => max_link(&node.right),
+                | None => {
+                    proof {
+                        assert forall|x: T| link_contains(*link, x) implies T::le(x, node.key) by {
+                            reveal_with_fuel(spec_is_bst_link, 2);
+                            reveal_with_fuel(link_contains, 2);
+                            if x == node.key {
+                                T::reflexive(x);
+                            } else {
+                                assert(link_contains(node.left, x));
+                            }
+                        };
+                    }
+                    Some(&node.key)
+                }
+                | Some(_) => {
+                    let max = max_link(&node.right);
+                    proof {
+                        reveal_with_fuel(spec_is_bst_link, 2);
+                        reveal_with_fuel(link_contains, 2);
+                        assert(link_contains(node.right, *max.unwrap()));
+                        assert forall|x: T| link_contains(*link, x) implies T::le(x, *max.unwrap()) by {
+                            reveal_with_fuel(spec_is_bst_link, 2);
+                            reveal_with_fuel(link_contains, 2);
+                            if link_contains(node.right, x) {
+                            } else if x == node.key {
+                            } else {
+                                assert(link_contains(node.left, x));
+                                T::transitive(x, node.key, *max.unwrap());
+                            }
+                        };
+                    }
+                    max
+                }
             },
         }
     }
@@ -624,6 +925,7 @@ pub mod BSTRBMtEph {
     impl<T: StTInMtT + Ord + TotalOrder> BSTRBMtEphTrait<T> for BSTRBMtEph<T> {
         open spec fn spec_bstrbmteph_wf(&self) -> bool {
             link_spec_size(self@) <= usize::MAX
+            && spec_is_bst_link(self@)
         }
 
         fn new() -> Self {

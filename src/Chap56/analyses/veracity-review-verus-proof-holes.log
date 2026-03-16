@@ -25,10 +25,10 @@ Table of Contents:
 ✓ AllPairsResultStPerF64.rs
 ✓ AllPairsResultStPerI64.rs
 ℹ Example56_1.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:43: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_1.rs:43: info: external_accept_hole
    Info: 1 total
 ℹ Example56_3.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:40: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_3.rs:40: info: external_accept_hole
    Info: 1 total
 ✓ PathWeightUtilsStEph.rs
 ✓ PathWeightUtilsStPer.rs
@@ -105,9 +105,11 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 08:12:40 -07:00
-Ended:     2026-03-16 08:12:40 -07:00
-Duration:  29ms
+Started:   2026-03-16 08:48:41 -07:00
+Ended:     2026-03-16 08:48:41 -07:00
+Duration:  54ms
 
 Full output: src/Chap56/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap56/analyses/veracity-review-verus-proof-holes.log
+Duration:  54ms
+
+Full output: src/Chap56/analyses/veracity-review-verus-proof-holes.log
