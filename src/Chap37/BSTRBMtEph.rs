@@ -25,6 +25,7 @@ pub mod BSTRBMtEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
 
@@ -44,7 +45,7 @@ pub mod BSTRBMtEph {
 
     #[verifier::reject_recursive_types(T)]
     #[derive(Clone)]
-    struct Node<T: StTInMtT + Ord> {
+    struct Node<T: StTInMtT + Ord + TotalOrder> {
         key: T,
         color: Color,
         size: N,
@@ -57,7 +58,7 @@ pub mod BSTRBMtEph {
     // 6. spec fns
 
     /// Structural node count for RB tree links.
-    pub open spec fn link_spec_size<T: StTInMtT + Ord>(link: Link<T>) -> nat
+    pub open spec fn link_spec_size<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> nat
         decreases link,
     {
         match link {
@@ -67,7 +68,7 @@ pub mod BSTRBMtEph {
     }
 
     /// Spec-level containment for RB tree links.
-    pub open spec fn link_contains<T: StTInMtT + Ord>(link: Link<T>, target: T) -> bool
+    pub open spec fn link_contains<T: StTInMtT + Ord + TotalOrder>(link: Link<T>, target: T) -> bool
         decreases link,
     {
         match link {
@@ -79,7 +80,7 @@ pub mod BSTRBMtEph {
     }
 
     /// Spec-level height for RB tree links.
-    pub open spec fn link_height<T: StTInMtT + Ord>(link: Link<T>) -> nat
+    pub open spec fn link_height<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> nat
         decreases link,
     {
         match link {
@@ -92,11 +93,28 @@ pub mod BSTRBMtEph {
         }
     }
 
+    /// BST ordering invariant for RB tree links.
+    pub open spec fn spec_is_bst_link<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> bool
+        decreases link,
+    {
+        match link {
+            None => true,
+            Some(node) => {
+                spec_is_bst_link(node.left)
+                && spec_is_bst_link(node.right)
+                && (forall|x: T| (#[trigger] link_contains(node.left, x)) ==>
+                    T::le(x, node.key) && x != node.key)
+                && (forall|x: T| (#[trigger] link_contains(node.right, x)) ==>
+                    T::le(node.key, x) && x != node.key)
+            }
+        }
+    }
+
     // 9. impls
 
     // Verified RB tree algorithms (Layer 1).
 
-    fn new_node<T: StTInMtT + Ord>(key: T) -> (node: Node<T>)
+    fn new_node<T: StTInMtT + Ord + TotalOrder>(key: T) -> (node: Node<T>)
 
         ensures
             node.key == key,
@@ -113,7 +131,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn is_red<T: StTInMtT + Ord>(link: &Link<T>) -> (red: bool)
+    fn is_red<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (red: bool)
 
         ensures
             (link is None) ==> !red,
@@ -124,7 +142,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (size: N)
+    fn size_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (size: N)
 
         ensures
             (link is None) ==> size == 0,
@@ -135,7 +153,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn update<T: StTInMtT + Ord>(node: &mut Node<T>)
+    fn update<T: StTInMtT + Ord + TotalOrder>(node: &mut Node<T>)
 
         ensures
             node.left == old(node).left,
@@ -150,7 +168,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn rotate_left<T: StTInMtT + Ord>(link: &mut Link<T>)
+    fn rotate_left<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
 
         ensures link_spec_size(*link) == link_spec_size(*old(link)),
     {
@@ -176,7 +194,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn rotate_right<T: StTInMtT + Ord>(link: &mut Link<T>)
+    fn rotate_right<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
 
         ensures link_spec_size(*link) == link_spec_size(*old(link)),
     {
@@ -202,7 +220,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn flip_colors<T: StTInMtT + Ord>(link: &mut Link<T>)
+    fn flip_colors<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
 
         ensures link_spec_size(*link) == link_spec_size(*old(link)),
     {
@@ -226,7 +244,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn fix_up<T: StTInMtT + Ord>(link: &mut Link<T>)
+    fn fix_up<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
 
         ensures link_spec_size(*link) == link_spec_size(*old(link)),
     {
@@ -265,7 +283,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T)
+    fn insert_link<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>, value: T)
 
         ensures link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
         decreases old(link),
@@ -285,7 +303,7 @@ pub mod BSTRBMtEph {
         fix_up(link);
     }
 
-    fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
+    fn find_link<'a, T: StTInMtT + Ord + TotalOrder>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
 
         ensures
             (link is None) ==> found is None,
@@ -305,7 +323,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> (min: Option<&T>)
+    fn min_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (min: Option<&T>)
 
         ensures
             (link is None) ==> min is None,
@@ -321,7 +339,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> (max: Option<&T>)
+    fn max_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (max: Option<&T>)
 
         ensures
             (link is None) ==> max is None,
@@ -337,7 +355,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+    fn in_order_collect<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>, out: &mut Vec<T>)
 
         ensures true,
         decreases *link,
@@ -349,7 +367,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+    fn pre_order_collect<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>, out: &mut Vec<T>)
 
         ensures true,
         decreases *link,
@@ -361,7 +379,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn in_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> (result: Vec<T>)
+    fn in_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (result: Vec<T>)
 
         ensures true,
         decreases *link,
@@ -382,7 +400,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn pre_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> (result: Vec<T>)
+    fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (result: Vec<T>)
 
         ensures true,
         decreases *link,
@@ -403,7 +421,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn build_balanced<T: StTInMtT + Ord>(values: &[T]) -> (link: Link<T>)
+    fn build_balanced<T: StTInMtT + Ord + TotalOrder>(values: &[T]) -> (link: Link<T>)
 
         ensures link_spec_size(link) <= values@.len(),
         decreases values.len(),
@@ -432,7 +450,7 @@ pub mod BSTRBMtEph {
         Some(node)
     }
 
-    fn filter_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
+    fn filter_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
         where
             F: Fn(&T) -> bool + Send + Sync,
 
@@ -461,7 +479,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
+    fn reduce_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
         where
             F: Fn(T, T) -> T + Send + Sync,
 
@@ -487,10 +505,9 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn height_rec<T: StTInMtT + Ord>(link: &Link<T>) -> (h: N)
-
-        ensures
-            (link is None) ==> h == 0,
+    fn height_rec<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (h: N)
+        requires link_height(*link) < usize::MAX as nat,
+        ensures h as nat == link_height(*link),
         decreases *link,
     {
         match link {
@@ -500,7 +517,7 @@ pub mod BSTRBMtEph {
     }
 
     /// Exec mirror of link_spec_size for runtime size guards.
-    fn compute_link_spec_size<T: StTInMtT + Ord>(link: &Link<T>) -> (n: usize)
+    fn compute_link_spec_size<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (n: usize)
         requires link_spec_size(*link) <= usize::MAX,
         ensures n as nat == link_spec_size(*link),
         decreases *link,
@@ -520,21 +537,21 @@ pub mod BSTRBMtEph {
     /// Lock predicate: link size fits in usize.
     pub struct BSTRBMtEphInv;
 
-    impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTRBMtEphInv {
+    impl<T: StTInMtT + Ord + TotalOrder> RwLockPredicate<Link<T>> for BSTRBMtEphInv {
         open spec fn inv(self, v: Link<T>) -> bool {
             link_spec_size(v) <= usize::MAX
         }
     }
 
     #[verifier::reject_recursive_types(T)]
-    pub struct BSTRBMtEph<T: StTInMtT + Ord> {
+    pub struct BSTRBMtEph<T: StTInMtT + Ord + TotalOrder> {
         pub(crate) root: RwLock<Link<T>, BSTRBMtEphInv>,
         pub(crate) ghost_root: Ghost<Link<T>>,
     }
 
     pub type BSTreeRB<T> = BSTRBMtEph<T>;
 
-    impl<T: StTInMtT + Ord> BSTRBMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> BSTRBMtEph<T> {
         #[verifier::type_invariant]
         spec fn wf(self) -> bool {
             link_spec_size(self.ghost_root@) <= usize::MAX
@@ -545,12 +562,12 @@ pub mod BSTRBMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord> View for BSTRBMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTRBMtEph<T> {
         type V = Link<T>;
         open spec fn view(&self) -> Link<T> { self.spec_ghost_root() }
     }
 
-    pub trait BSTRBMtEphTrait<T: StTInMtT + Ord>: Sized + View<V = Link<T>> {
+    pub trait BSTRBMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized + View<V = Link<T>> {
         spec fn spec_bstrbmteph_wf(&self) -> bool;
 
         fn new() -> (tree: Self)
@@ -604,7 +621,7 @@ pub mod BSTRBMtEph {
             ensures true;
     }
 
-    impl<T: StTInMtT + Ord> BSTRBMtEphTrait<T> for BSTRBMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> BSTRBMtEphTrait<T> for BSTRBMtEph<T> {
         open spec fn spec_bstrbmteph_wf(&self) -> bool {
             link_spec_size(self@) <= usize::MAX
         }
@@ -739,7 +756,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord> Default for BSTRBMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> Default for BSTRBMtEph<T> {
         fn default() -> Self { Self::new() }
     }
 
@@ -776,7 +793,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Debug for Node<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for Node<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("Node")
                 .field("key", &self.key)
@@ -786,7 +803,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Display for Node<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Display for Node<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "{}", self.key)
         }
@@ -804,13 +821,13 @@ pub mod BSTRBMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTRBMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for BSTRBMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTRBMtEph").finish()
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Display for BSTRBMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Display for BSTRBMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "BSTRBMtEph(size={})", self.size())
         }

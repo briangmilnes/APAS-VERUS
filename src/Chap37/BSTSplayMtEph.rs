@@ -25,6 +25,7 @@ pub mod BSTSplayMtEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
 
@@ -38,7 +39,7 @@ pub mod BSTSplayMtEph {
 
     #[verifier::reject_recursive_types(T)]
     #[derive(Clone)]
-    struct Node<T: StTInMtT + Ord> {
+    struct Node<T: StTInMtT + Ord + TotalOrder> {
         key: T,
         size: N,
         left: Option<Box<Node<T>>>,
@@ -50,7 +51,7 @@ pub mod BSTSplayMtEph {
     // 6. spec fns
 
     /// Structural node count for splay tree links.
-    pub open spec fn link_spec_size<T: StTInMtT + Ord>(link: Link<T>) -> nat
+    pub open spec fn link_spec_size<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> nat
         decreases link,
     {
         match link {
@@ -60,7 +61,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// Spec-level containment for splay tree links.
-    pub open spec fn link_contains<T: StTInMtT + Ord>(link: Link<T>, target: T) -> bool
+    pub open spec fn link_contains<T: StTInMtT + Ord + TotalOrder>(link: Link<T>, target: T) -> bool
         decreases link,
     {
         match link {
@@ -72,7 +73,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// Spec-level height for splay tree links.
-    pub open spec fn link_height<T: StTInMtT + Ord>(link: Link<T>) -> nat
+    pub open spec fn link_height<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> nat
         decreases link,
     {
         match link {
@@ -85,11 +86,28 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    /// BST ordering invariant for splay tree links.
+    pub open spec fn spec_is_bst_link<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> bool
+        decreases link,
+    {
+        match link {
+            None => true,
+            Some(node) => {
+                spec_is_bst_link(node.left)
+                && spec_is_bst_link(node.right)
+                && (forall|x: T| (#[trigger] link_contains(node.left, x)) ==>
+                    T::le(x, node.key) && x != node.key)
+                && (forall|x: T| (#[trigger] link_contains(node.right, x)) ==>
+                    T::le(node.key, x) && x != node.key)
+            }
+        }
+    }
+
     // 9. impls
 
     // Verified splay tree algorithms (Layer 1).
 
-    fn new_node<T: StTInMtT + Ord>(key: T) -> (node: Node<T>)
+    fn new_node<T: StTInMtT + Ord + TotalOrder>(key: T) -> (node: Node<T>)
 
         ensures
             node.key == key,
@@ -105,7 +123,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (size: N)
+    fn size_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (size: N)
 
         ensures
             (link is None) ==> size == 0,
@@ -116,7 +134,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn update<T: StTInMtT + Ord>(node: &mut Node<T>)
+    fn update<T: StTInMtT + Ord + TotalOrder>(node: &mut Node<T>)
 
         ensures
             node.left == old(node).left,
@@ -132,7 +150,7 @@ pub mod BSTSplayMtEph {
 
     // Bottom-up splay: bring target (or nearest key) toward the root using
     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
-    fn splay<T: StTInMtT + Ord>(root: Box<Node<T>>, target: &T) -> (result: Box<Node<T>>)
+    fn splay<T: StTInMtT + Ord + TotalOrder>(root: Box<Node<T>>, target: &T) -> (result: Box<Node<T>>)
 
         ensures link_spec_size(Some(result)) == link_spec_size(Some(root)),
         decreases root,
@@ -249,7 +267,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn bst_insert<T: StTInMtT + Ord>(link: &mut Link<T>, value: T) -> (inserted: bool)
+    fn bst_insert<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>, value: T) -> (inserted: bool)
 
         ensures link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
         decreases old(link),
@@ -273,7 +291,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T) -> (inserted: bool)
+    fn insert_link<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>, value: T) -> (inserted: bool)
 
         ensures link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
     {
@@ -287,7 +305,7 @@ pub mod BSTSplayMtEph {
         inserted
     }
 
-    fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
+    fn find_link<'a, T: StTInMtT + Ord + TotalOrder>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
 
         ensures
             (link is None) ==> found is None,
@@ -307,7 +325,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> (min: Option<&T>)
+    fn min_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (min: Option<&T>)
 
         ensures
             (link is None) ==> min is None,
@@ -323,7 +341,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> (max: Option<&T>)
+    fn max_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (max: Option<&T>)
 
         ensures
             (link is None) ==> max is None,
@@ -339,7 +357,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+    fn in_order_collect<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>, out: &mut Vec<T>)
 
         ensures true,
         decreases *link,
@@ -351,7 +369,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+    fn pre_order_collect<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>, out: &mut Vec<T>)
 
         ensures true,
         decreases *link,
@@ -363,7 +381,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn in_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> (result: Vec<T>)
+    fn in_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (result: Vec<T>)
 
         ensures true,
         decreases *link,
@@ -384,7 +402,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn pre_order_parallel<T: StTInMtT + Ord>(link: &Link<T>) -> (result: Vec<T>)
+    fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (result: Vec<T>)
 
         ensures true,
         decreases *link,
@@ -405,7 +423,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn build_balanced<T: StTInMtT + Ord>(values: &[T]) -> (link: Link<T>)
+    fn build_balanced<T: StTInMtT + Ord + TotalOrder>(values: &[T]) -> (link: Link<T>)
 
         ensures link_spec_size(link) <= values@.len(),
         decreases values.len(),
@@ -433,7 +451,7 @@ pub mod BSTSplayMtEph {
         Some(node)
     }
 
-    fn filter_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
+    fn filter_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
         where
             F: Fn(&T) -> bool + Send + Sync,
 
@@ -462,7 +480,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
+    fn reduce_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
         where
             F: Fn(T, T) -> T + Send + Sync,
 
@@ -488,10 +506,9 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn height_rec<T: StTInMtT + Ord>(link: &Link<T>) -> (h: N)
-
-        ensures
-            (link is None) ==> h == 0,
+    fn height_rec<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (h: N)
+        requires link_height(*link) < usize::MAX as nat,
+        ensures h as nat == link_height(*link),
         decreases *link,
     {
         match link {
@@ -501,7 +518,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// Exec mirror of link_spec_size for runtime size guards.
-    fn compute_link_spec_size<T: StTInMtT + Ord>(link: &Link<T>) -> (n: usize)
+    fn compute_link_spec_size<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (n: usize)
         requires link_spec_size(*link) <= usize::MAX,
         ensures n as nat == link_spec_size(*link),
         decreases *link,
@@ -521,21 +538,21 @@ pub mod BSTSplayMtEph {
     /// Lock predicate: link size fits in usize.
     pub struct BSTSplayMtEphInv;
 
-    impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTSplayMtEphInv {
+    impl<T: StTInMtT + Ord + TotalOrder> RwLockPredicate<Link<T>> for BSTSplayMtEphInv {
         open spec fn inv(self, v: Link<T>) -> bool {
             link_spec_size(v) <= usize::MAX
         }
     }
 
     #[verifier::reject_recursive_types(T)]
-    pub struct BSTSplayMtEph<T: StTInMtT + Ord> {
+    pub struct BSTSplayMtEph<T: StTInMtT + Ord + TotalOrder> {
         pub(crate) root: RwLock<Link<T>, BSTSplayMtEphInv>,
         pub(crate) ghost_root: Ghost<Link<T>>,
     }
 
     pub type BSTreeSplay<T> = BSTSplayMtEph<T>;
 
-    impl<T: StTInMtT + Ord> BSTSplayMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> BSTSplayMtEph<T> {
         #[verifier::type_invariant]
         spec fn wf(self) -> bool {
             link_spec_size(self.ghost_root@) <= usize::MAX
@@ -546,12 +563,12 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord> View for BSTSplayMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSplayMtEph<T> {
         type V = Link<T>;
         open spec fn view(&self) -> Link<T> { self.spec_ghost_root() }
     }
 
-    pub trait BSTSplayMtEphTrait<T: StTInMtT + Ord>: Sized + View<V = Link<T>> {
+    pub trait BSTSplayMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized + View<V = Link<T>> {
         spec fn spec_bstsplaymteph_wf(&self) -> bool;
 
         fn new() -> (tree: Self)
@@ -605,7 +622,7 @@ pub mod BSTSplayMtEph {
             ensures true;
     }
 
-    impl<T: StTInMtT + Ord> BSTSplayMtEphTrait<T> for BSTSplayMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> BSTSplayMtEphTrait<T> for BSTSplayMtEph<T> {
         open spec fn spec_bstsplaymteph_wf(&self) -> bool {
             link_spec_size(self@) <= usize::MAX
         }
@@ -737,7 +754,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord> Default for BSTSplayMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> Default for BSTSplayMtEph<T> {
         fn default() -> Self { Self::new() }
     }
 
@@ -759,7 +776,7 @@ pub mod BSTSplayMtEph {
 
     // 14. derive impls outside verus!
 
-    impl<T: StTInMtT + Ord> std::fmt::Debug for Node<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for Node<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("Node")
                 .field("key", &self.key)
@@ -768,7 +785,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Display for Node<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Display for Node<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "{}", self.key)
         }
@@ -786,13 +803,13 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTSplayMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for BSTSplayMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTSplayMtEph").finish()
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Display for BSTSplayMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Display for BSTSplayMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "BSTSplayMtEph(size={})", self.size())
         }

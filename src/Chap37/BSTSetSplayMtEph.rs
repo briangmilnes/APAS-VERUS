@@ -26,52 +26,53 @@ pub mod BSTSetSplayMtEph {
     use crate::Chap37::BSTSplayMtEph::BSTSplayMtEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
 
     //	4. type definitions
 
-    pub struct BSTSetSplayMtEph<T: StTInMtT + Ord> {
+    pub struct BSTSetSplayMtEph<T: StTInMtT + Ord + TotalOrder> {
         tree: BSTSplayMtEph<T>,
     }
 
     pub type BSTSetSplayMt<T> = BSTSetSplayMtEph<T>;
 
     #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetSplayMtEphIter<T: StTInMtT + Ord> {
+    pub struct BSTSetSplayMtEphIter<T: StTInMtT + Ord + TotalOrder> {
         pub snapshot: Vec<T>,
         pub pos: usize,
     }
 
     #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetSplayMtEphGhostIter<T: StTInMtT + Ord> {
+    pub struct BSTSetSplayMtEphGhostIter<T: StTInMtT + Ord + TotalOrder> {
         pub pos: int,
         pub elements: Seq<T>,
     }
 
     // 5. view impls
 
-    impl<T: StTInMtT + Ord> View for BSTSetSplayMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetSplayMtEphIter<T> {
         type V = (int, Seq<T>);
         open spec fn view(&self) -> (int, Seq<T>) {
             (self.pos as int, self.snapshot@)
         }
     }
 
-    impl<T: StTInMtT + Ord> View for BSTSetSplayMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetSplayMtEphGhostIter<T> {
         type V = Seq<T>;
         open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
     }
 
     // 6. spec fns
 
-    pub open spec fn bstsetsplaymteph_iter_invariant<T: StTInMtT + Ord>(it: &BSTSetSplayMtEphIter<T>) -> bool {
+    pub open spec fn bstsetsplaymteph_iter_invariant<T: StTInMtT + Ord + TotalOrder>(it: &BSTSetSplayMtEphIter<T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
 
     //	8. traits
 
-    pub trait BSTSetSplayMtEphTrait<T: StTInMtT + Ord>: Sized {
+    pub trait BSTSetSplayMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized {
         spec fn spec_bstsetsplaymteph_wf(&self) -> bool;
 
         fn empty() -> (set: Self)
@@ -139,14 +140,14 @@ pub mod BSTSetSplayMtEph {
 
     //	9. impls
 
-    fn values_vec<T: StTInMtT + Ord>(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
+    fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
 
         ensures true,
     {
         tree.in_order().iter().cloned().collect()
     }
 
-    fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
+    fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
 
         ensures true,
     {
@@ -157,7 +158,7 @@ pub mod BSTSetSplayMtEph {
         tree
     }
 
-    fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetSplayMtEph<T>)
+    fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder, I>(values: I) -> (set: BSTSetSplayMtEph<T>)
     where
         I: IntoIterator<Item = T>,
 
@@ -170,14 +171,14 @@ pub mod BSTSetSplayMtEph {
         BSTSetSplayMtEph { tree }
     }
 
-    fn copy_set<T: StTInMtT + Ord>(set: &BSTSetSplayMtEph<T>) -> (out: BSTSetSplayMtEph<T>)
+    fn copy_set<T: StTInMtT + Ord + TotalOrder>(set: &BSTSetSplayMtEph<T>) -> (out: BSTSetSplayMtEph<T>)
         requires set.spec_bstsetsplaymteph_wf()
         ensures out.spec_bstsetsplaymteph_wf()
     {
         from_sorted_iter(values_vec(&set.tree))
     }
 
-    impl<T: StTInMtT + Ord> BSTSetSplayMtEphTrait<T> for BSTSetSplayMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> BSTSetSplayMtEphTrait<T> for BSTSetSplayMtEph<T> {
         open spec fn spec_bstsetsplaymteph_wf(&self) -> bool {
             self.tree.spec_bstsplaymteph_wf()
         }
@@ -378,7 +379,7 @@ pub mod BSTSetSplayMtEph {
 
     // 10. iterators
 
-    impl<T: StTInMtT + Ord> std::iter::Iterator for BSTSetSplayMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::iter::Iterator for BSTSetSplayMtEphIter<T> {
         type Item = T;
 
         fn next(&mut self) -> (next: Option<T>)
@@ -410,14 +411,14 @@ pub mod BSTSetSplayMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for BSTSetSplayMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIteratorNew for BSTSetSplayMtEphIter<T> {
         type GhostIter = BSTSetSplayMtEphGhostIter<T>;
         open spec fn ghost_iter(&self) -> BSTSetSplayMtEphGhostIter<T> {
             BSTSetSplayMtEphGhostIter { pos: self@.0, elements: self@.1 }
         }
     }
 
-    impl<T: StTInMtT + Ord> vstd::pervasive::ForLoopGhostIterator for BSTSetSplayMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIterator for BSTSetSplayMtEphGhostIter<T> {
         type ExecIter = BSTSetSplayMtEphIter<T>;
         type Item = T;
         type Decrease = int;
@@ -452,7 +453,7 @@ pub mod BSTSetSplayMtEph {
         }
     }
 
-    impl<'a, T: StTInMtT + Ord> std::iter::IntoIterator for &'a BSTSetSplayMtEph<T> {
+    impl<'a, T: StTInMtT + Ord + TotalOrder> std::iter::IntoIterator for &'a BSTSetSplayMtEph<T> {
         type Item = T;
         type IntoIter = BSTSetSplayMtEphIter<T>;
         fn into_iter(self) -> (it: BSTSetSplayMtEphIter<T>)
@@ -463,7 +464,7 @@ pub mod BSTSetSplayMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord> IntoIterator for BSTSetSplayMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> IntoIterator for BSTSetSplayMtEph<T> {
         type Item = T;
         type IntoIter = std::vec::IntoIter<T>;
         fn into_iter(self) -> (it: Self::IntoIter)
@@ -492,37 +493,37 @@ pub mod BSTSetSplayMtEph {
 
     //	14. derive impls outside verus!
 
-    impl<T: StTInMtT + Ord + fmt::Debug> fmt::Debug for BSTSetSplayMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + fmt::Debug> fmt::Debug for BSTSetSplayMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             f.debug_struct("BSTSetSplayMtEph").field("tree", &self.tree).finish()
         }
     }
 
-    impl<T: StTInMtT + Ord> fmt::Display for BSTSetSplayMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> fmt::Display for BSTSetSplayMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "BSTSetSplayMtEph(size={})", self.size())
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTSetSplayMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for BSTSetSplayMtEphIter<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTSetSplayMtEphIter").field("pos", &self.pos).finish()
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Display for BSTSetSplayMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Display for BSTSetSplayMtEphIter<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "BSTSetSplayMtEphIter(pos={})", self.pos)
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTSetSplayMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for BSTSetSplayMtEphGhostIter<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTSetSplayMtEphGhostIter").finish()
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Display for BSTSetSplayMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Display for BSTSetSplayMtEphGhostIter<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "BSTSetSplayMtEphGhostIter")
         }
