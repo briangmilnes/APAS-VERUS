@@ -139,6 +139,127 @@ pub mod ParaHashTableStEph {
         }
     }
 
+    /// If key is absent from every entry's map, it is absent from spec_table_to_map.
+    pub proof fn lemma_table_to_map_not_contains<Key, Value, Entry: EntryTrait<Key, Value>>(
+        table: Seq<Entry>,
+        key: Key,
+    )
+        requires
+            forall |j: int| 0 <= j < table.len()
+                ==> !#[trigger] table[j].spec_entry_to_map().dom().contains(key),
+        ensures
+            !spec_table_to_map(table).dom().contains(key),
+        decreases table.len(),
+    {
+        if table.len() > 0 {
+            assert forall |j: int| 0 <= j < table.drop_last().len()
+                implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
+                assert(table.drop_last()[j] == table[j]);
+            }
+            lemma_table_to_map_not_contains::<Key, Value, Entry>(table.drop_last(), key);
+            assert(spec_table_to_map(table).dom() =~=
+                spec_table_to_map(table.drop_last()).dom().union(
+                    table.last().spec_entry_to_map().dom()));
+        }
+    }
+
+    /// If one entry's map changes from M to M.insert(key, value), and key does not appear
+    /// in any other entry's map, then spec_table_to_map gains exactly key→value.
+    pub proof fn lemma_table_to_map_update_insert<Key, Value, Entry: EntryTrait<Key, Value>>(
+        table: Seq<Entry>,
+        index: int,
+        new_entry: Entry,
+        key: Key,
+        value: Value,
+    )
+        requires
+            0 <= index < table.len(),
+            new_entry.spec_entry_to_map() == table[index].spec_entry_to_map().insert(key, value),
+            forall |j: int| 0 <= j < table.len() && j != index
+                ==> !#[trigger] table[j].spec_entry_to_map().dom().contains(key),
+        ensures
+            spec_table_to_map(table.update(index, new_entry))
+                == spec_table_to_map(table).insert(key, value),
+        decreases table.len(),
+    {
+        let updated = table.update(index, new_entry);
+        if index == table.len() - 1 {
+            assert(updated.drop_last() =~= table.drop_last());
+            assert(updated.last() == new_entry);
+            // key is not in any entry in drop_last (all have j != index).
+            assert forall |j: int| 0 <= j < table.drop_last().len()
+                implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
+                assert(table.drop_last()[j] == table[j]);
+            }
+            lemma_table_to_map_not_contains::<Key, Value, Entry>(table.drop_last(), key);
+            // rest.union_prefer_right(old_map.insert(key, value))
+            //   =~= rest.union_prefer_right(old_map).insert(key, value)
+            // when key not in rest.
+            assert(spec_table_to_map(updated) =~= spec_table_to_map(table).insert(key, value));
+        } else {
+            assert(updated.drop_last() =~= table.drop_last().update(index, new_entry));
+            assert(updated.last() == table.last());
+            // Precondition for recursive call: key not in entries j != index of drop_last.
+            assert forall |j: int| 0 <= j < table.drop_last().len() && j != index
+                implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
+                assert(table.drop_last()[j] == table[j]);
+            }
+            // Entry at index in drop_last matches table.
+            assert(table.drop_last()[index] == table[index]);
+            lemma_table_to_map_update_insert::<Key, Value, Entry>(
+                table.drop_last(), index, new_entry, key, value);
+            // key not in last entry's map.
+            assert(!table.last().spec_entry_to_map().dom().contains(key));
+            // rest.insert(key, value).union_prefer_right(last_map)
+            //   =~= rest.union_prefer_right(last_map).insert(key, value)
+            // when key not in last_map.
+            assert(spec_table_to_map(updated) =~= spec_table_to_map(table).insert(key, value));
+        }
+    }
+
+    /// If one entry's map changes from M to M.remove(key), and key does not appear
+    /// in any other entry's map, then spec_table_to_map loses exactly key.
+    pub proof fn lemma_table_to_map_update_remove<Key, Value, Entry: EntryTrait<Key, Value>>(
+        table: Seq<Entry>,
+        index: int,
+        new_entry: Entry,
+        key: Key,
+    )
+        requires
+            0 <= index < table.len(),
+            new_entry.spec_entry_to_map() == table[index].spec_entry_to_map().remove(key),
+            forall |j: int| 0 <= j < table.len() && j != index
+                ==> !#[trigger] table[j].spec_entry_to_map().dom().contains(key),
+        ensures
+            spec_table_to_map(table.update(index, new_entry))
+                == spec_table_to_map(table).remove(key),
+        decreases table.len(),
+    {
+        let updated = table.update(index, new_entry);
+        if index == table.len() - 1 {
+            assert(updated.drop_last() =~= table.drop_last());
+            assert(updated.last() == new_entry);
+            assert forall |j: int| 0 <= j < table.drop_last().len()
+                implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
+                assert(table.drop_last()[j] == table[j]);
+            }
+            lemma_table_to_map_not_contains::<Key, Value, Entry>(table.drop_last(), key);
+            assert(spec_table_to_map(updated) =~= spec_table_to_map(table).remove(key));
+        } else {
+            assert(updated.drop_last() =~= table.drop_last().update(index, new_entry));
+            assert(updated.last() == table.last());
+            assert forall |j: int| 0 <= j < table.drop_last().len() && j != index
+                implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
+                assert(table.drop_last()[j] == table[j]);
+            }
+            assert(table.drop_last()[index] == table[index]);
+            lemma_table_to_map_update_remove::<Key, Value, Entry>(
+                table.drop_last(), index, new_entry, key);
+            assert(!table.last().spec_entry_to_map().dom().contains(key));
+            assert(spec_table_to_map(updated) =~= spec_table_to_map(table).remove(key));
+        }
+    }
+
     // 7a. helpers
 
     /// Calls the hash function and returns a bucket index.
