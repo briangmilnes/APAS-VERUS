@@ -220,7 +220,11 @@
       "WebFetch(domain:devel.isa-afp.org)",
       "WebSearch",
       "WebFetch(domain:jack.wrenn.fyi)",
-      "WebFetch(domain:rust-lang.github.io)"
+      "WebFetch(domain:rust-lang.github.io)",
+      "Bash(sed * > /tmp/*)",
+      "Bash(sed *| sed * > /tmp/*)",
+      "Bash(sed *|sed * > /tmp/*)",
+      "Read(/tmp/*)"
     ]
   }
 }
