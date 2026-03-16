@@ -181,6 +181,8 @@
       "Bash(*|wc *)",
       "Bash(wc *)",
       "Bash(wc -l *)",
+      "Bash(wc * && *)",
+      "Bash(wc * src/*)",
       "Bash(while *)",
       "Bash(*| xargs *)",
       "Bash(*|xargs *)",
