@@ -1,29 +1,29 @@
 ============================================================
-HOLE PRIORITIES — 2026-03-16 12:31
+HOLE PRIORITIES — 2026-03-16 13:56
 ============================================================
 
 1. Summary by Category
 ------------------------------
   Category                            Count
   ---                                 -----
-  fn_missing_requires                    65
-  fn_missing_requires_ensures             4
+  fn_missing_requires                    35
+  fn_missing_requires_ensures             3
   requires_true                          39
-  assume                                 52
-  external_body                         157
+  assume                                 57
+  external_body                         155
   assume_specification                    1
   external                                2
 
-  Total actionable: 318
+  Total actionable: 290
 
 2. Actionable Holes by Chapter (sorted by count)
 -------------------------------------------------
   Chapter    Total  FnMR Assum ExtBd
   ---------- ----- ----- ----- -----
   Chap43       103     4    12    87
-  Chap37        56    53     0     3
-  Chap47        42     5    21    16
+  Chap47        45     5    26    14
   Chap41        28     7     4    17
+  Chap37        25    22     0     3
   Chap39        23     5     6    12
   Chap38        13     0     4     9
   Chap40         9     6     1     2
@@ -44,20 +44,15 @@ HOLE PRIORITIES — 2026-03-16 12:31
 -----------------------------------------------------------------------
   Chapter    File                                     Count
   ---------- ---------------------------------------- -----
-  Chap37     BSTRBMtEph.rs                               11
-  Chap37     BSTSplayMtEph.rs                            10
   Chap39     BSTTreapMtEph.rs                             5
   Chap37     BSTSplayStEph.rs                             5
-  Chap37     AVLTreeSeqStPer.rs                           5
   Chap41     Example41_3.rs                               4
-  Chap37     AVLTreeSeqMtPer.rs                           4
   Chap59     JohnsonStEphI64.rs                           3
   Chap47     StructChainedHashTable.rs                    3
   Chap37     BSTSetSplayMtEph.rs                          3
   Chap37     BSTSetPlainMtEph.rs                          3
   Chap37     BSTSetBBAlphaMtEph.rs                        3
   Chap37     BSTSetAVLMtEph.rs                            3
-  Chap37     AVLTreeSeqStEph.rs                           3
   Chap41     AVLTreeSetMtEph.rs                           2
   Chap40     BSTSizeStEph.rs                              2
   Chap40     BSTReducedStEph.rs                           2
@@ -82,7 +77,9 @@ HOLE PRIORITIES — 2026-03-16 12:31
   Chap42     TableStEph.rs                                1
   Chap42     TableMtEph.rs                                1
   Chap41     AVLTreeSetMtPer.rs                           1
-  Chap37     AVLTreeSeq.rs                                1
+  Chap37     AVLTreeSeqStPer.rs                           1
+  Chap37     AVLTreeSeqStEph.rs                           1
+  Chap37     AVLTreeSeqMtPer.rs                           1
   Chap28     MaxContigSubSumReducedStEph.rs               1
   Chap28     MaxContigSubSumReducedMcsseStEph.rs          1
   Chap28     MaxContigSubSumIterStEph.rs                  1
@@ -116,13 +113,13 @@ HOLE PRIORITIES — 2026-03-16 12:31
   Chap38     BSTParaMtEph.rs                              0     8
   Chap43     OrderedTableMtEph.rs                         0     7
   Chap41     AVLTreeSetMtEph.rs                           2     5
+  Chap47     DoubleHashFlatHashTableStEph.rs              3     3
   Chap39     BSTTreapMtEph.rs                             6     0
   Chap57     DijkstraStEphI64.rs                          3     2
   Chap47     StructChainedHashTable.rs                    4     1
+  Chap47     QuadProbFlatHashTableStEph.rs                2     3
   Chap38     BSTParaStEph.rs                              4     1
-  Chap47     QuadProbFlatHashTableStEph.rs                0     4
   Chap47     LinProbFlatHashTableStEph.rs                 1     3
-  Chap47     DoubleHashFlatHashTableStEph.rs              0     4
   Chap41     Example41_3.rs                               0     4
   Chap58     BellmanFordStEphI64.rs                       0     2
   Chap52     EdgeSetGraphStPer.rs                         0     2
@@ -140,4 +137,4 @@ HOLE PRIORITIES — 2026-03-16 12:31
   Chap40     BSTKeyValueStEph.rs                          1     0
   Chap37     AVLTreeSeq.rs                                0     1
 
-Generated: Mon Mar 16 12:31:46 PM PDT 2026
+Generated: Mon Mar 16 01:56:02 PM PDT 2026
