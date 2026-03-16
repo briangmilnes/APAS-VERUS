@@ -135,7 +135,7 @@ pub mod VecChainedHashTableStEph {
             /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, copy bucket entries, insert, set back.
             #[verifier::external_body]
             fn insert(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
-                let index = call_hash_fn(&table.hash_fn, &key, table.current_size);
+                let index = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
                 let bucket_len = table.table[index].len();
                 let mut new_bucket: Vec<(Key, Value)> = Vec::new();
                 let mut existed = false;
@@ -168,7 +168,7 @@ pub mod VecChainedHashTableStEph {
             /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — hash, index bucket, scan chain.
             #[verifier::external_body]
             fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
-                let index = call_hash_fn(&table.hash_fn, key, table.current_size);
+                let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 EntryTrait::lookup(&table.table[index], key)
             }
 
@@ -176,7 +176,7 @@ pub mod VecChainedHashTableStEph {
             /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, copy bucket entries, delete, set back.
             #[verifier::external_body]
             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
-                let index = call_hash_fn(&table.hash_fn, key, table.current_size);
+                let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 let bucket_len = table.table[index].len();
                 let mut new_bucket: Vec<(Key, Value)> = Vec::new();
                 let mut deleted = false;
@@ -254,6 +254,7 @@ pub mod VecChainedHashTableStEph {
                     current_size: new_size,
                     num_elements: 0,
                     metrics: Metrics::default(),
+                    spec_hash: table.spec_hash,
                     _phantom: PhantomData,
                 };
 
@@ -284,7 +285,7 @@ pub mod VecChainedHashTableStEph {
             /// - APAS: Work O(1), Span O(1).
             /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to stored hash function.
             fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (index: usize) {
-                call_hash_fn(&table.hash_fn, key, table.current_size)
+                call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash)
             }
         }
     }

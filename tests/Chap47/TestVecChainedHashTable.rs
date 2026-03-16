@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+use vstd::prelude::Ghost;
 use apas_verus::Chap47::ChainedHashTable::ChainedHashTable::*;
 use apas_verus::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
 use apas_verus::Chap47::VecChainedHashTableStEph::VecChainedHashTableStEph::*;
@@ -48,6 +49,7 @@ fn test_vec_chained_insert_lookup() {
         <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     for _ in 0..10 {
@@ -70,6 +72,7 @@ fn test_vec_chained_delete() {
         <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     for _ in 0..10 {
@@ -95,6 +98,7 @@ fn test_vec_chained_resize() {
         <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, (), HashFn>>::createTable(
             mod_hash,
             4,
+            Ghost::assume_new(),
         );
 
     for _ in 0..4 {
@@ -122,6 +126,7 @@ fn test_vec_chained_hash_index() {
         <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     // hash_index is used internally but we can verify it compiles and doesn't panic

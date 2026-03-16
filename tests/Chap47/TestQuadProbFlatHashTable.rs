@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+use vstd::prelude::Ghost;
 use apas_verus::Chap47::FlatHashTable::FlatHashTable::*;
 use apas_verus::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
 use apas_verus::Chap47::QuadProbFlatHashTableStEph::QuadProbFlatHashTableStEph::*;
@@ -15,6 +16,7 @@ fn test_insert_and_lookup() {
         <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     for _ in 0..11 {
@@ -37,6 +39,7 @@ fn test_delete() {
         <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     for _ in 0..11 {
@@ -55,6 +58,7 @@ fn test_probe_quadratic_sequence() {
         <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     // Verify quadratic probing: (hash + i²) mod m
@@ -81,6 +85,7 @@ fn test_find_slot() {
         <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     for _ in 0..11 {
@@ -97,6 +102,7 @@ fn test_update_existing_key() {
         <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     for _ in 0..11 {
@@ -116,6 +122,7 @@ fn test_max_attempts_ceiling_m_over_2() {
         <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             zero_hash,
             11,
+            Ghost::assume_new(),
         );
 
     // Fill first 6 slots (⌈11/2⌉ = 6) with colliding keys
@@ -144,6 +151,7 @@ fn test_lookup_stops_at_max_attempts() {
         <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     for _ in 0..11 {
@@ -165,6 +173,7 @@ fn test_delete_maintains_probe_chain() {
         <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     for _ in 0..11 {
@@ -193,6 +202,7 @@ fn test_prime_size_guarantees() {
         <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             13,
+            Ghost::assume_new(),
         );
 
     for _ in 0..13 {
@@ -215,6 +225,7 @@ fn test_resize_empty_table() {
         <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     let new_table = QuadProbFlatHashTableStEph::resize(&table, 23);
@@ -228,6 +239,7 @@ fn test_resize_with_elements() {
         <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     QuadProbFlatHashTableStEph::insert(&mut table, 1, "one".to_string());
@@ -258,6 +270,7 @@ fn test_load_and_size() {
         <QuadProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     let result = QuadProbFlatHashTableStEph::loadAndSize(&table);

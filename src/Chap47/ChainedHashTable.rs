@@ -54,17 +54,17 @@ pub mod ChainedHashTable {
             /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on hash function.
             fn hash_index(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (index: usize)
                 requires
-                    table.current_size > 0,
+                    spec_hashtable_wf(table),
                 ensures
-                    index < table.current_size;
+                    index < table.current_size,
+                    index as nat == (table.spec_hash@)(*key) % (table.current_size as nat);
 
             /// Inserts into the chain at the hashed bucket, updating num_elements on new keys.
             /// - APAS: Work O(1) expected, Span O(1).
             /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — lookup to check existence, then chain insert.
             fn insert_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
                 requires
-                    old(table).current_size > 0,
-                    old(table).table@.len() == old(table).current_size as int,
+                    spec_hashtable_wf(old(table)),
                     old(table).num_elements < usize::MAX,
                 ensures
                     table.table@.len() == table.current_size as int,
@@ -93,8 +93,7 @@ pub mod ChainedHashTable {
             /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — agrees with APAS; hashes then linear scan of chain.
             fn lookup_chained(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
                 requires
-                    table.current_size > 0,
-                    table.table@.len() == table.current_size as int,
+                    spec_hashtable_wf(table),
                 ensures true,
             {
                 let index = Self::hash_index(table, key);
@@ -110,8 +109,7 @@ pub mod ChainedHashTable {
             /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — agrees with APAS; hashes then linear scan of chain.
             fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
                 requires
-                    old(table).current_size > 0,
-                    old(table).table@.len() == old(table).current_size as int,
+                    spec_hashtable_wf(old(table)),
                 ensures
                     table.table@.len() == table.current_size as int,
                     table.current_size == old(table).current_size,

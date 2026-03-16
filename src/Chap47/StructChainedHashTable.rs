@@ -234,7 +234,7 @@ pub mod StructChainedHashTable {
             /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, clone chain, insert into clone, set back.
             #[verifier::external_body]
             fn insert(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: Key, value: Value) {
-                let index = call_hash_fn(&table.hash_fn, &key, table.current_size);
+                let index = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
                 let existed = EntryTrait::lookup(&table.table[index], &key).is_some();
                 let mut entry = table.table[index].clone();
                 EntryTrait::insert(&mut entry, key, value);
@@ -248,7 +248,7 @@ pub mod StructChainedHashTable {
             /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — hash, index bucket, scan chain.
             #[verifier::external_body]
             fn lookup(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
-                let index = call_hash_fn(&table.hash_fn, key, table.current_size);
+                let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 EntryTrait::lookup(&table.table[index], key)
             }
 
@@ -256,7 +256,7 @@ pub mod StructChainedHashTable {
             /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, clone chain, delete from clone, set back.
             #[verifier::external_body]
             fn delete(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
-                let index = call_hash_fn(&table.hash_fn, key, table.current_size);
+                let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 let mut entry = table.table[index].clone();
                 let deleted = EntryTrait::delete(&mut entry, key);
                 table.table.set(index, entry);
@@ -314,6 +314,7 @@ pub mod StructChainedHashTable {
                     current_size: new_size,
                     num_elements: 0,
                     metrics: Metrics::default(),
+                    spec_hash: table.spec_hash,
                     _phantom: PhantomData,
                 };
 
@@ -345,7 +346,7 @@ pub mod StructChainedHashTable {
             /// - APAS: Work O(1), Span O(1).
             /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to stored hash function.
             fn hash_index(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (index: usize) {
-                call_hash_fn(&table.hash_fn, key, table.current_size)
+                call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash)
             }
         }
 

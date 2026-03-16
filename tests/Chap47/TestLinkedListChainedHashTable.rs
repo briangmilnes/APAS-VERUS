@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+use vstd::prelude::Ghost;
 use apas_verus::Chap18::LinkedListStEph::LinkedListStEph::*;
 use apas_verus::Chap47::ChainedHashTable::ChainedHashTable::*;
 use apas_verus::Chap47::LinkedListChainedHashTableStEph::LinkedListChainedHashTableStEph::*;
@@ -48,6 +49,7 @@ fn test_linkedlist_chained_insert_lookup() {
         <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, LinkedListStEphS<(i32, String)>, (), HashFn>>::createTable(
             mod_hash,
             2,
+            Ghost::assume_new(),
         );
 
     LinkedListChainedHashTableStEph::insert(&mut table, 0, "zero".to_string());
@@ -69,6 +71,7 @@ fn test_linkedlist_chained_delete() {
         <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, LinkedListStEphS<(i32, String)>, (), HashFn>>::createTable(
             mod_hash,
             2,
+            Ghost::assume_new(),
         );
 
     LinkedListChainedHashTableStEph::insert(&mut table, 0, "zero".to_string());
@@ -87,6 +90,7 @@ fn test_collision_handling() {
         <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, LinkedListStEphS<(i32, String)>, (), HashFn>>::createTable(
             mod_hash,
             2,
+            Ghost::assume_new(),
         );
 
     LinkedListChainedHashTableStEph::insert(&mut table, 0, "zero".to_string());
@@ -134,6 +138,7 @@ fn test_resize_empty_table() {
         <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, LinkedListStEphS<(i32, String)>, (), HashFn>>::createTable(
             mod_hash,
             2,
+            Ghost::assume_new(),
         );
 
     let new_table = LinkedListChainedHashTableStEph::resize(&table, 4);
@@ -147,6 +152,7 @@ fn test_resize_with_elements() {
         <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, LinkedListStEphS<(i32, String)>, (), HashFn>>::createTable(
             mod_hash,
             2,
+            Ghost::assume_new(),
         );
 
     LinkedListChainedHashTableStEph::insert(&mut table, 0, "zero".to_string());
@@ -167,6 +173,7 @@ fn test_load_and_size() {
         <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, LinkedListStEphS<(i32, String)>, (), HashFn>>::createTable(
             mod_hash,
             2,
+            Ghost::assume_new(),
         );
 
     let result = LinkedListChainedHashTableStEph::loadAndSize(&table);
@@ -188,6 +195,7 @@ fn test_update_existing_key() {
         <LinkedListChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, LinkedListStEphS<(i32, String)>, (), HashFn>>::createTable(
             mod_hash,
             2,
+            Ghost::assume_new(),
         );
 
     LinkedListChainedHashTableStEph::insert(&mut table, 0, "zero".to_string());
