@@ -1381,28 +1381,26 @@ Table of Contents:
    Info: 5 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ src/Chap40/BSTSizeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:451: error: external_body - #[verifier::external_body]
-       452 |         fn insert(&mut self, value: T, priority: u64) {
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:456: error: external_body - #[verifier::external_body]
-       457 |         fn delete(&mut self, key: &T) {
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:464: error: external_body - #[verifier::external_body]
-       465 |         fn find(&self, target: &T) -> Option<&T> { Self::find_link(&self.root, target) }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:467: error: external_body - #[verifier::external_body]
-       468 |         fn contains(&self, target: &T) -> bool { self.find(target).is_some() }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:418: warning: requires_true - requires true — vacuous precondition
-       416 | 
-       417 |     fn compare_links<T: StT + Ord>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
-       419 |         ensures
-       420 |             (a is None && b is None) ==> equal,
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:824: warning: requires_true - requires true — vacuous precondition
-       822 | 
-       823 |     fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)
-       825 |         ensures
-       826 |             Lnk::spec_content_link(&c) == Lnk::spec_content_link(link),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:835: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:890: info: accept()
-   Holes: 4 total
-      4 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:481: error: external_body - #[verifier::external_body]
+       482 |         fn delete(&mut self, key: &T) {
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:489: error: external_body - #[verifier::external_body]
+       490 |         fn find(&self, target: &T) -> Option<&T> { Self::find_link(&self.root, target) }
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:492: error: external_body - #[verifier::external_body]
+       493 |         fn contains(&self, target: &T) -> bool { self.find(target).is_some() }
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:444: warning: requires_true - requires true — vacuous precondition
+       442 | 
+       443 |     fn compare_links<T: StT + Ord>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
+       445 |         ensures
+       446 |             (a is None && b is None) ==> equal,
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:931: warning: requires_true - requires true — vacuous precondition
+       929 | 
+       930 |     fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)
+       932 |         ensures
+       933 |             Lnk::spec_content_link(&c) == Lnk::spec_content_link(link),
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:942: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:997: info: accept()
+   Holes: 3 total
+      3 × external_body
    Info: 2 total
    Proof functions: 3 total (3 clean, 0 holed)
 ❌ src/Chap41/AVLTreeSetMtEph.rs
@@ -1584,38 +1582,34 @@ Table of Contents:
        965 |         }
    Proof functions: 7 total (7 clean, 0 holed)
 ❌ src/Chap41/ArraySetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:598: error: external_body - #[verifier::external_body]
-       599 |         fn filter<F: PredSt<T>>(
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1186: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1182 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1244: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1240 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1184 |         {
-      1185 |             proof {
-      1187 |                 assume(other.spec_arraysetsteph_wf());
-      1188 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1187: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1182 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1242 |         {
+      1243 |             proof {
+      1245 |                 assume(other.spec_arraysetsteph_wf());
+      1246 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1245: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1240 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1185 |             proof {
-      1186 |                 assume(self.spec_arraysetsteph_wf());
-      1188 |             }
-      1189 |             let equal = self.size() == other.size() && {
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1209: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1182 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1243 |             proof {
+      1244 |                 assume(self.spec_arraysetsteph_wf());
+      1246 |             }
+      1247 |             let equal = self.size() == other.size() && {
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1267: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1240 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1207 |                 all_found
-      1208 |             };
-      1210 |             equal
-      1211 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1222: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1215 |         fn clone(&self) -> (cloned: Self)
+      1265 |                 all_found
+      1266 |             };
+      1268 |             equal
+      1269 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1280: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1273 |         fn clone(&self) -> (cloned: Self)
             ...
-      1220 |             };
-      1221 |             proof {
-      1223 |                 lemma_seq_map_cloned_view_eq(
-      1224 |                     self.elements.seq@,
-   Holes: 1 total
-      1 × external_body
+      1278 |             };
+      1279 |             proof {
+      1281 |                 lemma_seq_map_cloned_view_eq(
+      1282 |                     self.elements.seq@,
    Proof functions: 7 total (7 clean, 0 holed)
 ❌ src/Chap41/Example41_3.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:32: error: external_body - #[verifier::external_body]
@@ -2125,8 +2119,8 @@ Table of Contents:
    Info: 2 total
    1 clean proof function
 ℹ src/Chap47/ChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:147: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:157: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:145: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:155: info: accept()
    Info: 2 total
    1 clean proof function
 ❌ src/Chap47/DoubleHashFlatHashTableStEph.rs
@@ -2165,20 +2159,20 @@ Table of Contents:
       4 × external_body
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ src/Chap47/ParaHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:267: error: external_body - #[verifier::external_body]
-       268 |     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize) -> (index: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:295: error: external_body - #[verifier::external_body]
-       296 |     pub fn compute_second_hash<Key: std::hash::Hash>(key: &Key, table_size: usize) -> (step: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:448: warning: requires_true - requires true — vacuous precondition
-       446 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
-       447 |         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
-       449 |             ensures m == &table.metrics,
-       450 |         { &table.metrics }
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:457: warning: requires_true - requires true — vacuous precondition
-       455 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads only.
-       456 |         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
-       458 |             ensures
-       459 |                 load_and_size.size == table.current_size,
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:273: error: external_body - #[verifier::external_body]
+       274 |     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (index: usize)
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:303: error: external_body - #[verifier::external_body]
+       304 |     pub fn compute_second_hash<Key: std::hash::Hash>(key: &Key, table_size: usize) -> (step: usize)
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:464: warning: requires_true - requires true — vacuous precondition
+       462 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
+       463 |         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
+       465 |             ensures m == &table.metrics,
+       466 |         { &table.metrics }
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:473: warning: requires_true - requires true — vacuous precondition
+       471 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads only.
+       472 |         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
+       474 |             ensures
+       475 |                 load_and_size.size == table.current_size,
    Holes: 2 total
       2 × external_body
    Proof functions: 5 total (5 clean, 0 holed)
@@ -2223,10 +2217,10 @@ Table of Contents:
        162 |         ) -> (remaining_and_deleted: (Option<Box<Node<Key, Value>>>, bool))
        164 |             ensures
        165 |                 !remaining_and_deleted.1
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:367: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:384: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:401: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:415: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:368: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:385: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:402: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:416: info: accept()
    Holes: 4 total
       4 × external_body
    Info: 4 total
@@ -2410,11 +2404,42 @@ Table of Contents:
 ✓ src/Chap56/SSSPResultStPerI64.rs
 ✓ src/Chap57/DijkstraStEphF64.rs
 ❌ src/Chap57/DijkstraStEphI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:71: warning: requires_true - requires true — vacuous precondition
-        69 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
-        70 |     fn pq_entry_new(dist: i64, vertex: usize) -> (r: PQEntry)
-        72 |         ensures r.dist == dist, r.vertex == vertex,
-        73 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:91: error: external_body - #[verifier::external_body]
+        92 |         fn cmp(&self, other: &Self) -> Ordering {
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:108: error: external_body - #[verifier::external_body]
+       109 |         fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:156: error: assume() - proof { assume(obeys_feq_clone::<PQEntry>()); }
+       145 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
+            ...
+       154 |         let n = graph.vertices().size();
+       155 |         assert(n == graph@.V.len());
+       157 | 
+       158 |         let mut sssp = SSSPResultStEphI64::new(n, source);
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:173: error: assume() - proof { assume(pq@.len() * 2 <= usize::MAX as int); }
+       145 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
+            ...
+       171 |                 obeys_feq_clone::<PQEntry>(),
+       172 |         {
+       174 |             let (new_pq, min_elem) = pq.delete_min();
+       175 |             pq = new_pq;
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:207: error: assume() - proof { assume(pq@.len() + 1 <= usize::MAX as int); }
+       145 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
+            ...
+       205 |                                     let new_dist = dist.wrapping_add((*weight) as i64);
+       206 |                                     if new_dist < u_dist {
+       208 |                                         pq = pq.insert(pq_entry_new(new_dist, *u));
+       209 |                                         sssp.set_predecessor(*u, v);
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:84: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
+        69 |         fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
+            ...
+        82 |     /// - APAS: N/A — Verus-specific scaffolding.
+        83 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
+        85 |         ensures r.dist == dist, r.vertex == vertex,
+        86 |     {
+   Holes: 5 total
+      3 × assume()
+      2 × external_body
+   Proof functions: 4 total (4 clean, 0 holed)
 ✓ src/Chap57/StackStEph.rs
 ✓ src/Chap58/BellmanFordStEphF64.rs
 ❌ src/Chap58/BellmanFordStEphI64.rs
@@ -2434,7 +2459,32 @@ Table of Contents:
 ✓ src/Chap59/JohnsonMtEphF64.rs
 ✓ src/Chap59/JohnsonMtEphI64.rs
 ✓ src/Chap59/JohnsonStEphF64.rs
-✓ src/Chap59/JohnsonStEphI64.rs
+❌ src/Chap59/JohnsonStEphI64.rs
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:68: error: external_body - #[verifier::external_body]
+        69 |     fn neg_cycle_error_string() -> (s: String) {
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:77: error: fn_missing_requires - fn adjust_distance — exec fn should have requires
+        69 |     fn neg_cycle_error_string() -> (s: String) {
+            ...
+        75 |     /// - APAS: N/A — Verus-specific scaffolding.
+        76 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
+        78 |         ensures
+        79 |             d_prime == UNREACHABLE ==> result == UNREACHABLE,
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:93: error: fn_missing_requires_ensures - fn reweight_edge — exec fn should have requires and ensures
+        77 |     fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (result: i64)
+            ...
+        91 |     /// - APAS: N/A — Verus-specific scaffolding.
+        92 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
+        94 |     {
+        95 |         let diff: i128 = (h_u as i128) - (h_v as i128);
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:333: error: fn_missing_requires - fn create_negative_cycle_result — exec fn should have requires
+       243 |     fn reweight_graph(
+            ...
+       331 |     /// - APAS: N/A — Verus-specific scaffolding.
+       332 |     /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2).
+       334 |         ensures
+       335 |             result.spec_n() == n,
+   Holes: 1 total
+      1 × external_body
 ✓ src/Chap61/EdgeContractionMtEph.rs
 ✓ src/Chap61/EdgeContractionStEph.rs
 ✓ src/Chap61/VertexMatchingMtEph.rs
@@ -2602,22 +2652,22 @@ Chap41::AVLTreeSetStEph  depends upon holed modules: Chap37::AVLTreeSeqStEph
 Chap41::AVLTreeSetStPer  depends upon holed modules: Chap37::AVLTreeSeqStPer
 Chap41::ArraySetEnumMtEph  depends upon only clean modules
 Chap41::ArraySetStEph  depends upon only clean modules
-Chap41::Example41_3  depends upon holed modules: Chap41::AVLTreeSetStEph, Chap41::ArraySetStEph
-Chap42::Example42_1  depends upon holed modules: Chap41::ArraySetStEph, Chap42::TableMtEph, Chap42::TableStEph, Chap42::TableStPer
-Chap42::TableMtEph  depends upon holed modules: Chap41::ArraySetStEph
-Chap42::TableStEph  depends upon holed modules: Chap41::ArraySetStEph
-Chap42::TableStPer  depends upon holed modules: Chap41::ArraySetStEph
-Chap43::AugOrderedTableMtEph  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph, Chap43::OrderedTableMtEph
-Chap43::AugOrderedTableStEph  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStEph, Chap43::OrderedTableStEph
-Chap43::AugOrderedTableStPer  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStPer, Chap43::OrderedTableStPer
+Chap41::Example41_3  depends upon holed modules: Chap41::AVLTreeSetStEph
+Chap42::Example42_1  depends upon holed modules: Chap42::TableMtEph, Chap42::TableStEph, Chap42::TableStPer
+Chap42::TableMtEph  depends upon only clean modules
+Chap42::TableStEph  depends upon only clean modules
+Chap42::TableStPer  depends upon only clean modules
+Chap43::AugOrderedTableMtEph  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap42::TableMtEph, Chap43::OrderedTableMtEph
+Chap43::AugOrderedTableStEph  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap42::TableStEph, Chap43::OrderedTableStEph
+Chap43::AugOrderedTableStPer  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap42::TableStPer, Chap43::OrderedTableStPer
 Chap43::Example43_1  depends upon holed modules: Chap43::OrderedSetStPer
 Chap43::OrderedSetMtEph  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap43::OrderedSetStEph
 Chap43::OrderedSetStEph  depends upon holed modules: Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqStPer, Chap41::AVLTreeSetStEph
 Chap43::OrderedSetStPer  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::AVLTreeSetStPer
-Chap43::OrderedTableMtEph  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph
+Chap43::OrderedTableMtEph  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap42::TableMtEph
 Chap43::OrderedTableMtPer  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap43::OrderedSetMtEph, Chap43::OrderedTableStPer
-Chap43::OrderedTableStEph  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStEph
-Chap43::OrderedTableStPer  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStPer
+Chap43::OrderedTableStEph  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap42::TableStEph
+Chap43::OrderedTableStPer  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap42::TableStPer
 Chap44::DocumentIndex  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::AVLTreeSetStPer, Chap42::TableStPer
 Chap44::Example44_1  depends upon only clean modules
 Chap45::BalancedTreePQ  depends upon holed modules: Chap37::AVLTreeSeqStPer
@@ -2670,7 +2720,7 @@ Chap52::AdjSeqGraphStEph  depends upon only clean modules
 Chap52::AdjSeqGraphStPer  depends upon only clean modules
 Chap52::AdjTableGraphMtPer  depends upon holed modules: Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer
 Chap52::AdjTableGraphStEph  depends upon holed modules: Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph
-Chap52::AdjTableGraphStPer  depends upon holed modules: Chap41::AVLTreeSetStPer, Chap41::ArraySetStEph, Chap43::OrderedTableStPer
+Chap52::AdjTableGraphStPer  depends upon holed modules: Chap41::AVLTreeSetStPer, Chap43::OrderedTableStPer
 Chap52::EdgeSetGraphMtPer  depends upon holed modules: Chap41::AVLTreeSetMtPer
 Chap52::EdgeSetGraphStEph  depends upon holed modules: Chap41::AVLTreeSetStEph
 Chap52::EdgeSetGraphStPer  depends upon holed modules: Chap41::AVLTreeSetStPer
@@ -2864,22 +2914,22 @@ src/Chap41/AVLTreeSetStEph.rs  depends upon holed modules: Chap37::AVLTreeSeqStE
 src/Chap41/AVLTreeSetStPer.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer
 src/Chap41/ArraySetEnumMtEph.rs  depends upon only clean modules
 src/Chap41/ArraySetStEph.rs  depends upon only clean modules
-src/Chap41/Example41_3.rs  depends upon holed modules: Chap41::AVLTreeSetStEph, Chap41::ArraySetStEph
-src/Chap42/Example42_1.rs  depends upon holed modules: Chap41::ArraySetStEph, Chap42::TableMtEph, Chap42::TableStEph, Chap42::TableStPer
-src/Chap42/TableMtEph.rs  depends upon holed modules: Chap41::ArraySetStEph
-src/Chap42/TableStEph.rs  depends upon holed modules: Chap41::ArraySetStEph
-src/Chap42/TableStPer.rs  depends upon holed modules: Chap41::ArraySetStEph
-src/Chap43/AugOrderedTableMtEph.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph, Chap43::OrderedTableMtEph
-src/Chap43/AugOrderedTableStEph.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStEph, Chap43::OrderedTableStEph
-src/Chap43/AugOrderedTableStPer.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStPer, Chap43::OrderedTableStPer
+src/Chap41/Example41_3.rs  depends upon holed modules: Chap41::AVLTreeSetStEph
+src/Chap42/Example42_1.rs  depends upon holed modules: Chap42::TableMtEph, Chap42::TableStEph, Chap42::TableStPer
+src/Chap42/TableMtEph.rs  depends upon only clean modules
+src/Chap42/TableStEph.rs  depends upon only clean modules
+src/Chap42/TableStPer.rs  depends upon only clean modules
+src/Chap43/AugOrderedTableMtEph.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap42::TableMtEph, Chap43::OrderedTableMtEph
+src/Chap43/AugOrderedTableStEph.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap42::TableStEph, Chap43::OrderedTableStEph
+src/Chap43/AugOrderedTableStPer.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap42::TableStPer, Chap43::OrderedTableStPer
 src/Chap43/Example43_1.rs  depends upon holed modules: Chap43::OrderedSetStPer
 src/Chap43/OrderedSetMtEph.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap43::OrderedSetStEph
 src/Chap43/OrderedSetStEph.rs  depends upon holed modules: Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqStPer, Chap41::AVLTreeSetStEph
 src/Chap43/OrderedSetStPer.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::AVLTreeSetStPer
-src/Chap43/OrderedTableMtEph.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableMtEph
+src/Chap43/OrderedTableMtEph.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap42::TableMtEph
 src/Chap43/OrderedTableMtPer.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap43::OrderedSetMtEph, Chap43::OrderedTableStPer
-src/Chap43/OrderedTableStEph.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStEph
-src/Chap43/OrderedTableStPer.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStPer
+src/Chap43/OrderedTableStEph.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap42::TableStEph
+src/Chap43/OrderedTableStPer.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap42::TableStPer
 src/Chap44/DocumentIndex.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer, Chap41::AVLTreeSetStPer, Chap42::TableStPer
 src/Chap44/Example44_1.rs  depends upon only clean modules
 src/Chap45/BalancedTreePQ.rs  depends upon holed modules: Chap37::AVLTreeSeqStPer
@@ -2932,7 +2982,7 @@ src/Chap52/AdjSeqGraphStEph.rs  depends upon only clean modules
 src/Chap52/AdjSeqGraphStPer.rs  depends upon only clean modules
 src/Chap52/AdjTableGraphMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer
 src/Chap52/AdjTableGraphStEph.rs  depends upon holed modules: Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph
-src/Chap52/AdjTableGraphStPer.rs  depends upon holed modules: Chap41::AVLTreeSetStPer, Chap41::ArraySetStEph, Chap43::OrderedTableStPer
+src/Chap52/AdjTableGraphStPer.rs  depends upon holed modules: Chap41::AVLTreeSetStPer, Chap43::OrderedTableStPer
 src/Chap52/EdgeSetGraphMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer
 src/Chap52/EdgeSetGraphStEph.rs  depends upon holed modules: Chap41::AVLTreeSetStEph
 src/Chap52/EdgeSetGraphStPer.rs  depends upon holed modules: Chap41::AVLTreeSetStPer
@@ -3000,28 +3050,28 @@ src/ParaPairs.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   203 clean (no holes, no errors; 78%)
-   54 holed (holes or errors, 21%)
+   202 clean (no holes, no errors; 78%)
+   55 holed (holes or errors, 21%)
    257 total
 
 Proof Functions:
-   331 clean (100%)
+   335 clean (100%)
    0 holed (0%)
-   331 total
+   335 total
 
 Function Specs:
-   4999 exec fns with complete spec (requires+ensures) (69%)
-   83 exec fns missing spec (1%)
-   2067 proof/spec fns clean (28%)
+   5004 exec fns with complete spec (requires+ensures) (69%)
+   87 exec fns missing spec (1%)
+   2072 proof/spec fns clean (28%)
    0 proof/spec fns with holes (0%)
-   7149 total fns
+   7163 total fns
 
 
-Holes Found: 234 total
-   27 × assume() (11%)
+Holes Found: 238 total
+   30 × assume() (12%)
    1 × assume_specification (0%)
    2 × unsafe impl (0%)
-   201 × external_body (85%)
+   202 × external_body (84%)
    2 × external (0%)
    1 × trivial spec*wf { true } (0%)
 
@@ -3037,50 +3087,50 @@ Holes Found: 234 total
 
    1  Chap43  (102 holes, 11 files)
    2  Chap37  (85 holes, 19 files)
-   3  Chap41  (29 holes, 7 files)
+   3  Chap41  (28 holes, 7 files)
    4  Chap47  (26 holes, 9 files)
    5  Chap39  (18 holes, 4 files)
    6  Chap42  (15 holes, 4 files)
    7  Chap38  (14 holes, 2 files)
-   8  Chap40  (14 holes, 3 files)
-   9  Chap45  (6 holes, 7 files)
-   10  Chap52  (5 holes, 14 files)
-   11  Chap58  (3 holes, 2 files)
-   12  Chap65  (0 holes, 3 files)
-   13  Chap55  (0 holes, 8 files)
-   14  Chap28  (0 holes, 11 files)
-   15  Chap17  (0 holes, 1 files)
-   16  Chap12  (0 holes, 3 files)
-   17  Chap18  (0 holes, 7 files)
-   18  Chap30  (0 holes, 1 files)
-   19  Chap23  (0 holes, 2 files)
-   20  Chap26  (0 holes, 8 files)
-   21  Chap35  (0 holes, 4 files)
-   22  Chap56  (0 holes, 12 files)
-   23  Chap61  (0 holes, 4 files)
-   24  Chap36  (0 holes, 3 files)
-   25  Chap66  (0 holes, 2 files)
-   26  Chap44  (0 holes, 2 files)
-   27  Chap03  (0 holes, 1 files)
-   28  Chap02  (0 holes, 2 files)
-   29  Chap51  (0 holes, 8 files)
-   30  Chap21  (0 holes, 12 files)
-   31  Chap57  (0 holes, 3 files)
-   32  Concurrency  (0 holes, 1 files)
-   33  Chap54  (0 holes, 4 files)
-   34  Chap06  (0 holes, 20 files)
-   35  Chap05  (0 holes, 5 files)
-   36  Chap50  (0 holes, 8 files)
-   37  Chap27  (0 holes, 4 files)
-   38  Chap59  (0 holes, 4 files)
-   39  ParaPairs  (0 holes, 1 files)
-   40  Chap63  (0 holes, 2 files)
-   41  Chap62  (0 holes, 4 files)
-   42  Chap64  (0 holes, 3 files)
-   43  Chap53  (0 holes, 5 files)
-   44  Chap11  (0 holes, 5 files)
-   45  Chap19  (0 holes, 4 files)
-   46  Chap49  (0 holes, 8 files)
+   8  Chap40  (13 holes, 3 files)
+   9  Chap57  (6 holes, 3 files)
+   10  Chap45  (6 holes, 7 files)
+   11  Chap52  (5 holes, 14 files)
+   12  Chap59  (4 holes, 4 files)
+   13  Chap58  (3 holes, 2 files)
+   14  Chap66  (0 holes, 2 files)
+   15  Chap54  (0 holes, 4 files)
+   16  Chap56  (0 holes, 12 files)
+   17  Chap26  (0 holes, 8 files)
+   18  Chap27  (0 holes, 4 files)
+   19  Chap02  (0 holes, 2 files)
+   20  Chap17  (0 holes, 1 files)
+   21  Chap18  (0 holes, 7 files)
+   22  Chap12  (0 holes, 3 files)
+   23  Concurrency  (0 holes, 1 files)
+   24  Chap30  (0 holes, 1 files)
+   25  Chap55  (0 holes, 8 files)
+   26  Chap19  (0 holes, 4 files)
+   27  Chap44  (0 holes, 2 files)
+   28  Chap21  (0 holes, 12 files)
+   29  Chap50  (0 holes, 8 files)
+   30  Chap49  (0 holes, 8 files)
+   31  Chap53  (0 holes, 5 files)
+   32  Chap63  (0 holes, 2 files)
+   33  Chap36  (0 holes, 3 files)
+   34  Chap35  (0 holes, 4 files)
+   35  Chap62  (0 holes, 4 files)
+   36  Chap23  (0 holes, 2 files)
+   37  Chap51  (0 holes, 8 files)
+   38  ParaPairs  (0 holes, 1 files)
+   39  Chap65  (0 holes, 3 files)
+   40  Chap03  (0 holes, 1 files)
+   41  Chap05  (0 holes, 5 files)
+   42  Chap06  (0 holes, 20 files)
+   43  Chap28  (0 holes, 11 files)
+   44  Chap61  (0 holes, 4 files)
+   45  Chap11  (0 holes, 5 files)
+   46  Chap64  (0 holes, 3 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -3091,31 +3141,35 @@ Holes Found: 234 total
    3  src/Chap37/BSTSplayMtEph.rs  (17 holes)
    4  src/Chap39/BSTParaTreapMtEph.rs  (10 holes)
    5  src/Chap38/BSTParaMtEph.rs  (9 holes)
-   6  src/Chap39/BSTTreapMtEph.rs  (6 holes)
-   7  src/Chap37/AVLTreeSeqMtPer.rs  (6 holes)
-   8  src/Chap37/AVLTreeSeqStPer.rs  (5 holes)
-   9  src/Chap40/BSTReducedStEph.rs  (5 holes)
-   10  src/Chap40/BSTKeyValueStEph.rs  (5 holes)
-   11  src/Chap38/BSTParaStEph.rs  (5 holes)
-   12  src/Chap40/BSTSizeStEph.rs  (4 holes)
-   13  src/Chap37/BSTSetAVLMtEph.rs  (3 holes)
-   14  src/Chap37/BSTSetBBAlphaMtEph.rs  (3 holes)
-   15  src/Chap37/BSTSetPlainMtEph.rs  (3 holes)
-   16  src/Chap37/AVLTreeSeqStEph.rs  (3 holes)
+   6  src/Chap37/AVLTreeSeqMtPer.rs  (6 holes)
+   7  src/Chap39/BSTTreapMtEph.rs  (6 holes)
+   8  src/Chap42/TableStEph.rs  (6 holes)
+   9  src/Chap38/BSTParaStEph.rs  (5 holes)
+   10  src/Chap42/TableStPer.rs  (5 holes)
+   11  src/Chap40/BSTReducedStEph.rs  (5 holes)
+   12  src/Chap37/AVLTreeSeqStPer.rs  (5 holes)
+   13  src/Chap40/BSTKeyValueStEph.rs  (5 holes)
+   14  src/Chap59/JohnsonStEphI64.rs  (4 holes)
+   15  src/Chap42/TableMtEph.rs  (4 holes)
+   16  src/Chap40/BSTSizeStEph.rs  (3 holes)
    17  src/Chap58/BellmanFordStEphI64.rs  (3 holes)
-   18  src/Chap39/BSTTreapStEph.rs  (2 holes)
-   19  src/Chap45/BinaryHeapPQ.rs  (2 holes)
-   20  src/Chap47/ParaHashTableStEph.rs  (2 holes)
-   21  src/Chap37/AVLTreeSeq.rs  (2 holes)
-   22  src/Chap41/ArraySetStEph.rs  (1 holes)
+   18  src/Chap37/AVLTreeSeqStEph.rs  (3 holes)
+   19  src/Chap37/BSTSetBBAlphaMtEph.rs  (3 holes)
+   20  src/Chap37/BSTSetAVLMtEph.rs  (3 holes)
+   21  src/Chap37/BSTSetPlainMtEph.rs  (3 holes)
+   22  src/Chap47/ParaHashTableStEph.rs  (2 holes)
+   23  src/Chap37/AVLTreeSeq.rs  (2 holes)
+   24  src/Chap45/BinaryHeapPQ.rs  (2 holes)
+   25  src/Chap39/BSTTreapStEph.rs  (2 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
-   1  src/Chap40  (14 holes, 3 files)
-   2  src/Chap38  (14 holes, 2 files)
-   3  src/Chap58  (3 holes, 2 files)
+   1  src/Chap38  (14 holes, 2 files)
+   2  src/Chap40  (13 holes, 3 files)
+   3  src/Chap59  (4 holes, 4 files)
+   4  src/Chap58  (3 holes, 2 files)
 
 =================================================================
 4.4. Not Verusified
@@ -3133,9 +3187,9 @@ Holes Found: 234 total
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 35 clean, 11 holed, 234 holes (global), 257 modules
+Chapter Status — 46 chapters, 33 clean, 13 holed, 238 holes (global), 257 modules
 
-CLEAN CHAPTERS (35)
+CLEAN CHAPTERS (33)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -3163,8 +3217,6 @@ CLEAN CHAPTERS (35)
   Chap54             4
   Chap55             8
   Chap56            12
-  Chap57             3
-  Chap59             4
   Chap61             4
   Chap62             4
   Chap63             2
@@ -3174,26 +3226,27 @@ CLEAN CHAPTERS (35)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (11) — 317 holes
+HOLED CHAPTERS (13) — 325 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap37            85    19  internal  Chap37::BSTRBMtEph, Chap37::BSTSplayMtEph
+  Chap37            85    19  internal  Chap37::BSTSplayMtEph, Chap37::BSTRBMtEph
   Chap38            14     2  YES       
   Chap39            18     4  internal  Chap39::BSTParaTreapMtEph
-  Chap40            14     3  YES       
-  Chap41            29     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStPer
-  Chap42            15     4  NO        Chap41::ArraySetStEph
-  Chap43           102    11  NO        Chap37::AVLTreeSeqStPer, Chap41::ArraySetStEph, Chap42::TableStPer, Chap42::TableStEph, Chap42::TableMtEph, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetStPer
+  Chap40            13     3  YES       
+  Chap41            28     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStPer
+  Chap42            15     4  internal  Chap42::TableMtEph, Chap42::TableStEph, Chap42::TableStPer
+  Chap43           102    11  NO        Chap37::AVLTreeSeqStPer, Chap42::TableStPer, Chap41::AVLTreeSetStPer, Chap42::TableStEph, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph, Chap42::TableMtEph
   Chap45             6     7  NO        Chap37::AVLTreeSeqStPer
   Chap47            26     9  internal  Chap47::ParaHashTableStEph
-  Chap52             5    14  NO        Chap41::AVLTreeSetStPer, Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer, Chap41::ArraySetStEph, Chap43::OrderedTableStPer, Chap43::OrderedTableStEph
+  Chap52             5    14  NO        Chap41::AVLTreeSetStEph, Chap41::AVLTreeSetStPer, Chap43::OrderedTableStPer, Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer, Chap43::OrderedTableStEph
+  Chap57             6     3  NO        Chap45::BinaryHeapPQ
   Chap58             3     2  YES       
+  Chap59             4     4  YES       
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
   --------------  -------------------
   Chap41          Chap37
-  Chap42          Chap41
   Chap43          Chap37, Chap41, Chap42
   Chap44          Chap37, Chap41, Chap42
   Chap45          Chap37
@@ -3207,8 +3260,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 17:15:10 -07:00
-Ended:     2026-03-15 17:15:11 -07:00
-Duration:  1109ms
+Started:   2026-03-15 19:02:22 -07:00
+Ended:     2026-03-15 19:02:23 -07:00
+Duration:  1404ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log
