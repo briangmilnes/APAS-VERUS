@@ -94,6 +94,36 @@ pub mod BinaryHeapPQ {
             }
         }
 
+        /// In a binary heap, the root element is <= all elements.
+        proof fn lemma_heap_root_le_all<T: StT + Ord + TotalOrder>(seq: Seq<T>, i: int)
+            requires
+                seq.len() > 0,
+                0 <= i < seq.len(),
+                BinaryHeapPQ::<T>::spec_is_exec_heap(seq),
+            ensures
+                TotalOrder::le(seq[0], seq[i]),
+            decreases i,
+        {
+            if i == 0 {
+                T::reflexive(seq[0]);
+            } else {
+                let p = (i - 1) / 2;
+                assert(0 <= p < i);
+                assert(p < seq.len());
+                lemma_heap_root_le_all::<T>(seq, p);
+                assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(seq, p));
+                let left = 2 * p + 1;
+                let right = 2 * p + 2;
+                if i == left {
+                    assert(TotalOrder::le(seq[p], seq[left]));
+                } else {
+                    assert(i == right);
+                    assert(TotalOrder::le(seq[p], seq[right]));
+                }
+                T::transitive(seq[0], seq[p], seq[i]);
+            }
+        }
+
 
 //  8. traits
 
@@ -106,6 +136,8 @@ pub mod BinaryHeapPQ {
             spec fn spec_heap_inv_at(seq: Seq<T::V>, i: int) -> bool;
             spec fn spec_leq_view(a: T::V, b: T::V) -> bool;
             spec fn spec_is_heap(seq: Seq<T::V>) -> bool;
+            spec fn spec_exec_heap_inv_at(seq: Seq<T>, i: int) -> bool;
+            spec fn spec_is_exec_heap(seq: Seq<T>) -> bool;
             spec fn parent_spec(i: int) -> int;
             spec fn left_child_spec(i: int) -> int;
             spec fn right_child_spec(i: int) -> int;
@@ -124,6 +156,8 @@ pub mod BinaryHeapPQ {
                     pq.spec_binaryheappq_wf();
 
             fn find_min(&self) -> (min_elem: Option<&T>)
+                requires
+                    Self::spec_is_exec_heap(self.spec_seq()),
                 ensures
                     self@.len() == 0 ==> min_elem.is_none(),
                     self@.len() > 0 ==> min_elem.is_some(),
@@ -618,6 +652,18 @@ pub mod BinaryHeapPQ {
                 forall|i: int| 0 <= i < seq.len() ==> Self::spec_heap_inv_at(seq, i)
             }
 
+            open spec fn spec_exec_heap_inv_at(seq: Seq<T>, i: int) -> bool {
+                let left = 2 * i + 1;
+                let right = 2 * i + 2;
+                (left >= seq.len() || TotalOrder::le(seq[i], seq[left]))
+                && (right >= seq.len() || TotalOrder::le(seq[i], seq[right]))
+            }
+
+            open spec fn spec_is_exec_heap(seq: Seq<T>) -> bool {
+                forall|i: int| 0 <= i < seq.len() ==>
+                    #[trigger] Self::spec_exec_heap_inv_at(seq, i)
+            }
+
             open spec fn parent_spec(i: int) -> int {
                 if i == 0 { 0 } else { (i - 1) / 2 }
             }
@@ -658,12 +704,23 @@ pub mod BinaryHeapPQ {
 
             /// - APAS: Work O(1), Span O(1).
             /// - Claude-Opus-4.6: Work O(1), Span O(1) — root of heap is minimum.
-            #[verifier::external_body]
             fn find_min(&self) -> (min_elem: Option<&T>) {
                 if self.elements.length() == 0 {
                     None
                 } else {
-                    Some(self.elements.nth(0))
+                    let root = self.elements.nth(0);
+                    proof {
+                        // Root is in the multiset.
+                        assert(self@[0] == root@);
+                        assert(self@.contains(root@));
+                        vstd::seq_lib::to_multiset_contains(self@, root@);
+                        // Root <= all elements via heap ordering.
+                        assert forall|i: int| 0 <= i < self.spec_seq().len()
+                            implies #[trigger] TotalOrder::le(*root, self.spec_seq()[i]) by {
+                            lemma_heap_root_le_all::<T>(self.spec_seq(), i);
+                        };
+                    }
+                    Some(root)
                 }
             }
 
