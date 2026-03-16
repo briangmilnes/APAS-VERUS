@@ -112,6 +112,92 @@ pub mod BSTKeyValueStEph {
 
     // 7. proof fns
 
+    /// Left-rotation content equality: chain of algebraic identities on Map with union_prefer_right.
+    /// Requires xk != yk (distinct keys) and !c.contains_key(xk) (BST ordering disjointness).
+    proof fn lemma_rotate_left_content_eq<K: StT + Ord, V: StT>(
+        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
+        xk: K, xv: V, yk: K, yv: V,
+    )
+        requires xk != yk, !c.contains_key(xk),
+        ensures
+            a.union_prefer_right(
+                b.union_prefer_right(c).insert(yk, yv)
+            ).insert(xk, xv)
+            =~=
+            a.union_prefer_right(b).insert(xk, xv)
+                .union_prefer_right(c).insert(yk, yv),
+    {
+        // Chain: LHS = a.upr((b.upr(c)).insert(yk,yv)).insert(xk,xv)
+        // Step 1: m1.upr(m2.insert(k,v)) =~= m1.upr(m2).insert(k,v) [always true]
+        assert(a.union_prefer_right(b.union_prefer_right(c).insert(yk, yv))
+            =~= a.union_prefer_right(b.union_prefer_right(c)).insert(yk, yv));
+        // Step 2: upr associativity
+        assert(a.union_prefer_right(b.union_prefer_right(c))
+            =~= a.union_prefer_right(b).union_prefer_right(c));
+        // Step 3: insert commute when xk != yk
+        assert(a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv).insert(xk, xv)
+            =~= a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv).insert(yk, yv));
+        // Step 4: m.insert(k,v).upr(c) =~= m.upr(c).insert(k,v) when k not in c
+        assert(a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv)
+            =~= a.union_prefer_right(b).insert(xk, xv).union_prefer_right(c));
+    }
+
+    /// Right-rotation content equality: chain of algebraic identities on Map with union_prefer_right.
+    /// Requires xk != yk (distinct keys) and !c.contains_key(yk) (BST ordering disjointness).
+    proof fn lemma_rotate_right_content_eq<K: StT + Ord, V: StT>(
+        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
+        xk: K, xv: V, yk: K, yv: V,
+    )
+        requires xk != yk, !c.contains_key(yk),
+        ensures
+            a.union_prefer_right(b).insert(yk, yv)
+                .union_prefer_right(c).insert(xk, xv)
+            =~=
+            a.union_prefer_right(
+                b.union_prefer_right(c).insert(xk, xv)
+            ).insert(yk, yv),
+    {
+        // Chain: RHS = a.upr((b.upr(c)).insert(xk,xv)).insert(yk,yv)
+        // Step 1: m1.upr(m2.insert(k,v)) =~= m1.upr(m2).insert(k,v) [always true]
+        assert(a.union_prefer_right(b.union_prefer_right(c).insert(xk, xv))
+            =~= a.union_prefer_right(b.union_prefer_right(c)).insert(xk, xv));
+        // Step 2: upr associativity
+        assert(a.union_prefer_right(b.union_prefer_right(c))
+            =~= a.union_prefer_right(b).union_prefer_right(c));
+        // Step 3: insert commute when xk != yk
+        assert(a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv).insert(yk, yv)
+            =~= a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv).insert(xk, xv));
+        // Step 4: m.insert(k,v).upr(c) =~= m.upr(c).insert(k,v) when k not in c
+        assert(a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv)
+            =~= a.union_prefer_right(b).insert(yk, yv).union_prefer_right(c));
+    }
+
+    /// Insert on left commutes with union_prefer_right + insert on top when keys differ
+    /// and the inserted key is not in the right map.
+    proof fn lemma_insert_left_commutes<K: StT + Ord, V: StT>(
+        left: Map<K, V>, right: Map<K, V>,
+        nk: K, nv: V, ik: K, iv: V,
+    )
+        requires ik != nk, !right.contains_key(ik),
+        ensures
+            left.insert(ik, iv).union_prefer_right(right).insert(nk, nv)
+            =~=
+            left.union_prefer_right(right).insert(nk, nv).insert(ik, iv),
+    {}
+
+    /// Insert on right commutes with union_prefer_right + insert on top when keys differ
+    /// and the inserted key is not in the left map.
+    proof fn lemma_insert_right_commutes<K: StT + Ord, V: StT>(
+        left: Map<K, V>, right: Map<K, V>,
+        nk: K, nv: V, ik: K, iv: V,
+    )
+        requires ik != nk,
+        ensures
+            left.union_prefer_right(right.insert(ik, iv)).insert(nk, nv)
+            =~=
+            left.union_prefer_right(right).insert(nk, nv).insert(ik, iv),
+    {}
+
     proof fn lemma_content_left_contains_key<K: StT + Ord, V: StT>(
         node: &Box<Node<K, V>>, k: K,
     )
@@ -245,23 +331,6 @@ pub mod BSTKeyValueStEph {
         }
     }
 
-    /// Decompose spec_ordered_link for a non-None link into its four components.
-    proof fn lemma_ordered_decompose_kv<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>)
-        requires link.is_some(), spec_ordered_link(link),
-        ensures
-            match *link {
-                Some(node) => {
-                    spec_ordered_link(&node.left)
-                    && spec_ordered_link(&node.right)
-                    && (forall |k: K| #![auto] spec_content_link(&node.left).contains_key(k)
-                        ==> (TotalOrder::le(k, node.key) && k != node.key))
-                    && (forall |k: K| #![auto] spec_content_link(&node.right).contains_key(k)
-                        ==> (TotalOrder::le(node.key, k) && k != node.key))
-                }
-                None => true
-            }
-    {}
-
     // 8. traits
 
     pub trait LinkTrait<K: StT + Ord, V: StT>: Sized {
@@ -305,7 +374,9 @@ pub mod BSTKeyValueStEph {
             ensures height as nat == self.spec_height();
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn insert(&mut self, key: K, value: V, priority: u64)
-            requires old(self).spec_size() < usize::MAX,
+            requires
+                old(self).spec_size() < usize::MAX,
+                old(self).spec_bstkeyvaluesteph_wf(),
             ensures
                 self@ == old(self)@.insert(key, value),
                 self@.contains_key(key),
@@ -375,17 +446,26 @@ pub mod BSTKeyValueStEph {
             ensures height == Lnk::spec_height_link(link),
             decreases *link;
         fn rotate_left(link: &mut Link<K, V>)
+            requires spec_ordered_link(old(link)),
             ensures
                 link.is_some() == old(link).is_some(),
-                forall|k: K| #[trigger] spec_content_link(old(link)).contains_key(k) ==> spec_content_link(link).contains_key(k);
+                spec_content_link(link) == spec_content_link(old(link)),
+                spec_ordered_link(link),
+                spec_node_count_link(link) == spec_node_count_link(old(link));
         fn rotate_right(link: &mut Link<K, V>)
+            requires spec_ordered_link(old(link)),
             ensures
                 link.is_some() == old(link).is_some(),
-                forall|k: K| #[trigger] spec_content_link(old(link)).contains_key(k) ==> spec_content_link(link).contains_key(k);
+                spec_content_link(link) == spec_content_link(old(link)),
+                spec_ordered_link(link),
+                spec_node_count_link(link) == spec_node_count_link(old(link));
         fn insert_link(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> (inserted: bool)
+            requires spec_ordered_link(old(link)),
             ensures
                 link.is_some(),
-                spec_content_link(link).contains_key(key),
+                spec_content_link(link) == spec_content_link(old(link)).insert(key, value),
+                spec_ordered_link(link),
+                spec_node_count_link(link) == spec_node_count_link(old(link)) + if inserted { 1nat } else { 0nat },
             decreases old(link);
         fn find_link<'a>(link: &'a Link<K, V>, key: &K) -> (found: Option<&'a V>)
             requires
@@ -445,7 +525,6 @@ pub mod BSTKeyValueStEph {
 
 
     fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (cloned: Link<K, V>)
-        requires true,
         ensures
             spec_content_link(&cloned) == spec_content_link(link),
             spec_node_count_link(&cloned) == spec_node_count_link(link),
@@ -566,7 +645,6 @@ pub mod BSTKeyValueStEph {
     }
 
     fn compare_kv_links<K: StT + Ord, V: StT>(a: &Link<K, V>, b: &Link<K, V>) -> (equal: bool)
-        requires true,
         ensures
             (a is None && b is None) ==> equal,
             (a is Some && b is None) ==> !equal,
@@ -602,8 +680,8 @@ pub mod BSTKeyValueStEph {
 
         fn height(&self) -> (height: usize) { Self::height_link(&self.root) }
 
-        #[verifier::external_body]
         fn insert(&mut self, key: K, value: V, priority: u64) {
+            let ghost old_count = spec_node_count_link(&self.root);
             let inserted = Self::insert_link(&mut self.root, key, value, priority);
             if inserted {
                 self.size = self.size + 1;
@@ -657,21 +735,110 @@ pub mod BSTKeyValueStEph {
         }
 
         fn rotate_left(link: &mut Link<K, V>) {
+            proof { reveal_with_fuel(spec_ordered_link, 2); }
+            let ghost old_content = spec_content_link(link);
+            let ghost old_count = spec_node_count_link(link);
             if let Some(mut x) = link.take() {
+                let ghost a_content = spec_content_link(&x.left);
+                let ghost xk = x.key;
+                let ghost xv = x.value;
+                let ghost x_right_content = spec_content_link(&x.right);
+
                 if let Some(mut y) = x.right.take() {
-                    let ghost a = spec_content_link(&x.left);
-                    let ghost b = spec_content_link(&y.left);
-                    let ghost c = spec_content_link(&y.right);
-                    let ghost xk = x.key;
-                    let ghost xv = x.value;
+                    let ghost b_content = spec_content_link(&y.left);
+                    let ghost c_content = spec_content_link(&y.right);
                     let ghost yk = y.key;
                     let ghost yv = y.value;
+                    proof {
+                        reveal_with_fuel(spec_content_link, 2);
+                        assert(x_right_content =~=
+                            b_content.union_prefer_right(c_content).insert(yk, yv));
+                        assert(x_right_content.contains_key(yk));
+                        assert(TotalOrder::le(xk, yk));
+                        assert(xk != yk);
+                        // Capture all ordering facts before mutations.
+                        assert(forall |k: K| #![auto] a_content.contains_key(k)
+                            ==> (TotalOrder::le(k, xk) && k != xk));
+                        assert(forall |k: K| #![auto] x_right_content.contains_key(k)
+                            ==> (TotalOrder::le(xk, k) && k != xk));
+                        assert(forall |k: K| #![auto] b_content.contains_key(k)
+                            ==> (TotalOrder::le(k, yk) && k != yk));
+                        assert(forall |k: K| #![auto] c_content.contains_key(k)
+                            ==> (TotalOrder::le(yk, k) && k != yk));
+                        assert(spec_ordered_link(&x.left));
+                        assert(spec_ordered_link(&y.left));
+                        assert(spec_ordered_link(&y.right));
+                    }
+
                     x.right = y.left.take();
+
+                    // Prove new x (left=A, right=B, key=xk) is ordered.
+                    proof {
+                        // B was in x.right content, so B > xk.
+                        assert(forall |k: K| #![auto] b_content.contains_key(k)
+                            ==> x_right_content.contains_key(k));
+                        assert(forall |k: K| #![auto] spec_content_link(&x.right).contains_key(k)
+                            ==> (TotalOrder::le(xk, k) && k != xk));
+                    }
+
                     y.left = Some(x);
+
+                    // Prove new x (y.left) is ordered.
+                    proof {
+                        lemma_ordered_assemble_kv(&y.left);
+                    }
+
+                    // Ordering of new y: left=new_x, right=C, key=yk.
+                    proof {
+                        reveal_with_fuel(spec_content_link, 2);
+                        let ghost new_x_content = spec_content_link(&y.left);
+                        assert(new_x_content =~=
+                            a_content.union_prefer_right(b_content).insert(xk, xv));
+                        // A keys < yk by transitivity: A < xk < yk.
+                        assert forall |k: K| #![auto] a_content.contains_key(k)
+                            implies (TotalOrder::le(k, yk) && k != yk) by {
+                            if a_content.contains_key(k) {
+                                // Inline transitivity: le(k,xk) && le(xk,yk) => le(k,yk).
+                                K::transitive(k, xk, yk);
+                                // k != yk: if k == yk, then le(yk,xk) from le(k,xk),
+                                // combined with le(xk,yk) and antisymmetric => xk == yk, contradiction.
+                                if k == yk {
+                                    K::antisymmetric(k, xk);
+                                }
+                            }
+                        };
+                        // B keys < yk (from original y ordering, captured above).
+                        // xk < yk (established above).
+                        // Combine: all new_x_content keys < yk.
+                        assert(forall |k: K| #![auto] new_x_content.contains_key(k)
+                            ==> (TotalOrder::le(k, yk) && k != yk));
+                        // C keys > yk (from original y ordering, captured above).
+                        assert(forall |k: K| #![auto] c_content.contains_key(k)
+                            ==> (TotalOrder::le(yk, k) && k != yk));
+                    }
+
+                    // Re-assert y's ordering components before move.
+                    proof {
+                        assert(spec_ordered_link(&y.left));
+                        assert(spec_ordered_link(&y.right));
+                        assert(forall |k: K| #![auto] spec_content_link(&y.left).contains_key(k)
+                            ==> (TotalOrder::le(k, yk) && k != yk));
+                        assert(forall |k: K| #![auto] spec_content_link(&y.right).contains_key(k)
+                            ==> (TotalOrder::le(yk, k) && k != yk));
+                    }
+
                     *link = Some(y);
                     proof {
+                        reveal_with_fuel(spec_ordered_link, 2);
                         reveal_with_fuel(spec_content_link, 3);
-                        lemma_rotate_left_preserves_keys(a, b, c, xk, xv, yk, yv);
+                        reveal_with_fuel(spec_node_count_link, 3);
+                        // Prove xk not in C (BST ordering: all C keys > yk > xk).
+                        if c_content.contains_key(xk) {
+                            K::antisymmetric(xk, yk);
+                        }
+                        lemma_rotate_left_content_eq(a_content, b_content, c_content, xk, xv, yk, yv);
+                        assert(spec_content_link(link) =~= old_content);
+                        assert(spec_node_count_link(link) == old_count);
                     }
                 } else {
                     *link = Some(x);
@@ -680,21 +847,94 @@ pub mod BSTKeyValueStEph {
         }
 
         fn rotate_right(link: &mut Link<K, V>) {
+            proof { reveal_with_fuel(spec_ordered_link, 2); }
+            let ghost old_content = spec_content_link(link);
+            let ghost old_count = spec_node_count_link(link);
             if let Some(mut x) = link.take() {
+                let ghost c_content = spec_content_link(&x.right);
+                let ghost xk = x.key;
+                let ghost xv = x.value;
+                let ghost x_left_content = spec_content_link(&x.left);
+
                 if let Some(mut y) = x.left.take() {
-                    let ghost a = spec_content_link(&y.left);
-                    let ghost b = spec_content_link(&y.right);
-                    let ghost c = spec_content_link(&x.right);
-                    let ghost xk = x.key;
-                    let ghost xv = x.value;
+                    let ghost a_content = spec_content_link(&y.left);
+                    let ghost b_content = spec_content_link(&y.right);
                     let ghost yk = y.key;
                     let ghost yv = y.value;
+                    proof {
+                        reveal_with_fuel(spec_content_link, 2);
+                        assert(x_left_content =~=
+                            a_content.union_prefer_right(b_content).insert(yk, yv));
+                        assert(x_left_content.contains_key(yk));
+                        assert(TotalOrder::le(yk, xk));
+                        assert(yk != xk);
+                        // Capture all ordering facts before mutations.
+                        assert(forall |k: K| #![auto] a_content.contains_key(k)
+                            ==> (TotalOrder::le(k, yk) && k != yk));
+                        assert(forall |k: K| #![auto] x_left_content.contains_key(k)
+                            ==> (TotalOrder::le(k, xk) && k != xk));
+                        assert(forall |k: K| #![auto] b_content.contains_key(k)
+                            ==> (TotalOrder::le(yk, k) && k != yk));
+                        assert(forall |k: K| #![auto] c_content.contains_key(k)
+                            ==> (TotalOrder::le(xk, k) && k != xk));
+                        assert(spec_ordered_link(&x.right));
+                        assert(spec_ordered_link(&y.left));
+                        assert(spec_ordered_link(&y.right));
+                    }
+
                     x.left = y.right.take();
+
+                    // Prove new x (left=B, right=C, key=xk) is ordered.
+                    proof {
+                        // B was in x.left content, so B < xk.
+                        assert(forall |k: K| #![auto] b_content.contains_key(k)
+                            ==> x_left_content.contains_key(k));
+                        assert(forall |k: K| #![auto] spec_content_link(&x.left).contains_key(k)
+                            ==> (TotalOrder::le(k, xk) && k != xk));
+                    }
+
                     y.right = Some(x);
+
+                    // Prove new x (y.right) is ordered.
+                    proof {
+                        lemma_ordered_assemble_kv(&y.right);
+                    }
+
+                    // Ordering of new y: left=A, right=new_x, key=yk.
+                    proof {
+                        reveal_with_fuel(spec_content_link, 2);
+                        let ghost new_x_content = spec_content_link(&y.right);
+                        assert(new_x_content =~=
+                            b_content.union_prefer_right(c_content).insert(xk, xv));
+                        // C keys > yk by transitivity: C > xk > yk.
+                        assert forall |k: K| #![auto] c_content.contains_key(k)
+                            implies (TotalOrder::le(yk, k) && k != yk) by {
+                            if c_content.contains_key(k) {
+                                lemma_strict_gt_transitive(k, xk, yk);
+                            }
+                        };
+                        // B keys > yk (from original y ordering, captured above).
+                        // xk > yk (established above).
+                        // Combine: all new_x_content keys > yk.
+                        assert(forall |k: K| #![auto] new_x_content.contains_key(k)
+                            ==> (TotalOrder::le(yk, k) && k != yk));
+                        // A keys < yk (from original y ordering, captured above).
+                        assert(forall |k: K| #![auto] spec_content_link(&y.left).contains_key(k)
+                            ==> (TotalOrder::le(k, yk) && k != yk));
+                    }
+
                     *link = Some(y);
                     proof {
+                        reveal_with_fuel(spec_ordered_link, 2);
                         reveal_with_fuel(spec_content_link, 3);
-                        lemma_rotate_right_preserves_keys(a, b, c, xk, xv, yk, yv);
+                        reveal_with_fuel(spec_node_count_link, 3);
+                        // Prove yk not in C (BST ordering: all C keys > xk > yk).
+                        if c_content.contains_key(yk) {
+                            K::antisymmetric(yk, xk);
+                        }
+                        lemma_rotate_right_content_eq(a_content, b_content, c_content, xk, xv, yk, yv);
+                        assert(spec_content_link(link) =~= old_content);
+                        assert(spec_node_count_link(link) == old_count);
                     }
                 } else {
                     *link = Some(x);
@@ -705,14 +945,64 @@ pub mod BSTKeyValueStEph {
         fn insert_link(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> (inserted: bool)
             decreases old(link),
         {
-            proof { reveal_with_fuel(spec_content_link, 2); }
+            proof { reveal_with_fuel(spec_ordered_link, 2); }
+            let ghost old_content = spec_content_link(link);
+            let ghost old_count = spec_node_count_link(link);
             if let Some(mut node) = link.take() {
+                let ghost old_left_content = spec_content_link(&node.left);
+                let ghost old_right_content = spec_content_link(&node.right);
+                let ghost node_key = node.key;
+                let ghost node_value = node.value;
+                let ghost old_left_count = spec_node_count_link(&node.left);
+                let ghost old_right_count = spec_node_count_link(&node.right);
+                proof {
+                    reveal_with_fuel(spec_content_link, 2);
+                    reveal_with_fuel(spec_node_count_link, 2);
+                    assert(old_content =~=
+                        old_left_content.union_prefer_right(old_right_content).insert(node_key, node_value));
+                    assert(old_count == 1 + old_left_count + old_right_count);
+                    // Capture all ordering facts before mutations.
+                    assert(spec_ordered_link(&node.left));
+                    assert(spec_ordered_link(&node.right));
+                    assert(forall |k: K| #![auto] old_left_content.contains_key(k)
+                        ==> (TotalOrder::le(k, node_key) && k != node_key));
+                    assert(forall |k: K| #![auto] old_right_content.contains_key(k)
+                        ==> (TotalOrder::le(node_key, k) && k != node_key));
+                }
+
                 let c = TotalOrder::cmp(&key, &node.key);
                 match c {
                     Ordering::Less => {
+                        // Key not in right subtree (all right keys > node_key > key).
+                        proof {
+                            assert(TotalOrder::le(key, node_key));
+                            assert(key != node_key);
+                            if old_right_content.contains_key(key) {
+                                // Right ordering: le(node_key, key) && key != node_key.
+                                // Combined with le(key, node_key): antisymmetric => key == node_key.
+                                K::antisymmetric(key, node_key);
+                            }
+                        }
                         let inserted = Self::insert_link(&mut node.left, key, value, priority);
+                        // Ordering: new left = old_left.insert(key,value). All < node_key.
+                        proof {
+                            assert(forall |k: K| #![auto]
+                                spec_content_link(&node.left).contains_key(k)
+                                ==> (TotalOrder::le(k, node_key) && k != node_key));
+                            // Right subtree unchanged — reassert ordering.
+                            assert(forall |k: K| #![auto]
+                                spec_content_link(&node.right).contains_key(k)
+                                ==> (TotalOrder::le(node_key, k) && k != node_key));
+                        }
                         *link = Some(node);
-                        proof { lemma_left_key_in_link(link, key); }
+                        proof {
+                            reveal_with_fuel(spec_content_link, 2);
+                            reveal_with_fuel(spec_node_count_link, 2);
+                            lemma_insert_left_commutes(old_left_content, old_right_content,
+                                node_key, node_value, key, value);
+                            assert(spec_content_link(link) =~= old_content.insert(key, value));
+                            lemma_ordered_assemble_kv(link);
+                        }
                         let need_rotate = match link.as_ref().unwrap().left.as_ref() {
                             Some(left) => left.priority < link.as_ref().unwrap().priority,
                             None => false,
@@ -723,9 +1013,29 @@ pub mod BSTKeyValueStEph {
                         inserted
                     }
                     Ordering::Greater => {
+                        proof {
+                            assert(TotalOrder::le(node_key, key));
+                            assert(key != node_key);
+                        }
                         let inserted = Self::insert_link(&mut node.right, key, value, priority);
+                        proof {
+                            assert(forall |k: K| #![auto]
+                                spec_content_link(&node.right).contains_key(k)
+                                ==> (TotalOrder::le(node_key, k) && k != node_key));
+                            // Left subtree unchanged — reassert ordering.
+                            assert(forall |k: K| #![auto]
+                                spec_content_link(&node.left).contains_key(k)
+                                ==> (TotalOrder::le(k, node_key) && k != node_key));
+                        }
                         *link = Some(node);
-                        proof { lemma_right_key_in_link(link, key); }
+                        proof {
+                            reveal_with_fuel(spec_content_link, 2);
+                            reveal_with_fuel(spec_node_count_link, 2);
+                            lemma_insert_right_commutes(old_left_content, old_right_content,
+                                node_key, node_value, key, value);
+                            assert(spec_content_link(link) =~= old_content.insert(key, value));
+                            lemma_ordered_assemble_kv(link);
+                        }
                         let need_rotate = match link.as_ref().unwrap().right.as_ref() {
                             Some(right) => right.priority < link.as_ref().unwrap().priority,
                             None => false,
@@ -736,14 +1046,35 @@ pub mod BSTKeyValueStEph {
                         inserted
                     }
                     Ordering::Equal => {
+                        assert(key == node_key);
                         node.value = value;
+                        // Both children unchanged — reassert ordering.
+                        proof {
+                            assert(forall |k: K| #![auto]
+                                spec_content_link(&node.left).contains_key(k)
+                                ==> (TotalOrder::le(k, node_key) && k != node_key));
+                            assert(forall |k: K| #![auto]
+                                spec_content_link(&node.right).contains_key(k)
+                                ==> (TotalOrder::le(node_key, k) && k != node_key));
+                        }
                         *link = Some(node);
-                        proof { lemma_node_key_in_link(link); }
+                        proof {
+                            reveal_with_fuel(spec_content_link, 2);
+                            reveal_with_fuel(spec_node_count_link, 2);
+                            assert(spec_content_link(link) =~= old_content.insert(key, value));
+                            lemma_ordered_assemble_kv(link);
+                        }
                         false
                     }
                 }
             } else {
                 *link = Some(Box::new(Node::new(key, value, priority)));
+                proof {
+                    reveal_with_fuel(spec_content_link, 2);
+                    reveal_with_fuel(spec_node_count_link, 2);
+                    assert(spec_content_link(link) =~= old_content.insert(key, value));
+                    lemma_ordered_assemble_kv(link);
+                }
                 true
             }
         }
