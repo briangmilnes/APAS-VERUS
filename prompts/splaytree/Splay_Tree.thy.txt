@@ -1,0 +1,159 @@
+Splay_Tree.thy — Nipkow, AFP entry "Splay_Tree"
+Source: https://devel.isa-afp.org/browser_info/current/AFP/Splay_Tree/Splay_Tree.html
+
+Core splay tree operations and functional correctness proofs.
+Invariant: inv = λ_. True (no structural invariant beyond BST).
+
+theory Splay_Tree
+imports
+  "HOL-Library.Tree"
+  "HOL-Data_Structures.Set_Specs"
+  "HOL-Data_Structures.Cmp"
+begin
+
+declare sorted_wrt.simps(2)[simp del]
+
+text‹Splay trees were invented by Sleator and Tarjan.›
+
+subsection "Function splay"
+
+function splay :: "'a::linorder ⇒ 'a tree ⇒ 'a tree" where
+"splay x Leaf = Leaf" |
+"splay x (Node AB x CD) = Node AB x CD" |
+-- Zig left
+"x < b ==> splay x (Node (Node A x B) b CD) = Node A x (Node B b CD)" |
+-- Miss left
+"x < b ==> splay x (Node Leaf b CD) = Node Leaf b CD" |
+-- Zig-zig left (base)
+"x < a ==> x < b ==> splay x (Node (Node Leaf a B) b CD) = Node Leaf a (Node B b CD)" |
+-- Zig-zig left (recurse)
+"x < a ==> x < b ==> A ≠ Leaf ==>
+ splay x (Node (Node A a B) b CD) =
+ (case splay x A of Node A1 a' A2 => Node A1 a' (Node A2 a (Node B b CD)))" |
+-- Zig-zag left-right (base)
+"a < x ==> x < b ==> splay x (Node (Node A a Leaf) b CD) = Node A a (Node Leaf b CD)" |
+-- Zig-zag left-right (recurse)
+"a < x ==> x < b ==> B ≠ Leaf ==>
+ splay x (Node (Node A a B) b CD) =
+ (case splay x B of Node B1 b' B2 => Node (Node A a B1) b' (Node B2 b CD))" |
+-- Zig right
+"b < x ==> splay x (Node AB b (Node C x D)) = Node (Node AB b C) x D" |
+-- Miss right
+"b < x ==> splay x (Node AB b Leaf) = Node AB b Leaf" |
+-- Zig-zag right-left (recurse)
+"b < x ==> x < c ==> C ≠ Leaf ==>
+ splay x (Node AB b (Node C c D)) =
+ (case splay x C of Node C1 c' C2 => Node (Node AB b C1) c' (Node C2 c D))" |
+-- Zig-zag right-left (base)
+"b < x ==> x < c ==> splay x (Node AB b (Node Leaf c D)) = Node (Node AB b Leaf) c D" |
+-- Zig-zig right (base)
+"b < x ==> c < x ==> splay x (Node AB b (Node C c Leaf)) = Node (Node AB b C) c Leaf" |
+-- Zig-zig right (recurse)
+"a < x ==> c < x ==> D ≠ Leaf ==>
+ splay x (Node AB a (Node C c D)) =
+ (case splay x D of Node D1 d' D2 => Node (Node (Node AB a C) c D1) d' D2)"
+termination splay by lexicographic_order
+
+-- Executable code form using cmp:
+lemma splay_code: "splay x (Node AB b CD) =
+  (case cmp x b of
+   EQ => Node AB b CD |
+   LT => (case AB of
+          Leaf => Node AB b CD |
+          Node A a B =>
+            (case cmp x a of
+             EQ => Node A a (Node B b CD) |
+             LT => if A = Leaf then Node A a (Node B b CD)
+                   else case splay x A of
+                     Node A1 x' A2 => Node A1 x' (Node A2 a (Node B b CD)) |
+             GT => if B = Leaf then Node A a (Node B b CD)
+                   else case splay x B of
+                     Node B1 x' B2 => Node (Node A a B1) x' (Node B2 b CD))) |
+   GT => (case CD of
+          Leaf => Node AB b CD |
+          Node C c D =>
+            (case cmp x c of
+             EQ => Node (Node AB b C) c D |
+             LT => if C = Leaf then Node (Node AB b C) c D
+                   else case splay x C of
+                     Node C1 x' C2 => Node (Node AB b C1) x' (Node C2 c D) |
+             GT => if D = Leaf then Node (Node AB b C) c D
+                   else case splay x D of
+                     Node D1 x' D2 => Node (Node (Node AB b C) c D1) x' D2)))"
+
+definition is_root :: "'a => 'a tree => bool" where
+"is_root x t = (case t of Leaf => False | Node l a r => x = a)"
+
+definition "isin t x = is_root x (splay x t)"
+
+definition empty :: "'a tree" where "empty = Leaf"
+
+fun insert :: "'a::linorder => 'a tree => 'a tree" where
+"insert x t =
+  (if t = Leaf then Node Leaf x Leaf
+   else case splay x t of
+     Node l a r =>
+      case cmp x a of
+        EQ => Node l a r |
+        LT => Node l x (Node Leaf a r) |
+        GT => Node (Node l a Leaf) x r)"
+
+fun splay_max :: "'a tree => 'a tree" where
+"splay_max Leaf = Leaf" |
+"splay_max (Node A a Leaf) = Node A a Leaf" |
+"splay_max (Node A a (Node B b CD)) =
+  (if CD = Leaf then Node (Node A a B) b Leaf
+   else case splay_max CD of
+     Node C c D => Node (Node (Node A a B) b C) c D)"
+
+definition delete :: "'a::linorder => 'a tree => 'a tree" where
+"delete x t =
+  (if t = Leaf then Leaf
+   else case splay x t of Node l a r =>
+     if x ≠ a then Node l a r
+     else if l = Leaf then r
+     else case splay_max l of Node l' m r' => Node l' m r)"
+
+-- CORRECTNESS PROOFS --
+
+-- splay preserves inorder
+lemma inorder_splay: "inorder(splay x t) = inorder t"
+
+-- splay preserves BST
+lemma bst_splay: "bst t ==> bst (splay x t)"
+
+-- splay brings target to root (if present)
+lemma splay_elemsD:
+  "splay x t = Node l a r ==> sorted(inorder t) ==>
+  x ∈ set (inorder t) <-> x = a"
+
+-- isin is correct
+lemma isin_set: "sorted(inorder t) ==> isin t x = (x ∈ set (inorder t))"
+
+-- insert correct
+lemma inorder_insert:
+  "sorted(inorder t) ==> inorder(insert x t) = ins_list x (inorder t)"
+lemma bst_insert: "bst t ==> bst(insert x t)"
+
+-- splay_max brings max to root
+lemma inorder_splay_maxD:
+  "splay_max t = Node l a r ==> sorted(inorder t) ==>
+  inorder l @ [a] = inorder t ∧ r = Leaf"
+
+-- delete correct
+lemma inorder_delete:
+  "sorted(inorder t) ==> inorder(delete x t) = del_list x (inorder t)"
+lemma bst_delete: "bst t ==> bst(delete x t)"
+
+-- Overall: Set_by_Ordered interpretation with inv = λ_. True
+interpretation splay: Set_by_Ordered
+where empty = empty and isin = isin and insert = insert
+and delete = delete and inorder = inorder and inv = "λ_. True"
+
+-- Size lemmas
+lemma size_splay[simp]: "size (splay a t) = size t"
+lemma size_if_splay: "splay a t = Node l u r ==> size t = size l + size r + 1"
+lemma splay_not_Leaf: "t ≠ Leaf ==> ∃l x r. splay a t = Node l x r"
+lemma size_splay_max: "size(splay_max t) = size t"
+
+end

@@ -1,0 +1,70 @@
+Splay_Heap.thy — Nipkow (after Okasaki), AFP entry "Splay_Tree"
+Source: https://devel.isa-afp.org/browser_info/current/AFP/Splay_Tree/Splay_Heap.html
+
+Splay heaps — priority queues using splay trees (not min-heaps).
+Uses partition-based insert and splay-based delete-min.
+
+theory Splay_Heap
+imports "HOL-Library.Tree_Multiset"
+begin
+
+text‹Splay heaps were invented by Okasaki. They represent
+priority queues by splay trees, not by heaps!›
+
+fun get_min :: "'a::linorder tree => 'a" where
+"get_min (Node l m r) = (if l = Leaf then m else get_min l)"
+
+fun partition :: "'a::linorder => 'a tree => 'a tree * 'a tree" where
+"partition p Leaf = (Leaf, Leaf)" |
+"partition p (Node al a ar) =
+  (if a ≤ p then
+     case ar of
+       Leaf => (Node al a ar, Leaf) |
+       Node bl b br =>
+         if b ≤ p
+         then let (pl, pr) = partition p br in (Node (Node al a bl) b pl, pr)
+         else let (pl, pr) = partition p bl in (Node al a pl, Node pr b br)
+   else case al of
+       Leaf => (Leaf, Node al a ar) |
+       Node bl b br =>
+         if b ≤ p
+         then let (pl, pr) = partition p br in (Node bl b pl, Node pr a ar)
+         else let (pl, pr) = partition p bl in (pl, Node pr b (Node br a ar)))"
+
+definition insert :: "'a::linorder => 'a tree => 'a tree" where
+"insert x h = (let (l, r) = partition x h in Node l x r)"
+
+fun del_min :: "'a::linorder tree => 'a tree" where
+"del_min Leaf = Leaf" |
+"del_min (Node Leaf _ r) = r" |
+"del_min (Node (Node ll a lr) b r) =
+  (if ll = Leaf then Node lr b r else Node (del_min ll) a (Node lr b r))"
+
+-- CORRECTNESS --
+
+lemma get_min_in: "h ≠ Leaf ==> get_min h ∈ set_tree h"
+
+lemma get_min_min:
+  "bst_wrt (≤) h; h ≠ Leaf ==> ∀x ∈ set_tree h. get_min h ≤ x"
+
+lemma size_partition: "partition p t = (l', r') ==> size t = size l' + size r'"
+
+lemma mset_partition:
+  "bst_wrt (≤) t; partition p t = (l', r') ==>
+   mset_tree t = mset_tree l' + mset_tree r'"
+
+lemma set_partition:
+  "bst_wrt (≤) t; partition p t = (l', r') ==>
+   set_tree t = set_tree l' ∪ set_tree r'"
+
+lemma bst_partition:
+  "partition p t = (l', r') ==> bst_wrt (≤) t ==> bst_wrt (≤) (Node l' p r')"
+
+lemma size_del_min[simp]: "size(del_min t) = size t - 1"
+
+lemma mset_del_min:
+  "mset_tree (del_min h) = mset_tree h - {# get_min h #}"
+
+lemma bst_del_min: "bst_wrt (≤) t ==> bst_wrt (≤) (del_min t)"
+
+end

@@ -1,0 +1,49 @@
+Splay_Tree_Analysis.thy — Nipkow, AFP entry "Amortized_Complexity"
+Source: https://devel.isa-afp.org/browser_info/current/AFP/Amortized_Complexity/Splay_Tree_Analysis.html
+
+Amortized analysis of splay tree operations using the potential method.
+Proves O(log n) amortized bounds for splay, insert, and delete.
+
+KEY RESULTS
+-----------
+
+Amortized cost = actual cost + potential change:
+  A_splay(a, t) = T_splay(a, t) + Φ(splay(a, t)) - Φ(t)
+
+Splay:
+  A_splay(x, t) ≤ 3 * (φ(t) - φ(Node l x r)) + 1     [A_splay_ub]
+    where splay(x, t) = Node l x r
+  A_splay(x, t) ≤ 3 * (φ(t) - 1) + 1                  [A_splay_ub2, when x in tree]
+  A_splay(x, t) ≤ 3 * φ(t) + 1                         [A_splay_ub3]
+
+Insert:
+  T_insert(x, t) + Φ(insert(x, t)) - Φ(t) ≤ 4 * log₂(size1 t) + 2    [amor_insert]
+
+Delete:
+  A_splay_max(t) ≤ 3 * (φ(t) - 1) + 1                 [A_splay_max_ub]
+  T_delete(a, t) + Φ(delete(a, t)) - Φ(t) ≤ 6 * log₂(size1 t) + 2    [amor_delete]
+
+AMORTIZED FRAMEWORK INSTANTIATION
+----------------------------------
+
+Upper-bound function U for the generic amortized framework:
+  U Empty   []  = 1
+  U (Splay _) [t] = 3 * log₂(size1 t) + 1
+  U (Insert _) [t] = 4 * log₂(size1 t) + 3
+  U (Delete _) [t] = 6 * log₂(size1 t) + 3
+
+Proves: for any sequence of n operations starting from empty tree,
+total actual cost ≤ Σᵢ U(opᵢ, [tᵢ]) where tᵢ is the tree before operation i.
+
+PROOF TECHNIQUE
+---------------
+
+Uses the standard potential method with φ(t) = log₂(size1(t)):
+- Zig case: direct calculation
+- Zig-zig case: uses the "Access Lemma" inequality
+    log(a) + log(b) ≤ 2*log(a+b) - 2   (when a,b > 0)
+    which gives the 3*(φ(t) - φ(subtree)) bound
+- Zig-zag case: similar inequality manipulation
+
+The key algebraic fact (proven in Lemmas_log):
+  1 + log(x) + log(y) ≤ 2 * log(x + y)   for x,y > 0

@@ -1,0 +1,40 @@
+Splay_Heap_Analysis.thy — Nipkow, AFP entry "Amortized_Complexity"
+Source: https://devel.isa-afp.org/browser_info/current/AFP/Amortized_Complexity/Splay_Heap_Analysis.html
+
+Amortized analysis of splay heap operations.
+
+POTENTIAL FUNCTION
+------------------
+
+φ(t) = log₂(size1(t))
+
+Φ(Leaf) = 0
+Φ(Node l a r) = Φ(l) + Φ(r) + φ(Node l a r)
+
+AMORTIZED BOUNDS
+-----------------
+
+  U Empty     []  = 0
+  U (Insert _) [t] = 3 * log₂(size1(t) + 1) + 1
+  U Del_min    [t] = 2 * φ(t) + 1
+
+KEY LEMMAS
+----------
+
+amor_partition:
+  T_partition(p, t) + Φ(l) + Φ(r) - Φ(t) ≤ 2 * log₂(size1(t)) + 1
+  where partition(p, t) = (l, r)
+
+amor_del_min:
+  T_del_min(t) + Φ(del_min(t)) - Φ(t) ≤ 2 * φ(t) + 1
+
+PROOF STRUCTURE
+---------------
+
+The partition function is the analogue of splay for heaps. It splits a BST
+around a pivot, producing two sub-BSTs. The amortized cost analysis follows
+the same potential method as splay trees:
+
+- zig_zig and zig_zag lemmas bound the two-level rotation cases
+- amor_partition combines them into the overall bound
+- insert and del_min are expressed in terms of partition

@@ -1,0 +1,61 @@
+Splay_Tree_Analysis_Optimal.thy — Nipkow (after Schoenmakers), AFP entry "Amortized_Complexity"
+Source: https://devel.isa-afp.org/browser_info/current/AFP/Amortized_Complexity/Splay_Tree_Analysis_Optimal.html
+
+Optimal amortized bounds following Schoenmakers (IPL 1993).
+Improves the constant factors from the standard analysis.
+
+APPROACH
+--------
+
+Parameterizes the analysis over α (base) and β (scaling factor),
+establishing algebraic conditions A1, A2, A3 that any valid (α, β) must satisfy.
+
+locale Splay_Analysis with parameters α and β:
+  A1: 1 < α
+  A2: algebraic inequality on β
+  A3: algebraic inequality on β
+
+GENERALIZED POTENTIAL
+---------------------
+
+φ(t1, t2) = β * log_α(size1(t1) + size1(t2))
+
+Φ(Leaf) = 0
+Φ(Node l _ r) = Φ(l) + Φ(r) + φ(l, r)
+
+GENERALIZED AMORTIZED COST
+---------------------------
+
+A(a, t) = T_splay(a, t) + Φ(splay(a, t)) - Φ(t)
+Am(t) = T_splay_max(t) + Φ(splay_max(t)) - Φ(t)
+
+OPTIMAL INSTANTIATION
+---------------------
+
+α = ∛4 (cube root of 4), β = 1/3
+
+interpretation S34: Splay_Analysis (root 3 4) (1/3)
+
+This gives the tightest known constant factors:
+
+  U Empty   []  = 1
+  U (Splay _) [t] = (3/2) * log₂(size1 t) + 1
+  U (Insert _) [t] = 2 * log₂(size1 t) + 3/2
+  U (Delete _) [t] = 3 * log₂(size1 t) + 2
+
+Compared to the standard analysis (Splay_Tree_Analysis.thy):
+  Splay:  3*log → 1.5*log  (2x improvement)
+  Insert: 4*log → 2*log    (2x improvement)
+  Delete: 6*log → 3*log    (2x improvement)
+
+SIGNIFICANCE FOR APAS-VERUS
+----------------------------
+
+For BSTSplay verification, the key takeaways are:
+1. Correctness (BST property) is trivial: inv = λ_. True
+2. The amortized analysis requires:
+   - Potential function Φ based on log of subtree sizes
+   - Access Lemma inequality for zig-zig/zig-zag cases
+   - Size preservation through splay (already proved in Splay_Tree.thy)
+3. The splay function itself is the hard part to get right;
+   once correct, insert/delete/find are thin wrappers.

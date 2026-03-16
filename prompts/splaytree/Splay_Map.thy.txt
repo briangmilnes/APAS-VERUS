@@ -1,0 +1,83 @@
+Splay_Map.thy — Nipkow, AFP entry "Splay_Tree"
+Source: https://devel.isa-afp.org/browser_info/current/AFP/Splay_Tree/Splay_Map.html
+
+Map implementation using splay trees (key-value pairs as node elements).
+Relevant to APAS BSTSplay which stores (key, value) pairs.
+
+theory Splay_Map
+imports
+  Splay_Tree
+  "HOL-Data_Structures.Map_Specs"
+begin
+
+-- Splay on key-value pairs, comparing by fst (key):
+function splay :: "'a::linorder => ('a * 'b) tree => ('a * 'b) tree" where
+"splay x Leaf = Leaf" |
+"x = fst a ==> splay x (Node t1 a t2) = Node t1 a t2" |
+"x = fst a ==> x < fst b ==> splay x (Node (Node t1 a t2) b t3) = Node t1 a (Node t2 b t3)" |
+-- ... (same rotation cases as Splay_Tree but comparing fst of pair)
+-- Full pattern match on all 14 cases with fst-based comparison
+termination splay by lexicographic_order
+
+-- Executable code form:
+lemma splay_code: "splay x t = (case t of Leaf => Leaf |
+  Node al a ar => (case cmp x (fst a) of
+    EQ => t |
+    LT => (case al of Leaf => t | Node bl b br =>
+      (case cmp x (fst b) of
+        EQ => Node bl b (Node br a ar) |
+        LT => if bl = Leaf then ... else case splay x bl of ... |
+        GT => if br = Leaf then ... else case splay x br of ...)) |
+    GT => (case ar of Leaf => t | Node bl b br =>
+      (case cmp x (fst b) of
+        EQ => Node (Node al a bl) b br |
+        LT => if bl = Leaf then ... else case splay x bl of ... |
+        GT => if br = Leaf then ... else case splay x br of ...))))"
+
+definition lookup :: "('a * 'b) tree => 'a::linorder => 'b option" where
+"lookup t x = (case splay x t of Leaf => None | Node _ (a,b) _ =>
+   if x = a then Some b else None)"
+
+fun update :: "'a::linorder => 'b => ('a * 'b) tree => ('a * 'b) tree" where
+"update x y t = (if t = Leaf then Node Leaf (x,y) Leaf
+  else case splay x t of
+    Node l a r => if x = fst a then Node l (x,y) r
+      else if x < fst a then Node l (x,y) (Node Leaf a r)
+      else Node (Node l a Leaf) (x,y) r)"
+
+definition delete :: "'a::linorder => ('a * 'b) tree => ('a * 'b) tree" where
+"delete x t = (if t = Leaf then Leaf
+  else case splay x t of Node l a r =>
+    if x = fst a
+    then if l = Leaf then r else case splay_max l of
+         Node l' m r' => Node l' m r
+    else Node l a r)"
+
+-- CORRECTNESS --
+
+lemma splay_Leaf_iff: "(splay x t = Leaf) = (t = Leaf)"
+lemma inorder_splay: "inorder (splay x t) = inorder t"
+
+lemma splay_map_of_inorder:
+  "splay x t = Node l a r ==> sorted1 (inorder t) ==>
+   map_of (inorder t) x = (if x = fst a then Some (snd a) else None)"
+
+lemma lookup_eq:
+  "sorted1 (inorder t) ==> lookup t x = map_of (inorder t) x"
+
+lemma sorted_splay:
+  "sorted1 (inorder t) ==> splay x t = Node l a r ==>
+  sorted (map fst (inorder l) @ x # map fst (inorder r))"
+
+lemma inorder_update_splay:
+  "sorted1 (inorder t) ==> inorder (update x y t) = upd_list x y (inorder t)"
+
+lemma inorder_delete_splay:
+  "sorted1 (inorder t) ==> inorder (delete x t) = del_list x (inorder t)"
+
+-- Overall: Map_by_Ordered interpretation with inv = λ_. True
+interpretation Map_by_Ordered
+where empty = empty and lookup = lookup and update = update
+and delete = delete and inorder = inorder and inv = "λ _. True"
+
+end
