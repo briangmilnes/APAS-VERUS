@@ -32,6 +32,8 @@ pub mod AugOrderedTableMtEph {
     use vstd::laws_eq::obeys_view_eq;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
     use crate::{OrderedTableMtEphLit, ParaPair};
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
@@ -164,7 +166,12 @@ broadcast use {
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- mutates base table (linear scan), then recalculates reduction O(n)
         fn insert<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: G)
-            requires forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+            requires
+                old(self).spec_augorderedtablemteph_wf(),
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_clone::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures self@.dom().finite();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- mutates base table (linear scan), then recalculates reduction O(n)
@@ -186,7 +193,10 @@ broadcast use {
             reducer: F,
             identity: V,
         ) -> (domain: Self)
-            requires keys@.finite()
+            requires
+                keys.spec_arraysetsteph_wf(),
+                forall|k: &K| f.requires((k,)),
+                obeys_feq_full::<K>(),
             ensures domain@.dom().finite();
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- maps all values linearly, then recalculates reduction O(n)

@@ -17,6 +17,8 @@ pub mod OrderedTableMtEph {
     use vstd::laws_eq::obeys_view_eq;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     verus! {
 
@@ -107,7 +109,12 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.insert (linear dup check)
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F)
-            requires forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+            requires
+                old(self).spec_orderedtablemteph_wf(),
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_clone::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
@@ -127,7 +134,10 @@ broadcast use {
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
         /// - Claude-Opus-4.6: Work Θ(n^2), Span Θ(n^2) -- delegates to TableMtEph.tabulate (sequential insert loop)
         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            requires keys@.finite()
+            requires
+                keys.spec_arraysetsteph_wf(),
+                forall|k: &K| f.requires((k,)),
+                obeys_feq_full::<K>(),
             ensures tabulated@.dom().finite();
 
         /// - APAS: Work Θ(n), Span Θ(n)
@@ -496,11 +506,19 @@ broadcast use {
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
-            let entries = self.collect();
-            if entries.length() == 0 {
+            let entries = self.base_table.entries();
+            let n = entries.length();
+            if n == 0 {
                 None
             } else {
-                Some(entries.nth(0).0.clone())
+                let mut best = entries.nth(0).0.clone();
+                let mut i: usize = 1;
+                while i < n {
+                    let k = entries.nth(i).0.clone();
+                    if k < best { best = k; }
+                    i += 1;
+                }
+                Some(best)
             }
         }
 
@@ -508,12 +526,19 @@ broadcast use {
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
-            let entries = self.collect();
-            let size = entries.length();
-            if size == 0 {
+            let entries = self.base_table.entries();
+            let n = entries.length();
+            if n == 0 {
                 None
             } else {
-                Some(entries.nth(size - 1).0.clone())
+                let mut best = entries.nth(0).0.clone();
+                let mut i: usize = 1;
+                while i < n {
+                    let k = entries.nth(i).0.clone();
+                    if k > best { best = k; }
+                    i += 1;
+                }
+                Some(best)
             }
         }
 
@@ -521,36 +546,42 @@ broadcast use {
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
-            let entries = self.collect();
-            let size = entries.length();
-            let mut i: usize = size;
-            while i > 0 {
-                i -= 1;
-                let pair = entries.nth(i);
-                match Ord::cmp(&pair.0, k) {
-                    std::cmp::Ordering::Less => return Some(pair.0.clone()),
-                    _ => {},
+            let entries = self.base_table.entries();
+            let n = entries.length();
+            let mut best: Option<K> = None;
+            let mut i: usize = 0;
+            while i < n {
+                let ek = entries.nth(i).0.clone();
+                if ek < *k {
+                    best = match best {
+                        None => Some(ek),
+                        Some(b) => if ek > b { Some(ek) } else { Some(b) },
+                    };
                 }
+                i += 1;
             }
-            None
+            best
         }
 
         #[verifier::external_body]
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
-            let entries = self.collect();
-            let size = entries.length();
+            let entries = self.base_table.entries();
+            let n = entries.length();
+            let mut best: Option<K> = None;
             let mut i: usize = 0;
-            while i < size {
-                let pair = entries.nth(i);
-                match Ord::cmp(&pair.0, k) {
-                    std::cmp::Ordering::Greater => return Some(pair.0.clone()),
-                    _ => {},
+            while i < n {
+                let ek = entries.nth(i).0.clone();
+                if ek > *k {
+                    best = match best {
+                        None => Some(ek),
+                        Some(b) => if ek < b { Some(ek) } else { Some(b) },
+                    };
                 }
                 i += 1;
             }
-            None
+            best
         }
 
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
@@ -629,21 +660,16 @@ broadcast use {
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
-            let entries = self.collect();
-            let size = entries.length();
+            let entries = self.base_table.entries();
+            let n = entries.length();
             let mut count: usize = 0;
             let mut i: usize = 0;
-            while i < size {
+            while i < n {
                 let pair = entries.nth(i);
-                match Ord::cmp(&pair.0, k) {
-                    std::cmp::Ordering::Less => {
-                        count += 1;
-                        i += 1;
-                    },
-                    _ => {
-                        i = size;
-                    },
+                if pair.0 < *k {
+                    count += 1;
                 }
+                i += 1;
             }
             count
         }
@@ -652,12 +678,20 @@ broadcast use {
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
         {
-            let entries = self.collect();
-            if i >= entries.length() {
-                None
-            } else {
-                Some(entries.nth(i).0.clone())
+            let entries = self.base_table.entries();
+            let n = entries.length();
+            if i >= n {
+                return None;
             }
+            // Collect all keys, sort, and pick the i-th.
+            let mut keys: Vec<K> = Vec::new();
+            let mut j: usize = 0;
+            while j < n {
+                keys.push(entries.nth(j).0.clone());
+                j += 1;
+            }
+            keys.sort();
+            Some(keys[i].clone())
         }
 
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))

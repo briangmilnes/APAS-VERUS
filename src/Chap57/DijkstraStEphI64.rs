@@ -47,7 +47,7 @@ pub mod DijkstraStEphI64 {
 
     /// Priority queue entry: (distance, vertex)
     /// Ordered by distance (min-heap)
-    #[derive(Clone, Eq, PartialEq)]
+    #[derive(Eq, PartialEq)]
     pub struct PQEntry {
         pub dist: i64,
         pub vertex: usize,
@@ -58,6 +58,14 @@ pub mod DijkstraStEphI64 {
     impl View for PQEntry {
         type V = Self;
         open spec fn view(&self) -> Self { *self }
+    }
+
+    impl Clone for PQEntry {
+        fn clone(&self) -> (result: PQEntry)
+            ensures result@ == self@
+        {
+            PQEntry { dist: self.dist, vertex: self.vertex }
+        }
     }
 
     // 8. traits
