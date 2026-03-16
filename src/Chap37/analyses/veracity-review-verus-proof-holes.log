@@ -337,116 +337,96 @@ Table of Contents:
 ✓ BSTRBStEph.rs
    1 clean proof function
 ❌ BSTSetAVLMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetAVLMtEph.rs:142: error: fn_missing_requires - fn values_vec — exec fn should have requires
-       135 |         fn iter(&self) -> (it: BSTSetAVLMtEphIter<T>)
-            ...
-       140 |     //	9. impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetAVLMtEph.rs:143: warning: requires_true - requires true — vacuous precondition
        141 | 
-       143 | 
-       144 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetAVLMtEph.rs:149: error: fn_missing_requires - fn rebuild_from_vec — exec fn should have requires
        142 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTAVLMtEph<T>) -> (values: Vec<T>)
-            ...
-       147 |     }
+       144 |         ensures true,
+       145 |     {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetAVLMtEph.rs:150: warning: requires_true - requires true — vacuous precondition
        148 | 
-       150 | 
-       151 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetAVLMtEph.rs:160: error: fn_missing_requires - fn from_sorted_iter — exec fn should have requires
        149 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
+       151 |         ensures true,
+       152 |     {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetAVLMtEph.rs:163: warning: requires_true - requires true — vacuous precondition
+       160 |     fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetAVLMtEph<T>)
             ...
-       158 |     }
-       159 | 
        161 |     where
        162 |         I: IntoIterator<Item = T>,
+       164 |         ensures true,
+       165 |     {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetAVLMtEph.rs:407: info: accept()
    Info: 1 total
 ❌ BSTSetBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetBBAlphaMtEph.rs:124: error: fn_missing_requires - fn values_vec — exec fn should have requires
-       119 |         fn iter(&self) -> (it: BSTSetBBAlphaMtEphIter<T>)
-            ...
-       122 |     }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetBBAlphaMtEph.rs:125: warning: requires_true - requires true — vacuous precondition
        123 | 
-       125 | 
-       126 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetBBAlphaMtEph.rs:130: error: fn_missing_requires - fn rebuild_from_vec — exec fn should have requires
        124 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTBBAlphaMtEph<T>) -> (values: Vec<T>)
-            ...
-       128 |         tree.in_order().iter().cloned().collect()
+       126 |         ensures true,
+       127 |     {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetBBAlphaMtEph.rs:131: warning: requires_true - requires true — vacuous precondition
        129 |     }
-       131 | 
-       132 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetBBAlphaMtEph.rs:141: error: fn_missing_requires - fn from_sorted_iter — exec fn should have requires
        130 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTBBAlphaMtEph<T>)
+       132 |         ensures true,
+       133 |     {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetBBAlphaMtEph.rs:144: warning: requires_true - requires true — vacuous precondition
+       141 |     fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetBBAlphaMtEph<T>)
             ...
-       139 |     }
-       140 | 
        142 |     where
        143 |         I: IntoIterator<Item = T>,
+       145 |         ensures true,
+       146 |     {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetBBAlphaMtEph.rs:333: info: accept()
    Info: 1 total
 ❌ BSTSetPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetPlainMtEph.rs:124: error: fn_missing_requires - fn values_vec — exec fn should have requires
-       119 |         fn iter(&self) -> (it: BSTSetPlainMtEphIter<T>)
-            ...
-       122 |     }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetPlainMtEph.rs:125: warning: requires_true - requires true — vacuous precondition
        123 | 
-       125 | 
-       126 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetPlainMtEph.rs:130: error: fn_missing_requires - fn rebuild_from_vec — exec fn should have requires
        124 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTPlainMtEph<T>) -> (values: Vec<T>)
-            ...
-       128 |         tree.in_order().iter().cloned().collect()
+       126 |         ensures true,
+       127 |     {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetPlainMtEph.rs:131: warning: requires_true - requires true — vacuous precondition
        129 |     }
-       131 | 
-       132 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetPlainMtEph.rs:141: error: fn_missing_requires - fn from_sorted_iter — exec fn should have requires
        130 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTPlainMtEph<T>)
+       132 |         ensures true,
+       133 |     {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetPlainMtEph.rs:144: warning: requires_true - requires true — vacuous precondition
+       141 |     fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetPlainMtEph<T>)
             ...
-       139 |     }
-       140 | 
        142 |     where
        143 |         I: IntoIterator<Item = T>,
+       145 |         ensures true,
+       146 |     {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetPlainMtEph.rs:389: info: accept()
    Info: 1 total
 ❌ BSTSetRBMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetRBMtEph.rs:124: error: fn_missing_requires - fn values_vec — exec fn should have requires
-       119 |         fn iter(&self) -> (it: BSTSetRBMtEphIter<T>)
-            ...
-       122 |     }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetRBMtEph.rs:125: warning: requires_true - requires true — vacuous precondition
        123 | 
-       125 | 
+       124 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTRBMtEph<T>) -> (values: Vec<T>)
        126 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetRBMtEph.rs:139: error: fn_missing_requires - fn from_sorted_iter — exec fn should have requires
-       131 |     fn copy_set<T: StTInMtT + Ord>(set: &BSTSetRBMtEph<T>) -> (out: BSTSetRBMtEph<T>)
-            ...
-       137 |     }
+       127 |     {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetRBMtEph.rs:140: warning: requires_true - requires true — vacuous precondition
        138 | 
-       140 | 
+       139 |     fn from_sorted_iter<T: StTInMtT + Ord, I: IntoIterator<Item = T>>(values: I) -> (set: BSTSetRBMtEph<T>)
        141 |         ensures true,
+       142 |     {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetRBMtEph.rs:409: info: accept()
    Info: 1 total
 ❌ BSTSetSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetSplayMtEph.rs:142: error: fn_missing_requires - fn values_vec — exec fn should have requires
-       135 |         fn iter(&self) -> (it: BSTSetSplayMtEphIter<T>)
-            ...
-       140 |     //	9. impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetSplayMtEph.rs:143: warning: requires_true - requires true — vacuous precondition
        141 | 
-       143 | 
-       144 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetSplayMtEph.rs:149: error: fn_missing_requires - fn rebuild_from_vec — exec fn should have requires
        142 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
-            ...
-       147 |     }
+       144 |         ensures true,
+       145 |     {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetSplayMtEph.rs:150: warning: requires_true - requires true — vacuous precondition
        148 | 
-       150 | 
-       151 |         ensures true,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetSplayMtEph.rs:160: error: fn_missing_requires - fn from_sorted_iter — exec fn should have requires
        149 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
+       151 |         ensures true,
+       152 |     {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetSplayMtEph.rs:163: warning: requires_true - requires true — vacuous precondition
+       160 |     fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetSplayMtEph<T>)
             ...
-       158 |     }
-       159 | 
        161 |     where
        162 |         I: IntoIterator<Item = T>,
+       164 |         ensures true,
+       165 |     {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetSplayMtEph.rs:407: info: accept()
    Info: 1 total
 ❌ BSTSplayMtEph.rs
@@ -640,8 +620,8 @@ BSTSplayStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   11 clean (no holes, no errors; 57%)
-   8 holed (holes or errors, 42%)
+   16 clean (no holes, no errors; 84%)
+   3 holed (holes or errors, 15%)
    19 total
 
 Proof Functions:
@@ -650,8 +630,8 @@ Proof Functions:
    17 total
 
 Function Specs:
-   730 exec fns with complete spec (requires+ensures) (75%)
-   20 exec fns missing spec (2%)
+   744 exec fns with complete spec (requires+ensures) (76%)
+   6 exec fns missing spec (0%)
    219 proof/spec fns clean (22%)
    0 proof/spec fns with holes (0%)
    969 total fns
@@ -664,13 +644,13 @@ Holes Found: 3 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 20:46:46 -07:00
-Ended:     2026-03-15 20:46:46 -07:00
-Duration:  240ms
+Started:   2026-03-15 20:52:37 -07:00
+Ended:     2026-03-15 20:52:38 -07:00
+Duration:  134ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
-6:46 -07:00
-Ended:     2026-03-15 20:46:46 -07:00
-Duration:  240ms
+-07:00
+Ended:     2026-03-15 20:52:38 -07:00
+Duration:  134ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
