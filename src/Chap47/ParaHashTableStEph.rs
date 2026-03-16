@@ -558,6 +558,13 @@ pub mod ParaHashTableStEph {
 
     /// Trait for parametric nested hash tables.
     pub trait ParaHashTableStEphTrait<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default, H: Fn(&Key, usize) -> usize + Clone> {
+        /// Per-implementation well-formedness predicate.
+        /// Chained hash tables use the default (spec_hashtable_wf: key at hash slot).
+        /// Flat/open-addressing hash tables override with probe-chain wf.
+        open spec fn spec_impl_wf(table: &HashTable<Key, Value, Entry, Metrics, H>) -> bool {
+            spec_hashtable_wf(table)
+        }
+
         /// Creates an empty hash table with the given initial size.
         /// Takes a hash function that maps (&Key, table_size) to a bucket index.
         /// - APAS: Work O(m), Span O(m) where m is initial size.
@@ -615,11 +622,11 @@ pub mod ParaHashTableStEph {
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
         fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
             requires
-                spec_hashtable_wf(old(table)),
+                Self::spec_impl_wf(old(table)),
                 old(table).num_elements < usize::MAX,
             ensures
                 table@ == old(table)@.insert(key, value),
-                spec_hashtable_wf(table),
+                Self::spec_impl_wf(table),
                 table.spec_hash == old(table).spec_hash,
                 table.current_size == old(table).current_size,
                 table.num_elements <= old(table).num_elements + 1;
@@ -629,7 +636,7 @@ pub mod ParaHashTableStEph {
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
         fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
             requires
-                spec_hashtable_wf(table),
+                Self::spec_impl_wf(table),
             ensures
                 table@.dom().contains(*key) ==> found == Some(table@[*key]),
                 !table@.dom().contains(*key) ==> found is None;
@@ -639,11 +646,11 @@ pub mod ParaHashTableStEph {
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
             requires
-                spec_hashtable_wf(old(table)),
+                Self::spec_impl_wf(old(table)),
             ensures
                 deleted == old(table)@.dom().contains(*key),
                 table@ == old(table)@.remove(*key),
-                spec_hashtable_wf(table),
+                Self::spec_impl_wf(table),
                 table.spec_hash == old(table).spec_hash,
                 table.current_size == old(table).current_size;
 
@@ -651,7 +658,7 @@ pub mod ParaHashTableStEph {
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
-            requires spec_hashtable_wf(table),
+            requires Self::spec_impl_wf(table),
             ensures m == &table.metrics,
         { &table.metrics }
 
@@ -660,7 +667,7 @@ pub mod ParaHashTableStEph {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads only.
         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
-            requires spec_hashtable_wf(table),
+            requires Self::spec_impl_wf(table),
             ensures
                 load_and_size.size == table.current_size,
                 load_and_size.load == table.num_elements,
@@ -679,12 +686,12 @@ pub mod ParaHashTableStEph {
         fn resize(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> (resized: HashTable<Key, Value, Entry, Metrics, H>)
             requires
                 new_size > 0,
-                spec_hashtable_wf(table),
+                Self::spec_impl_wf(table),
             ensures
                 resized@ == table@,
                 resized.current_size == new_size,
                 resized.table@.len() == new_size as int,
-                spec_hashtable_wf(&resized),
+                Self::spec_impl_wf(&resized),
                 resized.spec_hash == table.spec_hash;
     }
 
