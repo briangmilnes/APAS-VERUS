@@ -70,6 +70,7 @@ broadcast use {
     pub fn recalculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
         table: &AugOrderedTableMtEph<K, V, F>,
     ) -> (reduced: V)
+    requires true,
     ensures table@.dom().finite()
     {
         let reduced = calculate_reduction(&table.base_table, &table.reducer, &table.identity);

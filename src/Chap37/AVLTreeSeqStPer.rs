@@ -228,7 +228,7 @@ pub mod AVLTreeSeqStPer {
     // 9. impls
 
     fn height_fn<T: StT>(n: &Link<T>) -> (h: N)
-
+        requires true,
         ensures h as nat == spec_cached_height(n),
     {
         match n {
@@ -238,7 +238,7 @@ pub mod AVLTreeSeqStPer {
     }
 
     fn size_fn<T: StT>(n: &Link<T>) -> (sz: N)
-
+        requires true,
         ensures sz as nat == spec_cached_size(n),
     {
         match n {
@@ -484,6 +484,7 @@ pub mod AVLTreeSeqStPer {
     }
 
     fn inorder_collect<T: StT>(cur: &Link<T>, out: &mut Vec<T>)
+        requires true,
         ensures true,
         decreases *cur,
     {
@@ -495,6 +496,7 @@ pub mod AVLTreeSeqStPer {
     }
 
     fn build_balanced_from_slice<T: StT>(a: &[T]) -> (link: Link<T>)
+        requires true,
         ensures
             spec_avltreeseqstper_wf(link),
             spec_inorder(link) =~= a@.map_values(|t: T| t@),
@@ -727,6 +729,7 @@ pub mod AVLTreeSeqStPer {
     // 10. iterators
 
     fn push_left_iter_stper<'a, T: StT>(it: &mut AVLTreeSeqStPerIter<'a, T>, cur: Option<&'a Node<T>>)
+        requires true,
         ensures true,
         decreases cur,
     {

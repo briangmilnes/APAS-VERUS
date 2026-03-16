@@ -199,38 +199,34 @@ Table of Contents:
        965 |         }
    Proof functions: 7 total (7 clean, 0 holed)
 ❌ ArraySetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:598: error: external_body - #[verifier::external_body]
-       599 |         fn filter<F: PredSt<T>>(
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1186: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1182 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1244: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1240 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1184 |         {
-      1185 |             proof {
-      1187 |                 assume(other.spec_arraysetsteph_wf());
-      1188 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1187: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1182 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1242 |         {
+      1243 |             proof {
+      1245 |                 assume(other.spec_arraysetsteph_wf());
+      1246 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1245: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1240 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1185 |             proof {
-      1186 |                 assume(self.spec_arraysetsteph_wf());
-      1188 |             }
-      1189 |             let equal = self.size() == other.size() && {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1209: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1182 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1243 |             proof {
+      1244 |                 assume(self.spec_arraysetsteph_wf());
+      1246 |             }
+      1247 |             let equal = self.size() == other.size() && {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1267: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1240 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1207 |                 all_found
-      1208 |             };
-      1210 |             equal
-      1211 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1222: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1215 |         fn clone(&self) -> (cloned: Self)
+      1265 |                 all_found
+      1266 |             };
+      1268 |             equal
+      1269 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1280: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1273 |         fn clone(&self) -> (cloned: Self)
             ...
-      1220 |             };
-      1221 |             proof {
-      1223 |                 lemma_seq_map_cloned_view_eq(
-      1224 |                     self.elements.seq@,
-   Holes: 1 total
-      1 × external_body
+      1278 |             };
+      1279 |             proof {
+      1281 |                 lemma_seq_map_cloned_view_eq(
+      1282 |                     self.elements.seq@,
    Proof functions: 7 total (7 clean, 0 holed)
 ❌ Example41_3.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/Example41_3.rs:32: error: external_body - #[verifier::external_body]
@@ -297,8 +293,8 @@ Example41_3.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 14%)
-   6 holed (holes or errors, 85%)
+   2 clean (no holes, no errors; 28%)
+   5 holed (holes or errors, 71%)
    7 total
 
 Proof Functions:
@@ -314,22 +310,21 @@ Function Specs:
    247 total fns
 
 
-Holes Found: 26 total
-   4 × assume() (15%)
-   2 × unsafe impl (7%)
-   20 × external_body (76%)
+Holes Found: 25 total
+   4 × assume() (16%)
+   2 × unsafe impl (8%)
+   19 × external_body (76%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 19:39:49 -07:00
-Ended:     2026-03-15 19:39:50 -07:00
+Started:   2026-03-15 20:46:46 -07:00
+Ended:     2026-03-15 20:46:46 -07:00
 Duration:  82ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
-9 -07:00
-Ended:     2026-03-15 19:39:50 -07:00
+nded:     2026-03-15 20:46:46 -07:00
 Duration:  82ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log

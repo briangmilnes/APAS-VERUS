@@ -52,6 +52,7 @@ pub mod BellmanFordStEphI64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
     fn clamp_weight(w: i128) -> (result: i64)
+        requires true,
         ensures
             w >= i64::MIN as i128 && w <= i64::MAX as i128 ==> result == w as i64,
             w < i64::MIN as i128 ==> result == i64::MIN,

@@ -36,6 +36,7 @@ pub mod LinkedListChainedHashTableStEph {
         fn clone_linked_list_entry<Key: Clone, Value: Clone>(
             entry: &LinkedListStEphS<(Key, Value)>,
         ) -> (cloned: LinkedListStEphS<(Key, Value)>)
+            requires true,
             ensures cloned.seq@ =~= entry.seq@,
         {
             let mut new_seq: Vec<(Key, Value)> = Vec::new();
