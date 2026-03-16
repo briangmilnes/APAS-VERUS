@@ -12,7 +12,7 @@ develop two software engineering tools to clean things up:
 
 **All 44 algorithm chapters verified, 34 with zero proof holes**
 
-**3976 verified, 0 errors | 2600 runtime tests | 147 proof time tests | 311 proof holes | 101 PartialEq/Clone workarounds**
+**4018 verified, 0 errors | 2613 runtime tests | 147 proof time tests | ~300 proof holes | 101 PartialEq/Clone workarounds**
 
 The 101 PartialEq/Clone workarounds are accepted `assume` calls inside `eq()` and `clone()` bodies — Verus cannot yet verify that Rust's generic PartialEq and Clone match spec-level View equality. These are standard across all Verus projects and will be eliminated when Verus adds derived spec support for these traits.
 
@@ -26,27 +26,15 @@ The 101 PartialEq/Clone workarounds are accepted `assume` calls inside `eq()` an
 
 ## Proof State
 
-Full verification: **3976 verified, 0 errors**
+Full verification: **4018 verified, 0 errors**
 
 | # | Metric | Count |
 |---|--------|-------|
 | 1 | Chapters verified | 44 |
 | 2 | Chapters with zero proof holes | 34 |
-| 3 | Clean modules (no holes) | 282 |
-| 4 | Holed modules | 161 |
-| 5 | Total verified modules | 443 |
-| 6 | Clean proof functions | 650 |
-| 7 | Runtime tests (RTT) | 2600 |
-| 8 | Proof time tests (PTT) | 147 |
-
-### Proof Holes: 311 total (algorithm chapters only)
-
-| # | Hole Type | Count | Pct | Notes |
-|---|-----------|-------|-----|-------|
-| 1 | `external_body` | 172 | 55% | Thread boundaries, opaque types, Verus limitations |
-| 2 | `assume()` | 135 | 43% | Proof obligations not yet discharged |
-| 3 | `external` | 2 | 1% | External function specifications |
-| 4 | `trivial spec*wf { true }` | 2 | 1% | Well-formedness specs returning true |
+| 3 | Verified functions | 4018 |
+| 4 | Runtime tests (RTT) | 2613 |
+| 5 | Proof time tests (PTT) | 147 |
 
 Holes tracked by [veracity](https://github.com/briangmilnes/veracity). 10 chapters remain holed; 34 are fully clean.
 
