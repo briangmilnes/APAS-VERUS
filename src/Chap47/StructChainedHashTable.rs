@@ -100,34 +100,42 @@ pub mod StructChainedHashTable {
         }
 
         /// Inserts key-value into chain, updating if key exists, appending if not.
+        /// Returns (new_chain, existed) where existed is true if key was already present.
         fn chain_insert<Key: PartialEq, Value>(
             chain: Option<Box<Node<Key, Value>>>,
             key: Key,
             value: Value,
-        ) -> (out: Option<Box<Node<Key, Value>>>)
+        ) -> (result: (Option<Box<Node<Key, Value>>>, bool))
             requires true,
             ensures
-                out is Some,
-                spec_chain_to_map(out).dom().contains(key),
+                result.0 is Some,
+                spec_chain_to_map(result.0) == spec_chain_to_map(chain).insert(key, value),
+                result.1 == spec_chain_to_map(chain).dom().contains(key),
             decreases chain,
         {
             match chain {
                 None => {
                     let out = Some(Box::new(Node { key, value, next: None }));
                     proof { reveal_with_fuel(spec_chain_to_map, 2); }
-                    out
+                    (out, false)
                 }
                 Some(node) => {
                     let Node { key: nk, value: nv, next: nn } = *node;
-                    if nk == key {
+                    let eq = nk == key;
+                    proof { assume(eq == (nk == key)); } // Eq bridge.
+                    if eq {
                         let out = Some(Box::new(Node { key, value, next: nn }));
                         proof { reveal_with_fuel(spec_chain_to_map, 2); }
-                        out
+                        (out, true)
                     } else {
-                        let updated = chain_insert(nn, key, value);
+                        let (updated, existed) = chain_insert(nn, key, value);
                         let out = Some(Box::new(Node { key: nk, value: nv, next: updated }));
-                        proof { reveal_with_fuel(spec_chain_to_map, 2); }
-                        out
+                        proof {
+                            reveal_with_fuel(spec_chain_to_map, 2);
+                            assert(spec_chain_to_map(nn).insert(key, value).insert(nk, nv)
+                                =~= spec_chain_to_map(nn).insert(nk, nv).insert(key, value));
+                        }
+                        (out, existed)
                     }
                 }
             }
@@ -155,15 +163,17 @@ pub mod StructChainedHashTable {
             }
         }
 
-        /// Removes first node matching key, returns updated chain and whether found.
+        /// Removes all nodes matching key, returns updated chain and whether any found.
         fn chain_delete<Key: PartialEq, Value>(
             chain: Option<Box<Node<Key, Value>>>,
             key: &Key,
         ) -> (remaining_and_deleted: (Option<Box<Node<Key, Value>>>, bool))
             requires true,
             ensures
-                !remaining_and_deleted.1
-                    ==> spec_chain_to_map(remaining_and_deleted.0) == spec_chain_to_map(chain),
+                spec_chain_to_map(remaining_and_deleted.0)
+                    == spec_chain_to_map(chain).remove(*key),
+                remaining_and_deleted.1
+                    == spec_chain_to_map(chain).dom().contains(*key),
             decreases chain,
         {
             match chain {
@@ -173,13 +183,24 @@ pub mod StructChainedHashTable {
                 }
                 Some(node) => {
                     let Node { key: nk, value: nv, next: nn } = *node;
-                    if nk == *key {
-                        (nn, true)
+                    let eq = nk == *key;
+                    proof { assume(eq == (nk == *key)); } // Eq bridge.
+                    let (new_next, tail_deleted) = chain_delete(nn, key);
+                    if eq {
+                        proof {
+                            reveal_with_fuel(spec_chain_to_map, 2);
+                            assert(spec_chain_to_map(nn).insert(*key, nv).remove(*key)
+                                =~= spec_chain_to_map(nn).remove(*key));
+                        }
+                        (new_next, true)
                     } else {
-                        let (new_next, deleted) = chain_delete(nn, key);
-                        let out = (Some(Box::new(Node { key: nk, value: nv, next: new_next })), deleted);
-                        proof { reveal_with_fuel(spec_chain_to_map, 2); }
-                        out
+                        let out = Some(Box::new(Node { key: nk, value: nv, next: new_next }));
+                        proof {
+                            reveal_with_fuel(spec_chain_to_map, 2);
+                            assert(spec_chain_to_map(nn).insert(nk, nv).remove(*key)
+                                =~= spec_chain_to_map(nn).remove(*key).insert(nk, nv));
+                        }
+                        (out, tail_deleted)
                     }
                 }
             }
@@ -197,7 +218,8 @@ pub mod StructChainedHashTable {
             fn insert(&mut self, key: Key, value: Value)
                 ensures spec_chain_to_map(self.head).dom().contains(key),
             {
-                self.head = chain_insert(self.head.take(), key, value);
+                let (new_head, _existed) = chain_insert(self.head.take(), key, value);
+                self.head = new_head;
             }
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
@@ -232,13 +254,40 @@ pub mod StructChainedHashTable {
         {
             /// - APAS: Work O(n) worst, Span O(n).
             /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, clone chain, insert into clone, set back.
-            #[verifier::external_body]
             fn insert(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: Key, value: Value) {
                 let index = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
-                let existed = EntryTrait::lookup(&table.table[index], &key).is_some();
+                let ghost old_table = table.table@;
+
                 let mut entry = table.table[index].clone();
-                EntryTrait::insert(&mut entry, key, value);
+                let ghost old_entry_map = entry.spec_entry_to_map();
+
+                let chain = entry.head.take();
+                let (new_head, existed) = chain_insert(chain, key, value);
+                entry.head = new_head;
+
                 table.table.set(index, entry);
+
+                proof {
+                    assert(table.table@[index as int].spec_entry_to_map()
+                        =~= old_table[index as int].spec_entry_to_map().insert(key, value));
+
+                    assert forall |j: int| 0 <= j < old_table.len() && j != index as int
+                        implies !#[trigger] old_table[j].spec_entry_to_map().dom().contains(key) by {}
+
+                    lemma_table_to_map_update_insert::<Key, Value, ChainList<Key, Value>>(
+                        old_table, index as int, table.table@[index as int], key, value);
+
+                    assert(table.table@.len() == table.current_size as int);
+                    assert(table.current_size > 0);
+                    assert forall |j: int, k: Key| 0 <= j < table.table@.len()
+                        && j != (table.spec_hash@)(k) as int % table.current_size as int
+                        implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
+                        if j != index as int {
+                            assert(table.table@[j] == old_table[j]);
+                        }
+                    }
+                }
+
                 if !existed {
                     table.num_elements = table.num_elements + 1;
                 }
@@ -254,16 +303,55 @@ pub mod StructChainedHashTable {
 
             /// - APAS: Work O(n) worst, Span O(n).
             /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, clone chain, delete from clone, set back.
-            #[verifier::external_body]
             fn delete(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+                let ghost old_table = table.table@;
+
                 let mut entry = table.table[index].clone();
-                let deleted = EntryTrait::delete(&mut entry, key);
+                let ghost old_entry_map = entry.spec_entry_to_map();
+
+                let chain = entry.head.take();
+                let (new_head, found) = chain_delete(chain, key);
+                entry.head = new_head;
+
                 table.table.set(index, entry);
-                if deleted && table.num_elements > 0 {
+
+                proof {
+                    assert(table.table@[index as int].spec_entry_to_map()
+                        =~= old_table[index as int].spec_entry_to_map().remove(*key));
+
+                    assert forall |j: int| 0 <= j < old_table.len() && j != index as int
+                        implies !#[trigger] old_table[j].spec_entry_to_map().dom().contains(*key) by {}
+
+                    lemma_table_to_map_update_remove::<Key, Value, ChainList<Key, Value>>(
+                        old_table, index as int, table.table@[index as int], *key);
+
+                    assert(table.table@.len() == table.current_size as int);
+                    assert(table.current_size > 0);
+                    assert forall |j: int, k: Key| 0 <= j < table.table@.len()
+                        && j != (table.spec_hash@)(k) as int % table.current_size as int
+                        implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
+                        if j == index as int {
+                            assert(!old_table[j].spec_entry_to_map().dom().contains(k));
+                        } else {
+                            assert(table.table@[j] == old_table[j]);
+                        }
+                    }
+
+                    // Prove found == old(table)@.dom().contains(*key).
+                    if found {
+                        lemma_table_to_map_update_contains::<Key, Value, ChainList<Key, Value>>(
+                            old_table, index as int, old_table[index as int], *key);
+                        assert(old_table.update(index as int, old_table[index as int]) =~= old_table);
+                    } else {
+                        lemma_table_to_map_not_contains::<Key, Value, ChainList<Key, Value>>(old_table, *key);
+                    }
+                }
+
+                if found && table.num_elements > 0 {
                     table.num_elements = table.num_elements - 1;
                 }
-                deleted
+                found
             }
 
             /// - APAS: Work O(n + m + m'), Span O(n + m + m').

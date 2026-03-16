@@ -257,31 +257,122 @@ pub mod VecChainedHashTableStEph {
             }
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, copy bucket entries, delete, set back.
-            #[verifier::external_body]
+            /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, clone bucket, filter out key, set back.
             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
-                let bucket_len = table.table[index].len();
+                let ghost old_table = table.table@;
+
+                let bucket = clone_vec_pairs(&table.table[index]);
+                let ghost original = bucket@;
+                let bucket_len = bucket.len();
+
                 let mut new_bucket: Vec<(Key, Value)> = Vec::new();
                 let mut deleted = false;
+                let ghost mut prefix_map: Map<Key, Value> = Map::empty();
                 let mut i: usize = 0;
+
                 while i < bucket_len
                     invariant
                         i <= bucket_len,
-                        index < table.table.len(),
-                        bucket_len == table.table@[index as int]@.len(),
-                        table.table@.len() == table.current_size as int,
+                        bucket_len == original.len(),
+                        bucket@ =~= original,
+                        original =~= old_table[index as int]@,
+                        index < old_table.len(),
+                        table.table@ == old_table,
                         table.current_size == old(table).current_size,
+                        table.num_elements == old(table).num_elements,
+                        prefix_map =~= spec_seq_pairs_to_map(original.subrange(0, i as int)),
+                        spec_seq_pairs_to_map(new_bucket@) =~= prefix_map.remove(*key),
+                        !deleted ==> forall |j: int| 0 <= j < i as int
+                            ==> (#[trigger] original[j]).0 != *key,
+                        deleted ==> exists |j: int| 0 <= j < i as int
+                            && (#[trigger] original[j]).0 == *key,
                     decreases bucket_len - i,
                 {
-                    if table.table[index][i].0 == *key && !deleted {
-                        deleted = true;
-                    } else {
-                        new_bucket.push((table.table[index][i].0.clone(), table.table[index][i].1.clone()));
+                    let eq = bucket[i].0 == *key;
+                    proof { assume(eq == (bucket@[i as int].0 == *key)); } // Eq bridge.
+
+                    proof {
+                        assert(original.subrange(0, (i + 1) as int).drop_last()
+                            =~= original.subrange(0, i as int));
+                        assert(original.subrange(0, (i + 1) as int).last()
+                            == original[i as int]);
                     }
-                    i = i + 1;
+
+                    if !eq {
+                        let k = bucket[i].0.clone();
+                        let v = bucket[i].1.clone();
+                        proof {
+                            assume(k == bucket@[i as int].0); // Clone bridge for Key.
+                            assume(v == bucket@[i as int].1); // Clone bridge for Value.
+                        }
+                        let ghost old_new_bucket = new_bucket@;
+                        new_bucket.push((k, v));
+                        proof {
+                            let ghost pair_key = original[i as int].0;
+                            let ghost pair_val = original[i as int].1;
+                            // new_bucket map = old map + (pair_key, pair_val).
+                            assert(new_bucket@.drop_last() =~= old_new_bucket);
+                            assert(new_bucket@.last() == (pair_key, pair_val));
+                            // insert/remove commute on different keys.
+                            assert(prefix_map.insert(pair_key, pair_val).remove(*key)
+                                =~= prefix_map.remove(*key).insert(pair_key, pair_val));
+                            prefix_map = prefix_map.insert(pair_key, pair_val);
+                        }
+                    } else {
+                        proof {
+                            let ghost pair_val = original[i as int].1;
+                            // insert(key, v).remove(key) = remove(key).
+                            assert(prefix_map.insert(*key, pair_val).remove(*key)
+                                =~= prefix_map.remove(*key));
+                            prefix_map = prefix_map.insert(original[i as int].0, original[i as int].1);
+                        }
+                        deleted = true;
+                    }
+                    i += 1;
                 }
+
+                proof {
+                    assert(original.subrange(0, bucket_len as int) =~= original);
+                }
+
                 table.table.set(index, new_bucket);
+
+                proof {
+                    assert(table.table@[index as int].spec_entry_to_map()
+                        =~= old_table[index as int].spec_entry_to_map().remove(*key));
+
+                    assert forall |j: int| 0 <= j < old_table.len() && j != index as int
+                        implies !#[trigger] old_table[j].spec_entry_to_map().dom().contains(*key) by {}
+
+                    lemma_table_to_map_update_remove::<Key, Value, Vec<(Key, Value)>>(
+                        old_table, index as int, table.table@[index as int], *key);
+
+                    assert(table.table@.len() == table.current_size as int);
+                    assert(table.current_size > 0);
+                    assert forall |j: int, k: Key| 0 <= j < table.table@.len()
+                        && j != (table.spec_hash@)(k) as int % table.current_size as int
+                        implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
+                        if j == index as int {
+                            assert(!old_table[j].spec_entry_to_map().dom().contains(k));
+                        } else {
+                            assert(table.table@[j] == old_table[j]);
+                        }
+                    }
+
+                    if deleted {
+                        let j_witness = choose |j: int| 0 <= j < original.len()
+                            && (#[trigger] original[j]).0 == *key;
+                        lemma_seq_pairs_has_key_in_map::<Key, Value>(original, *key, j_witness);
+                        lemma_table_to_map_update_contains::<Key, Value, Vec<(Key, Value)>>(
+                            old_table, index as int, old_table[index as int], *key);
+                        assert(old_table.update(index as int, old_table[index as int]) =~= old_table);
+                    } else {
+                        lemma_seq_pairs_no_key_not_in_map::<Key, Value>(original, *key);
+                        lemma_table_to_map_not_contains::<Key, Value, Vec<(Key, Value)>>(old_table, *key);
+                    }
+                }
+
                 if deleted && table.num_elements > 0 {
                     table.num_elements = table.num_elements - 1;
                 }
