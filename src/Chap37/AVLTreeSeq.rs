@@ -343,6 +343,7 @@ pub mod AVLTreeSeq {
     // 9. impls
 
     fn cached_height<T: StT>(n: &Link<T>) -> (height: N)
+        requires spec_avltreeseq_cached_height(n) <= usize::MAX as nat,
         ensures height as nat == spec_avltreeseq_cached_height(n),
     {
         match n {

@@ -108,7 +108,7 @@ pub mod BSTSplayMtEph {
     // Verified splay tree algorithms (Layer 1).
 
     fn new_node<T: StTInMtT + Ord + TotalOrder>(key: T) -> (node: Node<T>)
-
+        requires link_spec_size::<T>(None) + 1 <= usize::MAX as nat,
         ensures
             node.key == key,
             node.size == 1,
@@ -124,7 +124,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn size_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (size: N)
-
+        requires link_spec_size(*link) <= usize::MAX as nat,
         ensures
             (link is None) ==> size == 0,
     {
@@ -135,7 +135,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn update<T: StTInMtT + Ord + TotalOrder>(node: &mut Node<T>)
-
+        requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
         ensures
             node.left == old(node).left,
             node.right == old(node).right,
@@ -1413,7 +1413,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn in_order_collect<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>, out: &mut Vec<T>)
-
+        requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
         decreases *link,
     {
@@ -1425,7 +1425,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn pre_order_collect<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>, out: &mut Vec<T>)
-
+        requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
         decreases *link,
     {
@@ -1437,7 +1437,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn in_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (result: Vec<T>)
-
+        requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
         decreases *link,
     {
@@ -1458,7 +1458,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (result: Vec<T>)
-
+        requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
         decreases *link,
     {
@@ -1479,7 +1479,7 @@ pub mod BSTSplayMtEph {
     }
 
     fn build_balanced<T: StTInMtT + Ord + TotalOrder>(values: &[T]) -> (link: Link<T>)
-
+        requires values@.len() <= usize::MAX as nat,
         ensures link_spec_size(link) <= values@.len(),
         decreases values.len(),
     {
@@ -1509,7 +1509,7 @@ pub mod BSTSplayMtEph {
     fn filter_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
         where
             F: Fn(&T) -> bool + Send + Sync,
-
+        requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
         decreases *link,
     {
@@ -1538,7 +1538,7 @@ pub mod BSTSplayMtEph {
     fn reduce_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
         where
             F: Fn(T, T) -> T + Send + Sync,
-
+        requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
         decreases *link,
     {

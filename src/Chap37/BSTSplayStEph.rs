@@ -267,7 +267,6 @@ pub mod BSTSplayStEph {
     /// - APAS: N/A -- Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1) -- cached size field.
     fn size_link<T: TotalOrder + Clone>(link: &Link<T>) -> (size: N)
-
         ensures size as nat == spec_size_link(link),
     {
         proof { reveal(spec_size_link); }
@@ -299,7 +298,6 @@ pub mod BSTSplayStEph {
     /// - APAS: N/A -- Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1) -- recomputes cached size.
     fn update<T: TotalOrder + Clone>(node: &mut Node<T>)
-
         ensures
             node.key == old(node).key,
             node.left == old(node).left,
@@ -1603,7 +1601,6 @@ pub mod BSTSplayStEph {
     /// - APAS: Work O(n), Span O(n)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) -- visits every node.
     fn in_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
-
         ensures out@.len() == old(out)@.len() + spec_in_order_link(link).len(),
         decreases *link,
     {
@@ -1617,7 +1614,6 @@ pub mod BSTSplayStEph {
     /// - APAS: Work O(n), Span O(n)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) -- visits every node.
     fn pre_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
-
         ensures out@.len() == old(out)@.len() + spec_pre_order_link(link).len(),
         decreases *link,
     {
