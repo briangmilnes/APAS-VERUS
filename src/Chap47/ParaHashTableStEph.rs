@@ -266,6 +266,91 @@ pub mod ParaHashTableStEph {
         }
     }
 
+    /// Removing a pair at position i (where pairs[i].0 != k) does not affect the map for key k.
+    pub proof fn lemma_seq_pairs_to_map_remove_preserves_other_keys<Key, Value>(
+        pairs: Seq<(Key, Value)>,
+        i: int,
+        k: Key,
+    )
+        requires
+            0 <= i < pairs.len(),
+            pairs[i].0 != k,
+        ensures
+            spec_seq_pairs_to_map(pairs.remove(i)).dom().contains(k)
+                == spec_seq_pairs_to_map(pairs).dom().contains(k),
+            spec_seq_pairs_to_map(pairs.remove(i)).dom().contains(k) ==>
+                spec_seq_pairs_to_map(pairs.remove(i))[k]
+                    == spec_seq_pairs_to_map(pairs)[k],
+        decreases pairs.len(),
+    {
+        if pairs.len() == 1 {
+        } else if i == pairs.len() - 1 {
+            assert(pairs.remove(i) =~= pairs.drop_last());
+        } else {
+            assert(pairs.remove(i).drop_last() =~= pairs.drop_last().remove(i));
+            assert(pairs.remove(i).last() == pairs.last());
+            assert(pairs.drop_last()[i] == pairs[i]);
+            lemma_seq_pairs_to_map_remove_preserves_other_keys(pairs.drop_last(), i, k);
+        }
+    }
+
+    /// Removing a pair at position i (where pairs[i].0 == key) and then pushing (key, value)
+    /// produces the same map as inserting key->value into the original map.
+    pub proof fn lemma_seq_pairs_remove_key_then_push<Key, Value>(
+        pairs: Seq<(Key, Value)>,
+        i: int,
+        key: Key,
+        value: Value,
+    )
+        requires
+            0 <= i < pairs.len(),
+            pairs[i].0 == key,
+        ensures
+            spec_seq_pairs_to_map(pairs.remove(i).push((key, value)))
+                =~= spec_seq_pairs_to_map(pairs).insert(key, value),
+    {
+        let removed = pairs.remove(i);
+        let final_seq = removed.push((key, value));
+        assert(final_seq.drop_last() == removed);
+        assert(final_seq.last() == (key, value));
+        assert forall |k: Key| k != key implies
+            spec_seq_pairs_to_map(removed).dom().contains(k)
+                == spec_seq_pairs_to_map(pairs).dom().contains(k)
+        by {
+            lemma_seq_pairs_to_map_remove_preserves_other_keys(pairs, i, k);
+        }
+        assert forall |k: Key| k != key && spec_seq_pairs_to_map(removed).dom().contains(k) implies
+            spec_seq_pairs_to_map(removed)[k] == spec_seq_pairs_to_map(pairs)[k]
+        by {
+            lemma_seq_pairs_to_map_remove_preserves_other_keys(pairs, i, k);
+        }
+    }
+
+    /// Updating a table entry with one that has the same map does not change spec_table_to_map.
+    pub proof fn lemma_table_to_map_update_same<Key, Value, Entry: EntryTrait<Key, Value>>(
+        table: Seq<Entry>,
+        index: int,
+        new_entry: Entry,
+    )
+        requires
+            0 <= index < table.len(),
+            new_entry.spec_entry_to_map() == table[index].spec_entry_to_map(),
+        ensures
+            spec_table_to_map(table.update(index, new_entry)) == spec_table_to_map(table),
+        decreases table.len(),
+    {
+        let updated = table.update(index, new_entry);
+        if index == table.len() - 1 {
+            assert(updated.drop_last() =~= table.drop_last());
+            assert(updated.last() == new_entry);
+        } else {
+            assert(updated.drop_last() =~= table.drop_last().update(index, new_entry));
+            assert(updated.last() == table.last());
+            assert(table.drop_last()[index] == table[index]);
+            lemma_table_to_map_update_same::<Key, Value, Entry>(table.drop_last(), index, new_entry);
+        }
+    }
+
     // 7a. helpers
 
     /// Calls the hash function and returns a bucket index.

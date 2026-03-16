@@ -31,6 +31,33 @@ pub mod VecChainedHashTableStEph {
 
         proof fn _vec_chained_hash_table_verified() {}
 
+        /// Clones a Vec<(Key, Value)> with sequence equality ensures.
+        /// Clone bridges inside this function follow the approved clone body pattern.
+        fn clone_vec_pairs<Key: Clone, Value: Clone>(pairs: &Vec<(Key, Value)>) -> (cloned: Vec<(Key, Value)>)
+            ensures cloned@ =~= pairs@,
+        {
+            let mut new_vec: Vec<(Key, Value)> = Vec::new();
+            let mut i: usize = 0;
+            while i < pairs.len()
+                invariant
+                    i <= pairs@.len(),
+                    new_vec@.len() == i as int,
+                    forall |j: int| 0 <= j < i as int
+                        ==> #[trigger] new_vec@[j] == pairs@[j],
+                decreases pairs.len() - i,
+            {
+                let k = pairs[i].0.clone();
+                let v = pairs[i].1.clone();
+                proof {
+                    assume(k == pairs@[i as int].0); // Clone bridge for Key.
+                    assume(v == pairs@[i as int].1); // Clone bridge for Value.
+                }
+                new_vec.push((k, v));
+                i += 1;
+            }
+            new_vec
+        }
+
         // 9. impls
 
         impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for Vec<(Key, Value)> {
@@ -132,33 +159,90 @@ pub mod VecChainedHashTableStEph {
             for VecChainedHashTableStEph
         {
             /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, copy bucket entries, insert, set back.
-            #[verifier::external_body]
+            /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, clone bucket, dedup insert, set back.
             fn insert(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
                 let index = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
-                let bucket_len = table.table[index].len();
-                let mut new_bucket: Vec<(Key, Value)> = Vec::new();
+                let ghost old_table = table.table@;
+
+                let mut bucket = clone_vec_pairs(&table.table[index]);
+                let ghost original = bucket@;
+
+                let bucket_len = bucket.len();
                 let mut existed = false;
-                let mut i: usize = 0;
-                while i < bucket_len
+                let mut found_idx: usize = 0;
+                let mut scan_i: usize = 0;
+                while scan_i < bucket_len
                     invariant
-                        i <= bucket_len,
-                        index < table.table.len(),
-                        bucket_len == table.table@[index as int]@.len(),
-                        table.table@.len() == table.current_size as int,
+                        scan_i <= bucket_len,
+                        bucket_len == original.len(),
+                        bucket@ == original,
+                        table.table@ == old_table,
                         table.current_size == old(table).current_size,
                         table.num_elements == old(table).num_elements,
-                    decreases bucket_len - i,
+                        index < table.table@.len(),
+                        !existed ==> forall |j: int| 0 <= j < scan_i as int
+                            ==> (#[trigger] original[j]).0 != key,
+                        existed ==> found_idx < bucket_len
+                            && original[found_idx as int].0 == key,
+                    decreases bucket_len - scan_i,
                 {
-                    if table.table[index][i].0 == key {
+                    let eq = bucket[scan_i].0 == key;
+                    proof { assume(eq == (bucket@[scan_i as int].0 == key)); } // Eq bridge.
+                    if eq {
                         existed = true;
-                    } else {
-                        new_bucket.push((table.table[index][i].0.clone(), table.table[index][i].1.clone()));
+                        found_idx = scan_i;
+                        break;
                     }
-                    i = i + 1;
+                    scan_i += 1;
                 }
-                new_bucket.push((key, value));
-                table.table.set(index, new_bucket);
+
+                if existed {
+                    bucket.remove(found_idx);
+                }
+                let ghost pre_push = bucket@;
+                bucket.push((key, value));
+
+                let ghost new_bucket_seq = bucket@;
+
+                proof {
+                    assert(new_bucket_seq == pre_push.push((key, value)));
+                    if existed {
+                        assert(pre_push =~= original.remove(found_idx as int));
+                        lemma_seq_pairs_remove_key_then_push::<Key, Value>(
+                            original, found_idx as int, key, value);
+                    } else {
+                        assert(pre_push =~= original);
+                        assert(new_bucket_seq.drop_last() =~= original);
+                        assert(new_bucket_seq.last() == (key, value));
+                    }
+                    assert(spec_seq_pairs_to_map(new_bucket_seq)
+                        =~= spec_seq_pairs_to_map(original).insert(key, value));
+                }
+
+                table.table.set(index, bucket);
+
+                proof {
+                    assert(table.table@[index as int]@ == new_bucket_seq);
+                    assert(table.table@[index as int].spec_entry_to_map()
+                        =~= old_table[index as int].spec_entry_to_map().insert(key, value));
+
+                    assert forall |j: int| 0 <= j < old_table.len() && j != index as int
+                        implies !#[trigger] old_table[j].spec_entry_to_map().dom().contains(key) by {}
+
+                    lemma_table_to_map_update_insert::<Key, Value, Vec<(Key, Value)>>(
+                        old_table, index as int, table.table@[index as int], key, value);
+
+                    assert(table.table@.len() == table.current_size as int);
+                    assert(table.current_size > 0);
+                    assert forall |j: int, k: Key| 0 <= j < table.table@.len()
+                        && j != (table.spec_hash@)(k) as int % table.current_size as int
+                        implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
+                        if j != index as int {
+                            assert(table.table@[j] == old_table[j]);
+                        }
+                    }
+                }
+
                 if !existed {
                     table.num_elements = table.num_elements + 1;
                 }
