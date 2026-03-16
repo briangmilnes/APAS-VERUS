@@ -224,7 +224,25 @@
       "Bash(sed * > /tmp/*)",
       "Bash(sed *| sed * > /tmp/*)",
       "Bash(sed *|sed * > /tmp/*)",
-      "Read(/tmp/*)"
+      "Read(/tmp/*)",
+      "Bash(cat:*)",
+      "Bash(*> /dev/null*)",
+      "Bash(*2>&1*)",
+      "Bash(*< /dev/null*)",
+      "Read(/dev/*)",
+      "Bash([ *)",
+      "Bash(declare *)",
+      "Bash(export *)",
+      "Bash(set *)",
+      "Bash(source *)",
+      "Bash(type *)",
+      "Bash(which *)",
+      "Bash(paste *)",
+      "Bash(column *)",
+      "Bash(rev *)",
+      "Bash(nl *)",
+      "Bash(expand *)",
+      "Bash(yes *)"
     ]
   }
 }
