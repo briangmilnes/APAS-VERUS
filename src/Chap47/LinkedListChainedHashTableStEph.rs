@@ -36,7 +36,6 @@ pub mod LinkedListChainedHashTableStEph {
         fn clone_linked_list_entry<Key: Clone, Value: Clone>(
             entry: &LinkedListStEphS<(Key, Value)>,
         ) -> (cloned: LinkedListStEphS<(Key, Value)>)
-            requires true,
             ensures cloned.seq@ =~= entry.seq@,
         {
             let mut new_seq: Vec<(Key, Value)> = Vec::new();
@@ -250,11 +249,60 @@ pub mod LinkedListChainedHashTableStEph {
             }
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — hash, index bucket, scan chain.
-            #[verifier::external_body]
+            /// - Claude-Opus-4.6: Work O(n), Span O(n) — hash, backward scan bucket for last-wins match.
             fn lookup(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
-                EntryTrait::lookup(&table.table[index], key)
+                let bucket_len = table.table[index].seq.len();
+                // Ghost alias: definitionally == table.table@[index].seq@.
+                let ghost bv: Seq<(Key, Value)> = table.table@[index as int].seq@;
+                if bucket_len == 0 {
+                    proof {
+                        assert(bv =~= Seq::<(Key, Value)>::empty());
+                        lemma_seq_pairs_no_key_not_in_map::<Key, Value>(bv, *key);
+                        lemma_table_to_map_not_contains::<Key, Value, LinkedListStEphS<(Key, Value)>>(
+                            table.table@, *key);
+                    }
+                    return None;
+                }
+                let mut i: usize = bucket_len;
+                while i > 0
+                    invariant
+                        0 <= i <= bv.len(),
+                        bucket_len == bv.len(),
+                        bv == table.table@[index as int].seq@,
+                        index < table.table@.len(),
+                        spec_hashtable_wf(table),
+                        index as nat == (table.spec_hash@)(*key) % (table.current_size as nat),
+                        forall |j: int| i as int <= j < bv.len()
+                            ==> (#[trigger] bv[j]).0 != *key,
+                    decreases i,
+                {
+                    i = i - 1;
+                    let eq = table.table[index].seq[i].0 == *key;
+                    proof { assume(eq == (bv[i as int].0 == *key)); } // Eq bridge.
+                    if eq {
+                        let v = table.table[index].seq[i].1.clone();
+                        proof { assume(v == bv[i as int].1); } // Clone bridge.
+                        proof {
+                            lemma_seq_pairs_last_key_gives_value::<Key, Value>(
+                                bv, *key, i as int);
+                            // bv == table.table@[index].seq@ by definition, so
+                            // spec_entry_to_map (= spec_seq_pairs_to_map(self.seq@)) matches.
+                            assert(table.table@[index as int].spec_entry_to_map().dom().contains(*key));
+                            assert forall |j: int| 0 <= j < table.table@.len() && j != index as int
+                                implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {}
+                            lemma_table_to_map_unique_entry_value::<Key, Value, LinkedListStEphS<(Key, Value)>>(
+                                table.table@, index as int, *key);
+                        }
+                        return Some(v);
+                    }
+                }
+                proof {
+                    lemma_seq_pairs_no_key_not_in_map::<Key, Value>(bv, *key);
+                    lemma_table_to_map_not_contains::<Key, Value, LinkedListStEphS<(Key, Value)>>(
+                        table.table@, *key);
+                }
+                None
             }
 
             /// - APAS: Work O(n) worst, Span O(n).

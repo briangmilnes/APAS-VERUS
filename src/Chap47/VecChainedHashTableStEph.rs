@@ -34,7 +34,6 @@ pub mod VecChainedHashTableStEph {
         /// Clones a Vec<(Key, Value)> with sequence equality ensures.
         /// Clone bridges inside this function follow the approved clone body pattern.
         fn clone_vec_pairs<Key: Clone, Value: Clone>(pairs: &Vec<(Key, Value)>) -> (cloned: Vec<(Key, Value)>)
-            requires true,
             ensures cloned@ =~= pairs@,
         {
             let mut new_vec: Vec<(Key, Value)> = Vec::new();
@@ -250,11 +249,62 @@ pub mod VecChainedHashTableStEph {
             }
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — hash, index bucket, scan chain.
-            #[verifier::external_body]
+            /// - Claude-Opus-4.6: Work O(n), Span O(n) — hash, backward scan bucket for last-wins match.
             fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
-                EntryTrait::lookup(&table.table[index], key)
+                let bucket_len = table.table[index].len();
+                // Ghost alias: definitionally == table.table@[index]@.
+                let ghost bv: Seq<(Key, Value)> = table.table@[index as int]@;
+                if bucket_len == 0 {
+                    proof {
+                        assert(bv =~= Seq::<(Key, Value)>::empty());
+                        lemma_seq_pairs_no_key_not_in_map::<Key, Value>(bv, *key);
+                        lemma_table_to_map_not_contains::<Key, Value, Vec<(Key, Value)>>(
+                            table.table@, *key);
+                    }
+                    return None;
+                }
+                // Scan backward so the first match found is the last occurrence,
+                // matching spec_seq_pairs_to_map's last-wins semantics.
+                let mut i: usize = bucket_len;
+                while i > 0
+                    invariant
+                        0 <= i <= bv.len(),
+                        bucket_len == bv.len(),
+                        bv == table.table@[index as int]@,
+                        index < table.table@.len(),
+                        spec_hashtable_wf(table),
+                        index as nat == (table.spec_hash@)(*key) % (table.current_size as nat),
+                        forall |j: int| i as int <= j < bv.len()
+                            ==> (#[trigger] bv[j]).0 != *key,
+                    decreases i,
+                {
+                    i = i - 1;
+                    let eq = table.table[index][i].0 == *key;
+                    proof { assume(eq == (bv[i as int].0 == *key)); } // Eq bridge.
+                    if eq {
+                        let v = table.table[index][i].1.clone();
+                        proof { assume(v == bv[i as int].1); } // Clone bridge.
+                        proof {
+                            lemma_seq_pairs_last_key_gives_value::<Key, Value>(
+                                bv, *key, i as int);
+                            // bv == table.table@[index]@ by definition, so
+                            // spec_entry_to_map (= spec_seq_pairs_to_map(self@)) matches.
+                            assert(table.table@[index as int].spec_entry_to_map().dom().contains(*key));
+                            assert forall |j: int| 0 <= j < table.table@.len() && j != index as int
+                                implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {}
+                            lemma_table_to_map_unique_entry_value::<Key, Value, Vec<(Key, Value)>>(
+                                table.table@, index as int, *key);
+                        }
+                        return Some(v);
+                    }
+                }
+                proof {
+                    lemma_seq_pairs_no_key_not_in_map::<Key, Value>(bv, *key);
+                    lemma_table_to_map_not_contains::<Key, Value, Vec<(Key, Value)>>(
+                        table.table@, *key);
+                }
+                None
             }
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).

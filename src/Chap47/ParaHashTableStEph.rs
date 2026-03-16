@@ -319,7 +319,7 @@ pub mod ParaHashTableStEph {
         by {
             lemma_seq_pairs_to_map_remove_preserves_other_keys(pairs, i, k);
         }
-        assert forall |k: Key| k != key && spec_seq_pairs_to_map(removed).dom().contains(k) implies
+        assert forall |k: Key| k != key && #[trigger] spec_seq_pairs_to_map(removed).dom().contains(k) implies
             spec_seq_pairs_to_map(removed)[k] == spec_seq_pairs_to_map(pairs)[k]
         by {
             lemma_seq_pairs_to_map_remove_preserves_other_keys(pairs, i, k);
@@ -389,6 +389,70 @@ pub mod ParaHashTableStEph {
         } else {
             assert(pairs.drop_last()[idx] == pairs[idx]);
             lemma_seq_pairs_has_key_in_map::<Key, Value>(pairs.drop_last(), key, idx);
+        }
+    }
+
+    /// If pairs[i].0 == key and no later index has the same key, then the
+    /// map value for key equals pairs[i].1.
+    pub proof fn lemma_seq_pairs_last_key_gives_value<Key, Value>(
+        pairs: Seq<(Key, Value)>,
+        key: Key,
+        i: int,
+    )
+        requires
+            0 <= i < pairs.len(),
+            pairs[i].0 == key,
+            forall |j: int| i < j < pairs.len() ==> (#[trigger] pairs[j]).0 != key,
+        ensures
+            spec_seq_pairs_to_map(pairs).dom().contains(key),
+            spec_seq_pairs_to_map(pairs)[key] == pairs[i].1,
+        decreases pairs.len(),
+    {
+        if i == pairs.len() - 1 {
+            // pairs.last() == (key, pairs[i].1).
+            // spec_seq_pairs_to_map inserts last pair, so map[key] == pairs[i].1.
+        } else {
+            assert(pairs.drop_last()[i] == pairs[i]);
+            assert forall |j: int| i < j < pairs.drop_last().len()
+                implies (#[trigger] pairs.drop_last()[j]).0 != key by {
+                assert(pairs.drop_last()[j] == pairs[j]);
+            }
+            lemma_seq_pairs_last_key_gives_value::<Key, Value>(pairs.drop_last(), key, i);
+            // pairs.last().0 != key, so inserting it doesn't affect map[key].
+        }
+    }
+
+    /// If key appears in exactly one entry's map (at index), then
+    /// spec_table_to_map gives that entry's value for the key.
+    pub proof fn lemma_table_to_map_unique_entry_value<Key, Value, Entry: EntryTrait<Key, Value>>(
+        table: Seq<Entry>,
+        index: int,
+        key: Key,
+    )
+        requires
+            0 <= index < table.len(),
+            table[index].spec_entry_to_map().dom().contains(key),
+            forall |j: int| 0 <= j < table.len() && j != index
+                ==> !#[trigger] table[j].spec_entry_to_map().dom().contains(key),
+        ensures
+            spec_table_to_map(table).dom().contains(key),
+            spec_table_to_map(table)[key] == table[index].spec_entry_to_map()[key],
+        decreases table.len(),
+    {
+        if index == table.len() - 1 {
+            assert forall |j: int| 0 <= j < table.drop_last().len()
+                implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
+                assert(table.drop_last()[j] == table[j]);
+            }
+            lemma_table_to_map_not_contains::<Key, Value, Entry>(table.drop_last(), key);
+        } else {
+            assert(!table.last().spec_entry_to_map().dom().contains(key));
+            assert(table.drop_last()[index] == table[index]);
+            assert forall |j: int| 0 <= j < table.drop_last().len() && j != index
+                implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
+                assert(table.drop_last()[j] == table[j]);
+            }
+            lemma_table_to_map_unique_entry_value::<Key, Value, Entry>(table.drop_last(), index, key);
         }
     }
 
@@ -587,7 +651,7 @@ pub mod ParaHashTableStEph {
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
-            requires true,
+            requires spec_hashtable_wf(table),
             ensures m == &table.metrics,
         { &table.metrics }
 
@@ -596,7 +660,7 @@ pub mod ParaHashTableStEph {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads only.
         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
-            requires true,
+            requires spec_hashtable_wf(table),
             ensures
                 load_and_size.size == table.current_size,
                 load_and_size.load == table.num_elements,

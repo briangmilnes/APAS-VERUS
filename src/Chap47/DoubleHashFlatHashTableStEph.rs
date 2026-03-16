@@ -8,6 +8,7 @@ pub mod DoubleHashFlatHashTableStEph {
     // 1. module
     // 2. imports
     // 4. type definitions (inside verus!)
+    // 6. spec fns (inside verus!)
     // 9. impls (inside verus!)
 
     // 2. imports
@@ -27,6 +28,37 @@ pub mod DoubleHashFlatHashTableStEph {
     /// Probe sequence: h_i(k) = (h(k) + i·hh(k)) mod m
     /// Uses two hash functions to avoid both primary and secondary clustering.
     pub struct DoubleHashFlatHashTableStEph;
+
+    // 6. spec fns
+
+    /// Well-formedness for double hashing flat hash tables.
+    /// Probe sequence: slot (h + j * s) % m for attempt j = 0, 1, 2, ...
+    /// where h = hash(k) % m and s = second_hash(k, m) >= 1.
+    /// Since the second hash is opaque (external_body), the spec uses an
+    /// existential: there exists some step s >= 1 placing the key at its slot.
+    pub open spec fn spec_doublehashflathashsteph_wf<Key, Value, Metrics, H>(
+        table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+    ) -> bool {
+        let m = table.current_size as int;
+        table.table@.len() == m
+        && m > 0
+        // No duplicate keys.
+        && (forall |i: int, j: int, k: Key|
+            0 <= i < m && 0 <= j < m && i != j
+            && #[trigger] spec_flat_has_key(table.table@[i], k)
+            ==> !#[trigger] spec_flat_has_key(table.table@[j], k))
+        // Probe chain integrity for double hashing.
+        && (forall |i: int, k: Key|
+            0 <= i < m
+            && #[trigger] spec_flat_has_key(table.table@[i], k)
+            ==> {
+                let h = (table.spec_hash@)(k) as int % m;
+                exists |s: int, n: int| #![trigger table.table@[(h + n * s) % m]] s >= 1 && 0 <= n < m
+                    && (h + n * s) % m == i
+                    && forall |j: int| 0 <= j < n
+                        ==> !(#[trigger] table.table@[(h + j * s) % m] is Empty)
+            })
+    }
 
     // 9. impls
 

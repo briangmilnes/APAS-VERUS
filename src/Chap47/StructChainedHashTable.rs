@@ -106,7 +106,6 @@ pub mod StructChainedHashTable {
             key: Key,
             value: Value,
         ) -> (result: (Option<Box<Node<Key, Value>>>, bool))
-            requires true,
             ensures
                 result.0 is Some,
                 spec_chain_to_map(result.0) == spec_chain_to_map(chain).insert(key, value),
@@ -146,18 +145,36 @@ pub mod StructChainedHashTable {
             chain: &Option<Box<Node<Key, Value>>>,
             key: &Key,
         ) -> (found: Option<Value>)
-            requires true,
             ensures
-                chain is None ==> found is None,
+                spec_chain_to_map(*chain).dom().contains(*key)
+                    ==> found == Some(spec_chain_to_map(*chain)[*key]),
+                !spec_chain_to_map(*chain).dom().contains(*key)
+                    ==> found is None,
             decreases chain,
         {
             match chain {
-                None => None,
+                None => {
+                    proof { reveal_with_fuel(spec_chain_to_map, 1); }
+                    None
+                }
                 Some(node) => {
-                    if node.key == *key {
-                        Some(node.value.clone())
+                    let eq = node.key == *key;
+                    proof { assume(eq == (node.key == *key)); } // Eq bridge.
+                    if eq {
+                        let v = node.value.clone();
+                        proof {
+                            assume(v == node.value); // Clone bridge.
+                            reveal_with_fuel(spec_chain_to_map, 2);
+                        }
+                        Some(v)
                     } else {
-                        chain_lookup(&node.next, key)
+                        let result = chain_lookup(&node.next, key);
+                        proof {
+                            reveal_with_fuel(spec_chain_to_map, 2);
+                            // spec_chain_to_map(*chain) = spec_chain_to_map(node.next).insert(node.key, node.value)
+                            // node.key != *key, so value at *key comes from node.next's map.
+                        }
+                        result
                     }
                 }
             }
@@ -168,7 +185,6 @@ pub mod StructChainedHashTable {
             chain: Option<Box<Node<Key, Value>>>,
             key: &Key,
         ) -> (remaining_and_deleted: (Option<Box<Node<Key, Value>>>, bool))
-            requires true,
             ensures
                 spec_chain_to_map(remaining_and_deleted.0)
                     == spec_chain_to_map(chain).remove(*key),
@@ -295,10 +311,31 @@ pub mod StructChainedHashTable {
 
             /// - APAS: Work O(1+α) expected, Span O(1+α).
             /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — hash, index bucket, scan chain.
-            #[verifier::external_body]
             fn lookup(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
-                EntryTrait::lookup(&table.table[index], key)
+                let result = chain_lookup(&table.table[index].head, key);
+                proof {
+                    // chain_lookup ensures correctness against spec_chain_to_map(head).
+                    // spec_entry_to_map for ChainList == spec_chain_to_map(self.head).
+                    if spec_chain_to_map(table.table@[index as int].head).dom().contains(*key) {
+                        // Key in this bucket. By wf, not in any other bucket.
+                        assert forall |j: int| 0 <= j < table.table@.len() && j != index as int
+                            implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {}
+                        lemma_table_to_map_unique_entry_value::<Key, Value, ChainList<Key, Value>>(
+                            table.table@, index as int, *key);
+                    } else {
+                        // Key not in this bucket. By wf, not in any other bucket either.
+                        assert forall |j: int| 0 <= j < table.table@.len()
+                            implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
+                            if j == index as int {
+                            } else {
+                            }
+                        }
+                        lemma_table_to_map_not_contains::<Key, Value, ChainList<Key, Value>>(
+                            table.table@, *key);
+                    }
+                }
+                result
             }
 
             /// - APAS: Work O(n) worst, Span O(n).

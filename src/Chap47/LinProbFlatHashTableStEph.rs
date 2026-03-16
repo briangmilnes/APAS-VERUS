@@ -8,6 +8,7 @@ pub mod LinProbFlatHashTableStEph {
     // 1. module
     // 2. imports
     // 4. type definitions (inside verus!)
+    // 6. spec fns (inside verus!)
     // 9. impls (inside verus!)
 
     // 2. imports
@@ -24,6 +25,39 @@ pub mod LinProbFlatHashTableStEph {
 
     /// Linear Probing Flat Hash Table implementation.
     pub struct LinProbFlatHashTableStEph;
+
+    // 6. spec fns
+
+    /// Well-formedness for linear probing flat hash tables.
+    /// Unlike chained tables where keys live at their hash slot, open addressing
+    /// displaces keys along probe chains. This spec captures:
+    /// (1) no duplicate keys across slots,
+    /// (2) every occupied key is reachable from its hash via linear probing
+    ///     (no Empty gaps on the probe path).
+    pub open spec fn spec_linprobflathashsteph_wf<Key, Value, Metrics, H>(
+        table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+    ) -> bool {
+        let m = table.current_size as int;
+        // Basic structure.
+        table.table@.len() == m
+        && m > 0
+        // No duplicate keys: each key appears in at most one slot.
+        && (forall |i: int, j: int, k: Key|
+            0 <= i < m && 0 <= j < m && i != j
+            && #[trigger] spec_flat_has_key(table.table@[i], k)
+            ==> !#[trigger] spec_flat_has_key(table.table@[j], k))
+        // Probe chain integrity for linear probing.
+        // For every key k at slot i, the linear probe path from hash(k) to i
+        // has no Empty gaps: all intermediate slots are Occupied or Deleted.
+        && (forall |i: int, k: Key|
+            0 <= i < m
+            && #[trigger] spec_flat_has_key(table.table@[i], k)
+            ==> {
+                let h = (table.spec_hash@)(k) as int % m;
+                forall |d: int| 0 <= d < (i - h + m) % m
+                    ==> !(#[trigger] table.table@[(h + d) % m] is Empty)
+            })
+    }
 
     // 9. impls
 
