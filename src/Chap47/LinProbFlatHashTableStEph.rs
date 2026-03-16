@@ -98,23 +98,74 @@ pub mod LinProbFlatHashTableStEph {
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe sequence until found or empty.
-        #[verifier::external_body]
         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
+            let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+            let m = table.current_size;
             let mut attempt: usize = 0;
-            while attempt < table.current_size
+            while attempt < m
                 invariant
-                    attempt <= table.current_size,
-                    table.table@.len() == table.current_size as int,
-                decreases table.current_size - attempt,
+                    attempt <= m,
+                    m == table.current_size,
+                    m > 0,
+                    h < m,
+                    table.table@.len() == m as int,
+                    h as nat == (table.spec_hash@)(*key) % (m as nat),
+                    spec_hashtable_wf(table),
+                    attempt > 0 ==> !table@.dom().contains(*key),
+                decreases m - attempt,
             {
-                let slot = linear_probe(&table.hash_fn, key, table.current_size, attempt, table.spec_hash);
+                // At attempt 0, slot == h (the hash slot). For attempt > 0,
+                // the invariant already proves key absent so the exact slot is irrelevant.
+                let slot: usize = if attempt == 0 { h } else { h.wrapping_add(attempt) % m };
                 let entry = table.table[slot].clone();
-                if let FlatEntry::Occupied(k, v) = entry {
-                    if k == *key {
-                        return Some(v);
+                // Clone ensures: entry == table.table@[slot as int].
+                match entry {
+                    FlatEntry::Occupied(k, v) => {
+                        let eq = k == *key;
+                        proof { assume(eq == spec_flat_has_key(table.table@[slot as int], *key)); } // Eq bridge.
+                        if eq {
+                            proof {
+                                assert(table.table@[slot as int].spec_entry_to_map().dom().contains(*key));
+                                assert forall |j: int| 0 <= j < table.table@.len() && j != slot as int
+                                    implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {}
+                                lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+                                    table.table@, slot as int, *key);
+                            }
+                            return Some(v);
+                        }
+                        proof {
+                            assert(!table.table@[slot as int].spec_entry_to_map().dom().contains(*key));
+                        }
                     }
-                } else if let FlatEntry::Empty = entry {
-                    return None;
+                    FlatEntry::Empty => {
+                        proof {
+                            if attempt == 0 {
+                                // slot == h, entry at h is Empty → entry_to_map is Map::empty().
+                                assert forall |j: int| 0 <= j < table.table@.len()
+                                    implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
+                                    if j == h as int {}
+                                }
+                                lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+                            }
+                        }
+                        return None;
+                    }
+                    FlatEntry::Deleted => {
+                        proof {
+                            assert(!table.table@[slot as int].spec_entry_to_map().dom().contains(*key));
+                        }
+                    }
+                }
+                // Didn't return: Occupied with different key, or Deleted.
+                proof {
+                    if attempt == 0 {
+                        // slot == h, entry at h doesn't have *key. By wf, no other slot does either.
+                        assert forall |j: int| 0 <= j < table.table@.len()
+                            implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
+                            if j == h as int {}
+                        }
+                        lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+                    }
                 }
                 attempt = attempt + 1;
             }

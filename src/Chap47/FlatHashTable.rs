@@ -194,12 +194,16 @@ pub mod FlatHashTable {
     // 11. derive impls in verus!
 
     impl<Key: Clone, Value: Clone> Clone for FlatEntry<Key, Value> {
-        fn clone(&self) -> (cloned: Self) {
-            match self {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned == *self,
+        {
+            let c = match self {
                 FlatEntry::Empty => FlatEntry::Empty,
                 FlatEntry::Occupied(k, v) => FlatEntry::Occupied(k.clone(), v.clone()),
                 FlatEntry::Deleted => FlatEntry::Deleted,
-            }
+            };
+            proof { assume(c == *self); } // Clone bridge.
+            c
         }
     }
 
