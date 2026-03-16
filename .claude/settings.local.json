@@ -217,7 +217,10 @@
       "Write(/tmp/**)",
       "Bash(fi)",
       "Bash(/tmp/gap_table.txt:*)",
-      "WebFetch(domain:devel.isa-afp.org)"
+      "WebFetch(domain:devel.isa-afp.org)",
+      "WebSearch",
+      "WebFetch(domain:jack.wrenn.fyi)",
+      "WebFetch(domain:rust-lang.github.io)"
     ]
   }
 }

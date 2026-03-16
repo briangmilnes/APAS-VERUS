@@ -37,6 +37,7 @@ is to get code to **verify (prove)** with Verus.
 | 16 | `toplevel_coarse_rwlocks_for_mt_modules.rs` | Writing Mt modules with RwLock |
 | 17 | `tsm_standard.rs` | Thread-safe memory patterns |
 | 18 | `finite_sets_standard.rs` | Working with finite sets in specs |
+| 19 | `helper_function_placement_standard.rs` | Placing helpers in traits vs. free functions |
 - Run `scripts/validate.sh` after making changes
 - Fix verification errors before moving on
 - Prefer verified code over unverified code, even if it requires restructuring
