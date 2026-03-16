@@ -1,0 +1,143 @@
+============================================================
+HOLE PRIORITIES — 2026-03-16 12:31
+============================================================
+
+1. Summary by Category
+------------------------------
+  Category                            Count
+  ---                                 -----
+  fn_missing_requires                    65
+  fn_missing_requires_ensures             4
+  requires_true                          39
+  assume                                 52
+  external_body                         157
+  assume_specification                    1
+  external                                2
+
+  Total actionable: 318
+
+2. Actionable Holes by Chapter (sorted by count)
+-------------------------------------------------
+  Chapter    Total  FnMR Assum ExtBd
+  ---------- ----- ----- ----- -----
+  Chap43       103     4    12    87
+  Chap37        56    53     0     3
+  Chap47        42     5    21    16
+  Chap41        28     7     4    17
+  Chap39        23     5     6    12
+  Chap38        13     0     4     9
+  Chap40         9     6     1     2
+  Chap28         8     8     0     0
+  Chap57         6     1     3     2
+  Chap52         5     0     0     5
+  Chap45         5     3     1     1
+  Chap59         4     3     0     1
+  Chap21         4     4     0     0
+  Chap58         3     1     0     2
+  Chap42         3     3     0     0
+  Chap55         2     2     0     0
+  Chap66         1     1     0     0
+  Chap23         1     1     0     0
+  Chap03         1     1     0     0
+
+3. Mechanical Fixes (fn_missing_requires/ensures/requires_true) by File
+-----------------------------------------------------------------------
+  Chapter    File                                     Count
+  ---------- ---------------------------------------- -----
+  Chap37     BSTRBMtEph.rs                               11
+  Chap37     BSTSplayMtEph.rs                            10
+  Chap39     BSTTreapMtEph.rs                             5
+  Chap37     BSTSplayStEph.rs                             5
+  Chap37     AVLTreeSeqStPer.rs                           5
+  Chap41     Example41_3.rs                               4
+  Chap37     AVLTreeSeqMtPer.rs                           4
+  Chap59     JohnsonStEphI64.rs                           3
+  Chap47     StructChainedHashTable.rs                    3
+  Chap37     BSTSetSplayMtEph.rs                          3
+  Chap37     BSTSetPlainMtEph.rs                          3
+  Chap37     BSTSetBBAlphaMtEph.rs                        3
+  Chap37     BSTSetAVLMtEph.rs                            3
+  Chap37     AVLTreeSeqStEph.rs                           3
+  Chap41     AVLTreeSetMtEph.rs                           2
+  Chap40     BSTSizeStEph.rs                              2
+  Chap40     BSTReducedStEph.rs                           2
+  Chap40     BSTKeyValueStEph.rs                          2
+  Chap37     BSTSetRBMtEph.rs                             2
+  Chap21     Exercise21_7.rs                              2
+  Chap66     BoruvkaStEph.rs                              1
+  Chap58     BellmanFordStEphI64.rs                       1
+  Chap57     DijkstraStEphI64.rs                          1
+  Chap55     SCCStPer.rs                                  1
+  Chap55     SCCStEph.rs                                  1
+  Chap47     VecChainedHashTableStEph.rs                  1
+  Chap47     LinkedListChainedHashTableStEph.rs           1
+  Chap45     LeftistHeapPQ.rs                             1
+  Chap45     HeapsortExample.rs                           1
+  Chap45     BinaryHeapPQ.rs                              1
+  Chap43     OrderedSetStPer.rs                           1
+  Chap43     OrderedSetStEph.rs                           1
+  Chap43     AugOrderedTableStPer.rs                      1
+  Chap43     AugOrderedTableMtEph.rs                      1
+  Chap42     TableStPer.rs                                1
+  Chap42     TableStEph.rs                                1
+  Chap42     TableMtEph.rs                                1
+  Chap41     AVLTreeSetMtPer.rs                           1
+  Chap37     AVLTreeSeq.rs                                1
+  Chap28     MaxContigSubSumReducedStEph.rs               1
+  Chap28     MaxContigSubSumReducedMcsseStEph.rs          1
+  Chap28     MaxContigSubSumIterStEph.rs                  1
+  Chap28     MaxContigSubSumDivConStEph.rs                1
+  Chap28     MaxContigSubSumDivConOptStEph.rs             1
+  Chap28     MaxContigSubSumDivConOptMtEph.rs             1
+  Chap28     MaxContigSubSumDivConMtEph.rs                1
+  Chap28     MaxContigSubSumBruteStEph.rs                 1
+  Chap23     BalBinTreeStEph.rs                           1
+  Chap21     Exercise21_8.rs                              1
+  Chap21     Algorithm21_5.rs                             1
+  Chap03     InsertionSortStEph.rs                        1
+
+4. Real Proof Work (assume + external_body) by File
+---------------------------------------------------
+  Chapter    File                                     Assum ExtBd
+  ---------- ---------------------------------------- ----- -----
+  Chap43     OrderedSetMtEph.rs                           7     8
+  Chap43     OrderedTableStEph.rs                         0    12
+  Chap43     OrderedSetStEph.rs                           1    11
+  Chap43     OrderedTableStPer.rs                         0    10
+  Chap43     AugOrderedTableStEph.rs                      0    10
+  Chap39     BSTParaTreapMtEph.rs                         0    10
+  Chap47     VecChainedHashTableStEph.rs                  8     1
+  Chap47     LinkedListChainedHashTableStEph.rs           8     1
+  Chap43     OrderedSetStPer.rs                           0     9
+  Chap41     AVLTreeSetMtPer.rs                           1     8
+  Chap43     OrderedTableMtPer.rs                         2     6
+  Chap43     AugOrderedTableStPer.rs                      2     6
+  Chap43     AugOrderedTableMtEph.rs                      0     8
+  Chap38     BSTParaMtEph.rs                              0     8
+  Chap43     OrderedTableMtEph.rs                         0     7
+  Chap41     AVLTreeSetMtEph.rs                           2     5
+  Chap39     BSTTreapMtEph.rs                             6     0
+  Chap57     DijkstraStEphI64.rs                          3     2
+  Chap47     StructChainedHashTable.rs                    4     1
+  Chap38     BSTParaStEph.rs                              4     1
+  Chap47     QuadProbFlatHashTableStEph.rs                0     4
+  Chap47     LinProbFlatHashTableStEph.rs                 1     3
+  Chap47     DoubleHashFlatHashTableStEph.rs              0     4
+  Chap41     Example41_3.rs                               0     4
+  Chap58     BellmanFordStEphI64.rs                       0     2
+  Chap52     EdgeSetGraphStPer.rs                         0     2
+  Chap52     EdgeSetGraphMtPer.rs                         0     2
+  Chap47     ParaHashTableStEph.rs                        0     2
+  Chap39     BSTTreapStEph.rs                             0     2
+  Chap37     AVLTreeSeqMtPer.rs                           0     2
+  Chap59     JohnsonStEphI64.rs                           0     1
+  Chap52     EdgeSetGraphStEph.rs                         0     1
+  Chap45     BinaryHeapPQ.rs                              1     0
+  Chap45     BalancedTreePQ.rs                            0     1
+  Chap41     AVLTreeSetStEph.rs                           1     0
+  Chap40     BSTSizeStEph.rs                              0     1
+  Chap40     BSTReducedStEph.rs                           0     1
+  Chap40     BSTKeyValueStEph.rs                          1     0
+  Chap37     AVLTreeSeq.rs                                0     1
+
+Generated: Mon Mar 16 12:31:46 PM PDT 2026

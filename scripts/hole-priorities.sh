@@ -1,6 +1,6 @@
 #!/bin/bash
 # Analyze proof holes across all chapters and produce a prioritized summary.
-# Outputs to /tmp/hole-priorities.txt (and stdout).
+# Outputs to analyses/hole-priorities.log (and stdout).
 #
 # Usage: scripts/hole-priorities.sh [--no-info]
 #   --no-info  Exclude accept() and assume_eq_clone_workaround from output
@@ -8,7 +8,8 @@
 set -uo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-OUT=/tmp/hole-priorities.txt
+mkdir -p "$PROJECT_ROOT/analyses"
+OUT="$PROJECT_ROOT/analyses/hole-priorities.log"
 SHOW_INFO=true
 
 if [[ "${1:-}" == "--no-info" ]]; then
@@ -23,7 +24,7 @@ cd "$PROJECT_ROOT"
 echo "Scanning chapters..." >&2
 
 # Build raw data: chapter|file|lineno|category
-TMP_RAW=/tmp/hole-raw.txt
+TMP_RAW="$PROJECT_ROOT/analyses/.hole-raw.tmp"
 > "$TMP_RAW"
 
 for dir in src/Chap*/; do
@@ -81,7 +82,7 @@ printf "  %-10s %5s %5s %5s %5s\n" "Chapter" "Total" "FnMR" "Assum" "ExtBd"
 printf "  %-10s %5s %5s %5s %5s\n" "----------" "-----" "-----" "-----" "-----"
 
 # Build chapter counts, sort by total descending.
-TMP_CHAP=/tmp/hole-chap.txt
+TMP_CHAP="$PROJECT_ROOT/analyses/.hole-chap.tmp"
 > "$TMP_CHAP"
 for chap in $(cut -d'|' -f1 "$TMP_RAW" | sort -u); do
     fmr=$(grep "^${chap}|" "$TMP_RAW" | grep -cE "\|(fn_missing_requires|fn_missing_requires_ensures|requires_true)$" || true)
