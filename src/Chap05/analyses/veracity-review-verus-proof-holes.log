@@ -22,24 +22,20 @@ Table of Contents:
 
 ✓ KleeneStPer.rs
    9 clean proof functions
-❌ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/MappingStEph.rs:429: error: external_body - #[verifier::external_body]
-       430 |         fn size(&self) -> (size: N) { self.mapping.size() }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/MappingStEph.rs:606: info: accept()
-   Holes: 1 total
-      1 × external_body
+ℹ MappingStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:622: info: accept()
    Info: 1 total
 ✓ RelationStEph.rs
 ℹ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1045: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1054: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1062: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1073: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1099: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1045: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1054: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1062: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1073: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1099: info: accept()
    Info: 5 total
    1 clean proof function
 ℹ SetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:896: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:896: info: accept()
    Info: 1 total
    1 clean proof function
 
@@ -72,8 +68,8 @@ SetStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 80%)
-   1 holed (holes or errors, 20%)
+   5 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    5 total
 
 Proof Functions:
@@ -89,18 +85,19 @@ Function Specs:
    254 total fns
 
 
-Holes Found: 1 total
-   1 × external_body (100%)
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 16:30:31 -07:00
-Ended:     2026-03-15 16:30:31 -07:00
-Duration:  38ms
+Started:   2026-03-15 17:15:09 -07:00
+Ended:     2026-03-15 17:15:09 -07:00
+Duration:  28ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
-Duration:  38ms
+Duration:  28ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log

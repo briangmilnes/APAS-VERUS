@@ -22,11 +22,11 @@ Table of Contents:
 
 ✓ BellmanFordStEphF64.rs
 ❌ BellmanFordStEphI64.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap58/BellmanFordStEphI64.rs:83: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphI64.rs:83: error: external_body - #[verifier::external_body]
         84 |     fn neg_cycle_error_string() -> (s: String) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap58/BellmanFordStEphI64.rs:88: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphI64.rs:88: error: external_body - #[verifier::external_body]
         89 |     fn algorithm_error_string() -> (s: String) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap58/BellmanFordStEphI64.rs:54: error: fn_missing_requires - fn clamp_weight — exec fn should have requires
+/home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphI64.rs:54: error: fn_missing_requires - fn clamp_weight — exec fn should have requires
         38 |         fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
             ...
         52 |     /// - APAS: N/A — Verus-specific scaffolding.
@@ -83,8 +83,9 @@ Holes Found: 2 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 16:33:24 -07:00
-Ended:     2026-03-15 16:33:24 -07:00
+Started:   2026-03-15 17:15:10 -07:00
+Ended:     2026-03-15 17:15:10 -07:00
 Duration:  4ms
 
 Full output: src/Chap58/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap58/analyses/veracity-review-verus-proof-holes.log
