@@ -479,13 +479,13 @@ pub mod ParaHashTableStEph {
         (h.wrapping_add(attempt)) % table_size
     }
 
-    /// Quadratic probe: (hash(key) + attempt + attempt^2) % table_size.
+    /// Quadratic probe: (hash(key) + attempt²) % table_size.
     pub fn quadratic_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (slot: usize)
         requires table_size > 0,
         ensures slot < table_size,
     {
         let h = call_hash_fn(hash_fn, key, table_size, spec_hash);
-        (h.wrapping_add(attempt).wrapping_add(attempt.wrapping_mul(attempt))) % table_size
+        (h.wrapping_add(attempt.wrapping_mul(attempt))) % table_size
     }
 
     /// Computes a second hash value for double hashing.
