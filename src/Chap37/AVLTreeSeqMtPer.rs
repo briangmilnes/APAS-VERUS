@@ -495,6 +495,7 @@ pub mod AVLTreeSeqMtPer {
     }
 
     fn inorder_collect<T: StTInMtT>(cur: &Link<T>, out: &mut Vec<T>)
+        requires spec_cached_size(cur) <= usize::MAX as nat,
         ensures true,
         decreases *cur,
     {

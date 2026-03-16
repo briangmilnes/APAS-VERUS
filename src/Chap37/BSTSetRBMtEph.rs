@@ -123,6 +123,7 @@ pub mod BSTSetRBMtEph {
     }
 
     fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTRBMtEph<T>) -> (values: Vec<T>)
+        requires tree.spec_bstrbmteph_wf(),
         ensures true,
     {
         tree.in_order().iter().cloned().collect()
@@ -137,6 +138,7 @@ pub mod BSTSetRBMtEph {
     }
 
     fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder, I: IntoIterator<Item = T>>(values: I) -> (set: BSTSetRBMtEph<T>)
+        requires 0nat <= usize::MAX as nat,
         ensures true,
     {
         let mut tree = BSTRBMtEph::new();
