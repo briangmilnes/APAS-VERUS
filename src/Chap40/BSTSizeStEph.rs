@@ -536,7 +536,6 @@ pub mod BSTSizeStEph {
     }
 
     fn compare_links<T: StT + Ord>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
-        requires true,
         ensures
             (a is None && b is None) ==> equal,
             (a is Some && b is None) ==> !equal,
@@ -1177,7 +1176,6 @@ pub mod BSTSizeStEph {
     // 11. derive impls in verus!
 
     fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)
-        requires true,
         ensures
             Lnk::spec_content_link(&c) == Lnk::spec_content_link(link),
             Lnk::spec_size_link(&c) == Lnk::spec_size_link(link),
