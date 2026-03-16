@@ -22,11 +22,42 @@ Table of Contents:
 
 ✓ DijkstraStEphF64.rs
 ❌ DijkstraStEphI64.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphI64.rs:71: warning: requires_true - requires true — vacuous precondition
-        69 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
-        70 |     fn pq_entry_new(dist: i64, vertex: usize) -> (r: PQEntry)
-        72 |         ensures r.dist == dist, r.vertex == vertex,
-        73 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphI64.rs:91: error: external_body - #[verifier::external_body]
+        92 |         fn cmp(&self, other: &Self) -> Ordering {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphI64.rs:108: error: external_body - #[verifier::external_body]
+       109 |         fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphI64.rs:156: error: assume() - proof { assume(obeys_feq_clone::<PQEntry>()); }
+       145 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
+            ...
+       154 |         let n = graph.vertices().size();
+       155 |         assert(n == graph@.V.len());
+       157 | 
+       158 |         let mut sssp = SSSPResultStEphI64::new(n, source);
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphI64.rs:173: error: assume() - proof { assume(pq@.len() * 2 <= usize::MAX as int); }
+       145 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
+            ...
+       171 |                 obeys_feq_clone::<PQEntry>(),
+       172 |         {
+       174 |             let (new_pq, min_elem) = pq.delete_min();
+       175 |             pq = new_pq;
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphI64.rs:207: error: assume() - proof { assume(pq@.len() + 1 <= usize::MAX as int); }
+       145 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
+            ...
+       205 |                                     let new_dist = dist.wrapping_add((*weight) as i64);
+       206 |                                     if new_dist < u_dist {
+       208 |                                         pq = pq.insert(pq_entry_new(new_dist, *u));
+       209 |                                         sssp.set_predecessor(*u, v);
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphI64.rs:84: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
+        69 |         fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
+            ...
+        82 |     /// - APAS: N/A — Verus-specific scaffolding.
+        83 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
+        85 |         ensures r.dist == dist, r.vertex == vertex,
+        86 |     {
+   Holes: 5 total
+      3 × assume()
+      2 × external_body
+   Proof functions: 4 total (4 clean, 0 holed)
 ✓ StackStEph.rs
 
 =================================================================
@@ -54,34 +85,38 @@ StackStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   2 clean (no holes, no errors; 66%)
+   1 holed (holes or errors, 33%)
    3 total
 
 Proof Functions:
-   0 clean (0%)
+   4 clean (100%)
    0 holed (0%)
-   0 total
+   4 total
 
 Function Specs:
-   19 exec fns with complete spec (requires+ensures) (82%)
-   0 exec fns missing spec (0%)
-   4 proof/spec fns clean (17%)
+   19 exec fns with complete spec (requires+ensures) (65%)
+   1 exec fns missing spec (3%)
+   9 proof/spec fns clean (31%)
    0 proof/spec fns with holes (0%)
-   23 total fns
+   29 total fns
 
 
-Holes Found: 0 total
-
-🎉 No proof holes found! All proofs are complete.
+Holes Found: 5 total
+   3 × assume() (60%)
+   2 × external_body (40%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 19:39:50 -07:00
-Ended:     2026-03-15 19:39:50 -07:00
+Started:   2026-03-15 21:45:29 -07:00
+Ended:     2026-03-15 21:45:29 -07:00
 Duration:  5ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
-hap57/analyses/veracity-review-verus-proof-holes.log
+ 21:45:29 -07:00
+Ended:     2026-03-15 21:45:29 -07:00
+Duration:  5ms
+
+Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log

@@ -94,6 +94,22 @@ pub mod BSTKeyValueStEph {
         }
     }
 
+    pub open spec fn spec_ordered_link<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>) -> bool
+        decreases *link,
+    {
+        match link {
+            None => true,
+            Some(node) => {
+                spec_ordered_link(&node.left)
+                && spec_ordered_link(&node.right)
+                && (forall |k: K| #![auto] spec_content_link(&node.left).contains_key(k)
+                    ==> (TotalOrder::le(k, node.key) && k != node.key))
+                && (forall |k: K| #![auto] spec_content_link(&node.right).contains_key(k)
+                    ==> (TotalOrder::le(node.key, k) && k != node.key))
+            }
+        }
+    }
+
     // 7. proof fns
 
     proof fn lemma_content_left_contains_key<K: StT + Ord, V: StT>(
@@ -185,7 +201,66 @@ pub mod BSTKeyValueStEph {
     {
     }
 
+    proof fn lemma_ordered_assemble_kv<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>)
+        requires
+            match link {
+                None => true,
+                Some(node) => {
+                    spec_ordered_link(&node.left)
+                    && spec_ordered_link(&node.right)
+                    && (forall |k: K| #![auto] spec_content_link(&node.left).contains_key(k)
+                        ==> (TotalOrder::le(k, node.key) && k != node.key))
+                    && (forall |k: K| #![auto] spec_content_link(&node.right).contains_key(k)
+                        ==> (TotalOrder::le(node.key, k) && k != node.key))
+                }
+            }
+        ensures spec_ordered_link(link),
+    {}
 
+    /// Strict less-than transitivity: (le(a,b) && a!=b) && (le(b,c) && b!=c) ==> (le(a,c) && a!=c).
+    proof fn lemma_strict_lt_transitive<K: StT + Ord + TotalOrder>(a: K, b: K, c: K)
+        requires
+            TotalOrder::le(a, b), a != b,
+            TotalOrder::le(b, c), b != c,
+        ensures
+            TotalOrder::le(a, c), a != c,
+    {
+        K::transitive(a, b, c);
+        if a == c {
+            K::antisymmetric(a, b);
+        }
+    }
+
+    /// Strict greater-than transitivity: (le(b,a) && a!=b) && (le(c,b) && b!=c) ==> (le(c,a) && a!=c).
+    proof fn lemma_strict_gt_transitive<K: StT + Ord + TotalOrder>(a: K, b: K, c: K)
+        requires
+            TotalOrder::le(b, a), a != b,
+            TotalOrder::le(c, b), b != c,
+        ensures
+            TotalOrder::le(c, a), a != c,
+    {
+        K::transitive(c, b, a);
+        if a == c {
+            K::antisymmetric(b, a);
+        }
+    }
+
+    /// Decompose spec_ordered_link for a non-None link into its four components.
+    proof fn lemma_ordered_decompose_kv<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>)
+        requires link.is_some(), spec_ordered_link(link),
+        ensures
+            match *link {
+                Some(node) => {
+                    spec_ordered_link(&node.left)
+                    && spec_ordered_link(&node.right)
+                    && (forall |k: K| #![auto] spec_content_link(&node.left).contains_key(k)
+                        ==> (TotalOrder::le(k, node.key) && k != node.key))
+                    && (forall |k: K| #![auto] spec_content_link(&node.right).contains_key(k)
+                        ==> (TotalOrder::le(node.key, k) && k != node.key))
+                }
+                None => true
+            }
+    {}
 
     // 8. traits
 
@@ -216,7 +291,8 @@ pub mod BSTKeyValueStEph {
         fn new() -> (empty: Self)
             ensures
                 empty.spec_size() == 0,
-                empty@ == Map::<K, V>::empty();
+                empty@ == Map::<K, V>::empty(),
+                empty.spec_bstkeyvaluesteph_wf();
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
             ensures count as nat == self.spec_size();
@@ -234,13 +310,15 @@ pub mod BSTKeyValueStEph {
                 self@ == old(self)@.insert(key, value),
                 self@.contains_key(key),
                 self.spec_size() >= old(self).spec_size(),
-                self.spec_size() <= old(self).spec_size() + 1;
+                self.spec_size() <= old(self).spec_size() + 1,
+                self.spec_bstkeyvaluesteph_wf();
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — filter + rebuild
         fn delete(&mut self, key: &K)
             requires old(self).spec_bstkeyvaluesteph_wf(),
             ensures
                 self@ == old(self)@.remove(*key),
-                self.spec_size() <= old(self).spec_size();
+                self.spec_size() <= old(self).spec_size(),
+                self.spec_bstkeyvaluesteph_wf();
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn find(&self, key: &K) -> (found: Option<&V>)
             requires self.spec_bstkeyvaluesteph_wf(),
@@ -310,9 +388,13 @@ pub mod BSTKeyValueStEph {
                 spec_content_link(link).contains_key(key),
             decreases old(link);
         fn find_link<'a>(link: &'a Link<K, V>, key: &K) -> (found: Option<&'a V>)
+            requires
+                spec_ordered_link(link),
             ensures
                 link.is_none() ==> found.is_none(),
                 found.is_some() ==> spec_content_link(link).contains_key(*key),
+                found is Some ==> *found.unwrap() == spec_content_link(link)[*key],
+                spec_content_link(link).contains_key(*key) ==> found is Some,
             decreases *link;
         fn min_key_link(link: &Link<K, V>) -> (minimum: Option<&K>)
             ensures
@@ -507,6 +589,7 @@ pub mod BSTKeyValueStEph {
         open spec fn spec_height(&self) -> nat { Lnk::spec_height_link(&self.root) }
         open spec fn spec_bstkeyvaluesteph_wf(&self) -> bool {
             self.size as nat == spec_node_count_link(&self.root)
+            && spec_ordered_link(&self.root)
         }
         open spec fn spec_min_key(&self) -> Option<K> { Lnk::spec_min_key_link(&self.root) }
         open spec fn spec_max_key(&self) -> Option<K> { Lnk::spec_max_key_link(&self.root) }
@@ -536,13 +619,10 @@ pub mod BSTKeyValueStEph {
             self.size = filtered.len();
         }
 
-        #[verifier::external_body]
         fn find(&self, key: &K) -> Option<&V> { Self::find_link(&self.root, key) }
 
-        #[verifier::external_body]
         fn contains(&self, key: &K) -> bool { self.find(key).is_some() }
 
-        #[verifier::external_body]
         fn get(&self, key: &K) -> Option<&V> { self.find(key) }
 
         fn keys(&self) -> ArraySeqStPerS<K> {
@@ -656,7 +736,6 @@ pub mod BSTKeyValueStEph {
                         inserted
                     }
                     Ordering::Equal => {
-                        // TotalOrder::cmp ensures: key == node.key (spec equality).
                         node.value = value;
                         *link = Some(node);
                         proof { lemma_node_key_in_link(link); }
@@ -672,21 +751,40 @@ pub mod BSTKeyValueStEph {
         fn find_link<'a>(link: &'a Link<K, V>, key: &K) -> (found: Option<&'a V>)
             decreases *link,
         {
+            proof { reveal_with_fuel(spec_ordered_link, 2); }
             match link {
                 | None => None,
                 | Some(node) => {
                     let c = TotalOrder::cmp(key, &node.key);
                     match c {
                         Ordering::Equal => {
-                            // TotalOrder::cmp ensures: *key == node.key (spec equality).
-                            proof { lemma_node_key_in_link(link); }
+                            assert(*key == node.key);
+                            proof {
+                                assert(spec_content_link(link) =~=
+                                    spec_content_link(&node.left)
+                                        .union_prefer_right(spec_content_link(&node.right))
+                                        .insert(node.key, node.value));
+                            }
                             Some(&node.value)
                         }
                         Ordering::Less => {
                             let r = Self::find_link(&node.left, key);
                             proof {
+                                assert(spec_content_link(link) =~=
+                                    spec_content_link(&node.left)
+                                        .union_prefer_right(spec_content_link(&node.right))
+                                        .insert(node.key, node.value));
                                 if r.is_some() {
-                                    lemma_left_key_in_link(link, *key);
+                                    assert(spec_content_link(&node.left).contains_key(*key));
+                                }
+                                // key < node.key, key != node.key (from TotalOrder::cmp).
+                                // If key were in right: right ordering gives le(node.key, key) && key != node.key.
+                                // Combined with le(key, node.key): antisymmetric → key == node.key. Contradiction.
+                                if spec_content_link(&node.right).contains_key(*key) {
+                                    K::antisymmetric(*key, node.key);
+                                }
+                                if spec_content_link(link).contains_key(*key) {
+                                    assert(spec_content_link(&node.left).contains_key(*key));
                                 }
                             }
                             r
@@ -694,8 +792,21 @@ pub mod BSTKeyValueStEph {
                         Ordering::Greater => {
                             let r = Self::find_link(&node.right, key);
                             proof {
+                                assert(spec_content_link(link) =~=
+                                    spec_content_link(&node.left)
+                                        .union_prefer_right(spec_content_link(&node.right))
+                                        .insert(node.key, node.value));
                                 if r.is_some() {
-                                    lemma_right_key_in_link(link, *key);
+                                    assert(spec_content_link(&node.right).contains_key(*key));
+                                }
+                                // key > node.key, key != node.key.
+                                // If key were in left: left ordering gives le(key, node.key) && key != node.key.
+                                // Combined with le(node.key, key): antisymmetric → key == node.key. Contradiction.
+                                if spec_content_link(&node.left).contains_key(*key) {
+                                    K::antisymmetric(node.key, *key);
+                                }
+                                if spec_content_link(link).contains_key(*key) {
+                                    assert(spec_content_link(&node.right).contains_key(*key));
                                 }
                             }
                             r

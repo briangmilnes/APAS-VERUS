@@ -25,6 +25,9 @@ pub mod BSTReducedStEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::OrdSpec;
+
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
@@ -77,6 +80,46 @@ pub mod BSTReducedStEph {
 
     // 7. proof fns
 
+    proof fn lemma_ordered_assemble_reduced<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>)
+        requires
+            match link {
+                None => true,
+                Some(node) => {
+                    Lnk::spec_ordered_link(&node.left)
+                    && Lnk::spec_ordered_link(&node.right)
+                    && (forall |k: K| #![auto] Lnk::spec_content_link(&node.left).contains_key(k)
+                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Less)
+                    && (forall |k: K| #![auto] Lnk::spec_content_link(&node.right).contains_key(k)
+                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Greater)
+                }
+            }
+        ensures Lnk::spec_ordered_link(link),
+    {}
+
+    /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
+    proof fn lemma_cmp_antisymmetry_reduced<K: StT + Ord>(a: K, b: K)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            a.cmp_spec(&b) == std::cmp::Ordering::Greater,
+        ensures
+            b.cmp_spec(&a) == std::cmp::Ordering::Less,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
+    proof fn lemma_cmp_antisymmetry_lt_reduced<K: StT + Ord>(a: K, b: K)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            a.cmp_spec(&b) == std::cmp::Ordering::Less,
+        ensures
+            b.cmp_spec(&a) == std::cmp::Ordering::Greater,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
     proof fn lemma_wf_assemble<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>)
         requires match link {
             None => true,
@@ -97,6 +140,7 @@ pub mod BSTReducedStEph {
         spec fn spec_link_size_wf(link: &Link<K, V, R>) -> bool;
         spec fn spec_height_link(link: &Link<K, V, R>) -> nat;
         spec fn spec_content_link(link: &Link<K, V, R>) -> Map<K, V>;
+        spec fn spec_ordered_link(link: &Link<K, V, R>) -> bool;
     }
 
     pub trait NodeTrait<K: StT + Ord, V: StT, R: StT>: Sized {
@@ -165,17 +209,26 @@ pub mod BSTReducedStEph {
                 self.spec_size() <= old(self).spec_size();
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn find(&self, key: &K) -> (found: Option<&V>)
-            requires self.spec_bstreducedsteph_wf(),
+            requires
+                self.spec_bstreducedsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                forall |a: K, b: K| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures
                 found is Some <==> self@.contains_key(*key),
                 found is Some ==> *found.unwrap() == self@[*key];
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn contains(&self, key: &K) -> (contains: bool)
-            requires self.spec_bstreducedsteph_wf(),
+            requires
+                self.spec_bstreducedsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                forall |a: K, b: K| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures contains == self@.contains_key(*key);
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn get(&self, key: &K) -> (value: Option<&V>)
-            requires self.spec_bstreducedsteph_wf(),
+            requires
+                self.spec_bstreducedsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                forall |a: K, b: K| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures
                 value is Some <==> self@.contains_key(*key),
                 value is Some ==> *value.unwrap() == self@[*key];
@@ -274,7 +327,15 @@ pub mod BSTReducedStEph {
                 Lnk::spec_size_link(link) >= Lnk::spec_size_link(old(link)),
             decreases old(link);
         fn find_link<'a>(link: &'a Link<K, V, R>, key: &K) -> (found: Option<&'a V>)
-            ensures link.is_none() ==> found.is_none(),
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                forall |a: K, b: K| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
+                Lnk::spec_ordered_link(link),
+            ensures
+                link.is_none() ==> found.is_none(),
+                found.is_some() ==> Lnk::spec_content_link(link).contains_key(*key),
+                found is Some ==> *found.unwrap() == Lnk::spec_content_link(link)[*key],
+                Lnk::spec_content_link(link).contains_key(*key) ==> found is Some,
             decreases *link;
         fn min_key_link(link: &Link<K, V, R>) -> (minimum: Option<&K>)
             ensures
@@ -372,6 +433,22 @@ pub mod BSTReducedStEph {
                     Self::spec_content_link(&n.left)
                         .union_prefer_right(Self::spec_content_link(&n.right))
                         .insert(n.key, n.value),
+            }
+        }
+
+        open spec fn spec_ordered_link(link: &Link<K, V, R>) -> bool
+            decreases *link,
+        {
+            match link {
+                None => true,
+                Some(node) => {
+                    Self::spec_ordered_link(&node.left)
+                    && Self::spec_ordered_link(&node.right)
+                    && (forall |k: K| #![auto] Self::spec_content_link(&node.left).contains_key(k)
+                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Less)
+                    && (forall |k: K| #![auto] Self::spec_content_link(&node.right).contains_key(k)
+                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Greater)
+                }
             }
         }
     }
@@ -500,7 +577,9 @@ pub mod BSTReducedStEph {
         for BSTReducedStEph<K, V, R, Op>
     {
         open spec fn spec_size(&self) -> nat { Lnk::spec_size_link(&self.root) }
-        open spec fn spec_bstreducedsteph_wf(&self) -> bool { Lnk::spec_link_size_wf(&self.root) }
+        open spec fn spec_bstreducedsteph_wf(&self) -> bool {
+            Lnk::spec_link_size_wf(&self.root) && Lnk::spec_ordered_link(&self.root)
+        }
         open spec fn spec_height(&self) -> nat { Lnk::spec_height_link(&self.root) }
 
         fn new() -> (empty: Self) {
@@ -529,13 +608,10 @@ pub mod BSTReducedStEph {
             self.root = Self::build_treap_from_vec(&filtered, 0, filtered.len());
         }
 
-        #[verifier::external_body]
         fn find(&self, key: &K) -> Option<&V> { Self::find_link(&self.root, key) }
 
-        #[verifier::external_body]
         fn contains(&self, key: &K) -> bool { self.find(key).is_some() }
 
-        #[verifier::external_body]
         fn get(&self, key: &K) -> Option<&V> { self.find(key) }
 
         fn keys(&self) -> ArraySeqStPerS<K> {
@@ -706,15 +782,51 @@ pub mod BSTReducedStEph {
         fn find_link<'a>(link: &'a Link<K, V, R>, key: &K) -> (found: Option<&'a V>)
             decreases *link,
         {
+            proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
             match link {
                 | None => None,
                 | Some(node) => {
-                    if *key == node.key {
-                        Some(&node.value)
-                    } else if *key < node.key {
-                        Self::find_link(&node.left, key)
-                    } else {
-                        Self::find_link(&node.right, key)
+                    match key.cmp(&node.key) {
+                        std::cmp::Ordering::Equal => {
+                            assert(*key == node.key);
+                            proof {
+                                assert(Lnk::spec_content_link(link) =~=
+                                    Lnk::spec_content_link(&node.left)
+                                        .union_prefer_right(Lnk::spec_content_link(&node.right))
+                                        .insert(node.key, node.value));
+                            }
+                            Some(&node.value)
+                        }
+                        std::cmp::Ordering::Less => {
+                            let r = Self::find_link(&node.left, key);
+                            proof {
+                                reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                                assert(Lnk::spec_content_link(link) =~=
+                                    Lnk::spec_content_link(&node.left)
+                                        .union_prefer_right(Lnk::spec_content_link(&node.right))
+                                        .insert(node.key, node.value));
+                                if Lnk::spec_content_link(link).contains_key(*key) {
+                                    assert(!Lnk::spec_content_link(&node.right).contains_key(*key));
+                                    assert(Lnk::spec_content_link(&node.left).contains_key(*key));
+                                }
+                            }
+                            r
+                        }
+                        std::cmp::Ordering::Greater => {
+                            let r = Self::find_link(&node.right, key);
+                            proof {
+                                reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                                assert(Lnk::spec_content_link(link) =~=
+                                    Lnk::spec_content_link(&node.left)
+                                        .union_prefer_right(Lnk::spec_content_link(&node.right))
+                                        .insert(node.key, node.value));
+                                if Lnk::spec_content_link(link).contains_key(*key) {
+                                    assert(!Lnk::spec_content_link(&node.left).contains_key(*key));
+                                    assert(Lnk::spec_content_link(&node.right).contains_key(*key));
+                                }
+                            }
+                            r
+                        }
                     }
                 }
             }
