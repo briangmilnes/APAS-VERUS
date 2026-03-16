@@ -153,6 +153,7 @@ pub mod OrderedTableStPer {
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
+                other.spec_orderedtablestper_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<K>(),

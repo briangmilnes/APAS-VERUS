@@ -158,6 +158,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.insert (linear dup check)
         fn insert<G: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: G)
             requires
+                old(self).spec_augorderedtablesteph_wf(),
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
@@ -221,6 +222,8 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to OrderedTableStEph.intersection (linear scan)
         fn intersection<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
             requires
+                old(self).spec_augorderedtablesteph_wf(),
+                other.spec_augorderedtablesteph_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_feq_clone::<K>(),
                 obeys_view_eq::<K>(),
@@ -236,6 +239,8 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to OrderedTableStEph.union (linear merge)
         fn union<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
             requires
+                old(self).spec_augorderedtablesteph_wf(),
+                other.spec_augorderedtablesteph_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_feq_clone::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),

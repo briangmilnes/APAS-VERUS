@@ -101,6 +101,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableStEph.insert which is O(n) linear scan
         fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
             requires
+                old(self).spec_orderedtablesteph_wf(),
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
@@ -169,6 +170,8 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableStEph.intersection which is linear scan
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
             requires
+                old(self).spec_orderedtablesteph_wf(),
+                other.spec_orderedtablesteph_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_feq_clone::<K>(),
                 obeys_view_eq::<K>(),
@@ -184,6 +187,8 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableStEph.union which is linear scan
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
             requires
+                old(self).spec_orderedtablesteph_wf(),
+                other.spec_orderedtablesteph_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_feq_clone::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
@@ -284,7 +289,12 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to union which is linear scan
         fn join_key(&mut self, other: Self)
-            requires obeys_feq_clone::<K>(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
+            requires
+                old(self).spec_orderedtablesteph_wf(),
+                other.spec_orderedtablesteph_wf(),
+                obeys_feq_clone::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                obeys_view_eq::<K>(),
             ensures
                 self@.dom() =~= old(self)@.dom().union(other@.dom()),
                 self@.dom().finite();
