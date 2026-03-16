@@ -216,7 +216,8 @@
       "Write(~/projects/APAS-VERUS*/**)",
       "Write(/tmp/**)",
       "Bash(fi)",
-      "Bash(/tmp/gap_table.txt:*)"
+      "Bash(/tmp/gap_table.txt:*)",
+      "WebFetch(domain:devel.isa-afp.org)"
     ]
   }
 }
