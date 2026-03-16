@@ -351,6 +351,47 @@ pub mod ParaHashTableStEph {
         }
     }
 
+    /// If no pair in a sequence has key as its first element, the key is absent from the map.
+    pub proof fn lemma_seq_pairs_no_key_not_in_map<Key, Value>(
+        pairs: Seq<(Key, Value)>,
+        key: Key,
+    )
+        requires
+            forall |j: int| 0 <= j < pairs.len() ==> (#[trigger] pairs[j]).0 != key,
+        ensures
+            !spec_seq_pairs_to_map(pairs).dom().contains(key),
+        decreases pairs.len(),
+    {
+        if pairs.len() > 0 {
+            assert forall |j: int| 0 <= j < pairs.drop_last().len()
+                implies (#[trigger] pairs.drop_last()[j]).0 != key by {
+                assert(pairs.drop_last()[j] == pairs[j]);
+            }
+            lemma_seq_pairs_no_key_not_in_map::<Key, Value>(pairs.drop_last(), key);
+        }
+    }
+
+    /// If a pair at index idx has key as its first element, the key is in the map.
+    pub proof fn lemma_seq_pairs_has_key_in_map<Key, Value>(
+        pairs: Seq<(Key, Value)>,
+        key: Key,
+        idx: int,
+    )
+        requires
+            0 <= idx < pairs.len(),
+            pairs[idx].0 == key,
+        ensures
+            spec_seq_pairs_to_map(pairs).dom().contains(key),
+        decreases pairs.len(),
+    {
+        if idx == pairs.len() - 1 {
+            // key is the last pair; map.insert(key, _) contains key.
+        } else {
+            assert(pairs.drop_last()[idx] == pairs[idx]);
+            lemma_seq_pairs_has_key_in_map::<Key, Value>(pairs.drop_last(), key, idx);
+        }
+    }
+
     // 7a. helpers
 
     /// Calls the hash function and returns a bucket index.
