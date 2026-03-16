@@ -21,21 +21,91 @@ Table of Contents:
 =================================================================
 
 ❌ BSTSplayStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayStEph.rs:520: error: trivial_spec_wf - spec fn spec_bstsplaysteph_wf — trivial body { true } or { true; }, needs // accept hole
-       518 |         open spec fn spec_contains(self, value: T) -> bool { spec_contains_link(&self.root, value) }
-       519 |         // TODO: Strengthen to spec_is_bst_link(&self.root) when splay/bst_insert proves BST preservation.
-       521 |         open spec fn spec_in_order(self) -> Seq<T> { spec_in_order_link(&self.root) }
-       522 |         open spec fn spec_pre_order(self) -> Seq<T> { spec_pre_order_link(&self.root) }
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayStEph.rs:544: error: external_body - #[verifier::external_body]
-       545 |         fn insert(&mut self, value: T) { insert_link(&mut self.root, value); }
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayStEph.rs:549: error: external_body - #[verifier::external_body]
-       550 |         fn find(&self, target: &T) -> (found: Option<&T>) { find_link(&self.root, target) }
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayStEph.rs:558: error: external_body - #[verifier::external_body]
-       559 |         fn minimum(&self) -> (min: Option<&T>) { min_link(&self.root) }
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayStEph.rs:563: error: external_body - #[verifier::external_body]
-       564 |         fn maximum(&self) -> (max: Option<&T>) { max_link(&self.root) }
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayStEph.rs:568: error: external_body - #[verifier::external_body]
-       569 |         fn in_order(&self) -> ArraySeqStPerS<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayStEph.rs:577: error: external_body - #[verifier::external_body]
-       578 |         fn pre_order(&self) -> ArraySeqStPerS<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayStEph.rs:197: error: fn_missing_requires - fn new_node — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:251: error: fn_missing_requires - fn new_node — exec fn should have requires
+       241 |         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
+            ...
+       249 |     /// - APAS: N/A -- Verus-specific scaffolding.
+       250 |     /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constant-time allocation.
+       252 | 
+       253 |         ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:269: error: fn_missing_requires - fn size_link — exec fn should have requires
+       251 |     fn new_node<T: TotalOrder + Clone>(key: T) -> (node: Node<T>)
+            ...
+       267 |     /// - APAS: N/A -- Verus-specific scaffolding.
+       268 |     /// - Claude-Opus-4.6: Work O(1), Span O(1) -- cached size field.
+       270 | 
+       271 |         ensures size as nat == spec_size_link(link),
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:301: error: fn_missing_requires - fn update — exec fn should have requires
+       282 |     fn height_link<T: TotalOrder + Clone>(link: &Link<T>) -> (height: N)
+            ...
+       299 |     /// - APAS: N/A -- Verus-specific scaffolding.
+       300 |     /// - Claude-Opus-4.6: Work O(1), Span O(1) -- recomputes cached size.
+       302 | 
+       303 |         ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:1605: error: fn_missing_requires - fn in_order_collect — exec fn should have requires
+      1553 |     fn max_link<T: TotalOrder + Clone>(link: &Link<T>) -> (max: Option<&T>)
+            ...
+      1603 |     /// - APAS: Work O(n), Span O(n)
+      1604 |     /// - Claude-Opus-4.6: Work O(n), Span O(n) -- visits every node.
+      1606 | 
+      1607 |         ensures out@.len() == old(out)@.len() + spec_in_order_link(link).len(),
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayStEph.rs:1619: error: fn_missing_requires - fn pre_order_collect — exec fn should have requires
+      1605 |     fn in_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
+            ...
+      1617 |     /// - APAS: Work O(n), Span O(n)
+      1618 |     /// - Claude-Opus-4.6: Work O(n), Span O(n) -- visits every node.
+      1620 | 
+      1621 |         ensures out@.len() == old(out)@.len() + spec_pre_order_link(link).len(),
+   Proof functions: 1 total (1 clean, 0 holed)
+
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+BSTSplayStEph  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+BSTSplayStEph.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
+
+Modules:
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
+   1 total
+
+Proof Functions:
+   1 clean (100%)
+   0 holed (0%)
+   1 total
+
+Function Specs:
+   32 exec fns with complete spec (requires+ensures) (57%)
+   5 exec fns missing spec (8%)
+   19 proof/spec fns clean (33%)
+   0 proof/spec fns with holes (0%)
+   56 total fns
+
+
+Holes Found: 0 total
+
+🎉 No proof holes found! All proofs are complete.
+
+=================================================================
+5. Started/Ended/Duration
+=================================================================
+
+Started:   2026-03-15 19:40:19 -07:00
+Ended:     2026-03-15 19:40:19 -07:00
+Duration:  24ms
+
+Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
