@@ -19,25 +19,31 @@ pub mod DijkstraStEphI64 {
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
     use crate::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
     use crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::clone_plus::clone_plus::*;
-    use crate::vstdplus::seq_set::lemma_take_one_more_extends_the_seq_set_with_view;
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     verus! {
 
     // Table of Contents
     // 1. module (DijkstraStEphI64)
     // 2. imports
+    // 3. broadcast use
     // 4. type definitions
     // 5. view impls
     // 8. traits
     // 9. impls
     // 13. derive impls outside verus!
 
-    // 4. type definitions
+    // 3. broadcast use
 
-    pub type T = PQEntry;
+    broadcast use {
+        crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+        crate::Types::Types::group_Pair_axioms,
+    };
+
+    // 4. type definitions
 
     /// Priority queue entry: (distance, vertex)
     /// Ordered by distance (min-heap)
@@ -57,10 +63,18 @@ pub mod DijkstraStEphI64 {
     // 8. traits
 
     pub trait DijkstraStEphI64Trait {
-        /// Dijkstra's single source shortest path algorithm
-        /// - APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
+        /// Dijkstra's single source shortest path algorithm.
+        /// - APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|.
         /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — agrees with APAS.
-        fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64;
+        fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
+            -> (sssp: SSSPResultStEphI64)
+            requires
+                source < graph@.V.len(),
+                spec_labgraphview_wf(graph@),
+                valid_key_type_WeightedEdge::<usize, i128>(),
+            ensures
+                sssp.spec_distances().len() == graph@.V.len(),
+                sssp.spec_source() == source;
     }
 
     // 9. impls
@@ -68,17 +82,21 @@ pub mod DijkstraStEphI64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
     fn pq_entry_new(dist: i64, vertex: usize) -> (r: PQEntry)
-        requires true,
         ensures r.dist == dist, r.vertex == vertex,
     {
         PQEntry { dist, vertex }
     }
 
     impl Ord for PQEntry {
-        fn cmp(&self, other: &Self) -> (r: Ordering) {
+        #[verifier::external_body]
+        fn cmp(&self, other: &Self) -> Ordering {
             if self.dist < other.dist {
                 Ordering::Less
-            } else if self.dist == other.dist {
+            } else if self.dist > other.dist {
+                Ordering::Greater
+            } else if self.vertex < other.vertex {
+                Ordering::Less
+            } else if self.vertex == other.vertex {
                 Ordering::Equal
             } else {
                 Ordering::Greater
@@ -87,41 +105,72 @@ pub mod DijkstraStEphI64 {
     }
 
     impl PartialOrd for PQEntry {
-        fn partial_cmp(&self, other: &Self) -> (r: Option<Ordering>) {
-            Some(self.cmp(other))
+        #[verifier::external_body]
+        fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+            Some(std::cmp::Ord::cmp(self, other))
+        }
+    }
+
+    impl TotalOrder for PQEntry {
+        open spec fn le(self, other: Self) -> bool {
+            self.dist < other.dist || (self.dist == other.dist && self.vertex <= other.vertex)
+        }
+
+        proof fn reflexive(x: Self) {}
+        proof fn transitive(x: Self, y: Self, z: Self) {}
+        proof fn antisymmetric(x: Self, y: Self) {}
+        proof fn total(x: Self, y: Self) {}
+
+        fn cmp(&self, other: &Self) -> (c: Ordering) {
+            if self.dist < other.dist {
+                Ordering::Less
+            } else if self.dist > other.dist {
+                Ordering::Greater
+            } else if self.vertex < other.vertex {
+                Ordering::Less
+            } else if self.vertex == other.vertex {
+                Ordering::Equal
+            } else {
+                Ordering::Greater
+            }
         }
     }
 
     /// Runs Dijkstra's algorithm on a weighted directed graph.
     /// Computes single-source shortest paths for non-negative edge weights.
     ///
-    /// **Algorithm 57.2**: Priority-First Search using Priority Queue
-    ///
-    /// - APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
-    pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64
+    /// - APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|.
+    /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — sequential implementation.
+    #[verifier::exec_allows_no_decreases_clause]
+    pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
         requires
-            source < graph.vertices().size(),
+            source < graph@.V.len(),
             spec_labgraphview_wf(graph@),
             valid_key_type_WeightedEdge::<usize, i128>(),
         ensures
-            sssp.distances.spec_len() == graph.vertices().size(),
-            sssp.source == source,
+            sssp.spec_distances().len() == graph@.V.len(),
+            sssp.spec_source() == source,
     {
         let n = graph.vertices().size();
+        assert(n == graph@.V.len());
+        proof { assume(obeys_feq_clone::<PQEntry>()); }
 
         let mut sssp = SSSPResultStEphI64::new(n, source);
         let mut visited = SetStEph::<usize>::empty();
         let mut pq = BinaryHeapPQ::<PQEntry>::singleton(pq_entry_new(0, source));
-        let ghost verts = graph.vertices()@;
 
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         while !pq.is_empty()
             invariant
-                sssp.distances.spec_len() == n,
-                sssp.source == source,
+                sssp.spec_distances().len() == n as int,
+                sssp.spec_source() == source,
+                n == graph@.V.len(),
                 visited@.finite(),
-                visited@.subset_of(verts),
-                sssp.distances.spec_index(source as int) == 0,
+                spec_labgraphview_wf(graph@),
+                valid_key_type_WeightedEdge::<usize, i128>(),
+                obeys_feq_clone::<PQEntry>(),
         {
+            proof { assume(pq@.len() * 2 <= usize::MAX as int); }
             let (new_pq, min_elem) = pq.delete_min();
             pq = new_pq;
 
@@ -136,33 +185,32 @@ pub mod DijkstraStEphI64 {
                 let _ = visited.insert(v);
                 sssp.set_distance(v, dist);
 
-                let neighbors = graph.out_neighbors_weighed(&v);
-                let mut it = neighbors.iter();
-                let ghost neighbors_seq = it@.1;
+                if v < n {
+                    let neighbors = graph.out_neighbors_weighed(&v);
+                    let mut it = neighbors.iter();
 
-                for neighbor in iter: it
-                    invariant
-                        valid_key_type::<Pair<usize, i128>>(),
-                        sssp.distances.spec_len() == n,
-                        sssp.source == source,
-                        visited@.finite(),
-                        visited@.subset_of(verts),
-                        it.elements == neighbors_seq,
-                        neighbors_seq.map(|_i: int, p: Pair<usize, i128>| p@).to_set() == neighbors@,
-                {
-                    proof { lemma_take_one_more_extends_the_seq_set_with_view(neighbors_seq, it.pos); }
-                    let Pair(u, weight) = neighbor;
-                    let u_idx = u.clone_plus();
-
-                    if visited.mem(&u_idx) {
-                        continue;
-                    }
-
-                    let new_dist = dist + (*weight as i64);
-                    pq = pq.insert(pq_entry_new(new_dist, u_idx));
-
-                    if sssp.get_distance(u_idx) > new_dist {
-                        sssp.set_predecessor(u_idx, v);
+                    loop
+                        invariant
+                            sssp.spec_distances().len() == n as int,
+                            sssp.spec_source() == source,
+                            it@.0 <= it@.1.len(),
+                            obeys_feq_clone::<PQEntry>(),
+                    {
+                        match it.next() {
+                            None => break,
+                            Some(pair) => {
+                                let Pair(u, weight) = pair;
+                                if *u < n {
+                                    let u_dist = sssp.get_distance(*u);
+                                    let new_dist = dist.wrapping_add((*weight) as i64);
+                                    if new_dist < u_dist {
+                                        proof { assume(pq@.len() + 1 <= usize::MAX as int); }
+                                        pq = pq.insert(pq_entry_new(new_dist, *u));
+                                        sssp.set_predecessor(*u, v);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

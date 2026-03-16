@@ -1032,9 +1032,9 @@ path = "tests/Chap56/TestSSSPResultStPerI64.rs"
 # name = "TestDijkstraStEphF64"
 # path = "disabled"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestDijkstraStEphI64"
-# path = "disabled"
+[[test]]
+name = "TestDijkstraStEphI64"
+path = "tests/Chap57/TestDijkstraStEphI64.rs"
 
 [[test]]
 name = "TestStackStEph"
@@ -1060,9 +1060,9 @@ path = "tests/Chap58/TestBellmanFordStEphI64.rs"
 # name = "TestJohnsonStEphF64"
 # path = "disabled"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestJohnsonStEphI64"
-# path = "disabled"
+[[test]]
+name = "TestJohnsonStEphI64"
+path = "tests/Chap59/TestJohnsonStEphI64.rs"
 
 # [[test]]  # module commented out in lib.rs
 # name = "TestEdgeContractionMtEph"
