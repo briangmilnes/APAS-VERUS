@@ -257,6 +257,7 @@ pub mod AVLTreeSeqMtPer {
     // 9. impls
 
     fn height_fn<T: StTInMtT>(n: &Link<T>) -> (h: N)
+        requires spec_cached_height(n) <= usize::MAX as nat,
         ensures h as nat == spec_cached_height(n),
     {
         match n {
@@ -266,6 +267,7 @@ pub mod AVLTreeSeqMtPer {
     }
 
     fn size_fn<T: StTInMtT>(n: &Link<T>) -> (sz: N)
+        requires spec_cached_size(n) <= usize::MAX as nat,
         ensures sz as nat == spec_cached_size(n),
     {
         match n {
@@ -509,7 +511,13 @@ pub mod AVLTreeSeqMtPer {
             spec_avltreeseqmtper_wf(link),
             spec_inorder(link) =~= a@.map_values(|t: T| t@),
     {
-        fn rec<T: StTInMtT>(a: &[T]) -> Link<T> {
+        fn rec<T: StTInMtT>(a: &[T]) -> (link: Link<T>)
+            requires obeys_feq_full::<T>(),
+            ensures
+                spec_avltreeseqmtper_wf(link),
+                spec_inorder(link) =~= a@.map_values(|t: T| t@),
+            decreases a.len(),
+        {
             if a.is_empty() {
                 return None;
             }

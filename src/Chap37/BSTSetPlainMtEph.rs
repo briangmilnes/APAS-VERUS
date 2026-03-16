@@ -122,13 +122,11 @@ pub mod BSTSetPlainMtEph {
     }
 
     fn values_vec<T: StTInMtT + Ord>(tree: &BSTPlainMtEph<T>) -> (values: Vec<T>)
-
         ensures true,
     {
         tree.in_order().iter().cloned().collect()
     }
     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTPlainMtEph<T>)
-
         ensures true,
     {
         let mut tree = BSTPlainMtEph::new();
@@ -141,7 +139,6 @@ pub mod BSTSetPlainMtEph {
     fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetPlainMtEph<T>)
     where
         I: IntoIterator<Item = T>,
-
         ensures true,
     {
         let mut tree = BSTPlainMtEph::new();

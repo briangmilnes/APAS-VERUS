@@ -325,6 +325,7 @@ pub mod AVLTreeSeqStEph {
     // 9. impls
 
     fn h_fn<T: StT>(n: &Link<T>) -> (height: N)
+        requires spec_cached_height(n) <= usize::MAX as nat,
         ensures height as nat == spec_cached_height(n),
     {
         match n {
@@ -672,6 +673,7 @@ pub mod AVLTreeSeqStEph {
     }
 
     fn clone_link<T: StT>(link: &Link<T>) -> (copy: Link<T>)
+        requires 0nat <= usize::MAX as nat,
         ensures
             spec_inorder(copy) =~= spec_inorder(*link),
             spec_avltreeseqsteph_wf(*link) ==> spec_avltreeseqsteph_wf(copy),
