@@ -393,6 +393,16 @@ min[|A|]`, `previous(A,k) = max{k' | k' < k}`, etc. Those are the postconditions
 can't prove them, leave the `external_body` and report what you tried. Never gut the spec
 to inflate your hole count.
 
+**DO NOT ADD `requires true` TO FIX `fn_missing_requires` WARNINGS.** A `requires true`
+is a vacuous precondition — it says nothing about the function's contract and is strictly
+worse than leaving the warning in place. When veracity reports `fn_missing_requires`, the
+fix is to add the **real** precondition: typically the module's well-formedness predicate
+(`self.spec_<module>_wf()`) and any parameter constraints the function actually needs. Read
+the function body, understand what it assumes about its inputs, and express that as a real
+`requires` clause. If the function operates on `&self`, it almost certainly requires
+`self.spec_<module>_wf()`. If it takes a key or index, it may require bounds. The goal is
+a contract that callers must satisfy and that the proof can use — not a syntactic band-aid.
+
 ### Search Locations ("The Usual Suspects")
 
 1. **veracity-search** — vstd + APAS-VERUS function index (searched by default)
