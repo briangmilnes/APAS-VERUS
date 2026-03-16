@@ -21,83 +21,83 @@ Table of Contents:
 =================================================================
 
 ❌ BSTKeyValueStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:522: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:522: error: external_body - #[verifier::external_body]
        523 |         fn insert(&mut self, key: K, value: V, priority: u64) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:530: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:530: error: external_body - #[verifier::external_body]
        531 |         fn delete(&mut self, key: &K) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:539: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:539: error: external_body - #[verifier::external_body]
        540 |         fn find(&self, key: &K) -> Option<&V> { Self::find_link(&self.root, key) }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:542: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:542: error: external_body - #[verifier::external_body]
        543 |         fn contains(&self, key: &K) -> bool { self.find(key).is_some() }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:545: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:545: error: external_body - #[verifier::external_body]
        546 |         fn get(&self, key: &K) -> Option<&V> { self.find(key) }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:366: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:366: warning: requires_true - requires true — vacuous precondition
        364 | 
        365 |     fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (cloned: Link<K, V>)
        367 |         ensures
        368 |             spec_content_link(&cloned) == spec_content_link(link),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:487: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:487: warning: requires_true - requires true — vacuous precondition
        485 | 
        486 |     fn compare_kv_links<K: StT + Ord, V: StT>(a: &Link<K, V>, b: &Link<K, V>) -> (equal: bool)
        488 |         ensures
        489 |             (a is None && b is None) ==> equal,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:377: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:869: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:377: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:869: info: accept()
    Holes: 5 total
       5 × external_body
    Info: 2 total
    Proof functions: 7 total (7 clean, 0 holed)
 ❌ BSTReducedStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:519: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:519: error: external_body - #[verifier::external_body]
        520 |         fn insert(&mut self, key: K, value: V, priority: u64) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:524: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:524: error: external_body - #[verifier::external_body]
        525 |         fn delete(&mut self, key: &K) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:532: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:532: error: external_body - #[verifier::external_body]
        533 |         fn find(&self, key: &K) -> Option<&V> { Self::find_link(&self.root, key) }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:535: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:535: error: external_body - #[verifier::external_body]
        536 |         fn contains(&self, key: &K) -> bool { self.find(key).is_some() }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:538: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:538: error: external_body - #[verifier::external_body]
        539 |         fn get(&self, key: &K) -> Option<&V> { self.find(key) }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:380: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:380: warning: requires_true - requires true — vacuous precondition
        378 | 
        379 |     fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (cloned: Link<K, V, R>)
        381 |         ensures
        382 |             Lnk::spec_content_link(&cloned) == Lnk::spec_content_link(link),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:481: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:481: warning: requires_true - requires true — vacuous precondition
        479 | 
        480 |     fn compare_reduced_links<K: StT + Ord, V: StT, R: StT>(a: &Link<K, V, R>, b: &Link<K, V, R>) -> (equal: bool)
        482 |         ensures
        483 |             (a is None && b is None) ==> equal,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:392: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:462: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:464: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:475: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:920: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:392: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:462: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:464: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:475: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:920: info: accept()
    Holes: 5 total
       5 × external_body
    Info: 5 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ BSTSizeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:451: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:451: error: external_body - #[verifier::external_body]
        452 |         fn insert(&mut self, value: T, priority: u64) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:456: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:456: error: external_body - #[verifier::external_body]
        457 |         fn delete(&mut self, key: &T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:464: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:464: error: external_body - #[verifier::external_body]
        465 |         fn find(&self, target: &T) -> Option<&T> { Self::find_link(&self.root, target) }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:467: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:467: error: external_body - #[verifier::external_body]
        468 |         fn contains(&self, target: &T) -> bool { self.find(target).is_some() }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:418: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:418: warning: requires_true - requires true — vacuous precondition
        416 | 
        417 |     fn compare_links<T: StT + Ord>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
        419 |         ensures
        420 |             (a is None && b is None) ==> equal,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:824: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:824: warning: requires_true - requires true — vacuous precondition
        822 | 
        823 |     fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)
        825 |         ensures
        826 |             Lnk::spec_content_link(&c) == Lnk::spec_content_link(link),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:835: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:890: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:835: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:890: info: accept()
    Holes: 4 total
       4 × external_body
    Info: 2 total
@@ -152,13 +152,13 @@ Holes Found: 14 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 16:41:23 -07:00
-Ended:     2026-03-15 16:41:23 -07:00
-Duration:  27ms
+Started:   2026-03-15 16:27:27 -07:00
+Ended:     2026-03-15 16:27:28 -07:00
+Duration:  79ms
 
 Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
-
-Ended:     2026-03-15 16:41:23 -07:00
-Duration:  27ms
+27:27 -07:00
+Ended:     2026-03-15 16:27:28 -07:00
+Duration:  79ms
 
 Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
