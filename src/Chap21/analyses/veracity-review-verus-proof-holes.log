@@ -24,7 +24,7 @@ Table of Contents:
    2 clean proof functions
 ✓ Algorithm21_2.rs
 ❌ Algorithm21_5.rs
-/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:47: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap21/Algorithm21_5.rs:47: warning: requires_true - requires true — vacuous precondition
         45 |     /// - Claude-Opus-4.6: Work Θ(n^{3/2}), Span Θ(n^{3/2}) — sequential StPer tabulate + filter.
         46 |     pub fn primes_bf(n: N) -> (primes: ArraySeqStPerS<N>)
         48 |         ensures
@@ -35,18 +35,18 @@ Table of Contents:
    1 clean proof function
 ✓ Exercise21_6.rs
 ❌ Exercise21_7.rs
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:48: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap21/Exercise21_7.rs:48: warning: requires_true - requires true — vacuous precondition
         46 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         47 |     pub fn is_even(x: &N) -> (r: B)
         49 |         ensures r == spec_is_even(*x as int)
         50 |     { *x % 2 == 0 }
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:62: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap21/Exercise21_7.rs:62: warning: requires_true - requires true — vacuous precondition
         60 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         61 |     pub fn is_vowel(c: &char) -> (r: B)
         63 |         ensures r == spec_is_vowel(*c)
         64 |     {
 ❌ Exercise21_8.rs
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:177: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap21/Exercise21_8.rs:177: warning: requires_true - requires true — vacuous precondition
        175 |     /// - Claude-Opus-4.6: Work Θ(√n), Span Θ(√n) — sequential StEph tabulate + filter.
        176 |     pub fn is_prime(n: N) -> (prime: B)
        178 |         ensures prime == spec_is_prime(n as int)
@@ -126,12 +126,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 08:12:39 -07:00
-Ended:     2026-03-16 08:12:39 -07:00
-Duration:  16ms
+Started:   2026-03-16 08:45:06 -07:00
+Ended:     2026-03-16 08:45:06 -07:00
+Duration:  21ms
 
 Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
-2026-03-16 08:12:39 -07:00
-Duration:  16ms
-
-Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap21/analyses/veracity-review-verus-proof-holes.log

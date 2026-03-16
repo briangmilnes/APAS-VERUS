@@ -174,7 +174,8 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&mut self, x: T)
-            requires old(self).spec_avltreesetsteph_wf(),
+            requires
+                old(self).spec_avltreesetsteph_wf(),
             ensures
                 self@ == old(self)@.insert(x@),
                 self.spec_avltreesetsteph_wf();
@@ -311,7 +312,6 @@ broadcast use {
             constructed
         }
 
-        #[verifier::external_body]
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -331,11 +331,21 @@ broadcast use {
                     filtered.spec_avltreesetsteph_wf(),
                     filtered@.subset_of(self@),
                     forall|t: &T| #[trigger] f.requires((t,)),
+                    forall|x: T, keep: bool|
+                        f.ensures((&x,), keep) ==> keep == spec_pred(x@),
                     obeys_feq_full::<T>(),
+                    forall|v: T::V| #[trigger] filtered@.contains(v) ==> spec_pred(v),
+                    forall|j: int| #![trigger self.elements@[j]]
+                        0 <= j < i && spec_pred(self.elements@[j])
+                        ==> filtered@.contains(self.elements@[j]),
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
-                if f(elem) {
+                let keep = f(elem);
+                proof {
+                    assert(keep == spec_pred(self.elements@[i as int]));
+                }
+                if keep {
                     let c = elem.clone();
                     proof {
                         lemma_cloned_view_eq(*elem, c);
@@ -354,9 +364,34 @@ broadcast use {
                                 }
                             };
                         };
+                        assert forall|v: T::V| #[trigger] filtered@.contains(v)
+                            implies spec_pred(v) by {
+                            if !old_filtered_view.contains(v) {
+                                assert(v == c@);
+                            }
+                        };
+                        assert forall|j: int| #![trigger self.elements@[j]]
+                            0 <= j < (i + 1) as int && spec_pred(self.elements@[j])
+                            implies filtered@.contains(self.elements@[j]) by {
+                            if j < i as int {
+                                assert(old_filtered_view.contains(self.elements@[j]));
+                            } else {
+                                assert(filtered@.contains(c@));
+                            }
+                        };
                     }
                 }
                 i += 1;
+            }
+            proof {
+                assert forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    implies #[trigger] filtered@.contains(v) by {
+                    assert(self.elements@.to_set().contains(v));
+                    assert(self.elements@.contains(v));
+                    let j = choose|j: int| 0 <= j < self.elements@.len()
+                        && self.elements@[j] == v;
+                    assert(spec_pred(self.elements@[j]));
+                };
             }
             filtered
         }
