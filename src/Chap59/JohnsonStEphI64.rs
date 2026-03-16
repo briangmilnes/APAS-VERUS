@@ -75,6 +75,7 @@ pub mod JohnsonStEphI64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
     fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (result: i64)
+        requires true,
         ensures
             d_prime == UNREACHABLE ==> result == UNREACHABLE,
     {
@@ -91,6 +92,8 @@ pub mod JohnsonStEphI64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
     fn reweight_edge(weight: i128, h_u: i64, h_v: i64) -> (result: i128)
+        requires true,
+        ensures true,
     {
         let diff: i128 = (h_u as i128) - (h_v as i128);
         if diff >= 0 {
@@ -331,6 +334,7 @@ pub mod JohnsonStEphI64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2).
     fn create_negative_cycle_result(n: usize) -> (result: AllPairsResultStEphI64)
+        requires true,
         ensures
             result.spec_n() == n,
             result.spec_distances_len() == n as nat,

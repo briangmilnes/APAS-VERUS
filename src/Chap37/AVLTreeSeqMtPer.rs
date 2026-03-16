@@ -257,7 +257,7 @@ pub mod AVLTreeSeqMtPer {
     // 9. impls
 
     fn height_fn<T: StTInMtT>(n: &Link<T>) -> (h: N)
-
+        requires true,
         ensures h as nat == spec_cached_height(n),
     {
         match n {
@@ -267,7 +267,7 @@ pub mod AVLTreeSeqMtPer {
     }
 
     fn size_fn<T: StTInMtT>(n: &Link<T>) -> (sz: N)
-
+        requires true,
         ensures sz as nat == spec_cached_size(n),
     {
         match n {
@@ -495,6 +495,7 @@ pub mod AVLTreeSeqMtPer {
     }
 
     fn inorder_collect<T: StTInMtT>(cur: &Link<T>, out: &mut Vec<T>)
+        requires true,
         ensures true,
         decreases *cur,
     {
