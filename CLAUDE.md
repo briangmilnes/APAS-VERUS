@@ -177,6 +177,17 @@ minor). You bring:
 4. After all merges: regenerate analyses (`scripts/all-holes-by-chap.sh`, etc.)
 5. Commit, push, then `scripts/rebase-agents.sh`
 
+**Explicit agent-ready signals.** After completing merge/rebase/push operations for an
+agent, explicitly tell the user which agents are ready to receive new work. Use this exact
+format:
+
+> **Agent N is ready for work** — rebased on main at `<commit>`, worktree clean.
+
+Do NOT assume the user knows an agent is ready just because you ran rebase-agents.sh.
+The user launches agents manually and needs a clear signal before doing so. If a stash
+was involved, say whether stashed work was valuable or can be dropped. If agents need
+to be restarted (not just given new prompts), say so explicitly.
+
 ### Output Formatting
 
 - **Show full command output** in response text (especially verus and cargo test). The user
