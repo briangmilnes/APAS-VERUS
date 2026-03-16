@@ -1,6 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 use std::marker::PhantomData;
 
+use vstd::prelude::Ghost;
 use apas_verus::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
 use apas_verus::Chap47::VecChainedHashTableStEph::VecChainedHashTableStEph::*;
 use apas_verus::Types::Types::*;
@@ -16,6 +17,7 @@ fn test_createtable() {
         <VecChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, Vec<(i32, String)>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
     assert_eq!(table.initial_size, 10);
     assert_eq!(table.current_size, 10);
@@ -31,6 +33,7 @@ fn test_loadandsize_empty() {
         current_size: 10,
         num_elements: 0,
         metrics: (),
+        spec_hash: Ghost::assume_new(),
         _phantom: PhantomData,
     };
     let load_size =
@@ -48,6 +51,7 @@ fn test_metrics() {
         current_size: 10,
         num_elements: 0,
         metrics: (),
+        spec_hash: Ghost::assume_new(),
         _phantom: PhantomData,
     };
     let _metrics =
@@ -63,6 +67,7 @@ fn test_loadandsize_with_elements() {
         current_size: 10,
         num_elements: 5,
         metrics: (),
+        spec_hash: Ghost::assume_new(),
         _phantom: PhantomData,
     };
     let load_size =

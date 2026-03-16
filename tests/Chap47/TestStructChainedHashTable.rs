@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+use vstd::prelude::Ghost;
 use apas_verus::Chap47::ChainedHashTable::ChainedHashTable::*;
 use apas_verus::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
 use apas_verus::Chap47::StructChainedHashTable::StructChainedHashTable::*;
@@ -63,6 +64,7 @@ fn test_struct_chained_insert_lookup() {
         <StructChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, ChainList<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     for _ in 0..10 {
@@ -85,6 +87,7 @@ fn test_struct_chained_delete() {
         <StructChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, ChainList<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     for _ in 0..10 {
@@ -109,6 +112,7 @@ fn test_struct_chained_resize() {
         <StructChainedHashTableStEph as ParaHashTableStEphTrait<i32, String, ChainList<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             4,
+            Ghost::assume_new(),
         );
 
     for _ in 0..4 {

@@ -44,7 +44,7 @@ pub mod LinProbFlatHashTableStEph {
                     table.num_elements == old(table).num_elements,
                 decreases table.current_size - attempt,
             {
-                let slot = linear_probe(&table.hash_fn, &key, table.current_size, attempt);
+                let slot = linear_probe(&table.hash_fn, &key, table.current_size, attempt, table.spec_hash);
                 let entry = table.table[slot].clone();
                 if let FlatEntry::Occupied(k, _) = &entry {
                     if *k == key {
@@ -73,7 +73,7 @@ pub mod LinProbFlatHashTableStEph {
                     table.table@.len() == table.current_size as int,
                 decreases table.current_size - attempt,
             {
-                let slot = linear_probe(&table.hash_fn, key, table.current_size, attempt);
+                let slot = linear_probe(&table.hash_fn, key, table.current_size, attempt, table.spec_hash);
                 let entry = table.table[slot].clone();
                 if let FlatEntry::Occupied(k, v) = entry {
                     if k == *key {
@@ -99,7 +99,7 @@ pub mod LinProbFlatHashTableStEph {
                     table.current_size == old(table).current_size,
                 decreases table.current_size - attempt,
             {
-                let slot = linear_probe(&table.hash_fn, key, table.current_size, attempt);
+                let slot = linear_probe(&table.hash_fn, key, table.current_size, attempt, table.spec_hash);
                 let entry = table.table[slot].clone();
                 if let FlatEntry::Occupied(k, _) = &entry {
                     if *k == *key {
@@ -159,6 +159,7 @@ pub mod LinProbFlatHashTableStEph {
                 current_size: new_size,
                 num_elements: 0,
                 metrics: Metrics::default(),
+                spec_hash: table.spec_hash,
                 _phantom: PhantomData,
             };
 
@@ -190,7 +191,7 @@ pub mod LinProbFlatHashTableStEph {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — hash + addition + modulo.
         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {
-            let hash_val = call_hash_fn(&table.hash_fn, key, table.current_size);
+            let hash_val = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             (hash_val.wrapping_add(attempt)) % table.current_size
         }
 

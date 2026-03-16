@@ -62,7 +62,7 @@ pub mod DoubleHashFlatHashTableStEph {
                     table.num_elements == old(table).num_elements,
                 decreases table.current_size - attempt,
             {
-                let slot = double_hash_probe(&table.hash_fn, &key, table.current_size, attempt);
+                let slot = double_hash_probe(&table.hash_fn, &key, table.current_size, attempt, table.spec_hash);
                 let entry = table.table[slot].clone();
                 if let FlatEntry::Occupied(k, _) = &entry {
                     if *k == key {
@@ -91,7 +91,7 @@ pub mod DoubleHashFlatHashTableStEph {
                     table.table@.len() == table.current_size as int,
                 decreases table.current_size - attempt,
             {
-                let slot = double_hash_probe(&table.hash_fn, key, table.current_size, attempt);
+                let slot = double_hash_probe(&table.hash_fn, key, table.current_size, attempt, table.spec_hash);
                 let entry = table.table[slot].clone();
                 if let FlatEntry::Occupied(k, v) = entry {
                     if k == *key {
@@ -117,7 +117,7 @@ pub mod DoubleHashFlatHashTableStEph {
                     table.current_size == old(table).current_size,
                 decreases table.current_size - attempt,
             {
-                let slot = double_hash_probe(&table.hash_fn, key, table.current_size, attempt);
+                let slot = double_hash_probe(&table.hash_fn, key, table.current_size, attempt, table.spec_hash);
                 let entry = table.table[slot].clone();
                 if let FlatEntry::Occupied(k, _) = &entry {
                     if *k == *key {
@@ -175,6 +175,7 @@ pub mod DoubleHashFlatHashTableStEph {
                 current_size: new_size,
                 num_elements: 0,
                 metrics: Metrics::default(),
+                spec_hash: table.spec_hash,
                 _phantom: PhantomData,
             };
 
@@ -205,7 +206,7 @@ pub mod DoubleHashFlatHashTableStEph {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — two hash values + arithmetic + modulo.
         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {
-            let hash1 = call_hash_fn(&table.hash_fn, key, table.current_size);
+            let hash1 = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let step = Self::second_hash(key, table.current_size);
             (hash1.wrapping_add(attempt.wrapping_mul(step))) % table.current_size
         }

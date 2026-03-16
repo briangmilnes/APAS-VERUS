@@ -34,6 +34,7 @@ pub mod ParaHashTableStEph {
 
     /// Parametric nested hash table structure.
     /// Generic `H` is the hash function type: takes (&Key, usize) and returns an index.
+    #[verifier::reject_recursive_types(Key)]
     pub struct HashTable<Key, Value, Entry, Metrics, H> {
         pub table: Vec<Entry>,
         pub hash_fn: H,
@@ -41,13 +42,18 @@ pub mod ParaHashTableStEph {
         pub current_size: usize,
         pub num_elements: usize,
         pub metrics: Metrics,
+        pub spec_hash: Ghost<spec_fn(Key) -> nat>,
         pub _phantom: PhantomData<(Key, Value)>,
     }
 
     // 6. spec fns
 
-    pub open spec fn spec_hashtable_wf<Key, Value, Entry, Metrics, H>(table: &HashTable<Key, Value, Entry, Metrics, H>) -> bool {
+    pub open spec fn spec_hashtable_wf<Key, Value, Entry: EntryTrait<Key, Value>, Metrics, H>(table: &HashTable<Key, Value, Entry, Metrics, H>) -> bool {
         table.table@.len() == table.current_size as int
+        && table.current_size > 0
+        && forall |k: Key, j: int| 0 <= j < table.table@.len()
+            && j != (table.spec_hash@)(k) as int % table.current_size as int
+            ==> !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k)
     }
 
     /// Maps a sequence of key-value pairs to its abstract Map representation.
@@ -265,28 +271,30 @@ pub mod ParaHashTableStEph {
     /// Calls the hash function and returns a bucket index.
     /// External_body because Verus cannot reason about opaque Fn closures.
     #[verifier::external_body]
-    pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize) -> (index: usize)
+    pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (index: usize)
         requires table_size > 0,
-        ensures index < table_size,
+        ensures
+            index < table_size,
+            index as nat == (spec_hash@)(*key) % (table_size as nat),
     {
         (hash_fn)(key, table_size)
     }
 
     /// Linear probe: (hash(key) + attempt) % table_size.
-    pub fn linear_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
+    pub fn linear_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (slot: usize)
         requires table_size > 0,
         ensures slot < table_size,
     {
-        let h = call_hash_fn(hash_fn, key, table_size);
+        let h = call_hash_fn(hash_fn, key, table_size, spec_hash);
         (h.wrapping_add(attempt)) % table_size
     }
 
     /// Quadratic probe: (hash(key) + attempt + attempt^2) % table_size.
-    pub fn quadratic_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
+    pub fn quadratic_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (slot: usize)
         requires table_size > 0,
         ensures slot < table_size,
     {
-        let h = call_hash_fn(hash_fn, key, table_size);
+        let h = call_hash_fn(hash_fn, key, table_size, spec_hash);
         (h.wrapping_add(attempt).wrapping_add(attempt.wrapping_mul(attempt))) % table_size
     }
 
@@ -314,11 +322,11 @@ pub mod ParaHashTableStEph {
     }
 
     /// Double hash probe: (hash(key) + attempt * second_hash(key, table_size)) % table_size.
-    pub fn double_hash_probe<Key: std::hash::Hash, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)
+    pub fn double_hash_probe<Key: std::hash::Hash, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (slot: usize)
         requires table_size > 0,
         ensures slot < table_size,
     {
-        let h = call_hash_fn(hash_fn, key, table_size);
+        let h = call_hash_fn(hash_fn, key, table_size, spec_hash);
         let h2 = compute_second_hash(key, table_size);
         (h.wrapping_add(attempt.wrapping_mul(h2))) % table_size
     }
@@ -364,7 +372,7 @@ pub mod ParaHashTableStEph {
         /// Takes a hash function that maps (&Key, table_size) to a bucket index.
         /// - APAS: Work O(m), Span O(m) where m is initial size.
         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
-        fn createTable(hash_fn: H, initial_size: usize) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
+        fn createTable(hash_fn: H, initial_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
             requires
                 initial_size > 0,
             ensures
@@ -374,6 +382,7 @@ pub mod ParaHashTableStEph {
                 table.table@.len() == initial_size as int,
                 spec_hashtable_wf(&table),
                 table@ == Map::<Key, Value>::empty(),
+                table.spec_hash == spec_hash,
         {
             let mut table_vec: Vec<Entry> = Vec::new();
             let mut i: usize = 0;
@@ -382,6 +391,8 @@ pub mod ParaHashTableStEph {
                     i <= initial_size,
                     table_vec@.len() == i as int,
                     spec_table_to_map::<Key, Value, Entry>(table_vec@) == Map::<Key, Value>::empty(),
+                    forall |j: int| 0 <= j < table_vec@.len()
+                        ==> (#[trigger] table_vec@[j]).spec_entry_to_map() == Map::<Key, Value>::empty(),
                 decreases initial_size - i,
             {
                 let ghost old_view = table_vec@;
@@ -392,6 +403,11 @@ pub mod ParaHashTableStEph {
                 }
                 i += 1;
             }
+            proof {
+                assert forall |k: Key, j: int| 0 <= j < table_vec@.len()
+                    && j != (spec_hash@)(k) as int % initial_size as int
+                    implies !#[trigger] table_vec@[j].spec_entry_to_map().dom().contains(k) by {}
+            }
             HashTable {
                 table: table_vec,
                 hash_fn,
@@ -399,6 +415,7 @@ pub mod ParaHashTableStEph {
                 current_size: initial_size,
                 num_elements: 0,
                 metrics: Metrics::default(),
+                spec_hash,
                 _phantom: PhantomData,
             }
         }
@@ -408,12 +425,12 @@ pub mod ParaHashTableStEph {
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
         fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
             requires
-                old(table).current_size > 0,
-                old(table).table@.len() == old(table).current_size as int,
+                spec_hashtable_wf(old(table)),
                 old(table).num_elements < usize::MAX,
             ensures
                 table@ == old(table)@.insert(key, value),
-                table.table@.len() == table.current_size as int,
+                spec_hashtable_wf(table),
+                table.spec_hash == old(table).spec_hash,
                 table.current_size == old(table).current_size,
                 table.num_elements <= old(table).num_elements + 1;
 
@@ -422,8 +439,7 @@ pub mod ParaHashTableStEph {
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
         fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
             requires
-                table.current_size > 0,
-                table.table@.len() == table.current_size as int,
+                spec_hashtable_wf(table),
             ensures
                 table@.dom().contains(*key) ==> found == Some(table@[*key]),
                 !table@.dom().contains(*key) ==> found is None;
@@ -433,12 +449,12 @@ pub mod ParaHashTableStEph {
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
             requires
-                old(table).current_size > 0,
-                old(table).table@.len() == old(table).current_size as int,
+                spec_hashtable_wf(old(table)),
             ensures
                 deleted == old(table)@.dom().contains(*key),
                 table@ == old(table)@.remove(*key),
-                table.table@.len() == table.current_size as int,
+                spec_hashtable_wf(table),
+                table.spec_hash == old(table).spec_hash,
                 table.current_size == old(table).current_size;
 
         /// Accessor for metrics field.
@@ -477,7 +493,9 @@ pub mod ParaHashTableStEph {
             ensures
                 resized@ == table@,
                 resized.current_size == new_size,
-                resized.table@.len() == new_size as int;
+                resized.table@.len() == new_size as int,
+                spec_hashtable_wf(&resized),
+                resized.spec_hash == table.spec_hash;
     }
 
     } // verus!

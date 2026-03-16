@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+use vstd::prelude::Ghost;
 use apas_verus::Chap47::DoubleHashFlatHashTableStEph::DoubleHashFlatHashTableStEph::*;
 use apas_verus::Chap47::FlatHashTable::FlatHashTable::*;
 use apas_verus::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
@@ -15,6 +16,7 @@ fn test_insert_and_lookup() {
         <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     for _ in 0..11 {
@@ -46,6 +48,7 @@ fn test_delete() {
         <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     for _ in 0..11 {
@@ -83,6 +86,7 @@ fn test_probe_double_hash_sequence() {
         <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     let key = 5;
@@ -107,6 +111,7 @@ fn test_probe_visits_all_slots_prime_size() {
         <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             zero_hash,
             11,
+            Ghost::assume_new(),
         );
 
     let key = 1;
@@ -130,6 +135,7 @@ fn test_find_slot() {
         <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     for _ in 0..11 {
@@ -146,6 +152,7 @@ fn test_update_existing_key() {
         <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     for _ in 0..11 {
@@ -168,6 +175,7 @@ fn test_high_load_factor() {
         <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     for _ in 0..11 {
@@ -194,6 +202,7 @@ fn test_delete_maintains_probe_chain() {
         <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     for _ in 0..11 {
@@ -225,6 +234,7 @@ fn test_lookup_nonexistent_key() {
         <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     for _ in 0..11 {
@@ -257,6 +267,7 @@ fn test_resize_empty_table() {
         <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     let new_table = DoubleHashFlatHashTableStEph::resize(&table, 23);
@@ -270,6 +281,7 @@ fn test_resize_with_elements() {
         <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     DoubleHashFlatHashTableStEph::insert(&mut table, 1, "one".to_string());
@@ -300,6 +312,7 @@ fn test_load_and_size() {
         <DoubleHashFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             11,
+            Ghost::assume_new(),
         );
 
     let result = DoubleHashFlatHashTableStEph::loadAndSize(&table);

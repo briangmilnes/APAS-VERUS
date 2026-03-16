@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+use vstd::prelude::Ghost;
 use apas_verus::Chap47::FlatHashTable::FlatHashTable::*;
 use apas_verus::Chap47::LinProbFlatHashTableStEph::LinProbFlatHashTableStEph::*;
 use apas_verus::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
@@ -15,6 +16,7 @@ fn test_insert_and_lookup() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     LinProbFlatHashTableStEph::insert(&mut table, 1, "one".to_string());
@@ -33,6 +35,7 @@ fn test_delete() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     for _ in 0..10 {
@@ -50,6 +53,7 @@ fn test_probe() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     let slot0 = LinProbFlatHashTableStEph::probe(&table, &5, 0);
@@ -65,6 +69,7 @@ fn test_find_slot() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     for _ in 0..10 {
@@ -129,6 +134,7 @@ fn test_default_insert_with_probe() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     for _ in 0..10 {
@@ -153,6 +159,7 @@ fn test_default_lookup_with_probe() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     for _ in 0..10 {
@@ -209,6 +216,7 @@ fn test_insert_update_existing_key() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     for _ in 0..10 {
@@ -230,6 +238,7 @@ fn test_insert_into_deleted_slot() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     for _ in 0..10 {
@@ -250,6 +259,7 @@ fn test_lookup_through_deleted_entries() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     for _ in 0..10 {
@@ -276,6 +286,7 @@ fn test_delete_not_found() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     for _ in 0..10 {
@@ -293,6 +304,7 @@ fn test_find_slot_with_occupied_matching_key() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     for _ in 0..10 {
@@ -314,6 +326,7 @@ fn test_lookup_exhaustive_probe() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     for _ in 0..10 {
@@ -335,6 +348,7 @@ fn test_resize_empty_table() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     let new_table = LinProbFlatHashTableStEph::resize(&table, 20);
@@ -348,6 +362,7 @@ fn test_resize_with_elements() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     // Insert some elements
@@ -382,6 +397,7 @@ fn test_resize_smaller() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             20,
+            Ghost::assume_new(),
         );
 
     // Insert some elements
@@ -410,6 +426,7 @@ fn test_resize_preserves_deleted_not_reinserted() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     // Insert and delete
@@ -434,6 +451,7 @@ fn test_load_and_size() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     // Initially empty
@@ -462,6 +480,7 @@ fn test_find_slot_table_full_fallback() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), fn(&i32, usize) -> usize>>::createTable(
             zero_hash,
             3,
+            Ghost::assume_new(),
         );
 
     // Fill all slots
@@ -480,6 +499,7 @@ fn test_delete_exhaustive_probe() {
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
             10,
+            Ghost::assume_new(),
         );
 
     // Fill table with keys
