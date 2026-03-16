@@ -21,7 +21,7 @@ Table of Contents:
 =================================================================
 
 ❌ InsertionSortStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap03/InsertionSortStEph.rs:39: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap03/InsertionSortStEph.rs:39: warning: requires_true - requires true — vacuous precondition
         37 | #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         38 | pub fn insertion_sort<T: TotalOrder + Copy>(a: &mut [T]) -> (sorted: &[T])
         40 |         ensures
@@ -73,9 +73,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 06:53:18 -07:00
-Ended:     2026-03-16 06:53:18 -07:00
-Duration:  4ms
+Started:   2026-03-16 07:54:14 -07:00
+Ended:     2026-03-16 07:54:14 -07:00
+Duration:  3ms
 
 Full output: src/Chap03/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap03/analyses/veracity-review-verus-proof-holes.log
+
