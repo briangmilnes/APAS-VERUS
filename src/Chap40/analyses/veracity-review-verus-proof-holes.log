@@ -21,78 +21,78 @@ Table of Contents:
 =================================================================
 
 ❌ BSTKeyValueStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1276: error: assume() - assume(spec_ordered_link(link));
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1276: error: assume() - assume(spec_ordered_link(link));
       1119 |         fn delete_link(link: &mut Link<K, V>, key: &K) -> (deleted: bool)
             ...
       1274 |                                     // Both le(k, rot.key) ✔ and k != rot.key ✔ but && fails.
       1275 |                                     // All 4 sub-assertions of spec_ordered_link ✔ but conjunction fails.
       1277 |                                 }
       1278 |                                 deleted
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:565: error: fn_missing_requires - fn clone_link — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:565: error: fn_missing_requires - fn clone_link — exec fn should have requires
        557 |         fn filter_by_key_kvp(
             ...
        563 | 
        564 | 
        566 |         ensures
        567 |             spec_content_link(&cloned) == spec_content_link(link),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:685: error: fn_missing_requires - fn compare_kv_links — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:685: error: fn_missing_requires - fn compare_kv_links — exec fn should have requires
        673 |         fn new(key: K, value: V, priority: u64) -> (node: Self)
             ...
        683 |     }
        684 | 
        686 |         ensures
        687 |             (a is None && b is None) ==> equal,
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:576: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1517: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:576: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTKeyValueStEph.rs:1517: info: accept()
    Holes: 1 total
       1 × assume()
    Info: 2 total
    Proof functions: 14 total (14 clean, 0 holed)
 ❌ BSTReducedStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:690: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:690: error: external_body - #[verifier::external_body]
        691 |         fn delete(&mut self, key: &K) {
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:546: error: fn_missing_requires - fn clone_link — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:546: error: fn_missing_requires - fn clone_link — exec fn should have requires
        529 |         open spec fn spec_ordered_link(link: &Link<K, V, R>) -> bool
             ...
        544 |     }
        545 | 
        547 |         ensures
        548 |             Lnk::spec_content_link(&cloned) == Lnk::spec_content_link(link),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:646: error: fn_missing_requires - fn compare_reduced_links — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:646: error: fn_missing_requires - fn compare_reduced_links — exec fn should have requires
        643 |         fn lift(_value: &T) -> (lifted: usize) { 1 }
             ...
        644 |     }
        645 | 
        647 |         ensures
        648 |             (a is None && b is None) ==> equal,
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:558: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:628: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:630: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:641: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1419: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:558: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:628: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:630: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:641: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTReducedStEph.rs:1419: info: accept()
    Holes: 1 total
       1 × external_body
    Info: 5 total
    Proof functions: 8 total (8 clean, 0 holed)
 ❌ BSTSizeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:575: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:575: error: external_body - #[verifier::external_body]
        576 |         fn delete(&mut self, key: &T) {
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:538: error: fn_missing_requires - fn compare_links — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:538: error: fn_missing_requires - fn compare_links — exec fn should have requires
        520 |         fn new(key: T, priority: u64) -> (node: Self)
             ...
        536 |     }
        537 | 
        539 |         ensures
        540 |             (a is None && b is None) ==> equal,
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1178: error: fn_missing_requires - fn clone_link — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1178: error: fn_missing_requires - fn clone_link — exec fn should have requires
       1157 |         fn select_link(link: &Link<T>, rank: usize) -> Option<&T>
             ...
       1176 |     // 11. derive impls in verus!
       1177 | 
       1179 |         ensures
       1180 |             Lnk::spec_content_link(&c) == Lnk::spec_content_link(link),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1189: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1244: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1189: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap40/BSTSizeStEph.rs:1244: info: accept()
    Holes: 1 total
       1 × external_body
    Info: 2 total
@@ -148,13 +148,9 @@ Holes Found: 3 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 12:14:42 -07:00
-Ended:     2026-03-16 12:14:42 -07:00
-Duration:  51ms
+Started:   2026-03-16 15:16:41 -07:00
+Ended:     2026-03-16 15:16:41 -07:00
+Duration:  49ms
 
 Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
-12:14:42 -07:00
-Ended:     2026-03-16 12:14:42 -07:00
-Duration:  51ms
-
-Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
