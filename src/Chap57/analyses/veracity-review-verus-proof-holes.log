@@ -22,32 +22,32 @@ Table of Contents:
 
 ✓ DijkstraStEphF64.rs
 ❌ DijkstraStEphI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:100: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphI64.rs:100: error: external_body - #[verifier::external_body]
        101 |         fn cmp(&self, other: &Self) -> Ordering {
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:117: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphI64.rs:117: error: external_body - #[verifier::external_body]
        118 |         fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:165: error: assume() - proof { assume(obeys_feq_clone::<PQEntry>()); }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphI64.rs:165: error: assume() - proof { assume(obeys_feq_clone::<PQEntry>()); }
        154 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
             ...
        163 |         let n = graph.vertices().size();
        164 |         assert(n == graph@.V.len());
        166 | 
        167 |         let mut sssp = SSSPResultStEphI64::new(n, source);
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:182: error: assume() - proof { assume(pq@.len() * 2 <= usize::MAX as int); }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphI64.rs:182: error: assume() - proof { assume(pq@.len() * 2 <= usize::MAX as int); }
        154 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
             ...
        180 |                 obeys_feq_clone::<PQEntry>(),
        181 |         {
        183 |             let (new_pq, min_elem) = pq.delete_min();
        184 |             pq = new_pq;
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:216: error: assume() - proof { assume(pq@.len() + 1 <= usize::MAX as int); }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphI64.rs:216: error: assume() - proof { assume(pq@.len() + 1 <= usize::MAX as int); }
        154 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
             ...
        214 |                                     let new_dist = dist.wrapping_add((*weight) as i64);
        215 |                                     if new_dist < u_dist {
        217 |                                         pq = pq.insert(pq_entry_new(new_dist, *u));
        218 |                                         sssp.set_predecessor(*u, v);
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:93: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphI64.rs:93: warning: requires_true - requires true — vacuous precondition
         91 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
         92 |     fn pq_entry_new(dist: i64, vertex: usize) -> (r: PQEntry)
         94 |         ensures r.dist == dist, r.vertex == vertex,
@@ -108,11 +108,12 @@ Holes Found: 5 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 08:12:40 -07:00
-Ended:     2026-03-16 08:12:40 -07:00
-Duration:  6ms
+Started:   2026-03-16 12:10:11 -07:00
+Ended:     2026-03-16 12:10:11 -07:00
+Duration:  5ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
-ms
+11 -07:00
+Duration:  5ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
