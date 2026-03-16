@@ -595,7 +595,6 @@ pub mod ArraySetStEph {
             false
         }
 
-        #[verifier::external_body]
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -615,6 +614,8 @@ pub mod ArraySetStEph {
                     old_view.no_duplicates(),
                     obeys_feq_full::<T>(),
                     forall|t: &T| #[trigger] f.requires((t,)),
+                    forall|x: T, keep: bool|
+                        f.ensures((&x,), keep) ==> keep == spec_pred(x@),
                     rv_views.len() == result_vec@.len(),
                     forall|j: int| #![trigger rv_views[j]]
                         0 <= j < rv_views.len() ==> rv_views[j] == result_vec@[j]@,
@@ -622,6 +623,11 @@ pub mod ArraySetStEph {
                     forall|j: int| #![trigger rv_views[j]]
                         0 <= j < rv_views.len()
                         ==> old_view.subrange(0, i as int).to_set().contains(rv_views[j]),
+                    forall|j: int| #![trigger rv_views[j]]
+                        0 <= j < rv_views.len() ==> spec_pred(rv_views[j]),
+                    forall|j: int| #![trigger old_view[j]]
+                        0 <= j < i && spec_pred(old_view[j])
+                        ==> rv_views.to_set().contains(old_view[j]),
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
@@ -630,12 +636,11 @@ pub mod ArraySetStEph {
                     proof {
                         lemma_cloned_view_eq(*elem, cloned_elem);
                         assert(elem@ == old_view[i as int]);
+                        assert(spec_pred(elem@));
                     }
                     let ghost cv = cloned_elem@;
                     result_vec.push(cloned_elem);
                     proof {
-                        
-                        
                         assert(!rv_views.contains(cv)) by {
                             if rv_views.contains(cv) {
                                 let k = choose|k: int| 0 <= k < rv_views.len() && rv_views[k] == cv;
@@ -647,9 +652,9 @@ pub mod ArraySetStEph {
                                 assert(false);
                             }
                         };
+                        let ghost old_rv = rv_views;
                         rv_views = rv_views.push(cv);
                         lemma_push_preserves_no_dups(rv_views.drop_last(), cv);
-                        // Update containment: all previous elements in subrange(0, i) ⊆ subrange(0, i+1)
                         let ghost next_sub = old_view.subrange(0, (i + 1) as int);
                         assert forall|j: int| #![trigger rv_views[j]]
                             0 <= j < rv_views.len()
@@ -663,6 +668,31 @@ pub mod ArraySetStEph {
                                 assert(next_sub[i as int] == cv);
                             }
                         };
+                        // spec_pred for new rv_views
+                        assert forall|j: int| #![trigger rv_views[j]]
+                            0 <= j < rv_views.len()
+                            implies spec_pred(rv_views[j]) by {
+                            if j < rv_views.len() - 1 {
+                                assert(old_rv[j] == rv_views[j]);
+                                assert(spec_pred(old_rv[j]));
+                            } else {
+                                assert(rv_views[j] == cv);
+                                assert(spec_pred(cv));
+                            }
+                        };
+                        // completeness: elements at indices < i+1 satisfying spec_pred are in rv_views
+                        assert forall|j: int| #![trigger old_view[j]]
+                            0 <= j < (i + 1) as int && spec_pred(old_view[j])
+                            implies rv_views.to_set().contains(old_view[j]) by {
+                            if j < i as int {
+                                assert(old_rv.to_set().contains(old_view[j]));
+                                let k = choose|k: int| 0 <= k < old_rv.len() && old_rv[k] == old_view[j];
+                                assert(rv_views[k] == old_rv[k]);
+                                assert(rv_views.contains(old_view[j]));
+                            } else {
+                                assert(old_view[j] == cv);
+                            }
+                        };
                     }
                 } else {
                     proof {
@@ -673,6 +703,12 @@ pub mod ArraySetStEph {
                             assert(old_view.subrange(0, i as int).to_set().contains(rv_views[j]));
                             let m = choose|m: int| 0 <= m < i && old_view.subrange(0, i as int)[m] == rv_views[j];
                             assert(next_sub[m] == rv_views[j]);
+                        };
+                        // completeness: spec_pred(old_view[i]) is false, so invariant extends
+                        assert forall|j: int| #![trigger old_view[j]]
+                            0 <= j < (i + 1) as int && spec_pred(old_view[j])
+                            implies rv_views.to_set().contains(old_view[j]) by {
+                            assert(j < i as int);
                         };
                     }
                 }
@@ -702,6 +738,28 @@ pub mod ArraySetStEph {
                     };
                 };
                 vstd::seq_lib::seq_to_set_is_finite(filtered.elements@);
+                // spec_arraysetsteph_wf
+                assert(filtered.elements@.no_duplicates());
+                // spec_pred direction
+                assert forall|v: <T as View>::V| #[trigger] filtered@.contains(v)
+                    implies self@.contains(v) && spec_pred(v) by {
+                    if filtered@.contains(v) {
+                        assert(rv_views.to_set().contains(v));
+                        let k = choose|k: int| 0 <= k < rv_views.len() && rv_views[k] == v;
+                        assert(spec_pred(rv_views[k]));
+                        assert(old_view.to_set().contains(v));
+                    }
+                };
+                // completeness direction
+                assert forall|v: <T as View>::V| self@.contains(v) && spec_pred(v)
+                    implies #[trigger] filtered@.contains(v) by {
+                    if self@.contains(v) && spec_pred(v) {
+                        assert(old_view.to_set().contains(v));
+                        let k = choose|k: int| 0 <= k < old_view.len() && old_view[k] == v;
+                        assert(spec_pred(old_view[k]));
+                        assert(rv_views.to_set().contains(old_view[k]));
+                    }
+                };
             }
             filtered
         }

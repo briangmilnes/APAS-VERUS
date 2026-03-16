@@ -23,7 +23,32 @@ Table of Contents:
 ✓ JohnsonMtEphF64.rs
 ✓ JohnsonMtEphI64.rs
 ✓ JohnsonStEphF64.rs
-✓ JohnsonStEphI64.rs
+❌ JohnsonStEphI64.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap59/JohnsonStEphI64.rs:68: error: external_body - #[verifier::external_body]
+        69 |     fn neg_cycle_error_string() -> (s: String) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap59/JohnsonStEphI64.rs:77: error: fn_missing_requires - fn adjust_distance — exec fn should have requires
+        69 |     fn neg_cycle_error_string() -> (s: String) {
+            ...
+        75 |     /// - APAS: N/A — Verus-specific scaffolding.
+        76 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
+        78 |         ensures
+        79 |             d_prime == UNREACHABLE ==> result == UNREACHABLE,
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap59/JohnsonStEphI64.rs:93: error: fn_missing_requires_ensures - fn reweight_edge — exec fn should have requires and ensures
+        77 |     fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (result: i64)
+            ...
+        91 |     /// - APAS: N/A — Verus-specific scaffolding.
+        92 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
+        94 |     {
+        95 |         let diff: i128 = (h_u as i128) - (h_v as i128);
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap59/JohnsonStEphI64.rs:333: error: fn_missing_requires - fn create_negative_cycle_result — exec fn should have requires
+       243 |     fn reweight_graph(
+            ...
+       331 |     /// - APAS: N/A — Verus-specific scaffolding.
+       332 |     /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2).
+       334 |         ensures
+       335 |             result.spec_n() == n,
+   Holes: 1 total
+      1 × external_body
 
 =================================================================
 2. Depends Upon
@@ -52,8 +77,8 @@ JohnsonStEphI64.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   3 clean (no holes, no errors; 75%)
+   1 holed (holes or errors, 25%)
    4 total
 
 Proof Functions:
@@ -62,24 +87,22 @@ Proof Functions:
    0 total
 
 Function Specs:
-   2 exec fns with complete spec (requires+ensures) (100%)
-   0 exec fns missing spec (0%)
+   7 exec fns with complete spec (requires+ensures) (70%)
+   3 exec fns missing spec (30%)
    0 proof/spec fns clean (0%)
    0 proof/spec fns with holes (0%)
-   2 total fns
+   10 total fns
 
 
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
+Holes Found: 1 total
+   1 × external_body (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-15 17:15:10 -07:00
-Ended:     2026-03-15 17:15:10 -07:00
-Duration:  3ms
+Started:   2026-03-15 18:28:51 -07:00
+Ended:     2026-03-15 18:28:51 -07:00
+Duration:  7ms
 
-Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
