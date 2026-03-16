@@ -176,7 +176,14 @@ minor). You bring:
 2. On conflict: resolve with `scripts/resolve-analysis-merge.sh`, commit, run `scripts/validate-check-rtt-ptt.sh`
 3. Repeat for each agent branch
 4. After all merges: regenerate analyses (`scripts/all-holes-by-chap.sh`, etc.)
-5. Commit, push, then `scripts/rebase-agents.sh`
+5. Commit, push, then **wait for user to request rebase** (see below).
+
+**Do NOT rebase agents without asking.** Agents may be running. Running
+`scripts/rebase-agents.sh` while agents have uncommitted work destroys that work. After
+pushing to main, tell the user: "Main is pushed. Ready to rebase agents when you say go."
+Only run the rebase script when the user explicitly asks (e.g., "rebase agents", "go
+ahead and rebase"). This applies to all forms of agent worktree modification — rebase,
+stash, checkout, reset.
 
 **Explicit agent-ready signals.** After completing merge/rebase/push operations for an
 agent, explicitly tell the user which agents are ready to receive new work. Use this exact
@@ -434,6 +441,28 @@ Only proof-mode calls (lemma invocations, `reveal`, `let ghost`) need `proof { }
 **Triggers**: Use `#![auto]` during development, then replace with explicit `#[trigger]`
 from Verus's proposals. Do not leave `#![auto]` or trigger warnings in final code.
 Clean up all trigger warnings as they occur — do not defer them.
+
+When Verus emits "Could not automatically infer triggers" (an error, not a warning),
+`#![auto]` will NOT help — there is nothing for it to select. You must manually add
+`#[trigger]` to one or more terms in the quantifier body. A good trigger term is a
+function application that mentions ALL bound variables and appears in both the hypothesis
+and conclusion. Common patterns:
+
+```rust
+// Single trigger on a function call:
+forall|i: int| 0 <= i < n ==> #[trigger] seq[i] == f(i)
+
+// Trigger on a spec function:
+forall|k: Key| #[trigger] table@.contains_key(k) ==> bucket_contains(table, k, hash)
+
+// Multiple triggers when one term doesn't cover all bound vars:
+forall|i: int, j: int| #![trigger seq1[i], seq2[j]] ...
+```
+
+If no function application mentions all bound variables, restructure the quantifier:
+factor into two nested `forall`s, add a helper spec function that takes all bound
+variables, or add a conjunction term that Verus can use as a trigger. Never leave a
+trigger error unresolved — it means the SMT solver cannot instantiate the quantifier.
 
 **Nested functions**: Do not use. Keep helpers at module level (Verus proof limitation).
 

@@ -214,6 +214,7 @@ pub mod experiments {
     // pub mod derive_clone_enum_in_verus;
     // pub mod derive_copy_struct_in_verus;
     // pub mod derive_copy_enum_in_verus;
+    // pub mod copy_vs_clone_wars;  // RESULT: FAILS (Copy doesn't eliminate Clone/PartialEq workaround assumes)
     // pub mod derive_default_struct_in_verus;
     // pub mod derive_default_enum_in_verus;
     // pub mod derive_hash_struct_in_verus;
