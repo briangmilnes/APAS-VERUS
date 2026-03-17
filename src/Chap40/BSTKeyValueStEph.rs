@@ -324,6 +324,7 @@ pub mod BSTKeyValueStEph {
         ensures spec_ordered_link(link),
     {}
 
+
     /// Strict less-than transitivity: (le(a,b) && a!=b) && (le(b,c) && b!=c) ==> (le(a,c) && a!=c).
     proof fn lemma_strict_lt_transitive<K: StT + Ord + TotalOrder>(a: K, b: K, c: K)
         requires
@@ -562,7 +563,8 @@ pub mod BSTKeyValueStEph {
 
 
 
-    fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (cloned: Link<K, V>)
+    fn clone_link<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>) -> (cloned: Link<K, V>)
+        requires spec_ordered_link(link),
         ensures
             spec_content_link(&cloned) == spec_content_link(link),
             spec_node_count_link(&cloned) == spec_node_count_link(link),
@@ -571,6 +573,7 @@ pub mod BSTKeyValueStEph {
         match link {
             None => None,
             Some(node) => {
+                proof { reveal_with_fuel(spec_ordered_link, 2); }
                 let k = node.key.clone();
                 let v = node.value.clone();
                 proof { accept(k == node.key && v == node.value); } // accept hole: Clone bridge
@@ -682,7 +685,8 @@ pub mod BSTKeyValueStEph {
         }
     }
 
-    fn compare_kv_links<K: StT + Ord, V: StT>(a: &Link<K, V>, b: &Link<K, V>) -> (equal: bool)
+    fn compare_kv_links<K: StT + Ord + TotalOrder, V: StT>(a: &Link<K, V>, b: &Link<K, V>) -> (equal: bool)
+        requires spec_ordered_link(a), spec_ordered_link(b),
         ensures
             (a is None && b is None) ==> equal,
             (a is Some && b is None) ==> !equal,
@@ -692,6 +696,7 @@ pub mod BSTKeyValueStEph {
         match (a, b) {
             (None, None) => true,
             (Some(an), Some(bn)) => {
+                proof { reveal_with_fuel(spec_ordered_link, 2); }
                 an.key == bn.key && an.value == bn.value
                     && compare_kv_links(&an.left, &bn.left)
                     && compare_kv_links(&an.right, &bn.right)
@@ -1241,39 +1246,61 @@ pub mod BSTKeyValueStEph {
                                 deleted
                             } else {
                                 Self::rotate_left(link);
-                                // After rotate_left, key is in the left subtree.
+                                // Unfold ordering before take — link still Some(rotated).
+                                proof {
+                                    reveal_with_fuel(spec_ordered_link, 2);
+                                    assert(spec_ordered_link(link));
+                                }
                                 let mut rot = link.take().unwrap();
                                 let ghost rot_left_content = spec_content_link(&rot.left);
                                 let ghost rot_right_content = spec_content_link(&rot.right);
                                 proof {
-                                    reveal_with_fuel(spec_ordered_link, 2);
                                     reveal_with_fuel(spec_content_link, 2);
                                     reveal_with_fuel(spec_node_count_link, 2);
                                     assert(old_content =~=
                                         rot_left_content.union_prefer_right(rot_right_content).insert(rot.key, rot.value));
-                                    // Pin pre-delete left ordering for post-recursion lemma.
-                                    assert(forall |k: K| #![auto] rot_left_content.contains_key(k)
-                                        ==> (TotalOrder::le(k, rot.key) && k != rot.key));
                                 }
                                 let deleted = Self::delete_link(&mut rot.left, key);
                                 *link = Some(rot);
+                                // Content proof.
                                 proof {
                                     reveal_with_fuel(spec_content_link, 2);
                                     reveal_with_fuel(spec_node_count_link, 2);
-                                    // Key not in right subtree (ordering + antisymmetric).
                                     if rot_right_content.contains_key(*key) {
                                         K::antisymmetric(rot.key, *key);
                                     }
                                     assert(spec_content_link(link) =~= old_content.remove(*key));
-                                    // Right unchanged — direct assertion (mirrors rotate_right pattern).
-                                    assert(forall |k: K| #![auto] spec_content_link(&rot.right).contains_key(k)
-                                        ==> (TotalOrder::le(rot.key, k) && k != rot.key));
-                                    // Z3 flaky conjunction: all sub-assertions verify individually (✔)
-                                    // but conjunctions fail. The symmetric rotate_right case above
-                                    // verifies identically with lemma_ordered_assemble_kv.
-                                    // Both le(k, rot.key) ✔ and k != rot.key ✔ but && fails.
-                                    // All 4 sub-assertions of spec_ordered_link ✔ but conjunction fails.
-                                    assume(spec_ordered_link(link));
+                                }
+                                // Left subtree ordering after deletion.
+                                proof {
+                                    assert forall |k: K| #![auto] spec_content_link(&rot.left).contains_key(k)
+                                        implies (TotalOrder::le(k, rot.key) && k != rot.key) by {
+                                        assert(rot_left_content.contains_key(k));
+                                    };
+                                }
+                                // Incrementally build conjunction to work around Z3 flakiness.
+                                proof {
+                                    reveal_with_fuel(spec_ordered_link, 2);
+                                    // Connect rot fields to link.unwrap() fields.
+                                    let node = link.unwrap();
+                                    assert(node.left == rot.left);
+                                    assert(node.right == rot.right);
+                                    assert(node.key == rot.key);
+                                    let ghost c1 = spec_ordered_link(&node.left);
+                                    let ghost c2 = spec_ordered_link(&node.right);
+                                    assert(c1);
+                                    assert(c2);
+                                    assert(c1 && c2);
+                                    let ghost c3 = forall |k: K| #![auto] spec_content_link(&node.left).contains_key(k)
+                                        ==> (TotalOrder::le(k, node.key) && k != node.key);
+                                    assert(c3);
+                                    assert(c1 && c2 && c3);
+                                    let ghost c4 = forall |k: K| #![auto] spec_content_link(&node.right).contains_key(k)
+                                        ==> (TotalOrder::le(node.key, k) && k != node.key);
+                                    assert(c4);
+                                    assert(c1 && c2 && c3 && c4);
+                                    assert(spec_ordered_link(link) == (c1 && c2 && c3 && c4));
+                                    assert(spec_ordered_link(link));
                                 }
                                 deleted
                             }
@@ -1476,8 +1503,9 @@ pub mod BSTKeyValueStEph {
 
 
 
-    impl<K: StT + Ord, V: StT> Clone for Node<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT> Clone for Node<K, V> {
         fn clone(&self) -> Self {
+            proof { assume(spec_ordered_link(&self.left)); assume(spec_ordered_link(&self.right)); } // Clone body: ordering bridge
             Node {
                 key: self.key.clone(),
                 value: self.value.clone(),
@@ -1488,12 +1516,13 @@ pub mod BSTKeyValueStEph {
         }
     }
 
-    impl<K: StT + Ord, V: StT> Clone for BSTKeyValueStEph<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT> Clone for BSTKeyValueStEph<K, V> {
         fn clone(&self) -> (cloned: Self)
             ensures
                 cloned@ == self@,
                 cloned.size == self.size,
         {
+            proof { assume(spec_ordered_link(&self.root)); } // Clone body: ordering bridge
             BSTKeyValueStEph {
                 root: clone_link(&self.root),
                 size: self.size,
@@ -1502,17 +1531,18 @@ pub mod BSTKeyValueStEph {
     }
 
     #[cfg(verus_keep_ghost)]
-    impl<K: StT + Ord, V: StT> PartialEqSpecImpl for BSTKeyValueStEph<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT> PartialEqSpecImpl for BSTKeyValueStEph<K, V> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    impl<K: StT + Ord, V: StT> Eq for BSTKeyValueStEph<K, V> {}
+    impl<K: StT + Ord + TotalOrder, V: StT> Eq for BSTKeyValueStEph<K, V> {}
 
-    impl<K: StT + Ord, V: StT> PartialEq for BSTKeyValueStEph<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT> PartialEq for BSTKeyValueStEph<K, V> {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
+            proof { assume(spec_ordered_link(&self.root)); assume(spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
             let equal = compare_kv_links(&self.root, &other.root) && self.size == other.size;
             proof { accept(equal == (self@ == other@)); }
             equal

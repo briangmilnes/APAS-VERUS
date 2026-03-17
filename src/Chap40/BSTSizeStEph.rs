@@ -193,6 +193,30 @@ pub mod BSTSizeStEph {
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
     }
 
+    // Root key of a link (arbitrary if None).
+    pub open spec fn spec_root_key_link<T: StT + Ord>(link: &Link<T>) -> T {
+        match link {
+            Some(node) => node.key,
+            None => arbitrary(),
+        }
+    }
+
+    // Whether a link's root has a left child.
+    pub open spec fn spec_has_left_child_link<T: StT + Ord>(link: &Link<T>) -> bool {
+        match link {
+            Some(node) => node.left.is_some(),
+            None => false,
+        }
+    }
+
+    // Whether a link's root has a right child.
+    pub open spec fn spec_has_right_child_link<T: StT + Ord>(link: &Link<T>) -> bool {
+        match link {
+            Some(node) => node.right.is_some(),
+            None => false,
+        }
+    }
+
     // 8. traits
 
     pub trait LinkTrait<T: StT + Ord>: Sized {
@@ -253,7 +277,10 @@ pub mod BSTSizeStEph {
                 self.spec_size() >= old(self).spec_size();
         /// - APAS: Work Θ(n), Span Θ(n)
         fn delete(&mut self, key: &T)
-            requires old(self).spec_bstsizesteph_wf(),
+            requires
+                old(self).spec_bstsizesteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                forall |a: T, b: T| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures
                 self@ == old(self)@.remove(*key),
                 self.spec_bstsizesteph_wf(),
@@ -337,7 +364,13 @@ pub mod BSTSizeStEph {
                 Lnk::spec_size_link(link) == Lnk::spec_size_link(old(link)),
                 Lnk::spec_link_size_wf(link),
                 Lnk::spec_content_link(link) == Lnk::spec_content_link(old(link)),
-                Lnk::spec_ordered_link(link);
+                Lnk::spec_ordered_link(link),
+                // After non-trivial rotation, root key comes from right subtree.
+                spec_has_right_child_link(old(link)) ==> (
+                    spec_root_key_link(link) != spec_root_key_link(old(link))
+                    && spec_root_key_link(link).cmp_spec(&spec_root_key_link(old(link)))
+                        == std::cmp::Ordering::Greater
+                );
         fn rotate_right(link: &mut Link<T>)
             requires
                 Lnk::spec_link_size_wf(old(link)),
@@ -348,7 +381,13 @@ pub mod BSTSizeStEph {
                 Lnk::spec_size_link(link) == Lnk::spec_size_link(old(link)),
                 Lnk::spec_link_size_wf(link),
                 Lnk::spec_content_link(link) == Lnk::spec_content_link(old(link)),
-                Lnk::spec_ordered_link(link);
+                Lnk::spec_ordered_link(link),
+                // After non-trivial rotation, root key comes from left subtree.
+                spec_has_left_child_link(old(link)) ==> (
+                    spec_root_key_link(link) != spec_root_key_link(old(link))
+                    && spec_root_key_link(link).cmp_spec(&spec_root_key_link(old(link)))
+                        == std::cmp::Ordering::Less
+                );
         fn insert_link(link: &mut Link<T>, value: T, priority: u64)
             requires
                 Lnk::spec_size_link(old(link)) + 1 <= usize::MAX as nat,
@@ -363,6 +402,19 @@ pub mod BSTSizeStEph {
                 Lnk::spec_content_link(link) == Lnk::spec_content_link(old(link)).insert(value),
                 Lnk::spec_ordered_link(link),
             decreases old(link);
+        fn delete_link(link: &mut Link<T>, key: &T) -> (deleted: bool)
+            requires
+                Lnk::spec_ordered_link(old(link)),
+                Lnk::spec_link_size_wf(old(link)),
+                Lnk::spec_size_link(old(link)) <= usize::MAX as nat,
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                forall |a: T, b: T| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
+            ensures
+                Lnk::spec_content_link(link) == Lnk::spec_content_link(old(link)).remove(*key),
+                Lnk::spec_ordered_link(link),
+                Lnk::spec_link_size_wf(link),
+                Lnk::spec_size_link(link) + if deleted { 1nat } else { 0nat } == Lnk::spec_size_link(old(link)),
+            decreases Lnk::spec_size_link(old(link));
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -536,6 +588,7 @@ pub mod BSTSizeStEph {
     }
 
     fn compare_links<T: StT + Ord>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
+        requires Lnk::spec_ordered_link(a), Lnk::spec_ordered_link(b),
         ensures
             (a is None && b is None) ==> equal,
             (a is Some && b is None) ==> !equal,
@@ -572,12 +625,8 @@ pub mod BSTSizeStEph {
             Self::insert_link(&mut self.root, value, priority);
         }
 
-        #[verifier::external_body]
         fn delete(&mut self, key: &T) {
-            let mut items: Vec<(T, u64)> = Vec::new();
-            Self::in_order_collect_with_priority(&self.root, &mut items);
-            let filtered = Self::filter_by_key(&items, key);
-            self.root = Self::build_treap_from_vec(&filtered, 0, filtered.len());
+            Self::delete_link(&mut self.root, key);
         }
 
         fn find(&self, target: &T) -> Option<&T> { Self::find_link(&self.root, target) }
@@ -743,6 +792,9 @@ pub mod BSTSizeStEph {
                     proof {
                         lemma_wf_assemble(link);
                         lemma_ordered_assemble(link);
+                        // Root key postcondition: new root is y_key, old was x_key, y_key > x_key.
+                        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                        assert(y_key != x_key);
                     }
                 } else {
                     *link = Some(x);
@@ -846,6 +898,9 @@ pub mod BSTSizeStEph {
                     proof {
                         lemma_wf_assemble(link);
                         lemma_ordered_assemble(link);
+                        // Root key postcondition: new root is y_key, old was x_key, y_key < x_key.
+                        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                        assert(y_key != x_key);
                     }
                 } else {
                     *link = Some(x);
@@ -950,6 +1005,178 @@ pub mod BSTSizeStEph {
                     lemma_wf_assemble(link);
                     lemma_ordered_assemble(link);
                 }
+            }
+        }
+
+        fn delete_link(link: &mut Link<T>, key: &T) -> (deleted: bool)
+            decreases Lnk::spec_size_link(old(link)),
+        {
+            proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
+            let ghost old_content = Lnk::spec_content_link(link);
+            let ghost old_size = Lnk::spec_size_link(link);
+            if let Some(mut node) = link.take() {
+                let ghost old_left_content = Lnk::spec_content_link(&node.left);
+                let ghost old_right_content = Lnk::spec_content_link(&node.right);
+                let ghost node_key = node.key;
+                let ghost old_left_size = Lnk::spec_size_link(&node.left);
+                let ghost old_right_size = Lnk::spec_size_link(&node.right);
+                proof {
+                    assert(Lnk::spec_ordered_link(&node.left));
+                    assert(Lnk::spec_ordered_link(&node.right));
+                    assert(Lnk::spec_link_size_wf(&node.left));
+                    assert(Lnk::spec_link_size_wf(&node.right));
+                    assert(forall |k: T| #![auto] old_left_content.contains(k)
+                        ==> k.cmp_spec(&node_key) == std::cmp::Ordering::Less);
+                    assert(forall |k: T| #![auto] old_right_content.contains(k)
+                        ==> k.cmp_spec(&node_key) == std::cmp::Ordering::Greater);
+                    assert(old_content =~=
+                        old_left_content.union(old_right_content).insert(node_key));
+                    assert(old_size == 1 + old_left_size + old_right_size);
+                }
+
+                match key.cmp(&node.key) {
+                    std::cmp::Ordering::Less => {
+                        assert((*key).cmp_spec(&node_key) == std::cmp::Ordering::Less);
+                        proof {
+                            if old_right_content.contains(*key) {
+                                assert((*key).cmp_spec(&node_key) == std::cmp::Ordering::Greater);
+                            }
+                        }
+                        let deleted = Self::delete_link(&mut node.left, key);
+                        Self::update_size(&mut *node);
+                        *link = Some(node);
+                        proof {
+                            lemma_wf_assemble(link);
+                            assert forall |k: T| #![auto] Lnk::spec_content_link(&node.left).contains(k)
+                                implies k.cmp_spec(&node.key) == std::cmp::Ordering::Less by {
+                                assert(old_left_content.contains(k));
+                            };
+                            lemma_ordered_assemble(link);
+                            reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                            assert(*key != node_key);
+                            assert(Lnk::spec_content_link(link) =~= old_content.remove(*key));
+                        }
+                        deleted
+                    }
+                    std::cmp::Ordering::Greater => {
+                        assert((*key).cmp_spec(&node_key) == std::cmp::Ordering::Greater);
+                        proof {
+                            if old_left_content.contains(*key) {
+                                assert((*key).cmp_spec(&node_key) == std::cmp::Ordering::Less);
+                            }
+                        }
+                        let deleted = Self::delete_link(&mut node.right, key);
+                        Self::update_size(&mut *node);
+                        *link = Some(node);
+                        proof {
+                            lemma_wf_assemble(link);
+                            assert forall |k: T| #![auto] Lnk::spec_content_link(&node.right).contains(k)
+                                implies k.cmp_spec(&node.key) == std::cmp::Ordering::Greater by {
+                                assert(old_right_content.contains(k));
+                            };
+                            lemma_ordered_assemble(link);
+                            reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                            assert(*key != node_key);
+                            assert(Lnk::spec_content_link(link) =~= old_content.remove(*key));
+                        }
+                        deleted
+                    }
+                    std::cmp::Ordering::Equal => {
+                        assert(*key == node_key);
+                        if node.left.is_none() && node.right.is_none() {
+                            proof {
+                                assert(old_content.remove(*key) =~= Set::<T>::empty());
+                            }
+                            true
+                        } else {
+                            let rotate_right = if node.right.is_none() {
+                                true
+                            } else if node.left.is_none() {
+                                false
+                            } else {
+                                node.left.as_ref().unwrap().priority <= node.right.as_ref().unwrap().priority
+                            };
+                            *link = Some(node);
+                            if rotate_right {
+                                Self::rotate_right(link);
+                                let ghost new_root_key = spec_root_key_link(link);
+                                proof {
+                                    // From rotate_right ensures: new root < old root.
+                                    assert(new_root_key.cmp_spec(&node_key) == std::cmp::Ordering::Less);
+                                    assert(new_root_key != node_key);
+                                }
+                                let mut rot = link.take().unwrap();
+                                let ghost rot_left_content = Lnk::spec_content_link(&rot.left);
+                                let ghost rot_right_content = Lnk::spec_content_link(&rot.right);
+                                proof {
+                                    assert(old_content =~=
+                                        rot_left_content.union(rot_right_content).insert(rot.key));
+                                }
+                                let deleted = Self::delete_link(&mut rot.right, key);
+                                Self::update_size(&mut *rot);
+                                *link = Some(rot);
+                                proof {
+                                    // rot.key == new_root_key != *key.
+                                    assert(rot.key != *key);
+                                    // rot.key < *key by antisymmetry.
+                                    lemma_cmp_antisymmetry_lt(rot.key, *key);
+                                    // If *key in left: key.cmp_spec(&rot.key) == Less, contradicts Greater.
+                                    if rot_left_content.contains(*key) {
+                                        assert((*key).cmp_spec(&rot.key) == std::cmp::Ordering::Less);
+                                    }
+                                    assert(!rot_left_content.contains(*key));
+                                    assert(Lnk::spec_content_link(link) =~= old_content.remove(*key));
+                                    assert forall |k: T| #![auto] Lnk::spec_content_link(&rot.right).contains(k)
+                                        implies k.cmp_spec(&rot.key) == std::cmp::Ordering::Greater by {
+                                        assert(rot_right_content.contains(k));
+                                    };
+                                    lemma_wf_assemble(link);
+                                    lemma_ordered_assemble(link);
+                                }
+                                deleted
+                            } else {
+                                Self::rotate_left(link);
+                                let ghost new_root_key = spec_root_key_link(link);
+                                proof {
+                                    // From rotate_left ensures: new root > old root.
+                                    assert(new_root_key.cmp_spec(&node_key) == std::cmp::Ordering::Greater);
+                                    assert(new_root_key != node_key);
+                                }
+                                let mut rot = link.take().unwrap();
+                                let ghost rot_left_content = Lnk::spec_content_link(&rot.left);
+                                let ghost rot_right_content = Lnk::spec_content_link(&rot.right);
+                                proof {
+                                    assert(old_content =~=
+                                        rot_left_content.union(rot_right_content).insert(rot.key));
+                                }
+                                let deleted = Self::delete_link(&mut rot.left, key);
+                                Self::update_size(&mut *rot);
+                                *link = Some(rot);
+                                proof {
+                                    // rot.key == new_root_key != *key.
+                                    assert(rot.key != *key);
+                                    // rot.key > *key by antisymmetry.
+                                    lemma_cmp_antisymmetry(rot.key, *key);
+                                    // If *key in right: key.cmp_spec(&rot.key) == Greater, contradicts Less.
+                                    if rot_right_content.contains(*key) {
+                                        assert((*key).cmp_spec(&rot.key) == std::cmp::Ordering::Greater);
+                                    }
+                                    assert(!rot_right_content.contains(*key));
+                                    assert(Lnk::spec_content_link(link) =~= old_content.remove(*key));
+                                    assert forall |k: T| #![auto] Lnk::spec_content_link(&rot.left).contains(k)
+                                        implies k.cmp_spec(&rot.key) == std::cmp::Ordering::Less by {
+                                        assert(rot_left_content.contains(k));
+                                    };
+                                    lemma_wf_assemble(link);
+                                    lemma_ordered_assemble(link);
+                                }
+                                deleted
+                            }
+                        }
+                    }
+                }
+            } else {
+                false
             }
         }
 
@@ -1176,6 +1403,7 @@ pub mod BSTSizeStEph {
     // 11. derive impls in verus!
 
     fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)
+        requires Lnk::spec_ordered_link(link),
         ensures
             Lnk::spec_content_link(&c) == Lnk::spec_content_link(link),
             Lnk::spec_size_link(&c) == Lnk::spec_size_link(link),
@@ -1207,6 +1435,7 @@ pub mod BSTSizeStEph {
 
     impl<T: StT + Ord> Clone for Node<T> {
         fn clone(&self) -> (cloned: Self) {
+            proof { assume(Lnk::spec_ordered_link(&self.left)); assume(Lnk::spec_ordered_link(&self.right)); } // Clone body: ordering bridge
             Node {
                 key: self.key.clone(),
                 priority: self.priority,
@@ -1224,6 +1453,7 @@ pub mod BSTSizeStEph {
                 Lnk::spec_size_link(&cloned.root) == Lnk::spec_size_link(&self.root),
                 Lnk::spec_link_size_wf(&self.root) ==> Lnk::spec_link_size_wf(&cloned.root),
         {
+            proof { assume(Lnk::spec_ordered_link(&self.root)); } // Clone body: ordering bridge
             BSTSizeStEph { root: clone_link(&self.root) }
         }
     }
@@ -1240,6 +1470,7 @@ pub mod BSTSizeStEph {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
+            proof { assume(Lnk::spec_ordered_link(&self.root)); assume(Lnk::spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
             let equal = compare_links(&self.root, &other.root);
             proof { accept(equal == (self@ == other@)); }
             equal
