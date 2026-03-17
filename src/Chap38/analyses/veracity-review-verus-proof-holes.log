@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap38/BSTParaMtEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap38/
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -21,45 +21,56 @@ Table of Contents:
 =================================================================
 
 ❌ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:81: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:81: error: external_body - #[verifier::external_body]
         82 |         open spec fn view(&self) -> Set<<T as View>::V> { Set::empty() }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:97: error: assume_specification - pub assume_specification<T: MtKey + 'static>[ split_inner ](
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:97: error: assume_specification - pub assume_specification<T: MtKey + 'static>[ split_inner ](
         92 |         open spec fn view(&self) -> () { () }
             ...
         95 |     // 7. proof fns/broadcast groups
         96 | 
         98 |         -> (parts: (ParamBST<T>, B, ParamBST<T>))
         99 |         ensures
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:362: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:362: error: external_body - #[verifier::external_body]
        363 |         fn join_pair(&self, other: Self) -> (joined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:367: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:367: error: external_body - #[verifier::external_body]
        368 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:372: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:372: error: external_body - #[verifier::external_body]
        373 |         fn intersect(&self, other: &Self) -> (common: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:377: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:377: error: external_body - #[verifier::external_body]
        378 |         fn difference(&self, other: &Self) -> (remaining: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:382: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:382: error: external_body - #[verifier::external_body]
        383 |         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:392: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:392: error: external_body - #[verifier::external_body]
        393 |         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:397: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:397: error: external_body - #[verifier::external_body]
        398 |         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:210: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:224: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:240: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:263: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:279: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:351: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:417: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:432: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:442: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:417: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:432: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:442: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:210: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:224: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:240: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:263: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:279: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:351: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:417: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:432: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:442: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:417: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:432: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:442: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
    Holes: 9 total
       1 × assume_specification
       8 × external_body
    Info: 9 total
+❌ BSTParaStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:475: error: assume() - proof { assume(
+       442 |         fn expose(&self) -> (exposed: Exposed<T>)
+            ...
+       473 |                     let r = node.right.clone();
+       474 |                     // T::clone has no verified ensures; cmp_spec(k) vs cmp_spec(node.key) unresolvable.
+       476 |                         k@ == node.key@
+       477 |                         && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 5 total (5 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -70,12 +81,14 @@ Table of Contents:
 =================================================================
 
 BSTParaMtEph  depends upon only clean modules
+BSTParaStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
 BSTParaMtEph.rs  depends upon only clean modules
+BSTParaStEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
@@ -83,35 +96,41 @@ BSTParaMtEph.rs  depends upon only clean modules
 
 Modules:
    0 clean (no holes, no errors; 0%)
-   1 holed (holes or errors, 100%)
-   1 total
+   2 holed (holes or errors, 100%)
+   2 total
 
 Proof Functions:
-   0 clean (0%)
+   5 clean (100%)
    0 holed (0%)
-   0 total
+   5 total
 
 Function Specs:
-   38 exec fns with complete spec (requires+ensures) (86%)
+   84 exec fns with complete spec (requires+ensures) (80%)
    0 exec fns missing spec (0%)
-   6 proof/spec fns clean (13%)
+   20 proof/spec fns clean (19%)
    0 proof/spec fns with holes (0%)
-   44 total fns
+   104 total fns
 
 
-Holes Found: 9 total
-   1 × assume_specification (11%)
-   8 × external_body (88%)
+Holes Found: 10 total
+   1 × assume() (10%)
+   1 × assume_specification (10%)
+   8 × external_body (80%)
 
 Structural False Positives: 3 detected (language limitations, not missing proof)
-   3 × EQ_CLONE_ASSUME
+   3 × EQ_CLONE_ASSUME (not in hole count — accept() pattern)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 09:35:58 -07:00
-Ended:     2026-03-17 09:35:58 -07:00
-Duration:  9ms
+Started:   2026-03-17 10:22:39 -07:00
+Ended:     2026-03-17 10:22:39 -07:00
+Duration:  26ms
+
+Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
+-07:00
+Ended:     2026-03-17 10:22:39 -07:00
+Duration:  26ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log

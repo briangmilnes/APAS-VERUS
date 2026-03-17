@@ -431,7 +431,6 @@ pub mod LinkedListChainedHashTableStEph {
 
             /// - APAS: Work O(n + m + m'), Span O(n + m + m').
             /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' lists, reinserts.
-            #[verifier::external_body]
             fn resize(
                 table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>,
                 new_size: usize,
@@ -443,35 +442,86 @@ pub mod LinkedListChainedHashTableStEph {
                     invariant
                         i <= table.table@.len(),
                         table.table@.len() == table.current_size as int,
+                        spec_seq_pairs_to_map(pairs@) =~=
+                            spec_table_to_map::<Key, Value, LinkedListStEphS<(Key, Value)>>(
+                                table.table@.subrange(0, i as int)),
                     decreases table.table.len() - i,
                 {
-                    let ghost table_len = table.table@.len();
+                    let ghost outer_map = spec_seq_pairs_to_map(pairs@);
                     let chain_len = table.table[i].seq.len();
                     let mut j: usize = 0;
                     while j < chain_len
                         invariant
-                            i < table_len,
-                            table.table@.len() == table_len,
+                            i < table.table@.len(),
                             j <= chain_len,
                             chain_len == table.table@[i as int].seq@.len(),
+                            spec_seq_pairs_to_map(pairs@) =~=
+                                outer_map.union_prefer_right(
+                                    spec_seq_pairs_to_map(
+                                        table.table@[i as int].seq@.subrange(0, j as int))),
                         decreases chain_len - j,
                     {
-                        pairs.push((table.table[i].seq[j].0.clone(), table.table[i].seq[j].1.clone()));
+                        let ghost old_pairs = pairs@;
+                        let ghost old_map = spec_seq_pairs_to_map(old_pairs);
+                        let ghost chain = table.table@[i as int].seq@;
+                        let k = table.table[i].seq[j].0.clone();
+                        let v = table.table[i].seq[j].1.clone();
+                        proof {
+                            accept(k == chain[j as int].0);
+                            accept(v == chain[j as int].1);
+                        }
+                        pairs.push((k, v));
+                        proof {
+                            assert(pairs@.drop_last() =~= old_pairs);
+                            assert(pairs@.last() == (k, v));
+                            assert(spec_seq_pairs_to_map(pairs@) =~= old_map.insert(k, v));
+                            let ghost chain_sub = chain.subrange(0, j as int);
+                            let ghost chain_sub_next = chain.subrange(0, (j + 1) as int);
+                            assert(chain_sub_next.drop_last() =~= chain_sub);
+                            assert(chain_sub_next.last() == chain[j as int]);
+                            let ghost n = spec_seq_pairs_to_map(chain_sub);
+                            assert(outer_map.union_prefer_right(n).insert(k, v) =~=
+                                outer_map.union_prefer_right(n.insert(k, v)));
+                        }
                         j = j + 1;
+                    }
+                    proof {
+                        assert(table.table@[i as int].seq@.subrange(
+                            0, table.table@[i as int].seq@.len() as int)
+                            =~= table.table@[i as int].seq@);
+                        let ghost sub_next = table.table@.subrange(0, (i + 1) as int);
+                        assert(sub_next.drop_last()
+                            =~= table.table@.subrange(0, i as int));
+                        assert(sub_next.last() == table.table@[i as int]);
                     }
                     i = i + 1;
                 }
+                proof {
+                    assert(table.table@.subrange(0, table.table@.len() as int)
+                        =~= table.table@);
+                }
 
-                // Phase 2: create new table.
+                // Phase 2: create new table with empty entries.
                 let mut new_table_vec: Vec<LinkedListStEphS<(Key, Value)>> = Vec::new();
                 let mut k: usize = 0;
                 while k < new_size
                     invariant
                         k <= new_size,
                         new_table_vec@.len() == k as int,
+                        forall |idx: int| 0 <= idx < new_table_vec@.len()
+                            ==> (#[trigger] new_table_vec@[idx]).seq@.len() == 0,
+                        spec_table_to_map::<Key, Value, LinkedListStEphS<(Key, Value)>>(
+                            new_table_vec@) == Map::<Key, Value>::empty(),
                     decreases new_size - k,
                 {
-                    new_table_vec.push(LinkedListStEphS { seq: Vec::new() });
+                    let ghost old_vec = new_table_vec@;
+                    let empty_chain = LinkedListStEphS { seq: Vec::new() };
+                    new_table_vec.push(empty_chain);
+                    proof {
+                        lemma_table_to_map_push_empty::<
+                            Key, Value, LinkedListStEphS<(Key, Value)>>(
+                            old_vec, new_table_vec@.last());
+                    }
                     k = k + 1;
                 }
                 let mut new_table = HashTable {
@@ -484,6 +534,17 @@ pub mod LinkedListChainedHashTableStEph {
                     spec_hash: table.spec_hash,
                     _phantom: PhantomData,
                 };
+                proof {
+                    assert forall |key: Key, idx: int|
+                        0 <= idx < new_table.table@.len()
+                        && idx != (new_table.spec_hash@)(key) as int
+                            % new_table.current_size as int
+                        implies !#[trigger] new_table.table@[idx]
+                            .spec_entry_to_map().dom().contains(key) by {
+                        assert(new_table.table@[idx].seq@.len() == 0);
+                    }
+                    assert(spec_hashtable_wf(&new_table));
+                }
 
                 // Phase 3: reinsert all pairs.
                 let mut m: usize = 0;
@@ -494,12 +555,29 @@ pub mod LinkedListChainedHashTableStEph {
                         new_table.current_size == new_size,
                         new_table.table@.len() == new_table.current_size as int,
                         new_table.num_elements <= m,
+                        Self::spec_impl_wf(&new_table),
+                        new_table@ =~= spec_seq_pairs_to_map(
+                            pairs@.subrange(0, m as int)),
+                        new_table.spec_hash == table.spec_hash,
                     decreases pairs.len() - m,
                 {
                     let key = pairs[m].0.clone();
                     let value = pairs[m].1.clone();
+                    proof {
+                        accept(key == pairs@[m as int].0);
+                        accept(value == pairs@[m as int].1);
+                    }
                     Self::insert(&mut new_table, key, value);
+                    proof {
+                        assert(pairs@.subrange(0, (m + 1) as int).drop_last()
+                            =~= pairs@.subrange(0, m as int));
+                        assert(pairs@.subrange(0, (m + 1) as int).last()
+                            == pairs@[m as int]);
+                    }
                     m = m + 1;
+                }
+                proof {
+                    assert(pairs@.subrange(0, pairs@.len() as int) =~= pairs@);
                 }
 
                 new_table

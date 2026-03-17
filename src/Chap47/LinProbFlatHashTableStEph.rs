@@ -257,7 +257,6 @@ pub mod LinProbFlatHashTableStEph {
 
         /// - APAS: Work O(n + m + m'), Span O(n + m + m').
         /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs from m slots, creates m' new slots, reinserts n pairs.
-        #[verifier::external_body]
         fn resize(
             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
             new_size: usize,
@@ -269,13 +268,45 @@ pub mod LinProbFlatHashTableStEph {
                 invariant
                     i <= table.table@.len(),
                     table.table@.len() == table.current_size as int,
+                    spec_seq_pairs_to_map(pairs@) =~=
+                        spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(
+                            table.table@.subrange(0, i as int)),
                 decreases table.table.len() - i,
             {
+                let ghost old_pairs = pairs@;
+                let ghost old_map = spec_seq_pairs_to_map(old_pairs);
                 let entry = table.table[i].clone();
                 if let FlatEntry::Occupied(k, v) = entry {
                     pairs.push((k, v));
+                    proof {
+                        // Help Z3 unfold spec_seq_pairs_to_map after push.
+                        assert(pairs@.drop_last() =~= old_pairs);
+                        assert(pairs@.last() == (k, v));
+                        assert(spec_seq_pairs_to_map(pairs@)
+                            =~= spec_seq_pairs_to_map(old_pairs).insert(k, v));
+                        assert(spec_seq_pairs_to_map(pairs@) =~= old_map.insert(k, v));
+                        // Connect to spec_table_to_map via union_prefer_right.
+                        let ghost entry_map = table.table@[i as int].spec_entry_to_map();
+                        assert(entry_map =~= Map::<Key, Value>::empty().insert(k, v));
+                        assert(old_map.insert(k, v)
+                            =~= old_map.union_prefer_right(entry_map));
+                    }
+                } else {
+                    proof {
+                        assert(table.table@[i as int].spec_entry_to_map()
+                            =~= Map::<Key, Value>::empty());
+                    }
+                }
+                proof {
+                    let ghost sub_next = table.table@.subrange(0, (i + 1) as int);
+                    assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
+                    assert(sub_next.last() == table.table@[i as int]);
                 }
                 i = i + 1;
+            }
+            proof {
+                assert(table.table@.subrange(0, table.table@.len() as int)
+                    =~= table.table@);
             }
 
             // Phase 2: create new table with empty entries.
@@ -285,9 +316,18 @@ pub mod LinProbFlatHashTableStEph {
                 invariant
                     k <= new_size,
                     new_table_vec@.len() == k as int,
+                    forall |j: int| 0 <= j < new_table_vec@.len()
+                        ==> (#[trigger] new_table_vec@[j]) is Empty,
+                    spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(new_table_vec@)
+                        == Map::<Key, Value>::empty(),
                 decreases new_size - k,
             {
+                let ghost old_vec = new_table_vec@;
                 new_table_vec.push(FlatEntry::Empty);
+                proof {
+                    lemma_table_to_map_push_empty::<Key, Value, FlatEntry<Key, Value>>(
+                        old_vec, FlatEntry::Empty);
+                }
                 k = k + 1;
             }
             let mut new_table = HashTable {
@@ -300,6 +340,11 @@ pub mod LinProbFlatHashTableStEph {
                 spec_hash: table.spec_hash,
                 _phantom: PhantomData,
             };
+            proof {
+                assert forall |j: int| 0 <= j < new_table.table@.len()
+                    implies (#[trigger] new_table.table@[j]) is Empty by {}
+                assert(spec_linprobflathashsteph_wf(&new_table));
+            }
 
             // Phase 3: reinsert all pairs.
             let mut j: usize = 0;
@@ -310,12 +355,28 @@ pub mod LinProbFlatHashTableStEph {
                     new_table.current_size == new_size,
                     new_table.table@.len() == new_table.current_size as int,
                     new_table.num_elements <= j,
+                    Self::spec_impl_wf(&new_table),
+                    new_table@ =~= spec_seq_pairs_to_map(pairs@.subrange(0, j as int)),
+                    new_table.spec_hash == table.spec_hash,
                 decreases pairs.len() - j,
             {
                 let key = pairs[j].0.clone();
                 let value = pairs[j].1.clone();
+                proof {
+                    accept(key == pairs@[j as int].0); // Clone bridge for Key.
+                    accept(value == pairs@[j as int].1); // Clone bridge for Value.
+                }
                 Self::insert(&mut new_table, key, value);
+                proof {
+                    assert(pairs@.subrange(0, (j + 1) as int).drop_last()
+                        =~= pairs@.subrange(0, j as int));
+                    assert(pairs@.subrange(0, (j + 1) as int).last()
+                        == pairs@[j as int]);
+                }
                 j = j + 1;
+            }
+            proof {
+                assert(pairs@.subrange(0, pairs@.len() as int) =~= pairs@);
             }
 
             new_table

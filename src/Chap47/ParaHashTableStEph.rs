@@ -87,7 +87,7 @@ pub mod ParaHashTableStEph {
     // 7. proof fns
 
     /// All-empty entries produce an empty map when composed by spec_table_to_map.
-    proof fn lemma_table_to_map_push_empty<Key, Value, Entry: EntryTrait<Key, Value>>(
+    pub proof fn lemma_table_to_map_push_empty<Key, Value, Entry: EntryTrait<Key, Value>>(
         table: Seq<Entry>,
         entry: Entry,
     )

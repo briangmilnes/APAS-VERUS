@@ -21,56 +21,56 @@ Table of Contents:
 =================================================================
 
 ℹ BSTKeyValueStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:579: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1508: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1508: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1525: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1545: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1545: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1547: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:579: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:1508: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:1508: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:1525: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:1545: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:1545: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:1547: info: accept()
    Info: 7 total
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:579: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1508: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1508: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1525: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1545: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1545: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1547: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:579: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:1508: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:1508: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:1525: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:1545: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:1545: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTKeyValueStEph.rs:1547: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    14 clean proof functions
 ℹ BSTReducedStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:612: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:682: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:684: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:695: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1608: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1608: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1650: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1650: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1652: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:612: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:682: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:684: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:695: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:1608: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:1608: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:1650: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:1650: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:1652: info: accept()
    Info: 9 total
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:612: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1608: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1608: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1650: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1650: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1652: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:612: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:1608: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:1608: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:1650: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:1650: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTReducedStEph.rs:1652: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    8 clean proof functions
 ℹ BSTSizeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1417: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1438: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1438: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1456: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1473: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1473: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1475: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:1417: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:1438: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:1438: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:1456: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:1473: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:1473: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:1475: info: accept()
    Info: 7 total
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1417: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1438: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1438: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1456: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1473: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1473: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1475: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:1417: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:1438: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:1438: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:1456: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:1473: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:1473: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap40/BSTSizeStEph.rs:1475: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    8 clean proof functions
 
 =================================================================
@@ -118,7 +118,7 @@ Function Specs:
 Holes Found: 0 total
 
 Structural False Positives: 20 detected (language limitations, not missing proof)
-   20 × EQ_CLONE_ASSUME
+   20 × EQ_CLONE_ASSUME (not in hole count — accept() pattern)
 
 🎉 No proof holes or warnings found! All proofs are complete.
 
@@ -126,9 +126,13 @@ Structural False Positives: 20 detected (language limitations, not missing proof
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 09:29:52 -07:00
-Ended:     2026-03-17 09:29:52 -07:00
+Started:   2026-03-17 10:22:39 -07:00
+Ended:     2026-03-17 10:22:39 -07:00
 Duration:  55ms
 
 Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
+ -07:00
+Ended:     2026-03-17 10:22:39 -07:00
+Duration:  55ms
+
 Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
