@@ -1601,6 +1601,7 @@ pub mod BSTSplayStEph {
     /// - APAS: Work O(n), Span O(n)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) -- visits every node.
     fn in_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
+        requires spec_is_bst_link(link),
         ensures out@.len() == old(out)@.len() + spec_in_order_link(link).len(),
         decreases *link,
     {
@@ -1614,6 +1615,7 @@ pub mod BSTSplayStEph {
     /// - APAS: Work O(n), Span O(n)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) -- visits every node.
     fn pre_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
+        requires spec_is_bst_link(link),
         ensures out@.len() == old(out)@.len() + spec_pre_order_link(link).len(),
         decreases *link,
     {
