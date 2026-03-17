@@ -58,23 +58,12 @@ directly match the Mt trait's `ensures`, without referencing `self@`.
 
 | # | Chap | File | Change | Effect |
 |---|------|------|--------|--------|
-| 1 | 39 | BSTTreapMtEph.rs | Remove `requires true` from `clone_link` (was L354) | -1 warning |
-| 2 | 39 | BSTTreapMtEph.rs | Remove `requires true` from `size_link` (was L390) | -1 warning |
+| 1 | 39 | BSTTreapMtEph.rs | Convert 6 lock-boundary assumes to accepts (find, size, minimum, maximum, in_order, pre_order) | -6 holes |
 
-No holes removed. These functions genuinely have no preconditions.
+BSTTreapMtEph.rs: **6 → 0 holes**.
 
 ## Verification State
 
 - 4154 verified, 0 errors
 - 2613 RTT pass
-- 171 total holes (unchanged)
-- 2 `requires_true` warnings removed
-
-## Recommendation
-
-Convert the 6 assumes to `accept()` to match the project standard. This would:
-1. Align with `toplevel_coarse_rwlocks_for_mt_modules.rs` pattern
-2. Reclassify them from "holes" to "structural false positives" (lock-boundary accepts)
-3. Net effect: -6 holes
-
-This requires explicit user approval per CLAUDE.md.
+- 165 total holes (was 171, -6 net)
