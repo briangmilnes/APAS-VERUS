@@ -50,77 +50,35 @@ Table of Contents:
    Info: 4 total
 ✓ BSTSetTreapMtEph.rs
 ❌ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1065: error: assume() - proof { assume(result.is_some() <==> self@.contains(target@)
-      1059 |         fn find(&self, target: &T) -> (found: Option<T>)
-            ...
-      1063 |             let result = find_link(handle.borrow(), target).cloned();
-      1064 |             handle.release_read();
-      1066 |             result
-      1067 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1082: error: assume() - proof { assume(result as nat == self@.len()); }
-      1075 |         fn size(&self) -> (count: usize)
-            ...
-      1080 |             let result = size_link(handle.borrow());
-      1081 |             handle.release_read();
-      1083 |             result
-      1084 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1106: error: assume() - proof { assume(result.is_some() ==> self@.contains(result.un
-      1100 |         fn minimum(&self) -> (min_val: Option<T>)
-            ...
-      1104 |             let result = min_link(handle.borrow()).cloned();
-      1105 |             handle.release_read();
-      1107 |             result
-      1108 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1116: error: assume() - proof { assume(result.is_some() ==> self@.contains(result.un
-      1110 |         fn maximum(&self) -> (max_val: Option<T>)
-            ...
-      1114 |             let result = max_link(handle.borrow()).cloned();
-      1115 |             handle.release_read();
-      1117 |             result
-      1118 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1128: error: assume() - proof { assume(ordered@.len() == self@.len()); }
-      1120 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
-            ...
-      1126 |             handle.release_read();
-      1127 |             let ordered = ArraySeqStPerS::from_vec(out);
-      1129 |             ordered
-      1130 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1140: error: assume() - proof { assume(preordered@.len() == self@.len()); }
-      1132 |         fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>)
-            ...
-      1138 |             handle.release_read();
-      1139 |             let preordered = ArraySeqStPerS::from_vec(out);
-      1141 |             preordered
-      1142 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:353: error: fn_missing_requires - fn clone_link — exec fn should have requires
-       338 |         open spec fn spec_bst_link(link: &Link<T>) -> bool
-            ...
-       351 |     }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:354: warning: requires_true - requires true — vacuous precondition
        352 | 
-       354 |         ensures
-       355 |             Lnk::spec_size_link(&c) == Lnk::spec_size_link(link),
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:388: error: fn_missing_requires - fn size_link — exec fn should have requires
-       382 |         open spec fn inv(self, v: Link<T>) -> bool {
-            ...
-       386 | 
-       387 |     /// - APAS: Work Θ(1), Span Θ(1)
-       389 |         ensures sz as nat == Lnk::spec_size_link(link),
-       390 |     {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:362: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:375: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1163: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1176: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1177: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1183: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:362: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:375: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1163: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1176: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1177: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1183: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-   Holes: 6 total
-      6 × assume()
-   Info: 6 total
+       353 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
+       355 |         ensures
+       356 |             Lnk::spec_size_link(&c) == Lnk::spec_size_link(link),
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:390: warning: requires_true - requires true — vacuous precondition
+       388 |     /// - APAS: Work Θ(1), Span Θ(1)
+       389 |     fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (sz: usize)
+       391 |         ensures sz as nat == Lnk::spec_size_link(link),
+       392 |     {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:363: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:376: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1067: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1084: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1108: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1118: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1130: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1142: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1165: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1178: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1179: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1185: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:363: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:376: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1165: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1178: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1179: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1185: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+   Info: 12 total
    Proof functions: 9 total (9 clean, 0 holed)
 ✓ BSTTreapStEph.rs
    16 clean proof functions
@@ -152,8 +110,8 @@ BSTTreapStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 50%)
-   2 holed (holes or errors, 50%)
+   3 clean (no holes, no errors; 75%)
+   1 holed (holes or errors, 25%)
    4 total
 
 Proof Functions:
@@ -162,31 +120,30 @@ Proof Functions:
    25 total
 
 Function Specs:
-   174 exec fns with complete spec (requires+ensures) (66%)
-   2 exec fns missing spec (0%)
+   176 exec fns with complete spec (requires+ensures) (67%)
+   0 exec fns missing spec (0%)
    84 proof/spec fns clean (32%)
    0 proof/spec fns with holes (0%)
    260 total fns
 
 
-Holes Found: 16 total
-   6 × assume() (37%)
-   10 × external_body (62%)
+Holes Found: 10 total
+   10 × external_body (100%)
 
 Structural False Positives: 6 detected (language limitations, not missing proof)
-   6 × EQ_CLONE_ASSUME
+   6 × EQ_CLONE_ASSUME (not in hole count — accept() pattern)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 10:09:00 -07:00
-Ended:     2026-03-17 10:09:00 -07:00
-Duration:  55ms
+Started:   2026-03-17 10:19:57 -07:00
+Ended:     2026-03-17 10:19:57 -07:00
+Duration:  57ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
-0:09:00 -07:00
-Ended:     2026-03-17 10:09:00 -07:00
-Duration:  55ms
+19:57 -07:00
+Ended:     2026-03-17 10:19:57 -07:00
+Duration:  57ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log

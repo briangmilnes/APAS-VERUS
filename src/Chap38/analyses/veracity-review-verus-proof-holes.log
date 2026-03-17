@@ -118,19 +118,17 @@ Holes Found: 10 total
    8 × external_body (80%)
 
 Structural False Positives: 3 detected (language limitations, not missing proof)
-   3 × EQ_CLONE_ASSUME
+   3 × EQ_CLONE_ASSUME (not in hole count — accept() pattern)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 10:09:00 -07:00
-Ended:     2026-03-17 10:09:00 -07:00
-Duration:  52ms
+Started:   2026-03-17 10:19:57 -07:00
+Ended:     2026-03-17 10:19:57 -07:00
+Duration:  32ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
--07:00
-Ended:     2026-03-17 10:09:00 -07:00
-Duration:  52ms
+uration:  32ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log

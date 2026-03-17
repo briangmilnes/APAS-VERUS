@@ -79,7 +79,9 @@ Function Specs:
 Holes Found: 0 total
 
 Structural False Positives: 4 detected (language limitations, not missing proof)
-   4 × STD_TRAIT_IMPL
+   4 × STD_TRAIT_IMPL (in hole count)
+
+Real Actionable Holes: 0 (0 total - 4 structural FPs in count)
 
 🎉 No proof holes or warnings found! All proofs are complete.
 
@@ -87,13 +89,9 @@ Structural False Positives: 4 detected (language limitations, not missing proof)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 10:08:59 -07:00
-Ended:     2026-03-17 10:08:59 -07:00
-Duration:  4ms
+Started:   2026-03-17 10:19:57 -07:00
+Ended:     2026-03-17 10:19:57 -07:00
+Duration:  3ms
 
 Full output: src/Chap30/analyses/veracity-review-verus-proof-holes.log
-7:00
-Ended:     2026-03-17 10:08:59 -07:00
-Duration:  4ms
-
-Full output: src/Chap30/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap30/analyses/veracity-review-verus-proof-holes.log

@@ -82,7 +82,9 @@ Function Specs:
 Holes Found: 0 total
 
 Structural False Positives: 4 detected (language limitations, not missing proof)
-   4 × THREAD_SPAWN
+   4 × THREAD_SPAWN (in hole count)
+
+Real Actionable Holes: 0 (0 total - 4 structural FPs in count)
 
 🎉 No proof holes or warnings found! All proofs are complete.
 
@@ -90,9 +92,12 @@ Structural False Positives: 4 detected (language limitations, not missing proof)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 10:08:59 -07:00
-Ended:     2026-03-17 10:08:59 -07:00
-Duration:  5ms
+Started:   2026-03-17 10:19:56 -07:00
+Ended:     2026-03-17 10:19:56 -07:00
+Duration:  7ms
 
 Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
+26-03-17 10:19:56 -07:00
+Duration:  7ms
+
+Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log

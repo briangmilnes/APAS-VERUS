@@ -189,7 +189,7 @@ Function Specs:
 Holes Found: 0 total
 
 Structural False Positives: 3 detected (language limitations, not missing proof)
-   3 × EQ_CLONE_ASSUME
+   3 × EQ_CLONE_ASSUME (not in hole count — accept() pattern)
 
 🎉 No proof holes found! All proofs are complete.
 
@@ -197,16 +197,15 @@ Structural False Positives: 3 detected (language limitations, not missing proof)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 10:08:59 -07:00
-Ended:     2026-03-17 10:08:59 -07:00
-Duration:  57ms
+Started:   2026-03-17 10:19:56 -07:00
+Ended:     2026-03-17 10:19:56 -07:00
+Duration:  38ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
-rted/Ended/Duration
-=================================================================
+========================
 
-Started:   2026-03-17 10:08:59 -07:00
-Ended:     2026-03-17 10:08:59 -07:00
-Duration:  57ms
+Started:   2026-03-17 10:19:56 -07:00
+Ended:     2026-03-17 10:19:56 -07:00
+Duration:  38ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log

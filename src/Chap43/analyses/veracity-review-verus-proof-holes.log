@@ -449,22 +449,24 @@ Holes Found: 98 total
    87 × external_body (88%)
 
 Structural False Positives: 12 detected (language limitations, not missing proof)
-   5 × RWLOCK_GHOST
-   4 × EQ_CLONE_ASSUME
-   2 × STD_TRAIT_IMPL
-   1 × OPAQUE_EXTERNAL
+   5 × RWLOCK_GHOST (in hole count)
+   4 × EQ_CLONE_ASSUME (not in hole count — accept() pattern)
+   2 × STD_TRAIT_IMPL (in hole count)
+   1 × OPAQUE_EXTERNAL (in hole count)
+
+Real Actionable Holes: 90 (98 total - 8 structural FPs in count)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 10:09:00 -07:00
-Ended:     2026-03-17 10:09:00 -07:00
-Duration:  147ms
+Started:   2026-03-17 10:19:58 -07:00
+Ended:     2026-03-17 10:19:58 -07:00
+Duration:  101ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
-ted:   2026-03-17 10:09:00 -07:00
-Ended:     2026-03-17 10:09:00 -07:00
-Duration:  147ms
+:58 -07:00
+Ended:     2026-03-17 10:19:58 -07:00
+Duration:  101ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log

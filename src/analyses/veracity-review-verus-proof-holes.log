@@ -629,77 +629,35 @@ Table of Contents:
    Info: 4 total
 ✓ src/Chap39/BSTSetTreapMtEph.rs
 ❌ src/Chap39/BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1065: error: assume() - proof { assume(result.is_some() <==> self@.contains(target@)
-      1059 |         fn find(&self, target: &T) -> (found: Option<T>)
-            ...
-      1063 |             let result = find_link(handle.borrow(), target).cloned();
-      1064 |             handle.release_read();
-      1066 |             result
-      1067 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1082: error: assume() - proof { assume(result as nat == self@.len()); }
-      1075 |         fn size(&self) -> (count: usize)
-            ...
-      1080 |             let result = size_link(handle.borrow());
-      1081 |             handle.release_read();
-      1083 |             result
-      1084 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1106: error: assume() - proof { assume(result.is_some() ==> self@.contains(result.un
-      1100 |         fn minimum(&self) -> (min_val: Option<T>)
-            ...
-      1104 |             let result = min_link(handle.borrow()).cloned();
-      1105 |             handle.release_read();
-      1107 |             result
-      1108 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1116: error: assume() - proof { assume(result.is_some() ==> self@.contains(result.un
-      1110 |         fn maximum(&self) -> (max_val: Option<T>)
-            ...
-      1114 |             let result = max_link(handle.borrow()).cloned();
-      1115 |             handle.release_read();
-      1117 |             result
-      1118 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1128: error: assume() - proof { assume(ordered@.len() == self@.len()); }
-      1120 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
-            ...
-      1126 |             handle.release_read();
-      1127 |             let ordered = ArraySeqStPerS::from_vec(out);
-      1129 |             ordered
-      1130 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1140: error: assume() - proof { assume(preordered@.len() == self@.len()); }
-      1132 |         fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>)
-            ...
-      1138 |             handle.release_read();
-      1139 |             let preordered = ArraySeqStPerS::from_vec(out);
-      1141 |             preordered
-      1142 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:353: error: fn_missing_requires - fn clone_link — exec fn should have requires
-       338 |         open spec fn spec_bst_link(link: &Link<T>) -> bool
-            ...
-       351 |     }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:354: warning: requires_true - requires true — vacuous precondition
        352 | 
-       354 |         ensures
-       355 |             Lnk::spec_size_link(&c) == Lnk::spec_size_link(link),
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:388: error: fn_missing_requires - fn size_link — exec fn should have requires
-       382 |         open spec fn inv(self, v: Link<T>) -> bool {
-            ...
-       386 | 
-       387 |     /// - APAS: Work Θ(1), Span Θ(1)
-       389 |         ensures sz as nat == Lnk::spec_size_link(link),
-       390 |     {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:362: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:375: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1163: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1176: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1177: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1183: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:362: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:375: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1163: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1176: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1177: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1183: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-   Holes: 6 total
-      6 × assume()
-   Info: 6 total
+       353 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
+       355 |         ensures
+       356 |             Lnk::spec_size_link(&c) == Lnk::spec_size_link(link),
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:390: warning: requires_true - requires true — vacuous precondition
+       388 |     /// - APAS: Work Θ(1), Span Θ(1)
+       389 |     fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (sz: usize)
+       391 |         ensures sz as nat == Lnk::spec_size_link(link),
+       392 |     {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:363: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:376: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1067: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1084: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1108: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1118: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1130: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1142: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1165: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1178: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1179: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1185: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:363: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:376: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1165: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1178: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1179: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapMtEph.rs:1185: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+   Info: 12 total
    Proof functions: 9 total (9 clean, 0 holed)
 ✓ src/Chap39/BSTTreapStEph.rs
    16 clean proof functions
@@ -800,6 +758,8 @@ Table of Contents:
        374 |                 ensures common@.len() <= self_vals@.len()
        375 |             {
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:546: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:622: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:623: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph [high]
    Holes: 9 total
       2 × assume()
       2 × unsafe impl
@@ -2311,8 +2271,8 @@ src/ParaPairs.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   223 clean (no holes, no errors; 86%)
-   34 holed (holes or errors, 13%)
+   224 clean (no holes, no errors; 87%)
+   33 holed (holes or errors, 12%)
    257 total
 
 Proof Functions:
@@ -2321,26 +2281,29 @@ Proof Functions:
    369 total
 
 Function Specs:
-   5037 exec fns with complete spec (requires+ensures) (69%)
-   62 exec fns missing spec (0%)
+   5039 exec fns with complete spec (requires+ensures) (69%)
+   60 exec fns missing spec (0%)
    2138 proof/spec fns clean (29%)
    0 proof/spec fns with holes (0%)
    7237 total fns
 
 
-Holes Found: 171 total
-   25 × assume() (14%)
+Holes Found: 165 total
+   19 × assume() (11%)
    1 × assume_specification (0%)
    2 × unsafe impl (1%)
-   141 × external_body (82%)
+   141 × external_body (85%)
    2 × external (1%)
 
-Structural False Positives: 165 detected (language limitations, not missing proof)
-   143 × EQ_CLONE_ASSUME
-   10 × STD_TRAIT_IMPL
-   5 × RWLOCK_GHOST
-   4 × THREAD_SPAWN
-   3 × OPAQUE_EXTERNAL
+Structural False Positives: 167 detected (language limitations, not missing proof)
+   143 × EQ_CLONE_ASSUME (not in hole count — accept() pattern)
+   10 × STD_TRAIT_IMPL (in hole count)
+   5 × RWLOCK_GHOST (in hole count)
+   4 × THREAD_SPAWN (in hole count)
+   3 × OPAQUE_EXTERNAL (in hole count)
+   2 × UNSAFE_SEND_SYNC (in hole count)
+
+Real Actionable Holes: 141 (165 total - 24 structural FPs in count)
 
 =================================================================
 4. Proof Targets
@@ -2352,70 +2315,69 @@ Structural False Positives: 165 detected (language limitations, not missing proo
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap43  (102 holes, 11 files)
-   2  Chap41  (25 holes, 7 files)
-   3  Chap39  (18 holes, 4 files)
-   4  Chap47  (15 holes, 9 files)
+   1  Chap43  (98 holes, 11 files)
+   2  Chap41  (22 holes, 7 files)
+   3  Chap47  (15 holes, 9 files)
+   4  Chap39  (10 holes, 4 files)
    5  Chap38  (10 holes, 2 files)
-   6  Chap57  (5 holes, 3 files)
-   7  Chap59  (4 holes, 4 files)
-   8  Chap37  (3 holes, 19 files)
-   9  Chap45  (2 holes, 7 files)
-   10  Chap27  (0 holes, 4 files)
-   11  Chap54  (0 holes, 4 files)
-   12  Chap03  (0 holes, 1 files)
-   13  Chap50  (0 holes, 8 files)
-   14  Chap23  (0 holes, 2 files)
-   15  Chap51  (0 holes, 8 files)
-   16  Chap62  (0 holes, 4 files)
-   17  Chap11  (0 holes, 5 files)
-   18  Chap42  (0 holes, 4 files)
-   19  Chap52  (0 holes, 14 files)
-   20  Chap28  (0 holes, 11 files)
-   21  Concurrency  (0 holes, 1 files)
-   22  Chap64  (0 holes, 3 files)
-   23  Chap30  (0 holes, 1 files)
-   24  Chap02  (0 holes, 2 files)
-   25  ParaPairs  (0 holes, 1 files)
-   26  Chap17  (0 holes, 1 files)
-   27  Chap06  (0 holes, 20 files)
-   28  Chap12  (0 holes, 3 files)
-   29  Chap26  (0 holes, 8 files)
-   30  Chap49  (0 holes, 8 files)
-   31  Chap35  (0 holes, 4 files)
-   32  Chap36  (0 holes, 3 files)
-   33  Chap21  (0 holes, 12 files)
-   34  Chap65  (0 holes, 3 files)
-   35  Chap40  (0 holes, 3 files)
-   36  Chap05  (0 holes, 5 files)
-   37  Chap66  (0 holes, 2 files)
-   38  Chap19  (0 holes, 4 files)
-   39  Chap56  (0 holes, 12 files)
-   40  Chap44  (0 holes, 2 files)
-   41  Chap18  (0 holes, 7 files)
-   42  Chap58  (0 holes, 2 files)
-   43  Chap61  (0 holes, 4 files)
+   6  Chap57  (4 holes, 3 files)
+   7  Chap37  (3 holes, 19 files)
+   8  Chap45  (2 holes, 7 files)
+   9  Chap59  (1 holes, 4 files)
+   10  Chap35  (0 holes, 4 files)
+   11  Chap65  (0 holes, 3 files)
+   12  Chap02  (0 holes, 2 files)
+   13  Chap03  (0 holes, 1 files)
+   14  Chap11  (0 holes, 5 files)
+   15  Chap62  (0 holes, 4 files)
+   16  Chap28  (0 holes, 11 files)
+   17  Chap36  (0 holes, 3 files)
+   18  Chap50  (0 holes, 8 files)
+   19  Chap17  (0 holes, 1 files)
+   20  Chap06  (0 holes, 20 files)
+   21  Chap49  (0 holes, 8 files)
+   22  Chap30  (0 holes, 1 files)
+   23  Chap51  (0 holes, 8 files)
+   24  Chap12  (0 holes, 3 files)
+   25  Concurrency  (0 holes, 1 files)
+   26  Chap27  (0 holes, 4 files)
+   27  Chap56  (0 holes, 12 files)
+   28  Chap40  (0 holes, 3 files)
+   29  Chap63  (0 holes, 2 files)
+   30  Chap05  (0 holes, 5 files)
+   31  Chap42  (0 holes, 4 files)
+   32  Chap61  (0 holes, 4 files)
+   33  Chap44  (0 holes, 2 files)
+   34  Chap18  (0 holes, 7 files)
+   35  Chap66  (0 holes, 2 files)
+   36  Chap58  (0 holes, 2 files)
+   37  ParaPairs  (0 holes, 1 files)
+   38  Chap52  (0 holes, 14 files)
+   39  Chap26  (0 holes, 8 files)
+   40  Chap64  (0 holes, 3 files)
+   41  Chap23  (0 holes, 2 files)
+   42  Chap21  (0 holes, 12 files)
+   43  Chap53  (0 holes, 5 files)
    44  Chap55  (0 holes, 8 files)
-   45  Chap53  (0 holes, 5 files)
-   46  Chap63  (0 holes, 2 files)
+   45  Chap19  (0 holes, 4 files)
+   46  Chap54  (0 holes, 4 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
    1  src/Chap43/OrderedTableStEph.rs  (12 holes)
-   2  src/Chap43/OrderedSetStPer.rs  (10 holes)
-   3  src/Chap39/BSTParaTreapMtEph.rs  (10 holes)
+   2  src/Chap39/BSTParaTreapMtEph.rs  (10 holes)
+   3  src/Chap43/OrderedSetStPer.rs  (9 holes)
    4  src/Chap38/BSTParaMtEph.rs  (9 holes)
-   5  src/Chap39/BSTTreapMtEph.rs  (8 holes)
-   6  src/Chap43/OrderedTableMtEph.rs  (7 holes)
-   7  src/Chap47/ParaHashTableStEph.rs  (2 holes)
-   8  src/Chap37/AVLTreeSeqMtPer.rs  (2 holes)
-   9  src/Chap37/AVLTreeSeq.rs  (1 holes)
-   10  src/Chap38/BSTParaStEph.rs  (1 holes)
-   11  src/Chap41/AVLTreeSetStEph.rs  (1 holes)
-   12  src/Chap45/BalancedTreePQ.rs  (1 holes)
-   13  src/Chap45/Example45_2.rs  (1 holes)
+   5  src/Chap43/OrderedTableMtEph.rs  (7 holes)
+   6  src/Chap47/ParaHashTableStEph.rs  (2 holes)
+   7  src/Chap37/AVLTreeSeqMtPer.rs  (2 holes)
+   8  src/Chap45/Example45_2.rs  (1 holes)
+   9  src/Chap41/AVLTreeSetStEph.rs  (1 holes)
+   10  src/Chap45/BalancedTreePQ.rs  (1 holes)
+   11  src/Chap38/BSTParaStEph.rs  (1 holes)
+   12  src/Chap37/AVLTreeSeq.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -2440,7 +2402,7 @@ Structural False Positives: 165 detected (language limitations, not missing proo
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 37 clean, 9 holed, 171 holes (global), 257 modules
+Chapter Status — 46 chapters, 37 clean, 9 holed, 165 holes (global), 257 modules
 
 CLEAN CHAPTERS (37)
   Chapter        Files
@@ -2483,18 +2445,18 @@ CLEAN CHAPTERS (37)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (9) — 184 holes
+HOLED CHAPTERS (9) — 165 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap37             3    19  YES       
   Chap38            10     2  YES       
-  Chap39            18     4  internal  Chap39::BSTParaTreapMtEph
-  Chap41            25     7  NO        Chap37::AVLTreeSeqMtPer
-  Chap43           102    11  NO        Chap42::TableStPer, Chap41::AVLTreeSetStEph
+  Chap39            10     4  internal  Chap39::BSTParaTreapMtEph
+  Chap41            22     7  NO        Chap37::AVLTreeSeqMtPer
+  Chap43            98    11  NO        Chap42::TableStPer, Chap41::AVLTreeSetStEph
   Chap45             2     7  internal  Chap45::BalancedTreePQ
   Chap47            15     9  internal  Chap47::ParaHashTableStEph
-  Chap57             5     3  NO        Chap05::SetStEph
-  Chap59             4     4  NO        Chap05::SetStEph
+  Chap57             4     3  NO        Chap05::SetStEph
+  Chap59             1     4  NO        Chap05::SetStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
@@ -2520,8 +2482,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 10:09:01 -07:00
-Ended:     2026-03-17 10:09:04 -07:00
-Duration:  2429ms
+Started:   2026-03-17 10:19:58 -07:00
+Ended:     2026-03-17 10:20:00 -07:00
+Duration:  1611ms
 
 Full output: /home/milnes/projects/APAS-VERUS-agent4/analyses/veracity-review-verus-proof-holes.log

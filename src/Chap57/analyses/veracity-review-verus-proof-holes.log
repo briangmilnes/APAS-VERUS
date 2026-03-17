@@ -104,15 +104,20 @@ Holes Found: 4 total
    2 × external_body (50%)
 
 Structural False Positives: 2 detected (language limitations, not missing proof)
-   2 × STD_TRAIT_IMPL
+   2 × STD_TRAIT_IMPL (in hole count)
+
+Real Actionable Holes: 2 (4 total - 2 structural FPs in count)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 10:09:01 -07:00
-Ended:     2026-03-17 10:09:01 -07:00
+Started:   2026-03-17 10:19:58 -07:00
+Ended:     2026-03-17 10:19:58 -07:00
 Duration:  6ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
+58 -07:00
+Duration:  6ms
+
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log

@@ -65,6 +65,8 @@ Table of Contents:
        374 |                 ensures common@.len() <= self_vals@.len()
        375 |             {
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:546: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:622: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap41/AVLTreeSetMtEph.rs:623: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph [high]
    Holes: 9 total
       2 × assume()
       2 × unsafe impl
@@ -217,21 +219,24 @@ Holes Found: 22 total
    2 × unsafe impl (9%)
    17 × external_body (77%)
 
-Structural False Positives: 17 detected (language limitations, not missing proof)
-   16 × EQ_CLONE_ASSUME
-   1 × STD_TRAIT_IMPL
+Structural False Positives: 19 detected (language limitations, not missing proof)
+   16 × EQ_CLONE_ASSUME (not in hole count — accept() pattern)
+   2 × UNSAFE_SEND_SYNC (in hole count)
+   1 × STD_TRAIT_IMPL (in hole count)
+
+Real Actionable Holes: 19 (22 total - 3 structural FPs in count)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 10:09:00 -07:00
-Ended:     2026-03-17 10:09:00 -07:00
-Duration:  90ms
+Started:   2026-03-17 10:19:57 -07:00
+Ended:     2026-03-17 10:19:57 -07:00
+Duration:  69ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
-07:00
-Ended:     2026-03-17 10:09:00 -07:00
-Duration:  90ms
+-07:00
+Ended:     2026-03-17 10:19:57 -07:00
+Duration:  69ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
