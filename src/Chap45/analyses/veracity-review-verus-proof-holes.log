@@ -32,15 +32,22 @@ Table of Contents:
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1032: error: assume() - proof { assume(Self::spec_sorted(result.seq@)); }
-      1013 |             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1031: error: assume() - proof { assume(Self::spec_sorted(result.seq@)); }
+      1012 |             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
             ...
-      1030 | 
-      1031 |                 // accept hole: Proving sortedness requires heap property invariant (task #8).
-      1033 |                 result
-      1034 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1175: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1190: info: accept()
+      1029 | 
+      1030 |                 // accept hole: Proving sortedness requires heap property invariant (task #8).
+      1032 |                 result
+      1033 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:284: error: fn_missing_requires - fn parent — exec fn should have requires
+       277 |         fn right_child(i: usize) -> (child_idx: usize)
+            ...
+       282 |         }
+       283 | 
+       285 |             ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
+       286 |         {
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1174: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1189: info: accept()
    Holes: 1 total
       1 × assume()
    Info: 2 total
@@ -128,8 +135,8 @@ Proof Functions:
    14 total
 
 Function Specs:
-   258 exec fns with complete spec (requires+ensures) (71%)
-   1 exec fns missing spec (0%)
+   257 exec fns with complete spec (requires+ensures) (70%)
+   2 exec fns missing spec (0%)
    103 proof/spec fns clean (28%)
    0 proof/spec fns with holes (0%)
    362 total fns
@@ -144,12 +151,9 @@ Holes Found: 4 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 18:04:23 -07:00
-Ended:     2026-03-16 18:04:23 -07:00
-Duration:  56ms
+Started:   2026-03-16 18:11:29 -07:00
+Ended:     2026-03-16 18:11:29 -07:00
+Duration:  47ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
-4:23 -07:00
-Duration:  56ms
-
-Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap45/analyses/veracity-review-verus-proof-holes.log

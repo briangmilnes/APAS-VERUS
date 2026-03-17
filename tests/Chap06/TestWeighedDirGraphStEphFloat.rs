@@ -20,7 +20,7 @@ fn test_weigheddirgraphstephfloatlit_macro_functionality() {
     // Test graph creation with weighed edges
     let with_data = WeighedDirGraphStEphFloatLit!(
         V: [1, 2, 3],
-        A: [Triple(1, 2, OrderedFloat(1.5)), Triple(2, 3, OrderedFloat(2.5)), Triple(3, 1, OrderedFloat(3.5))]
+        A: [WeightedEdge(1, 2, OrderedFloat(1.5)), WeightedEdge(2, 3, OrderedFloat(2.5)), WeightedEdge(3, 1, OrderedFloat(3.5))]
     );
     assert_eq!(with_data.vertices().size(), 3);
     assert_eq!(with_data.arcs().size(), 3);
@@ -254,7 +254,7 @@ fn test_weigheddirgraphstephfloat_complex_topology() {
 #[test]
 fn test_from_weighed_edges() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, OrderedFloat(1.5)), Triple(2, 3, OrderedFloat(2.5))];
+    let edges = SetLit![WeightedEdge(1, 2, OrderedFloat(1.5)), WeightedEdge(2, 3, OrderedFloat(2.5))];
     let g = WeighedDirGraphStEphFloat::from_weighed_edges(vertices, edges);
     assert_eq!(g.vertices().size(), 3);
     assert_eq!(g.labeled_arcs().size(), 2);
@@ -273,7 +273,7 @@ fn test_add_weighed_edge() {
 #[test]
 fn test_get_edge_weight() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, OrderedFloat(4.5))];
+    let edges = SetLit![WeightedEdge(1, 2, OrderedFloat(4.5))];
     let g = WeighedDirGraphStEphFloat::from_weighed_edges(vertices, edges);
     assert_eq!(g.get_edge_weight(&1, &2), Some(OrderedFloat(4.5)));
     assert_eq!(g.get_edge_weight(&2, &3), None);
@@ -282,7 +282,7 @@ fn test_get_edge_weight() {
 #[test]
 fn test_weighed_edges() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, OrderedFloat(1.0)), Triple(2, 3, OrderedFloat(2.0))];
+    let edges = SetLit![WeightedEdge(1, 2, OrderedFloat(1.0)), WeightedEdge(2, 3, OrderedFloat(2.0))];
     let g = WeighedDirGraphStEphFloat::from_weighed_edges(vertices, edges);
     let weighed_edges = g.weighed_edges();
     assert_eq!(weighed_edges.size(), 2);
@@ -291,7 +291,7 @@ fn test_weighed_edges() {
 #[test]
 fn test_out_neighbors_weighed() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, OrderedFloat(1.5)), Triple(1, 3, OrderedFloat(2.5))];
+    let edges = SetLit![WeightedEdge(1, 2, OrderedFloat(1.5)), WeightedEdge(1, 3, OrderedFloat(2.5))];
     let g = WeighedDirGraphStEphFloat::from_weighed_edges(vertices, edges);
     let out_neighbors = g.out_neighbors_weighed(&1);
     assert_eq!(out_neighbors.size(), 2);
@@ -300,7 +300,7 @@ fn test_out_neighbors_weighed() {
 #[test]
 fn test_in_neighbors_weighed() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, OrderedFloat(1.5)), Triple(3, 2, OrderedFloat(2.5))];
+    let edges = SetLit![WeightedEdge(1, 2, OrderedFloat(1.5)), WeightedEdge(3, 2, OrderedFloat(2.5))];
     let g = WeighedDirGraphStEphFloat::from_weighed_edges(vertices, edges);
     let in_neighbors = g.in_neighbors_weighed(&2);
     assert_eq!(in_neighbors.size(), 2);
@@ -309,7 +309,7 @@ fn test_in_neighbors_weighed() {
 #[test]
 fn test_total_weight() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, OrderedFloat(1.0)), Triple(2, 3, OrderedFloat(2.0))];
+    let edges = SetLit![WeightedEdge(1, 2, OrderedFloat(1.0)), WeightedEdge(2, 3, OrderedFloat(2.0))];
     let g = WeighedDirGraphStEphFloat::from_weighed_edges(vertices, edges);
     assert_eq!(g.total_weight(), OrderedFloat(3.0));
 }
@@ -318,9 +318,9 @@ fn test_total_weight() {
 fn test_edges_above_weight() {
     let vertices = SetLit![1, 2, 3, 4];
     let edges = SetLit![
-        Triple(1, 2, OrderedFloat(1.0)),
-        Triple(2, 3, OrderedFloat(5.0)),
-        Triple(3, 4, OrderedFloat(10.0))
+        WeightedEdge(1, 2, OrderedFloat(1.0)),
+        WeightedEdge(2, 3, OrderedFloat(5.0)),
+        WeightedEdge(3, 4, OrderedFloat(10.0))
     ];
     let g = WeighedDirGraphStEphFloat::from_weighed_edges(vertices, edges);
     let above_3 = g.edges_above_weight(OrderedFloat(3.0));
@@ -331,9 +331,9 @@ fn test_edges_above_weight() {
 fn test_edges_below_weight() {
     let vertices = SetLit![1, 2, 3, 4];
     let edges = SetLit![
-        Triple(1, 2, OrderedFloat(1.0)),
-        Triple(2, 3, OrderedFloat(5.0)),
-        Triple(3, 4, OrderedFloat(10.0))
+        WeightedEdge(1, 2, OrderedFloat(1.0)),
+        WeightedEdge(2, 3, OrderedFloat(5.0)),
+        WeightedEdge(3, 4, OrderedFloat(10.0))
     ];
     let g = WeighedDirGraphStEphFloat::from_weighed_edges(vertices, edges);
     let below_6 = g.edges_below_weight(OrderedFloat(6.0));
@@ -343,7 +343,7 @@ fn test_edges_below_weight() {
 #[test]
 fn test_min_weight_edge() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, OrderedFloat(5.0)), Triple(2, 3, OrderedFloat(2.0))];
+    let edges = SetLit![WeightedEdge(1, 2, OrderedFloat(5.0)), WeightedEdge(2, 3, OrderedFloat(2.0))];
     let g = WeighedDirGraphStEphFloat::from_weighed_edges(vertices, edges);
     let min_edge = g.min_weight_edge();
     assert!(min_edge.is_some());
@@ -353,7 +353,7 @@ fn test_min_weight_edge() {
 #[test]
 fn test_max_weight_edge() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, OrderedFloat(5.0)), Triple(2, 3, OrderedFloat(2.0))];
+    let edges = SetLit![WeightedEdge(1, 2, OrderedFloat(5.0)), WeightedEdge(2, 3, OrderedFloat(2.0))];
     let g = WeighedDirGraphStEphFloat::from_weighed_edges(vertices, edges);
     let max_edge = g.max_weight_edge();
     assert!(max_edge.is_some());
@@ -363,7 +363,7 @@ fn test_max_weight_edge() {
 #[test]
 fn test_scale_weights() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, OrderedFloat(2.0)), Triple(2, 3, OrderedFloat(4.0))];
+    let edges = SetLit![WeightedEdge(1, 2, OrderedFloat(2.0)), WeightedEdge(2, 3, OrderedFloat(4.0))];
     let mut g = WeighedDirGraphStEphFloat::from_weighed_edges(vertices, edges);
     g.scale_weights(OrderedFloat(2.0));
     assert_eq!(g.get_edge_weight(&1, &2), Some(OrderedFloat(4.0)));

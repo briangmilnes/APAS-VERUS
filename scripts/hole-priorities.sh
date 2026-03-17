@@ -58,7 +58,7 @@ echo "------------------------------"
 printf "  %-35s %5s\n" "Category" "Count"
 printf "  %-35s %5s\n" "---" "-----"
 
-for cat in fn_missing_requires fn_missing_requires_ensures requires_true \
+for cat in fn_missing_requires fn_missing_ensures fn_missing_requires_ensures requires_true \
            assume external_body assume_specification \
            accept assume_eq_clone_workaround unsafe_impl external; do
     count=$(grep -c "|${cat}$" "$TMP_RAW" || true)
@@ -71,7 +71,7 @@ for cat in fn_missing_requires fn_missing_requires_ensures requires_true \
 done
 echo ""
 
-actionable=$(grep -cE "\|(fn_missing_requires|fn_missing_requires_ensures|requires_true|assume|external_body|assume_specification)$" "$TMP_RAW" || true)
+actionable=$(grep -cE "\|(fn_missing_requires|fn_missing_ensures|fn_missing_requires_ensures|requires_true|assume|external_body|assume_specification)$" "$TMP_RAW" || true)
 echo "  Total actionable: $actionable"
 echo ""
 
@@ -85,7 +85,7 @@ printf "  %-10s %5s %5s %5s %5s\n" "----------" "-----" "-----" "-----" "-----"
 TMP_CHAP="$PROJECT_ROOT/analyses/.hole-chap.tmp"
 > "$TMP_CHAP"
 for chap in $(cut -d'|' -f1 "$TMP_RAW" | sort -u); do
-    fmr=$(grep "^${chap}|" "$TMP_RAW" | grep -cE "\|(fn_missing_requires|fn_missing_requires_ensures|requires_true)$" || true)
+    fmr=$(grep "^${chap}|" "$TMP_RAW" | grep -cE "\|(fn_missing_requires|fn_missing_ensures|fn_missing_requires_ensures|requires_true)$" || true)
     assumes=$(grep "^${chap}|" "$TMP_RAW" | grep -c "|assume$" || true)
     ext=$(grep "^${chap}|" "$TMP_RAW" | grep -c "|external_body$" || true)
     act=$((fmr + assumes + ext))
@@ -105,7 +105,7 @@ echo "-----------------------------------------------------------------------"
 printf "  %-10s %-40s %5s\n" "Chapter" "File" "Count"
 printf "  %-10s %-40s %5s\n" "----------" "----------------------------------------" "-----"
 
-grep -E "\|(fn_missing_requires|fn_missing_requires_ensures|requires_true)$" "$TMP_RAW" | \
+grep -E "\|(fn_missing_requires|fn_missing_ensures|fn_missing_requires_ensures|requires_true)$" "$TMP_RAW" | \
     awk -F'|' '{print $1"|"$2}' | sort | uniq -c | sort -rn | \
     while read -r count chapfile; do
         chap=$(echo "$chapfile" | cut -d'|' -f1)

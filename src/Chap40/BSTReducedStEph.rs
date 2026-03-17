@@ -19,6 +19,7 @@ pub mod BSTReducedStEph {
 
     use std::fmt;
     use std::marker::PhantomData;
+    use std::ops::Add;
 
     use vstd::prelude::*;
 
@@ -673,7 +674,7 @@ pub mod BSTReducedStEph {
         }
     }
 
-    impl<T: ArithmeticT> ReduceOp<T, T> for SumOp<T> {
+    impl<T: StT + Add<Output = T> + Default + Copy> ReduceOp<T, T> for SumOp<T> {
         uninterp spec fn spec_identity() -> T;
         uninterp spec fn spec_combine(a: T, b: T) -> T;
         open spec fn spec_lift(value: T) -> T { value }

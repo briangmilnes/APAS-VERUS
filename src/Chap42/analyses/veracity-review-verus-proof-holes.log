@@ -28,6 +28,13 @@ Table of Contents:
       2174 |     pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (constructed: TableMtEph<K, V>)
       2176 |         ensures constructed@.dom().finite()
       2177 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2174: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include constructed.spec_tablemteph_wf() for return type TableMtEph
+      2161 |         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>) {
+            ...
+      2172 |     }
+      2173 | 
+      2175 |         requires true,
+      2176 |         ensures constructed@.dom().finite()
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2203: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2215: info: accept()
    Info: 2 total
@@ -40,6 +47,13 @@ Table of Contents:
       2084 |     ) -> (cloned: TableStEph<K, V>)
       2086 |         ensures cloned@.dom().finite()
       2087 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2082: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include cloned.spec_tablesteph_wf() for return type TableStEph
+      2069 |         fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>) {
+            ...
+      2080 |     }
+      2081 | 
+      2083 |         entries: Vec<Pair<K, V>>,
+      2084 |     ) -> (cloned: TableStEph<K, V>)
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2119: info: accept()
    Info: 1 total
    Proof functions: 8 total (8 clean, 0 holed)
@@ -51,6 +65,20 @@ Table of Contents:
       2020 |     ) -> (cloned: TableStPer<K, V>)
       2022 |         ensures cloned@.dom().finite()
       2023 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2018: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include cloned.spec_tablestper_wf() for return type TableStPer
+      2004 |         fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
+            ...
+      2016 |     }
+      2017 | 
+      2019 |         entries: Vec<Pair<K, V>>,
+      2020 |     ) -> (cloned: TableStPer<K, V>)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2036: error: fn_missing_wf_ensures - fn collect_by_key — ensures should include grouped.spec_tablestper_wf() for return type TableStPer
+      2018 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
+            ...
+      2034 |     /// APAS Algorithm 42.3: collect groups a sequence of (key, value) pairs into a table
+      2035 |     /// mapping each key to the subsequence of values for that key, preserving order.
+      2037 |         pairs: &ArraySeqStPerS<Pair<K, V>>,
+      2038 |     ) -> (grouped: TableStPer<K, ArraySeqStPerS<V>>)
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2194: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2205: info: accept()
    Info: 2 total
@@ -83,8 +111,8 @@ TableStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   1 clean (no holes, no errors; 25%)
+   3 holed (holes or errors, 75%)
    4 total
 
 Proof Functions:
@@ -108,8 +136,8 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 18:04:23 -07:00
-Ended:     2026-03-16 18:04:23 -07:00
+Started:   2026-03-16 18:11:29 -07:00
+Ended:     2026-03-16 18:11:29 -07:00
 Duration:  74ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log

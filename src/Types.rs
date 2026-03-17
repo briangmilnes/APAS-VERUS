@@ -5,7 +5,6 @@ pub mod Types {
 
     use std::fmt::{Formatter, Debug, Display};
     use std::hash::Hash;
-    use std::ops::Add;
     use vstd::prelude::*;
 
     /// Verus/Rust really needs usize or an int for indexing and lengths; here we have selected usize.
@@ -45,18 +44,9 @@ broadcast use {
     pub open spec fn spec_graphview_wf<V>(gv: GraphView<V>) -> bool {
         &&& gv.V.finite()
         &&& gv.A.finite()
-        &&& forall |u: V, w: V| 
-                #[trigger] gv.A.contains((u, w)) ==> 
+        &&& forall |u: V, w: V|
+                #[trigger] gv.A.contains((u, w)) ==>
                     gv.V.contains(u) && gv.V.contains(w)
-    }
-    /// Well-formedness is preserved when taking a subset of arcs.
-    pub proof fn lemma_spec_graphview_wf_subset_arcs<V>(gv: GraphView<V>, arcs_subset: Set<(V, V)>)
-        requires
-            spec_graphview_wf(gv),
-            arcs_subset <= gv.A,
-        ensures
-            spec_graphview_wf(GraphView { V: gv.V, A: arcs_subset }),
-    {
     }
 
     /// Labeled graph view struct: vertices and labeled arcs/edges.
@@ -71,34 +61,9 @@ broadcast use {
     pub open spec fn spec_labgraphview_wf<V, L>(gv: LabGraphView<V, L>) -> bool {
         &&& gv.V.finite()
         &&& gv.A.finite()
-        &&& forall |u: V, w: V, l: L| 
-                #[trigger] gv.A.contains((u, w, l)) ==> 
+        &&& forall |u: V, w: V, l: L|
+                #[trigger] gv.A.contains((u, w, l)) ==>
                     gv.V.contains(u) && gv.V.contains(w)
-    }
-
-    /// Well-formedness is preserved when taking a subset of arcs.
-    pub proof fn lemma_spec_labgraphview_wf_subset_arcs<V,L>(gv: LabGraphView<V,L>, arcs_subset: Set<(V, V, L)>)
-        requires
-            spec_labgraphview_wf(gv),
-            arcs_subset <= gv.A,
-        ensures
-            spec_labgraphview_wf(LabGraphView { V: gv.V, A: arcs_subset }),
-    {
-    }
-
-    /// Triple wrapper for three-element tuples.
-    #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-    pub struct Triple<A, B, C>(pub A, pub B, pub C);
-
-    /// Quadruple wrapper for four-element tuples.
-    #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-    pub struct Quadruple<A, B, C, D>(pub A, pub B, pub C, pub D);
-
-    /// Key-value struct with named fields.
-    #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-    pub struct KeyVal<K, V> {
-        pub key: K,
-        pub val: V,
     }
 
     /// Single-threaded friendly elements: Eq + Clone + Display + Debug + Sized + View.
@@ -131,14 +96,6 @@ broadcast use {
     #[derive(Copy, PartialEq, Eq, Hash, Debug)]
     pub struct WeightedEdge<V: StT, W: StT + Hash>(pub V, pub V, pub W);
 
-    /// - Weighted Labelled Edge wrapper for edges with both a label and a weight.
-    /// - This is a quadruple: (from, to, label, weight).
-    #[verifier::reject_recursive_types(V)]
-    #[verifier::reject_recursive_types(L)]
-    #[verifier::reject_recursive_types(W)]
-    #[derive(Copy, PartialEq, Eq, Hash, Debug)]
-    pub struct WeightedLabEdge<V: StT, L: StT + Hash, W: StT + Hash>(pub V, pub V, pub L, pub W);
-
     /// Newtype wrapper for key-value pairs with better Display than tuples
     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Pair<K, V>(pub K, pub V);
@@ -165,30 +122,6 @@ broadcast use {
         type V = (V::V, V::V, W::V);
 
         open spec fn view(&self) -> (V::V, V::V, W::V) {(self.0@, self.1@, self.2@)}
-    }
-
-    impl<V: StT, L: StT + Hash, W: StT + Hash> vstd::prelude::View for WeightedLabEdge<V, L, W> {
-        type V = (V::V, V::V, L::V, W::V);
-
-        open spec fn view(&self) -> (V::V, V::V, L::V, W::V) {(self.0@, self.1@, self.2@, self.3@)}
-    }
-
-    impl<A: vstd::prelude::View, B: vstd::prelude::View, C: vstd::prelude::View> vstd::prelude::View for Triple<A, B, C> {
-        type V = (A::V, B::V, C::V);
-
-        open spec fn view(&self) -> (A::V, B::V, C::V) {(self.0@, self.1@, self.2@)}
-    }
-
-    impl<A: vstd::prelude::View, B: vstd::prelude::View, C: vstd::prelude::View, D: vstd::prelude::View> vstd::prelude::View for Quadruple<A, B, C, D> {
-        type V = (A::V, B::V, C::V, D::V);
-
-        open spec fn view(&self) -> (A::V, B::V, C::V, D::V) {(self.0@, self.1@, self.2@, self.3@)}
-    }
-
-    impl<K: vstd::prelude::View, V: vstd::prelude::View> vstd::prelude::View for KeyVal<K, V> {
-        type V = (K::V, V::V);
-
-        open spec fn view(&self) -> (K::V, V::V) {(self.key@, self.val@)}
     }
 
     /// - Axiom that Pair's view is injective (needed for hash collections)
@@ -306,130 +239,11 @@ broadcast use {
         &&& obeys_feq_full::<V>() && obeys_feq_full::<W>() && obeys_feq_full::<WeightedEdge<V, W>>()
         // Also require LabEdge since WeightedGraph implementations use LabDirGraph internally
         &&& obeys_key_model::<LabEdge<V, W>>() && obeys_feq_full::<LabEdge<V, W>>()
-        // Also require Triple and Pair for edge collections and neighbor results
-        &&& obeys_key_model::<Triple<V, V, W>>() && obeys_feq_full::<Triple<V, V, W>>()
+        // Also require Pair for neighbor results
         &&& obeys_key_model::<Pair<V, W>>() && obeys_feq_full::<Pair<V, W>>()
     }
 
-    pub open spec fn WeightedLabEdge_feq_trigger<V: StT + Hash, L: StT + Hash, W: StT + Hash>() -> bool { true }
-
-    pub broadcast proof fn axiom_WeightedLabEdge_feq<V: StT + Hash, L: StT + Hash, W: StT + Hash>()
-        requires #[trigger] WeightedLabEdge_feq_trigger::<V, L, W>()
-        ensures obeys_feq_full::<WeightedLabEdge<V, L, W>>()
-    { admit(); }
-
-    pub broadcast proof fn axiom_WeightedLabEdge_key_model<V: StT + Hash, L: StT + Hash, W: StT + Hash>()
-        requires #[trigger] WeightedLabEdge_feq_trigger::<V, L, W>()
-        ensures obeys_key_model::<WeightedLabEdge<V, L, W>>()
-    { admit(); }
-
-    pub broadcast group group_WeightedLabEdge_axioms {
-        axiom_WeightedLabEdge_feq,
-        axiom_WeightedLabEdge_key_model,
-    }
-
-    pub open spec fn valid_key_type_WeightedLabEdge<V: StT + Hash, L: StT + Hash, W: StT + Hash>() -> bool {
-        &&& obeys_key_model::<V>() && obeys_key_model::<L>() && obeys_key_model::<W>() && obeys_key_model::<WeightedLabEdge<V, L, W>>()
-        &&& obeys_feq_full::<V>() && obeys_feq_full::<L>() && obeys_feq_full::<W>() && obeys_feq_full::<WeightedLabEdge<V, L, W>>()
-    }
-
-    pub open spec fn Triple_feq_trigger<A: StT + Hash, B: StT + Hash, C: StT + Hash>() -> bool { true }
-
-    pub broadcast proof fn axiom_Triple_feq<A: StT + Hash, B: StT + Hash, C: StT + Hash>()
-        requires #[trigger] Triple_feq_trigger::<A, B, C>()
-        ensures obeys_feq_full::<Triple<A, B, C>>()
-    { admit(); }
-
-    pub broadcast proof fn axiom_Triple_key_model<A: StT + Hash, B: StT + Hash, C: StT + Hash>()
-        requires #[trigger] Triple_feq_trigger::<A, B, C>()
-        ensures obeys_key_model::<Triple<A, B, C>>()
-    { admit(); }
-
-    pub broadcast group group_Triple_axioms {
-        axiom_Triple_feq,
-        axiom_Triple_key_model,
-    }
-
-    pub open spec fn valid_key_type_Triple<A: StT + Hash, B: StT + Hash, C: StT + Hash>() -> bool {
-        &&& obeys_key_model::<A>() && obeys_key_model::<B>() && obeys_key_model::<C>() && obeys_key_model::<Triple<A, B, C>>()
-        &&& obeys_feq_full::<A>() && obeys_feq_full::<B>() && obeys_feq_full::<C>() && obeys_feq_full::<Triple<A, B, C>>()
-    }
-
-    /// - Newtype wrapper for Pair iterator to implement ForLoopGhostIterator (orphan rule).
-    /// - Currently unused due to Verus limitation - for loops don't recognize ForLoopGhostIteratorNew
-    ///   on newtype wrappers. Kept for future use when this is supported.
-    pub struct PairIter<'a, K: 'a, V: 'a>(pub std::collections::hash_set::Iter<'a, Pair<K, V>>);
-
-    /// Ghost iterator for iterating over Pair<K, V> in hash sets.
-    pub struct PairIterGhostIterator<'a, K, V> {
-        pub pos: int,
-        pub elements: Seq<Pair<K, V>>,
-        pub phantom: core::marker::PhantomData<&'a ()>,
-    }
-
-    impl<'a, K: 'a, V: 'a> vstd::pervasive::ForLoopGhostIteratorNew for PairIter<'a, K, V> {
-        type GhostIter = PairIterGhostIterator<'a, K, V>;
-
-        open spec fn ghost_iter(&self) -> PairIterGhostIterator<'a, K, V> {
-            PairIterGhostIterator { pos: self.0@.0, elements: self.0@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, K: 'a, V: 'a> vstd::pervasive::ForLoopGhostIterator for PairIterGhostIterator<'a, K, V> {
-        type ExecIter = PairIter<'a, K, V>;
-
-        type Item = &'a Pair<K, V>;
-
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &PairIter<'a, K, V>) -> bool {
-            &&& self.pos == exec_iter.0@.0
-            &&& self.elements == exec_iter.0@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<&'a Pair<K, V>> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(&self.elements[self.pos as int])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &PairIter<'a, K, V>) -> PairIterGhostIterator<'a, K, V> {
-            PairIterGhostIterator { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    /// Type supporting arithmetic operations (for reductions). External: Verus does not verify Add/Default.
-    #[verifier::external_trait_specification]
-    pub trait ArithmeticT: StT + Add<Output = Self> + Default + Copy {
-        type ExternalTraitSpecificationFor: ArithmeticT;
-    }
-
     } // verus!
-
-    impl<T> ArithmeticT for T
-    where
-        T: StT + Add<Output = T> + Default + Copy,
-    {
-        type ExternalTraitSpecificationFor = T;
-    }
 
     // Re-export MT traits from Concurrency (canonical definitions)
     pub use crate::Concurrency::Concurrency::{
@@ -473,19 +287,6 @@ broadcast use {
         fn from(e: WeightedEdge<V, W>) -> (V, V, W) { (e.0, e.1, e.2) }
     }
 
-    impl<V: StT, L: StT + Hash, W: StT + Hash> Display for WeightedLabEdge<V, L, W> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { write!(f, "({}, {}, {}, {})", self.0, self.1, self.2, self.3) }
-    }
-
-    impl<V: StT, L: StT + Hash, W: StT + Hash> From<(V, V, L, W)> for WeightedLabEdge<V, L, W> {
-        fn from(t: (V, V, L, W)) -> Self { WeightedLabEdge(t.0, t.1, t.2, t.3) }
-    }
-
-    impl<V: StT, L: StT + Hash, W: StT + Hash> From<WeightedLabEdge<V, L, W>> for (V, V, L, W) {
-        fn from(e: WeightedLabEdge<V, L, W>) -> (V, V, L, W) { (e.0, e.1, e.2, e.3) }
-    }
-
-
 
     impl<A, B> From<(A, B)> for Pair<A, B> {
         fn from(t: (A, B)) -> Self { Pair(t.0, t.1) }
@@ -493,63 +294,6 @@ broadcast use {
 
     impl<A, B> From<Pair<A, B>> for (A, B) {
         fn from(p: Pair<A, B>) -> Self { (p.0, p.1) }
-    }
-
-    impl<A: Display, B: Display, C: Display> Display for Triple<A, B, C> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { write!(f, "({}, {}, {})", self.0, self.1, self.2) }
-    }
-    impl<A: Display, B: Display, C: Display, D: Display> Display for Quadruple<A, B, C, D> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(f, "({}, {}, {}, {})", self.0, self.1, self.2, self.3)
-        }
-    }
-    impl<K: Display, V: Display> Display for KeyVal<K, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(f, "{{key: {}, val: {}}}", self.key, self.val)
-        }
-    }
-
-    // Implement Iterator for PairIter to enable for loops (must be outside verus! block)
-    impl<'a, K: 'a, V: 'a> Iterator for PairIter<'a, K, V> {
-        type Item = &'a Pair<K, V>;
-
-        fn next(&mut self) -> Option<Self::Item> {
-            self.0.next()
-        }
-    }
-
-    // Implement Deref for easier access
-    impl<'a, K: 'a, V: 'a> std::ops::Deref for PairIter<'a, K, V> {
-        type Target = std::collections::hash_set::Iter<'a, Pair<K, V>>;
-
-        fn deref(&self) -> &Self::Target {
-            &self.0
-        }
-    }
-
-    impl<'a, K: 'a, V: 'a> std::ops::DerefMut for PairIter<'a, K, V> {
-        fn deref_mut(&mut self) -> &mut Self::Target {
-            &mut self.0
-        }
-    }
-
-    // Clone implementations (outside verus! block to avoid Verus autoderive warnings)
-    impl<A: Clone, B: Clone, C: Clone> Clone for Triple<A, B, C> {
-        fn clone(&self) -> Self {
-            Triple(self.0.clone(), self.1.clone(), self.2.clone())
-        }
-    }
-
-    impl<A: Clone, B: Clone, C: Clone, D: Clone> Clone for Quadruple<A, B, C, D> {
-        fn clone(&self) -> Self {
-            Quadruple(self.0.clone(), self.1.clone(), self.2.clone(), self.3.clone())
-        }
-    }
-
-    impl<K: Clone, V: Clone> Clone for KeyVal<K, V> {
-        fn clone(&self) -> Self {
-            KeyVal { key: self.key.clone(), val: self.val.clone() }
-        }
     }
 
     impl<V: StT> Clone for Edge<V> {
@@ -570,12 +314,6 @@ broadcast use {
         }
     }
 
-    impl<V: StT, L: StT + Hash, W: StT + Hash> Clone for WeightedLabEdge<V, L, W> {
-        fn clone(&self) -> Self {
-            WeightedLabEdge(self.0.clone(), self.1.clone(), self.2.clone(), self.3.clone())
-        }
-    }
-
     impl<K: Clone, V: Clone> Clone for Pair<K, V> {
         fn clone(&self) -> Self {
             Pair(self.0.clone(), self.1.clone())
@@ -591,36 +329,9 @@ broadcast use {
 
     // Macros are defined outside verus! blocks to allow importing via `use crate::MacroName;` from other modules.
     #[macro_export]
-    macro_rules! EdgeLit {
-        ($a:expr, $b:expr) => {
-            $crate::Types::Types::Edge($a, $b)
-        };
-    }
-
-    #[macro_export]
     macro_rules! PairLit {
         ($a:expr, $b:expr) => {
             $crate::Types::Types::Pair($a, $b)
-        };
-    }
-
-    #[macro_export]
-    macro_rules! EdgeList {
-        () => {
-            Vec::new()
-        };
-        ( $( ($a:expr, $b:expr) ),* $(,)? ) => {
-            vec![ $( $crate::EdgeLit!($a, $b) ),* ]
-        };
-    }
-
-    #[macro_export]
-    macro_rules! PairList {
-        () => {
-            Vec::new()
-        };
-        ( $( ($a:expr, $b:expr) ),* $(,)? ) => {
-            vec![ $( $crate::PairLit!($a, $b) ),* ]
         };
     }
 }

@@ -17,9 +17,9 @@ fn test_simple_path() {
     }
 
     let mut edges = SetStEph::empty();
-    edges.insert(Triple(0, 1, OrderedFloat(1.0)));
-    edges.insert(Triple(0, 2, OrderedFloat(3.0)));
-    edges.insert(Triple(1, 2, OrderedFloat(1.0)));
+    edges.insert(WeightedEdge(0, 1, OrderedFloat(1.0)));
+    edges.insert(WeightedEdge(0, 2, OrderedFloat(3.0)));
+    edges.insert(WeightedEdge(1, 2, OrderedFloat(1.0)));
 
     let graph = WeightedDirGraphStEphFloat::from_weighted_edges(vertices, edges);
     let result = dijkstra(&graph, 0);
@@ -37,13 +37,13 @@ fn test_complex_graph() {
     }
 
     let mut edges = SetStEph::empty();
-    edges.insert(Triple(0, 1, OrderedFloat(1.0)));
-    edges.insert(Triple(0, 2, OrderedFloat(5.0)));
-    edges.insert(Triple(1, 2, OrderedFloat(2.0)));
-    edges.insert(Triple(1, 3, OrderedFloat(12.0)));
-    edges.insert(Triple(2, 3, OrderedFloat(2.0)));
-    edges.insert(Triple(2, 4, OrderedFloat(3.0)));
-    edges.insert(Triple(3, 4, OrderedFloat(1.0)));
+    edges.insert(WeightedEdge(0, 1, OrderedFloat(1.0)));
+    edges.insert(WeightedEdge(0, 2, OrderedFloat(5.0)));
+    edges.insert(WeightedEdge(1, 2, OrderedFloat(2.0)));
+    edges.insert(WeightedEdge(1, 3, OrderedFloat(12.0)));
+    edges.insert(WeightedEdge(2, 3, OrderedFloat(2.0)));
+    edges.insert(WeightedEdge(2, 4, OrderedFloat(3.0)));
+    edges.insert(WeightedEdge(3, 4, OrderedFloat(1.0)));
 
     let graph = WeightedDirGraphStEphFloat::from_weighted_edges(vertices, edges);
     let result = dijkstra(&graph, 0);
@@ -77,8 +77,8 @@ fn test_disconnected_graph() {
     }
 
     let mut edges = SetStEph::empty();
-    edges.insert(Triple(0, 1, OrderedFloat(1.0)));
-    edges.insert(Triple(2, 3, OrderedFloat(1.0)));
+    edges.insert(WeightedEdge(0, 1, OrderedFloat(1.0)));
+    edges.insert(WeightedEdge(2, 3, OrderedFloat(1.0)));
 
     let graph = WeightedDirGraphStEphFloat::from_weighted_edges(vertices, edges);
     let result = dijkstra(&graph, 0);

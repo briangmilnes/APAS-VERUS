@@ -44,6 +44,13 @@ Table of Contents:
         74 |     ) -> (reduced: V)
         76 |     ensures table@.dom().finite()
         77 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:72: error: fn_missing_wf_requires - fn recalculate_reduction — requires should include table.spec_augorderedtablemteph_wf() for input type AugOrderedTableMtEph
+        67 |         open spec fn view(&self) -> Map<K::V, V::V> { self.base_table@ }
+            ...
+        70 |     // 7. free functions (calculate_reduction, recalculate_reduction)
+        71 | 
+        73 |         table: &AugOrderedTableMtEph<K, V, F>,
+        74 |     ) -> (reduced: V)
    Holes: 8 total
       8 × external_body
    Proof functions: 1 total (1 clean, 0 holed)
@@ -177,6 +184,13 @@ Table of Contents:
        489 |                 assume(left.spec_orderedsetsteph_wf());
        491 |             }
        492 |             (from_st(left), from_st(right))
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:68: error: fn_missing_wf_ensures - fn from_st — ensures should include s.spec_orderedsetmteph_wf() for return type OrderedSetMtEph
+        62 |         pub closed spec fn spec_ghost_locked_set(self) -> Set<<T as View>::V> {
+            ...
+        66 | 
+        67 |     // Helper: construct Mt wrapper from St set (used by split/get_range/split_rank/from_seq).
+        69 |         requires inner.spec_orderedsetsteph_wf(), inner@.finite()
+        70 |         ensures s@ == inner@, s@.finite()
    Holes: 15 total
       7 × assume()
       8 × external_body
@@ -259,6 +273,13 @@ Table of Contents:
        660 |         fn rank_key(&self, k: &K) -> (rank: usize)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:677: error: external_body - #[verifier::external_body]
        678 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:887: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include constructed.spec_orderedtablemteph_wf() for return type OrderedTableMtEph
+       876 |         fn clone(&self) -> (cloned: Self)
+            ...
+       885 |     }
+       886 | 
+       888 |         requires entries.spec_avltreeseqstper_wf()
+       889 |         ensures constructed@.dom().finite()
    Holes: 7 total
       7 × external_body
 ❌ OrderedTableMtPer.rs
@@ -288,6 +309,13 @@ Table of Contents:
        483 |         fn rank_key(&self, k: &K) -> (rank: usize)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:493: error: external_body - #[verifier::external_body]
        494 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:73: error: fn_missing_wf_ensures - fn from_st_table — ensures should include s.spec_orderedtablemtper_wf() for return type OrderedTableMtPer
+        65 |         pub closed spec fn spec_ghost_locked_table(self) -> Map<K::V, V::V> {
+            ...
+        71 | 
+        72 |     /// Construct Mt wrapper from an St table.
+        74 |         inner: OrderedTableStPer<K, V>,
+        75 |     ) -> (s: OrderedTableMtPer<K, V>)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:522: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:526: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:527: info: accept()
@@ -320,6 +348,13 @@ Table of Contents:
        699 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:712: error: external_body - #[verifier::external_body]
        713 |         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:887: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include cloned.spec_orderedtablesteph_wf() for return type OrderedTableStEph
+       880 |         fn clone(&self) -> (cloned: Self) {
+            ...
+       885 |     }
+       886 | 
+       888 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+       889 |     ) -> (cloned: OrderedTableStEph<K, V>)
    Holes: 12 total
       12 × external_body
 ❌ OrderedTableStPer.rs
@@ -343,6 +378,13 @@ Table of Contents:
        619 |         fn select_key(&self, i: usize) -> (key: Option<K>)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:632: error: external_body - #[verifier::external_body]
        633 |         fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:668: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include table.spec_orderedtablestper_wf() for return type OrderedTableStPer
+       633 |         fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
+            ...
+       666 |     }
+       667 | 
+       669 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+       670 |     ) -> (table: OrderedTableStPer<K, V>)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:832: info: accept()
    Holes: 10 total
       10 × external_body
@@ -414,13 +456,12 @@ Holes Found: 99 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 18:04:23 -07:00
-Ended:     2026-03-16 18:04:23 -07:00
-Duration:  90ms
+Started:   2026-03-16 18:11:29 -07:00
+Ended:     2026-03-16 18:11:29 -07:00
+Duration:  77ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
-03-16 18:04:23 -07:00
-Ended:     2026-03-16 18:04:23 -07:00
-Duration:  90ms
+Ended:     2026-03-16 18:11:29 -07:00
+Duration:  77ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log

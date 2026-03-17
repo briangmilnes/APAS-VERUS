@@ -19,7 +19,7 @@ fn test_weigheddirgraphmtephintlit_macro_functionality() {
     // Test graph creation with weighed edges
     let with_data = WeighedDirGraphMtEphIntLit!(
         V: [1, 2, 3],
-        E: [Triple(1, 2, 10), Triple(2, 3, 20), Triple(3, 1, 30)]
+        E: [WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20), WeightedEdge(3, 1, 30)]
     );
     assert_eq!(with_data.vertices().size(), 3);
     assert_eq!(with_data.arcs().size(), 3);
@@ -307,7 +307,7 @@ fn test_weigheddirgraphmtephint_concurrent_access() {
 #[test]
 fn test_from_weighed_edges() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 10), Triple(2, 3, 20)];
+    let edges = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20)];
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
     assert_eq!(g.vertices().size(), 3);
 }
@@ -315,7 +315,7 @@ fn test_from_weighed_edges() {
 #[test]
 fn test_in_neighbors_weighed() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 10), Triple(3, 2, 20)];
+    let edges = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(3, 2, 20)];
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
     let in_neighbors = g.in_neighbors_weighed(&2);
     assert_eq!(in_neighbors.size(), 2);
@@ -324,7 +324,7 @@ fn test_in_neighbors_weighed() {
 #[test]
 fn test_total_weight() {
     let vertices = SetLit![1, 2];
-    let edges = SetLit![Triple(1, 2, 100)];
+    let edges = SetLit![WeightedEdge(1, 2, 100)];
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
     assert_eq!(g.total_weight(), 100);
 }
@@ -341,7 +341,7 @@ fn test_weighed_edges_empty() {
 #[test]
 fn test_get_edge_weight_nonexistent() {
     let vertices = SetLit![1, 2];
-    let edges = SetLit![Triple(1, 2, 50)];
+    let edges = SetLit![WeightedEdge(1, 2, 50)];
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
     assert_eq!(g.get_edge_weight(&2, &1), None);
 }
@@ -349,7 +349,7 @@ fn test_get_edge_weight_nonexistent() {
 #[test]
 fn test_out_neighbors_weighed_isolated() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 10)];
+    let edges = SetLit![WeightedEdge(1, 2, 10)];
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
     assert_eq!(g.out_neighbors_weighed(&3).size(), 0);
 }
@@ -357,7 +357,7 @@ fn test_out_neighbors_weighed_isolated() {
 #[test]
 fn test_in_neighbors_weighed_empty() {
     let vertices = SetLit![1, 2];
-    let edges = SetLit![Triple(1, 2, 30)];
+    let edges = SetLit![WeightedEdge(1, 2, 30)];
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
     assert_eq!(g.in_neighbors_weighed(&1).size(), 0);
 }
@@ -382,22 +382,22 @@ fn test_add_weighed_edge() {
 #[test]
 fn test_weighed_edges() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 10), Triple(2, 3, 20), Triple(3, 1, 30)];
+    let edges = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20), WeightedEdge(3, 1, 30)];
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices.clone(), edges.clone());
 
     let weighed_edges = g.weighed_edges();
     assert_eq!(weighed_edges.size(), 3);
 
     // Verify all edges are present
-    assert!(weighed_edges.mem(&Triple(1, 2, 10)));
-    assert!(weighed_edges.mem(&Triple(2, 3, 20)));
-    assert!(weighed_edges.mem(&Triple(3, 1, 30)));
+    assert!(weighed_edges.mem(&WeightedEdge(1, 2, 10)));
+    assert!(weighed_edges.mem(&WeightedEdge(2, 3, 20)));
+    assert!(weighed_edges.mem(&WeightedEdge(3, 1, 30)));
 }
 
 #[test]
 fn test_get_edge_weight() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 100), Triple(2, 3, 200)];
+    let edges = SetLit![WeightedEdge(1, 2, 100), WeightedEdge(2, 3, 200)];
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
     assert_eq!(g.get_edge_weight(&1, &2), Some(100));
@@ -408,7 +408,7 @@ fn test_get_edge_weight() {
 #[test]
 fn test_out_neighbors_weighed() {
     let vertices = SetLit![1, 2, 3, 4];
-    let edges = SetLit![Triple(1, 2, 10), Triple(1, 3, 20), Triple(1, 4, 30), Triple(2, 3, 40)];
+    let edges = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(1, 3, 20), WeightedEdge(1, 4, 30), WeightedEdge(2, 3, 40)];
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
     let out_1 = g.out_neighbors_weighed(&1);
@@ -428,7 +428,7 @@ fn test_out_neighbors_weighed_large_parallel() {
     let vertices = SetLit![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
     let mut edges = SetStEph::empty();
     for i in 0..15 {
-        edges.insert(Triple(i, i + 1, i as i32 * 10));
+        edges.insert(WeightedEdge(i, i + 1, i as i32 * 10));
     }
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
@@ -447,7 +447,7 @@ fn test_in_neighbors_weighed_large_parallel() {
     let vertices = SetLit![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
     let mut edges = SetStEph::empty();
     for i in 0..15 {
-        edges.insert(Triple(i, i + 1, i as i32 * 10));
+        edges.insert(WeightedEdge(i, i + 1, i as i32 * 10));
     }
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
@@ -463,7 +463,7 @@ fn test_in_neighbors_weighed_large_parallel() {
 #[test]
 fn test_total_weight_multiple_edges() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 100), Triple(2, 3, 200), Triple(3, 1, 300)];
+    let edges = SetLit![WeightedEdge(1, 2, 100), WeightedEdge(2, 3, 200), WeightedEdge(3, 1, 300)];
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
     assert_eq!(g.total_weight(), 600);
 }
@@ -471,7 +471,7 @@ fn test_total_weight_multiple_edges() {
 #[test]
 fn test_total_weight_negative() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 100), Triple(2, 3, -50)];
+    let edges = SetLit![WeightedEdge(1, 2, 100), WeightedEdge(2, 3, -50)];
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
     assert_eq!(g.total_weight(), 50);
 }
@@ -479,7 +479,7 @@ fn test_total_weight_negative() {
 #[test]
 fn test_out_neighbors_weighed_no_outgoing() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 10), Triple(2, 3, 20)];
+    let edges = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20)];
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
     let out_3 = g.out_neighbors_weighed(&3);
@@ -489,7 +489,7 @@ fn test_out_neighbors_weighed_no_outgoing() {
 #[test]
 fn test_in_neighbors_weighed_multiple() {
     let vertices = SetLit![1, 2, 3, 4];
-    let edges = SetLit![Triple(1, 2, 10), Triple(3, 2, 20), Triple(4, 2, 30)];
+    let edges = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(3, 2, 20), WeightedEdge(4, 2, 30)];
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
     let in_2 = g.in_neighbors_weighed(&2);
@@ -505,7 +505,7 @@ fn test_minimal_parallel_out_neighbors() {
     let vertices = SetLit![0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     let mut edges = SetStEph::empty();
     for i in 0..9 {
-        edges.insert(Triple(i, i + 1, i as i32));
+        edges.insert(WeightedEdge(i, i + 1, i as i32));
     }
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
@@ -520,7 +520,7 @@ fn test_minimal_parallel_in_neighbors() {
     let vertices = SetLit![0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     let mut edges = SetStEph::empty();
     for i in 0..9 {
-        edges.insert(Triple(i, i + 1, i as i32 * 5));
+        edges.insert(WeightedEdge(i, i + 1, i as i32 * 5));
     }
     let g = WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 

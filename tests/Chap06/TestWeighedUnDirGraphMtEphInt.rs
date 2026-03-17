@@ -20,7 +20,7 @@ fn test_weighedundirgraphmtephintlit_macro_functionality() {
     // Test graph creation with vertices and edges
     let with_data: WeighedUnDirGraphMtEphInt<i32> = WeighedUnDirGraphMtEphIntLit!(
         V: [1, 2, 3],
-        E: [Triple(1, 2, 10), Triple(2, 3, 20)]
+        E: [WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20)]
     );
     assert_eq!(with_data.vertices().size(), 3);
     assert_eq!(with_data.labeled_edges().size(), 2);
@@ -343,7 +343,7 @@ fn test_weighedundirgraphmtephint_completegraph() {
 #[test]
 fn test_from_weighed_edges() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 10), Triple(2, 3, 20)];
+    let edges = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20)];
     let g = WeighedUnDirGraphMtEphInt::from_weighed_edges(vertices, edges);
     assert_eq!(g.vertices().size(), 3);
     assert_eq!(g.labeled_edges().size(), 2);
@@ -362,7 +362,7 @@ fn test_add_weighed_edge() {
 #[test]
 fn test_get_edge_weight() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 10), Triple(2, 3, 20)];
+    let edges = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20)];
     let g = WeighedUnDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
     assert_eq!(g.get_edge_weight(&1, &2), Some(10));
@@ -373,7 +373,7 @@ fn test_get_edge_weight() {
 #[test]
 fn test_weighed_edges() {
     let vertices = SetLit![1, 2];
-    let edges = SetLit![Triple(1, 2, 100)];
+    let edges = SetLit![WeightedEdge(1, 2, 100)];
     let g = WeighedUnDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
     let weighed = g.weighed_edges();
@@ -383,7 +383,7 @@ fn test_weighed_edges() {
 #[test]
 fn test_neighbors_weighed() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 10), Triple(1, 3, 20)];
+    let edges = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(1, 3, 20)];
     let g = WeighedUnDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
     let neighbors = g.neighbors_weighed(&1);
@@ -393,7 +393,7 @@ fn test_neighbors_weighed() {
 #[test]
 fn test_total_weight() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 10), Triple(2, 3, 20)];
+    let edges = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20)];
     let g = WeighedUnDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
     assert_eq!(g.total_weight(), 30);
@@ -402,7 +402,7 @@ fn test_total_weight() {
 #[test]
 fn test_vertex_degree() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 10), Triple(1, 3, 20)];
+    let edges = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(1, 3, 20)];
     let g = WeighedUnDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
     assert_eq!(g.vertex_degree(&1), 2);
@@ -420,7 +420,7 @@ fn test_parallel_neighbors_weighed() {
 
     let mut edges = SetStEph::empty();
     for i in 1..13 {
-        edges.insert(Triple(0, i, i * 10));
+        edges.insert(WeightedEdge(0, i, i * 10));
     }
 
     let g = WeighedUnDirGraphMtEphInt::from_weighed_edges(vertices, edges);
@@ -437,7 +437,7 @@ fn test_parallel_neighbors_weighed() {
 #[test]
 fn test_display_debug_traits() {
     let vertices = SetLit![1, 2];
-    let edges = SetLit![Triple(1, 2, 42)];
+    let edges = SetLit![WeightedEdge(1, 2, 42)];
     let g = WeighedUnDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
     let display_str = format!("{}", g);
@@ -450,7 +450,7 @@ fn test_display_debug_traits() {
 #[test]
 fn test_clone() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 10), Triple(2, 3, 20)];
+    let edges = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20)];
     let g = WeighedUnDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
     let g2 = g.clone();
@@ -462,7 +462,7 @@ fn test_clone() {
 #[test]
 fn test_get_edge_weight_int() {
     let vertices = SetLit![1, 2, 3];
-    let edges = SetLit![Triple(1, 2, 15), Triple(2, 3, 25)];
+    let edges = SetLit![WeightedEdge(1, 2, 15), WeightedEdge(2, 3, 25)];
     let g = WeighedUnDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
     assert_eq!(g.get_edge_weight(&1, &2), Some(15));
@@ -473,7 +473,7 @@ fn test_get_edge_weight_int() {
 #[test]
 fn test_weighed_edges_int() {
     let vertices = SetLit![1, 2];
-    let edges = SetLit![Triple(1, 2, 42)];
+    let edges = SetLit![WeightedEdge(1, 2, 42)];
     let g = WeighedUnDirGraphMtEphInt::from_weighed_edges(vertices, edges);
 
     let we = g.weighed_edges();
