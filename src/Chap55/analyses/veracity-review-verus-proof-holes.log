@@ -13,7 +13,6 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
-     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -24,8 +23,22 @@ Table of Contents:
 ✓ CycleDetectStPer.rs
 ✓ DFSStEph.rs
 ✓ DFSStPer.rs
-✓ SCCStEph.rs
-✓ SCCStPer.rs
+❌ SCCStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap55/SCCStEph.rs:171: error: fn_missing_requires - fn check_wf_adj_list_eph — exec fn should have requires
+       108 |     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<N>>)
+            ...
+       169 |     /// Runtime check that all neighbor indices are valid vertex indices.
+       170 |     // veracity: no_requires
+       172 |         ensures valid ==> spec_toposortsteph_wf(graph),
+       173 |     {
+❌ SCCStPer.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap55/SCCStPer.rs:247: error: fn_missing_requires - fn check_wf_adj_list_per — exec fn should have requires
+       186 |     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<N>>)
+            ...
+       245 |     /// Runtime check that all neighbor indices are valid vertex indices.
+       246 |     // veracity: no_requires
+       248 |         ensures valid ==> spec_toposortstper_wf(graph),
+       249 |     {
 ✓ TopoSortStEph.rs
    4 clean proof functions
 ✓ TopoSortStPer.rs
@@ -65,8 +78,8 @@ TopoSortStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   8 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   6 clean (no holes, no errors; 75%)
+   2 holed (holes or errors, 25%)
    8 total
 
 Proof Functions:
@@ -84,15 +97,17 @@ Function Specs:
 
 Holes Found: 0 total
 
-No proof holes or warnings found! All proofs are complete.
+🎉 No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:04:38 -07:00
-Ended:     2026-03-17 11:04:38 -07:00
-Duration:  17ms
+Started:   2026-03-17 11:40:04 -07:00
+Ended:     2026-03-17 11:40:04 -07:00
+Duration:  19ms
 
 Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
+Duration:  19ms
+
+Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log

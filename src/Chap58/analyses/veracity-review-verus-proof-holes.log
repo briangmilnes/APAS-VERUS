@@ -13,7 +13,6 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
-     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -21,7 +20,14 @@ Table of Contents:
 =================================================================
 
 ✓ BellmanFordStEphF64.rs
-✓ BellmanFordStEphI64.rs
+❌ BellmanFordStEphI64.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap58/BellmanFordStEphI64.rs:64: error: fn_missing_requires - fn clamp_weight — exec fn should have requires
+        47 |         fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
+            ...
+        62 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
+        63 |     // veracity: no_requires
+        65 |         ensures
+        66 |             w >= i64::MIN as i128 && w <= i64::MAX as i128 ==> result == w as i64,
 
 =================================================================
 2. Depends Upon
@@ -46,8 +52,8 @@ BellmanFordStEphI64.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   1 clean (no holes, no errors; 50%)
+   1 holed (holes or errors, 50%)
    2 total
 
 Proof Functions:
@@ -65,15 +71,15 @@ Function Specs:
 
 Holes Found: 0 total
 
-No proof holes or warnings found! All proofs are complete.
+🎉 No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:04:38 -07:00
-Ended:     2026-03-17 11:04:38 -07:00
-Duration:  3ms
+Started:   2026-03-17 11:40:04 -07:00
+Ended:     2026-03-17 11:40:04 -07:00
+Duration:  4ms
 
 Full output: src/Chap58/analyses/veracity-review-verus-proof-holes.log
-
+output: src/Chap58/analyses/veracity-review-verus-proof-holes.log

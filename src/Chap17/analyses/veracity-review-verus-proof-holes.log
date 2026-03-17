@@ -13,7 +13,6 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
-     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -21,8 +20,8 @@ Table of Contents:
 =================================================================
 
 ℹ MathSeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:714: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:726: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap17/MathSeq.rs:714: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap17/MathSeq.rs:726: info: accept()
    Info: 2 total
 
 =================================================================
@@ -65,18 +64,15 @@ Function Specs:
 
 Holes Found: 0 total
 
-Accepted (reviewed): 2 total
-   2 × accept()
-
-No proof holes or warnings found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:04:37 -07:00
-Ended:     2026-03-17 11:04:37 -07:00
+Started:   2026-03-17 11:40:02 -07:00
+Ended:     2026-03-17 11:40:02 -07:00
 Duration:  7ms
 
 Full output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
+yses/veracity-review-verus-proof-holes.log

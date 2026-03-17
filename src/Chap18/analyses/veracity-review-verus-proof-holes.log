@@ -13,7 +13,6 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
-     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -21,41 +20,41 @@ Table of Contents:
 =================================================================
 
 ℹ ArraySeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1463: info: external_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1595: info: external_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1622: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeq.rs:1463: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeq.rs:1595: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeq.rs:1622: info: accept()
    Info: 3 total
    10 clean proof functions
 ℹ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:529: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1586: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeqMtEph.rs:529: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeqMtEph.rs:1586: info: accept()
    Info: 2 total
    4 clean proof functions
 ℹ ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:323: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1191: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeqMtPer.rs:323: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeqMtPer.rs:1191: info: accept()
    Info: 2 total
    2 clean proof functions
 ℹ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:354: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1055: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeqStEph.rs:354: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeqStEph.rs:1055: info: accept()
    Info: 2 total
    1 clean proof function
 ℹ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:348: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1021: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeqStPer.rs:348: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/ArraySeqStPer.rs:1021: info: accept()
    Info: 2 total
    1 clean proof function
 ℹ LinkedListStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:297: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:878: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:892: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/LinkedListStEph.rs:297: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/LinkedListStEph.rs:878: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/LinkedListStEph.rs:892: info: accept()
    Info: 3 total
    1 clean proof function
 ℹ LinkedListStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:289: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:861: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:875: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/LinkedListStPer.rs:289: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/LinkedListStPer.rs:861: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap18/LinkedListStPer.rs:875: info: accept()
    Info: 3 total
    1 clean proof function
 
@@ -111,20 +110,18 @@ Function Specs:
 
 Holes Found: 0 total
 
-Accepted (reviewed): 17 total
-   9 × accept()
-   6 × trivial_spec_wf
-   2 × external_accept_hole
-
-No proof holes or warnings found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:04:37 -07:00
-Ended:     2026-03-17 11:04:37 -07:00
-Duration:  94ms
+Started:   2026-03-17 11:40:02 -07:00
+Ended:     2026-03-17 11:40:02 -07:00
+Duration:  104ms
 
 Full output: src/Chap18/analyses/veracity-review-verus-proof-holes.log
-c/Chap18/analyses/veracity-review-verus-proof-holes.log
+
+Duration:  104ms
+
+Full output: src/Chap18/analyses/veracity-review-verus-proof-holes.log

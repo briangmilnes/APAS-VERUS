@@ -13,7 +13,6 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
-     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -21,38 +20,38 @@ Table of Contents:
 =================================================================
 
 ℹ MatrixChainMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:496: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:518: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:496: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtEph.rs:518: info: accept()
    Info: 2 total
 ℹ MatrixChainMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:408: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:426: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtPer.rs:408: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainMtPer.rs:426: info: accept()
    Info: 2 total
 ℹ MatrixChainStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:370: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:386: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainStEph.rs:370: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainStEph.rs:386: info: accept()
    Info: 2 total
 ℹ MatrixChainStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:339: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:355: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainStPer.rs:339: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/MatrixChainStPer.rs:355: info: accept()
    Info: 2 total
 ℹ OptBinSearchTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:58: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:358: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:380: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:58: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:358: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtEph.rs:380: info: accept()
    Info: 3 total
 ℹ OptBinSearchTreeMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:61: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:263: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:281: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtPer.rs:61: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtPer.rs:263: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeMtPer.rs:281: info: accept()
    Info: 3 total
 ℹ OptBinSearchTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:55: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:75: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeStEph.rs:55: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeStEph.rs:75: info: accept()
    Info: 2 total
 ℹ OptBinSearchTreeStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:55: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:75: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeStPer.rs:55: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap50/OptBinSearchTreeStPer.rs:75: info: accept()
    Info: 2 total
 
 =================================================================
@@ -109,18 +108,15 @@ Function Specs:
 
 Holes Found: 0 total
 
-Accepted (reviewed): 18 total
-   18 × accept()
-
-No proof holes or warnings found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:04:38 -07:00
-Ended:     2026-03-17 11:04:38 -07:00
-Duration:  28ms
+Started:   2026-03-17 11:40:03 -07:00
+Ended:     2026-03-17 11:40:03 -07:00
+Duration:  29ms
 
 Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap50/analyses/veracity-review-verus-proof-holes.log

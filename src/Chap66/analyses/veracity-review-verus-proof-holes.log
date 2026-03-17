@@ -13,7 +13,6 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
-     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -21,10 +20,17 @@ Table of Contents:
 =================================================================
 
 ℹ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:52: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:52: info: accept()
    Info: 1 total
-ℹ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:67: info: accept()
+❌ BoruvkaStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:101: error: fn_missing_requires - fn coin_flip — exec fn should have requires
+        93 |     pub open spec fn spec_all_weights_finite<V: View<V = V> + Copy>(edges: Set<LabeledEdge<V>>) -> bool {
+            ...
+        99 |     /// Deterministic coin flip from seed and vertex iteration index.
+       100 |     // veracity: no_requires
+       102 |         ensures flip == (((seed ^ (index as u64)) & 1u64) == 1u64)
+       103 |     {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:67: info: accept()
    Info: 1 total
 
 =================================================================
@@ -50,8 +56,8 @@ BoruvkaStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   1 clean (no holes, no errors; 50%)
+   1 holed (holes or errors, 50%)
    2 total
 
 Proof Functions:
@@ -69,18 +75,15 @@ Function Specs:
 
 Holes Found: 0 total
 
-Accepted (reviewed): 2 total
-   2 × accept()
-
-No proof holes or warnings found! All proofs are complete.
+🎉 No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:04:38 -07:00
-Ended:     2026-03-17 11:04:38 -07:00
-Duration:  10ms
+Started:   2026-03-17 11:40:04 -07:00
+Ended:     2026-03-17 11:40:04 -07:00
+Duration:  8ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap66/analyses/veracity-review-verus-proof-holes.log

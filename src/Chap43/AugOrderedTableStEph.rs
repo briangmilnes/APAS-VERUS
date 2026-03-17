@@ -495,7 +495,6 @@ broadcast use {
             r
         }
 
-        #[verifier::external_body]
         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (mapped: Self)
         {
             let new_base = self.base_table.map(f);
@@ -507,7 +506,7 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof { lemma_aug_view(self); lemma_aug_view(&r); }
             r
         }
 
@@ -575,7 +574,6 @@ broadcast use {
             self.base_table.collect()
         }
 
-        #[verifier::external_body]
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
             ensures
@@ -584,10 +582,10 @@ broadcast use {
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t),
         {
+            proof { lemma_aug_view(self); }
             self.base_table.first_key()
         }
 
-        #[verifier::external_body]
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
             ensures
@@ -596,10 +594,10 @@ broadcast use {
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v),
         {
+            proof { lemma_aug_view(self); }
             self.base_table.last_key()
         }
 
-        #[verifier::external_body]
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             ensures
@@ -608,10 +606,10 @@ broadcast use {
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
         {
+            proof { lemma_aug_view(self); }
             self.base_table.previous_key(k)
         }
 
-        #[verifier::external_body]
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             ensures
@@ -620,6 +618,7 @@ broadcast use {
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
         {
+            proof { lemma_aug_view(self); }
             self.base_table.next_key(k)
         }
 
@@ -698,7 +697,6 @@ broadcast use {
             r
         }
 
-        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             ensures
@@ -706,10 +704,10 @@ broadcast use {
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
         {
+            proof { lemma_aug_view(self); }
             self.base_table.rank_key(k)
         }
 
-        #[verifier::external_body]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
             ensures
@@ -718,6 +716,7 @@ broadcast use {
                 selected matches Some(k) ==> self@.dom().contains(k@),
                 selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int,
         {
+            proof { lemma_aug_view(self); }
             self.base_table.select_key(i)
         }
 

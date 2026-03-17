@@ -13,14 +13,20 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
-     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
 1. File Holes
 =================================================================
 
-✓ InsertionSortStEph.rs
+❌ InsertionSortStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap03/InsertionSortStEph.rs:39: error: fn_missing_requires - fn insertion_sort — exec fn should have requires
+        31 | pub open spec fn is_sorted<T: TotalOrder>(v: &[T]) -> bool {
+            ...
+        37 | #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        38 | // veracity: no_requires
+        40 |         ensures
+        41 |           sorted.len() == old(a).len(),
 
 =================================================================
 2. Depends Upon
@@ -43,8 +49,8 @@ InsertionSortStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
    1 total
 
 Proof Functions:
@@ -62,15 +68,15 @@ Function Specs:
 
 Holes Found: 0 total
 
-No proof holes or warnings found! All proofs are complete.
+🎉 No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:04:37 -07:00
-Ended:     2026-03-17 11:04:37 -07:00
-Duration:  4ms
+Started:   2026-03-17 11:40:02 -07:00
+Ended:     2026-03-17 11:40:02 -07:00
+Duration:  2ms
 
 Full output: src/Chap03/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap03/analyses/veracity-review-verus-proof-holes.log

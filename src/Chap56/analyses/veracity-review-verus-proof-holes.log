@@ -13,7 +13,6 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
-     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -25,10 +24,10 @@ Table of Contents:
 ✓ AllPairsResultStPerF64.rs
 ✓ AllPairsResultStPerI64.rs
 ℹ Example56_1.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:43: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_1.rs:43: info: external_accept_hole
    Info: 1 total
 ℹ Example56_3.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:40: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap56/Example56_3.rs:40: info: external_accept_hole
    Info: 1 total
 ✓ PathWeightUtilsStEph.rs
 ✓ PathWeightUtilsStPer.rs
@@ -99,18 +98,15 @@ Function Specs:
 
 Holes Found: 0 total
 
-Accepted (reviewed): 2 total
-   2 × external_accept_hole
-
-No proof holes or warnings found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:04:38 -07:00
-Ended:     2026-03-17 11:04:38 -07:00
-Duration:  25ms
+Started:   2026-03-17 11:40:04 -07:00
+Ended:     2026-03-17 11:40:04 -07:00
+Duration:  31ms
 
 Full output: src/Chap56/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap56/analyses/veracity-review-verus-proof-holes.log

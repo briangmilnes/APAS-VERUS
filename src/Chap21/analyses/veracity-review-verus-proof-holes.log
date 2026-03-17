@@ -13,7 +13,6 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
-     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -23,15 +22,41 @@ Table of Contents:
 ✓ Algorithm21_1.rs
    2 clean proof functions
 ✓ Algorithm21_2.rs
-✓ Algorithm21_5.rs
+❌ Algorithm21_5.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap21/Algorithm21_5.rs:46: error: fn_missing_requires - fn primes_bf — exec fn should have requires
+        44 |     /// - APAS: Work Θ(n^{3/2}), Span Θ(lg n)
+        45 |     /// - Claude-Opus-4.6: Work Θ(n^{3/2}), Span Θ(n^{3/2}) — sequential StPer tabulate + filter.
+        47 |         ensures
+        48 |             n <= 2 ==> primes.spec_len() == 0,
 ✓ Algorithm21_6.rs
    1 clean proof function
 ✓ Exercise21_5.rs
    1 clean proof function
 ✓ Exercise21_6.rs
-✓ Exercise21_7.rs
-✓ Exercise21_8.rs
-   5 clean proof functions
+❌ Exercise21_7.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap21/Exercise21_7.rs:48: error: fn_missing_requires - fn is_even — exec fn should have requires
+        40 |     pub open spec fn spec_is_even(x: int) -> bool { x % 2 == 0     }
+            ...
+        46 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        47 |     // veracity: no_requires
+        49 |         ensures r == spec_is_even(*x as int)
+        50 |     { *x % 2 == 0 }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap21/Exercise21_7.rs:62: error: fn_missing_requires - fn is_vowel — exec fn should have requires
+        53 |     pub open spec fn spec_is_vowel(c: char) -> bool {
+            ...
+        60 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        61 |     // veracity: no_requires
+        63 |         ensures r == spec_is_vowel(*c)
+        64 |     {
+❌ Exercise21_8.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap21/Exercise21_8.rs:177: error: fn_missing_requires - fn is_prime — exec fn should have requires
+       164 |     pub fn is_divisible(n: N, i: N) -> (divides: B)
+            ...
+       175 |     /// - Claude-Opus-4.6: Work Θ(√n), Span Θ(√n) — sequential StEph tabulate + filter.
+       176 |     // veracity: no_requires
+       178 |         ensures prime == spec_is_prime(n as int)
+       179 |     {
+   Proof functions: 5 total (5 clean, 0 holed)
 ✓ Exercise21_9.rs
    3 clean proof functions
 ✓ Problem21_1.rs
@@ -81,8 +106,8 @@ Problem21_4.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   12 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   9 clean (no holes, no errors; 75%)
+   3 holed (holes or errors, 25%)
    12 total
 
 Proof Functions:
@@ -100,15 +125,15 @@ Function Specs:
 
 Holes Found: 0 total
 
-No proof holes or warnings found! All proofs are complete.
+🎉 No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:04:37 -07:00
-Ended:     2026-03-17 11:04:37 -07:00
-Duration:  17ms
+Started:   2026-03-17 11:40:03 -07:00
+Ended:     2026-03-17 11:40:03 -07:00
+Duration:  14ms
 
 Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
- src/Chap21/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
