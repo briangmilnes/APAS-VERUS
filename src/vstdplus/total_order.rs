@@ -448,26 +448,89 @@ pub trait IsLtTransitive: PartialOrd + Sized {
     proof fn is_lt_transitive(a: Self, b: Self, c: Self)
         requires a.is_lt(&b), b.is_lt(&c),
         ensures a.is_lt(&c);
+
+    proof fn is_lt_irreflexive(a: Self)
+        ensures !a.is_lt(&a);
+
+    proof fn is_lt_antisymmetric(a: Self, b: Self)
+        requires !a.is_lt(&b), !b.is_lt(&a),
+        ensures a == b;
 }
 
-impl IsLtTransitive for u8   { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
-impl IsLtTransitive for u16  { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
-impl IsLtTransitive for u32  { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
-impl IsLtTransitive for u64  { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
-impl IsLtTransitive for u128 { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
-impl IsLtTransitive for usize { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
-impl IsLtTransitive for i8   { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
-impl IsLtTransitive for i16  { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
-impl IsLtTransitive for i32  { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
-impl IsLtTransitive for i64  { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
-impl IsLtTransitive for i128 { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
-impl IsLtTransitive for isize { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
+impl IsLtTransitive for u8 {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self) {}
+    proof fn is_lt_irreflexive(a: Self) {}
+    proof fn is_lt_antisymmetric(a: Self, b: Self) {}
+}
+impl IsLtTransitive for u16 {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self) {}
+    proof fn is_lt_irreflexive(a: Self) {}
+    proof fn is_lt_antisymmetric(a: Self, b: Self) {}
+}
+impl IsLtTransitive for u32 {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self) {}
+    proof fn is_lt_irreflexive(a: Self) {}
+    proof fn is_lt_antisymmetric(a: Self, b: Self) {}
+}
+impl IsLtTransitive for u64 {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self) {}
+    proof fn is_lt_irreflexive(a: Self) {}
+    proof fn is_lt_antisymmetric(a: Self, b: Self) {}
+}
+impl IsLtTransitive for u128 {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self) {}
+    proof fn is_lt_irreflexive(a: Self) {}
+    proof fn is_lt_antisymmetric(a: Self, b: Self) {}
+}
+impl IsLtTransitive for usize {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self) {}
+    proof fn is_lt_irreflexive(a: Self) {}
+    proof fn is_lt_antisymmetric(a: Self, b: Self) {}
+}
+impl IsLtTransitive for i8 {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self) {}
+    proof fn is_lt_irreflexive(a: Self) {}
+    proof fn is_lt_antisymmetric(a: Self, b: Self) {}
+}
+impl IsLtTransitive for i16 {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self) {}
+    proof fn is_lt_irreflexive(a: Self) {}
+    proof fn is_lt_antisymmetric(a: Self, b: Self) {}
+}
+impl IsLtTransitive for i32 {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self) {}
+    proof fn is_lt_irreflexive(a: Self) {}
+    proof fn is_lt_antisymmetric(a: Self, b: Self) {}
+}
+impl IsLtTransitive for i64 {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self) {}
+    proof fn is_lt_irreflexive(a: Self) {}
+    proof fn is_lt_antisymmetric(a: Self, b: Self) {}
+}
+impl IsLtTransitive for i128 {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self) {}
+    proof fn is_lt_irreflexive(a: Self) {}
+    proof fn is_lt_antisymmetric(a: Self, b: Self) {}
+}
+impl IsLtTransitive for isize {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self) {}
+    proof fn is_lt_irreflexive(a: Self) {}
+    proof fn is_lt_antisymmetric(a: Self, b: Self) {}
+}
 
-// String: partial_cmp_spec is opaque, so transitivity of is_lt must be assumed.
+// String: partial_cmp_spec is opaque, so ordering axioms must be assumed.
 // accept hole
 impl IsLtTransitive for String {
     proof fn is_lt_transitive(a: Self, b: Self, c: Self) {
         accept(a.is_lt(&c));
+    }
+    // accept hole
+    proof fn is_lt_irreflexive(a: Self) {
+        accept(!a.is_lt(&a));
+    }
+    // accept hole
+    proof fn is_lt_antisymmetric(a: Self, b: Self) {
+        accept(a == b);
     }
 }
 

@@ -103,6 +103,20 @@ pub mod BSTTreapMtEph {
         }
     }
 
+    /// Maps a Link<T> to the Set of views it contains.
+    pub open spec fn spec_set_of_link<T: StTInMtT + Ord>(link: &Link<T>) -> Set<<T as View>::V>
+        decreases *link,
+    {
+        match link {
+            None => Set::empty(),
+            Some(node) => {
+                spec_set_of_link(&node.left)
+                    .union(spec_set_of_link(&node.right))
+                    .insert(node.key@)
+            }
+        }
+    }
+
 
     //		7. proof fns/broadcast groups
 
@@ -135,6 +149,41 @@ pub mod BSTTreapMtEph {
     proof fn lemma_contains_root<T: StTInMtT + Ord>(node: &Box<Node<T>>)
         ensures spec_contains_link(&Some(*node), node.key),
     {
+    }
+
+    /// Forward direction: structural containment implies set membership.
+    proof fn lemma_contains_implies_in_set<T: StTInMtT + Ord>(link: &Link<T>, val: T)
+        requires spec_contains_link(link, val),
+        ensures spec_set_of_link(link).contains(val@),
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                if node.key == val {
+                    // val@ == node.key@, and node.key@ is inserted into the set.
+                } else if spec_contains_link(&node.left, val) {
+                    lemma_contains_implies_in_set(&node.left, val);
+                    assert(spec_set_of_link(&node.left).contains(val@));
+                } else {
+                    lemma_contains_implies_in_set(&node.right, val);
+                    assert(spec_set_of_link(&node.right).contains(val@));
+                }
+            }
+        }
+    }
+
+    proof fn lemma_set_of_link_finite<T: StTInMtT + Ord>(link: &Link<T>)
+        ensures spec_set_of_link(link).finite(),
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_set_of_link_finite(&node.left);
+                lemma_set_of_link_finite(&node.right);
+            }
+        }
     }
 
     proof fn lemma_height_le_size<T: StTInMtT + Ord>(link: &Link<T>)
@@ -219,9 +268,11 @@ pub mod BSTTreapMtEph {
             ensures !self@.contains(target@), self.spec_bsttreapmteph_wf();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn find(&self, target: &T) -> (found: Option<T>)
+            requires T::obeys_partial_cmp_spec(),
             ensures found.is_some() <==> self@.contains(target@);
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn contains(&self, target: &T) -> (found: bool)
+            requires T::obeys_partial_cmp_spec(),
             ensures found <==> self@.contains(target@);
         /// - APAS: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
@@ -799,29 +850,63 @@ pub mod BSTTreapMtEph {
 
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-    fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
-        requires true,
-        ensures found.is_some() ==> spec_contains_link(link, *found.unwrap()),
+    fn find_link<'a, T: StTInMtT + Ord + IsLtTransitive>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
+        requires
+            Lnk::spec_bst_link(link),
+            T::obeys_partial_cmp_spec(),
+        ensures
+            found.is_some() <==> spec_contains_link(link, *target),
+            found.is_some() ==> *found.unwrap() == *target,
         decreases *link,
     {
+        proof { reveal_with_fuel(spec_contains_link, 2); }
         match link {
             | None => None,
             | Some(node) => {
-                if (*target) == node.key {
-                    proof { lemma_contains_root(node); }
-                    Some(&node.key)
-                } else if (*target) < node.key {
+                proof { lemma_bst_decompose(link); }
+                if *target < node.key {
                     let r = find_link(&node.left, target);
                     proof {
-                        if r.is_some() { lemma_contains_left(node, *r.unwrap()); }
+                        if r.is_some() {
+                            lemma_contains_left(node, *target);
+                        }
+                        T::is_lt_irreflexive(*target);
+                        if spec_contains_link(link, *target) {
+                            if spec_contains_link(&node.right, *target) {
+                                T::is_lt_transitive(*target, node.key, *target);
+                            }
+                            assert(!spec_contains_link(&node.right, *target));
+                            assert(node.key != *target);
+                            assert(spec_contains_link(&node.left, *target));
+                            assert(r.is_some());
+                        }
+                    }
+                    r
+                } else if node.key < *target {
+                    let r = find_link(&node.right, target);
+                    proof {
+                        if r.is_some() {
+                            lemma_contains_right(node, *target);
+                        }
+                        T::is_lt_irreflexive(*target);
+                        if spec_contains_link(link, *target) {
+                            if spec_contains_link(&node.left, *target) {
+                                T::is_lt_transitive(*target, node.key, *target);
+                            }
+                            assert(!spec_contains_link(&node.left, *target));
+                            assert(node.key != *target);
+                            assert(spec_contains_link(&node.right, *target));
+                            assert(r.is_some());
+                        }
                     }
                     r
                 } else {
-                    let r = find_link(&node.right, target);
                     proof {
-                        if r.is_some() { lemma_contains_right(node, *r.unwrap()); }
+                        T::is_lt_antisymmetric(*target, node.key);
+                        lemma_contains_root(node);
+                        assert(spec_contains_link(link, *target));
                     }
-                    r
+                    Some(&node.key)
                 }
             }
         }
