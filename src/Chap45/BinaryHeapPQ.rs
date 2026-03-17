@@ -40,6 +40,8 @@ pub mod BinaryHeapPQ {
         use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
         use crate::vstdplus::accept::accept;
         use crate::vstdplus::total_order::total_order::TotalOrder;
+        use crate::vstdplus::pervasives_plus::pervasives_plus::vec_swap;
+        use core::cmp::Ordering;
         #[cfg(verus_keep_ghost)]
         use crate::vstdplus::feq::feq::*;
 
@@ -138,6 +140,7 @@ pub mod BinaryHeapPQ {
             spec fn spec_is_heap(seq: Seq<T::V>) -> bool;
             spec fn spec_exec_heap_inv_at(seq: Seq<T>, i: int) -> bool;
             spec fn spec_is_exec_heap(seq: Seq<T>) -> bool;
+            spec fn spec_is_exec_heap_except(seq: Seq<T>, pos: int) -> bool;
             spec fn parent_spec(i: int) -> int;
             spec fn left_child_spec(i: int) -> int;
             spec fn right_child_spec(i: int) -> int;
@@ -177,13 +180,20 @@ pub mod BinaryHeapPQ {
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() * 2 <= usize::MAX as int,
+                    Self::spec_is_exec_heap(self.spec_seq()),
                 ensures
                     self@.len() > 0 ==> min_and_rest.1.is_some(),
                     self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,
                     self@.len() == 0 ==> min_and_rest.1.is_none(),
                     self@.len() == 0 ==> min_and_rest.0@.len() == 0,
                     self@.len() > 0 ==> self@.to_multiset() =~=
-                        min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@);
+                        min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@),
+                    self@.len() > 0 ==> Self::spec_is_exec_heap(min_and_rest.0.spec_seq()),
+                    self@.len() > 0 ==> min_and_rest.1.unwrap() == self.spec_seq()[0],
+                    self@.len() > 0 ==> (forall|i: int|
+                        0 <= i < min_and_rest.0.spec_seq().len() ==>
+                        #[trigger] TotalOrder::le(min_and_rest.1.unwrap(),
+                            min_and_rest.0.spec_seq()[i]));
 
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
@@ -222,6 +232,7 @@ pub mod BinaryHeapPQ {
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() * 2 <= usize::MAX as int,
+                    Self::spec_is_exec_heap(self.spec_seq()),
                 ensures
                     sorted@.len() == self@.len(),
                     Self::spec_sorted(sorted.seq@);
@@ -253,6 +264,7 @@ pub mod BinaryHeapPQ {
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() * 2 <= usize::MAX as int,
+                    Self::spec_is_exec_heap(self.spec_seq()),
                 ensures
                     v@.len() == self@.len(),
                     Self::spec_sorted(v@);
@@ -312,6 +324,28 @@ pub mod BinaryHeapPQ {
                 vstd::multiset::lemma_insert_increases_count_by_1(m.insert(b).remove(a), a);
                 vstd::multiset::lemma_insert_other_elements_unchanged(m.insert(b).remove(a), a, key);
             });
+        }
+
+        /// Transfers le(min, a[j]) for all j to le(min, b[i]) for all i
+        /// when a and b have equal multisets.
+        proof fn lemma_le_preserved_by_multiset_eq<T: TotalOrder>(
+            min_elem: T, a: Seq<T>, b: Seq<T>,
+        )
+            requires
+                a.to_multiset() =~= b.to_multiset(),
+                forall|j: int| 0 <= j < a.len() ==>
+                    #[trigger] TotalOrder::le(min_elem, a[j]),
+            ensures
+                forall|i: int| 0 <= i < b.len() ==>
+                    #[trigger] TotalOrder::le(min_elem, b[i]),
+        {
+            assert forall|i: int| 0 <= i < b.len()
+                implies #[trigger] TotalOrder::le(min_elem, b[i]) by {
+                // b[i] appears in b, so it's in b's multiset.
+                vstd::seq_lib::to_multiset_contains(b, b[i]);
+                // Same multiset, so b[i] is in a's multiset, hence in a.
+                vstd::seq_lib::to_multiset_contains(a, b[i]);
+            }
         }
 
         fn swap_elements<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>, i: usize, j: usize) -> (swapped: ArraySeqStPerS<T>)
@@ -495,6 +529,181 @@ pub mod BinaryHeapPQ {
             result
         }
 
+        /// Sifts down from position 0, restoring full heap property.
+        /// Takes ownership to enable in-place vec_swap for T-level identity.
+        fn bubble_down_heap<T: StT + Ord + TotalOrder>(heap: ArraySeqStPerS<T>) -> (heaped: ArraySeqStPerS<T>)
+            requires
+                heap.seq@.len() > 0,
+                heap.seq@.len() * 2 <= usize::MAX as int,
+                BinaryHeapPQ::<T>::spec_is_exec_heap_except(heap.seq@, 0),
+            ensures
+                heaped.seq@.len() == heap.seq@.len(),
+                BinaryHeapPQ::<T>::spec_is_exec_heap(heaped.seq@),
+                heaped@.to_multiset() =~= heap@.to_multiset(),
+                heaped.seq@.to_multiset() =~= heap.seq@.to_multiset(),
+        {
+            let ghost orig = heap.seq@;
+            let ghost orig_view = heap@;
+            let mut v = heap.seq;
+            let n = v.len();
+            if n <= 1 {
+                proof {
+                    if n > 0 { assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(v@, 0)); }
+                }
+                return ArraySeqStPerS { seq: v };
+            }
+            let mut idx: usize = 0;
+            let mut done = false;
+            let ghost mut view_seq: Seq<T::V> = orig_view;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            while !done
+                invariant
+                    v@.len() == n,
+                    n > 1,
+                    (n as int) * 2 <= usize::MAX as int,
+                    (idx as int) < (n as int),
+                    BinaryHeapPQ::<T>::spec_is_exec_heap_except(v@, idx as int),
+                    idx > 0 ==> (
+                        (2 * (idx as int) + 1 < n as int ==>
+                            TotalOrder::le(v@[((idx as int) - 1) / 2], v@[2 * (idx as int) + 1]))
+                        && (2 * (idx as int) + 2 < n as int ==>
+                            TotalOrder::le(v@[((idx as int) - 1) / 2], v@[2 * (idx as int) + 2]))
+                    ),
+                    v@.to_multiset() =~= orig.to_multiset(),
+                    view_seq.len() == n as int,
+                    view_seq.to_multiset() =~= orig_view.to_multiset(),
+                    forall|k: int| 0 <= k < n as int ==> #[trigger] view_seq[k] == v@[k]@,
+                    done ==> BinaryHeapPQ::<T>::spec_is_exec_heap(v@),
+                decreases (if !done { 1int } else { 0int }), n - idx,
+            {
+                let left = 2 * idx + 1;
+                if left >= n {
+                    // Leaf: heap_inv_at trivially holds.
+                    proof { assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(v@, idx as int)); }
+                    done = true;
+                } else {
+                    let right = left + 1;
+                    let ghost pre = v@;
+                    let mut smallest = idx;
+
+                    // Compare left child with current using TotalOrder::cmp.
+                    let c1 = TotalOrder::cmp(&v[left], &v[idx]);
+                    match c1 {
+                        Ordering::Less => { smallest = left; }
+                        Ordering::Equal => { proof { T::reflexive(pre[idx as int]); } }
+                        _ => { }
+                    }
+
+                    // Compare right child with current smallest.
+                    if right < n {
+                        let ghost sbc = smallest as int;
+                        let c2 = TotalOrder::cmp(&v[right], &v[smallest]);
+                        match c2 {
+                            Ordering::Less => {
+                                proof {
+                                    // c2 gives le(right, pre[sbc]).
+                                    // Establish le(right, idx) and le(right, left) while
+                                    // branch context connects sbc to c1 outcome.
+                                    if sbc == left as int {
+                                        // c1 was Less: le(right, left) from c2.
+                                        T::transitive(pre[right as int], pre[left as int], pre[idx as int]);
+                                    } else {
+                                        // sbc == idx. le(right, idx) from c2.
+                                        // c1 not Less: Equal gives pre[left]==pre[idx],
+                                        // Greater gives le(idx, left). Either way le(idx, left).
+                                        T::reflexive(pre[idx as int]);
+                                        T::total(pre[idx as int], pre[left as int]);
+                                        if TotalOrder::le(pre[idx as int], pre[left as int]) {
+                                            T::transitive(pre[right as int], pre[idx as int], pre[left as int]);
+                                        }
+                                    }
+                                    T::reflexive(pre[right as int]);
+                                }
+                                smallest = right;
+                            }
+                            Ordering::Equal => { proof { T::reflexive(pre[smallest as int]); } }
+                            _ => { }
+                        }
+                    }
+
+                    if smallest == idx {
+                        proof { assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(v@, idx as int)); }
+                        done = true;
+                    } else {
+                        proof {
+                            T::reflexive(pre[smallest as int]);
+                            assert(TotalOrder::le(pre[smallest as int], pre[idx as int]));
+                            assert(TotalOrder::le(pre[smallest as int], pre[left as int]));
+                            if right < n {
+                                assert(TotalOrder::le(pre[smallest as int], pre[right as int]));
+                            }
+                        }
+
+                        let ghost pre_view = view_seq;
+                        vec_swap(&mut v, idx, smallest);
+
+                        proof {
+                            let id = idx as int;
+                            let sc = smallest as int;
+                            assert(v@ =~= pre.update(id, pre[sc]).update(sc, pre[id]));
+                            lemma_swap_preserves_multiset(pre, id, sc);
+
+                            // View tracking.
+                            view_seq = pre_view.update(id, pre_view[sc]).update(sc, pre_view[id]);
+                            assert(view_seq.len() == n as int);
+                            lemma_swap_preserves_multiset(pre_view, id, sc);
+                            assert forall|k: int| 0 <= k < n as int
+                                implies #[trigger] view_seq[k] == v@[k]@ by {
+                                if k == id {
+                                    assert(v@[k] == pre[sc]);
+                                    assert(view_seq[k] == pre_view[sc]);
+                                } else if k == sc {
+                                    assert(v@[k] == pre[id]);
+                                    assert(view_seq[k] == pre_view[id]);
+                                }
+                            }
+
+                            // C2 at new position sc: parent(sc) = id.
+                            assert((sc - 1) / 2 == id);
+                            assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(pre, sc));
+
+                            // Heap-except at sc.
+                            assert forall|j: int| 0 <= j < n as int && j != sc
+                                implies #[trigger] BinaryHeapPQ::<T>::spec_exec_heap_inv_at(v@, j) by {
+                                if j == id {
+                                    // v@[id] = pre[sc]. For each child c of id:
+                                    //   c == sc → v@[c] = pre[id], le(pre[sc], pre[id]) ✓
+                                    //   c != sc → v@[c] = pre[c], le(pre[sc], pre[c]) ✓
+                                } else if id > 0 && j == (id - 1) / 2 {
+                                    // Parent of id. v@[j] unchanged.
+                                    // Child at id: v@[id] = pre[sc], le(pre[j], pre[sc]) from C2.
+                                    // Sibling child: unchanged, from old heap.
+                                    assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(pre, j));
+                                } else {
+                                    // Positions j, 2j+1, 2j+2 are all ∉ {id, sc}.
+                                    if 2 * j + 1 == id { assert(j == (id - 1) / 2); }
+                                    if 2 * j + 2 == id { assert(j == (id - 1) / 2); }
+                                    if 2 * j + 1 == sc { assert(j == id); }
+                                    if 2 * j + 2 == sc { assert(j == id); }
+                                    assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(pre, j));
+                                }
+                            };
+                        }
+                        idx = smallest;
+                    }
+                }
+            }
+
+            proof {
+                assert(ArraySeqStPerS::<T> { seq: v }.view() =~= view_seq) by {
+                    assert forall|k: int| 0 <= k < n as int
+                        implies v@.map(|_i: int, t: T| t@)[k] == view_seq[k] by {}
+                }
+            }
+            ArraySeqStPerS { seq: v }
+        }
+
         fn heapify<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>) -> (heap: ArraySeqStPerS<T>)
             requires
                 obeys_feq_clone::<T>(),
@@ -664,6 +873,11 @@ pub mod BinaryHeapPQ {
                     #[trigger] Self::spec_exec_heap_inv_at(seq, i)
             }
 
+            open spec fn spec_is_exec_heap_except(seq: Seq<T>, pos: int) -> bool {
+                forall|i: int| 0 <= i < seq.len() && i != pos ==>
+                    #[trigger] Self::spec_exec_heap_inv_at(seq, i)
+            }
+
             open spec fn parent_spec(i: int) -> int {
                 if i == 0 { 0 } else { (i - 1) / 2 }
             }
@@ -812,6 +1026,10 @@ pub mod BinaryHeapPQ {
                         new_elements@[0] == self@[n as int - 1],
                         forall|m: int| 1 <= m < i as int ==>
                             #[trigger] new_elements@[m] == self@[m],
+                        // T-level identity for heap-except proof.
+                        new_elements.seq@[0] == last_element,
+                        forall|m: int| 1 <= m < i as int ==>
+                            #[trigger] new_elements.seq@[m] == self.elements.seq@[m],
                 {
                     let elem = self.elements.nth(i);
                     let single_seq = ArraySeqStPerS::singleton(elem.clone());
@@ -843,15 +1061,64 @@ pub mod BinaryHeapPQ {
                             assert(new_elements.spec_index(m)@ == new_elements@[m]);
                             assert(pre_seq[m]@ == pre_view[m]);
                         }
+                        // T-level: new element at position i.
+                        assert(new_elements.seq@[i as int] == self.elements.seq@[i as int]) by {
+                            assert(new_elements.spec_index(i as int) == single_seq.seq@[0]);
+                        }
+                        // T-level: position 0 preserved.
+                        assert(new_elements.seq@[0] == last_element) by {
+                            assert(new_elements.spec_index(0) == pre_seq[0]);
+                        }
+                        // T-level: previous elements preserved.
+                        assert forall|m: int| 1 <= m < i as int
+                            implies #[trigger] new_elements.seq@[m] == self.elements.seq@[m] by {
+                            assert(new_elements.spec_index(m) == pre_seq[m]);
+                        }
                     }
                 }
 
-                let heapified = bubble_down(&new_elements, 0);
+                // Prove heap-except-0 for new_elements.
+                proof {
+                    assert forall|j: int| 0 <= j < new_elements.seq@.len() && j != 0
+                        implies #[trigger] Self::spec_exec_heap_inv_at(new_elements.seq@, j) by {
+                        assert(new_elements.seq@[j] == self.elements.seq@[j]);
+                        assert(Self::spec_exec_heap_inv_at(self.elements.seq@, j));
+                        let left = 2 * j + 1;
+                        let right = 2 * j + 2;
+                        if left < new_elements.seq@.len() {
+                            assert(left >= 1);
+                            assert(new_elements.seq@[left] == self.elements.seq@[left]);
+                        }
+                        if right < new_elements.seq@.len() {
+                            assert(right >= 1);
+                            assert(new_elements.seq@[right] == self.elements.seq@[right]);
+                        }
+                    }
+                }
+
+                // Capture ghost state before ownership transfer to bubble_down_heap.
+                let ghost new_elem_view = new_elements@;
+                let ghost new_elem_seq = new_elements.seq@;
+                let heapified = bubble_down_heap(new_elements);
 
                 let new_pq = BinaryHeapPQ { elements: heapified };
                 proof {
-                    // new_elements has elements: [self@[n-1], self@[1], ..., self@[n-2]]
-                    // These are exactly self@.subrange(1, n) rearranged.
+                    // le(min_element, every element in new_elem_seq).
+                    assert forall|j: int| 0 <= j < new_elem_seq.len()
+                        implies #[trigger] TotalOrder::le(min_element, new_elem_seq[j]) by {
+                        if j == 0 {
+                            lemma_heap_root_le_all::<T>(self.spec_seq(), (n as int - 1));
+                            assert(new_elem_seq[0] == self.spec_seq()[n as int - 1]);
+                        } else {
+                            lemma_heap_root_le_all::<T>(self.spec_seq(), j);
+                            assert(new_elem_seq[j] == self.spec_seq()[j]);
+                        }
+                        assert(min_element == self.spec_seq()[0]);
+                    }
+                    // Transfer le through multiset equality to heapified.
+                    lemma_le_preserved_by_multiset_eq(min_element, new_elem_seq, heapified.seq@);
+
+                    // Multiset proof.
                     let sr = self@.subrange(1, n as int);
                     // Show multisets are equal by relating to subrange.
                     // sr = [self@[1], ..., self@[n-1]], sr.last() = self@[n-1]
@@ -866,14 +1133,14 @@ pub mod BinaryHeapPQ {
                     let rest = sr.subrange(0, sr.len() - 1);
                     let rearranged = first + rest;
 
-                    // Show new_elements@ =~= rearranged.
+                    // Show new_elem_view =~= rearranged.
                     assert(rearranged.len() == sr.len());
-                    assert(new_elements@.len() == sr.len());
-                    assert(new_elements@ =~= rearranged) by {
-                        assert(new_elements@[0] == rearranged[0]);
-                        assert forall|m: int| 1 <= m < new_elements@.len()
-                            implies #[trigger] new_elements@[m] == rearranged[m] by {
-                            assert(new_elements@[m] == self@[m]);
+                    assert(new_elem_view.len() == sr.len());
+                    assert(new_elem_view =~= rearranged) by {
+                        assert(new_elem_view[0] == rearranged[0]);
+                        assert forall|m: int| 1 <= m < new_elem_view.len()
+                            implies #[trigger] new_elem_view[m] == rearranged[m] by {
+                            assert(new_elem_view[m] == self@[m]);
                             assert(0 <= m - 1 < rest.len());
                             assert(rearranged[m] == rest[m - 1]);
                             assert(0 <= m - 1 < sr.len());
@@ -913,12 +1180,12 @@ pub mod BinaryHeapPQ {
                     // self@.remove(0).to_multiset() == self@.to_multiset().remove(self@[0])
                     assert(self@.remove(0) =~= sr);
                     // So sr.to_multiset() == self@.to_multiset().remove(self@[0])
-                    // And new_elements@.to_multiset() == sr.to_multiset()
-                    // And heapified@.to_multiset() == new_elements@.to_multiset() (from bubble_down)
+                    // And new_elem_view.to_multiset() == sr.to_multiset()
+                    // And heapified@.to_multiset() == new_elem_view.to_multiset() (from bubble_down_heap)
                     // And min_element@ == self@[0]
                     // So: new_pq@.to_multiset().insert(min_element@)
                     //   = heapified@.to_multiset().insert(self@[0])
-                    //   = new_elements@.to_multiset().insert(self@[0])
+                    //   = new_elem_view.to_multiset().insert(self@[0])
                     //   = self@.to_multiset().remove(self@[0]).insert(self@[0])
                     //   = self@.to_multiset()
                     assert(self@.contains(self@[0]));
@@ -1013,22 +1280,101 @@ pub mod BinaryHeapPQ {
                 let mut result = ArraySeqStPerS::empty();
                 let mut current_heap = self.clone();
 
+                // Clone preserves T-level seq equality, so heap property transfers.
+                proof {
+                    assert forall|j: int| 0 <= j < current_heap.spec_seq().len()
+                        implies #[trigger] Self::spec_exec_heap_inv_at(
+                            current_heap.spec_seq(), j) by {
+                        assert(current_heap.elements.seq@[j] == self.elements.seq@[j]);
+                        assert(Self::spec_exec_heap_inv_at(self.elements.seq@, j));
+                        let left = 2 * j + 1;
+                        let right = 2 * j + 2;
+                        if left < current_heap.spec_seq().len() {
+                            assert(current_heap.elements.seq@[left]
+                                == self.elements.seq@[left]);
+                        }
+                        if right < current_heap.spec_seq().len() {
+                            assert(current_heap.elements.seq@[right]
+                                == self.elements.seq@[right]);
+                        }
+                    }
+                }
+
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 while !current_heap.is_empty()
                     invariant
                         current_heap@.len() * 2 <= usize::MAX as int,
                         result@.len() + current_heap@.len() == self@.len(),
+                        obeys_feq_clone::<T>(),
+                        Self::spec_is_exec_heap(current_heap.spec_seq()),
+                        Self::spec_sorted(result.seq@),
+                        forall|r: int, h: int|
+                            #![trigger result.seq@[r], current_heap.spec_seq()[h]]
+                            0 <= r < result.seq@.len()
+                                && 0 <= h < current_heap.spec_seq().len() ==>
+                            TotalOrder::le(result.seq@[r], current_heap.spec_seq()[h]),
                 {
+                    let ghost old_result_seq = result.seq@;
+                    let ghost old_result_len = result.seq@.len() as int;
                     let (new_heap, min_element) = current_heap.delete_min();
                     if let Some(element) = min_element {
                         let single_seq = ArraySeqStPerS::singleton(element);
+                        let ghost pre_seq = result.seq@;
                         result = ArraySeqStPerS::append(&result, &single_seq);
+
+                        proof {
+                            // element == current_heap.spec_seq()[0] from delete_min.
+                            // le(element, new_heap[h]) for all h from delete_min.
+
+                            // T-level identity through append.
+                            assert(result.seq@[old_result_len] == element) by {
+                                assert(result.spec_index(old_result_len)
+                                    == single_seq.seq@[0]);
+                                assert(single_seq.spec_index(0) == element);
+                            }
+
+                            // Sorted: old elements + new element.
+                            assert forall|i: int, j: int|
+                                0 <= i < j < result.seq@.len()
+                                implies #[trigger] TotalOrder::le(
+                                    result.seq@[i], result.seq@[j]) by {
+                                if i < old_result_len && j < old_result_len {
+                                    assert(result.spec_index(i) == pre_seq[i]);
+                                    assert(result.spec_index(j) == pre_seq[j]);
+                                } else if i < old_result_len {
+                                    // j == old_result_len; new element is the min.
+                                    assert(result.spec_index(i) == pre_seq[i]);
+                                    // le(old[i], current_heap root) from boundary.
+                                    assert(old_result_seq[i]
+                                        == current_heap.spec_seq()[i]
+                                        || true);
+                                    // Use boundary: le(old_result_seq[i],
+                                    //   current_heap.spec_seq()[0])
+                                    // and element == current_heap.spec_seq()[0].
+                                }
+                            };
+
+                            // Boundary: all result elements <= all new_heap elements.
+                            assert forall|r: int, h: int|
+                                0 <= r < result.seq@.len()
+                                    && 0 <= h < new_heap.spec_seq().len()
+                                implies TotalOrder::le(result.seq@[r],
+                                    new_heap.spec_seq()[h]) by {
+                                if r < old_result_len {
+                                    assert(result.spec_index(r) == pre_seq[r]);
+                                    // le(old[r], element) from boundary with h=0.
+                                    // le(element, new_heap[h]) from delete_min.
+                                    T::transitive(result.seq@[r], element,
+                                        new_heap.spec_seq()[h]);
+                                }
+                                // r == old_result_len: result[r] == element,
+                                // le(element, new_heap[h]) from delete_min.
+                            };
+                        }
                     }
                     current_heap = new_heap;
                 }
 
-                // accept hole: Proving sortedness requires heap property invariant (task #8).
-                proof { assume(Self::spec_sorted(result.seq@)); }
                 result
             }
 
@@ -1167,7 +1513,11 @@ pub mod BinaryHeapPQ {
 
         impl<T: StT + Ord + TotalOrder> Clone for BinaryHeapPQ<T> {
             fn clone(&self) -> (cloned: Self)
-                ensures cloned@ == self@
+                ensures
+                    cloned@ == self@,
+                    cloned.elements.seq@.len() == self.elements.seq@.len(),
+                    forall|i: int| 0 <= i < self.elements.seq@.len() ==>
+                        #[trigger] cloned.elements.seq@[i] == self.elements.seq@[i],
             {
                 let cloned = BinaryHeapPQ { elements: self.elements.clone() };
                 proof {
@@ -1176,6 +1526,12 @@ pub mod BinaryHeapPQ {
                         self.elements.seq@,
                         cloned.elements.seq@,
                     );
+                    // T-level seq equality from clone axiom.
+                    assert forall|i: int| 0 <= i < self.elements.seq@.len()
+                        implies #[trigger] cloned.elements.seq@[i] == self.elements.seq@[i] by {
+                        // ArraySeqStPerS::clone ensures cloned(original, clone) at each index.
+                        // axiom_cloned_implies_eq_owned + obeys_feq_clone gives T-level equality.
+                    }
                 }
                 cloned
             }

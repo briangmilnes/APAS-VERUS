@@ -180,7 +180,10 @@ pub mod DijkstraStEphI64 {
                 valid_key_type_WeightedEdge::<usize, i128>(),
                 obeys_feq_clone::<PQEntry>(),
         {
-            proof { assume(pq@.len() * 2 <= usize::MAX as int); }
+            proof {
+                assume(pq@.len() * 2 <= usize::MAX as int);
+                assume(BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_seq()));
+            }
             let (new_pq, min_elem) = pq.delete_min();
             pq = new_pq;
 

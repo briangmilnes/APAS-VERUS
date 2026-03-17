@@ -35,20 +35,13 @@ Table of Contents:
        128 |             proof {
        130 |                     && #[trigger] spec_flat_has_key(table.table@[j], *key) ==> {
        131 |                     let hh = (table.spec_hash@)(*key) as int % (m as int);
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:171: error: assume() - assume(slot as int == (h as int + attempt as int * step as i
-       122 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
-            ...
-       169 |                 proof {
-       170 |                     // Bridge wrapping arithmetic to spec: slot == (h + attempt * step) % m.
-       172 |                 }
-       173 |                 let entry = table.table[slot].clone();
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:238: error: external_body - #[verifier::external_body]
-       239 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:268: error: external_body - #[verifier::external_body]
-       269 |         fn resize(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:177: info: accept()
-   Holes: 5 total
-      2 × assume()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:269: error: external_body - #[verifier::external_body]
+       270 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:299: error: external_body - #[verifier::external_body]
+       300 |         fn resize(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:179: info: accept()
+   Holes: 4 total
+      1 × assume()
       3 × external_body
    Info: 1 total
 ℹ FlatHashTable.rs
@@ -155,20 +148,12 @@ Table of Contents:
 ❌ QuadProbFlatHashTableStEph.rs
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap47/QuadProbFlatHashTableStEph.rs:76: error: external_body - #[verifier::external_body]
         77 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/QuadProbFlatHashTableStEph.rs:131: error: assume() - assume(slot as int == (h as int + attempt as int * attempt a
-       107 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
-            ...
-       129 |                 proof {
-       130 |                     // Bridge wrapping arithmetic to spec: slot == (h + attempt²) % m.
-       132 |                 }
-       133 |                 let entry = table.table[slot].clone();
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/QuadProbFlatHashTableStEph.rs:204: error: external_body - #[verifier::external_body]
-       205 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/QuadProbFlatHashTableStEph.rs:234: error: external_body - #[verifier::external_body]
-       235 |         fn resize(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/QuadProbFlatHashTableStEph.rs:137: info: accept()
-   Holes: 4 total
-      1 × assume()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/QuadProbFlatHashTableStEph.rs:264: error: external_body - #[verifier::external_body]
+       265 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/QuadProbFlatHashTableStEph.rs:294: error: external_body - #[verifier::external_body]
+       295 |         fn resize(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/QuadProbFlatHashTableStEph.rs:139: info: accept()
+   Holes: 3 total
       3 × external_body
    Info: 1 total
 ❌ StructChainedHashTable.rs
@@ -284,16 +269,16 @@ Function Specs:
    135 total fns
 
 
-Holes Found: 17 total
-   3 × assume() (17%)
-   14 × external_body (82%)
+Holes Found: 15 total
+   1 × assume() (6%)
+   14 × external_body (93%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 21:28:13 -07:00
-Ended:     2026-03-16 21:28:13 -07:00
-Duration:  42ms
+Started:   2026-03-17 03:04:13 -07:00
+Ended:     2026-03-17 03:04:13 -07:00
+Duration:  32ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log

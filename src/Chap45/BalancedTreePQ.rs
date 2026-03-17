@@ -219,32 +219,59 @@ broadcast use {
             }
 
             /// - APAS: Work O(log n), Span O(log n).
-            /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan for position, rebuild via from_vec.
-            #[verifier::external_body]
+            /// - Claude-Opus-4.6: Work O(n), Span O(n) — values_in_order + Vec::insert at sorted position.
             fn insert(&self, element: T) -> Self {
-                let n = self.elements.length();
-                let mut values: Vec<T> = Vec::new();
-                let mut inserted = false;
+                let mut vals: Vec<T> = self.elements.values_in_order();
+                let ghost old_vals = vals@;
+                let n = vals.len();
+
+                // Find sorted insertion position.
+                let mut pos: usize = n;
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
                     invariant
-                        values@.len() == (if inserted { i as int + 1 } else { i as int }),
-                        n == self.elements.spec_seq().len(),
-                        self.elements.spec_avltreeseqstper_wf(),
+                        pos == n,
+                        n == vals@.len(),
+                        old_vals =~= vals@,
                 {
-                    let current = self.elements.nth(i);
-                    if !inserted && element <= *current {
-                        values.push(element.clone());
-                        inserted = true;
+                    if element <= vals[i] {
+                        pos = i;
+                        break;
                     }
-                    values.push(current.clone());
                 }
-                if !inserted {
-                    values.push(element);
+
+                // Insert at sorted position.
+                vals.insert(pos, element);
+
+                let result = BalancedTreePQ {
+                    elements: AVLTreeSeqStPerS::from_vec(vals),
+                };
+                proof {
+                    // vals@ == old_vals.insert(pos, element)  (from Vec::insert)
+                    // result@ =~= vals@.map_values(|t: T| t@)  (from from_vec)
+                    // old_vals.map_values(|t: T| t@) =~= self@  (from values_in_order)
+                    //
+                    // Need: result@ =~= self@.insert(pos, element@)
+                    // i.e.: old_vals.insert(pos, element).map_values(|t: T| t@)
+                    //    =~= old_vals.map_values(|t: T| t@).insert(pos, element@)
+                    old_vals.insert_ensures(pos as int, element);
+                    self@.insert_ensures(pos as int, element@);
+                    let view_fn = |t: T| t@;
+                    assert forall|k: int| 0 <= k < vals@.map_values(view_fn).len()
+                        implies vals@.map_values(view_fn)[k]
+                            == self@.insert(pos as int, element@)[k] by {
+                        if k < pos as int {
+                            assert(vals@[k] == old_vals[k]);
+                        } else if k == pos as int {
+                            assert(vals@[k] == element);
+                        } else {
+                            assert(vals@[k] == old_vals[(k - 1) as int]);
+                        }
+                    }
+                    assert(result@ =~= self@.insert(pos as int, element@));
+                    // to_multiset_insert (broadcast): s.insert(i, a).to_multiset() == s.to_multiset().insert(a)
                 }
-                BalancedTreePQ {
-                    elements: AVLTreeSeqStPerS::from_vec(values),
-                }
+                result
             }
 
             /// - APAS: Work O(log n), Span O(log n).
