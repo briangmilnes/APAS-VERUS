@@ -313,6 +313,11 @@ scripts/rtt.sh               # run time tests (cargo nextest)
   memory. Verus holds large dependency graphs in memory; running concurrent builds can
   exhaust system RAM and lock the machine. Always: `validate` first, then `rtt`, then `ptt`.
   Never overlap them. Never run two validation passes at the same time.
+- **DO NOT run validate from subagents.** Validation is inherently sequential (single Verus
+  process, single Z3 solver). Running validate from multiple subagents concurrently will
+  wedge the machine. If you need multiple views of the output, run validate ONCE in the
+  main agent, tee the output to a temp file (`scripts/validate.sh 2>&1 | tee /tmp/validate.txt`),
+  and have subagents read the temp file. The same applies to rtt and ptt.
 
 ### Validation Modes
 
