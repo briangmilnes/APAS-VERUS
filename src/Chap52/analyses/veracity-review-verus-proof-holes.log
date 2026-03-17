@@ -125,8 +125,13 @@ Structural False Positives: 2 detected (language limitations, not missing proof)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 08:54:13 -07:00
-Ended:     2026-03-17 08:54:13 -07:00
-Duration:  42ms
+Started:   2026-03-17 09:29:52 -07:00
+Ended:     2026-03-17 09:29:52 -07:00
+Duration:  44ms
+
+Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+:00
+Ended:     2026-03-17 09:29:52 -07:00
+Duration:  44ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log

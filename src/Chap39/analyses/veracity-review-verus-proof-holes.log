@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap39/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap39/BSTTreapMtEph.rs
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,35 +20,6 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:68: error: external_body - #[verifier::external_body]
-        69 |         open spec fn view(&self) -> Set<T::V> {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:547: error: external_body - #[verifier::external_body]
-       548 |         fn join_mid(exposed: Exposed<T>) -> (tree: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:665: error: external_body - #[verifier::external_body]
-       666 |         fn split(&self, key: &T) -> (parts: (Self, bool, Self)) { split_inner(self, key) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:670: error: external_body - #[verifier::external_body]
-       671 |         fn join_pair(&self, other: Self) -> (joined: Self) { join_pair_inner(self.clone(), other) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:675: error: external_body - #[verifier::external_body]
-       676 |         fn union(&self, other: &Self) -> (combined: Self) { union_inner(self, other) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:680: error: external_body - #[verifier::external_body]
-       681 |         fn intersect(&self, other: &Self) -> (common: Self) { intersect_inner(self, other) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:685: error: external_body - #[verifier::external_body]
-       686 |         fn difference(&self, other: &Self) -> (diff: Self) { difference_inner(self, other) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:690: error: external_body - #[verifier::external_body]
-       691 |         fn filter<F: Pred<T>>(
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:699: error: external_body - #[verifier::external_body]
-       700 |         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:709: error: external_body - #[verifier::external_body]
-       710 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:499: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:529: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:568: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:655: info: accept()
-   Holes: 10 total
-      10 × external_body
-   Info: 4 total
-✓ BSTSetTreapMtEph.rs
 ❌ BSTTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1067: error: assume() - proof { assume(result.is_some() <==> self@.contains(target@)
       1061 |         fn find(&self, target: &T) -> (found: Option<T>)
@@ -118,8 +89,6 @@ Table of Contents:
       6 × assume()
    Info: 6 total
    Proof functions: 9 total (9 clean, 0 holed)
-✓ BSTTreapStEph.rs
-   16 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -129,45 +98,38 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-BSTParaTreapMtEph  depends upon only clean modules
-BSTSetTreapMtEph  depends upon only clean modules
 BSTTreapMtEph  depends upon only clean modules
-BSTTreapStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-BSTParaTreapMtEph.rs  depends upon only clean modules
-BSTSetTreapMtEph.rs  depends upon only clean modules
 BSTTreapMtEph.rs  depends upon only clean modules
-BSTTreapStEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 50%)
-   2 holed (holes or errors, 50%)
-   4 total
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
+   1 total
 
 Proof Functions:
-   25 clean (100%)
+   9 clean (100%)
    0 holed (0%)
-   25 total
+   9 total
 
 Function Specs:
-   176 exec fns with complete spec (requires+ensures) (67%)
+   40 exec fns with complete spec (requires+ensures) (60%)
    0 exec fns missing spec (0%)
-   84 proof/spec fns clean (32%)
+   26 proof/spec fns clean (39%)
    0 proof/spec fns with holes (0%)
-   260 total fns
+   66 total fns
 
 
-Holes Found: 16 total
-   6 × assume() (37%)
-   10 × external_body (62%)
+Holes Found: 6 total
+   6 × assume() (100%)
 
 Structural False Positives: 6 detected (language limitations, not missing proof)
    6 × EQ_CLONE_ASSUME
@@ -176,13 +138,8 @@ Structural False Positives: 6 detected (language limitations, not missing proof)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 08:53:00 -07:00
-Ended:     2026-03-17 08:53:00 -07:00
-Duration:  35ms
-
-Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
- -07:00
-Ended:     2026-03-17 08:53:00 -07:00
-Duration:  35ms
+Started:   2026-03-17 09:36:43 -07:00
+Ended:     2026-03-17 09:36:43 -07:00
+Duration:  15ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log

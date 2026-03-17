@@ -1315,8 +1315,6 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:98: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:113: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:98: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:113: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    1 clean proof function
 ℹ src/Chap45/LeftistHeapPQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1133: info: accept()
@@ -2333,8 +2331,8 @@ Holes Found: 171 total
    141 × external_body (82%)
    2 × external (1%)
 
-Structural False Positives: 167 detected (language limitations, not missing proof)
-   145 × EQ_CLONE_ASSUME
+Structural False Positives: 165 detected (language limitations, not missing proof)
+   143 × EQ_CLONE_ASSUME
    10 × STD_TRAIT_IMPL
    5 × RWLOCK_GHOST
    4 × THREAD_SPAWN
@@ -2359,43 +2357,43 @@ Structural False Positives: 167 detected (language limitations, not missing proo
    7  Chap59  (4 holes, 4 files)
    8  Chap37  (3 holes, 19 files)
    9  Chap45  (2 holes, 7 files)
-   10  Chap49  (0 holes, 8 files)
-   11  Chap18  (0 holes, 7 files)
-   12  Chap05  (0 holes, 5 files)
-   13  Chap64  (0 holes, 3 files)
-   14  Chap42  (0 holes, 4 files)
-   15  Chap30  (0 holes, 1 files)
-   16  Chap51  (0 holes, 8 files)
-   17  Chap23  (0 holes, 2 files)
-   18  Chap66  (0 holes, 2 files)
-   19  Chap19  (0 holes, 4 files)
-   20  Chap21  (0 holes, 12 files)
-   21  Chap44  (0 holes, 2 files)
-   22  Chap54  (0 holes, 4 files)
-   23  Chap35  (0 holes, 4 files)
-   24  Chap55  (0 holes, 8 files)
-   25  Concurrency  (0 holes, 1 files)
-   26  Chap17  (0 holes, 1 files)
-   27  Chap06  (0 holes, 20 files)
-   28  Chap56  (0 holes, 12 files)
-   29  Chap11  (0 holes, 5 files)
-   30  Chap53  (0 holes, 5 files)
-   31  Chap27  (0 holes, 4 files)
-   32  Chap62  (0 holes, 4 files)
-   33  Chap63  (0 holes, 2 files)
-   34  Chap40  (0 holes, 3 files)
-   35  Chap36  (0 holes, 3 files)
-   36  ParaPairs  (0 holes, 1 files)
-   37  Chap03  (0 holes, 1 files)
-   38  Chap65  (0 holes, 3 files)
-   39  Chap61  (0 holes, 4 files)
-   40  Chap26  (0 holes, 8 files)
-   41  Chap02  (0 holes, 2 files)
-   42  Chap12  (0 holes, 3 files)
-   43  Chap28  (0 holes, 11 files)
-   44  Chap50  (0 holes, 8 files)
-   45  Chap58  (0 holes, 2 files)
-   46  Chap52  (0 holes, 14 files)
+   10  Chap35  (0 holes, 4 files)
+   11  Chap06  (0 holes, 20 files)
+   12  Chap49  (0 holes, 8 files)
+   13  Chap44  (0 holes, 2 files)
+   14  Chap53  (0 holes, 5 files)
+   15  Chap11  (0 holes, 5 files)
+   16  Chap50  (0 holes, 8 files)
+   17  Chap28  (0 holes, 11 files)
+   18  Chap61  (0 holes, 4 files)
+   19  Chap62  (0 holes, 4 files)
+   20  Chap64  (0 holes, 3 files)
+   21  Chap52  (0 holes, 14 files)
+   22  Chap63  (0 holes, 2 files)
+   23  Chap21  (0 holes, 12 files)
+   24  Chap51  (0 holes, 8 files)
+   25  Chap02  (0 holes, 2 files)
+   26  Chap05  (0 holes, 5 files)
+   27  Chap26  (0 holes, 8 files)
+   28  Chap30  (0 holes, 1 files)
+   29  Concurrency  (0 holes, 1 files)
+   30  Chap55  (0 holes, 8 files)
+   31  Chap03  (0 holes, 1 files)
+   32  Chap58  (0 holes, 2 files)
+   33  Chap27  (0 holes, 4 files)
+   34  Chap19  (0 holes, 4 files)
+   35  Chap18  (0 holes, 7 files)
+   36  Chap23  (0 holes, 2 files)
+   37  Chap65  (0 holes, 3 files)
+   38  Chap54  (0 holes, 4 files)
+   39  Chap42  (0 holes, 4 files)
+   40  Chap36  (0 holes, 3 files)
+   41  ParaPairs  (0 holes, 1 files)
+   42  Chap56  (0 holes, 12 files)
+   43  Chap66  (0 holes, 2 files)
+   44  Chap40  (0 holes, 3 files)
+   45  Chap12  (0 holes, 3 files)
+   46  Chap17  (0 holes, 1 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -2409,11 +2407,11 @@ Structural False Positives: 167 detected (language limitations, not missing proo
    6  src/Chap39/BSTTreapMtEph.rs  (6 holes)
    7  src/Chap37/AVLTreeSeqMtPer.rs  (2 holes)
    8  src/Chap47/ParaHashTableStEph.rs  (2 holes)
-   9  src/Chap38/BSTParaStEph.rs  (1 holes)
-   10  src/Chap37/AVLTreeSeq.rs  (1 holes)
-   11  src/Chap45/Example45_2.rs  (1 holes)
-   12  src/Chap45/BalancedTreePQ.rs  (1 holes)
-   13  src/Chap41/AVLTreeSetStEph.rs  (1 holes)
+   9  src/Chap45/BalancedTreePQ.rs  (1 holes)
+   10  src/Chap45/Example45_2.rs  (1 holes)
+   11  src/Chap37/AVLTreeSeq.rs  (1 holes)
+   12  src/Chap41/AVLTreeSetStEph.rs  (1 holes)
+   13  src/Chap38/BSTParaStEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -2488,7 +2486,7 @@ HOLED CHAPTERS (9) — 182 holes
   Chap38            10     2  YES       
   Chap39            16     4  internal  Chap39::BSTParaTreapMtEph
   Chap41            25     7  NO        Chap37::AVLTreeSeqMtPer
-  Chap43           102    11  NO        Chap41::AVLTreeSetStEph, Chap42::TableStPer
+  Chap43           102    11  NO        Chap42::TableStPer, Chap41::AVLTreeSetStEph
   Chap45             2     7  internal  Chap45::BalancedTreePQ
   Chap47            15     9  internal  Chap47::ParaHashTableStEph
   Chap57             5     3  NO        Chap05::SetStEph
@@ -2518,8 +2516,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 08:53:01 -07:00
-Ended:     2026-03-17 08:53:02 -07:00
-Duration:  1337ms
+Started:   2026-03-17 09:29:52 -07:00
+Ended:     2026-03-17 09:29:54 -07:00
+Duration:  1302ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

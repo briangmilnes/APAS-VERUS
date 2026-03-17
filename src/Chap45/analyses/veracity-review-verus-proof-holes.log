@@ -46,8 +46,6 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:98: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:113: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:98: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:113: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    1 clean proof function
 ℹ LeftistHeapPQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1133: info: accept()
@@ -126,19 +124,16 @@ Function Specs:
 Holes Found: 2 total
    2 × external (100%)
 
-Structural False Positives: 12 detected (language limitations, not missing proof)
-   12 × EQ_CLONE_ASSUME
+Structural False Positives: 10 detected (language limitations, not missing proof)
+   10 × EQ_CLONE_ASSUME
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 08:53:00 -07:00
-Ended:     2026-03-17 08:53:00 -07:00
-Duration:  53ms
+Started:   2026-03-17 09:29:52 -07:00
+Ended:     2026-03-17 09:29:52 -07:00
+Duration:  51ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
-Ended:     2026-03-17 08:53:00 -07:00
-Duration:  53ms
-
-Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
