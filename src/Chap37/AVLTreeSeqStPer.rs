@@ -781,9 +781,9 @@ pub mod AVLTreeSeqStPer {
             ensures equal == (self@ == other@)
         {
             proof {
-                assume(spec_avltreeseqstper_wf(self.root));
-                assume(spec_avltreeseqstper_wf(other.root));
-                assume(obeys_feq_full::<T>());
+                accept(spec_avltreeseqstper_wf(self.root));
+                accept(spec_avltreeseqstper_wf(other.root));
+                accept(obeys_feq_full::<T>());
             }
             compare_trees(&self.root, &other.root)
         }

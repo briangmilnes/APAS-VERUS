@@ -1047,35 +1047,35 @@ Table of Contents:
    Info: 2 total
    Proof functions: 14 total (14 clean, 0 holed)
 ❌ src/Chap40/BSTReducedStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1607: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1605 |     impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
-      1606 |         fn clone(&self) -> Self {
-      1608 |             Node {
-      1609 |                 key: self.key.clone(),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1607: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1605 |     impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
-      1606 |         fn clone(&self) -> Self {
-      1608 |             Node {
-      1609 |                 key: self.key.clone(),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1649: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1646 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1608: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1606 |     impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
+      1607 |         fn clone(&self) -> Self {
+      1609 |             Node {
+      1610 |                 key: self.key.clone(),
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1608: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1606 |     impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
+      1607 |         fn clone(&self) -> Self {
+      1609 |             Node {
+      1610 |                 key: self.key.clone(),
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1650: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1647 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1647 |             ensures equal == (self@ == other@)
-      1648 |         {
-      1650 |             let equal = compare_reduced_links(&self.root, &other.root);
-      1651 |             proof { accept(equal == (self@ == other@)); }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1649: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1646 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1648 |             ensures equal == (self@ == other@)
+      1649 |         {
+      1651 |             let equal = compare_reduced_links(&self.root, &other.root);
+      1652 |             proof { accept(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1650: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1647 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1647 |             ensures equal == (self@ == other@)
-      1648 |         {
-      1650 |             let equal = compare_reduced_links(&self.root, &other.root);
-      1651 |             proof { accept(equal == (self@ == other@)); }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:611: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:681: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:683: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:694: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1651: info: accept()
+      1648 |             ensures equal == (self@ == other@)
+      1649 |         {
+      1651 |             let equal = compare_reduced_links(&self.root, &other.root);
+      1652 |             proof { accept(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:612: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:682: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:684: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:695: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1652: info: accept()
    Info: 5 total
    Proof functions: 8 total (8 clean, 0 holed)
 ❌ src/Chap40/BSTSizeStEph.rs
@@ -1125,7 +1125,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:250: error: external_body - #[verifier::external_body]
        251 |         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:294: error: external_body - #[verifier::external_body]
-       295 |         fn filter<F: PredMt<T> + Clone>(
+       295 |         fn filter<F: Pred<T> + Clone>(
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:345: error: external_body - #[verifier::external_body]
        346 |         fn intersection(&self, other: &Self) -> (common: Self)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:408: error: external_body - #[verifier::external_body]
@@ -1145,14 +1145,14 @@ Table of Contents:
        620 | 
        621 |     // 12. macros
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:312: error: fn_missing_requires - fn parallel_filter — exec fn should have requires
-       295 |         fn filter<F: PredMt<T> + Clone>(
+       295 |         fn filter<F: Pred<T> + Clone>(
             ...
        310 |             };
        311 | 
        313 |                 let n = vals.len();
        314 |                 if n == 0 {
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:312: error: fn_missing_ensures - fn parallel_filter — exec fn should have ensures
-       295 |         fn filter<F: PredMt<T> + Clone>(
+       295 |         fn filter<F: Pred<T> + Clone>(
             ...
        310 |             };
        311 | 
@@ -1182,7 +1182,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:225: error: external_body - #[verifier::external_body]
        226 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:275: error: external_body - #[verifier::external_body]
-       276 |         fn filter<F: PredMt<T> + Clone>(
+       276 |         fn filter<F: Pred<T> + Clone>(
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:338: error: external_body - #[verifier::external_body]
        339 |         fn intersection(&self, other: &Self) -> (common: Self)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:396: error: external_body - #[verifier::external_body]
@@ -1544,7 +1544,7 @@ Table of Contents:
        270 |             read_handle.release_read();
        271 |             found
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:294: error: external_body - #[verifier::external_body]
-       295 |         fn filter<F: PredMt<T>>(
+       295 |         fn filter<F: Pred<T>>(
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:345: error: external_body - #[verifier::external_body]
        346 |         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>) {
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:378: error: external_body - #[verifier::external_body]
@@ -2491,7 +2491,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:67: info: accept()
    Info: 1 total
 ℹ src/Concurrency.rs
-/home/milnes/projects/APAS-VERUS/src/Concurrency.rs:14: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Concurrency.rs:13: info: external_body_accept_hole
    Info: 1 total
 ✓ src/ParaPairs.rs
 
@@ -3073,41 +3073,41 @@ Holes Found: 214 total
    9  Chap57  (5 holes, 3 files)
    10  Chap58  (2 holes, 2 files)
    11  Chap59  (1 holes, 4 files)
-   12  Chap40  (0 holes, 3 files)
-   13  Chap50  (0 holes, 8 files)
-   14  Chap49  (0 holes, 8 files)
-   15  Chap17  (0 holes, 1 files)
-   16  Chap02  (0 holes, 2 files)
-   17  Chap21  (0 holes, 12 files)
-   18  Chap36  (0 holes, 3 files)
-   19  Chap26  (0 holes, 8 files)
-   20  Chap35  (0 holes, 4 files)
-   21  Chap61  (0 holes, 4 files)
-   22  Chap66  (0 holes, 2 files)
-   23  ParaPairs  (0 holes, 1 files)
-   24  Chap06  (0 holes, 20 files)
-   25  Chap11  (0 holes, 5 files)
-   26  Chap64  (0 holes, 3 files)
-   27  Chap28  (0 holes, 11 files)
-   28  Chap19  (0 holes, 4 files)
-   29  Chap65  (0 holes, 3 files)
-   30  Concurrency  (0 holes, 1 files)
-   31  Chap56  (0 holes, 12 files)
-   32  Chap53  (0 holes, 5 files)
-   33  Chap23  (0 holes, 2 files)
-   34  Chap44  (0 holes, 2 files)
-   35  Chap51  (0 holes, 8 files)
-   36  Chap05  (0 holes, 5 files)
-   37  Chap30  (0 holes, 1 files)
-   38  Chap03  (0 holes, 1 files)
-   39  Chap18  (0 holes, 7 files)
-   40  Chap27  (0 holes, 4 files)
-   41  Chap55  (0 holes, 8 files)
-   42  Chap63  (0 holes, 2 files)
-   43  Chap62  (0 holes, 4 files)
-   44  Chap42  (0 holes, 4 files)
-   45  Chap54  (0 holes, 4 files)
-   46  Chap12  (0 holes, 3 files)
+   12  Chap21  (0 holes, 12 files)
+   13  Chap40  (0 holes, 3 files)
+   14  Chap28  (0 holes, 11 files)
+   15  Chap06  (0 holes, 20 files)
+   16  Chap62  (0 holes, 4 files)
+   17  Chap26  (0 holes, 8 files)
+   18  Chap18  (0 holes, 7 files)
+   19  Chap61  (0 holes, 4 files)
+   20  Chap50  (0 holes, 8 files)
+   21  Chap65  (0 holes, 3 files)
+   22  Chap63  (0 holes, 2 files)
+   23  Chap64  (0 holes, 3 files)
+   24  Chap03  (0 holes, 1 files)
+   25  Chap55  (0 holes, 8 files)
+   26  Chap51  (0 holes, 8 files)
+   27  Chap49  (0 holes, 8 files)
+   28  Chap02  (0 holes, 2 files)
+   29  Chap27  (0 holes, 4 files)
+   30  Chap56  (0 holes, 12 files)
+   31  Chap66  (0 holes, 2 files)
+   32  Chap30  (0 holes, 1 files)
+   33  Chap53  (0 holes, 5 files)
+   34  Concurrency  (0 holes, 1 files)
+   35  Chap19  (0 holes, 4 files)
+   36  Chap54  (0 holes, 4 files)
+   37  Chap12  (0 holes, 3 files)
+   38  Chap42  (0 holes, 4 files)
+   39  Chap36  (0 holes, 3 files)
+   40  Chap05  (0 holes, 5 files)
+   41  Chap23  (0 holes, 2 files)
+   42  Chap44  (0 holes, 2 files)
+   43  ParaPairs  (0 holes, 1 files)
+   44  Chap35  (0 holes, 4 files)
+   45  Chap17  (0 holes, 1 files)
+   46  Chap11  (0 holes, 5 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -3118,21 +3118,21 @@ Holes Found: 214 total
    3  src/Chap39/BSTTreapMtEph.rs  (6 holes)
    4  src/Chap38/BSTParaStEph.rs  (5 holes)
    5  src/Chap37/BSTSplayStEph.rs  (5 holes)
-   6  src/Chap37/AVLTreeSeqMtPer.rs  (2 holes)
-   7  src/Chap37/BSTSetAVLMtEph.rs  (2 holes)
-   8  src/Chap47/ParaHashTableStEph.rs  (2 holes)
-   9  src/Chap52/EdgeSetGraphStPer.rs  (2 holes)
-   10  src/Chap37/BSTSetBBAlphaMtEph.rs  (2 holes)
+   6  src/Chap39/BSTTreapStEph.rs  (2 holes)
+   7  src/Chap52/EdgeSetGraphStPer.rs  (2 holes)
+   8  src/Chap45/BinaryHeapPQ.rs  (2 holes)
+   9  src/Chap37/BSTSetAVLMtEph.rs  (2 holes)
+   10  src/Chap37/AVLTreeSeqMtPer.rs  (2 holes)
    11  src/Chap37/BSTSetPlainMtEph.rs  (2 holes)
-   12  src/Chap37/AVLTreeSeqStEph.rs  (2 holes)
-   13  src/Chap39/BSTTreapStEph.rs  (2 holes)
-   14  src/Chap45/BinaryHeapPQ.rs  (2 holes)
-   15  src/Chap37/BSTSplayMtEph.rs  (1 holes)
-   16  src/Chap37/AVLTreeSeq.rs  (1 holes)
-   17  src/Chap45/Example45_2.rs  (1 holes)
-   18  src/Chap37/AVLTreeSeqStPer.rs  (1 holes)
+   12  src/Chap47/ParaHashTableStEph.rs  (2 holes)
+   13  src/Chap37/BSTSetBBAlphaMtEph.rs  (2 holes)
+   14  src/Chap37/AVLTreeSeqStEph.rs  (2 holes)
+   15  src/Chap37/BSTRBMtEph.rs  (1 holes)
+   16  src/Chap37/AVLTreeSeqStPer.rs  (1 holes)
+   17  src/Chap37/AVLTreeSeq.rs  (1 holes)
+   18  src/Chap37/BSTSplayMtEph.rs  (1 holes)
    19  src/Chap45/LeftistHeapPQ.rs  (1 holes)
-   20  src/Chap37/BSTRBMtEph.rs  (1 holes)
+   20  src/Chap45/Example45_2.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -3203,11 +3203,11 @@ HOLED CHAPTERS (11) — 246 holes
   Chap37            22    19  internal  Chap37::BSTRBMtEph, Chap37::BSTSplayMtEph
   Chap38            14     2  YES       
   Chap39            18     4  internal  Chap39::BSTParaTreapMtEph
-  Chap41            29     7  NO        Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqStPer, Chap37::AVLTreeSeqMtPer
-  Chap43            99    11  NO        Chap37::AVLTreeSeqStPer, Chap42::TableStEph, Chap42::TableStPer, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph, Chap42::TableMtEph
+  Chap41            29     7  NO        Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqStPer
+  Chap43            99    11  NO        Chap37::AVLTreeSeqStPer, Chap42::TableMtEph, Chap42::TableStPer, Chap42::TableStEph, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph
   Chap45             6     7  NO        Chap37::AVLTreeSeqStPer
   Chap47            45     9  internal  Chap47::ParaHashTableStEph
-  Chap52             5    14  NO        Chap41::AVLTreeSetStEph, Chap43::OrderedTableStPer, Chap43::OrderedTableStEph, Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer
+  Chap52             5    14  NO        Chap41::AVLTreeSetMtPer, Chap43::OrderedTableStPer, Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph, Chap43::OrderedTableMtPer
   Chap57             5     3  NO        Chap05::SetStEph, Chap45::BinaryHeapPQ
   Chap58             2     2  NO        Chap05::SetStEph
   Chap59             1     4  NO        Chap05::SetStEph
@@ -3237,8 +3237,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 18:11:30 -07:00
-Ended:     2026-03-16 18:11:31 -07:00
-Duration:  1324ms
+Started:   2026-03-16 18:46:40 -07:00
+Ended:     2026-03-16 18:46:42 -07:00
+Duration:  1438ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

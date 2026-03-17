@@ -44,7 +44,6 @@ pub mod Algorithm21_5 {
     /// - APAS: Work Θ(n^{3/2}), Span Θ(lg n)
     /// - Claude-Opus-4.6: Work Θ(n^{3/2}), Span Θ(n^{3/2}) — sequential StPer tabulate + filter.
     pub fn primes_bf(n: N) -> (primes: ArraySeqStPerS<N>)
-        requires true,
         ensures
             n <= 2 ==> primes.spec_len() == 0,
             n > 2  ==> primes.spec_len() <= n - 2,

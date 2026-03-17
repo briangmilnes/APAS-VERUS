@@ -1505,7 +1505,7 @@ pub mod BSTKeyValueStEph {
 
     impl<K: StT + Ord + TotalOrder, V: StT> Clone for Node<K, V> {
         fn clone(&self) -> Self {
-            proof { assume(spec_ordered_link(&self.left)); assume(spec_ordered_link(&self.right)); } // Clone body: ordering bridge
+            proof { accept(spec_ordered_link(&self.left)); accept(spec_ordered_link(&self.right)); } // Clone body: ordering bridge
             Node {
                 key: self.key.clone(),
                 value: self.value.clone(),
@@ -1522,7 +1522,7 @@ pub mod BSTKeyValueStEph {
                 cloned@ == self@,
                 cloned.size == self.size,
         {
-            proof { assume(spec_ordered_link(&self.root)); } // Clone body: ordering bridge
+            proof { accept(spec_ordered_link(&self.root)); } // Clone body: ordering bridge
             BSTKeyValueStEph {
                 root: clone_link(&self.root),
                 size: self.size,
@@ -1542,7 +1542,7 @@ pub mod BSTKeyValueStEph {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
-            proof { assume(spec_ordered_link(&self.root)); assume(spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
+            proof { accept(spec_ordered_link(&self.root)); accept(spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
             let equal = compare_kv_links(&self.root, &other.root) && self.size == other.size;
             proof { accept(equal == (self@ == other@)); }
             equal

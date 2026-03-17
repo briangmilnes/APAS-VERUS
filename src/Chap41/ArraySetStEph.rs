@@ -36,6 +36,7 @@ pub mod ArraySetStEph {
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_feq_clone, lemma_cloned_view_eq, lemma_seq_map_cloned_view_eq};
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -1241,8 +1242,8 @@ pub mod ArraySetStEph {
             ensures equal == (self@ == other@)
         {
             proof {
-                assume(self.spec_arraysetsteph_wf());
-                assume(other.spec_arraysetsteph_wf());
+                accept(self.spec_arraysetsteph_wf());
+                accept(other.spec_arraysetsteph_wf());
             }
             let equal = self.size() == other.size() && {
                 let n = self.elements.length();
@@ -1264,7 +1265,7 @@ pub mod ArraySetStEph {
                 }
                 all_found
             };
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }
@@ -1277,7 +1278,7 @@ pub mod ArraySetStEph {
                 elements: self.elements.clone(),
             };
             proof {
-                assume(obeys_feq_clone::<T>());
+                accept(obeys_feq_clone::<T>());
                 lemma_seq_map_cloned_view_eq(
                     self.elements.seq@,
                     cloned.elements.seq@,

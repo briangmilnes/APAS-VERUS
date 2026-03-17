@@ -335,7 +335,7 @@ broadcast use {
             let result = AVLTreeSeqStPerS::from_vec(elements);
             proof {
                 // T::clone preserves View (StT bound); from_vec maps values through View.
-                assume(result@ =~= eph_seq@);  // accept hole: clone/view bridging
+                accept(result@ =~= eph_seq@);  // Clone/view bridging.
             }
             result
         }

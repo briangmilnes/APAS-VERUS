@@ -414,7 +414,7 @@ pub mod BSTParaMtEph {
                 Exposed::Leaf => Exposed::Leaf,
                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
             };
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }
@@ -429,7 +429,7 @@ pub mod BSTParaMtEph {
                 left: self.left.clone(),
                 right: self.right.clone(),
             };
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }
@@ -439,7 +439,7 @@ pub mod BSTParaMtEph {
             ensures cloned@ == self@
         {
             let cloned = ParamBST { root: clone_arc_rwlock(&self.root) };
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }

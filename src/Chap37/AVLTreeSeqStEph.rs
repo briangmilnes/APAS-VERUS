@@ -686,7 +686,7 @@ pub mod AVLTreeSeqStEph {
                 let left = clone_link(&node.left);
                 let right = clone_link(&node.right);
                 let new_value = node.value.clone_plus();
-                proof { assume(new_value@ == node.value@); }
+                proof { accept(new_value@ == node.value@); }
                 Some(Box::new(AVLTreeNode {
                     value: new_value,
                     height: node.height,
@@ -1103,9 +1103,9 @@ pub mod AVLTreeSeqStEph {
             ensures equal == (self@ == other@)
         {
             proof {
-                assume(spec_avltreeseqsteph_wf(self.root));
-                assume(spec_avltreeseqsteph_wf(other.root));
-                assume(obeys_feq_full::<T>());
+                accept(spec_avltreeseqsteph_wf(self.root));
+                accept(spec_avltreeseqsteph_wf(other.root));
+                accept(obeys_feq_full::<T>());
             }
             compare_trees(&self.root, &other.root)
         }

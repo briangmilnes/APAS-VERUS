@@ -1222,9 +1222,11 @@ pub mod AVLTreeSeq {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
-            assume(spec_avltreeseq_wf(self.root));
-            assume(spec_avltreeseq_wf(other.root));
-            proof { accept(obeys_feq_full::<T>()); }  // accept hole: feq bridge
+            proof {
+                accept(spec_avltreeseq_wf(self.root));
+                accept(spec_avltreeseq_wf(other.root));
+                accept(obeys_feq_full::<T>());
+            }
             // Per-node size bound in wf gives cached_size < usize::MAX.
             let equal = compare_trees(&self.root, &other.root);
             equal

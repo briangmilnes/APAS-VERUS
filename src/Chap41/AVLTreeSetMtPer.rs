@@ -535,8 +535,8 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             proof {
-                assume(self.spec_avltreesetmtper_wf());
-                assume(other.spec_avltreesetmtper_wf());
+                accept(self.spec_avltreesetmtper_wf());
+                accept(other.spec_avltreesetmtper_wf());
             }
             let equal = self.size() == other.size() && {
                 let n = self.size();

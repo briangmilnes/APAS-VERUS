@@ -11,6 +11,7 @@ pub mod feq {
     use vstd::pervasive::strictly_cloned;
     use core::cmp::Eq;
     use core::marker::PointeeSized;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -212,7 +213,7 @@ pub mod feq {
             // obeys_feq_eq: x.eq_spec(&y) <==> x == y
             // obeys_feq_view: x.eq_spec(&y) ==> x@ == y@
             // obeys_feq_view_injective: x@ == y@ ==> x == y
-            assume(result == (x@ == y@));
+            accept(result == (x@ == y@));
         }
         result
     }

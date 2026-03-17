@@ -121,7 +121,7 @@ pub mod StructChainedHashTable {
                 Some(node) => {
                     let Node { key: nk, value: nv, next: nn } = *node;
                     let eq = nk == key;
-                    proof { assume(eq == (nk == key)); } // Eq bridge.
+                    proof { accept(eq == (nk == key)); } // Eq bridge.
                     if eq {
                         let out = Some(Box::new(Node { key, value, next: nn }));
                         proof { reveal_with_fuel(spec_chain_to_map, 2); }
@@ -159,11 +159,11 @@ pub mod StructChainedHashTable {
                 }
                 Some(node) => {
                     let eq = node.key == *key;
-                    proof { assume(eq == (node.key == *key)); } // Eq bridge.
+                    proof { accept(eq == (node.key == *key)); } // Eq bridge.
                     if eq {
                         let v = node.value.clone();
                         proof {
-                            assume(v == node.value); // Clone bridge.
+                            accept(v == node.value); // Clone bridge.
                             reveal_with_fuel(spec_chain_to_map, 2);
                         }
                         Some(v)
@@ -200,7 +200,7 @@ pub mod StructChainedHashTable {
                 Some(node) => {
                     let Node { key: nk, value: nv, next: nn } = *node;
                     let eq = nk == *key;
-                    proof { assume(eq == (nk == *key)); } // Eq bridge.
+                    proof { accept(eq == (nk == *key)); } // Eq bridge.
                     let (new_next, tail_deleted) = chain_delete(nn, key);
                     if eq {
                         proof {

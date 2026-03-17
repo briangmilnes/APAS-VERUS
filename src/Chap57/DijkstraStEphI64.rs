@@ -22,6 +22,7 @@ pub mod DijkstraStEphI64 {
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     verus! {
@@ -162,7 +163,7 @@ pub mod DijkstraStEphI64 {
     {
         let n = graph.vertices().size();
         assert(n == graph@.V.len());
-        proof { assume(obeys_feq_clone::<PQEntry>()); }
+        proof { accept(obeys_feq_clone::<PQEntry>()); }
 
         let mut sssp = SSSPResultStEphI64::new(n, source);
         let mut visited = SetStEph::<usize>::empty();

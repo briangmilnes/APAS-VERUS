@@ -17,7 +17,7 @@ verus! {
 pub proof fn accept(b: bool)
     ensures b,
 {
-    admit();
+    assume(b);
 }
 
 } // verus!

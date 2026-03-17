@@ -17,21 +17,17 @@ pub mod Example41_3 {
 
     pub trait Example41_3Trait {
         /// Example 41.1 cases using ArraySetStEph.
-        fn example_41_1_array_set()
-            ensures true;
+        fn example_41_1_array_set();
 
         /// Example 41.1 cases using AVLTreeSetStEph.
-        fn example_41_1_avl_set()
-            ensures true;
+        fn example_41_1_avl_set();
 
         /// Demonstrate set operations with different implementations.
-        fn demonstrate_set_operations()
-            ensures true;
+        fn demonstrate_set_operations();
     }
 
     #[verifier::external_body]
     fn example_41_1_array_set_impl()
-        ensures true
     {
         // Example 41.1 cases using ArraySetStEph
 
@@ -84,7 +80,6 @@ pub mod Example41_3 {
 
     #[verifier::external_body]
     fn example_41_1_avl_set_impl()
-        ensures true
     {
         // Example 41.1 cases using AVLTreeSetStEph
 
@@ -137,7 +132,6 @@ pub mod Example41_3 {
 
     #[verifier::external_body]
     fn example_41_3_from_seq_demonstration_impl()
-        ensures true
     {
         // Example 41.3: Two implementations of fromSeq
 
@@ -186,7 +180,6 @@ pub mod Example41_3 {
 
     #[verifier::external_body]
     fn additional_set_operations_impl()
-        ensures true
     {
         // Additional set operations testing
         let set1 = ArraySetStEphLit![1, 2, 3, 4, 5];
@@ -242,16 +235,12 @@ pub mod Example41_3 {
     }
 
     pub fn example_41_1_array_set()
-        requires true, ensures true,
     { example_41_1_array_set_impl(); }
     pub fn example_41_1_avl_set()
-        requires true, ensures true,
     { example_41_1_avl_set_impl(); }
     pub fn example_41_3_from_seq_demonstration()
-        requires true, ensures true,
     { example_41_3_from_seq_demonstration_impl(); }
     pub fn additional_set_operations()
-        requires true, ensures true,
     { additional_set_operations_impl(); }
 
     } // verus!

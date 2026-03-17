@@ -19,6 +19,7 @@ pub mod LinkedListChainedHashTableStEph {
     use crate::Chap47::ChainedHashTable::ChainedHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -51,8 +52,8 @@ pub mod LinkedListChainedHashTableStEph {
                 let k = entry.seq[i].0.clone();
                 let v = entry.seq[i].1.clone();
                 proof {
-                    assume(k == entry.seq@[i as int].0); // Clone bridge for Key.
-                    assume(v == entry.seq@[i as int].1); // Clone bridge for Value.
+                    accept(k == entry.seq@[i as int].0); // Clone bridge for Key.
+                    accept(v == entry.seq@[i as int].1); // Clone bridge for Value.
                 }
                 new_seq.push((k, v));
                 i += 1;
@@ -186,7 +187,7 @@ pub mod LinkedListChainedHashTableStEph {
                     decreases bucket_len - scan_i,
                 {
                     let eq = bucket_seq[scan_i].0 == key;
-                    proof { assume(eq == (bucket_seq@[scan_i as int].0 == key)); } // Eq bridge.
+                    proof { accept(eq == (bucket_seq@[scan_i as int].0 == key)); } // Eq bridge.
                     if eq {
                         existed = true;
                         found_idx = scan_i;
@@ -279,10 +280,10 @@ pub mod LinkedListChainedHashTableStEph {
                 {
                     i = i - 1;
                     let eq = table.table[index].seq[i].0 == *key;
-                    proof { assume(eq == (bv[i as int].0 == *key)); } // Eq bridge.
+                    proof { accept(eq == (bv[i as int].0 == *key)); } // Eq bridge.
                     if eq {
                         let v = table.table[index].seq[i].1.clone();
-                        proof { assume(v == bv[i as int].1); } // Clone bridge.
+                        proof { accept(v == bv[i as int].1); } // Clone bridge.
                         proof {
                             lemma_seq_pairs_last_key_gives_value::<Key, Value>(
                                 bv, *key, i as int);
@@ -340,7 +341,7 @@ pub mod LinkedListChainedHashTableStEph {
                     decreases bucket_len - i,
                 {
                     let eq = bucket_seq[i].0 == *key;
-                    proof { assume(eq == (bucket_seq@[i as int].0 == *key)); } // Eq bridge.
+                    proof { accept(eq == (bucket_seq@[i as int].0 == *key)); } // Eq bridge.
 
                     proof {
                         assert(original.subrange(0, (i + 1) as int).drop_last()
@@ -353,8 +354,8 @@ pub mod LinkedListChainedHashTableStEph {
                         let k = bucket_seq[i].0.clone();
                         let v = bucket_seq[i].1.clone();
                         proof {
-                            assume(k == bucket_seq@[i as int].0); // Clone bridge for Key.
-                            assume(v == bucket_seq@[i as int].1); // Clone bridge for Value.
+                            accept(k == bucket_seq@[i as int].0); // Clone bridge for Key.
+                            accept(v == bucket_seq@[i as int].1); // Clone bridge for Value.
                         }
                         let ghost old_new_seq = new_seq@;
                         new_seq.push((k, v));

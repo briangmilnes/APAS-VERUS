@@ -31,7 +31,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:250: error: external_body - #[verifier::external_body]
        251 |         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:294: error: external_body - #[verifier::external_body]
-       295 |         fn filter<F: PredMt<T> + Clone>(
+       295 |         fn filter<F: Pred<T> + Clone>(
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:345: error: external_body - #[verifier::external_body]
        346 |         fn intersection(&self, other: &Self) -> (common: Self)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:408: error: external_body - #[verifier::external_body]
@@ -51,14 +51,14 @@ Table of Contents:
        620 | 
        621 |     // 12. macros
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:312: error: fn_missing_requires - fn parallel_filter — exec fn should have requires
-       295 |         fn filter<F: PredMt<T> + Clone>(
+       295 |         fn filter<F: Pred<T> + Clone>(
             ...
        310 |             };
        311 | 
        313 |                 let n = vals.len();
        314 |                 if n == 0 {
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:312: error: fn_missing_ensures - fn parallel_filter — exec fn should have ensures
-       295 |         fn filter<F: PredMt<T> + Clone>(
+       295 |         fn filter<F: Pred<T> + Clone>(
             ...
        310 |             };
        311 | 
@@ -88,7 +88,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:225: error: external_body - #[verifier::external_body]
        226 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:275: error: external_body - #[verifier::external_body]
-       276 |         fn filter<F: PredMt<T> + Clone>(
+       276 |         fn filter<F: Pred<T> + Clone>(
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:338: error: external_body - #[verifier::external_body]
        339 |         fn intersection(&self, other: &Self) -> (common: Self)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:396: error: external_body - #[verifier::external_body]
@@ -333,15 +333,13 @@ Holes Found: 23 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 18:11:29 -07:00
-Ended:     2026-03-16 18:11:29 -07:00
-Duration:  50ms
+Started:   2026-03-16 18:46:40 -07:00
+Ended:     2026-03-16 18:46:40 -07:00
+Duration:  61ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
-==================
-
-Started:   2026-03-16 18:11:29 -07:00
-Ended:     2026-03-16 18:11:29 -07:00
-Duration:  50ms
+0
+Ended:     2026-03-16 18:46:40 -07:00
+Duration:  61ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log

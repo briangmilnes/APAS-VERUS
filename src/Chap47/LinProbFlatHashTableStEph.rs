@@ -19,6 +19,7 @@ pub mod LinProbFlatHashTableStEph {
     use crate::Chap47::FlatHashTable::FlatHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -158,7 +159,7 @@ pub mod LinProbFlatHashTableStEph {
                 match entry {
                     FlatEntry::Occupied(k, v) => {
                         let eq = k == *key;
-                        proof { assume(eq == spec_flat_has_key(table.table@[slot as int], *key)); } // Eq bridge.
+                        proof { accept(eq == spec_flat_has_key(table.table@[slot as int], *key)); } // Eq bridge.
                         if eq {
                             proof {
                                 assert(spec_flat_has_key(table.table@[slot as int], *key));

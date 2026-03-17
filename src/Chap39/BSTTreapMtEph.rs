@@ -30,6 +30,7 @@ pub mod BSTTreapMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::vstdplus::total_order::total_order::IsLtTransitive;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -308,7 +309,7 @@ pub mod BSTTreapMtEph {
         match link {
             None => {
                 let c = None;
-                proof { assume(c == *link); }
+                proof { accept(c == *link); }
                 c
             }
             Some(node) => {
@@ -321,7 +322,7 @@ pub mod BSTTreapMtEph {
                     left,
                     right,
                 }));
-                proof { assume(c == *link); }
+                proof { accept(c == *link); }
                 c
             }
         }
@@ -1075,7 +1076,7 @@ pub mod BSTTreapMtEph {
                 left: clone_link(&self.left),
                 right: clone_link(&self.right),
             };
-            proof { assume(cloned == *self); }
+            proof { accept(cloned == *self); }
             cloned
         }
     }
@@ -1088,14 +1089,14 @@ pub mod BSTTreapMtEph {
             let inner_clone = clone_link(handle.borrow());
             handle.release_read();
             proof {
-                assume(spec_bsttreapmteph_link_wf(&inner_clone));
-                assume(self.ghost_locked_root@.finite());
+                accept(spec_bsttreapmteph_link_wf(&inner_clone));
+                accept(self.ghost_locked_root@.finite());
             }
             let cloned = BSTTreapMtEph {
                 locked_root: RwLock::new(inner_clone, Ghost(BSTTreapMtEphInv)),
                 ghost_locked_root: Ghost(self.ghost_locked_root@),
             };
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }

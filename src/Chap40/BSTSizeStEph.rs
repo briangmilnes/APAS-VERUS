@@ -1435,7 +1435,7 @@ pub mod BSTSizeStEph {
 
     impl<T: StT + Ord> Clone for Node<T> {
         fn clone(&self) -> (cloned: Self) {
-            proof { assume(Lnk::spec_ordered_link(&self.left)); assume(Lnk::spec_ordered_link(&self.right)); } // Clone body: ordering bridge
+            proof { accept(Lnk::spec_ordered_link(&self.left)); accept(Lnk::spec_ordered_link(&self.right)); } // Clone body: ordering bridge
             Node {
                 key: self.key.clone(),
                 priority: self.priority,
@@ -1453,7 +1453,7 @@ pub mod BSTSizeStEph {
                 Lnk::spec_size_link(&cloned.root) == Lnk::spec_size_link(&self.root),
                 Lnk::spec_link_size_wf(&self.root) ==> Lnk::spec_link_size_wf(&cloned.root),
         {
-            proof { assume(Lnk::spec_ordered_link(&self.root)); } // Clone body: ordering bridge
+            proof { accept(Lnk::spec_ordered_link(&self.root)); } // Clone body: ordering bridge
             BSTSizeStEph { root: clone_link(&self.root) }
         }
     }
@@ -1470,7 +1470,7 @@ pub mod BSTSizeStEph {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
-            proof { assume(Lnk::spec_ordered_link(&self.root)); assume(Lnk::spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
+            proof { accept(Lnk::spec_ordered_link(&self.root)); accept(Lnk::spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
             let equal = compare_links(&self.root, &other.root);
             proof { accept(equal == (self@ == other@)); }
             equal

@@ -57,35 +57,35 @@ Table of Contents:
    Info: 2 total
    Proof functions: 14 total (14 clean, 0 holed)
 ❌ BSTReducedStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1607: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1605 |     impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
-      1606 |         fn clone(&self) -> Self {
-      1608 |             Node {
-      1609 |                 key: self.key.clone(),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1607: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1605 |     impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
-      1606 |         fn clone(&self) -> Self {
-      1608 |             Node {
-      1609 |                 key: self.key.clone(),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1649: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1646 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1608: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1606 |     impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
+      1607 |         fn clone(&self) -> Self {
+      1609 |             Node {
+      1610 |                 key: self.key.clone(),
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1608: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1606 |     impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
+      1607 |         fn clone(&self) -> Self {
+      1609 |             Node {
+      1610 |                 key: self.key.clone(),
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1650: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1647 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1647 |             ensures equal == (self@ == other@)
-      1648 |         {
-      1650 |             let equal = compare_reduced_links(&self.root, &other.root);
-      1651 |             proof { accept(equal == (self@ == other@)); }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1649: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1646 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1648 |             ensures equal == (self@ == other@)
+      1649 |         {
+      1651 |             let equal = compare_reduced_links(&self.root, &other.root);
+      1652 |             proof { accept(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1650: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1647 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1647 |             ensures equal == (self@ == other@)
-      1648 |         {
-      1650 |             let equal = compare_reduced_links(&self.root, &other.root);
-      1651 |             proof { accept(equal == (self@ == other@)); }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:611: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:681: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:683: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:694: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1651: info: accept()
+      1648 |             ensures equal == (self@ == other@)
+      1649 |         {
+      1651 |             let equal = compare_reduced_links(&self.root, &other.root);
+      1652 |             proof { accept(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:612: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:682: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:684: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:695: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1652: info: accept()
    Info: 5 total
    Proof functions: 8 total (8 clean, 0 holed)
 ❌ BSTSizeStEph.rs
@@ -175,15 +175,9 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 18:11:29 -07:00
-Ended:     2026-03-16 18:11:29 -07:00
+Started:   2026-03-16 18:46:40 -07:00
+Ended:     2026-03-16 18:46:40 -07:00
 Duration:  56ms
 
 Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
-==================
-
-Started:   2026-03-16 18:11:29 -07:00
-Ended:     2026-03-16 18:11:29 -07:00
-Duration:  56ms
-
 Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log

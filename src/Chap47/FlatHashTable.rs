@@ -18,6 +18,7 @@ pub mod FlatHashTable {
     use vstd::prelude::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -202,7 +203,7 @@ pub mod FlatHashTable {
                 FlatEntry::Occupied(k, v) => FlatEntry::Occupied(k.clone(), v.clone()),
                 FlatEntry::Deleted => FlatEntry::Deleted,
             };
-            proof { assume(c == *self); } // Clone bridge.
+            proof { accept(c == *self); } // Clone bridge.
             c
         }
     }

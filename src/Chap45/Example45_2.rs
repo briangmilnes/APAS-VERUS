@@ -29,14 +29,14 @@ pub mod Example45_2 {
 // 8. traits
         /// Heapsort demonstrations comparing all five PQ implementations on various inputs.
         pub trait Example45_2Trait {
-            fn example_45_2_textbook_example()         -> (comparison: HeapsortComparison<i32>) ensures true;
-            fn example_45_2_reverse_sorted()           -> (comparison: HeapsortComparison<i32>) ensures true;
-            fn example_45_2_already_sorted()           -> (comparison: HeapsortComparison<i32>) ensures true;
-            fn example_45_2_duplicates()               -> (comparison: HeapsortComparison<i32>) ensures true;
-            fn example_45_2_single_element()           -> (comparison: HeapsortComparison<i32>) ensures true;
-            fn example_45_2_empty()                    -> (comparison: HeapsortComparison<i32>) ensures true;
-            fn example_45_2_efficiency_demonstration() -> (results: Vec<(String, Vec<i32>)>) ensures true;
-            fn run_example_45_2()                      -> (output: String) ensures true;
+            fn example_45_2_textbook_example()         -> (comparison: HeapsortComparison<i32>);
+            fn example_45_2_reverse_sorted()           -> (comparison: HeapsortComparison<i32>);
+            fn example_45_2_already_sorted()           -> (comparison: HeapsortComparison<i32>);
+            fn example_45_2_duplicates()               -> (comparison: HeapsortComparison<i32>);
+            fn example_45_2_single_element()           -> (comparison: HeapsortComparison<i32>);
+            fn example_45_2_empty()                    -> (comparison: HeapsortComparison<i32>);
+            fn example_45_2_efficiency_demonstration() -> (results: Vec<(String, Vec<i32>)>);
+            fn run_example_45_2()                      -> (output: String);
         }
 
 // 9. impls

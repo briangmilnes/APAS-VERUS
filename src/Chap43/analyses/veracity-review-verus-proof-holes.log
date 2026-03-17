@@ -134,7 +134,7 @@ Table of Contents:
        270 |             read_handle.release_read();
        271 |             found
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:294: error: external_body - #[verifier::external_body]
-       295 |         fn filter<F: PredMt<T>>(
+       295 |         fn filter<F: Pred<T>>(
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:345: error: external_body - #[verifier::external_body]
        346 |         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>) {
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:378: error: external_body - #[verifier::external_body]
@@ -456,12 +456,13 @@ Holes Found: 99 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 18:11:29 -07:00
-Ended:     2026-03-16 18:11:29 -07:00
-Duration:  77ms
+Started:   2026-03-16 18:46:40 -07:00
+Ended:     2026-03-16 18:46:40 -07:00
+Duration:  94ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
-Ended:     2026-03-16 18:11:29 -07:00
-Duration:  77ms
+07:00
+Ended:     2026-03-16 18:46:40 -07:00
+Duration:  94ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
