@@ -38,8 +38,8 @@ pub mod DFSStEph {
             ensures
                 reachable@.contains(source),
                 forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),
-                forall|v: int| #![auto] 0 <= v < graph@.len()
-                    ==> (reachable@.contains(v as usize) <==> spec_reachable(graph, source as int, v)),
+                forall|v: int| 0 <= v < graph@.len()
+                    ==> (reachable@.contains(v as usize) <==> #[trigger] spec_reachable(graph, source as int, v)),
             ;
     }
 
@@ -58,9 +58,9 @@ pub mod DFSStEph {
             spec_toposortsteph_wf(graph),
         ensures
             visited@.len() == old(visited)@.len(),
-            forall|j: int| #![auto]
+            forall|j: int|
                 0 <= j < visited@.len() && old(visited)@[j]
-                ==> visited@[j],
+                ==> #[trigger] visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
@@ -83,9 +83,9 @@ pub mod DFSStEph {
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited@.len() == graph@.len(),
                 spec_toposortsteph_wf(graph),
-                forall|j: int| #![auto]
+                forall|j: int|
                     0 <= j < visited@.len() && old(visited)@[j]
-                    ==> visited@[j],
+                    ==> #[trigger] visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
             decreases neighbors_len - i,
         {

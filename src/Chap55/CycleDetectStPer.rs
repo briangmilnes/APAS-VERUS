@@ -29,9 +29,9 @@ pub mod CycleDetectStPer {
 
     /// Well-formed adjacency list for persistent graph representation.
     pub open spec fn spec_cycledetectstper_wf(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> bool {
-        forall|v: int, i: int| #![auto]
+        forall|v: int, i: int|
             0 <= v < graph@.len() && 0 <= i < graph@[v]@.len()
-            ==> graph@[v]@[i] < graph@.len()
+            ==> (#[trigger] graph@[v]@[i]) < graph@.len()
     }
 
     // 8. traits
@@ -65,9 +65,9 @@ pub mod CycleDetectStPer {
         ensures
             visited@.len() == old(visited)@.len(),
             ancestors@.len() == old(ancestors)@.len(),
-            forall|j: int| #![auto]
+            forall|j: int|
                 0 <= j < visited@.len() && old(visited)@[j]
-                ==> visited@[j],
+                ==> #[trigger] visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
@@ -95,9 +95,9 @@ pub mod CycleDetectStPer {
                 visited@.len() == graph@.len(),
                 ancestors@.len() == graph@.len(),
                 spec_cycledetectstper_wf(graph),
-                forall|j: int| #![auto]
+                forall|j: int|
                     0 <= j < visited@.len() && old(visited)@[j]
-                    ==> visited@[j],
+                    ==> #[trigger] visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
             decreases neighbors_len - i,
         {

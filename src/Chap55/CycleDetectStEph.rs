@@ -56,9 +56,9 @@ pub mod CycleDetectStEph {
         ensures
             visited@.len() == old(visited)@.len(),
             ancestors@.len() == old(ancestors)@.len(),
-            forall|j: int| #![auto]
+            forall|j: int|
                 0 <= j < visited@.len() && old(visited)@[j]
-                ==> visited@[j],
+                ==> #[trigger] visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
@@ -88,9 +88,9 @@ pub mod CycleDetectStEph {
                 visited@.len() == graph@.len(),
                 ancestors@.len() == graph@.len(),
                 spec_toposortsteph_wf(graph),
-                forall|j: int| #![auto]
+                forall|j: int|
                     0 <= j < visited@.len() && old(visited)@[j]
-                    ==> visited@[j],
+                    ==> #[trigger] visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
             decreases neighbors_len - i,
         {

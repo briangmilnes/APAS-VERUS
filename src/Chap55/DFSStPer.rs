@@ -38,8 +38,8 @@ pub mod DFSStPer {
             ensures
                 reachable@.contains(source),
                 forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),
-                forall|v: int| #![auto] 0 <= v < graph@.len()
-                    ==> (reachable@.contains(v as usize) <==> spec_reachable_per(graph, source as int, v)),
+                forall|v: int| 0 <= v < graph@.len()
+                    ==> (reachable@.contains(v as usize) <==> #[trigger] spec_reachable_per(graph, source as int, v)),
             ;
     }
 
@@ -59,9 +59,9 @@ pub mod DFSStPer {
             spec_toposortstper_wf(graph),
         ensures
             visited_bool@.len() == old(visited_bool)@.len(),
-            forall|j: int| #![auto]
+            forall|j: int|
                 0 <= j < visited_bool@.len() && old(visited_bool)@[j]
-                ==> visited_bool@[j],
+                ==> #[trigger] visited_bool@[j],
             spec_num_false(visited_bool@) <= spec_num_false(old(visited_bool)@),
         decreases spec_num_false(old(visited_bool)@),
     {
@@ -85,9 +85,9 @@ pub mod DFSStPer {
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited_bool@.len() == graph@.len(),
                 spec_toposortstper_wf(graph),
-                forall|j: int| #![auto]
+                forall|j: int|
                     0 <= j < visited_bool@.len() && old(visited_bool)@[j]
-                    ==> visited_bool@[j],
+                    ==> #[trigger] visited_bool@[j],
                 spec_num_false(visited_bool@) < spec_num_false(old(visited_bool)@),
             decreases neighbors_len - i,
         {

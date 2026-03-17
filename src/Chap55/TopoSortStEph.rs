@@ -47,22 +47,22 @@ broadcast use {
 
     /// Well-formed adjacency list: all neighbor indices are valid vertex indices.
     pub open spec fn spec_toposortsteph_wf(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> bool {
-        forall|v: int, i: int| #![auto]
+        forall|v: int, i: int|
             0 <= v < graph@.len() && 0 <= i < graph@[v]@.len()
-            ==> graph@[v]@[i] < graph@.len()
+            ==> (#[trigger] graph@[v]@[i]) < graph@.len()
     }
 
     /// Whether there is a directed edge from u to v in the graph.
     pub open spec fn spec_has_edge(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, u: int, v: int) -> bool {
         0 <= u < graph@.len()
-        && exists|i: int| #![auto] 0 <= i < graph@[u]@.len() && graph@[u]@[i] == v
+        && exists|i: int| 0 <= i < graph@[u]@.len() && (#[trigger] graph@[u]@[i]) == v
     }
 
     /// Whether a sequence of vertex indices forms a valid path in the graph.
     pub open spec fn spec_is_path(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, path: Seq<int>) -> bool {
         path.len() >= 1
-        && (forall|k: int| #![auto] 0 <= k < path.len() ==> 0 <= path[k] < graph@.len())
-        && (forall|k: int| #![auto] 0 <= k < path.len() - 1 ==> spec_has_edge(graph, path[k], path[k + 1]))
+        && (forall|k: int| 0 <= k < path.len() ==> 0 <= #[trigger] path[k] < graph@.len())
+        && (forall|k: int| 0 <= k < path.len() - 1 ==> #[trigger] spec_has_edge(graph, path[k], path[k + 1]))
     }
 
     /// Whether vertex v is reachable from vertex u (Definition 55.3, reachability).
@@ -79,8 +79,8 @@ broadcast use {
     pub open spec fn spec_is_topo_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, order: Seq<usize>) -> bool {
         order.len() == graph@.len()
         && order.no_duplicates()
-        && (forall|k: int| #![auto] 0 <= k < order.len() ==> (order[k] as int) < graph@.len())
-        && (forall|i: int, j: int| #![auto]
+        && (forall|k: int| 0 <= k < order.len() ==> (#[trigger] order[k] as int) < graph@.len())
+        && (forall|i: int, j: int| #![trigger order[i], order[j]]
             0 <= i < order.len() && 0 <= j < order.len()
             && spec_has_edge(graph, order[i] as int, order[j] as int)
             ==> i < j)
@@ -88,24 +88,25 @@ broadcast use {
 
     /// Whether a set of vertices is strongly connected (Definition 55.14).
     pub open spec fn spec_strongly_connected(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, vertices: Set<int>) -> bool {
-        forall|u: int, v: int| #![auto] vertices.contains(u) && vertices.contains(v)
+        forall|u: int, v: int| #![trigger vertices.contains(u), vertices.contains(v)]
+            vertices.contains(u) && vertices.contains(v)
             ==> spec_reachable(graph, u, v)
     }
 
     /// Whether components form a valid SCC decomposition in topological order (Definition 55.17).
     pub open spec fn spec_is_scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, components: Seq<Set<int>>) -> bool {
         // Each component is strongly connected.
-        (forall|c: int| #![auto] 0 <= c < components.len()
-            ==> spec_strongly_connected(graph, components[c]))
+        (forall|c: int| 0 <= c < components.len()
+            ==> #[trigger] spec_strongly_connected(graph, components[c]))
         // Components partition the vertex set.
         && (forall|v: int| 0 <= v < graph@.len() ==>
-            exists|c: int| #![auto] 0 <= c < components.len() && components[c].contains(v))
+            exists|c: int| 0 <= c < components.len() && (#[trigger] components[c]).contains(v))
         // Components are disjoint.
-        && (forall|c1: int, c2: int| #![auto]
+        && (forall|c1: int, c2: int| #![trigger components[c1], components[c2]]
             0 <= c1 < components.len() && 0 <= c2 < components.len() && c1 != c2
             ==> components[c1].disjoint(components[c2]))
         // Inter-component edges go forward (topological order).
-        && (forall|c1: int, c2: int, u: int, v: int| #![auto]
+        && (forall|c1: int, c2: int, u: int, v: int| #![trigger components[c1].contains(u), components[c2].contains(v)]
             0 <= c1 < components.len() && 0 <= c2 < components.len()
             && components[c1].contains(u) && components[c2].contains(v)
             && spec_has_edge(graph, u, v) && c1 != c2
@@ -152,7 +153,7 @@ broadcast use {
 
     /// An all-true sequence has zero false entries.
     pub proof fn lemma_all_true_num_false_zero(s: Seq<bool>)
-        requires forall|j: int| #![auto] 0 <= j < s.len() ==> s[j],
+        requires forall|j: int| 0 <= j < s.len() ==> #[trigger] s[j],
         ensures spec_num_false(s) == 0,
         decreases s.len(),
     {
@@ -163,7 +164,7 @@ broadcast use {
 
     /// An all-false sequence has num_false equal to its length.
     pub proof fn lemma_all_false_num_false_eq_len(s: Seq<bool>)
-        requires forall|j: int| #![auto] 0 <= j < s.len() ==> !s[j],
+        requires forall|j: int| #![trigger s[j]] 0 <= j < s.len() ==> !s[j],
         ensures spec_num_false(s) == s.len(),
         decreases s.len(),
     {
@@ -201,17 +202,17 @@ broadcast use {
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
             spec_toposortsteph_wf(graph),
-            forall|k: int| #![auto] 0 <= k < old(finish_order)@.len()
-                ==> (old(finish_order)@[k] as int) < graph@.len(),
+            forall|k: int| 0 <= k < old(finish_order)@.len()
+                ==> (#[trigger] old(finish_order)@[k] as int) < graph@.len(),
         ensures
             visited@.len() == old(visited)@.len(),
-            forall|j: int| #![auto]
+            forall|j: int|
                 0 <= j < visited@.len() && old(visited)@[j]
-                ==> visited@[j],
+                ==> #[trigger] visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
             finish_order@.len() >= old(finish_order)@.len(),
-            forall|k: int| #![auto] 0 <= k < finish_order@.len()
-                ==> (finish_order@[k] as int) < graph@.len(),
+            forall|k: int| 0 <= k < finish_order@.len()
+                ==> (#[trigger] finish_order@[k] as int) < graph@.len(),
             visited@[vertex as int],
             finish_order@.len() + spec_num_false(visited@)
                 == old(finish_order)@.len() + spec_num_false(old(visited)@),
@@ -237,13 +238,13 @@ broadcast use {
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited@.len() == graph@.len(),
                 spec_toposortsteph_wf(graph),
-                forall|j: int| #![auto]
+                forall|j: int|
                     0 <= j < visited@.len() && old(visited)@[j]
-                    ==> visited@[j],
+                    ==> #[trigger] visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
                 finish_order@.len() >= old(finish_order)@.len(),
-                forall|k: int| #![auto] 0 <= k < finish_order@.len()
-                    ==> (finish_order@[k] as int) < graph@.len(),
+                forall|k: int| 0 <= k < finish_order@.len()
+                    ==> (#[trigger] finish_order@[k] as int) < graph@.len(),
                 visited@[vertex as int],
                 finish_order@.len() + spec_num_false(visited@) + 1
                     == old(finish_order)@.len() + spec_num_false(old(visited)@),
@@ -274,9 +275,9 @@ broadcast use {
         ensures
             visited@.len() == old(visited)@.len(),
             rec_stack@.len() == old(rec_stack)@.len(),
-            forall|j: int| #![auto]
+            forall|j: int|
                 0 <= j < visited@.len() && old(visited)@[j]
-                ==> visited@[j],
+                ==> #[trigger] visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
@@ -306,9 +307,9 @@ broadcast use {
                 visited@.len() == graph@.len(),
                 rec_stack@.len() == graph@.len(),
                 spec_toposortsteph_wf(graph),
-                forall|j: int| #![auto]
+                forall|j: int|
                     0 <= j < visited@.len() && old(visited)@[j]
-                    ==> visited@[j],
+                    ==> #[trigger] visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
             decreases neighbors_len - i,
         {
@@ -389,9 +390,9 @@ broadcast use {
                     n == graph@.len(),
                     visited@.len() == n,
                     spec_toposortsteph_wf(graph),
-                    forall|k: int| #![auto] 0 <= k < finish_order@.len()
-                        ==> (finish_order@[k] as int) < graph@.len(),
-                    forall|j: int| #![auto] 0 <= j < start as int ==> visited@[j],
+                    forall|k: int| 0 <= k < finish_order@.len()
+                        ==> (#[trigger] finish_order@[k] as int) < graph@.len(),
+                    forall|j: int| 0 <= j < start as int ==> #[trigger] visited@[j],
                     finish_order@.len() + spec_num_false(visited@) == n,
                 decreases n - start,
             {

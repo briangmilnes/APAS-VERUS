@@ -57,17 +57,17 @@ pub mod SCCStPer {
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
             spec_toposortstper_wf(graph),
-            forall|k: int| #![auto] 0 <= k < old(finish_order)@.len()
-                ==> (old(finish_order)@[k] as int) < graph@.len(),
+            forall|k: int| 0 <= k < old(finish_order)@.len()
+                ==> (#[trigger] old(finish_order)@[k] as int) < graph@.len(),
         ensures
             visited@.len() == old(visited)@.len(),
-            forall|j: int| #![auto]
+            forall|j: int|
                 0 <= j < visited@.len() && old(visited)@[j]
-                ==> visited@[j],
+                ==> #[trigger] visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
             finish_order@.len() >= old(finish_order)@.len(),
-            forall|k: int| #![auto] 0 <= k < finish_order@.len()
-                ==> (finish_order@[k] as int) < graph@.len(),
+            forall|k: int| 0 <= k < finish_order@.len()
+                ==> (#[trigger] finish_order@[k] as int) < graph@.len(),
             visited@[vertex as int],
             finish_order@.len() + spec_num_false(visited@)
                 == old(finish_order)@.len() + spec_num_false(old(visited)@),
@@ -92,13 +92,13 @@ pub mod SCCStPer {
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited@.len() == graph@.len(),
                 spec_toposortstper_wf(graph),
-                forall|j: int| #![auto]
+                forall|j: int|
                     0 <= j < visited@.len() && old(visited)@[j]
-                    ==> visited@[j],
+                    ==> #[trigger] visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
                 finish_order@.len() >= old(finish_order)@.len(),
-                forall|k: int| #![auto] 0 <= k < finish_order@.len()
-                    ==> (finish_order@[k] as int) < graph@.len(),
+                forall|k: int| 0 <= k < finish_order@.len()
+                    ==> (#[trigger] finish_order@[k] as int) < graph@.len(),
                 visited@[vertex as int],
                 finish_order@.len() + spec_num_false(visited@) + 1
                     == old(finish_order)@.len() + spec_num_false(old(visited)@),
@@ -118,8 +118,8 @@ pub mod SCCStPer {
         ensures
             result.spec_avltreeseqstper_wf(),
             result@.len() == graph@.len(),
-            forall|i: int| #![auto] 0 <= i < result@.len()
-                ==> (result@[i] as int) < graph@.len(),
+            forall|i: int| 0 <= i < result@.len()
+                ==> (#[trigger] result@[i] as int) < graph@.len(),
     {
         let n = graph.length();
         let mut visited: Vec<bool> = Vec::new();
@@ -129,7 +129,7 @@ pub mod SCCStPer {
             invariant
                 j <= n,
                 visited@.len() == j as int,
-                forall|k: int| #![auto] 0 <= k < j as int ==> !visited@[k],
+                forall|k: int| #![trigger visited@[k]] 0 <= k < j as int ==> !visited@[k],
             decreases n - j,
         {
             visited.push(false);
@@ -147,9 +147,9 @@ pub mod SCCStPer {
                 n == graph@.len(),
                 visited@.len() == n,
                 spec_toposortstper_wf(graph),
-                forall|k: int| #![auto] 0 <= k < finish_order@.len()
-                    ==> (finish_order@[k] as int) < graph@.len(),
-                forall|j: int| #![auto] 0 <= j < start as int ==> visited@[j],
+                forall|k: int| 0 <= k < finish_order@.len()
+                    ==> (#[trigger] finish_order@[k] as int) < graph@.len(),
+                forall|j: int| 0 <= j < start as int ==> #[trigger] visited@[j],
                 finish_order@.len() + spec_num_false(visited@) == n,
             decreases n - start,
         {
@@ -169,10 +169,10 @@ pub mod SCCStPer {
                 k <= result_len,
                 result_len == finish_order@.len(),
                 result_len == n,
-                forall|j: int| #![auto] 0 <= j < finish_order@.len()
-                    ==> (finish_order@[j] as int) < graph@.len(),
-                forall|j: int| #![auto] 0 <= j < reversed@.len()
-                    ==> (reversed@[j] as int) < graph@.len(),
+                forall|j: int| 0 <= j < finish_order@.len()
+                    ==> (#[trigger] finish_order@[j] as int) < graph@.len(),
+                forall|j: int| 0 <= j < reversed@.len()
+                    ==> (#[trigger] reversed@[j] as int) < graph@.len(),
                 reversed@.len() == (result_len - k) as nat,
             decreases k,
         {
@@ -253,9 +253,9 @@ pub mod SCCStPer {
             invariant
                 u <= n,
                 n == graph@.len(),
-                forall|v: int, i: int| #![auto]
+                forall|v: int, i: int|
                     0 <= v < u as int && 0 <= i < graph@[v]@.len()
-                    ==> graph@[v]@[i] < graph@.len(),
+                    ==> (#[trigger] graph@[v]@[i]) < graph@.len(),
             decreases n - u,
         {
             let neighbors = graph.nth(u);
@@ -267,12 +267,12 @@ pub mod SCCStPer {
                     u < n,
                     n == graph@.len(),
                     neighbors_len == graph@[u as int]@.len(),
-                    forall|v: int, j: int| #![auto]
+                    forall|v: int, j: int|
                         0 <= v < u as int && 0 <= j < graph@[v]@.len()
-                        ==> graph@[v]@[j] < graph@.len(),
-                    forall|j: int| #![auto]
+                        ==> (#[trigger] graph@[v]@[j]) < graph@.len(),
+                    forall|j: int|
                         0 <= j < i as int
-                        ==> graph@[u as int]@[j] < graph@.len(),
+                        ==> (#[trigger] graph@[u as int]@[j]) < graph@.len(),
                 decreases neighbors_len - i,
             {
                 let neighbor = *neighbors.nth(i);
@@ -300,9 +300,9 @@ pub mod SCCStPer {
             spec_toposortstper_wf(graph),
         ensures
             visited_bool@.len() == old(visited_bool)@.len(),
-            forall|j: int| #![auto]
+            forall|j: int|
                 0 <= j < visited_bool@.len() && old(visited_bool)@[j]
-                ==> visited_bool@[j],
+                ==> #[trigger] visited_bool@[j],
             spec_num_false(visited_bool@) <= spec_num_false(old(visited_bool)@),
         decreases spec_num_false(old(visited_bool)@),
     {
@@ -325,9 +325,9 @@ pub mod SCCStPer {
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited_bool@.len() == graph@.len(),
                 spec_toposortstper_wf(graph),
-                forall|j: int| #![auto]
+                forall|j: int|
                     0 <= j < visited_bool@.len() && old(visited_bool)@[j]
-                    ==> visited_bool@[j],
+                    ==> #[trigger] visited_bool@[j],
                 spec_num_false(visited_bool@) < spec_num_false(old(visited_bool)@),
             decreases neighbors_len - i,
         {

@@ -51,8 +51,8 @@ pub mod SCCStEph {
         ensures
             result.spec_avltreeseqsteph_wf(),
             result@.len() == graph@.len(),
-            forall|i: int| #![auto] 0 <= i < result@.len()
-                ==> (result@[i] as int) < graph@.len(),
+            forall|i: int| 0 <= i < result@.len()
+                ==> (#[trigger] result@[i] as int) < graph@.len(),
     {
         let n = graph.length();
         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
@@ -69,9 +69,9 @@ pub mod SCCStEph {
                 n == graph@.len(),
                 visited@.len() == n,
                 spec_toposortsteph_wf(graph),
-                forall|k: int| #![auto] 0 <= k < finish_order@.len()
-                    ==> (finish_order@[k] as int) < graph@.len(),
-                forall|j: int| #![auto] 0 <= j < start as int ==> visited@[j],
+                forall|k: int| 0 <= k < finish_order@.len()
+                    ==> (#[trigger] finish_order@[k] as int) < graph@.len(),
+                forall|j: int| 0 <= j < start as int ==> #[trigger] visited@[j],
                 finish_order@.len() + spec_num_false(visited@) == n,
             decreases n - start,
         {
@@ -91,10 +91,10 @@ pub mod SCCStEph {
                 k <= result_len,
                 result_len == finish_order@.len(),
                 result_len == n,
-                forall|j: int| #![auto] 0 <= j < finish_order@.len()
-                    ==> (finish_order@[j] as int) < graph@.len(),
-                forall|j: int| #![auto] 0 <= j < reversed@.len()
-                    ==> (reversed@[j] as int) < graph@.len(),
+                forall|j: int| 0 <= j < finish_order@.len()
+                    ==> (#[trigger] finish_order@[j] as int) < graph@.len(),
+                forall|j: int| 0 <= j < reversed@.len()
+                    ==> (#[trigger] reversed@[j] as int) < graph@.len(),
                 reversed@.len() == (result_len - k) as nat,
             decreases k,
         {
@@ -177,9 +177,9 @@ pub mod SCCStEph {
             invariant
                 u <= n,
                 n == graph@.len(),
-                forall|v: int, i: int| #![auto]
+                forall|v: int, i: int|
                     0 <= v < u as int && 0 <= i < graph@[v]@.len()
-                    ==> graph@[v]@[i] < graph@.len(),
+                    ==> (#[trigger] graph@[v]@[i]) < graph@.len(),
             decreases n - u,
         {
             let neighbors = graph.nth(u);
@@ -191,12 +191,12 @@ pub mod SCCStEph {
                     u < n,
                     n == graph@.len(),
                     neighbors_len == graph@[u as int]@.len(),
-                    forall|v: int, j: int| #![auto]
+                    forall|v: int, j: int|
                         0 <= v < u as int && 0 <= j < graph@[v]@.len()
-                        ==> graph@[v]@[j] < graph@.len(),
-                    forall|j: int| #![auto]
+                        ==> (#[trigger] graph@[v]@[j]) < graph@.len(),
+                    forall|j: int|
                         0 <= j < i as int
-                        ==> graph@[u as int]@[j] < graph@.len(),
+                        ==> (#[trigger] graph@[u as int]@[j]) < graph@.len(),
                 decreases neighbors_len - i,
             {
                 let neighbor = *neighbors.nth(i);
@@ -261,9 +261,9 @@ pub mod SCCStEph {
             spec_toposortsteph_wf(graph),
         ensures
             visited@.len() == old(visited)@.len(),
-            forall|j: int| #![auto]
+            forall|j: int|
                 0 <= j < visited@.len() && old(visited)@[j]
-                ==> visited@[j],
+                ==> #[trigger] visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
@@ -288,9 +288,9 @@ pub mod SCCStEph {
                 neighbors_len == graph@[vertex as int]@.len(),
                 visited@.len() == graph@.len(),
                 spec_toposortsteph_wf(graph),
-                forall|j: int| #![auto]
+                forall|j: int|
                     0 <= j < visited@.len() && old(visited)@[j]
-                    ==> visited@[j],
+                    ==> #[trigger] visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
             decreases neighbors_len - i,
         {

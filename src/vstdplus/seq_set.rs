@@ -580,7 +580,7 @@ pub proof fn lemma_to_seq_gives_same_set(s: Set<u32>, seq: Seq<u32>)
     lemma_u32_view_identity(seq);
     let view_seq = seq.map(|_i: int, t: u32| t@);
     
-    assert forall |x: u32| #![auto] s.contains(x) <==> seq.to_set().contains(x) by {
+    assert forall |x: u32| #[trigger] s.contains(x) <==> seq.to_set().contains(x) by {
         if view_seq.contains(x) {
             let i = choose |i: int| 0 <= i < view_seq.len() && view_seq[i] == x;
         }
@@ -601,7 +601,7 @@ pub proof fn lemma_seq_map_to_set_eq_set_map(seq: Seq<u32>, set: Set<u32>)
     let mapped_seq = seq.map(|_i: int, v: u32| v as nat);
     let mapped_set = set.map(|v: u32| v as nat);
     
-    assert forall |n: nat| #![auto] mapped_seq.to_set().contains(n) <==> mapped_set.contains(n) by {
+    assert forall |n: nat| #[trigger] mapped_seq.to_set().contains(n) <==> mapped_set.contains(n) by {
         if mapped_seq.to_set().contains(n) {
             let i = choose |i: int| 0 <= i < seq.len() && (seq[i] as nat) == n;
             assert(set.contains(seq[i]));
