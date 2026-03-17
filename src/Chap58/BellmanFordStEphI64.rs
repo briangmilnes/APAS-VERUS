@@ -19,8 +19,10 @@ pub mod BellmanFordStEphI64 {
     // 1. module (BellmanFordStEphI64)
     // 2. imports
     // 3. broadcast use
+    // 4. type definitions
     // 8. traits
     // 9. impls
+    // 14. derive impls outside verus!
 
     // 3. broadcast use
 
@@ -29,6 +31,13 @@ pub mod BellmanFordStEphI64 {
         crate::Types::Types::group_Pair_axioms,
     };
 
+    // 4. type definitions
+
+    pub enum BellmanFordError {
+        NegativeCycleDetected,
+        AlgorithmError,
+    }
+
     // 8. traits
 
     pub trait BellmanFordStEphI64Trait {
@@ -36,7 +45,7 @@ pub mod BellmanFordStEphI64 {
         /// - APAS: Work O(nm), Span O(n lg n) where n = |V|, m = |E| (with sequences).
         /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — sequential implementation.
         fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
-            -> (sssp: Result<SSSPResultStEphI64, String>)
+            -> (sssp: Result<SSSPResultStEphI64, BellmanFordError>)
             requires
                 source < graph@.V.len(),
                 spec_labgraphview_wf(graph@),
@@ -51,8 +60,8 @@ pub mod BellmanFordStEphI64 {
     /// Clamp an i128 weight to i64 range.
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
+    // veracity: no_requires
     fn clamp_weight(w: i128) -> (result: i64)
-        requires true,
         ensures
             w >= i64::MIN as i128 && w <= i64::MAX as i128 ==> result == w as i64,
             w < i64::MIN as i128 ==> result == i64::MIN,
@@ -79,16 +88,6 @@ pub mod BellmanFordStEphI64 {
         if sum >= UNREACHABLE as i128 { UNREACHABLE }
         else if sum < (i64::MIN as i128) { i64::MIN }
         else { sum as i64 }
-    }
-
-    #[verifier::external_body]
-    fn neg_cycle_error_string() -> (s: String) {
-        "Negative-weight cycle detected".to_string()
-    }
-
-    #[verifier::external_body]
-    fn algorithm_error_string() -> (s: String) {
-        "Algorithm error: max rounds exceeded".to_string()
     }
 
     /// Reconstruct predecessor array from converged distances.
@@ -178,7 +177,7 @@ pub mod BellmanFordStEphI64 {
     /// - APAS: Work O(nm), Span O(n lg n) where n = |V|, m = |E| (with sequences).
     /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — sequential implementation, no parallelism.
     pub fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
-        -> (sssp: Result<SSSPResultStEphI64, String>)
+        -> (sssp: Result<SSSPResultStEphI64, BellmanFordError>)
         requires
             source < graph@.V.len(),
             spec_labgraphview_wf(graph@),
@@ -291,14 +290,38 @@ pub mod BellmanFordStEphI64 {
             }
 
             if round == n - 1 {
-                return Err(neg_cycle_error_string());
+                return Err(BellmanFordError::NegativeCycleDetected);
             }
 
             round = round + 1;
         }
 
-        Err(algorithm_error_string())
+        Err(BellmanFordError::AlgorithmError)
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for BellmanFordError {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match self {
+                BellmanFordError::NegativeCycleDetected => write!(f, "NegativeCycleDetected"),
+                BellmanFordError::AlgorithmError => write!(f, "AlgorithmError"),
+            }
+        }
+    }
+
+    impl std::fmt::Display for BellmanFordError {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match self {
+                BellmanFordError::NegativeCycleDetected => {
+                    write!(f, "Negative-weight cycle detected")
+                }
+                BellmanFordError::AlgorithmError => {
+                    write!(f, "Algorithm error: max rounds exceeded")
+                }
+            }
+        }
+    }
 }
