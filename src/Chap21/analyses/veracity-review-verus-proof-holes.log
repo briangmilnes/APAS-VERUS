@@ -23,12 +23,7 @@ Table of Contents:
 ✓ Algorithm21_1.rs
    2 clean proof functions
 ✓ Algorithm21_2.rs
-❌ Algorithm21_5.rs
-/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:47: warning: requires_true - requires true — vacuous precondition
-        45 |     /// - Claude-Opus-4.6: Work Θ(n^{3/2}), Span Θ(n^{3/2}) — sequential StPer tabulate + filter.
-        46 |     pub fn primes_bf(n: N) -> (primes: ArraySeqStPerS<N>)
-        48 |         ensures
-        49 |             n <= 2 ==> primes.spec_len() == 0,
+✓ Algorithm21_5.rs
 ✓ Algorithm21_6.rs
    1 clean proof function
 ✓ Exercise21_5.rs
@@ -111,8 +106,8 @@ Proof Functions:
    12 total
 
 Function Specs:
-   15 exec fns with complete spec (requires+ensures) (45%)
-   0 exec fns missing spec (0%)
+   14 exec fns with complete spec (requires+ensures) (42%)
+   1 exec fns missing spec (3%)
    18 proof/spec fns clean (54%)
    0 proof/spec fns with holes (0%)
    33 total fns
@@ -126,9 +121,13 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 18:46:39 -07:00
-Ended:     2026-03-16 18:46:39 -07:00
-Duration:  13ms
+Started:   2026-03-16 19:58:12 -07:00
+Ended:     2026-03-16 19:58:12 -07:00
+Duration:  66ms
 
 Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
+00
+Ended:     2026-03-16 19:58:12 -07:00
+Duration:  66ms
+
 Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log

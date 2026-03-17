@@ -26,131 +26,67 @@ Table of Contents:
    Info: 2 total
    1 clean proof function
 ❌ DoubleHashFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:90: error: external_body - #[verifier::external_body]
-        91 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:128: error: assume() - assume(forall |j: int| 0 <= j < m as int
-       121 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:91: error: external_body - #[verifier::external_body]
+        92 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:129: error: assume() - assume(forall |j: int| 0 <= j < m as int
+       122 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             ...
-       126 |             // uses our runtime step. The wf existential witness s == step.
-       127 |             proof {
-       129 |                     && #[trigger] spec_flat_has_key(table.table@[j], *key) ==> {
-       130 |                     let hh = (table.spec_hash@)(*key) as int % (m as int);
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:170: error: assume() - assume(slot as int == (h as int + attempt as int * step as i
-       121 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
+       127 |             // uses our runtime step. The wf existential witness s == step.
+       128 |             proof {
+       130 |                     && #[trigger] spec_flat_has_key(table.table@[j], *key) ==> {
+       131 |                     let hh = (table.spec_hash@)(*key) as int % (m as int);
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:171: error: assume() - assume(slot as int == (h as int + attempt as int * step as i
+       122 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             ...
-       168 |                 proof {
-       169 |                     // Bridge wrapping arithmetic to spec: slot == (h + attempt * step) % m.
-       171 |                 }
-       172 |                 let entry = table.table[slot].clone();
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:176: error: assume() - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
-       121 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
-            ...
-       174 |                     FlatEntry::Occupied(k, v) => {
-       175 |                         let eq = k == *key;
-       177 |                         if eq {
-       178 |                             proof {
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:237: error: external_body - #[verifier::external_body]
-       238 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:267: error: external_body - #[verifier::external_body]
-       268 |         fn resize(
-   Holes: 6 total
-      3 × assume()
+       169 |                 proof {
+       170 |                     // Bridge wrapping arithmetic to spec: slot == (h + attempt * step) % m.
+       172 |                 }
+       173 |                 let entry = table.table[slot].clone();
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:238: error: external_body - #[verifier::external_body]
+       239 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:268: error: external_body - #[verifier::external_body]
+       269 |         fn resize(
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:177: info: accept()
+   Holes: 5 total
+      2 × assume()
       3 × external_body
-❌ FlatHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:205: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       197 |         fn clone(&self) -> (cloned: Self)
-            ...
-       203 |                 FlatEntry::Deleted => FlatEntry::Deleted,
-       204 |             };
-       206 |             c
-       207 |         }
+   Info: 1 total
+ℹ FlatHashTable.rs
+/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:206: info: accept()
+   Info: 1 total
 ❌ LinProbFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:93: error: external_body - #[verifier::external_body]
-        94 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:161: error: assume() - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
-       124 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
-            ...
-       159 |                     FlatEntry::Occupied(k, v) => {
-       160 |                         let eq = k == *key;
-       162 |                         if eq {
-       163 |                             proof {
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:229: error: external_body - #[verifier::external_body]
-       230 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:259: error: external_body - #[verifier::external_body]
-       260 |         fn resize(
-   Holes: 4 total
-      1 × assume()
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:94: error: external_body - #[verifier::external_body]
+        95 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:230: error: external_body - #[verifier::external_body]
+       231 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:260: error: external_body - #[verifier::external_body]
+       261 |         fn resize(
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:162: info: accept()
+   Holes: 3 total
       3 × external_body
+   Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ LinkedListChainedHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:54: error: assume() - assume(k == entry.seq@[i as int].0); // Clone bridge for Key
-        36 |         fn clone_linked_list_entry<Key: Clone, Value: Clone>(
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:433: error: external_body - #[verifier::external_body]
+       434 |             fn resize(
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:37: error: fn_missing_requires - fn clone_linked_list_entry — exec fn should have requires
+        33 |         proof fn _linked_list_chained_hash_table_verified() {}
             ...
-        52 |                 let v = entry.seq[i].1.clone();
-        53 |                 proof {
-        55 |                     assume(v == entry.seq@[i as int].1); // Clone bridge for Value.
-        56 |                 }
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:55: error: assume() - assume(v == entry.seq@[i as int].1); // Clone bridge for Val
-        36 |         fn clone_linked_list_entry<Key: Clone, Value: Clone>(
-            ...
-        53 |                 proof {
-        54 |                     assume(k == entry.seq@[i as int].0); // Clone bridge for Key.
-        56 |                 }
-        57 |                 new_seq.push((k, v));
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:189: error: assume() - proof { assume(eq == (bucket_seq@[scan_i as int].0 == key));
-       161 |             fn insert(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
-            ...
-       187 |                 {
-       188 |                     let eq = bucket_seq[scan_i].0 == key;
-       190 |                     if eq {
-       191 |                         existed = true;
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:282: error: assume() - proof { assume(eq == (bv[i as int].0 == *key)); } // Eq brid
-       253 |             fn lookup(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
-            ...
-       280 |                     i = i - 1;
-       281 |                     let eq = table.table[index].seq[i].0 == *key;
-       283 |                     if eq {
-       284 |                         let v = table.table[index].seq[i].1.clone();
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:285: error: assume() - proof { assume(v == bv[i as int].1); } // Clone bridge.
-       253 |             fn lookup(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
-            ...
-       283 |                     if eq {
-       284 |                         let v = table.table[index].seq[i].1.clone();
-       286 |                         proof {
-       287 |                             lemma_seq_pairs_last_key_gives_value::<Key, Value>(
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:343: error: assume() - proof { assume(eq == (bucket_seq@[i as int].0 == *key)); } /
-       310 |             fn delete(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
-            ...
-       341 |                 {
-       342 |                     let eq = bucket_seq[i].0 == *key;
-       344 | 
-       345 |                     proof {
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:356: error: assume() - assume(k == bucket_seq@[i as int].0); // Clone bridge for Ke
-       310 |             fn delete(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
-            ...
-       354 |                         let v = bucket_seq[i].1.clone();
-       355 |                         proof {
-       357 |                             assume(v == bucket_seq@[i as int].1); // Clone bridge for Value.
-       358 |                         }
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:357: error: assume() - assume(v == bucket_seq@[i as int].1); // Clone bridge for Va
-       310 |             fn delete(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
-            ...
-       355 |                         proof {
-       356 |                             assume(k == bucket_seq@[i as int].0); // Clone bridge for Key.
-       358 |                         }
-       359 |                         let ghost old_new_seq = new_seq@;
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:432: error: external_body - #[verifier::external_body]
-       433 |             fn resize(
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:36: error: fn_missing_requires - fn clone_linked_list_entry — exec fn should have requires
-        32 |         proof fn _linked_list_chained_hash_table_verified() {}
-            ...
-        34 |         /// Clones a LinkedListStEphS<(Key, Value)> with sequence equality ensures.
-        35 |         /// Clone bridges inside this function follow the approved clone body pattern.
-        37 |             entry: &LinkedListStEphS<(Key, Value)>,
-        38 |         ) -> (cloned: LinkedListStEphS<(Key, Value)>)
-   Holes: 9 total
-      8 × assume()
+        35 |         /// Clones a LinkedListStEphS<(Key, Value)> with sequence equality ensures.
+        36 |         /// Clone bridges inside this function follow the approved clone body pattern.
+        38 |             entry: &LinkedListStEphS<(Key, Value)>,
+        39 |         ) -> (cloned: LinkedListStEphS<(Key, Value)>)
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:55: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:56: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:190: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:283: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:286: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:344: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:357: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:358: info: accept()
+   Holes: 1 total
       1 × external_body
+   Info: 8 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ ParaHashTableStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:463: error: external_body - #[verifier::external_body]
@@ -217,58 +153,25 @@ Table of Contents:
       2 × external_body
    Proof functions: 12 total (12 clean, 0 holed)
 ❌ QuadProbFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:75: error: external_body - #[verifier::external_body]
-        76 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:130: error: assume() - assume(slot as int == (h as int + attempt as int * attempt a
-       106 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:76: error: external_body - #[verifier::external_body]
+        77 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:131: error: assume() - assume(slot as int == (h as int + attempt as int * attempt a
+       107 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             ...
-       128 |                 proof {
-       129 |                     // Bridge wrapping arithmetic to spec: slot == (h + attempt²) % m.
-       131 |                 }
-       132 |                 let entry = table.table[slot].clone();
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:136: error: assume() - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
-       106 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
-            ...
-       134 |                     FlatEntry::Occupied(k, v) => {
-       135 |                         let eq = k == *key;
-       137 |                         if eq {
-       138 |                             proof {
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:203: error: external_body - #[verifier::external_body]
-       204 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:233: error: external_body - #[verifier::external_body]
-       234 |         fn resize(
-   Holes: 5 total
-      2 × assume()
+       129 |                 proof {
+       130 |                     // Bridge wrapping arithmetic to spec: slot == (h + attempt²) % m.
+       132 |                 }
+       133 |                 let entry = table.table[slot].clone();
+/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:204: error: external_body - #[verifier::external_body]
+       205 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:234: error: external_body - #[verifier::external_body]
+       235 |         fn resize(
+/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:137: info: accept()
+   Holes: 4 total
+      1 × assume()
       3 × external_body
+   Info: 1 total
 ❌ StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:124: error: assume() - proof { assume(eq == (nk == key)); } // Eq bridge.
-       104 |         fn chain_insert<Key: PartialEq, Value>(
-            ...
-       122 |                     let Node { key: nk, value: nv, next: nn } = *node;
-       123 |                     let eq = nk == key;
-       125 |                     if eq {
-       126 |                         let out = Some(Box::new(Node { key, value, next: nn }));
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:162: error: assume() - proof { assume(eq == (node.key == *key)); } // Eq bridge.
-       144 |         fn chain_lookup<Key: PartialEq, Value: Clone>(
-            ...
-       160 |                 Some(node) => {
-       161 |                     let eq = node.key == *key;
-       163 |                     if eq {
-       164 |                         let v = node.value.clone();
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:166: error: assume() - assume(v == node.value); // Clone bridge.
-       144 |         fn chain_lookup<Key: PartialEq, Value: Clone>(
-            ...
-       164 |                         let v = node.value.clone();
-       165 |                         proof {
-       167 |                             reveal_with_fuel(spec_chain_to_map, 2);
-       168 |                         }
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:203: error: assume() - proof { assume(eq == (nk == *key)); } // Eq bridge.
-       184 |         fn chain_delete<Key: PartialEq, Value>(
-            ...
-       201 |                     let Node { key: nk, value: nv, next: nn } = *node;
-       202 |                     let eq = nk == *key;
-       204 |                     let (new_next, tail_deleted) = chain_delete(nn, key);
-       205 |                     if eq {
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:396: error: external_body - #[verifier::external_body]
        397 |             fn resize(
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:104: error: fn_missing_requires - fn chain_insert — exec fn should have requires
@@ -292,84 +195,39 @@ Table of Contents:
        183 |         /// Removes all nodes matching key, returns updated chain and whether any found.
        185 |             chain: Option<Box<Node<Key, Value>>>,
        186 |             key: &Key,
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:124: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:162: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:166: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:203: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:493: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:510: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:527: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:541: info: accept()
-   Holes: 5 total
-      4 × assume()
+   Holes: 1 total
       1 × external_body
-   Info: 4 total
+   Info: 8 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ VecChainedHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:52: error: assume() - assume(k == pairs@[i as int].0); // Clone bridge for Key.
-        36 |         fn clone_vec_pairs<Key: Clone, Value: Clone>(pairs: &Vec<(Key, Value)>) -> (cloned: Vec<(Key, Value)>)
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:436: error: external_body - #[verifier::external_body]
+       437 |             fn resize(
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:37: error: fn_missing_requires - fn clone_vec_pairs — exec fn should have requires
+        33 |         proof fn _vec_chained_hash_table_verified() {}
             ...
-        50 |                 let v = pairs[i].1.clone();
-        51 |                 proof {
-        53 |                     assume(v == pairs@[i as int].1); // Clone bridge for Value.
-        54 |                 }
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:53: error: assume() - assume(v == pairs@[i as int].1); // Clone bridge for Value.
-        36 |         fn clone_vec_pairs<Key: Clone, Value: Clone>(pairs: &Vec<(Key, Value)>) -> (cloned: Vec<(Key, Value)>)
-            ...
-        51 |                 proof {
-        52 |                     assume(k == pairs@[i as int].0); // Clone bridge for Key.
-        54 |                 }
-        55 |                 new_vec.push((k, v));
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:190: error: assume() - proof { assume(eq == (bucket@[scan_i as int].0 == key)); } /
-       163 |             fn insert(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
-            ...
-       188 |                 {
-       189 |                     let eq = bucket[scan_i].0 == key;
-       191 |                     if eq {
-       192 |                         existed = true;
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:284: error: assume() - proof { assume(eq == (bv[i as int].0 == *key)); } // Eq brid
-       253 |             fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
-            ...
-       282 |                     i = i - 1;
-       283 |                     let eq = table.table[index][i].0 == *key;
-       285 |                     if eq {
-       286 |                         let v = table.table[index][i].1.clone();
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:287: error: assume() - proof { assume(v == bv[i as int].1); } // Clone bridge.
-       253 |             fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
-            ...
-       285 |                     if eq {
-       286 |                         let v = table.table[index][i].1.clone();
-       288 |                         proof {
-       289 |                             lemma_seq_pairs_last_key_gives_value::<Key, Value>(
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:344: error: assume() - proof { assume(eq == (bucket@[i as int].0 == *key)); } // Eq
-       312 |             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
-            ...
-       342 |                 {
-       343 |                     let eq = bucket[i].0 == *key;
-       345 | 
-       346 |                     proof {
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:357: error: assume() - assume(k == bucket@[i as int].0); // Clone bridge for Key.
-       312 |             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
-            ...
-       355 |                         let v = bucket[i].1.clone();
-       356 |                         proof {
-       358 |                             assume(v == bucket@[i as int].1); // Clone bridge for Value.
-       359 |                         }
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:358: error: assume() - assume(v == bucket@[i as int].1); // Clone bridge for Value.
-       312 |             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
-            ...
-       356 |                         proof {
-       357 |                             assume(k == bucket@[i as int].0); // Clone bridge for Key.
-       359 |                         }
-       360 |                         let ghost old_new_bucket = new_bucket@;
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:435: error: external_body - #[verifier::external_body]
-       436 |             fn resize(
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:36: error: fn_missing_requires - fn clone_vec_pairs — exec fn should have requires
-        32 |         proof fn _vec_chained_hash_table_verified() {}
-            ...
-        34 |         /// Clones a Vec<(Key, Value)> with sequence equality ensures.
-        35 |         /// Clone bridges inside this function follow the approved clone body pattern.
-        37 |             ensures cloned@ =~= pairs@,
-        38 |         {
-   Holes: 9 total
-      8 × assume()
+        35 |         /// Clones a Vec<(Key, Value)> with sequence equality ensures.
+        36 |         /// Clone bridges inside this function follow the approved clone body pattern.
+        38 |             ensures cloned@ =~= pairs@,
+        39 |         {
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:53: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:54: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:191: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:285: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:288: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:345: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:358: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:359: info: accept()
+   Holes: 1 total
       1 × external_body
+   Info: 8 total
    Proof functions: 1 total (1 clean, 0 holed)
 
 =================================================================
@@ -426,21 +284,23 @@ Function Specs:
    135 total fns
 
 
-Holes Found: 40 total
-   26 × assume() (65%)
-   14 × external_body (35%)
+Holes Found: 17 total
+   3 × assume() (17%)
+   14 × external_body (82%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 18:46:40 -07:00
-Ended:     2026-03-16 18:46:40 -07:00
-Duration:  36ms
+Started:   2026-03-16 19:58:15 -07:00
+Ended:     2026-03-16 19:58:15 -07:00
+Duration:  128ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
-2026-03-16 18:46:40 -07:00
-Ended:     2026-03-16 18:46:40 -07:00
-Duration:  36ms
+==============================
+
+Started:   2026-03-16 19:58:15 -07:00
+Ended:     2026-03-16 19:58:15 -07:00
+Duration:  128ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log

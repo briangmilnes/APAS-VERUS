@@ -457,9 +457,13 @@ Custom definitions create proof islands that don't connect to the broader ecosys
 **Assert in exec code**: `assert` in executable code does NOT need a `proof { }` block.
 Only proof-mode calls (lemma invocations, `reveal`, `let ghost`) need `proof { }`.
 
-**Triggers**: Use `#![auto]` during development, then replace with explicit `#[trigger]`
-from Verus's proposals. Do not leave `#![auto]` or trigger warnings in final code.
-Clean up all trigger warnings as they occur — do not defer them.
+**Triggers — MANDATORY**: Every `forall` and `exists` quantifier MUST have explicit
+`#[trigger]` annotations. Do NOT use `#![auto]` — it causes "automatically chose triggers"
+notes that flood verification output and hide real errors. Do NOT leave quantifiers without
+trigger annotations. When you write a quantifier, add `#[trigger]` immediately. When Verus
+prints "automatically chose triggers", read the trigger it selected and add that as an
+explicit `#[trigger]`. This is not optional. Every agent commit must have zero trigger notes
+in its assigned files.
 
 When Verus emits "Could not automatically infer triggers" (an error, not a warning),
 `#![auto]` will NOT help — there is nothing for it to select. You must manually add

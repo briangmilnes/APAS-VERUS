@@ -195,13 +195,6 @@ Table of Contents:
       7 × assume()
       8 × external_body
 ❌ OrderedSetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:338: error: assume() - assume(result@ =~= eph_seq@);  // accept hole: clone/view br
-       318 |         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
-            ...
-       336 |             proof {
-       337 |                 // T::clone preserves View (StT bound); from_vec maps values through View.
-       339 |             }
-       340 |             result
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:343: error: external_body - #[verifier::external_body]
        344 |         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:358: error: external_body - #[verifier::external_body]
@@ -229,9 +222,10 @@ Table of Contents:
        735 |     pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)
        737 |         ensures constructed@.finite(), constructed.spec_orderedsetsteph_wf()
        738 |     {
-   Holes: 12 total
-      1 × assume()
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:338: info: accept()
+   Holes: 11 total
       11 × external_body
+   Info: 1 total
 ❌ OrderedSetStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:337: error: external_body - #[verifier::external_body]
        338 |         fn first(&self) -> (first: Option<T>)
@@ -448,21 +442,23 @@ Function Specs:
    660 total fns
 
 
-Holes Found: 99 total
-   12 × assume() (12%)
-   87 × external_body (87%)
+Holes Found: 98 total
+   11 × assume() (11%)
+   87 × external_body (88%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 18:46:40 -07:00
-Ended:     2026-03-16 18:46:40 -07:00
-Duration:  94ms
+Started:   2026-03-16 19:58:14 -07:00
+Ended:     2026-03-16 19:58:15 -07:00
+Duration:  338ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
-07:00
-Ended:     2026-03-16 18:46:40 -07:00
-Duration:  94ms
+==========================================================
+
+Started:   2026-03-16 19:58:14 -07:00
+Ended:     2026-03-16 19:58:15 -07:00
+Duration:  338ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
