@@ -179,11 +179,17 @@ broadcast use {
         }
 
         /// Extended operations requiring closure parameters.
-        pub trait BalancedTreePQExtTrait<T: StT + Ord + TotalOrder>: Sized {
-            fn filter<F>(&self, predicate: F) -> (filtered: Self) where F: Fn(&T) -> bool
-                ensures true;
-            fn map<U, G>(&self, f: G) -> (mapped: BalancedTreePQ<U>) where U: StT + Ord + TotalOrder, G: Fn(&T) -> U
-                ensures true;
+        pub trait BalancedTreePQExtTrait<T: StT + Ord + TotalOrder>: Sized + BalancedTreePQTrait<T> {
+            fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)
+                requires
+                    self.spec_balancedtreepq_wf(),
+                    forall|t: &T| #[trigger] predicate.requires((t,)),
+                ensures filtered.spec_balancedtreepq_wf();
+            fn map<U: StT + Ord + TotalOrder, G: Fn(&T) -> U>(&self, f: G) -> (mapped: BalancedTreePQ<U>)
+                requires
+                    self.spec_balancedtreepq_wf(),
+                    forall|t: &T| #[trigger] f.requires((t,)),
+                ensures mapped.spec_balancedtreepq_wf();
         }
 
 // 9. impls
@@ -595,32 +601,48 @@ broadcast use {
             { Self::empty() }
         }
 
-        #[verifier::external]
         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
-            fn filter<F>(&self, predicate: F) -> (filtered: Self)
-            where
-                F: Fn(&T) -> bool,
+            fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)
             {
                 let mut result = Self::empty();
-                for i in 0..self.elements.length() {
+                let n = self.elements.length();
+                let mut i: usize = 0;
+                while i < n
+                    invariant
+                        i <= n,
+                        n as nat == self.elements.spec_seq().len(),
+                        self.spec_balancedtreepq_wf(),
+                        result.spec_balancedtreepq_wf(),
+                        forall|t: &T| #[trigger] predicate.requires((t,)),
+                    decreases n - i,
+                {
                     let current = self.elements.nth(i);
                     if predicate(current) {
                         result = result.insert(current.clone());
                     }
+                    i = i + 1;
                 }
                 result
             }
 
-            fn map<U, G>(&self, f: G) -> (mapped: BalancedTreePQ<U>)
-            where
-                U: StT + Ord + TotalOrder,
-                G: Fn(&T) -> U,
+            fn map<U: StT + Ord + TotalOrder, G: Fn(&T) -> U>(&self, f: G) -> (mapped: BalancedTreePQ<U>)
             {
                 let mut result = BalancedTreePQ::<U>::empty();
-                for i in 0..self.elements.length() {
+                let n = self.elements.length();
+                let mut i: usize = 0;
+                while i < n
+                    invariant
+                        i <= n,
+                        n as nat == self.elements.spec_seq().len(),
+                        self.spec_balancedtreepq_wf(),
+                        result.spec_balancedtreepq_wf(),
+                        forall|t: &T| #[trigger] f.requires((t,)),
+                    decreases n - i,
+                {
                     let current = self.elements.nth(i);
-                    let mapped = f(current);
-                    result = result.insert(mapped);
+                    let mapped_val = f(current);
+                    result = result.insert(mapped_val);
+                    i = i + 1;
                 }
                 result
             }

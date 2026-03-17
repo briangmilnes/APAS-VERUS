@@ -48,7 +48,8 @@ pub mod AVLTreeSeqMtPer {
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{lemma_cloned_view_eq, obeys_feq_clone, obeys_feq_full};
+    use crate::vstdplus::feq::feq::{lemma_cloned_view_eq, obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger};
+    use vstd::slice::slice_subrange;
 
     verus! {
 
@@ -506,30 +507,41 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
-    #[verifier::external_body]
     fn build_balanced_from_slice<T: StTInMtT>(a: &[T]) -> (link: Link<T>)
+        requires 0nat < usize::MAX as nat,
         ensures
             spec_avltreeseqmtper_wf(link),
             spec_inorder(link) =~= a@.map_values(|t: T| t@),
+        decreases a.len(),
     {
-        fn rec<T: StTInMtT>(a: &[T]) -> (link: Link<T>)
-            requires obeys_feq_full::<T>(),
-            ensures
-                spec_avltreeseqmtper_wf(link),
-                spec_inorder(link) =~= a@.map_values(|t: T| t@),
-            decreases a.len(),
-        {
-            if a.is_empty() {
-                return None;
-            }
-            let mid = a.len() / 2;
-            let crate::Types::Types::Pair(left, right) = crate::ParaPair!(
-                move || rec(&a[..mid]),
-                move || rec(&a[mid + 1..])
-            );
-            Some(mk(a[mid].clone(), left, right))
+        if a.is_empty() {
+            assert(a@.map_values(|t: T| t@) =~= Seq::<T::V>::empty());
+            return None;
         }
-        rec(a)
+        let mid = a.len() / 2;
+        let left_slice = slice_subrange(a, 0, mid);
+        let right_slice = slice_subrange(a, mid + 1, a.len());
+        let left = build_balanced_from_slice(left_slice);
+        let right = build_balanced_from_slice(right_slice);
+        let val = a[mid].clone();
+        proof {
+            lemma_size_eq_inorder_len::<T>(&left);
+            lemma_size_eq_inorder_len::<T>(&right);
+            lemma_height_le_size::<T>(&left);
+            lemma_height_le_size::<T>(&right);
+            assert(obeys_feq_full_trigger::<T>());
+            assert(cloned(a@[mid as int], val));
+        }
+        let node = mk(val, left, right);
+        proof {
+            let left_seq = left_slice@;
+            let right_seq = right_slice@;
+            let full_seq = a@;
+            assert(left_seq =~= full_seq.subrange(0, mid as int));
+            assert(right_seq =~= full_seq.subrange(mid as int + 1, full_seq.len() as int));
+            assert(full_seq =~= left_seq + seq![full_seq[mid as int]] + right_seq);
+        }
+        Some(node)
     }
 
     fn compare_trees<T: StTInMtT>(a: &Link<T>, b: &Link<T>) -> (equal: bool)

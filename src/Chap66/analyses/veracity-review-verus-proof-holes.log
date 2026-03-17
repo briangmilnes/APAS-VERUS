@@ -21,13 +21,13 @@ Table of Contents:
 =================================================================
 
 ℹ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:52: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:52: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:52: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:52: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
 ℹ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:67: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:67: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:67: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:67: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
 
 =================================================================
 2. Depends Upon
@@ -72,7 +72,7 @@ Function Specs:
 Holes Found: 0 total
 
 Structural False Positives: 2 detected (language limitations, not missing proof)
-   2 × EQ_CLONE_ASSUME
+   2 × EQ_CLONE_ASSUME (not in hole count — accept() pattern)
 
 🎉 No proof holes or warnings found! All proofs are complete.
 
@@ -80,9 +80,9 @@ Structural False Positives: 2 detected (language limitations, not missing proof)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 09:29:52 -07:00
-Ended:     2026-03-17 09:29:52 -07:00
+Started:   2026-03-17 10:16:28 -07:00
+Ended:     2026-03-17 10:16:28 -07:00
 Duration:  12ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
