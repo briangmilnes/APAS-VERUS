@@ -228,6 +228,7 @@ pub mod experiments {
 //    pub mod accept;
     // pub mod accept_external_body;  // FAILS: macro cannot produce attribute attaching to item
 //    pub mod external_body_accept_hole;
+    // pub mod exec_spec_verified_test;
 }
 
 #[cfg(not(feature = "experiments_only"))]
@@ -680,7 +681,7 @@ pub mod Chap56 {
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap57 {
     pub mod StackStEph;
-    pub mod DijkstraStEphI64;
+    pub mod DijkstraStEphU64;
     // pub mod DijkstraStEphF64;  // blocked: no WeightedDirGraphStEphF64 + BinaryHeapPQ
 }
 
@@ -693,7 +694,7 @@ pub mod Chap58 {
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap59 {
     pub mod JohnsonStEphI64;
-    // pub mod JohnsonMtEphI64;  // depends on DijkstraStEphI64
+    // pub mod JohnsonMtEphI64;  // depends on DijkstraStEphU64
     // pub mod JohnsonStEphF64;  // blocked: no WeightedDirGraphStEphF64
     // pub mod JohnsonMtEphF64;  // blocked: no WeightedDirGraphStEphF64
 }

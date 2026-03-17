@@ -24,7 +24,7 @@ pub mod JohnsonStEphI64 {
     use crate::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::{
         SSSPResultStEphI64, SSSPResultStEphI64Trait, UNREACHABLE, NO_PREDECESSOR,
     };
-    use crate::Chap57::DijkstraStEphI64::DijkstraStEphI64::dijkstra;
+    use crate::Chap57::DijkstraStEphU64::DijkstraStEphU64::dijkstra;
     use crate::Chap58::BellmanFordStEphI64::BellmanFordStEphI64::bellman_ford;
     use crate::Types::Types::*;
 

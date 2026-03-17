@@ -1033,8 +1033,8 @@ path = "tests/Chap56/TestSSSPResultStPerI64.rs"
 # path = "disabled"
 
 [[test]]
-name = "TestDijkstraStEphI64"
-path = "tests/Chap57/TestDijkstraStEphI64.rs"
+name = "TestDijkstraStEphU64"
+path = "tests/Chap57/TestDijkstraStEphU64.rs"
 
 [[test]]
 name = "TestStackStEph"

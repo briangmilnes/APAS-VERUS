@@ -24,7 +24,7 @@ pub mod JohnsonMtEphI64 {
     use crate::Types::Types::*;
 
     #[cfg(not(verus_keep_ghost))]
-    use crate::Chap57::DijkstraStEphI64::DijkstraStEphI64::dijkstra;
+    use crate::Chap57::DijkstraStEphU64::DijkstraStEphU64::dijkstra;
     #[cfg(not(verus_keep_ghost))]
     use crate::Chap58::BellmanFordStEphI64::BellmanFordStEphI64::bellman_ford;
 

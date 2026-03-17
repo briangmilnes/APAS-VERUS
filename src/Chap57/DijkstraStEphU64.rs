@@ -7,7 +7,7 @@
 //! **Algorithmic Analysis:**
 //! - Dijkstra: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
 
-pub mod DijkstraStEphI64 {
+pub mod DijkstraStEphU64 {
 
     use std::cmp::Ordering;
     use std::fmt::{Debug, Display, Formatter};
@@ -28,7 +28,7 @@ pub mod DijkstraStEphI64 {
     verus! {
 
     // Table of Contents
-    // 1. module (DijkstraStEphI64)
+    // 1. module (DijkstraStEphU64)
     // 2. imports
     // 3. broadcast use
     // 4. type definitions
@@ -71,7 +71,7 @@ pub mod DijkstraStEphI64 {
 
     // 8. traits
 
-    pub trait DijkstraStEphI64Trait {
+    pub trait DijkstraStEphU64Trait {
         /// Dijkstra's single source shortest path algorithm.
         /// - APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|.
         /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — agrees with APAS.
