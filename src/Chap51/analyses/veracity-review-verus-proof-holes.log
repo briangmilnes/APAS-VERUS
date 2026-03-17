@@ -21,44 +21,44 @@ Table of Contents:
 =================================================================
 
 ℹ BottomUpDPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:329: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:329: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:329: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:329: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    2 clean proof functions
 ℹ BottomUpDPMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:296: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:296: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:296: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:296: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    2 clean proof functions
 ℹ BottomUpDPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:481: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:481: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:481: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:481: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    2 clean proof functions
 ℹ BottomUpDPStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:438: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:438: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:438: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:438: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    2 clean proof functions
 ℹ TopDownDPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:485: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:485: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:485: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:485: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    3 clean proof functions
 ℹ TopDownDPMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:440: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:440: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:440: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:440: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    3 clean proof functions
 ℹ TopDownDPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:383: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:383: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:383: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:383: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    3 clean proof functions
 ℹ TopDownDPStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:332: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:332: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:332: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:332: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    3 clean proof functions
 
 =================================================================
@@ -124,11 +124,9 @@ Structural False Positives: 8 detected (language limitations, not missing proof)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 10:19:58 -07:00
-Ended:     2026-03-17 10:19:58 -07:00
-Duration:  43ms
+Started:   2026-03-17 10:55:04 -07:00
+Ended:     2026-03-17 10:55:04 -07:00
+Duration:  31ms
 
 Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
-n:  43ms
-
-Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
