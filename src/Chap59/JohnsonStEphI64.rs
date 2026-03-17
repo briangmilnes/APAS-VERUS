@@ -25,7 +25,7 @@ pub mod JohnsonStEphI64 {
         SSSPResultStEphI64, SSSPResultStEphI64Trait, UNREACHABLE, NO_PREDECESSOR,
     };
     use crate::Chap57::DijkstraStEphI64::DijkstraStEphI64::dijkstra;
-    use crate::Chap58::BellmanFordStEphI64::BellmanFordStEphI64::bellman_ford;
+    use crate::Chap58::BellmanFordStEphI64::BellmanFordStEphI64::{bellman_ford, BellmanFordError};
     use crate::Types::Types::*;
 
     verus! {
@@ -65,17 +65,12 @@ pub mod JohnsonStEphI64 {
 
     // 9. impls
 
-    #[verifier::external_body]
-    fn neg_cycle_error_string() -> (s: String) {
-        "Negative-weight cycle detected".to_string()
-    }
-
     /// Adjust reweighted distance back to original weights.
     /// d(u,v) = d'(u,v) - h(u) + h(v), using i128 to avoid overflow.
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
+    // veracity: no_requires
     fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (result: i64)
-        requires true,
         ensures
             d_prime == UNREACHABLE ==> result == UNREACHABLE,
     {
@@ -91,8 +86,8 @@ pub mod JohnsonStEphI64 {
     /// Reweight edge: new_weight = weight + h(u) - h(v), clamped to i128 range.
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
+    // veracity: no_requires
     fn reweight_edge(weight: i128, h_u: i64, h_v: i64) -> (result: i128)
-        requires true,
         ensures true,
     {
         let diff: i128 = (h_u as i128) - (h_v as i128);
@@ -333,8 +328,8 @@ pub mod JohnsonStEphI64 {
     /// Create all-UNREACHABLE result for negative cycle detection.
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2).
+    // veracity: no_requires
     fn create_negative_cycle_result(n: usize) -> (result: AllPairsResultStEphI64)
-        requires true,
         ensures
             result.spec_n() == n,
             result.spec_distances_len() == n as nat,

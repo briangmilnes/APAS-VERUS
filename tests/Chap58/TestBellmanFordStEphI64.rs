@@ -103,9 +103,7 @@ fn test_negative_cycle_detection() {
     let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
     let result = bellman_ford(&graph, 0);
 
-    assert!(result.is_err());
-    let err_msg = result.err().unwrap();
-    assert!(err_msg.contains("Negative-weight cycle"));
+    assert!(matches!(result, Err(BellmanFordError::NegativeCycleDetected)));
 }
 
 #[test]
