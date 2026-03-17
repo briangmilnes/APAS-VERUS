@@ -56,18 +56,18 @@ pub mod BSTRBStEph {
                 BalBinTree::Node(node) =>
                     node.left.tree_is_bst()
                     && node.right.tree_is_bst()
-                    && (forall|x: T| #![auto] node.left.tree_contains(x) ==>
+                    && (forall|x: T| (#[trigger] node.left.tree_contains(x)) ==>
                         T::le(x, node.value) && x != node.value)
-                    && (forall|x: T| #![auto] node.right.tree_contains(x) ==>
+                    && (forall|x: T| (#[trigger] node.right.tree_contains(x)) ==>
                         T::le(node.value, x) && x != node.value)
                     && match node.left {
                         BalBinTree::Leaf => true,
                         BalBinTree::Node(lnode) =>
                             lnode.left.tree_is_bst()
                             && lnode.right.tree_is_bst()
-                            && (forall|x: T| #![auto] lnode.left.tree_contains(x) ==>
+                            && (forall|x: T| (#[trigger] lnode.left.tree_contains(x)) ==>
                                 T::le(x, lnode.value) && x != lnode.value)
-                            && (forall|x: T| #![auto] lnode.right.tree_contains(x) ==>
+                            && (forall|x: T| (#[trigger] lnode.right.tree_contains(x)) ==>
                                 T::le(lnode.value, x) && x != lnode.value)
                     }
                     && match node.right {
@@ -75,9 +75,9 @@ pub mod BSTRBStEph {
                         BalBinTree::Node(rnode) =>
                             rnode.left.tree_is_bst()
                             && rnode.right.tree_is_bst()
-                            && (forall|x: T| #![auto] rnode.left.tree_contains(x) ==>
+                            && (forall|x: T| (#[trigger] rnode.left.tree_contains(x)) ==>
                                 T::le(x, rnode.value) && x != rnode.value)
-                            && (forall|x: T| #![auto] rnode.right.tree_contains(x) ==>
+                            && (forall|x: T| (#[trigger] rnode.right.tree_contains(x)) ==>
                                 T::le(rnode.value, x) && x != rnode.value)
                     }
             }
@@ -129,7 +129,7 @@ pub mod BSTRBStEph {
                 inserted.spec_bstrbsteph_wf(),
                 inserted.spec_root().tree_is_bst(),
                 inserted.spec_root().tree_contains(value),
-                forall|x: T| #![auto] inserted.spec_root().tree_contains(x) <==>
+                forall|x: T| (#[trigger] inserted.spec_root().tree_contains(x)) <==>
                     (self.spec_root().tree_contains(x) || x == value);
         fn contains(&self, target: &T) -> (found: bool)
             requires
@@ -156,7 +156,7 @@ pub mod BSTRBStEph {
             !(tree is Leaf),
         ensures
             rotated.tree_is_bst(),
-            forall|x: T| #![auto] rotated.tree_contains(x) == tree.tree_contains(x),
+            forall|x: T| (#[trigger] rotated.tree_contains(x)) == tree.tree_contains(x),
     {
         let ghost tree_ghost = tree;
         match tree {
@@ -256,7 +256,7 @@ pub mod BSTRBStEph {
             !(tree is Leaf),
         ensures
             rotated.tree_is_bst(),
-            forall|x: T| #![auto] rotated.tree_contains(x) == tree.tree_contains(x),
+            forall|x: T| (#[trigger] rotated.tree_contains(x)) == tree.tree_contains(x),
     {
         let ghost tree_ghost = tree;
         match tree {
@@ -296,6 +296,12 @@ pub mod BSTRBStEph {
                             assert(x_val != y_val);
 
                             assert(left_sub.tree_is_bst());
+                            assert(old_rr.tree_is_bst());
+
+                            assert forall|z: T| (#[trigger] old_rr.tree_contains(z)) implies
+                                T::le(y_val, z) && z != y_val
+                            by {
+                            };
 
                             assert forall|z: T| left_sub.tree_contains(z) implies
                                 #[trigger] T::le(z, y_val) && z != y_val
@@ -331,6 +337,7 @@ pub mod BSTRBStEph {
                                     || old_rl.tree_contains(z)
                                     || old_rr.tree_contains(z)));
                             };
+                            assert(r.tree_is_bst());
                         }
                         r
                     }
@@ -354,7 +361,7 @@ pub mod BSTRBStEph {
         ensures
             inserted.tree_is_bst(),
             inserted.tree_contains(value),
-            forall|x: T| #![auto] inserted.tree_contains(x) <==>
+            forall|x: T| (#[trigger] inserted.tree_contains(x)) <==>
                 (node.tree_contains(x) || x == value),
         decreases node.spec_size(),
     {

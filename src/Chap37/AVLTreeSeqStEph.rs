@@ -1006,7 +1006,7 @@ pub mod AVLTreeSeqStEph {
                     assert(self.spec_seq().len() == (len - 1) as nat);
                     let expected = old_seq.subrange(0, idx as int) + old_seq.subrange(idx as int + 1, len as int);
                     assert(expected.len() == (len - 1) as nat);
-                    assert forall|m: int| #![auto] 0 <= m < expected.len() implies self.spec_seq()[m] == expected[m] by {
+                    assert forall|m: int| 0 <= m < expected.len() implies (#[trigger] self.spec_seq()[m]) == expected[m] by {
                         if m < idx as int {
                             assert(expected[m] == old_seq[m]);
                             assert(out_vec@[m]@ == old_seq[m]);

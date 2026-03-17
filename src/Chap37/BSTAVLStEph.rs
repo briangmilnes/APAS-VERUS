@@ -153,7 +153,7 @@ pub mod BSTAVLStEph {
                 inserted.spec_bstavlsteph_wf(),
                 tree_is_avl::<T>(inserted.spec_root()),
                 inserted.spec_root().tree_contains(value),
-                forall|x: T| #![auto] inserted.spec_root().tree_contains(x) <==>
+                forall|x: T| (#[trigger] inserted.spec_root().tree_contains(x)) <==>
                     (self.spec_root().tree_contains(x) || x == value);
         fn contains(&self, target: &T) -> (found: bool)
             requires
@@ -179,7 +179,7 @@ pub mod BSTAVLStEph {
             !(tree is Leaf),
         ensures
             rotated.tree_is_bst(),
-            forall|x: T| #![auto] rotated.tree_contains(x) == tree.tree_contains(x),
+            forall|x: T| (#[trigger] rotated.tree_contains(x)) == tree.tree_contains(x),
             match tree {
                 BalBinTree::Node(outer) => match outer.left {
                     BalBinTree::Node(l) => {
@@ -337,7 +337,7 @@ pub mod BSTAVLStEph {
             !(tree is Leaf),
         ensures
             rotated.tree_is_bst(),
-            forall|x: T| #![auto] rotated.tree_contains(x) == tree.tree_contains(x),
+            forall|x: T| (#[trigger] rotated.tree_contains(x)) == tree.tree_contains(x),
             match tree {
                 BalBinTree::Node(outer) => match outer.right {
                     BalBinTree::Node(r) => {
@@ -514,7 +514,7 @@ pub mod BSTAVLStEph {
             avl_balanced(balanced),
             balanced.spec_height() <= tree.spec_height(),
             balanced.spec_height() + 1 >= tree.spec_height(),
-            forall|x: T| #![auto] balanced.tree_contains(x) == tree.tree_contains(x),
+            forall|x: T| (#[trigger] balanced.tree_contains(x)) == tree.tree_contains(x),
             match tree {
                 BalBinTree::Node(inner) => {
                     let lh = inner.left.spec_height() as int;
@@ -791,7 +791,7 @@ pub mod BSTAVLStEph {
             inserted.tree_contains(value),
             inserted.spec_height() <= node.spec_height() + 1,
             inserted.spec_height() >= node.spec_height(),
-            forall|x: T| #![auto] inserted.tree_contains(x) <==>
+            forall|x: T| (#[trigger] inserted.tree_contains(x)) <==>
                 (node.tree_contains(x) || x == value),
         decreases node.spec_size(),
     {

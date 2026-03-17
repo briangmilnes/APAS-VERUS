@@ -42,7 +42,7 @@ pub mod BSTPlainMtEph {
         ensures
             inserted.tree_is_bst(),
             inserted.tree_contains(value),
-            forall|x: T| #![auto] inserted.tree_contains(x) <==>
+            forall|x: T| (#[trigger] inserted.tree_contains(x)) <==>
                 (node.tree_contains(x) || x == value),
             inserted.spec_size() <= node.spec_size() + 1,
             inserted.spec_height() <= node.spec_height() + 1,
@@ -264,7 +264,7 @@ pub mod BSTPlainMtEph {
             ensures self.spec_bstplainmteph_wf(),
                     match r {
                         Ok(_) => self@.tree_contains(value)
-                            && forall|x: T| #![auto] self@.tree_contains(x) <==>
+                            && forall|x: T| (#[trigger] self@.tree_contains(x)) <==>
                                 (old(self)@.tree_contains(x) || x == value),
                         Err(_) => self@ == old(self)@,
                     };

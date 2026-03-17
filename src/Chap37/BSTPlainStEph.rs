@@ -110,7 +110,7 @@ pub mod BSTPlainStEph {
                 inserted.spec_bstplainsteph_wf(),
                 inserted.spec_root().tree_is_bst(),
                 inserted.spec_root().tree_contains(value),
-                forall|x: T| #![auto] inserted.spec_root().tree_contains(x) <==>
+                forall|x: T| (#[trigger] inserted.spec_root().tree_contains(x)) <==>
                     (self.spec_root().tree_contains(x) || x == value);
         fn contains(&self, target: &T) -> (found: bool)
             requires
@@ -132,7 +132,7 @@ pub mod BSTPlainStEph {
                 deleted.spec_bstplainsteph_wf(),
                 deleted.spec_root().tree_is_bst(),
                 !deleted.spec_root().tree_contains(*target),
-                forall|x: T| #![auto] deleted.spec_root().tree_contains(x) <==>
+                forall|x: T| (#[trigger] deleted.spec_root().tree_contains(x)) <==>
                     (self.spec_root().tree_contains(x) && x != *target);
         fn minimum(&self) -> (min: Option<&T>)
             requires
@@ -267,7 +267,7 @@ pub mod BSTPlainStEph {
         ensures
             inserted.tree_is_bst(),
             inserted.tree_contains(value),
-            forall|x: T| #![auto] inserted.tree_contains(x) <==>
+            forall|x: T| (#[trigger] inserted.tree_contains(x)) <==>
                 (node.tree_contains(x) || x == value),
         decreases node.spec_size(),
     {
@@ -524,9 +524,9 @@ pub mod BSTPlainStEph {
             pair.0.tree_is_bst(),
             node.tree_contains(pair.1),
             !pair.0.tree_contains(pair.1),
-            forall|x: T| #![auto] pair.0.tree_contains(x) <==>
+            forall|x: T| (#[trigger] pair.0.tree_contains(x)) <==>
                 (node.tree_contains(x) && x != pair.1),
-            forall|x: T| #![auto] node.tree_contains(x) ==> T::le(pair.1, x),
+            forall|x: T| (#[trigger] node.tree_contains(x)) ==> T::le(pair.1, x),
         decreases node.spec_size(),
     {
         match node {
@@ -641,7 +641,7 @@ pub mod BSTPlainStEph {
         ensures
             deleted.tree_is_bst(),
             !deleted.tree_contains(*target),
-            forall|x: T| #![auto] deleted.tree_contains(x) <==>
+            forall|x: T| (#[trigger] deleted.tree_contains(x)) <==>
                 (node.tree_contains(x) && x != *target),
         decreases node.spec_size(),
     {
