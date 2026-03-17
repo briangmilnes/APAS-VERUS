@@ -112,7 +112,7 @@ broadcast use {
             ensures constructed@.finite(), constructed.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn filter<F: PredMt<T> + Clone>(
+        fn filter<F: Pred<T> + Clone>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
@@ -273,7 +273,7 @@ broadcast use {
         // PARALLEL: filter using divide-and-conquer with sequential cutoff
         // Work: Θ(n), Span: Θ(log n) when parallel
         #[verifier::external_body]
-        fn filter<F: PredMt<T> + Clone>(
+        fn filter<F: Pred<T> + Clone>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,

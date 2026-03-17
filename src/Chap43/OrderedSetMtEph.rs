@@ -292,7 +292,7 @@ pub mod OrderedSetMtEph {
         }
 
         #[verifier::external_body]
-        fn filter<F: PredMt<T>>(
+        fn filter<F: Pred<T>>(
             &mut self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,

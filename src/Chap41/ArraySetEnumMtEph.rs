@@ -222,7 +222,7 @@ broadcast use {
 
         /// - APAS Cost Spec 41.3: Work u + Σ W(f(x)), Span 1 + max S(f(x))
         /// - Claude-Opus-4.6: Work Θ(u + Σ W(f(x))), Span Θ(1 + max S(f(x))) -- agrees with APAS; parallel filter via join().
-        fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (filtered: Self)
+        fn filter<F: Fn(usize) -> bool + Send + Sync + 'static + Clone>(&self, f: F) -> (filtered: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
                 forall|i: usize| i < self.spec_universe_size() ==> #[trigger] f.requires((i,)),
@@ -578,7 +578,7 @@ broadcast use {
             constructed
         }
 
-        fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (filtered: Self)
+        fn filter<F: Fn(usize) -> bool + Send + Sync + 'static + Clone>(&self, f: F) -> (filtered: Self)
             ensures
                 filtered@.finite(),
                 filtered@.subset_of(self@),

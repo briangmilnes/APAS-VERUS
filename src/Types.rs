@@ -247,7 +247,7 @@ broadcast use {
 
     // Re-export MT traits from Concurrency (canonical definitions)
     pub use crate::Concurrency::Concurrency::{
-        StTInMtT, MtT, MtKey, MtVal, MtFn, MtFnClone, MtReduceFn, PredMt, Pred, PredVal,
+        StTInMtT, MtT, MtKey, MtVal, MtReduceFn, Pred,
     };
 
 

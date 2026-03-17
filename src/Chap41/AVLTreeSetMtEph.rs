@@ -145,7 +145,7 @@ broadcast use {
                 constructed.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn filter<F: PredMt<T> + Clone>(
+        fn filter<F: Pred<T> + Clone>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
@@ -292,7 +292,7 @@ broadcast use {
         
         // Work: Θ(n), Span: Θ(log n)
         #[verifier::external_body]
-        fn filter<F: PredMt<T> + Clone>(
+        fn filter<F: Pred<T> + Clone>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
@@ -309,7 +309,7 @@ broadcast use {
                 vals
             };
 
-            fn parallel_filter<T: StTInMtT + Ord + 'static, F: PredMt<T> + Clone>(vals: Vec<T>, f: F) -> Vec<T> {
+            fn parallel_filter<T: StTInMtT + Ord + 'static, F: Pred<T> + Clone>(vals: Vec<T>, f: F) -> Vec<T> {
                 let n = vals.len();
                 if n == 0 {
                     return Vec::new();
