@@ -227,43 +227,7 @@ broadcast use {
             ensures constructed@.finite()
         {
             let mut vals = seq.values_in_order();
-
-            fn parallel_sort<T: StTInMtT + Ord + 'static>(mut vals: Vec<T>) -> Vec<T> {
-                let n = vals.len();
-                if n <= 1 {
-                    return vals;
-                }
-                if n <= SEQUENTIAL_CUTOFF {
-                    vals.sort();
-                    return vals;
-                }
-
-                let mid = n / 2;
-                let right_vals = vals.split_off(mid);
-                let left_vals = vals;
-
-                let Pair(left_sorted, right_sorted) =
-                    ParaPair!(move || parallel_sort(left_vals), move || parallel_sort(right_vals));
-
-                // Merge sorted halves
-                let mut constructed = Vec::with_capacity(n);
-                let mut i = 0;
-                let mut j = 0;
-                while i < left_sorted.len() && j < right_sorted.len() {
-                    if left_sorted[i] <= right_sorted[j] {
-                        constructed.push(left_sorted[i].clone());
-                        i += 1;
-                    } else {
-                        constructed.push(right_sorted[j].clone());
-                        j += 1;
-                    }
-                }
-                constructed.extend_from_slice(&left_sorted[i..]);
-                constructed.extend_from_slice(&right_sorted[j..]);
-                constructed
-            }
-
-            vals = parallel_sort(vals);
+            vals = parallel_sort_set(vals);
             vals.dedup();
             AVLTreeSetMtPer {
                 elements: AVLTreeSeqMtPerS::from_vec(vals),
@@ -603,6 +567,44 @@ broadcast use {
     }
 
     } // verus!
+
+    // 14. parallel helpers outside verus!
+
+    /// Recursive parallel merge sort via divide-and-conquer with ParaPair.
+    fn parallel_sort_set<T: StTInMtT + Ord + 'static>(mut vals: Vec<T>) -> Vec<T> {
+        let n = vals.len();
+        if n <= 1 {
+            return vals;
+        }
+        if n <= SEQUENTIAL_CUTOFF {
+            vals.sort();
+            return vals;
+        }
+
+        let mid = n / 2;
+        let right_vals = vals.split_off(mid);
+        let left_vals = vals;
+
+        let Pair(left_sorted, right_sorted) =
+            ParaPair!(move || parallel_sort_set(left_vals), move || parallel_sort_set(right_vals));
+
+        // Merge sorted halves.
+        let mut merged = Vec::with_capacity(n);
+        let mut i = 0;
+        let mut j = 0;
+        while i < left_sorted.len() && j < right_sorted.len() {
+            if left_sorted[i] <= right_sorted[j] {
+                merged.push(left_sorted[i].clone());
+                i += 1;
+            } else {
+                merged.push(right_sorted[j].clone());
+                j += 1;
+            }
+        }
+        merged.extend_from_slice(&left_sorted[i..]);
+        merged.extend_from_slice(&right_sorted[j..]);
+        merged
+    }
 
     // 12. macros
 
