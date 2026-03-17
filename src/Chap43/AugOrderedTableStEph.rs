@@ -68,7 +68,6 @@ broadcast use {
 
     // 7. free functions (calculate_reduction)
 
-    #[verifier::external_body]
     pub fn calculate_reduction<K: StT + Ord, V: StT, F>(
         base: &OrderedTableStEph<K, V>,
         reducer: &F,
@@ -76,26 +75,28 @@ broadcast use {
     ) -> (reduced: V)
     where
         F: Fn(&V, &V) -> V + Clone,
+        requires forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
         ensures base@.dom().finite(),
     {
-        if base.size() == 0 {
+        let pairs = base.collect();
+        let sz = pairs.length();
+        if sz == 0 {
             return identity.clone();
         }
-
-        let pairs = base.collect();
-        let mut reduced = identity.clone();
-        let mut first = true;
-
-        for i in 0..pairs.length() {
+        let mut reduced = pairs.nth(0).1.clone();
+        let mut i: usize = 1;
+        while i < sz
+            invariant
+                1 <= i <= pairs@.len(),
+                sz as nat == pairs@.len(),
+                pairs.spec_avltreeseqstper_wf(),
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+            decreases pairs@.len() - i,
+        {
             let pair = pairs.nth(i);
-            if first {
-                reduced = pair.1.clone();
-                first = false;
-            } else {
-                reduced = reducer(&reduced, &pair.1);
-            }
+            reduced = reducer(&reduced, &pair.1);
+            i += 1;
         }
-
         reduced
     }
 
@@ -187,7 +188,11 @@ broadcast use {
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
         /// - Claude-Opus-4.6: Work Θ(n^2), Span Θ(n^2) -- delegates to OrderedTableStEph.tabulate (sequential insert loop)
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
-            requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>()
+            requires
+                keys.spec_arraysetsteph_wf(),
+                forall|k: &K| f.requires((k,)),
+                obeys_feq_full::<K>(),
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
             ensures
                 tabulated@.dom() =~= keys@,
                 tabulated.spec_augorderedtablesteph_wf(),
@@ -199,12 +204,13 @@ broadcast use {
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to OrderedTableStEph.map (collect + rebuild)
         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (mapped: Self)
-            requires forall|k: &K, v: &V| f.requires((k, v))
+            requires self.spec_augorderedtablesteph_wf(), forall|k: &K, v: &V| f.requires((k, v))
             ensures mapped@.dom() =~= self@.dom(), mapped@.dom().finite();
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to OrderedTableStEph.filter (collect + filter + rebuild)
         fn filter<G: Fn(&K, &V) -> B>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
             requires
+                self.spec_augorderedtablesteph_wf(),
                 forall|k: &K, v: &V| f.requires((k, v)),
                 forall|k: K, v: V, keep: bool| f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
             ensures
@@ -325,6 +331,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then partitions by key
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized,
+            requires old(self).spec_augorderedtablesteph_wf(),
             ensures
                 self@.dom().finite(),
                 old(self)@.dom().finite(),
@@ -335,13 +342,19 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to union (linear merge)
         fn join_key(&mut self, other: Self)
-            requires obeys_feq_clone::<K>(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
+            requires
+                old(self).spec_augorderedtablesteph_wf(),
+                other.spec_augorderedtablesteph_wf(),
+                obeys_feq_clone::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                obeys_view_eq::<K>(),
             ensures
                 self@.dom() =~= old(self)@.dom().union(other@.dom()),
                 self@.dom().finite();
         /// - APAS: Work Θ(log n + m), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then filters by range
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+            requires self.spec_augorderedtablesteph_wf(),
             ensures
                 range@.dom().finite(),
                 range@.dom().subset_of(self@.dom());
@@ -366,6 +379,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then partitions by rank
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized,
+            requires old(self).spec_augorderedtablesteph_wf(),
             ensures
                 self@.dom().finite(),
                 old(self)@.dom().finite(),
@@ -380,6 +394,7 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- get_key_range + calculate_reduction
         fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
+            requires self.spec_augorderedtablesteph_wf(),
             ensures self@.dom().finite();
     }
 
@@ -391,6 +406,7 @@ broadcast use {
     {
         open spec fn spec_augorderedtablesteph_wf(&self) -> bool {
             self.base_table.spec_orderedtablesteph_wf()
+            && forall|v1: &V, v2: &V| #[trigger] self.reducer.requires((v1, v2))
         }
 
         fn size(&self) -> (count: usize)
@@ -495,7 +511,6 @@ broadcast use {
             r
         }
 
-        #[verifier::external_body]
         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (mapped: Self)
         {
             let new_base = self.base_table.map(f);
@@ -507,7 +522,7 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof { lemma_aug_view(self); lemma_aug_view(&r); }
             r
         }
 
@@ -575,7 +590,6 @@ broadcast use {
             self.base_table.collect()
         }
 
-        #[verifier::external_body]
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
             ensures
@@ -584,10 +598,10 @@ broadcast use {
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t),
         {
+            proof { lemma_aug_view(self); }
             self.base_table.first_key()
         }
 
-        #[verifier::external_body]
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
             ensures
@@ -596,10 +610,10 @@ broadcast use {
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v),
         {
+            proof { lemma_aug_view(self); }
             self.base_table.last_key()
         }
 
-        #[verifier::external_body]
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             ensures
@@ -608,10 +622,10 @@ broadcast use {
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
         {
+            proof { lemma_aug_view(self); }
             self.base_table.previous_key(k)
         }
 
-        #[verifier::external_body]
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             ensures
@@ -620,6 +634,7 @@ broadcast use {
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
         {
+            proof { lemma_aug_view(self); }
             self.base_table.next_key(k)
         }
 
@@ -659,22 +674,23 @@ broadcast use {
             (left, found_value, right)
         }
 
-        #[verifier::external_body]
         fn join_key(&mut self, other: Self)
         {
+            let self_size = self.base_table.size();
+            let other_size = other.base_table.size();
             let old_reduction = self.cached_reduction.clone();
             let other_reduction = other.cached_reduction.clone();
-            let other_size = other.base_table.size();
 
             self.base_table.join_key(other.base_table);
 
-            if self.base_table.size() == 0 {
+            if self_size == 0 {
                 self.cached_reduction = other_reduction;
             } else if other_size == 0 {
                 self.cached_reduction = old_reduction;
             } else {
                 self.cached_reduction = (self.reducer)(&old_reduction, &other_reduction);
             }
+            proof { lemma_aug_view(self); }
         }
 
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
@@ -698,7 +714,6 @@ broadcast use {
             r
         }
 
-        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             ensures
@@ -706,10 +721,10 @@ broadcast use {
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
         {
+            proof { lemma_aug_view(self); }
             self.base_table.rank_key(k)
         }
 
-        #[verifier::external_body]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
             ensures
@@ -718,6 +733,7 @@ broadcast use {
                 selected matches Some(k) ==> self@.dom().contains(k@),
                 selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int,
         {
+            proof { lemma_aug_view(self); }
             self.base_table.select_key(i)
         }
 
@@ -812,12 +828,13 @@ broadcast use {
     where
         F: Fn(&V, &V) -> V + Clone,
     {
-        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
+            let base_cloned = self.base_table.clone();
+            proof { assume(base_cloned@ == self.base_table@); }
             Self {
-                base_table: self.base_table.clone(),
+                base_table: base_cloned,
                 cached_reduction: self.cached_reduction.clone(),
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
