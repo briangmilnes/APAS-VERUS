@@ -156,7 +156,8 @@ pub mod BinaryHeapPQ {
                 ensures
                     pq@.len() == 1,
                     pq@.to_multiset() =~= Multiset::empty().insert(element@),
-                    pq.spec_binaryheappq_wf();
+                    pq.spec_binaryheappq_wf(),
+                    Self::spec_is_exec_heap(pq.spec_seq());
 
             fn find_min(&self) -> (min_elem: Option<&T>)
                 requires
@@ -912,6 +913,11 @@ pub mod BinaryHeapPQ {
                     assert(pq@.len() == 1);
                     assert(pq@[0] == element@);
                     assert(pq@ =~= Seq::<T::V>::empty().push(element@));
+                    // Heap property: 1-element sequence is trivially a heap.
+                    assert forall|i: int| 0 <= i < pq.spec_seq().len()
+                        implies #[trigger] Self::spec_exec_heap_inv_at(pq.spec_seq(), i) by {
+                        // Only i = 0. left_child = 1 >= 1, right_child = 2 >= 1.
+                    }
                 }
                 pq
             }

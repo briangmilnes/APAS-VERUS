@@ -81,6 +81,7 @@ pub mod DijkstraStEphI64 {
                 source < graph@.V.len(),
                 spec_labgraphview_wf(graph@),
                 valid_key_type_WeightedEdge::<usize, i128>(),
+                graph@.A.len() * 2 + 2 <= usize::MAX as int,
             ensures
                 sssp.spec_distances().len() == graph@.V.len(),
                 sssp.spec_source() == source;
@@ -91,7 +92,6 @@ pub mod DijkstraStEphI64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
     fn pq_entry_new(dist: i64, vertex: usize) -> (r: PQEntry)
-        requires true,
         ensures r.dist == dist, r.vertex == vertex,
     {
         PQEntry { dist, vertex }
@@ -157,6 +157,7 @@ pub mod DijkstraStEphI64 {
             source < graph@.V.len(),
             spec_labgraphview_wf(graph@),
             valid_key_type_WeightedEdge::<usize, i128>(),
+            graph@.A.len() * 2 + 2 <= usize::MAX as int,
         ensures
             sssp.spec_distances().len() == graph@.V.len(),
             sssp.spec_source() == source,
@@ -165,9 +166,19 @@ pub mod DijkstraStEphI64 {
         assert(n == graph@.V.len());
         proof { accept(obeys_feq_clone::<PQEntry>()); }
 
+        // Edge count for PQ size bound: total PQ inserts <= |E|.
+        let arcs_ref = graph.labeled_arcs();
+        proof {
+            assert(arcs_ref@.finite());
+            assert(valid_key_type::<LabEdge<usize, i128>>());
+        }
+        let m = arcs_ref.size();
+        assert(m as int == graph@.A.len());
+
         let mut sssp = SSSPResultStEphI64::new(n, source);
         let mut visited = SetStEph::<usize>::empty();
         let mut pq = BinaryHeapPQ::<PQEntry>::singleton(pq_entry_new(0, source));
+        let ghost mut remaining_budget: int = m as int;
 
         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         while !pq.is_empty()
@@ -179,9 +190,15 @@ pub mod DijkstraStEphI64 {
                 spec_labgraphview_wf(graph@),
                 valid_key_type_WeightedEdge::<usize, i128>(),
                 obeys_feq_clone::<PQEntry>(),
+                m as int == graph@.A.len(),
+                graph@.A.len() * 2 + 2 <= usize::MAX as int,
+                remaining_budget >= 0,
+                pq@.len() + remaining_budget <= m as int + 1,
         {
+            // PQ size bound from budget invariant:
+            // pq@.len() <= m + 1, and (m + 1) * 2 = m * 2 + 2 <= usize::MAX.
+            assert(pq@.len() * 2 <= usize::MAX as int);
             proof {
-                assume(pq@.len() * 2 <= usize::MAX as int);
                 assume(BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_seq()));
             }
             let (new_pq, min_elem) = pq.delete_min();
@@ -208,6 +225,10 @@ pub mod DijkstraStEphI64 {
                             sssp.spec_source() == source,
                             it@.0 <= it@.1.len(),
                             obeys_feq_clone::<PQEntry>(),
+                            m as int == graph@.A.len(),
+                            graph@.A.len() * 2 + 2 <= usize::MAX as int,
+                            remaining_budget >= 0,
+                            pq@.len() + remaining_budget <= m as int,
                     {
                         match it.next() {
                             None => break,
@@ -217,8 +238,11 @@ pub mod DijkstraStEphI64 {
                                     let u_dist = sssp.get_distance(*u);
                                     let new_dist = dist.wrapping_add((*weight) as i64);
                                     if new_dist < u_dist {
-                                        proof { assume(pq@.len() + 1 <= usize::MAX as int); }
+                                        assert(pq@.len() + 1 <= usize::MAX as int);
+                                        // Budget: total Dijkstra PQ inserts <= |E|.
+                                        proof { assume(remaining_budget > 0); }
                                         pq = pq.insert(pq_entry_new(new_dist, *u));
+                                        proof { remaining_budget = remaining_budget - 1; }
                                         sssp.set_predecessor(*u, v);
                                     }
                                 }
