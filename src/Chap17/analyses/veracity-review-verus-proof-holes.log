@@ -21,11 +21,11 @@ Table of Contents:
 =================================================================
 
 ℹ MathSeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:714: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:726: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap17/MathSeq.rs:714: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap17/MathSeq.rs:726: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:714: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:726: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap17/MathSeq.rs:714: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap17/MathSeq.rs:726: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
 
 =================================================================
 2. Depends Upon
@@ -76,11 +76,11 @@ Structural False Positives: 2 detected (language limitations, not missing proof)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 09:29:51 -07:00
-Ended:     2026-03-17 09:29:51 -07:00
-Duration:  8ms
+Started:   2026-03-17 10:08:59 -07:00
+Ended:     2026-03-17 10:08:59 -07:00
+Duration:  15ms
 
 Full output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
-on:  8ms
+n:  15ms
 
 Full output: src/Chap17/analyses/veracity-review-verus-proof-holes.log

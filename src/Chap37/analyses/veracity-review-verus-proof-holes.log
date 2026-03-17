@@ -21,118 +21,118 @@ Table of Contents:
 =================================================================
 
 ❌ AVLTreeSeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1117: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeq.rs:1117: error: external_body - #[verifier::external_body]
       1118 |         fn next(&mut self) -> (next: Option<&'a T>)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1226: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1227: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1228: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1251: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1117: info: structural_false_positive STD_TRAIT_IMPL next [high]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1226: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1227: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1228: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1251: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeq.rs:1226: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeq.rs:1227: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeq.rs:1228: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeq.rs:1251: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeq.rs:1117: info: structural_false_positive STD_TRAIT_IMPL next [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeq.rs:1226: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeq.rs:1227: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeq.rs:1228: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeq.rs:1251: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
    Holes: 1 total
       1 × external_body
    Info: 4 total
    Proof functions: 3 total (3 clean, 0 holed)
 ❌ AVLTreeSeqMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:509: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqMtPer.rs:509: error: external_body - #[verifier::external_body]
        510 |     fn build_balanced_from_slice<T: StTInMtT>(a: &[T]) -> (link: Link<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:630: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqMtPer.rs:630: error: external_body - #[verifier::external_body]
        631 |         fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:722: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:723: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:724: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:737: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:630: info: structural_false_positive OPAQUE_EXTERNAL subseq_copy [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:722: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:723: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:724: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:737: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqMtPer.rs:722: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqMtPer.rs:723: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqMtPer.rs:724: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqMtPer.rs:737: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqMtPer.rs:630: info: structural_false_positive OPAQUE_EXTERNAL subseq_copy [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqMtPer.rs:722: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqMtPer.rs:723: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqMtPer.rs:724: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqMtPer.rs:737: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
    Holes: 2 total
       2 × external_body
    Info: 4 total
    Proof functions: 2 total (2 clean, 0 holed)
 ℹ AVLTreeSeqStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:690: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1108: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1109: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1110: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStEph.rs:690: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStEph.rs:1108: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStEph.rs:1109: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStEph.rs:1110: info: accept()
    Info: 4 total
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:690: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1108: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1109: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1110: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStEph.rs:690: info: structural_false_positive EQ_CLONE_ASSUME clone_link [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStEph.rs:1108: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStEph.rs:1109: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStEph.rs:1110: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    2 clean proof functions
 ℹ AVLTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:785: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:786: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:787: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:802: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStPer.rs:785: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStPer.rs:786: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStPer.rs:787: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStPer.rs:802: info: accept()
    Info: 4 total
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:785: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:786: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:787: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:802: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStPer.rs:785: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStPer.rs:786: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStPer.rs:787: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/AVLTreeSeqStPer.rs:802: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
    2 clean proof functions
 ℹ BSTAVLMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:506: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:530: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:541: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:551: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:562: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTAVLMtEph.rs:506: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTAVLMtEph.rs:530: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTAVLMtEph.rs:541: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTAVLMtEph.rs:551: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTAVLMtEph.rs:562: info: accept()
    Info: 5 total
    1 clean proof function
 ✓ BSTAVLStEph.rs
    2 clean proof functions
 ℹ BSTBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:321: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:345: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:356: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:366: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:377: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTBBAlphaMtEph.rs:321: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTBBAlphaMtEph.rs:345: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTBBAlphaMtEph.rs:356: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTBBAlphaMtEph.rs:366: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTBBAlphaMtEph.rs:377: info: accept()
    Info: 5 total
 ✓ BSTBBAlphaStEph.rs
 ℹ BSTPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:320: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:344: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:355: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:365: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:376: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTPlainMtEph.rs:320: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTPlainMtEph.rs:344: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTPlainMtEph.rs:355: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTPlainMtEph.rs:365: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTPlainMtEph.rs:376: info: accept()
    Info: 5 total
 ✓ BSTPlainStEph.rs
    3 clean proof functions
 ℹ BSTRBMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:950: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:971: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:980: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:989: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:998: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTRBMtEph.rs:950: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTRBMtEph.rs:971: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTRBMtEph.rs:980: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTRBMtEph.rs:989: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTRBMtEph.rs:998: info: accept()
    Info: 5 total
 ✓ BSTRBStEph.rs
    1 clean proof function
 ℹ BSTSetAVLMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetAVLMtEph.rs:407: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTSetAVLMtEph.rs:407: info: accept()
    Info: 1 total
 ℹ BSTSetBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:333: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTSetBBAlphaMtEph.rs:333: info: accept()
    Info: 1 total
 ℹ BSTSetPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:389: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTSetPlainMtEph.rs:389: info: accept()
    Info: 1 total
 ℹ BSTSetRBMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:410: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTSetRBMtEph.rs:410: info: accept()
    Info: 1 total
 ℹ BSTSetSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:408: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTSetSplayMtEph.rs:408: info: accept()
    Info: 1 total
 ℹ BSTSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1705: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1723: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1732: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1741: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1750: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTSplayMtEph.rs:1705: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTSplayMtEph.rs:1723: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTSplayMtEph.rs:1732: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTSplayMtEph.rs:1741: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap37/BSTSplayMtEph.rs:1750: info: accept()
    Info: 5 total
 ✓ BSTSplayStEph.rs
    1 clean proof function
@@ -223,8 +223,13 @@ Structural False Positives: 18 detected (language limitations, not missing proof
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 09:35:31 -07:00
-Ended:     2026-03-17 09:35:32 -07:00
-Duration:  144ms
+Started:   2026-03-17 10:09:00 -07:00
+Ended:     2026-03-17 10:09:00 -07:00
+Duration:  291ms
+
+Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
+07:00
+Ended:     2026-03-17 10:09:00 -07:00
+Duration:  291ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log

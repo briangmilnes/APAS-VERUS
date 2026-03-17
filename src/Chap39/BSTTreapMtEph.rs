@@ -351,7 +351,6 @@ pub mod BSTTreapMtEph {
     }
 
     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
-        requires true,
         ensures
             Lnk::spec_size_link(&c) == Lnk::spec_size_link(link),
             Lnk::spec_link_size_wf(link) ==> Lnk::spec_link_size_wf(&c),
@@ -387,7 +386,6 @@ pub mod BSTTreapMtEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (sz: usize)
-        requires true,
         ensures sz as nat == Lnk::spec_size_link(link),
     {
         match link {
