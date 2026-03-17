@@ -238,7 +238,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let count = inner.size();
-            proof { accept(count == self@.len()); }
+            proof { assume(count == self@.len()); }
             read_handle.release_read();
             count
         }
@@ -266,7 +266,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let found = inner.find(x);
-            proof { accept(found == self@.contains(x@)); }
+            proof { assume(found == self@.contains(x@)); }
             read_handle.release_read();
             found
         }
@@ -382,7 +382,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let first = inner.first();
-            proof { accept(inner@ =~= self@); }
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             first
         }
@@ -394,7 +394,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let last = inner.last();
-            proof { accept(inner@ =~= self@); }
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             last
         }
@@ -406,7 +406,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let predecessor = inner.previous(k);
-            proof { accept(inner@ =~= self@); }
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             predecessor
         }
@@ -418,7 +418,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let successor = inner.next(k);
-            proof { accept(inner@ =~= self@); }
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             successor
         }
@@ -431,8 +431,8 @@ pub mod OrderedSetMtEph {
             self.ghost_locked_set = Ghost(empty_val@);
             write_handle.release_write(empty_val);
             proof {
-                accept(left.spec_orderedsetsteph_wf());
-                accept(right.spec_orderedsetsteph_wf());
+                assume(left.spec_orderedsetsteph_wf());
+                assume(right.spec_orderedsetsteph_wf());
             }
             (from_st(left), found, from_st(right))
         }
@@ -456,7 +456,7 @@ pub mod OrderedSetMtEph {
             let inner = read_handle.borrow();
             let range = inner.get_range(k1, k2);
             read_handle.release_read();
-            proof { accept(range.spec_orderedsetsteph_wf()); }
+            proof { assume(range.spec_orderedsetsteph_wf()); }
             from_st(range)
         }
 
@@ -467,7 +467,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let rank = inner.rank(k);
-            proof { accept(inner@ =~= self@); }
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             rank
         }
@@ -479,7 +479,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let selected = inner.select(i);
-            proof { accept(inner@ =~= self@); }
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             selected
         }
@@ -492,8 +492,8 @@ pub mod OrderedSetMtEph {
             self.ghost_locked_set = Ghost(empty_val@);
             write_handle.release_write(empty_val);
             proof {
-                accept(left.spec_orderedsetsteph_wf());
-                accept(right.spec_orderedsetsteph_wf());
+                assume(left.spec_orderedsetsteph_wf());
+                assume(right.spec_orderedsetsteph_wf());
             }
             (from_st(left), from_st(right))
         }

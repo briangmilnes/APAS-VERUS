@@ -505,6 +505,14 @@ feature gates, no module gating in lib.rs.
 
 **Never modify `~/projects/verus/`**. Find workarounds within APAS-VERUS.
 
+**Never modify `~/projects/veracity/`**. Veracity is a separate tool maintained by a
+separate AI agent. APAS-VERUS agents must not modify veracity source code, build veracity,
+or change veracity's behavior. If you have feedback about veracity's output (wrong counts,
+missing detections, etc.), write it to a file in `plans/` and report it — do not attempt
+to fix veracity yourself. The only veracity interactions allowed are: (1) running the
+existing binaries via `scripts/holes.sh`, `scripts/all-holes-by-chap.sh`, etc., and
+(2) reading veracity's output logs.
+
 **If you think Verus can't do X**: Search `src/experiments/` for existing tests, or propose
 a new experiment. Do not assume limitations without evidence.
 

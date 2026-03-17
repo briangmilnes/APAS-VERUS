@@ -255,13 +255,15 @@ Real Actionable Holes: 9 (10 total - 1 structural FPs in count)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:42:02 -07:00
-Ended:     2026-03-17 11:42:02 -07:00
-Duration:  42ms
+Started:   2026-03-17 12:29:05 -07:00
+Ended:     2026-03-17 12:29:05 -07:00
+Duration:  47ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
-2 -07:00
-Ended:     2026-03-17 11:42:02 -07:00
-Duration:  42ms
+=================================
+
+Started:   2026-03-17 12:29:05 -07:00
+Ended:     2026-03-17 12:29:05 -07:00
+Duration:  47ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
