@@ -90,8 +90,7 @@ pub mod TopDownDPMtPer {
         s: Seq<char>,
         t: Seq<char>,
     ) -> bool {
-        forall|a: usize, b: usize| #![auto]
-            memo.contains_key((a, b)) ==>
+        forall|a: usize, b: usize| #[trigger] memo.contains_key((a, b)) ==>
             memo[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
     }
 
@@ -201,8 +200,7 @@ pub mod TopDownDPMtPer {
         assert(result as nat == spec_med_fn(s, t, i as nat, j as nat));
         let ghost pre_memo = memo@;
         proof {
-            assert forall|a: usize, b: usize| #![auto]
-                pre_memo.contains_key((a, b))
+            assert forall|a: usize, b: usize| #[trigger] pre_memo.contains_key((a, b))
             implies
                 pre_memo[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
             by {
@@ -210,8 +208,7 @@ pub mod TopDownDPMtPer {
             };
         }
         memo.insert(Pair(i, j), result);
-        assert forall|a: usize, b: usize| #![auto]
-            memo@.contains_key((a, b))
+        assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
         implies
             memo@[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
         by {
@@ -335,8 +332,7 @@ pub mod TopDownDPMtPer {
             let ghost pre_insert = current@;
             current.insert(Pair(i, j), dist);
             proof {
-                assert forall|a: usize, b: usize| #![auto]
-                    current@.contains_key((a, b))
+                assert forall|a: usize, b: usize| #[trigger] current@.contains_key((a, b))
                 implies
                     current@[(a, b)] as nat == spec_med_fn(seq_s@, seq_t@, a as nat, b as nat)
                 by {

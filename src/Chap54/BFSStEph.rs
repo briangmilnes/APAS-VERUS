@@ -37,21 +37,21 @@ pub mod BFSStEph {
 
     /// All neighbor indices in the adjacency list are valid vertex indices.
     pub open spec fn spec_bfssteph_wf(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> bool {
-        forall|u: int, i: int| #![auto]
+        forall|u: int, i: int|
             0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len()
-            ==> graph.spec_index(u).spec_index(i) < graph.spec_len()
+            ==> #[trigger] graph.spec_index(u).spec_index(i) < graph.spec_len()
     }
 
     /// Every distance entry is either UNREACHABLE or bounded by n.
     pub open spec fn spec_distances_bounded(distances: &ArraySeqStEphS<N>, n: int) -> bool {
-        forall|j: int| #![auto] 0 <= j < distances.spec_len() ==>
-            distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
+        forall|j: int| 0 <= j < distances.spec_len() ==>
+            #[trigger] distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
     }
 
     /// Every parent entry is either NO_PARENT or a valid vertex index.
     pub open spec fn spec_parents_bounded(parents: &ArraySeqStEphS<N>, n: int) -> bool {
-        forall|j: int| #![auto] 0 <= j < parents.spec_len() ==>
-            parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
+        forall|j: int| 0 <= j < parents.spec_len() ==>
+            #[trigger] parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
     }
 
     // 7. proof fns
@@ -59,7 +59,7 @@ pub mod BFSStEph {
     proof fn lemma_tabulate_all_no_parent(parents: &ArraySeqStEphS<N>, n: int)
         requires
             parents.spec_len() == n,
-            forall|i: int| #![auto] 0 <= i < n ==> parents.spec_index(i) == NO_PARENT,
+            forall|i: int| 0 <= i < n ==> #[trigger] parents.spec_index(i) == NO_PARENT,
         ensures
             spec_parents_bounded(parents, n),
     {}
@@ -77,8 +77,8 @@ pub mod BFSStEph {
             0 <= v < n,
             new_val < n,
             parents.spec_index(v) == new_val,
-            forall|j: int| #![auto] 0 <= j < n && j != v ==>
-                parents.spec_index(j) == old_parents.spec_index(j),
+            forall|j: int| 0 <= j < n && j != v ==>
+                #[trigger] parents.spec_index(j) == old_parents.spec_index(j),
             spec_parents_bounded(old_parents, n),
         ensures
             spec_parents_bounded(parents, n),
@@ -98,8 +98,8 @@ pub mod BFSStEph {
     proof fn lemma_tabulate_all_unreachable(distances: &ArraySeqStEphS<N>, n: int)
         requires
             distances.spec_len() == n,
-            forall|i: int| #![auto] 0 <= i < n ==>
-                distances.spec_index(i) == UNREACHABLE,
+            forall|i: int| 0 <= i < n ==>
+                #[trigger] distances.spec_index(i) == UNREACHABLE,
         ensures
             spec_distances_bounded(distances, n),
     {
@@ -119,8 +119,8 @@ pub mod BFSStEph {
             0 <= v < n,
             new_val < n,
             distances.spec_index(v) == new_val,
-            forall|j: int| #![auto] 0 <= j < n && j != v ==>
-                distances.spec_index(j) == old_distances.spec_index(j),
+            forall|j: int| 0 <= j < n && j != v ==>
+                #[trigger] distances.spec_index(j) == old_distances.spec_index(j),
             spec_distances_bounded(old_distances, n),
         ensures
             spec_distances_bounded(distances, n),
@@ -151,8 +151,8 @@ pub mod BFSStEph {
                 traversal.spec_len() == graph.spec_len(),
                 traversal.spec_index(source as int) == 0usize,
                 spec_distances_bounded(&traversal, graph.spec_len() as int),
-                forall|v: int| #![auto] 0 <= v < traversal.spec_len()
-                    && traversal.spec_index(v) != UNREACHABLE && v != source as int
+                forall|v: int| 0 <= v < traversal.spec_len()
+                    && #[trigger] traversal.spec_index(v) != UNREACHABLE && v != source as int
                     ==> traversal.spec_index(v) > 0usize,
         ;
 
@@ -170,10 +170,10 @@ pub mod BFSStEph {
                 traversal.order.spec_len() > 0,
                 traversal.order.spec_len() <= graph.spec_len(),
                 traversal.order.spec_index(0) == source,
-                forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
-                    ==> traversal.order.spec_index(i) < graph.spec_len(),
+                forall|i: int| 0 <= i < traversal.order.spec_len()
+                    ==> #[trigger] traversal.order.spec_index(i) < graph.spec_len(),
                 spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
-                forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
+                forall|i: int| #![trigger traversal.order.spec_index(i)] 0 <= i < traversal.order.spec_len()
                     ==> traversal.parents.spec_index(
                         traversal.order.spec_index(i) as int) != NO_PARENT,
         ;
@@ -185,15 +185,15 @@ pub mod BFSStEph {
         fn top_down_order(&self) -> (order: &ArraySeqStEphS<N>)
             ensures
                 order.spec_len() == self.spec_order().spec_len(),
-                forall|i: int| #![auto] 0 <= i < order.spec_len() ==>
-                    order.spec_index(i) == self.spec_order().spec_index(i);
+                forall|i: int| 0 <= i < order.spec_len() ==>
+                    #[trigger] order.spec_index(i) == self.spec_order().spec_index(i);
 
         fn bottom_up_order(&self) -> (order: ArraySeqStEphS<N>)
             requires self.spec_order().spec_len() <= usize::MAX,
             ensures
                 order.spec_len() == self.spec_order().spec_len(),
-                forall|i: int| #![auto] 0 <= i < order.spec_len() ==>
-                    order.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i);
+                forall|i: int| 0 <= i < order.spec_len() ==>
+                    #[trigger] order.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i);
     }
 
     // 9. impls
@@ -242,13 +242,13 @@ pub mod BFSStEph {
                 n < usize::MAX,
                 spec_bfssteph_wf(graph),
                 distances.spec_index(source as int) == 0usize,
-                forall|j: int| #![auto] 0 <= j < queue@.len() ==>
-                    queue@[j] < n,
-                forall|j: int| #![auto] 0 <= j < queue@.len() ==>
-                    distances.spec_index(queue@[j] as int) != UNREACHABLE,
+                forall|j: int| 0 <= j < queue@.len() ==>
+                    (#[trigger] queue@[j]) < n,
+                forall|j: int| 0 <= j < queue@.len() ==>
+                    distances.spec_index((#[trigger] queue@[j]) as int) != UNREACHABLE,
                 spec_distances_bounded(&distances, n as int),
-                forall|v: int| #![auto] 0 <= v < distances.spec_len()
-                    && distances.spec_index(v) != UNREACHABLE && v != source as int
+                forall|v: int| 0 <= v < distances.spec_len()
+                    && #[trigger] distances.spec_index(v) != UNREACHABLE && v != source as int
                     ==> distances.spec_index(v) > 0usize,
         {
             let u_opt = queue.pop_front();
@@ -274,13 +274,13 @@ pub mod BFSStEph {
                             u < n,
                             dist < n,
                             *neighbors == graph.spec_index(u as int),
-                            forall|j: int| #![auto] 0 <= j < queue@.len() ==>
-                                queue@[j] < n,
-                            forall|j: int| #![auto] 0 <= j < queue@.len() ==>
-                                distances.spec_index(queue@[j] as int) != UNREACHABLE,
+                            forall|j: int| 0 <= j < queue@.len() ==>
+                                (#[trigger] queue@[j]) < n,
+                            forall|j: int| 0 <= j < queue@.len() ==>
+                                distances.spec_index((#[trigger] queue@[j]) as int) != UNREACHABLE,
                             spec_distances_bounded(&distances, n as int),
-                            forall|w: int| #![auto] 0 <= w < distances.spec_len()
-                                && distances.spec_index(w) != UNREACHABLE && w != source as int
+                            forall|w: int| 0 <= w < distances.spec_len()
+                                && #[trigger] distances.spec_index(w) != UNREACHABLE && w != source as int
                                 ==> distances.spec_index(w) > 0usize,
                         decreases num_neighbors - i
                     {
@@ -356,15 +356,15 @@ pub mod BFSStEph {
                 n < usize::MAX,
                 spec_bfssteph_wf(graph),
                 parents.spec_index(source as int) == source,
-                forall|j: int| #![auto] 0 <= j < queue@.len() ==> queue@[j] < n,
-                forall|j: int| #![auto] 0 <= j < queue@.len() ==>
-                    parents.spec_index(queue@[j] as int) != NO_PARENT,
+                forall|j: int| 0 <= j < queue@.len() ==> (#[trigger] queue@[j]) < n,
+                forall|j: int| 0 <= j < queue@.len() ==>
+                    parents.spec_index((#[trigger] queue@[j]) as int) != NO_PARENT,
                 spec_parents_bounded(&parents, n as int),
                 order@.len() > 0,
                 order@.len() <= n as int,
                 order@[0] == source,
-                forall|j: int| #![auto] 0 <= j < order@.len() ==> order@[j] < n,
-                forall|j: int| #![auto] 0 <= j < order@.len() ==>
+                forall|j: int| 0 <= j < order@.len() ==> (#[trigger] order@[j]) < n,
+                forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==>
                     parents.spec_index(order@[j] as int) != NO_PARENT,
         {
             let u_opt = queue.pop_front();
@@ -388,15 +388,15 @@ pub mod BFSStEph {
                             parents.spec_index(source as int) == source,
                             u < n,
                             *neighbors == graph.spec_index(u as int),
-                            forall|j: int| #![auto] 0 <= j < queue@.len() ==> queue@[j] < n,
-                            forall|j: int| #![auto] 0 <= j < queue@.len() ==>
-                                parents.spec_index(queue@[j] as int) != NO_PARENT,
+                            forall|j: int| 0 <= j < queue@.len() ==> (#[trigger] queue@[j]) < n,
+                            forall|j: int| 0 <= j < queue@.len() ==>
+                                parents.spec_index((#[trigger] queue@[j]) as int) != NO_PARENT,
                             spec_parents_bounded(&parents, n as int),
                             order@.len() > 0,
                             order@.len() <= n as int,
                             order@[0] == source,
-                            forall|j: int| #![auto] 0 <= j < order@.len() ==> order@[j] < n,
-                            forall|j: int| #![auto] 0 <= j < order@.len() ==>
+                            forall|j: int| 0 <= j < order@.len() ==> (#[trigger] order@[j]) < n,
+                            forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==>
                                 parents.spec_index(order@[j] as int) != NO_PARENT,
                         decreases num_neighbors - i
                     {

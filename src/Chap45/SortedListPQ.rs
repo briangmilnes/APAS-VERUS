@@ -287,9 +287,9 @@ broadcast use {
                         insert_pos < n as int ==>
                             TotalOrder::le(
                                 element, self.elements.seq@[insert_pos as int]),
-                        forall|k: int| #![auto] 0 <= k < i as int
+                        forall|k: int| 0 <= k < i as int
                             && k < insert_pos as int ==>
-                            TotalOrder::le(self.elements.seq@[k], element),
+                            TotalOrder::le(#[trigger] self.elements.seq@[k], element),
                 {
                     if insert_pos == n {
                         match TotalOrder::cmp(
@@ -519,9 +519,9 @@ broadcast use {
                                     self.elements.seq@[i as int],
                                     single_seq.seq@[0]);
                                 // Raw push for sorted proof.
-                                assert forall|k: int| #![auto]
+                                assert forall|k: int|
                                     0 <= k < result.seq@.len() implies
-                                    result.seq@[k] == old_result_seq.push(
+                                    #[trigger] result.seq@[k] == old_result_seq.push(
                                         self.elements.seq@[i as int])[k]
                                 by {
                                     if k < old_result_seq.len() as int {
@@ -575,9 +575,9 @@ broadcast use {
                                     other.elements.seq@[j as int],
                                     single_seq.seq@[0]);
                                 // Raw push for sorted proof.
-                                assert forall|k: int| #![auto]
+                                assert forall|k: int|
                                     0 <= k < result.seq@.len() implies
-                                    result.seq@[k] == old_result_seq.push(
+                                    #[trigger] result.seq@[k] == old_result_seq.push(
                                         other.elements.seq@[j as int])[k]
                                 by {
                                     if k < old_result_seq.len() as int {
@@ -653,9 +653,9 @@ broadcast use {
                         axiom_cloned_implies_eq_owned(
                             self.elements.seq@[i as int],
                             single_seq.seq@[0]);
-                        assert forall|k: int| #![auto]
+                        assert forall|k: int|
                             0 <= k < result.seq@.len() implies
-                            result.seq@[k] == old_result_seq.push(
+                            #[trigger] result.seq@[k] == old_result_seq.push(
                                 self.elements.seq@[i as int])[k]
                         by {
                             if k < old_result_seq.len() as int {
@@ -724,9 +724,9 @@ broadcast use {
                         axiom_cloned_implies_eq_owned(
                             other.elements.seq@[j as int],
                             single_seq.seq@[0]);
-                        assert forall|k: int| #![auto]
+                        assert forall|k: int|
                             0 <= k < result.seq@.len() implies
-                            result.seq@[k] == old_result_seq.push(
+                            #[trigger] result.seq@[k] == old_result_seq.push(
                                 other.elements.seq@[j as int])[k]
                         by {
                             if k < old_result_seq.len() as int {
@@ -901,8 +901,8 @@ broadcast use {
                 proof {
                     // seq@ =~= vec@.map(view): chain through spec_index.
                     assert(seq@ =~= vec_view.map(|_i: int, t: T| t@)) by {
-                        assert forall|i: int| #![auto] 0 <= i < seq@.len()
-                        implies seq@[i] == vec_view.map(|_i: int, t: T| t@)[i] by {
+                        assert forall|i: int| 0 <= i < seq@.len()
+                        implies #[trigger] seq@[i] == vec_view.map(|_i: int, t: T| t@)[i] by {
                             assert(seq.spec_index(i) == vec_view[i]);
                         };
                     };
@@ -932,8 +932,8 @@ broadcast use {
                     invariant
                         n == self.elements@.len(),
                         v@.len() == i as int,
-                        forall|k: int| #![auto] 0 <= k < i as int ==>
-                            v@[k] == self.elements.seq@[k],
+                        forall|k: int| 0 <= k < i as int ==>
+                            #[trigger] v@[k] == self.elements.seq@[k],
                 {
                     let elem = self.elements.nth(i).clone();
                     proof {

@@ -208,9 +208,8 @@ pub mod TopDownDPStEph {
         open spec fn spec_memo(&self) -> Map<(usize, usize), usize> { self.memo_table@ }
 
         open spec fn spec_memo_correct(&self) -> bool {
-            forall|a: usize, b: usize| #![auto]
-                self.spec_memo().contains_key((a, b)) ==>
-                self.spec_memo()[(a, b)] as nat == self.spec_med(a as nat, b as nat)
+            forall|a: usize, b: usize| self.spec_memo().contains_key((a, b)) ==>
+                self.spec_memo()[(a, b)] as nat == #[trigger] self.spec_med(a as nat, b as nat)
         }
 
         open spec fn spec_med(&self, i: nat, j: nat) -> nat {
@@ -320,19 +319,17 @@ pub mod TopDownDPStEph {
             assert(result as nat == spec_med_fn(s, t, i as nat, j as nat));
             let ghost pre_memo = self.memo_table@;
             proof {
-                assert forall|a: usize, b: usize| #![auto]
-                    pre_memo.contains_key((a, b))
+                assert forall|a: usize, b: usize| pre_memo.contains_key((a, b))
                 implies
-                    pre_memo[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
+                    pre_memo[(a, b)] as nat == #[trigger] spec_med_fn(s, t, a as nat, b as nat)
                 by {
                     assert(self.spec_med(a as nat, b as nat) == spec_med_fn(s, t, a as nat, b as nat));
                 };
             }
             self.memo_table.insert(Pair(i, j), result);
-            assert forall|a: usize, b: usize| #![auto]
-                self.spec_memo().contains_key((a, b))
+            assert forall|a: usize, b: usize| self.spec_memo().contains_key((a, b))
             implies
-                self.spec_memo()[(a, b)] as nat == self.spec_med(a as nat, b as nat)
+                self.spec_memo()[(a, b)] as nat == #[trigger] self.spec_med(a as nat, b as nat)
             by {
                 if a == i && b == j {
                 } else if pre_memo.contains_key((a, b)) {
