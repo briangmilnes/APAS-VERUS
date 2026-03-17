@@ -21,57 +21,57 @@ Table of Contents:
 =================================================================
 
 ℹ MatrixChainMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:496: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:518: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:496: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:518: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:496: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:518: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:496: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:518: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
 ℹ MatrixChainMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:408: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:426: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtPer.rs:408: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtPer.rs:426: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:408: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:426: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtPer.rs:408: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtPer.rs:426: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
 ℹ MatrixChainStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:370: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:386: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStEph.rs:370: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStEph.rs:386: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:370: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:386: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStEph.rs:370: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStEph.rs:386: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
 ℹ MatrixChainStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:339: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:355: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs:339: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs:355: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:339: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:355: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs:339: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs:355: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
 ℹ OptBinSearchTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:58: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:358: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:380: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:58: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:358: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:380: info: accept()
    Info: 3 total
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:58: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:358: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:380: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:58: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:358: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:380: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
 ℹ OptBinSearchTreeMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:61: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:263: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:281: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:61: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:263: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:281: info: accept()
    Info: 3 total
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:61: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:263: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:281: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:61: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:263: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:281: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
 ℹ OptBinSearchTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:55: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:75: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:55: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:75: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:55: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:75: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:55: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:75: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
 ℹ OptBinSearchTreeStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:55: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:75: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStPer.rs:55: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStPer.rs:75: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:55: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:75: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStPer.rs:55: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStPer.rs:75: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
 
 =================================================================
 2. Depends Upon
@@ -136,9 +136,13 @@ Structural False Positives: 18 detected (language limitations, not missing proof
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 10:55:04 -07:00
-Ended:     2026-03-17 10:55:04 -07:00
-Duration:  24ms
+Started:   2026-03-17 10:43:18 -07:00
+Ended:     2026-03-17 10:43:18 -07:00
+Duration:  28ms
 
 Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log
-src/Chap50/analyses/veracity-review-verus-proof-holes.log
+0:43:18 -07:00
+Ended:     2026-03-17 10:43:18 -07:00
+Duration:  28ms
+
+Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log

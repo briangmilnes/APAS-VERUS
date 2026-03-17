@@ -21,28 +21,28 @@ Table of Contents:
 =================================================================
 
 ℹ BalBinTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:794: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:811: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:832: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:857: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:794: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:811: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:832: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:857: info: accept()
    Info: 4 total
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:794: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:811: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:832: info: structural_false_positive EQ_CLONE_ASSUME clone_tree [high]
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:857: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:794: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:811: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:832: info: structural_false_positive EQ_CLONE_ASSUME clone_tree [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:857: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
    2 clean proof functions
 ℹ PrimTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:887: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:899: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:917: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:935: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:940: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:887: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:899: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:917: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:935: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:940: info: accept()
    Info: 5 total
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:887: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:899: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:917: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:935: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:940: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:887: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:899: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:917: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:935: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:940: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
 
 =================================================================
 2. Depends Upon
@@ -95,9 +95,11 @@ Structural False Positives: 9 detected (language limitations, not missing proof)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 10:55:04 -07:00
-Ended:     2026-03-17 10:55:04 -07:00
-Duration:  15ms
+Started:   2026-03-17 10:43:17 -07:00
+Ended:     2026-03-17 10:43:17 -07:00
+Duration:  18ms
 
 Full output: src/Chap23/analyses/veracity-review-verus-proof-holes.log
-utput: src/Chap23/analyses/veracity-review-verus-proof-holes.log
+Duration:  18ms
+
+Full output: src/Chap23/analyses/veracity-review-verus-proof-holes.log

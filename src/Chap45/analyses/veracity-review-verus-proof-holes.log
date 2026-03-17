@@ -20,51 +20,55 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-ℹ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:671: info: accept()
+❌ BalancedTreePQ.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:598: error: external - #[verifier::external]
+       599 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:649: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:649: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+   Holes: 1 total
+      1 × external
    Info: 1 total
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:671: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-   1 clean proof function
+   Proof functions: 1 total (1 clean, 0 holed)
 ℹ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1558: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1579: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1558: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1579: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1558: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1579: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1558: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1579: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    5 clean proof functions
 ❌ Example45_2.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:43: error: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:43: error: external - #[verifier::external]
         44 |         impl Example45_2Trait for Example45_2 {
    Holes: 1 total
       1 × external
    Proof functions: 1 total (1 clean, 0 holed)
 ℹ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:98: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:113: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:98: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:113: info: accept()
    Info: 2 total
    1 clean proof function
 ℹ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1133: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1153: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1165: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1175: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1133: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1153: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1165: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1175: info: accept()
    Info: 4 total
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1133: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1153: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1165: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1175: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1133: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1153: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1165: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1175: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    4 clean proof functions
 ℹ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1046: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1046: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1046: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1046: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
    3 clean proof functions
 ℹ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:652: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:667: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:652: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:667: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:652: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:667: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:652: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:667: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    1 clean proof function
 
 =================================================================
@@ -100,8 +104,8 @@ UnsortedListPQ.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   6 clean (no holes, no errors; 85%)
-   1 holed (holes or errors, 14%)
+   5 clean (no holes, no errors; 71%)
+   2 holed (holes or errors, 28%)
    7 total
 
 Proof Functions:
@@ -117,8 +121,8 @@ Function Specs:
    368 total fns
 
 
-Holes Found: 1 total
-   1 × external (100%)
+Holes Found: 2 total
+   2 × external (100%)
 
 Structural False Positives: 10 detected (language limitations, not missing proof)
    10 × EQ_CLONE_ASSUME (not in hole count — accept() pattern)
@@ -127,9 +131,12 @@ Structural False Positives: 10 detected (language limitations, not missing proof
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 10:55:04 -07:00
-Ended:     2026-03-17 10:55:04 -07:00
-Duration:  54ms
+Started:   2026-03-17 10:43:17 -07:00
+Ended:     2026-03-17 10:43:18 -07:00
+Duration:  57ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
+
+Duration:  57ms
+
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
