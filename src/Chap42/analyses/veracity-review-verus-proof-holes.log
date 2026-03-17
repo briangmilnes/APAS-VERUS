@@ -23,26 +23,25 @@ Table of Contents:
 ✓ Example42_1.rs
    1 clean proof function
 ℹ TableMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2203: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2215: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:2203: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:2215: info: accept()
    Info: 2 total
    11 clean proof functions
 ℹ TableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2119: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStEph.rs:2119: info: accept()
    Info: 1 total
    8 clean proof functions
-❌ TableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2036: error: fn_missing_wf_ensures - fn collect_by_key — ensures should include grouped.spec_tablestper_wf() for return type TableStPer
+⚠ TableStPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:2036: error: fn_missing_wf_ensures - fn collect_by_key — ensures should include grouped.spec_tablestper_wf() for return type TableStPer
       2019 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
             ...
       2034 |     /// APAS Algorithm 42.3: collect groups a sequence of (key, value) pairs into a table
       2035 |     /// mapping each key to the subsequence of values for that key, preserving order.
       2037 |         pairs: &ArraySeqStPerS<Pair<K, V>>,
       2038 |     ) -> (grouped: TableStPer<K, ArraySeqStPerS<V>>)
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2194: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2205: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:2194: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:2205: info: accept()
    Info: 2 total
-   Proof functions: 12 total (12 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -102,9 +101,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:04:38 -07:00
-Ended:     2026-03-17 11:04:38 -07:00
-Duration:  80ms
+Started:   2026-03-17 13:54:12 -07:00
+Ended:     2026-03-17 13:54:13 -07:00
+Duration:  89ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log

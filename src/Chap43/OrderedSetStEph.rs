@@ -27,7 +27,7 @@ pub mod OrderedSetStEph {
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger, lemma_cloned_view_eq};
+    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
 
     verus! {
 
@@ -150,6 +150,7 @@ broadcast use {
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to AVLTreeSetStEph.from_seq (n inserts)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
+            requires seq.spec_avltreeseqstper_wf(),
             ensures
                 constructed@.finite(),
                 constructed.spec_orderedsetsteph_wf();
@@ -179,6 +180,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then scans for predecessor
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
             where T: TotalOrder
+            requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 predecessor matches Some(v) ==> self@.contains(v@),
@@ -188,15 +190,15 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then scans for successor
         fn next(&self, k: &T) -> (successor: Option<T>)
             where T: TotalOrder
+            requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 successor matches Some(v) ==> self@.contains(v@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
-        /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then partitions into two sets
         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
+            requires old(self).spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 old(self)@.finite(),
@@ -217,6 +219,7 @@ broadcast use {
         /// - APAS: Work Θ(log n + m), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then filters by range
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
+            requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 range@.finite(),
@@ -225,6 +228,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then counts elements < k
         fn rank(&self, k: &T) -> (rank: usize)
             where T: TotalOrder
+            requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 rank <= self@.len(),
@@ -243,6 +247,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then partitions by rank
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
+            requires old(self).spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 old(self)@.finite(),
@@ -340,22 +345,27 @@ broadcast use {
             result
         }
 
-        #[verifier::external_body]
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
-            ensures constructed@.finite()
         {
-            let len = seq.length();
-            let mut elements = Vec::new();
-            for i in 0..len {
-                elements.push(seq.nth(i).clone());
+            let mut constructed = Self::empty();
+            let n = seq.length();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    seq.spec_avltreeseqstper_wf(),
+                    n as nat == seq.spec_seq().len(),
+                    0 <= i <= n,
+                    constructed.spec_orderedsetsteph_wf(),
+                    constructed@.finite(),
+                decreases n - i,
+            {
+                let elem = seq.nth(i).clone();
+                constructed.insert(elem);
+                i = i + 1;
             }
-            let eph_seq = AVLTreeSeqStEphS::from_vec(elements);
-            OrderedSetStEph {
-                base_set: AVLTreeSetStEph::from_seq(eph_seq),
-            }
+            constructed
         }
 
-        #[verifier::external_body]
         fn first(&self) -> (first: Option<T>)
             where T: TotalOrder
             ensures
@@ -364,16 +374,89 @@ broadcast use {
                 first matches Some(v) ==> self@.contains(v@),
                 first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(v, t),
         {
+            assert(obeys_feq_full_trigger::<T>());
             let len = self.base_set.elements.length();
+            proof { self.base_set.elements@.unique_seq_to_set(); }
             if len == 0 {
                 None
             } else {
-                let elem = self.base_set.elements.nth(0);
-                Some(elem.clone())
+                let ghost vals = spec_inorder_values::<T>(self.base_set.elements.root);
+                proof { lemma_inorder_values_maps_to_views::<T>(self.base_set.elements.root); }
+                let first_ref = self.base_set.elements.nth(0);
+                let mut min_val = first_ref.clone();
+                proof {
+                    lemma_cloned_view_eq(*first_ref, min_val);
+                    assert(min_val@ == vals[0int]@);
+                    assert(min_val == vals[0int]);
+                    T::reflexive(min_val);
+                }
+                let ghost mut min_idx: int = 0;
+                let mut i: usize = 1;
+                while i < len
+                    invariant
+                        self.base_set.elements.spec_avltreeseqsteph_wf(),
+                        self.base_set.elements@.no_duplicates(),
+                        len as nat == self.base_set.elements@.len(),
+                        obeys_feq_full::<T>(),
+                        1 <= i, i <= len,
+                        0 <= min_idx, min_idx < i,
+                        vals == spec_inorder_values::<T>(self.base_set.elements.root),
+                        vals.len() == self.base_set.elements@.len(),
+                        vals.map_values(|t: T| t@) =~= self.base_set.elements@,
+                        min_val@ == self.base_set.elements@[min_idx],
+                        vals[min_idx] == min_val,
+                        forall|j: int| #![trigger vals[j]]
+                            0 <= j < i ==> TotalOrder::le(min_val, vals[j]),
+                    decreases len - i,
+                {
+                    let elem_ref = self.base_set.elements.nth(i);
+                    let c = TotalOrder::cmp(elem_ref, &min_val);
+                    proof {
+                        assert(elem_ref@ == vals[i as int]@);
+                        assert(*elem_ref == vals[i as int]);
+                    }
+                    match c {
+                        core::cmp::Ordering::Less => {
+                            let ghost old_min = min_val;
+                            min_val = elem_ref.clone();
+                            proof {
+                                lemma_cloned_view_eq(*elem_ref, min_val);
+                                min_idx = i as int;
+                                assert(min_val@ == vals[i as int]@);
+                                assert(min_val == vals[i as int]);
+                                assert forall|j: int| 0 <= j < i + 1
+                                    implies #[trigger] TotalOrder::le(min_val, vals[j]) by {
+                                    if j == i as int {
+                                        T::reflexive(min_val);
+                                    } else {
+                                        T::transitive(min_val, old_min, vals[j]);
+                                    }
+                                };
+                            }
+                        },
+                        core::cmp::Ordering::Equal => {
+                            proof { T::reflexive(min_val); }
+                        },
+                        core::cmp::Ordering::Greater => {
+                        },
+                    }
+                    i = i + 1;
+                }
+                proof {
+                    assert forall|t: T| self@.contains(t@)
+                        implies TotalOrder::le(min_val, t) by {
+                        assert(self.base_set.elements@.to_set().contains(t@));
+                        assert(self.base_set.elements@.contains(t@));
+                        let j = choose|j: int| 0 <= j < self.base_set.elements@.len()
+                            && self.base_set.elements@[j] == t@;
+                        assert(vals[j]@ == t@);
+                        assert(vals[j] == t);
+                    };
+                }
+                Some(min_val)
             }
         }
 
-        #[verifier::external_body]
         fn last(&self) -> (last: Option<T>)
             where T: TotalOrder
             ensures
@@ -382,55 +465,332 @@ broadcast use {
                 last matches Some(v) ==> self@.contains(v@),
                 last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(t, v),
         {
+            assert(obeys_feq_full_trigger::<T>());
             let len = self.base_set.elements.length();
+            proof { self.base_set.elements@.unique_seq_to_set(); }
             if len == 0 {
                 None
             } else {
-                let elem = self.base_set.elements.nth(len - 1);
-                Some(elem.clone())
+                let ghost vals = spec_inorder_values::<T>(self.base_set.elements.root);
+                proof { lemma_inorder_values_maps_to_views::<T>(self.base_set.elements.root); }
+                let first_ref = self.base_set.elements.nth(0);
+                let mut max_val = first_ref.clone();
+                proof {
+                    lemma_cloned_view_eq(*first_ref, max_val);
+                    assert(max_val@ == vals[0int]@);
+                    assert(max_val == vals[0int]);
+                    T::reflexive(max_val);
+                }
+                let ghost mut max_idx: int = 0;
+                let mut i: usize = 1;
+                while i < len
+                    invariant
+                        self.base_set.elements.spec_avltreeseqsteph_wf(),
+                        self.base_set.elements@.no_duplicates(),
+                        len as nat == self.base_set.elements@.len(),
+                        obeys_feq_full::<T>(),
+                        1 <= i, i <= len,
+                        0 <= max_idx, max_idx < i,
+                        vals == spec_inorder_values::<T>(self.base_set.elements.root),
+                        vals.len() == self.base_set.elements@.len(),
+                        vals.map_values(|t: T| t@) =~= self.base_set.elements@,
+                        max_val@ == self.base_set.elements@[max_idx],
+                        vals[max_idx] == max_val,
+                        forall|j: int| #![trigger vals[j]]
+                            0 <= j < i ==> TotalOrder::le(vals[j], max_val),
+                    decreases len - i,
+                {
+                    let elem_ref = self.base_set.elements.nth(i);
+                    let c = TotalOrder::cmp(elem_ref, &max_val);
+                    proof {
+                        assert(elem_ref@ == vals[i as int]@);
+                        assert(*elem_ref == vals[i as int]);
+                    }
+                    match c {
+                        core::cmp::Ordering::Greater => {
+                            let ghost old_max = max_val;
+                            max_val = elem_ref.clone();
+                            proof {
+                                lemma_cloned_view_eq(*elem_ref, max_val);
+                                max_idx = i as int;
+                                assert(max_val@ == vals[i as int]@);
+                                assert(max_val == vals[i as int]);
+                                assert forall|j: int| 0 <= j < i + 1
+                                    implies #[trigger] TotalOrder::le(vals[j], max_val) by {
+                                    if j == i as int {
+                                        T::reflexive(max_val);
+                                    } else {
+                                        T::transitive(vals[j], old_max, max_val);
+                                    }
+                                };
+                            }
+                        },
+                        core::cmp::Ordering::Equal => {
+                            proof { T::reflexive(max_val); }
+                        },
+                        core::cmp::Ordering::Less => {
+                        },
+                    }
+                    i = i + 1;
+                }
+                proof {
+                    assert forall|t: T| self@.contains(t@)
+                        implies TotalOrder::le(t, max_val) by {
+                        assert(self.base_set.elements@.to_set().contains(t@));
+                        assert(self.base_set.elements@.contains(t@));
+                        let j = choose|j: int| 0 <= j < self.base_set.elements@.len()
+                            && self.base_set.elements@[j] == t@;
+                        assert(vals[j]@ == t@);
+                        assert(vals[j] == t);
+                    };
+                }
+                Some(max_val)
             }
         }
 
-        #[verifier::external_body]
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
             where T: TotalOrder
-            ensures
-                self@.finite(),
-                predecessor matches Some(v) ==> self@.contains(v@),
-                predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
-                predecessor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
         {
-            let seq = self.to_seq();
-            let size = seq.length();
-
-            for i in (0..size).rev() {
-                let elem = seq.nth(i);
-                if elem < k {
-                    return Some(elem.clone());
+            assert(obeys_feq_full_trigger::<T>());
+            let len = self.base_set.elements.length();
+            proof { self.base_set.elements@.unique_seq_to_set(); }
+            let ghost vals = spec_inorder_values::<T>(self.base_set.elements.root);
+            proof { lemma_inorder_values_maps_to_views::<T>(self.base_set.elements.root); }
+            let mut found = false;
+            let mut best_pos: usize = 0;
+            let ghost mut best_idx: int = -1;
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    self.base_set.elements.spec_avltreeseqsteph_wf(),
+                    self.base_set.elements@.no_duplicates(),
+                    len as nat == self.base_set.elements@.len(),
+                    obeys_feq_full::<T>(),
+                    0 <= i, i <= len,
+                    vals == spec_inorder_values::<T>(self.base_set.elements.root),
+                    vals.len() == self.base_set.elements@.len(),
+                    vals.map_values(|t: T| t@) =~= self.base_set.elements@,
+                    !found ==> forall|j: int| #![trigger vals[j]]
+                        0 <= j < i ==> !(TotalOrder::le(vals[j], *k) && vals[j]@ != k@),
+                    found ==> (
+                        0 <= best_idx && best_idx < i &&
+                        best_pos == best_idx as usize &&
+                        TotalOrder::le(vals[best_idx], *k) && vals[best_idx]@ != k@ &&
+                        forall|j: int| #![trigger vals[j]]
+                            0 <= j < i && TotalOrder::le(vals[j], *k) && vals[j]@ != k@
+                            ==> TotalOrder::le(vals[j], vals[best_idx])
+                    ),
+                decreases len - i,
+            {
+                let elem_ref = self.base_set.elements.nth(i);
+                proof {
+                    assert(elem_ref@ == vals[i as int]@);
+                    assert(*elem_ref == vals[i as int]);
                 }
+                let c = TotalOrder::cmp(elem_ref, k);
+                match c {
+                    core::cmp::Ordering::Less => {
+                        // *elem_ref < *k: a predecessor candidate.
+                        if !found {
+                            found = true;
+                            best_pos = i;
+                            proof {
+                                best_idx = i as int;
+                                T::reflexive(vals[i as int]);
+                            }
+                        } else {
+                            let best_ref = self.base_set.elements.nth(best_pos);
+                            proof {
+                                assert(best_ref@ == vals[best_idx]@);
+                                assert(*best_ref == vals[best_idx]);
+                            }
+                            let c2 = TotalOrder::cmp(elem_ref, best_ref);
+                            match c2 {
+                                core::cmp::Ordering::Greater => {
+                                    proof {
+                                        let old_best = best_idx;
+                                        best_idx = i as int;
+                                        assert forall|j: int| 0 <= j < i + 1
+                                            && TotalOrder::le(vals[j], *k) && vals[j]@ != k@
+                                            implies #[trigger] TotalOrder::le(vals[j], vals[best_idx]) by {
+                                            if j == i as int {
+                                                T::reflexive(vals[i as int]);
+                                            } else {
+                                                T::transitive(vals[j], vals[old_best], vals[i as int]);
+                                            }
+                                        };
+                                    }
+                                    best_pos = i;
+                                },
+                                _ => {
+                                    proof {
+                                        T::total(vals[i as int], vals[best_idx]);
+                                    }
+                                },
+                            }
+                        }
+                    },
+                    core::cmp::Ordering::Equal => {
+                        // *elem_ref == *k: not strictly less.
+                    },
+                    core::cmp::Ordering::Greater => {
+                        // *k < *elem_ref: not <= k.
+                        proof {
+                            // le(*k, *elem_ref) && *elem_ref != *k
+                            // Suppose le(vals[i], *k) were true.
+                            // Then le(*k, vals[i]) && le(vals[i], *k) → vals[i] == *k.
+                            // But *elem_ref != *k and vals[i] == *elem_ref → contradiction.
+                            if TotalOrder::le(vals[i as int], *k) {
+                                T::antisymmetric(vals[i as int], *k);
+                            }
+                        }
+                    },
+                }
+                i = i + 1;
             }
-            None
+            if !found {
+                None
+            } else {
+                let result_ref = self.base_set.elements.nth(best_pos);
+                let result = result_ref.clone();
+                proof {
+                    lemma_cloned_view_eq(*result_ref, result);
+                    assert(result@ == vals[best_idx]@);
+                    assert(result == vals[best_idx]);
+                    assert forall|t: T| self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@
+                        implies TotalOrder::le(t, result) by {
+                        assert(self.base_set.elements@.to_set().contains(t@));
+                        assert(self.base_set.elements@.contains(t@));
+                        let j = choose|j: int| 0 <= j < self.base_set.elements@.len()
+                            && self.base_set.elements@[j] == t@;
+                        assert(vals[j]@ == t@);
+                        assert(vals[j] == t);
+                    };
+                }
+                Some(result)
+            }
         }
 
-        #[verifier::external_body]
         fn next(&self, k: &T) -> (successor: Option<T>)
             where T: TotalOrder
-            ensures
-                self@.finite(),
-                successor matches Some(v) ==> self@.contains(v@),
-                successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
-                successor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
         {
-            let seq = self.to_seq();
-            let size = seq.length();
-
-            for i in 0..size {
-                let elem = seq.nth(i);
-                if elem > k {
-                    return Some(elem.clone());
+            assert(obeys_feq_full_trigger::<T>());
+            let len = self.base_set.elements.length();
+            proof { self.base_set.elements@.unique_seq_to_set(); }
+            let ghost vals = spec_inorder_values::<T>(self.base_set.elements.root);
+            proof { lemma_inorder_values_maps_to_views::<T>(self.base_set.elements.root); }
+            let mut found = false;
+            let mut best_pos: usize = 0;
+            let ghost mut best_idx: int = -1;
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    self.base_set.elements.spec_avltreeseqsteph_wf(),
+                    self.base_set.elements@.no_duplicates(),
+                    len as nat == self.base_set.elements@.len(),
+                    obeys_feq_full::<T>(),
+                    0 <= i, i <= len,
+                    vals == spec_inorder_values::<T>(self.base_set.elements.root),
+                    vals.len() == self.base_set.elements@.len(),
+                    vals.map_values(|t: T| t@) =~= self.base_set.elements@,
+                    !found ==> forall|j: int| #![trigger vals[j]]
+                        0 <= j < i ==> !(TotalOrder::le(*k, vals[j]) && vals[j]@ != k@),
+                    found ==> (
+                        0 <= best_idx && best_idx < i &&
+                        best_pos == best_idx as usize &&
+                        TotalOrder::le(*k, vals[best_idx]) && vals[best_idx]@ != k@ &&
+                        forall|j: int| #![trigger vals[j]]
+                            0 <= j < i && TotalOrder::le(*k, vals[j]) && vals[j]@ != k@
+                            ==> TotalOrder::le(vals[best_idx], vals[j])
+                    ),
+                decreases len - i,
+            {
+                let elem_ref = self.base_set.elements.nth(i);
+                proof {
+                    assert(elem_ref@ == vals[i as int]@);
+                    assert(*elem_ref == vals[i as int]);
                 }
+                let c = TotalOrder::cmp(elem_ref, k);
+                match c {
+                    core::cmp::Ordering::Greater => {
+                        // *elem_ref > *k: a successor candidate.
+                        if !found {
+                            found = true;
+                            best_pos = i;
+                            proof {
+                                best_idx = i as int;
+                                T::reflexive(vals[i as int]);
+                            }
+                        } else {
+                            let best_ref = self.base_set.elements.nth(best_pos);
+                            proof {
+                                assert(best_ref@ == vals[best_idx]@);
+                                assert(*best_ref == vals[best_idx]);
+                            }
+                            let c2 = TotalOrder::cmp(elem_ref, best_ref);
+                            match c2 {
+                                core::cmp::Ordering::Less => {
+                                    // New element is smaller (closer to k), update best.
+                                    proof {
+                                        let old_best = best_idx;
+                                        best_idx = i as int;
+                                        assert forall|j: int| 0 <= j < i + 1
+                                            && TotalOrder::le(*k, vals[j]) && vals[j]@ != k@
+                                            implies #[trigger] TotalOrder::le(vals[best_idx], vals[j]) by {
+                                            if j == i as int {
+                                                T::reflexive(vals[i as int]);
+                                            } else {
+                                                T::transitive(vals[i as int], vals[old_best], vals[j]);
+                                            }
+                                        };
+                                    }
+                                    best_pos = i;
+                                },
+                                _ => {
+                                    proof {
+                                        T::total(vals[best_idx], vals[i as int]);
+                                    }
+                                },
+                            }
+                        }
+                    },
+                    core::cmp::Ordering::Equal => {
+                        // *elem_ref == *k: not strictly greater.
+                    },
+                    core::cmp::Ordering::Less => {
+                        // *elem_ref < *k: le(*k, vals[i]) would mean le(*k, *elem_ref).
+                        // Combined with le(*elem_ref, *k), we'd get *elem_ref == *k,
+                        // but *elem_ref != *k, contradiction.
+                        proof {
+                            if TotalOrder::le(*k, vals[i as int]) {
+                                T::antisymmetric(*k, vals[i as int]);
+                            }
+                        }
+                    },
+                }
+                i = i + 1;
             }
-            None
+            if !found {
+                None
+            } else {
+                let result_ref = self.base_set.elements.nth(best_pos);
+                let result = result_ref.clone();
+                proof {
+                    lemma_cloned_view_eq(*result_ref, result);
+                    assert(result@ == vals[best_idx]@);
+                    assert(result == vals[best_idx]);
+                    assert forall|t: T| self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@
+                        implies TotalOrder::le(result, t) by {
+                        assert(self.base_set.elements@.to_set().contains(t@));
+                        assert(self.base_set.elements@.contains(t@));
+                        let j = choose|j: int| 0 <= j < self.base_set.elements@.len()
+                            && self.base_set.elements@[j] == t@;
+                        assert(vals[j]@ == t@);
+                        assert(vals[j] == t);
+                    };
+                }
+                Some(result)
+            }
         }
 
         #[verifier::external_body]
@@ -479,27 +839,47 @@ broadcast use {
             ensures self@ == old(self)@.union(other@), self@.finite(), self.spec_orderedsetsteph_wf()
         { self.union(&other); }
 
-        #[verifier::external_body]
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
-            ensures
-                self@.finite(),
-                range@.finite(),
-                range@.subset_of(self@),
         {
-            let seq = self.to_seq();
-
-            let array_seq = ArraySeqStPerS::tabulate(&|i| seq.nth(i).clone(), seq.length());
-
-            let mut range_vec = Vec::new();
-            for i in 0..array_seq.length() {
-                let elem = array_seq.nth(i).clone();
-                if elem >= *k1 && elem <= *k2 {
-                    range_vec.push(elem);
+            assert(obeys_feq_full_trigger::<T>());
+            let mut range = Self::empty();
+            let n = self.base_set.elements.length();
+            proof { self.base_set.elements@.unique_seq_to_set(); }
+            let ghost vals = spec_inorder_values::<T>(self.base_set.elements.root);
+            proof { lemma_inorder_values_maps_to_views::<T>(self.base_set.elements.root); }
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    self.base_set.elements.spec_avltreeseqsteph_wf(),
+                    self.base_set.elements@.no_duplicates(),
+                    n as nat == self.base_set.elements@.len(),
+                    obeys_feq_full::<T>(),
+                    vals == spec_inorder_values::<T>(self.base_set.elements.root),
+                    vals.len() == self.base_set.elements@.len(),
+                    vals.map_values(|t: T| t@) =~= self.base_set.elements@,
+                    0 <= i <= n,
+                    range.spec_orderedsetsteph_wf(),
+                    range@.finite(),
+                    range@.subset_of(self@),
+                decreases n - i,
+            {
+                let elem_ref = self.base_set.elements.nth(i);
+                if *elem_ref >= *k1 && *elem_ref <= *k2 {
+                    let cloned = elem_ref.clone();
+                    proof {
+                        lemma_cloned_view_eq(*elem_ref, cloned);
+                        assert(cloned@ == self.base_set.elements@[i as int]);
+                        assert(self.base_set.elements@.to_set().contains(cloned@));
+                        assert(self@.contains(cloned@));
+                        // After insert, range@ == old(range)@.insert(cloned@).
+                        // subset_of: old(range)@.subset_of(self@) && self@.contains(cloned@)
+                        // ==> old(range)@.insert(cloned@).subset_of(self@).
+                    }
+                    range.insert(cloned);
                 }
+                i = i + 1;
             }
-
-            let range_seq = AVLTreeSeqStPerS::from_vec(range_vec);
-            Self::from_seq(range_seq)
+            range
         }
 
         #[verifier::external_body]
@@ -543,44 +923,117 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
-            ensures
-                self@.finite(),
-                old(self)@.finite(),
-                split.0@.finite(),
-                split.1@.finite(),
-                split.0@.subset_of(old(self)@),
-                split.1@.subset_of(old(self)@),
-                split.0@.disjoint(split.1@),
-                forall|x| old(self)@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x),
         {
-            let seq = self.to_seq();
-            let size = seq.length();
-
-            if i >= size {
-                let current = self.clone();
-                *self = Self::empty();
-                return (current, Self::empty());
+            assert(obeys_feq_full_trigger::<T>());
+            let n = self.base_set.elements.length();
+            proof { self.base_set.elements@.unique_seq_to_set(); }
+            let ghost old_view = self@;
+            let ghost old_elems = self.base_set.elements@;
+            let split_at: usize = if i >= n { n } else { i };
+            let mut left = Self::empty();
+            let mut right = Self::empty();
+            let mut j: usize = 0;
+            while j < n
+                invariant
+                    self.base_set.elements.spec_avltreeseqsteph_wf(),
+                    self.base_set.elements@.no_duplicates(),
+                    n as nat == self.base_set.elements@.len(),
+                    obeys_feq_full::<T>(),
+                    old_view == self.base_set.elements@.to_set(),
+                    old_elems == self.base_set.elements@,
+                    0 <= j <= n,
+                    left.spec_orderedsetsteph_wf(),
+                    left@.finite(),
+                    right.spec_orderedsetsteph_wf(),
+                    right@.finite(),
+                    left@.subset_of(old_view),
+                    right@.subset_of(old_view),
+                    split_at <= n,
+                    // Provenance: left has elements from indices < split_at only.
+                    forall|x| left@.contains(x) ==>
+                        exists|idx: int| 0 <= idx < j && idx < split_at as int && #[trigger] old_elems[idx] == x,
+                    // Provenance: right has elements from indices >= split_at only.
+                    forall|x| right@.contains(x) ==>
+                        exists|idx: int| split_at as int <= idx && idx < j && #[trigger] old_elems[idx] == x,
+                    // Coverage: visited elements are in left or right.
+                    forall|idx: int| #![trigger old_elems[idx]]
+                        0 <= idx < j ==> left@.contains(old_elems[idx]) || right@.contains(old_elems[idx]),
+                decreases n - j,
+            {
+                let elem_ref = self.base_set.elements.nth(j);
+                let cloned = elem_ref.clone();
+                proof {
+                    lemma_cloned_view_eq(*elem_ref, cloned);
+                    assert(cloned@ == old_elems[j as int]);
+                    assert(old_view.contains(cloned@));
+                }
+                if j < split_at {
+                    let ghost old_left_view = left@;
+                    left.insert(cloned);
+                    proof {
+                        assert(left@.subset_of(old_view)) by {
+                            assert forall|x| #[trigger] left@.contains(x) implies old_view.contains(x) by {
+                                if !old_left_view.contains(x) {
+                                    assert(x == elem_ref@);
+                                }
+                            };
+                        };
+                        assert forall|x| left@.contains(x) implies
+                            exists|idx: int| 0 <= idx < j + 1 && idx < split_at as int && #[trigger] old_elems[idx] == x by {
+                            if old_left_view.contains(x) {
+                            } else {
+                                assert(x == elem_ref@);
+                                assert(old_elems[j as int] == x);
+                            }
+                        };
+                    }
+                } else {
+                    let ghost old_right_view = right@;
+                    right.insert(cloned);
+                    proof {
+                        assert(right@.subset_of(old_view)) by {
+                            assert forall|x| #[trigger] right@.contains(x) implies old_view.contains(x) by {
+                                if !old_right_view.contains(x) {
+                                    assert(x == elem_ref@);
+                                }
+                            };
+                        };
+                        assert forall|x| right@.contains(x) implies
+                            exists|idx: int| split_at as int <= idx && idx < j + 1 && #[trigger] old_elems[idx] == x by {
+                            if old_right_view.contains(x) {
+                            } else {
+                                assert(x == elem_ref@);
+                                assert(old_elems[j as int] == x);
+                            }
+                        };
+                    }
+                }
+                j = j + 1;
             }
-
-            let mut left_elements = Vec::new();
-            let mut right_elements = Vec::new();
-
-            for j in 0..i {
-                left_elements.push(seq.nth(j).clone());
+            proof {
+                // Disjointness from provenance + no_duplicates.
+                assert(left@.disjoint(right@)) by {
+                    assert forall|x| !(#[trigger] left@.contains(x) && right@.contains(x)) by {
+                        if left@.contains(x) && right@.contains(x) {
+                            let idx1 = choose|idx: int| 0 <= idx < n && idx < split_at as int && old_elems[idx] == x;
+                            let idx2 = choose|idx: int| split_at as int <= idx && idx < n as int && old_elems[idx] == x;
+                            assert(idx1 != idx2);
+                        }
+                    };
+                };
+                // Coverage: every element in old_view was visited.
+                assert forall|x| old_view.contains(x)
+                    implies left@.contains(x) || right@.contains(x) by {
+                    assert(old_elems.to_set().contains(x));
+                    assert(old_elems.contains(x));
+                    let idx = choose|idx: int| 0 <= idx < old_elems.len() && old_elems[idx] == x;
+                    assert(left@.contains(old_elems[idx]) || right@.contains(old_elems[idx]));
+                };
             }
-            for j in i..size {
-                right_elements.push(seq.nth(j).clone());
-            }
-
-            let left_seq = AVLTreeSeqStPerS::from_vec(left_elements);
-            let right_seq = AVLTreeSeqStPerS::from_vec(right_elements);
-
             *self = Self::empty();
-
-            (Self::from_seq(left_seq), Self::from_seq(right_seq))
+            (left, right)
         }
     }
 
