@@ -27,9 +27,9 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    3 clean proof functions
 ℹ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:478: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjMatrixGraphStPer.rs:478: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:478: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjMatrixGraphStPer.rs:478: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    3 clean proof functions
 ✓ AdjSeqGraphMtEph.rs
    2 clean proof functions
@@ -38,9 +38,9 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
 ℹ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:514: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjSeqGraphStPer.rs:514: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:514: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjSeqGraphStPer.rs:514: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    2 clean proof functions
 ✓ AdjTableGraphMtPer.rs
 ✓ AdjTableGraphStEph.rs
@@ -117,7 +117,7 @@ Function Specs:
 Holes Found: 0 total
 
 Structural False Positives: 2 detected (language limitations, not missing proof)
-   2 × EQ_CLONE_ASSUME
+   2 × EQ_CLONE_ASSUME (not in hole count — accept() pattern)
 
 🎉 No proof holes or warnings found! All proofs are complete.
 
@@ -125,13 +125,9 @@ Structural False Positives: 2 detected (language limitations, not missing proof)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 09:29:52 -07:00
-Ended:     2026-03-17 09:29:52 -07:00
-Duration:  44ms
+Started:   2026-03-17 10:43:18 -07:00
+Ended:     2026-03-17 10:43:18 -07:00
+Duration:  47ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-:00
-Ended:     2026-03-17 09:29:52 -07:00
-Duration:  44ms
-
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log

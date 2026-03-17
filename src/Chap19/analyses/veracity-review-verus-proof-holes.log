@@ -21,23 +21,23 @@ Table of Contents:
 =================================================================
 
 ℹ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:478: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1481: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:478: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1481: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1481: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1481: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    6 clean proof functions
 ✓ ArraySeqMtEphSlice.rs
 ℹ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:452: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1201: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:452: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:1201: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1201: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:1201: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    4 clean proof functions
 ℹ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:438: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1201: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:438: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:1201: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1201: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:1201: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
    3 clean proof functions
 
 =================================================================
@@ -87,7 +87,7 @@ Function Specs:
 Holes Found: 0 total
 
 Structural False Positives: 3 detected (language limitations, not missing proof)
-   3 × EQ_CLONE_ASSUME
+   3 × EQ_CLONE_ASSUME (not in hole count — accept() pattern)
 
 🎉 No proof holes or warnings found! All proofs are complete.
 
@@ -95,9 +95,9 @@ Structural False Positives: 3 detected (language limitations, not missing proof)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 09:29:51 -07:00
-Ended:     2026-03-17 09:29:51 -07:00
-Duration:  46ms
+Started:   2026-03-17 10:43:17 -07:00
+Ended:     2026-03-17 10:43:17 -07:00
+Duration:  48ms
 
 Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
