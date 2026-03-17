@@ -393,7 +393,6 @@ broadcast use {
             from_sorted_entries(result_seq)
         }
 
-        #[verifier::external_body]
         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(
             &self,
             f: F,

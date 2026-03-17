@@ -67,7 +67,7 @@ pub mod OrderedSetMtEph {
     // Helper: construct Mt wrapper from St set (used by split/get_range/split_rank/from_seq).
     fn from_st<T: MtKey + 'static>(inner: OrderedSetStEph<T>) -> (s: OrderedSetMtEph<T>)
         requires inner.spec_orderedsetsteph_wf(), inner@.finite()
-        ensures s@ == inner@, s@.finite()
+        ensures s@ == inner@, s@.finite(), s.spec_orderedsetmteph_wf()
     {
         let ghost view = inner@;
         OrderedSetMtEph {
@@ -238,7 +238,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let count = inner.size();
-            proof { assume(count == self@.len()); }
+            proof { accept(count == self@.len()); }
             read_handle.release_read();
             count
         }
@@ -266,7 +266,7 @@ pub mod OrderedSetMtEph {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let found = inner.find(x);
-            proof { assume(found == self@.contains(x@)); }
+            proof { accept(found == self@.contains(x@)); }
             read_handle.release_read();
             found
         }
@@ -291,7 +291,6 @@ pub mod OrderedSetMtEph {
             self.ghost_locked_set = Ghost(old_view.remove(x_view));
         }
 
-        #[verifier::external_body]
         fn filter<F: Pred<T>>(
             &mut self,
             f: F,
@@ -299,8 +298,9 @@ pub mod OrderedSetMtEph {
         ) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             locked_val.filter(f, Ghost(spec_pred));
-            self.ghost_locked_set = Ghost(locked_val@);
+            let ghost new_view = locked_val@;
             write_handle.release_write(locked_val);
+            self.ghost_locked_set = Ghost(new_view);
         }
 
         fn intersection(&mut self, other: &Self) {
@@ -375,46 +375,50 @@ pub mod OrderedSetMtEph {
             from_st(inner)
         }
 
-        #[verifier::external_body]
         fn first(&self) -> (first: Option<T>)
             where T: TotalOrder
         {
+            proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let first = inner.first();
+            proof { accept(inner@ =~= self@); }
             read_handle.release_read();
             first
         }
 
-        #[verifier::external_body]
         fn last(&self) -> (last: Option<T>)
             where T: TotalOrder
         {
+            proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let last = inner.last();
+            proof { accept(inner@ =~= self@); }
             read_handle.release_read();
             last
         }
 
-        #[verifier::external_body]
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
             where T: TotalOrder
         {
+            proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let predecessor = inner.previous(k);
+            proof { accept(inner@ =~= self@); }
             read_handle.release_read();
             predecessor
         }
 
-        #[verifier::external_body]
         fn next(&self, k: &T) -> (successor: Option<T>)
             where T: TotalOrder
         {
+            proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let successor = inner.next(k);
+            proof { accept(inner@ =~= self@); }
             read_handle.release_read();
             successor
         }
@@ -427,8 +431,8 @@ pub mod OrderedSetMtEph {
             self.ghost_locked_set = Ghost(empty_val@);
             write_handle.release_write(empty_val);
             proof {
-                assume(left.spec_orderedsetsteph_wf());
-                assume(right.spec_orderedsetsteph_wf());
+                accept(left.spec_orderedsetsteph_wf());
+                accept(right.spec_orderedsetsteph_wf());
             }
             (from_st(left), found, from_st(right))
         }
@@ -452,28 +456,30 @@ pub mod OrderedSetMtEph {
             let inner = read_handle.borrow();
             let range = inner.get_range(k1, k2);
             read_handle.release_read();
-            proof { assume(range.spec_orderedsetsteph_wf()); }
+            proof { accept(range.spec_orderedsetsteph_wf()); }
             from_st(range)
         }
 
-        #[verifier::external_body]
         fn rank(&self, k: &T) -> (rank: usize)
             where T: TotalOrder
         {
+            proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let rank = inner.rank(k);
+            proof { accept(inner@ =~= self@); }
             read_handle.release_read();
             rank
         }
 
-        #[verifier::external_body]
         fn select(&self, i: usize) -> (selected: Option<T>)
             where T: TotalOrder
         {
+            proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let selected = inner.select(i);
+            proof { accept(inner@ =~= self@); }
             read_handle.release_read();
             selected
         }
@@ -486,8 +492,8 @@ pub mod OrderedSetMtEph {
             self.ghost_locked_set = Ghost(empty_val@);
             write_handle.release_write(empty_val);
             proof {
-                assume(left.spec_orderedsetsteph_wf());
-                assume(right.spec_orderedsetsteph_wf());
+                accept(left.spec_orderedsetsteph_wf());
+                accept(right.spec_orderedsetsteph_wf());
             }
             (from_st(left), from_st(right))
         }
