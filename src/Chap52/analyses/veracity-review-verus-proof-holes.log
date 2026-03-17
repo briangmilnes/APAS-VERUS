@@ -27,7 +27,7 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    3 clean proof functions
 ℹ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjMatrixGraphStPer.rs:478: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/AdjMatrixGraphStPer.rs:478: info: accept()
    Info: 1 total
    3 clean proof functions
 ✓ AdjSeqGraphMtEph.rs
@@ -37,7 +37,7 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
 ℹ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjSeqGraphStPer.rs:514: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/AdjSeqGraphStPer.rs:514: info: accept()
    Info: 1 total
    2 clean proof functions
 ✓ AdjTableGraphMtPer.rs
@@ -45,99 +45,16 @@ Table of Contents:
    1 clean proof function
 ✓ AdjTableGraphStPer.rs
 ❌ EdgeSetGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphMtPer.rs:135: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/EdgeSetGraphMtPer.rs:135: error: external_body - #[verifier::external_body]
        136 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphMtPer.rs:177: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/EdgeSetGraphMtPer.rs:177: error: external_body - #[verifier::external_body]
        178 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
    Holes: 2 total
       2 × external_body
 ❌ EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphStEph.rs:159: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/EdgeSetGraphStEph.rs:159: error: external_body - #[verifier::external_body]
        160 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
    Holes: 1 total
       1 × external_body
 ❌ EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphStPer.rs:140: error: external_body - #[verifier::external_body]
-       141 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphStPer.rs:177: error: external_body - #[verifier::external_body]
-       178 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
-   Holes: 2 total
-      2 × external_body
-
-=================================================================
-2. Depends Upon
-=================================================================
-
-=================================================================
-2.1. By Module
-=================================================================
-
-AdjMatrixGraphMtEph  depends upon only clean modules
-AdjMatrixGraphMtPer  depends upon only clean modules
-AdjMatrixGraphStEph  depends upon only clean modules
-AdjMatrixGraphStPer  depends upon only clean modules
-AdjSeqGraphMtEph  depends upon only clean modules
-AdjSeqGraphMtPer  depends upon only clean modules
-AdjSeqGraphStEph  depends upon only clean modules
-AdjSeqGraphStPer  depends upon only clean modules
-AdjTableGraphMtPer  depends upon only clean modules
-AdjTableGraphStEph  depends upon only clean modules
-AdjTableGraphStPer  depends upon only clean modules
-EdgeSetGraphMtPer  depends upon only clean modules
-EdgeSetGraphStEph  depends upon only clean modules
-EdgeSetGraphStPer  depends upon only clean modules
-
-=================================================================
-2.2. By File
-=================================================================
-
-AdjMatrixGraphMtEph.rs  depends upon only clean modules
-AdjMatrixGraphMtPer.rs  depends upon only clean modules
-AdjMatrixGraphStEph.rs  depends upon only clean modules
-AdjMatrixGraphStPer.rs  depends upon only clean modules
-AdjSeqGraphMtEph.rs  depends upon only clean modules
-AdjSeqGraphMtPer.rs  depends upon only clean modules
-AdjSeqGraphStEph.rs  depends upon only clean modules
-AdjSeqGraphStPer.rs  depends upon only clean modules
-AdjTableGraphMtPer.rs  depends upon only clean modules
-AdjTableGraphStEph.rs  depends upon only clean modules
-AdjTableGraphStPer.rs  depends upon only clean modules
-EdgeSetGraphMtPer.rs  depends upon only clean modules
-EdgeSetGraphStEph.rs  depends upon only clean modules
-EdgeSetGraphStPer.rs  depends upon only clean modules
-
-=================================================================
-3. Summary of Holes
-=================================================================
-
-Modules:
-   11 clean (no holes, no errors; 78%)
-   3 holed (holes or errors, 21%)
-   14 total
-
-Proof Functions:
-   21 clean (100%)
-   0 holed (0%)
-   21 total
-
-Function Specs:
-   288 exec fns with complete spec (requires+ensures) (66%)
-   0 exec fns missing spec (0%)
-   146 proof/spec fns clean (33%)
-   0 proof/spec fns with holes (0%)
-   434 total fns
-
-
-Holes Found: 5 total
-   5 × external_body (100%)
-
-=================================================================
-5. Started/Ended/Duration
-=================================================================
-
-Started:   2026-03-17 07:09:58 -07:00
-Ended:     2026-03-17 07:09:58 -07:00
-Duration:  44ms
-
-Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/EdgeSetGraphStPer.rs:140: error: external_body - #[verifier::external_body]

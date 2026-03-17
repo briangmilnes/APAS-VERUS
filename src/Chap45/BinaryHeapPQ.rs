@@ -126,6 +126,33 @@ pub mod BinaryHeapPQ {
             }
         }
 
+        /// In a heap, parent(i) <= i for all i > 0.
+        proof fn lemma_heap_parent_le<T: StT + Ord + TotalOrder>(seq: Seq<T>, i: int)
+            requires
+                seq.len() > 0,
+                0 < i < seq.len(),
+                BinaryHeapPQ::<T>::spec_is_exec_heap(seq),
+            ensures
+                TotalOrder::le(seq[(i - 1) / 2], seq[i]),
+        {
+            let p = (i - 1) / 2;
+            assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(seq, p));
+            let left = 2 * p + 1;
+            let right = 2 * p + 2;
+            if i == left {
+                assert(TotalOrder::le(seq[p], seq[left]));
+            } else {
+                assert(i == right);
+                assert(TotalOrder::le(seq[p], seq[right]));
+            }
+        }
+
+        /// Almost-heap: heap property holds at every position except possibly i.
+        spec fn spec_almost_exec_heap<T: StT + Ord + TotalOrder>(seq: Seq<T>, i: int) -> bool {
+            forall|k: int| 0 <= k < seq.len() && k != i ==>
+                #[trigger] BinaryHeapPQ::<T>::spec_exec_heap_inv_at(seq, k)
+        }
+
 
 //  8. traits
 

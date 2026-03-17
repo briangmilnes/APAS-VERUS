@@ -21,17 +21,26 @@ Table of Contents:
 =================================================================
 
 ❌ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:297: error: fn_missing_requires - fn parent — exec fn should have requires
-       290 |         fn right_child(i: usize) -> (child_idx: usize)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:1031: error: assume() - proof { assume(Self::spec_sorted(result.seq@)); }
+      1012 |             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
             ...
-       295 |         }
-       296 | 
-       298 |             ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
-       299 |         {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:1530: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:1551: info: accept()
+      1029 | 
+      1030 |                 // accept hole: Proving sortedness requires heap property invariant (task #8).
+      1032 |                 result
+      1033 |             }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:284: error: fn_missing_requires - fn parent — exec fn should have requires
+       277 |         fn right_child(i: usize) -> (child_idx: usize)
+            ...
+       282 |         }
+       283 | 
+       285 |             ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
+       286 |         {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:1174: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:1189: info: accept()
+   Holes: 1 total
+      1 × assume()
    Info: 2 total
-   Proof functions: 4 total (4 clean, 0 holed)
+   Proof functions: 3 total (3 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -50,37 +59,3 @@ BinaryHeapPQ  depends upon only clean modules
 BinaryHeapPQ.rs  depends upon only clean modules
 
 =================================================================
-3. Summary of Holes
-=================================================================
-
-Modules:
-   0 clean (no holes, no errors; 0%)
-   1 holed (holes or errors, 100%)
-   1 total
-
-Proof Functions:
-   4 clean (100%)
-   0 holed (0%)
-   4 total
-
-Function Specs:
-   49 exec fns with complete spec (requires+ensures) (59%)
-   1 exec fns missing spec (1%)
-   33 proof/spec fns clean (39%)
-   0 proof/spec fns with holes (0%)
-   83 total fns
-
-
-Holes Found: 0 total
-
-🎉 No proof holes found! All proofs are complete.
-
-=================================================================
-5. Started/Ended/Duration
-=================================================================
-
-Started:   2026-03-17 07:34:29 -07:00
-Ended:     2026-03-17 07:34:29 -07:00
-Duration:  20ms
-
-Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
