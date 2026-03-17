@@ -1,6 +1,6 @@
-Chapter Status — 46 chapters, 35 clean, 11 holed, 186 holes (global), 257 modules
+Chapter Status — 46 chapters, 37 clean, 9 holed, 171 holes (global), 257 modules
 
-CLEAN CHAPTERS (35)
+CLEAN CHAPTERS (37)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -26,10 +26,12 @@ CLEAN CHAPTERS (35)
   Chap49             8
   Chap50             8
   Chap51             8
+  Chap52            14
   Chap53             5
   Chap54             4
   Chap55             8
   Chap56            12
+  Chap58             2
   Chap61             4
   Chap62             4
   Chap63             2
@@ -39,20 +41,18 @@ CLEAN CHAPTERS (35)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (11) — 189 holes
+HOLED CHAPTERS (9) — 182 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap37             3    19  YES       
-  Chap38            11     2  YES       
-  Chap39            18     4  internal  Chap39::BSTParaTreapMtEph
-  Chap41            26     7  NO        Chap37::AVLTreeSeqMtPer
-  Chap43            98    11  NO        Chap42::TableStPer, Chap41::AVLTreeSetStEph
-  Chap45             4     7  internal  Chap45::BalancedTreePQ, Chap45::BinaryHeapPQ
-  Chap47            17     9  internal  Chap47::ParaHashTableStEph
-  Chap52             5    14  NO        Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer, Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph, Chap43::OrderedTableStPer
-  Chap57             4     3  NO        Chap05::SetStEph, Chap45::BinaryHeapPQ
-  Chap58             2     2  NO        Chap05::SetStEph
-  Chap59             1     4  NO        Chap05::SetStEph
+  Chap38            10     2  YES       
+  Chap39            16     4  internal  Chap39::BSTParaTreapMtEph
+  Chap41            25     7  NO        Chap37::AVLTreeSeqMtPer
+  Chap43           102    11  NO        Chap42::TableStPer, Chap41::AVLTreeSetStEph
+  Chap45             2     7  internal  Chap45::BalancedTreePQ
+  Chap47            15     9  internal  Chap47::ParaHashTableStEph
+  Chap57             5     3  NO        Chap05::SetStEph
+  Chap59             4     4  NO        Chap05::SetStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
@@ -64,12 +64,12 @@ DEPENDENCY CHAIN (chapter-level, external only)
   Chap52          Chap41, Chap43
   Chap53          Chap41
   Chap55          Chap41
-  Chap57          Chap05, Chap45
+  Chap57          Chap05
   Chap58          Chap05
   Chap59          Chap05
   Chap61          Chap05
   Chap62          Chap05
   Chap63          Chap05
   Chap64          Chap05
-  Chap65          Chap05, Chap45
+  Chap65          Chap05
   Chap66          Chap05

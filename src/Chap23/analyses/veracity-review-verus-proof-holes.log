@@ -20,25 +20,29 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ BalBinTreeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/BalBinTreeStEph.rs:820: warning: requires_true - requires true — vacuous precondition
-       818 |     /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — recursive deep clone.
-       819 |     fn clone_tree<T: Clone>(t: &BalBinTree<T>) -> (c: BalBinTree<T>)
-       821 |         ensures c == *t
-       822 |         decreases t,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/BalBinTreeStEph.rs:794: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/BalBinTreeStEph.rs:811: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/BalBinTreeStEph.rs:832: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/BalBinTreeStEph.rs:857: info: accept()
+ℹ BalBinTreeStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:794: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:811: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:832: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:857: info: accept()
    Info: 4 total
-   Proof functions: 2 total (2 clean, 0 holed)
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:794: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:811: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:832: info: structural_false_positive EQ_CLONE_ASSUME clone_tree [high]
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:857: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+   2 clean proof functions
 ℹ PrimTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/PrimTreeSeqStPer.rs:887: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/PrimTreeSeqStPer.rs:899: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/PrimTreeSeqStPer.rs:917: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/PrimTreeSeqStPer.rs:935: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/PrimTreeSeqStPer.rs:940: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:887: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:899: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:917: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:935: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:940: info: accept()
    Info: 5 total
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:887: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:899: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:917: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:935: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:940: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
 
 =================================================================
 2. Depends Upon
@@ -73,8 +77,8 @@ Proof Functions:
    2 total
 
 Function Specs:
-   69 exec fns with complete spec (requires+ensures) (47%)
-   0 exec fns missing spec (0%)
+   68 exec fns with complete spec (requires+ensures) (46%)
+   1 exec fns missing spec (0%)
    77 proof/spec fns clean (52%)
    0 proof/spec fns with holes (0%)
    146 total fns
@@ -82,18 +86,18 @@ Function Specs:
 
 Holes Found: 0 total
 
-🎉 No proof holes found! All proofs are complete.
+Structural False Positives: 9 detected (language limitations, not missing proof)
+   9 × EQ_CLONE_ASSUME
+
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 07:09:57 -07:00
-Ended:     2026-03-17 07:09:57 -07:00
-Duration:  18ms
+Started:   2026-03-17 08:53:00 -07:00
+Ended:     2026-03-17 08:53:00 -07:00
+Duration:  20ms
 
 Full output: src/Chap23/analyses/veracity-review-verus-proof-holes.log
-0
-Duration:  18ms
-
-Full output: src/Chap23/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap23/analyses/veracity-review-verus-proof-holes.log

@@ -20,12 +20,7 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ InsertionSortStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap03/InsertionSortStEph.rs:39: warning: requires_true - requires true — vacuous precondition
-        37 | #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-        38 | pub fn insertion_sort<T: TotalOrder + Copy>(a: &mut [T]) -> (sorted: &[T])
-        40 |         ensures
-        41 |           sorted.len() == old(a).len(),
+✓ InsertionSortStEph.rs
 
 =================================================================
 2. Depends Upon
@@ -58,8 +53,8 @@ Proof Functions:
    0 total
 
 Function Specs:
-   1 exec fns with complete spec (requires+ensures) (25%)
-   0 exec fns missing spec (0%)
+   0 exec fns with complete spec (requires+ensures) (0%)
+   1 exec fns missing spec (25%)
    3 proof/spec fns clean (75%)
    0 proof/spec fns with holes (0%)
    4 total fns
@@ -67,15 +62,15 @@ Function Specs:
 
 Holes Found: 0 total
 
-🎉 No proof holes found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 07:09:57 -07:00
-Ended:     2026-03-17 07:09:57 -07:00
-Duration:  3ms
+Started:   2026-03-17 08:52:59 -07:00
+Ended:     2026-03-17 08:52:59 -07:00
+Duration:  4ms
 
 Full output: src/Chap03/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap03/analyses/veracity-review-verus-proof-holes.log

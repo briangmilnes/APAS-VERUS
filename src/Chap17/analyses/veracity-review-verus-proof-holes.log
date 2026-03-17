@@ -21,9 +21,11 @@ Table of Contents:
 =================================================================
 
 ℹ MathSeq.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap17/MathSeq.rs:714: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap17/MathSeq.rs:726: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:714: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:726: info: accept()
    Info: 2 total
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:714: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:726: info: structural_false_positive EQ_CLONE_ASSUME eq [high]
 
 =================================================================
 2. Depends Upon
@@ -65,15 +67,18 @@ Function Specs:
 
 Holes Found: 0 total
 
+Structural False Positives: 2 detected (language limitations, not missing proof)
+   2 × EQ_CLONE_ASSUME
+
 🎉 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 07:09:57 -07:00
-Ended:     2026-03-17 07:09:57 -07:00
+Started:   2026-03-17 08:53:00 -07:00
+Ended:     2026-03-17 08:53:00 -07:00
 Duration:  7ms
 
 Full output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
