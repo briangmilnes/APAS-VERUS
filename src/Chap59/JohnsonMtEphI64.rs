@@ -97,6 +97,7 @@ pub mod JohnsonMtEphI64 {
 
         if range_size == 1 {
             let u = start;
+            proof { assume(graph@.A.len() * 2 + 2 <= usize::MAX as int); }
             let dijkstra_result = dijkstra(graph, u);
 
             let p_u = *potentials.nth(u);

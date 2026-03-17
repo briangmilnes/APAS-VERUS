@@ -19,5 +19,23 @@ pub mod pervasives_plus {
         true  // Always returns true, ignoring the claim
     }
 
+    /// Swap two elements in a Vec without cloning.
+    /// Wraps std Vec::swap, preserving T-level element identity.
+    /// Required because vstd specs Vec::set and set_and_swap but not Vec::swap.
+    #[verifier::external_body]
+    pub fn vec_swap<T>(v: &mut Vec<T>, i: usize, j: usize)
+        requires
+            i < old(v)@.len(),
+            j < old(v)@.len(),
+        ensures
+            v@.len() == old(v)@.len(),
+            v@[i as int] == old(v)@[j as int],
+            v@[j as int] == old(v)@[i as int],
+            forall|k: int| 0 <= k < v@.len() && k != i as int && k != j as int ==>
+                #[trigger] v@[k] == old(v)@[k],
+    {
+        v.swap(i, j);
+    }
+
     } // verus!
 }

@@ -136,6 +136,11 @@ pub mod DoubleHashFlatHashTableStEph {
                             ==> !(#[trigger] table.table@[(hh + d * step as int) % (m as int)] is Empty)
                 });
             }
+            let mut slot: usize = h;
+            proof {
+                vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
+                assert(slot as int == (h as int + 0int * step as int) % (m as int));
+            }
             let mut attempt: usize = 0;
             while attempt < m
                 invariant
@@ -145,6 +150,8 @@ pub mod DoubleHashFlatHashTableStEph {
                     h < m,
                     step >= 1usize,
                     table.table@.len() == m as int,
+                    slot < m,
+                    slot as int == (h as int + attempt as int * step as int) % (m as int),
                     h as nat == (table.spec_hash@)(*key) % (m as nat),
                     spec_doublehashflathashsteph_wf(table),
                     // Bridge: wf probe chain for *key uses step.
@@ -165,11 +172,6 @@ pub mod DoubleHashFlatHashTableStEph {
                         ==> !(#[trigger] table.table@[(h as int + d * step as int) % (m as int)] is Empty),
                 decreases m - attempt,
             {
-                let slot = double_hash_probe(&table.hash_fn, key, table.current_size, attempt, table.spec_hash);
-                proof {
-                    // Bridge wrapping arithmetic to spec: slot == (h + attempt * step) % m.
-                    assume(slot as int == (h as int + attempt as int * step as int) % (m as int));
-                }
                 let entry = table.table[slot].clone();
                 match entry {
                     FlatEntry::Occupied(k, v) => {
@@ -216,6 +218,35 @@ pub mod DoubleHashFlatHashTableStEph {
                             assert(!(table.table@[slot as int] is Empty));
                         }
                     }
+                }
+                // Update slot = (slot + step) % m incrementally.
+                let step_mod: usize = step % m;
+                let ghost prev_slot: int = slot as int;
+                slot = if step_mod < m - slot { slot + step_mod } else { step_mod - (m - slot) };
+                proof {
+                    let gs: int = step as int;
+                    let gm: int = m as int;
+                    let gsm: int = step_mod as int;
+                    let ga: int = attempt as int;
+                    let gh: int = h as int;
+                    // Safe addition produces (prev_slot + step_mod) % m.
+                    if gsm < gm - prev_slot {
+                        vstd::arithmetic::div_mod::lemma_small_mod((prev_slot + gsm) as nat, gm as nat);
+                    } else {
+                        vstd::arithmetic::div_mod::lemma_small_mod((prev_slot + gsm - gm) as nat, gm as nat);
+                        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(prev_slot + gsm - gm, gm);
+                    }
+                    assert(slot as int == (prev_slot + gsm) % gm);
+                    // (prev_slot + step % m) % m == (prev_slot + step) % m.
+                    vstd::arithmetic::div_mod::lemma_add_mod_noop_right(prev_slot, gs, gm);
+                    assert(slot as int == (prev_slot + gs) % gm);
+                    // Chain: prev_slot == (h + attempt * step) % m, so
+                    // (prev_slot + step) % m == (step + (h + attempt*step) % m) % m
+                    //                       == (step + h + attempt*step) % m
+                    //                       == (h + (attempt+1)*step) % m.
+                    vstd::arithmetic::div_mod::lemma_add_mod_noop_right(gs, gh + ga * gs, gm);
+                    assert(gs + gh + ga * gs == gh + (ga + 1) * gs) by(nonlinear_arith);
+                    assert(slot as int == (gh + (ga + 1) * gs) % gm);
                 }
                 attempt = attempt + 1;
             }

@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap45/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap45/BinaryHeapPQ.rs
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,65 +20,18 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:223: error: external_body - #[verifier::external_body]
-       224 |             fn insert(&self, element: T) -> Self {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:571: error: external - #[verifier::external]
-       572 |         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:622: info: accept()
-   Holes: 2 total
-      1 × external_body
-      1 × external
-   Info: 1 total
-   Proof functions: 1 total (1 clean, 0 holed)
 ❌ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:1032: error: assume() - proof { assume(Self::spec_sorted(result.seq@)); }
-      1013 |             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:297: error: fn_missing_requires - fn parent — exec fn should have requires
+       290 |         fn right_child(i: usize) -> (child_idx: usize)
             ...
-      1030 | 
-      1031 |                 // accept hole: Proving sortedness requires heap property invariant (task #8).
-      1033 |                 result
-      1034 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:1175: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:1190: info: accept()
-   Holes: 1 total
-      1 × assume()
+       295 |         }
+       296 | 
+       298 |             ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
+       299 |         {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:1530: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:1551: info: accept()
    Info: 2 total
-   Proof functions: 3 total (3 clean, 0 holed)
-❌ Example45_2.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/Example45_2.rs:43: error: external - #[verifier::external]
-        44 |         impl Example45_2Trait for Example45_2 {
-   Holes: 1 total
-      1 × external
-   Proof functions: 1 total (1 clean, 0 holed)
-ℹ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs:98: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs:113: info: accept()
-   Info: 2 total
-   1 clean proof function
-❌ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:84: error: fn_missing_requires - fn total_order_le — exec fn should have requires
-        81 |         proof fn _leftist_heap_pq_verified() {}
-            ...
-        82 | 
-        83 |         /// Exec comparison with spec ensures connecting to TotalOrder::le.
-        85 |             ensures le <==> TotalOrder::le(*a, *b)
-        86 |         {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:1132: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:1152: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:1164: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:1174: info: accept()
-   Info: 4 total
    Proof functions: 4 total (4 clean, 0 holed)
-ℹ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:1046: info: accept()
-   Info: 1 total
-   3 clean proof functions
-ℹ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/UnsortedListPQ.rs:652: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/UnsortedListPQ.rs:667: info: accept()
-   Info: 2 total
-   1 clean proof function
 
 =================================================================
 2. Depends Upon
@@ -88,60 +41,46 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-BalancedTreePQ  depends upon only clean modules
 BinaryHeapPQ  depends upon only clean modules
-Example45_2  depends upon only clean modules
-HeapsortExample  depends upon only clean modules
-LeftistHeapPQ  depends upon only clean modules
-SortedListPQ  depends upon only clean modules
-UnsortedListPQ  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-BalancedTreePQ.rs  depends upon only clean modules
 BinaryHeapPQ.rs  depends upon only clean modules
-Example45_2.rs  depends upon only clean modules
-HeapsortExample.rs  depends upon only clean modules
-LeftistHeapPQ.rs  depends upon only clean modules
-SortedListPQ.rs  depends upon only clean modules
-UnsortedListPQ.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 42%)
-   4 holed (holes or errors, 57%)
-   7 total
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
+   1 total
 
 Proof Functions:
-   14 clean (100%)
+   4 clean (100%)
    0 holed (0%)
-   14 total
+   4 total
 
 Function Specs:
-   257 exec fns with complete spec (requires+ensures) (70%)
-   2 exec fns missing spec (0%)
-   103 proof/spec fns clean (28%)
+   49 exec fns with complete spec (requires+ensures) (59%)
+   1 exec fns missing spec (1%)
+   33 proof/spec fns clean (39%)
    0 proof/spec fns with holes (0%)
-   362 total fns
+   83 total fns
 
 
-Holes Found: 4 total
-   1 × assume() (25%)
-   1 × external_body (25%)
-   2 × external (50%)
+Holes Found: 0 total
+
+🎉 No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 07:09:58 -07:00
-Ended:     2026-03-17 07:09:58 -07:00
-Duration:  50ms
+Started:   2026-03-17 07:34:29 -07:00
+Ended:     2026-03-17 07:34:29 -07:00
+Duration:  20ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap45/analyses/veracity-review-verus-proof-holes.log

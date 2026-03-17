@@ -108,14 +108,21 @@ pub mod QuadProbFlatHashTableStEph {
             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let m = table.current_size;
             let mut attempt: usize = 0;
+            let mut slot: usize = h;
+            proof {
+                vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
+                assert(slot as int == (h as int + 0int * 0int) % (m as int));
+            }
             while attempt < m
                 invariant
                     attempt <= m,
                     m == table.current_size,
                     m > 0,
                     h < m,
+                    slot < m,
                     table.table@.len() == m as int,
                     h as nat == (table.spec_hash@)(*key) % (m as nat),
+                    slot as int == (h as int + attempt as int * attempt as int) % (m as int),
                     spec_quadprobflathashsteph_wf(table),
                     // Prior probe positions don't have the key.
                     forall |d: int| 0 <= d < attempt as int
@@ -125,11 +132,6 @@ pub mod QuadProbFlatHashTableStEph {
                         ==> !(#[trigger] table.table@[(h as int + d * d) % (m as int)] is Empty),
                 decreases m - attempt,
             {
-                let slot = quadratic_probe(&table.hash_fn, key, table.current_size, attempt, table.spec_hash);
-                proof {
-                    // Bridge wrapping arithmetic to spec: slot == (h + attempt²) % m.
-                    assume(slot as int == (h as int + attempt as int * attempt as int) % (m as int));
-                }
                 let entry = table.table[slot].clone();
                 match entry {
                     FlatEntry::Occupied(k, v) => {
@@ -182,6 +184,64 @@ pub mod QuadProbFlatHashTableStEph {
                             assert(!(table.table@[slot as int] is Empty));
                         }
                     }
+                }
+                // Update slot for next attempt: slot_{a+1} = (h + (a+1)^2) % m
+                // = (slot + 2*a + 1) % m. Compute in two overflow-safe steps.
+                let ghost prev_slot: int = slot as int;
+                let slot1: usize = if attempt < m - slot { slot + attempt } else { attempt - (m - slot) };
+                proof {
+                    let sum = prev_slot + attempt as int;
+                    if sum < m as int {
+                        vstd::arithmetic::div_mod::lemma_small_mod(sum as nat, m as nat);
+                    } else {
+                        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum - m as int, m as int);
+                        vstd::arithmetic::div_mod::lemma_small_mod((sum - m as int) as nat, m as nat);
+                    }
+                    assert(slot1 as int == (prev_slot + attempt as int) % (m as int));
+                }
+                let incr: usize = attempt + 1;
+                slot = if incr < m {
+                    if incr < m - slot1 { slot1 + incr } else { incr - (m - slot1) }
+                } else {
+                    slot1
+                };
+                proof {
+                    let gi: int = incr as int;
+                    let gm: int = m as int;
+                    let gs1: int = slot1 as int;
+                    let ga: int = attempt as int;
+                    let gh: int = h as int;
+                    if gi < gm {
+                        let sum2 = gs1 + gi;
+                        if sum2 < gm {
+                            vstd::arithmetic::div_mod::lemma_small_mod(sum2 as nat, gm as nat);
+                        } else {
+                            vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum2 - gm, gm);
+                            vstd::arithmetic::div_mod::lemma_small_mod((sum2 - gm) as nat, gm as nat);
+                        }
+                        assert(slot as int == (gs1 + gi) % gm);
+                    } else {
+                        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(gs1, gm);
+                        vstd::arithmetic::div_mod::lemma_small_mod(gs1 as nat, gm as nat);
+                        assert(slot as int == (gs1 + gi) % gm);
+                    }
+                    // Chain: slot = (gs1 + gi) % gm
+                    //   where gs1 = (prev_slot + ga) % gm, prev_slot = (gh + ga*ga) % gm.
+                    // Lift to: slot = (gh + ga*ga + ga + gi) % gm = (gh + (ga+1)^2) % gm.
+                    vstd::arithmetic::div_mod::lemma_add_mod_noop_right(
+                        gi, prev_slot + ga, gm);
+                    assert((gi + gs1) % gm == (gi + prev_slot + ga) % gm);
+                    assert((gs1 + gi) % gm == (gi + gs1) % gm);
+                    assert(slot as int == (gi + prev_slot + ga) % gm);
+                    assert(prev_slot == (gh + ga * ga) % gm);
+                    vstd::arithmetic::div_mod::lemma_add_mod_noop_right(
+                        gi + ga, gh + ga * ga, gm);
+                    assert((gi + ga + prev_slot) % gm == (gi + ga + gh + ga * ga) % gm);
+                    assert(gi + prev_slot + ga == gi + ga + prev_slot);
+                    assert(slot as int == (gh + ga * ga + ga + gi) % gm);
+                    assert((ga + 1) * (ga + 1) == ga * ga + 2 * ga + 1) by(nonlinear_arith);
+                    assert(ga + gi == 2 * ga + 1);
+                    assert(slot as int == (gh + (ga + 1) * (ga + 1)) % gm);
                 }
                 attempt = attempt + 1;
             }

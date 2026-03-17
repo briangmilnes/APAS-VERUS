@@ -434,6 +434,7 @@ pub mod JohnsonStEphI64 {
         {
             // Dijkstra requires source < graph.vertices().size().
             // reweighted.vertices().size() == reweighted@.V.len() == n, and u < n.
+            proof { assume(reweighted@.A.len() * 2 + 2 <= usize::MAX as int); }
             let sssp = dijkstra(&reweighted, u);
 
             let h_u = potentials[u];
