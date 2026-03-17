@@ -13,6 +13,7 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
+     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -37,13 +38,6 @@ Table of Contents:
        413 |         fn difference(&self, other: &Self) -> (remaining: Self)
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:423: error: external_body - #[verifier::external_body]
        424 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:461: error: assume() - proof { assume(found == self@.contains(x@)); }  // accept ho
-       457 |         fn find(&self, x: &T) -> (found: B)
-            ...
-       459 |             let handle = self.inner.acquire_read();
-       460 |             let found = handle.borrow().find(x);
-       462 |             handle.release_read();
-       463 |             found
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:622: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
        623 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:623: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
@@ -63,12 +57,15 @@ Table of Contents:
        372 | 
        374 |                 ensures common@.len() <= self_vals@.len()
        375 |             {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:461: info: accept()
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:546: info: accept()
-   Holes: 9 total
-      2 × assume()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:622: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:623: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph [high]
+   Holes: 8 total
+      1 × assume()
       2 × unsafe impl
       5 × external_body
-   Info: 1 total
+   Info: 2 total
 ❌ AVLTreeSetMtPer.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:225: error: external_body - #[verifier::external_body]
        226 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
@@ -97,6 +94,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:545: info: accept()
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:567: info: accept()
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:606: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:580: info: structural_false_positive STD_TRAIT_IMPL cmp [high]
    Holes: 8 total
       8 × external_body
    Info: 4 total
@@ -151,28 +149,6 @@ Table of Contents:
        134 |     fn example_41_3_from_seq_demonstration_impl()
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/Example41_3.rs:181: error: external_body - #[verifier::external_body]
        182 |     fn additional_set_operations_impl()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/Example41_3.rs:237: error: fn_missing_ensures - fn example_41_1_array_set — exec fn should have ensures
-       229 |         fn demonstrate_set_operations() {
-            ...
-       235 |     }
-       236 | 
-       238 |     { example_41_1_array_set_impl(); }
-       239 |     pub fn example_41_1_avl_set()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/Example41_3.rs:239: error: fn_missing_ensures - fn example_41_1_avl_set — exec fn should have ensures
-       237 |     pub fn example_41_1_array_set()
-       238 |     { example_41_1_array_set_impl(); }
-       240 |     { example_41_1_avl_set_impl(); }
-       241 |     pub fn example_41_3_from_seq_demonstration()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/Example41_3.rs:241: error: fn_missing_ensures - fn example_41_3_from_seq_demonstration — exec fn should have ensures
-       239 |     pub fn example_41_1_avl_set()
-       240 |     { example_41_1_avl_set_impl(); }
-       242 |     { example_41_3_from_seq_demonstration_impl(); }
-       243 |     pub fn additional_set_operations()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/Example41_3.rs:243: error: fn_missing_ensures - fn additional_set_operations — exec fn should have ensures
-       241 |     pub fn example_41_3_from_seq_demonstration()
-       242 |     { example_41_3_from_seq_demonstration_impl(); }
-       244 |     { additional_set_operations_impl(); }
-       245 | 
    Holes: 4 total
       4 × external_body
 
@@ -226,18 +202,34 @@ Function Specs:
    256 total fns
 
 
-Holes Found: 23 total
-   4 × assume() (17%)
-   2 × unsafe impl (8%)
-   17 × external_body (73%)
+Holes Found: 22 total
+   3 × assume() (13%)
+   2 × unsafe impl (9%)
+   17 × external_body (77%)
+
+Warnings: 3 total
+   3 × fn_missing_requires
+
+Accepted (reviewed): 18 total
+   18 × accept()
+
+Structural False Positives: 3 detected (language limitations, not missing proof)
+   2 × UNSAFE_SEND_SYNC
+   1 × STD_TRAIT_IMPL
+
+Real Actionable Holes: 19 (22 total - 3 structural FPs in count)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:40:03 -07:00
-Ended:     2026-03-17 11:40:03 -07:00
-Duration:  69ms
+Started:   2026-03-17 12:35:30 -07:00
+Ended:     2026-03-17 12:35:30 -07:00
+Duration:  79ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
+ 2026-03-17 12:35:30 -07:00
+Ended:     2026-03-17 12:35:30 -07:00
+Duration:  79ms
+
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log

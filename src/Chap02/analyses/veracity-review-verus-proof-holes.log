@@ -13,6 +13,7 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
+     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -33,6 +34,10 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap02/HFSchedulerMtEph.rs:19: info: struct_outside_verus_accept_hole
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap02/HFSchedulerMtEph.rs:25: info: enum_outside_verus_accept_hole
    Info: 10 total
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap02/HFSchedulerMtEph.rs:105: info: structural_false_positive THREAD_SPAWN join [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap02/HFSchedulerMtEph.rs:132: info: structural_false_positive THREAD_SPAWN spawn_join [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap02/HFSchedulerMtEph.rs:163: info: structural_false_positive THREAD_SPAWN spawn [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap02/HFSchedulerMtEph.rs:185: info: structural_false_positive THREAD_SPAWN wait [medium]
 
 =================================================================
 2. Depends Upon
@@ -76,15 +81,27 @@ Function Specs:
 
 Holes Found: 0 total
 
-🎉 No proof holes or warnings found! All proofs are complete.
+Accepted (reviewed): 10 total
+   6 × external_body_accept_hole
+   1 × accept()
+   1 × external_type_specification_accept_hole
+   1 × struct_outside_verus_accept_hole
+   1 × enum_outside_verus_accept_hole
+
+Structural False Positives: 4 detected (language limitations, not missing proof)
+   4 × THREAD_SPAWN
+
+Real Actionable Holes: 0 (0 total - 4 structural FPs in count)
+
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:40:02 -07:00
-Ended:     2026-03-17 11:40:02 -07:00
-Duration:  2ms
+Started:   2026-03-17 12:35:29 -07:00
+Ended:     2026-03-17 12:35:29 -07:00
+Duration:  6ms
 
 Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log

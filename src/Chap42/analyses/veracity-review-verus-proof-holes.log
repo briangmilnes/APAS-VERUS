@@ -13,6 +13,7 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
+     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -21,37 +22,23 @@ Table of Contents:
 
 ✓ Example42_1.rs
    1 clean proof function
-❌ TableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableMtEph.rs:2175: error: fn_missing_requires - fn from_sorted_entries — exec fn should have requires
-      2161 |         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>) {
-            ...
-      2173 | 
-      2174 |     // veracity: no_requires
-      2176 |         ensures constructed@.dom().finite()
-      2177 |     {
+ℹ TableMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableMtEph.rs:2203: info: accept()
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableMtEph.rs:2215: info: accept()
    Info: 2 total
-   Proof functions: 11 total (11 clean, 0 holed)
-❌ TableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStEph.rs:2083: error: fn_missing_requires - fn from_sorted_entries — exec fn should have requires
-      2069 |         fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>) {
-            ...
-      2081 | 
-      2082 |     // veracity: no_requires
-      2084 |         entries: Vec<Pair<K, V>>,
-      2085 |     ) -> (cloned: TableStEph<K, V>)
+   11 clean proof functions
+ℹ TableStEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStEph.rs:2119: info: accept()
    Info: 1 total
-   Proof functions: 8 total (8 clean, 0 holed)
+   8 clean proof functions
 ❌ TableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStPer.rs:2019: error: fn_missing_requires - fn from_sorted_entries — exec fn should have requires
-      2004 |         fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStPer.rs:2036: error: fn_missing_wf_ensures - fn collect_by_key — ensures should include grouped.spec_tablestper_wf() for return type TableStPer
+      2019 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
             ...
-      2017 | 
-      2018 |     // veracity: no_requires
-      2020 |         entries: Vec<Pair<K, V>>,
-      2021 |     ) -> (cloned: TableStPer<K, V>)
+      2034 |     /// APAS Algorithm 42.3: collect groups a sequence of (key, value) pairs into a table
+      2035 |     /// mapping each key to the subsequence of values for that key, preserving order.
+      2037 |         pairs: &ArraySeqStPerS<Pair<K, V>>,
+      2038 |     ) -> (grouped: TableStPer<K, ArraySeqStPerS<V>>)
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStPer.rs:2194: info: accept()
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStPer.rs:2205: info: accept()
    Info: 2 total
@@ -84,8 +71,8 @@ TableStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 25%)
-   3 holed (holes or errors, 75%)
+   3 clean (no holes, no errors; 75%)
+   1 holed (holes or errors, 25%)
    4 total
 
 Proof Functions:
@@ -103,15 +90,24 @@ Function Specs:
 
 Holes Found: 0 total
 
-🎉 No proof holes found! All proofs are complete.
+Warnings: 1 total
+   1 × fn_missing_wf_ensures
+
+Accepted (reviewed): 5 total
+   5 × accept()
+
+No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:40:03 -07:00
-Ended:     2026-03-17 11:40:03 -07:00
-Duration:  87ms
+Started:   2026-03-17 12:35:30 -07:00
+Ended:     2026-03-17 12:35:30 -07:00
+Duration:  97ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
+2:35:30 -07:00
+Duration:  97ms
+
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log

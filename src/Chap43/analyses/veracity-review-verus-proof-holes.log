@@ -13,6 +13,7 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
+     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -47,40 +48,33 @@ Table of Contents:
       8 × external_body
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ AugOrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStEph.rs:71: error: external_body - #[verifier::external_body]
-        72 |     pub fn calculate_reduction<K: StT + Ord, V: StT, F>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStEph.rs:661: error: external_body - #[verifier::external_body]
-       662 |         fn join_key(&mut self, other: Self)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStEph.rs:814: error: external_body - #[verifier::external_body]
-       815 |         fn clone(&self) -> (cloned: Self)
-   Holes: 3 total
-      3 × external_body
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStEph.rs:835: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       831 |         fn clone(&self) -> (cloned: Self)
+            ...
+       833 |         {
+       834 |             let base_cloned = self.base_table.clone();
+       836 |             Self {
+       837 |                 base_table: base_cloned,
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStEph.rs:835: info: structural_false_positive EQ_CLONE_ASSUME clone [high]
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ AugOrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStPer.rs:102: error: assume() - proof { assume(reducer.requires((&reduced, &pair.1))); }
-        75 |     pub fn calculate_reduction<K: StT + Ord, V: StT, F>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStPer.rs:124: error: assume() - assume(forall|v1: &V, v2: &V| #[trigger] cloned.requires((v1
+       117 |     proof fn lemma_reducer_clone_total<V: StT, F: Fn(&V, &V) -> V + Clone>(
             ...
-       100 |         {
-       101 |             let pair = pairs.nth(i);
-       103 |             reduced = reducer(&reduced, &pair.1);
-       104 |             i += 1;
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStPer.rs:705: error: assume() - proof { assume(left.reducer.requires(
-       697 |         fn join_key(left: &Self, right: &Self) -> (joined: Self)
+       122 |         ensures forall|v1: &V, v2: &V| #[trigger] cloned.requires((v1, v2)),
+       123 |     {
+       125 |     }
+       126 | 
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStPer.rs:117: error: proof_fn_with_holes - proof fn lemma_reducer_clone_total — contains assume/external_body/admit, needs proof
+       109 |     proof fn lemma_aug_view<K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone>(
             ...
-       703 |                 left.cached_reduction.clone()
-       704 |             } else {
-       706 |                     (&left.cached_reduction, &right.cached_reduction))); }
-       707 |                 (left.reducer)(&left.cached_reduction, &right.cached_reduction)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStPer.rs:75: error: fn_missing_requires - fn calculate_reduction — exec fn should have requires
-        69 |         open spec fn view(&self) -> Map<K::V, V::V> { self.base_table@ }
-            ...
-        73 | 
-        74 |     /// Fold all values in `base` through `reducer`, returning `identity` for empty tables.
-        76 |         base: &OrderedTableStPer<K, V>,
-        77 |         reducer: &F,
-   Holes: 2 total
-      2 × assume()
-   Proof functions: 1 total (1 clean, 0 holed)
+       115 |     /// Clone bridge for closures: cloning a total reducer preserves totality.
+       116 |     /// Analogous to the eq/clone bridge pattern for values.
+       118 |         original: &F,
+       119 |         cloned: &F,
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 2 total (1 clean, 1 holed)
 ✓ Example43_1.rs
    1 clean proof function
 ❌ OrderedSetMtEph.rs
@@ -149,6 +143,17 @@ Table of Contents:
        489 |                 assume(left.spec_orderedsetsteph_wf());
        491 |             }
        492 |             (from_st(left), from_st(right))
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:68: error: fn_missing_wf_ensures - fn from_st — ensures should include s.spec_orderedsetmteph_wf() for return type OrderedSetMtEph
+        62 |         pub closed spec fn spec_ghost_locked_set(self) -> Set<<T as View>::V> {
+            ...
+        66 | 
+        67 |     // Helper: construct Mt wrapper from St set (used by split/get_range/split_rank/from_seq).
+        69 |         requires inner.spec_orderedsetsteph_wf(), inner@.finite()
+        70 |         ensures s@ == inner@, s@.finite()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:430: info: structural_false_positive RWLOCK_GHOST split [low]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:431: info: structural_false_positive RWLOCK_GHOST split [low]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:489: info: structural_false_positive RWLOCK_GHOST split_rank [low]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:490: info: structural_false_positive RWLOCK_GHOST split_rank [low]
    Holes: 15 total
       7 × assume()
       8 × external_body
@@ -183,6 +188,7 @@ Table of Contents:
        736 |         ensures constructed@.finite(), constructed.spec_orderedsetsteph_wf()
        737 |     {
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:338: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:622: info: structural_false_positive STD_TRAIT_IMPL next [high]
    Holes: 11 total
       11 × external_body
    Info: 1 total
@@ -212,6 +218,7 @@ Table of Contents:
        601 | 
        603 |         ensures constructed@.finite(), constructed.spec_orderedsetstper_wf()
        604 |     {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:645: info: structural_false_positive STD_TRAIT_IMPL next [high]
    Holes: 9 total
       9 × external_body
 ❌ OrderedTableMtEph.rs
@@ -229,6 +236,13 @@ Table of Contents:
        660 |         fn rank_key(&self, k: &K) -> (rank: usize)
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:677: error: external_body - #[verifier::external_body]
        678 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:887: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include constructed.spec_orderedtablemteph_wf() for return type OrderedTableMtEph
+       876 |         fn clone(&self) -> (cloned: Self)
+            ...
+       885 |     }
+       886 | 
+       888 |         requires entries.spec_avltreeseqstper_wf()
+       889 |         ensures constructed@.dom().finite()
    Holes: 7 total
       7 × external_body
 ❌ OrderedTableMtPer.rs
@@ -261,6 +275,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:522: info: accept()
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:526: info: accept()
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:527: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:81: info: structural_false_positive RWLOCK_GHOST from_st_table [low]
    Holes: 8 total
       2 × assume()
       6 × external_body
@@ -290,6 +305,13 @@ Table of Contents:
        699 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStEph.rs:712: error: external_body - #[verifier::external_body]
        713 |         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStEph.rs:887: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include cloned.spec_orderedtablesteph_wf() for return type OrderedTableStEph
+       880 |         fn clone(&self) -> (cloned: Self) {
+            ...
+       885 |     }
+       886 | 
+       888 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+       889 |     ) -> (cloned: OrderedTableStEph<K, V>)
    Holes: 12 total
       12 × external_body
 ❌ OrderedTableStPer.rs
@@ -313,7 +335,15 @@ Table of Contents:
        619 |         fn select_key(&self, i: usize) -> (key: Option<K>)
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:632: error: external_body - #[verifier::external_body]
        633 |         fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:668: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include table.spec_orderedtablestper_wf() for return type OrderedTableStPer
+       633 |         fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
+            ...
+       666 |     }
+       667 | 
+       669 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+       670 |     ) -> (table: OrderedTableStPer<K, V>)
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:832: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:570: info: structural_false_positive OPAQUE_EXTERNAL get_key_range [medium]
    Holes: 10 total
       10 × external_body
    Info: 1 total
@@ -359,38 +389,56 @@ OrderedTableStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 9%)
-   10 holed (holes or errors, 90%)
+   2 clean (no holes, no errors; 18%)
+   9 holed (holes or errors, 81%)
    11 total
 
 Proof Functions:
-   4 clean (100%)
-   0 holed (0%)
-   4 total
+   4 clean (80%)
+   1 holed (20%)
+   5 total
 
 Function Specs:
-   560 exec fns with complete spec (requires+ensures) (84%)
-   4 exec fns missing spec (0%)
+   561 exec fns with complete spec (requires+ensures) (84%)
+   3 exec fns missing spec (0%)
    96 proof/spec fns clean (14%)
-   0 proof/spec fns with holes (0%)
-   660 total fns
+   1 proof/spec fns with holes (0%)
+   661 total fns
 
 
-Holes Found: 85 total
-   11 × assume() (12%)
-   74 × external_body (87%)
+Holes Found: 81 total
+   10 × assume() (12%)
+   71 × external_body (87%)
+
+Warnings: 8 total
+   3 × fn_missing_requires
+   4 × fn_missing_wf_ensures
+   1 × assume_eq_clone_workaround
+
+Accepted (reviewed): 5 total
+   5 × accept()
+
+Structural False Positives: 9 detected (language limitations, not missing proof)
+   5 × RWLOCK_GHOST
+   2 × STD_TRAIT_IMPL
+   1 × EQ_CLONE_ASSUME
+   1 × OPAQUE_EXTERNAL
+
+Real Actionable Holes: 73 (81 total - 8 structural FPs in count)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:40:03 -07:00
-Ended:     2026-03-17 11:40:03 -07:00
-Duration:  94ms
+Started:   2026-03-17 12:35:30 -07:00
+Ended:     2026-03-17 12:35:30 -07:00
+Duration:  111ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
-  2026-03-17 11:40:03 -07:00
-Ended:     2026-03-17 11:40:03 -07:00
-Duration:  94ms
+=================================================================
+
+Started:   2026-03-17 12:35:30 -07:00
+Ended:     2026-03-17 12:35:30 -07:00
+Duration:  111ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log

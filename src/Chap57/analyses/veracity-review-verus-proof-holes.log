@@ -13,6 +13,7 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
+     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -47,6 +48,8 @@ Table of Contents:
         95 |         ensures r.dist == dist, r.vertex == vertex,
         96 |     {
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:167: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:101: info: structural_false_positive STD_TRAIT_IMPL cmp [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:118: info: structural_false_positive STD_TRAIT_IMPL partial_cmp [high]
    Holes: 4 total
       2 × assume()
       2 × external_body
@@ -100,13 +103,24 @@ Holes Found: 4 total
    2 × assume() (50%)
    2 × external_body (50%)
 
+Warnings: 1 total
+   1 × fn_missing_requires
+
+Accepted (reviewed): 1 total
+   1 × accept()
+
+Structural False Positives: 2 detected (language limitations, not missing proof)
+   2 × STD_TRAIT_IMPL
+
+Real Actionable Holes: 2 (4 total - 2 structural FPs in count)
+
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:40:04 -07:00
-Ended:     2026-03-17 11:40:04 -07:00
-Duration:  4ms
+Started:   2026-03-17 12:35:30 -07:00
+Ended:     2026-03-17 12:35:30 -07:00
+Duration:  8ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
-hap57/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log

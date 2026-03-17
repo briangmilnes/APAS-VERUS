@@ -13,6 +13,7 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
+     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -34,32 +35,18 @@ Table of Contents:
    Holes: 1 total
       1 × external
    Proof functions: 1 total (1 clean, 0 holed)
-❌ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/HeapsortExample.rs:131: error: fn_missing_requires_ensures - fn is_vec_sorted_exec — exec fn should have requires and ensures
-       126 |         proof fn _heapsort_example_verified() {}
-            ...
-       129 | 
-       130 |         /// Check if a Vec is sorted in non-decreasing order using element-wise comparison.
-       132 |         {
-       133 |             if v.len() <= 1 {
+ℹ HeapsortExample.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap45/HeapsortExample.rs:98: info: accept()
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap45/HeapsortExample.rs:113: info: accept()
    Info: 2 total
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:85: error: fn_missing_requires - fn total_order_le — exec fn should have requires
-        81 |         proof fn _leftist_heap_pq_verified() {}
-            ...
-        83 |         /// Exec comparison with spec ensures connecting to TotalOrder::le.
-        84 |         // veracity: no_requires
-        86 |             ensures le <==> TotalOrder::le(*a, *b)
-        87 |         {
+   1 clean proof function
+ℹ LeftistHeapPQ.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1133: info: accept()
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1153: info: accept()
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1165: info: accept()
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1175: info: accept()
    Info: 4 total
-   Proof functions: 4 total (4 clean, 0 holed)
+   4 clean proof functions
 ℹ SortedListPQ.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap45/SortedListPQ.rs:1046: info: accept()
    Info: 1 total
@@ -103,8 +90,8 @@ UnsortedListPQ.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 57%)
-   3 holed (holes or errors, 42%)
+   6 clean (no holes, no errors; 85%)
+   1 holed (holes or errors, 14%)
    7 total
 
 Proof Functions:
@@ -123,17 +110,16 @@ Function Specs:
 Holes Found: 1 total
    1 × external (100%)
 
+Accepted (reviewed): 12 total
+   12 × accept()
+
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:40:03 -07:00
-Ended:     2026-03-17 11:40:03 -07:00
-Duration:  61ms
+Started:   2026-03-17 12:35:30 -07:00
+Ended:     2026-03-17 12:35:30 -07:00
+Duration:  68ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
-026-03-17 11:40:03 -07:00
-Ended:     2026-03-17 11:40:03 -07:00
-Duration:  61ms
-
-Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap45/analyses/veracity-review-verus-proof-holes.log

@@ -13,6 +13,7 @@ Table of Contents:
      4.3. Next Target Directories
      4.4. Not Verusified
      4.5. Not Verusified (clean deps only)
+     4.6. Chapter by Chapter Proof Targeting
   5. Started/Ended/Duration
 
 =================================================================
@@ -32,6 +33,10 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap30/Probability.rs:150: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap30/Probability.rs:159: info: external_body_accept_hole
    Info: 11 total
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap30/Probability.rs:67: info: structural_false_positive STD_TRAIT_IMPL eq [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap30/Probability.rs:78: info: structural_false_positive STD_TRAIT_IMPL partial_cmp [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap30/Probability.rs:86: info: structural_false_positive STD_TRAIT_IMPL cmp [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap30/Probability.rs:109: info: structural_false_positive STD_TRAIT_IMPL hash [high]
 
 =================================================================
 2. Depends Upon
@@ -73,15 +78,26 @@ Function Specs:
 
 Holes Found: 0 total
 
-🎉 No proof holes or warnings found! All proofs are complete.
+Accepted (reviewed): 11 total
+   11 × external_body_accept_hole
+
+Structural False Positives: 4 detected (language limitations, not missing proof)
+   4 × STD_TRAIT_IMPL
+
+Real Actionable Holes: 0 (0 total - 4 structural FPs in count)
+
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 11:40:03 -07:00
-Ended:     2026-03-17 11:40:03 -07:00
-Duration:  2ms
+Started:   2026-03-17 12:35:29 -07:00
+Ended:     2026-03-17 12:35:29 -07:00
+Duration:  3ms
 
 Full output: src/Chap30/analyses/veracity-review-verus-proof-holes.log
+12:35:29 -07:00
+Duration:  3ms
 
+Full output: src/Chap30/analyses/veracity-review-verus-proof-holes.log

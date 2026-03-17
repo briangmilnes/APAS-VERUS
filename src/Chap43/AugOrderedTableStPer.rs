@@ -79,16 +79,14 @@ broadcast use {
     ) -> (reduced: V)
     where
         F: Fn(&V, &V) -> V + Clone,
+        requires forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
         ensures base@.dom().finite(),
     {
         let pairs = base.collect();
-        // collect ensures: base@.dom().finite(), pairs.spec_avltreeseqstper_wf()
         let sz = pairs.length();
-        // length ensures: sz as nat == pairs@.len(), given spec_avltreeseqstper_wf()
         if sz == 0 {
             return identity.clone();
         }
-        // sz > 0 so pairs@.len() > 0, safe to call nth(0).
         let mut reduced = pairs.nth(0).1.clone();
         let mut i: usize = 1;
         while i < sz
@@ -96,10 +94,10 @@ broadcast use {
                 1 <= i <= pairs@.len(),
                 sz as nat == pairs@.len(),
                 pairs.spec_avltreeseqstper_wf(),
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
             decreases pairs@.len() - i,
         {
             let pair = pairs.nth(i);
-            proof { assume(reducer.requires((&reduced, &pair.1))); }
             reduced = reducer(&reduced, &pair.1);
             i += 1;
         }
@@ -113,6 +111,18 @@ broadcast use {
     )
         ensures t@ =~= t.base_table@
     {}
+
+    /// Clone bridge for closures: cloning a total reducer preserves totality.
+    /// Analogous to the eq/clone bridge pattern for values.
+    proof fn lemma_reducer_clone_total<V: StT, F: Fn(&V, &V) -> V + Clone>(
+        original: &F,
+        cloned: &F,
+    )
+        requires forall|v1: &V, v2: &V| #[trigger] original.requires((v1, v2)),
+        ensures forall|v1: &V, v2: &V| #[trigger] cloned.requires((v1, v2)),
+    {
+        assume(forall|v1: &V, v2: &V| #[trigger] cloned.requires((v1, v2)));
+    }
 
     // 8. traits
 
@@ -132,11 +142,14 @@ broadcast use {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constructs empty base table with reducer/identity
         fn empty(reducer: F, identity: V) -> (empty: Self)
+            requires forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_augorderedtablestper_wf();
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constructs singleton base table with reducer/identity
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
-            requires obeys_feq_clone::<Pair<K, V>>(),
+            requires
+                obeys_feq_clone::<Pair<K, V>>(),
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
             ensures tree@.dom().finite(), tree.spec_augorderedtablestper_wf();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to TableStPer which uses linear scan
@@ -150,7 +163,11 @@ broadcast use {
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- clones base table (persistent), inserts linearly, recalculates reduction O(n)
         fn insert(&self, k: K, v: V) -> (updated: Self)
-            requires self.spec_augorderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
+            requires
+                self.spec_augorderedtablestper_wf(),
+
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 updated@.dom() =~= self@.dom().insert(k@),
                 updated@.dom().finite(),
@@ -160,6 +177,7 @@ broadcast use {
         fn delete(&self, k: &K) -> (updated: Self)
             requires
                 self.spec_augorderedtablestper_wf(),
+
                 obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
@@ -172,7 +190,11 @@ broadcast use {
         /// - APAS: Work O(n log n), Span O(n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- applies f to each key, then recalculates reduction O(n)
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
-            requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),
+            requires
+                keys.spec_arraysetsteph_wf(),
+                forall|k: &K| f.requires((k,)),
+                obeys_feq_full::<K>(),
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
             ensures
                 tabulated@.dom() =~= keys@,
                 tabulated.spec_augorderedtablestper_wf(),
@@ -184,7 +206,11 @@ broadcast use {
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- maps all values linearly, then recalculates reduction O(n)
         fn map<G: Fn(&V) -> V>(&self, f: G) -> (mapped: Self)
-            requires self.spec_augorderedtablestper_wf(), forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
+            requires
+                self.spec_augorderedtablestper_wf(),
+
+                forall|v: &V| f.requires((v,)),
+                obeys_feq_full::<K>(),
             ensures
                 mapped@.dom() == self@.dom(),
                 forall|k: K::V| #[trigger] mapped@.contains_key(k) ==>
@@ -199,6 +225,7 @@ broadcast use {
         fn filter<G: Fn(&K, &V) -> B>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
             requires
                 self.spec_augorderedtablestper_wf(),
+
                 forall|k: &K, v: &V| f.requires((k, v)),
                 obeys_feq_full::<Pair<K, V>>(),
                 forall|k: K, v: V, keep: bool| f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
@@ -214,6 +241,7 @@ broadcast use {
         fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (common: Self)
             requires
                 self.spec_augorderedtablestper_wf(),
+
                 other.spec_augorderedtablestper_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
@@ -232,6 +260,7 @@ broadcast use {
         fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (combined: Self)
             requires
                 self.spec_augorderedtablestper_wf(),
+
                 other.spec_augorderedtablestper_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
@@ -252,7 +281,11 @@ broadcast use {
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n * m), Span O(n * m) -- delegates to base table difference (linear scan), then recalculates reduction
         fn difference(&self, other: &Self) -> (remaining: Self)
-            requires self.spec_augorderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
+            requires
+                self.spec_augorderedtablestper_wf(),
+
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 remaining@.dom() =~= self@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] remaining@.contains_key(k) ==> remaining@[k] == self@[k],
@@ -261,7 +294,10 @@ broadcast use {
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n * m), Span O(n * m) -- delegates to base table restrict (linear scan), then recalculates reduction
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
-            requires self.spec_augorderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
+            requires
+                self.spec_augorderedtablestper_wf(),
+
+                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 restricted@.dom() =~= self@.dom().intersect(keys@),
                 forall|k: K::V| #[trigger] restricted@.contains_key(k) ==> restricted@[k] == self@[k],
@@ -270,7 +306,10 @@ broadcast use {
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n * m), Span O(n * m) -- delegates to base table subtract (linear scan), then recalculates reduction
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
-            requires self.spec_augorderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
+            requires
+                self.spec_augorderedtablestper_wf(),
+
+                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 subtracted@.dom() =~= self@.dom().difference(keys@),
                 forall|k: K::V| #[trigger] subtracted@.contains_key(k) ==> subtracted@[k] == self@[k],
@@ -320,6 +359,9 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, partitions into two tables + recalculates reductions
         fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))
             where Self: Sized
+            requires
+                self.spec_augorderedtablestper_wf(),
+
             ensures
                 self@.dom().finite(),
                 parts.0@.dom().finite(),
@@ -338,6 +380,7 @@ broadcast use {
             requires
                 left.spec_augorderedtablestper_wf(),
                 right.spec_augorderedtablestper_wf(),
+
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
             ensures
@@ -347,6 +390,9 @@ broadcast use {
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, filters range, builds new table + recalculates reduction
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+            requires
+                self.spec_augorderedtablestper_wf(),
+
             ensures
                 range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
@@ -372,6 +418,9 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, splits at rank into two tables + recalculates reductions
         fn split_rank_key(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
+            requires
+                self.spec_augorderedtablestper_wf(),
+
             ensures
                 self@.dom().finite(),
                 split.0@.dom().finite(),
@@ -387,6 +436,9 @@ broadcast use {
         /// - APAS: Work O(log n), Span O(log n) -- split + cached reduction
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- get_key_range O(n log n) + calculate_reduction O(n)
         fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
+            requires
+                self.spec_augorderedtablestper_wf(),
+
             ensures self@.dom().finite();
     }
 
@@ -398,6 +450,7 @@ broadcast use {
     {
         open spec fn spec_augorderedtablestper_wf(&self) -> bool {
             self.base_table.spec_orderedtablestper_wf()
+            && forall|v1: &V, v2: &V| #[trigger] self.reducer.requires((v1, v2))
         }
 
         fn size(&self) -> (count: usize)
@@ -452,7 +505,10 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof {
+                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
+                lemma_aug_view(&r);
+            }
             r
         }
 
@@ -468,7 +524,10 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof {
+                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
+                lemma_aug_view(&r);
+            }
             r
         }
 
@@ -504,7 +563,10 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof {
+                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
+                lemma_aug_view(&r);
+            }
             r
         }
 
@@ -519,7 +581,10 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof {
+                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
+                lemma_aug_view(&r);
+            }
             r
         }
 
@@ -534,7 +599,10 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof {
+                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
+                lemma_aug_view(&r);
+            }
             r
         }
 
@@ -549,7 +617,10 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof {
+                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
+                lemma_aug_view(&r);
+            }
             r
         }
 
@@ -564,7 +635,10 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof {
+                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
+                lemma_aug_view(&r);
+            }
             r
         }
 
@@ -579,7 +653,10 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof {
+                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
+                lemma_aug_view(&r);
+            }
             r
         }
 
@@ -594,7 +671,10 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof {
+                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
+                lemma_aug_view(&r);
+            }
             r
         }
 
@@ -702,8 +782,6 @@ broadcast use {
             } else if right.base_table.size() == 0 {
                 left.cached_reduction.clone()
             } else {
-                proof { assume(left.reducer.requires(
-                    (&left.cached_reduction, &right.cached_reduction))); }
                 (left.reducer)(&left.cached_reduction, &right.cached_reduction)
             };
 
@@ -713,7 +791,10 @@ broadcast use {
                 reducer: left.reducer.clone(),
                 identity: left.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof {
+                lemma_reducer_clone_total::<V, F>(&left.reducer, &r.reducer);
+                lemma_aug_view(&r);
+            }
             r
         }
 
