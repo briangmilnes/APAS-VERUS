@@ -600,7 +600,6 @@ broadcast use {
     }
 
     pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStPer<T>)
-        requires true,
         ensures constructed@.finite(), constructed.spec_orderedsetstper_wf()
     {
         let seq = AVLTreeSeqStPerS::from_vec(elements);

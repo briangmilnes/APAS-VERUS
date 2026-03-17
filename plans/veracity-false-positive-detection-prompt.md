@@ -1,5 +1,9 @@
 Veracity feature: detect and classify structural false positive proof holes.
 
+Changes to ~/projects/veracity/target/release/veracity-review-proof-holes
+
+We don't build in target/debug at all.
+
 Structural false positives are holes that cannot be removed due to
 Verus/Rust language limitations, not missing proof effort.
 
@@ -45,8 +49,16 @@ Categories to detect:
    Detection: external_body fn whose body calls functions from std:: that
    have no verus specification.
 
-Output format per hole:
-  file:line | category | fn_name | confidence (high/medium/low)
+Output format — emacs compile buffer compatible:
+
+  src/ChapNN/File.rs:LINE: info: structural_false_positive STD_TRAIT_IMPL fn_name [high]
+  src/ChapNN/File.rs:LINE: info: structural_false_positive THREAD_SPAWN fn_name [medium]
+  src/ChapNN/File.rs:LINE: info: structural_false_positive EQ_CLONE_ASSUME fn_name [high]
+  src/ChapNN/File.rs:LINE: info: structural_false_positive RWLOCK_GHOST fn_name [low]
+  src/ChapNN/File.rs:LINE: info: structural_false_positive UNSAFE_SEND_SYNC TypeName [high]
+  src/ChapNN/File.rs:LINE: info: structural_false_positive OPAQUE_EXTERNAL fn_name [medium]
+
+Format: file:line: severity: structural_false_positive CATEGORY fn_or_type_name [confidence]
 
 Confidence levels:
   high = pattern match is unambiguous

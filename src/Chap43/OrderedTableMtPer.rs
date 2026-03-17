@@ -74,7 +74,7 @@ pub mod OrderedTableMtPer {
         inner: OrderedTableStPer<K, V>,
     ) -> (s: OrderedTableMtPer<K, V>)
         requires inner@.dom().finite()
-        ensures s@.dom().finite()
+        ensures s@.dom().finite(), s.spec_orderedtablemtper_wf()
     {
         let ghost view = inner@;
         proof {

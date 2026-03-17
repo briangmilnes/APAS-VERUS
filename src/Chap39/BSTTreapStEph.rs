@@ -204,6 +204,7 @@ pub mod BSTTreapStEph {
             requires
                 self.spec_bsttreapsteph_wf(),
                 self.spec_bst(),
+                T::obeys_partial_cmp_spec(),
             ensures
                 found.is_some() <==> self.spec_contains(*target),
                 found.is_some() ==> *found.unwrap() == *target;
@@ -213,6 +214,7 @@ pub mod BSTTreapStEph {
             requires
                 self.spec_bsttreapsteph_wf(),
                 self.spec_bst(),
+                T::obeys_partial_cmp_spec(),
             ensures found == self.spec_contains(*target);
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
@@ -314,7 +316,12 @@ pub mod BSTTreapStEph {
                 Self::spec_bst_link(&link) ==> Self::spec_bst_link(&deleted);
 
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
-            ensures found.is_some() ==> spec_contains_link(link, *found.unwrap());
+            requires
+                Self::spec_bst_link(link),
+                T::obeys_partial_cmp_spec(),
+            ensures
+                found.is_some() <==> spec_contains_link(link, *target),
+                found.is_some() ==> *found.unwrap() == *target;
 
         fn min_link(link: &Link<T>) -> (min_val: Option<&T>)
             ensures match (min_val, Self::spec_min_link(link)) {
@@ -516,7 +523,6 @@ pub mod BSTTreapStEph {
             self.root = Self::delete_link(self.root.take(), target);
         }
 
-        #[verifier::external_body]
         fn find(&self, target: &T) -> Option<&T> {
             Self::find_link(&self.root, target)
         }
@@ -745,10 +751,10 @@ pub mod BSTTreapStEph {
             }
         }
 
-        #[verifier::external_body]
         fn insert_link(link: Link<T>, value: T, priority: u64) -> (inserted: Link<T>)
             decreases link,
         {
+            proof { reveal_with_fuel(spec_contains_link, 3); }
             match link {
                 None => {
                     let n = Box::new(Node { key: value, priority, size: 1, left: None, right: None });
@@ -798,7 +804,15 @@ pub mod BSTTreapStEph {
                             Some(l) => l.priority < node.priority,
                             None => false,
                         };
-                        if needs_rotate { Some(Self::rotate_right(node)) } else { Some(node) }
+                        if needs_rotate {
+                            let ghost pre_rotate = node;
+                            let rotated = Self::rotate_right(node);
+                            proof {
+                                // Rotation preserves containment; value was in pre_rotate.
+                                assert(spec_contains_link(&Some(rotated), value));
+                            }
+                            Some(rotated)
+                        } else { Some(node) }
                     } else if node.key < value {
                         node.right = Self::insert_link(node.right.take(), value, priority);
                         Self::update_size(&mut node);
@@ -830,9 +844,20 @@ pub mod BSTTreapStEph {
                             Some(r) => r.priority < node.priority,
                             None => false,
                         };
-                        if needs_rotate { Some(Self::rotate_left(node)) } else { Some(node) }
+                        if needs_rotate {
+                            let ghost pre_rotate = node;
+                            let rotated = Self::rotate_left(node);
+                            proof {
+                                assert(spec_contains_link(&Some(rotated), value));
+                            }
+                            Some(rotated)
+                        } else { Some(node) }
                     } else {
-                        // value == node.key; already contained.
+                        // !(value < node.key) && !(node.key < value) => structurally equal.
+                        proof {
+                            T::is_lt_antisymmetric(value, node.key);
+                            Self::lemma_contains_root(&node);
+                        }
                         Some(node)
                     }
                 }
@@ -1024,24 +1049,56 @@ pub mod BSTTreapStEph {
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             decreases *link,
         {
+            proof { reveal_with_fuel(spec_contains_link, 2); }
             match link {
                 | None => None,
                 | Some(node) => {
-                    if *target == node.key {
-                        proof { Self::lemma_contains_root(node); }
-                        Some(&node.key)
-                    } else if *target < node.key {
+                    proof { Self::lemma_bst_decompose(link); }
+                    if *target < node.key {
                         let r = Self::find_link(&node.left, target);
                         proof {
-                            if r.is_some() { Self::lemma_contains_left(node, *r.unwrap()); }
+                            // Forward: found in subtree → in whole tree.
+                            if r.is_some() {
+                                Self::lemma_contains_left(node, *target);
+                            }
+                            // Reverse: in whole tree → must be in left subtree → found.
+                            T::is_lt_irreflexive(*target);
+                            if spec_contains_link(link, *target) {
+                                if spec_contains_link(&node.right, *target) {
+                                    T::is_lt_transitive(*target, node.key, *target);
+                                }
+                                assert(!spec_contains_link(&node.right, *target));
+                                assert(node.key != *target);
+                                assert(spec_contains_link(&node.left, *target));
+                                assert(r.is_some());
+                            }
+                        }
+                        r
+                    } else if node.key < *target {
+                        let r = Self::find_link(&node.right, target);
+                        proof {
+                            // Forward: found in subtree → in whole tree.
+                            if r.is_some() {
+                                Self::lemma_contains_right(node, *target);
+                            }
+                            // Reverse: in whole tree → must be in right subtree → found.
+                            T::is_lt_irreflexive(*target);
+                            if spec_contains_link(link, *target) {
+                                assert(!spec_contains_link(&node.left, *target));
+                                assert(node.key != *target);
+                                assert(spec_contains_link(&node.right, *target));
+                                assert(r.is_some());
+                            }
                         }
                         r
                     } else {
-                        let r = Self::find_link(&node.right, target);
+                        // Neither target < node.key nor node.key < target.
                         proof {
-                            if r.is_some() { Self::lemma_contains_right(node, *r.unwrap()); }
+                            T::is_lt_antisymmetric(*target, node.key);
+                            Self::lemma_contains_root(node);
+                            assert(spec_contains_link(link, *target));
                         }
-                        r
+                        Some(&node.key)
                     }
                 }
             }
