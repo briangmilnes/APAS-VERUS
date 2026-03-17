@@ -22,11 +22,11 @@ Table of Contents:
 
 ✓ BellmanFordStEphF64.rs
 ❌ BellmanFordStEphI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphI64.rs:84: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap58/BellmanFordStEphI64.rs:84: error: external_body - #[verifier::external_body]
         85 |     fn neg_cycle_error_string() -> (s: String) {
-/home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphI64.rs:89: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap58/BellmanFordStEphI64.rs:89: error: external_body - #[verifier::external_body]
         90 |     fn algorithm_error_string() -> (s: String) {
-/home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphI64.rs:55: warning: requires_true - requires true — vacuous precondition
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap58/BellmanFordStEphI64.rs:55: warning: requires_true - requires true — vacuous precondition
         53 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
         54 |     fn clamp_weight(w: i128) -> (result: i64)
         56 |         ensures
@@ -81,9 +81,9 @@ Holes Found: 2 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 22:29:01 -07:00
-Ended:     2026-03-16 22:29:01 -07:00
+Started:   2026-03-16 23:27:15 -07:00
+Ended:     2026-03-16 23:27:15 -07:00
 Duration:  3ms
 
 Full output: src/Chap58/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap58/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap58/analyses/veracity-review-verus-proof-holes.log

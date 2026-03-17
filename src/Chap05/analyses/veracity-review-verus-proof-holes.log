@@ -23,117 +23,117 @@ Table of Contents:
 ✓ KleeneStPer.rs
    9 clean proof functions
 ℹ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:622: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:622: info: accept()
    Info: 1 total
 ✓ RelationStEph.rs
 ❌ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:229: error: fn_missing_wf_requires - fn elt_cross_set — requires should include s2.spec_setmteph_wf() for input type SetMtEph
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:229: error: fn_missing_wf_requires - fn elt_cross_set — requires should include s2.spec_setmteph_wf() for input type SetMtEph
        221 |         fn intersection(&self, s2: &Self) -> (intersection: Self)
             ...
        227 |         /// - APAS: N/A — internal helper for cartesian_product.
        228 |         /// - Claude-Opus-4.6: Work Θ(|s2|), Span Θ(|s2|) — sequential loop, creates one pair per element.
        230 |             requires
        231 |               Self::spec_valid_key_type(),
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:229: error: fn_missing_wf_ensures - fn elt_cross_set — ensures should include product.spec_setmteph_wf() for return type SetMtEph
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:229: error: fn_missing_wf_ensures - fn elt_cross_set — ensures should include product.spec_setmteph_wf() for return type SetMtEph
        221 |         fn intersection(&self, s2: &Self) -> (intersection: Self)
             ...
        227 |         /// - APAS: N/A — internal helper for cartesian_product.
        228 |         /// - Claude-Opus-4.6: Work Θ(|s2|), Span Θ(|s2|) — sequential loop, creates one pair per element.
        230 |             requires
        231 |               Self::spec_valid_key_type(),
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:240: error: fn_missing_wf_requires - fn cartesian_product — requires should include s2.spec_setmteph_wf() for input type SetMtEph
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:240: error: fn_missing_wf_requires - fn cartesian_product — requires should include s2.spec_setmteph_wf() for input type SetMtEph
        229 |         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
             ...
        238 |         /// - APAS: Work Θ(|a| × |b|), Span Θ(|b|)
        239 |         /// - Claude-Opus-4.6: Work Θ(|a| × |b|), Span Θ(|a| × |b|) — spawns |a| parallel elt_cross_set tasks (each Θ(|b|)), but join phase is sequential disjoint_union over |a| results of size |b|. Sequential join dominates span.
        241 |             where T: Send + Sync + 'static, Pair<T, U>: StT + Hash + View<V = (T::V, U::V)>,
        242 |             requires
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:240: error: fn_missing_wf_ensures - fn cartesian_product — ensures should include product.spec_setmteph_wf() for return type SetMtEph
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:240: error: fn_missing_wf_ensures - fn cartesian_product — ensures should include product.spec_setmteph_wf() for return type SetMtEph
        229 |         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
             ...
        238 |         /// - APAS: Work Θ(|a| × |b|), Span Θ(|b|)
        239 |         /// - Claude-Opus-4.6: Work Θ(|a| × |b|), Span Θ(|a| × |b|) — spawns |a| parallel elt_cross_set tasks (each Θ(|b|)), but join phase is sequential disjoint_union over |a| results of size |b|. Sequential join dominates span.
        241 |             where T: Send + Sync + 'static, Pair<T, U>: StT + Hash + View<V = (T::V, U::V)>,
        242 |             requires
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:252: error: fn_missing_wf_requires - fn all_nonempty — requires should include parts.spec_setmteph_wf() for input type SetMtEph
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:252: error: fn_missing_wf_requires - fn all_nonempty — requires should include parts.spec_setmteph_wf() for input type SetMtEph
        240 |         fn cartesian_product<U: StT + Hash + Clone + Send + Sync + 'static>(&self, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
             ...
        250 |         /// - APAS: N/A — internal helper for partition.
        251 |         /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) size check each.
        253 |             requires
        254 |                 Self::spec_valid_key_type(),
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:261: error: fn_missing_wf_requires - fn partition_on_elt — requires should include parts.spec_setmteph_wf() for input type SetMtEph
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:261: error: fn_missing_wf_requires - fn partition_on_elt — requires should include parts.spec_setmteph_wf() for input type SetMtEph
        252 |         fn all_nonempty(parts: &SetMtEph<SetMtEph<T>>) -> (all_nonempty: bool)
             ...
        259 |         /// - APAS: N/A — internal helper for partition.
        260 |         /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) membership check each.
        262 |             requires
        263 |                 Self::spec_valid_key_type(),
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:276: error: fn_missing_wf_requires - fn partition — requires should include parts.spec_setmteph_wf() for input type SetMtEph
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:276: error: fn_missing_wf_requires - fn partition — requires should include parts.spec_setmteph_wf() for input type SetMtEph
        261 |         fn partition_on_elt(x: &T, parts: &SetMtEph<SetMtEph<T>>) -> (partition_on_elt: bool)
             ...
        274 |         /// - APAS: Work Θ(|a| × |parts|), Span Θ(1)
        275 |         /// - Claude-Opus-4.6: Work Θ(|a| × |parts|), Span Θ(|a| × |parts|) — sequential loop, not parallel. Span == Work.
        277 |             requires
        278 |                 self.spec_setmteph_wf(),
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1045: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1054: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1062: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1073: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1099: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1045: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1054: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1062: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1073: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1099: info: accept()
    Info: 5 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ SetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:216: error: fn_missing_wf_requires - fn elt_cross_set — requires should include s2.spec_setsteph_wf() for input type SetStEph
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:216: error: fn_missing_wf_requires - fn elt_cross_set — requires should include s2.spec_setsteph_wf() for input type SetStEph
        208 |         fn intersection(&self, s2: &Self) -> (intersection: Self)
             ...
        214 |         /// - APAS: N/A — internal helper for cartesian_product.
        215 |         /// - Claude-Opus-4.6: Work Θ(|s2|), Span Θ(|s2|) — iterates s2, creates one pair per element.
        217 |             requires
        218 |               Self::spec_valid_key_type(),
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:216: error: fn_missing_wf_ensures - fn elt_cross_set — ensures should include product.spec_setsteph_wf() for return type SetStEph
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:216: error: fn_missing_wf_ensures - fn elt_cross_set — ensures should include product.spec_setsteph_wf() for return type SetStEph
        208 |         fn intersection(&self, s2: &Self) -> (intersection: Self)
             ...
        214 |         /// - APAS: N/A — internal helper for cartesian_product.
        215 |         /// - Claude-Opus-4.6: Work Θ(|s2|), Span Θ(|s2|) — iterates s2, creates one pair per element.
        217 |             requires
        218 |               Self::spec_valid_key_type(),
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:227: error: fn_missing_wf_requires - fn cartesian_product — requires should include s2.spec_setsteph_wf() for input type SetStEph
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:227: error: fn_missing_wf_requires - fn cartesian_product — requires should include s2.spec_setsteph_wf() for input type SetStEph
        216 |         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
             ...
        225 |         /// - APAS: Work Θ(|a| × |b|), Span Θ(1)
        226 |         /// - Claude-Opus-4.6: Work Θ(|a| × |b|), Span Θ(1)
        228 |             requires
        229 |                 self.spec_setsteph_wf(),
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:227: error: fn_missing_wf_ensures - fn cartesian_product — ensures should include product.spec_setsteph_wf() for return type SetStEph
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:227: error: fn_missing_wf_ensures - fn cartesian_product — ensures should include product.spec_setsteph_wf() for return type SetStEph
        216 |         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
             ...
        225 |         /// - APAS: Work Θ(|a| × |b|), Span Θ(1)
        226 |         /// - Claude-Opus-4.6: Work Θ(|a| × |b|), Span Θ(1)
        228 |             requires
        229 |                 self.spec_setsteph_wf(),
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:238: error: fn_missing_wf_requires - fn all_nonempty — requires should include parts.spec_setsteph_wf() for input type SetStEph
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:238: error: fn_missing_wf_requires - fn all_nonempty — requires should include parts.spec_setsteph_wf() for input type SetStEph
        227 |         fn cartesian_product<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
             ...
        236 |         /// - APAS: N/A — internal helper for partition.
        237 |         /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) size check each.
        239 |             requires
        240 |                 Self::spec_valid_key_type(),
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:247: error: fn_missing_wf_requires - fn partition_on_elt — requires should include parts.spec_setsteph_wf() for input type SetStEph
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:247: error: fn_missing_wf_requires - fn partition_on_elt — requires should include parts.spec_setsteph_wf() for input type SetStEph
        238 |         fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> (all_nonempty: bool)
             ...
        245 |         /// - APAS: N/A — internal helper for partition.
        246 |         /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) membership check each.
        248 |             requires
        249 |                 Self::spec_valid_key_type(),
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:262: error: fn_missing_wf_requires - fn partition — requires should include parts.spec_setsteph_wf() for input type SetStEph
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:262: error: fn_missing_wf_requires - fn partition — requires should include parts.spec_setsteph_wf() for input type SetStEph
        247 |         fn partition_on_elt(x: &T, parts: &SetStEph<SetStEph<T>>) -> (partition_on_elt: bool)
             ...
        260 |         /// - APAS: Work Θ(|a| × |parts|), Span Θ(1)
        261 |         /// - Claude-Opus-4.6: Work Θ(|a| × |parts|), Span Θ(1) — agrees. Outer loop over |a|, inner partition_on_elt scans |parts| with O(1) hash lookups.
        263 |             requires
        264 |                 self.spec_setsteph_wf(),
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:896: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:896: info: accept()
    Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 
@@ -191,15 +191,16 @@ Holes Found: 0 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 22:29:00 -07:00
-Ended:     2026-03-16 22:29:00 -07:00
-Duration:  36ms
+Started:   2026-03-16 23:27:14 -07:00
+Ended:     2026-03-16 23:27:14 -07:00
+Duration:  29ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
-=================
+rted/Ended/Duration
+=================================================================
 
-Started:   2026-03-16 22:29:00 -07:00
-Ended:     2026-03-16 22:29:00 -07:00
-Duration:  36ms
+Started:   2026-03-16 23:27:14 -07:00
+Ended:     2026-03-16 23:27:14 -07:00
+Duration:  29ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log

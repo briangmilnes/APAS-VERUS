@@ -24,8 +24,18 @@ Table of Contents:
 ✓ CycleDetectStPer.rs
 ✓ DFSStEph.rs
 ✓ DFSStPer.rs
-✓ SCCStEph.rs
-✓ SCCStPer.rs
+❌ SCCStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap55/SCCStEph.rs:171: warning: requires_true - requires true — vacuous precondition
+       169 |     /// Runtime check that all neighbor indices are valid vertex indices.
+       170 |     fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (valid: bool)
+       172 |         ensures valid ==> spec_toposortsteph_wf(graph),
+       173 |     {
+❌ SCCStPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap55/SCCStPer.rs:247: warning: requires_true - requires true — vacuous precondition
+       245 |     /// Runtime check that all neighbor indices are valid vertex indices.
+       246 |     fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (valid: bool)
+       248 |         ensures valid ==> spec_toposortstper_wf(graph),
+       249 |     {
 ✓ TopoSortStEph.rs
    4 clean proof functions
 ✓ TopoSortStPer.rs
@@ -75,8 +85,8 @@ Proof Functions:
    4 total
 
 Function Specs:
-   33 exec fns with complete spec (requires+ensures) (57%)
-   2 exec fns missing spec (3%)
+   35 exec fns with complete spec (requires+ensures) (61%)
+   0 exec fns missing spec (0%)
    22 proof/spec fns clean (38%)
    0 proof/spec fns with holes (0%)
    57 total fns
@@ -84,15 +94,15 @@ Function Specs:
 
 Holes Found: 0 total
 
-🎉 No proof holes or warnings found! All proofs are complete.
+🎉 No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 22:29:01 -07:00
-Ended:     2026-03-16 22:29:01 -07:00
-Duration:  20ms
+Started:   2026-03-16 23:27:15 -07:00
+Ended:     2026-03-16 23:27:15 -07:00
+Duration:  15ms
 
 Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap55/analyses/veracity-review-verus-proof-holes.log

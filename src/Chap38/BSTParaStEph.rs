@@ -454,6 +454,7 @@ pub mod BSTParaStEph {
                     && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
                     && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
                 },
+            decreases self@.len(), 0nat,
         {
             proof { use_type_invariant(self); }
             let handle = self.locked_root.acquire_read();
@@ -462,6 +463,11 @@ pub mod BSTParaStEph {
                     Exposed::Leaf
                 }
                 | Some(node) => {
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(node.left@, node.right@);
+                        assert(node.left@.len() < self@.len());
+                        assert(node.right@.len() < self@.len());
+                    }
                     let l = node.left.clone();
                     let k = node.key.clone();
                     let r = node.right.clone();
@@ -1574,17 +1580,22 @@ pub mod BSTParaStEph {
     }
 
     impl<T: StT + Ord> Clone for ParamBST<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
+            ensures cloned@ == self@,
+            decreases self@.len(), 1nat,
         {
-            let handle = self.locked_root.acquire_read();
-            let inner_clone = handle.borrow().clone();
-            handle.release_read();
-            let ghost pred = BSTParaStEphInv::<T> { contents: self@ };
-            ParamBST {
-                locked_root: RwLock::new(inner_clone, Ghost(pred)),
-                ghost_locked_root: Ghost(self@),
+            proof { use_type_invariant(self); }
+            let exposed = self.expose();
+            match exposed {
+                Exposed::Leaf => {
+                    Self::new()
+                }
+                Exposed::Node(l, k, r) => {
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(l@, r@);
+                    }
+                    Self::join_mid(Exposed::Node(l, k, r))
+                }
             }
         }
     }

@@ -29,9 +29,24 @@ Table of Contents:
 ✓ Exercise21_5.rs
    1 clean proof function
 ✓ Exercise21_6.rs
-✓ Exercise21_7.rs
-✓ Exercise21_8.rs
-   5 clean proof functions
+❌ Exercise21_7.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap21/Exercise21_7.rs:48: warning: requires_true - requires true — vacuous precondition
+        46 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        47 |     pub fn is_even(x: &N) -> (r: B)
+        49 |         ensures r == spec_is_even(*x as int)
+        50 |     { *x % 2 == 0 }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap21/Exercise21_7.rs:62: warning: requires_true - requires true — vacuous precondition
+        60 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        61 |     pub fn is_vowel(c: &char) -> (r: B)
+        63 |         ensures r == spec_is_vowel(*c)
+        64 |     {
+❌ Exercise21_8.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap21/Exercise21_8.rs:177: warning: requires_true - requires true — vacuous precondition
+       175 |     /// - Claude-Opus-4.6: Work Θ(√n), Span Θ(√n) — sequential StEph tabulate + filter.
+       176 |     pub fn is_prime(n: N) -> (prime: B)
+       178 |         ensures prime == spec_is_prime(n as int)
+       179 |     {
+   Proof functions: 5 total (5 clean, 0 holed)
 ✓ Exercise21_9.rs
    3 clean proof functions
 ✓ Problem21_1.rs
@@ -91,8 +106,8 @@ Proof Functions:
    12 total
 
 Function Specs:
-   11 exec fns with complete spec (requires+ensures) (33%)
-   4 exec fns missing spec (12%)
+   14 exec fns with complete spec (requires+ensures) (42%)
+   1 exec fns missing spec (3%)
    18 proof/spec fns clean (54%)
    0 proof/spec fns with holes (0%)
    33 total fns
@@ -100,15 +115,15 @@ Function Specs:
 
 Holes Found: 0 total
 
-🎉 No proof holes or warnings found! All proofs are complete.
+🎉 No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 22:29:00 -07:00
-Ended:     2026-03-16 22:29:00 -07:00
-Duration:  13ms
+Started:   2026-03-16 23:27:14 -07:00
+Ended:     2026-03-16 23:27:14 -07:00
+Duration:  14ms
 
 Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
