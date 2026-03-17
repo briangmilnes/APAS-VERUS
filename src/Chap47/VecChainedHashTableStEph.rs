@@ -33,7 +33,6 @@ pub mod VecChainedHashTableStEph {
 
         /// Clones a Vec<(Key, Value)> with sequence equality ensures.
         /// Clone bridges inside this function follow the approved clone body pattern.
-        // veracity: no_requires — loop bounded by pairs.len(), handles all inputs.
         fn clone_vec_pairs<Key: Clone, Value: Clone>(pairs: &Vec<(Key, Value)>) -> (cloned: Vec<(Key, Value)>)
             ensures cloned@ =~= pairs@,
         {

@@ -494,7 +494,6 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
-    // veracity: no_requires — recursive traversal, handles all inputs.
     fn inorder_collect<T: StTInMtT>(cur: &Link<T>, out: &mut Vec<T>)
         requires spec_cached_size(cur) <= usize::MAX as nat,
         ensures true,

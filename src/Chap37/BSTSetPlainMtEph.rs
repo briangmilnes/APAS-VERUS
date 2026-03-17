@@ -128,7 +128,6 @@ pub mod BSTSetPlainMtEph {
         tree.in_order().iter().cloned().collect()
     }
     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTPlainMtEph<T>)
-        requires values@.len() <= usize::MAX as nat,
         ensures true,
     {
         let mut tree = BSTPlainMtEph::new();
@@ -141,7 +140,6 @@ pub mod BSTSetPlainMtEph {
     fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetPlainMtEph<T>)
     where
         I: IntoIterator<Item = T>,
-        requires 0nat <= usize::MAX as nat,
         ensures true,
     {
         let mut tree = BSTPlainMtEph::new();

@@ -1479,7 +1479,6 @@ pub mod BSTSplayMtEph {
     }
 
     fn build_balanced<T: StTInMtT + Ord + TotalOrder>(values: &[T]) -> (link: Link<T>)
-        requires values@.len() <= usize::MAX as nat,
         ensures link_spec_size(link) <= values@.len(),
         decreases values.len(),
     {

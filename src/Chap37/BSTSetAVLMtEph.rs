@@ -147,7 +147,6 @@ pub mod BSTSetAVLMtEph {
     }
 
     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
-        requires values@.len() <= usize::MAX as nat,
         ensures true,
     {
         let mut tree = BSTAVLMtEph::new();
@@ -160,7 +159,6 @@ pub mod BSTSetAVLMtEph {
     fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetAVLMtEph<T>)
     where
         I: IntoIterator<Item = T>,
-        requires 0nat <= usize::MAX as nat,
         ensures true,
     {
         let mut tree = BSTAVLMtEph::new();

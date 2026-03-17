@@ -148,7 +148,6 @@ pub mod BSTSetSplayMtEph {
     }
 
     fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
-        requires values@.len() <= usize::MAX as nat,
         ensures true,
     {
         let mut tree = BSTSplayMtEph::new();
@@ -161,7 +160,6 @@ pub mod BSTSetSplayMtEph {
     fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder, I>(values: I) -> (set: BSTSetSplayMtEph<T>)
     where
         I: IntoIterator<Item = T>,
-        requires 0nat <= usize::MAX as nat,
         ensures true,
     {
         let mut tree = BSTSplayMtEph::new();

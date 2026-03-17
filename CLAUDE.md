@@ -411,6 +411,25 @@ the function body, understand what it assumes about its inputs, and express that
 `self.spec_<module>_wf()`. If it takes a key or index, it may require bounds. The goal is
 a contract that callers must satisfy and that the proof can use — not a syntactic band-aid.
 
+**DO NOT ADD TAUTOLOGICAL `requires` CLAUSES.** `requires 0nat <= usize::MAX as nat` is
+just `requires true` wearing a disguise. Similarly, `requires values@.len() <= usize::MAX`
+when `values` is a `Vec<T>` or `&[T]` is always true because Vec/slice lengths are `usize`.
+Any requires clause that is provably always true is vacuous and MUST NOT be added. If you
+cannot identify a real precondition, leave the function without requires and let veracity
+flag it — do not paper over the warning with a tautology.
+
+**DO NOT ADD `// veracity: no_requires` ANNOTATIONS.** Only the user adds these. The
+`// veracity: no_requires` comment is a human-reviewed annotation that tells veracity to
+suppress the `fn_missing_requires` warning for a function that genuinely has no precondition.
+Agents must NEVER add this annotation. If you believe a function truly has no precondition,
+leave it as-is and report it to the user. The user will decide whether to annotate it.
+
+**Requires/ensures wf propagation.** If `f(x: &T) -> (y: U)` and the module defines
+well-formedness predicates for `T` and/or `U`, then `f` needs `requires x.spec_<t>_wf()`
+and `ensures y.spec_<u>_wf()`. Well-formedness flows through function boundaries: if the
+input is well-formed, the output should be too, and both facts must be stated explicitly.
+Do not assume callers "just know" the output is well-formed — prove it in the ensures.
+
 ### Search Locations ("The Usual Suspects")
 
 1. **veracity-search** — vstd + APAS-VERUS function index (searched by default)

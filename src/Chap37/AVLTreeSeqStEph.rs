@@ -673,7 +673,6 @@ pub mod AVLTreeSeqStEph {
     }
 
     fn clone_link<T: StT>(link: &Link<T>) -> (copy: Link<T>)
-        requires 0nat <= usize::MAX as nat,
         ensures
             spec_inorder(copy) =~= spec_inorder(*link),
             spec_avltreeseqsteph_wf(*link) ==> spec_avltreeseqsteph_wf(copy),
@@ -1038,9 +1037,7 @@ pub mod AVLTreeSeqStEph {
 
     // 10. iterators
 
-    // veracity: no_requires — iterator helper called from Iterator::next.
     fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqIterStEph<'a, T>, link: &'a Link<T>)
-        requires 0nat <= usize::MAX as nat,
         ensures true,
         decreases *link,
     {
