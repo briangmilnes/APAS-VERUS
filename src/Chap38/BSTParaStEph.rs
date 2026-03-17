@@ -54,8 +54,8 @@ pub mod BSTParaStEph {
                     && !(*box_node).right@.contains((*box_node).key@)
                     && (*box_node).left@.len() + (*box_node).right@.len() < usize::MAX as nat
                     && (*box_node).size as nat == (*box_node).left@.len() + (*box_node).right@.len() + 1
-                    && (forall|t: T| #![auto] (*box_node).left@.contains(t@) ==> t.cmp_spec(&(*box_node).key) == Less)
-                    && (forall|t: T| #![auto] (*box_node).right@.contains(t@) ==> t.cmp_spec(&(*box_node).key) == Greater)
+                    && (forall|t: T| (#[trigger] (*box_node).left@.contains(t@)) ==> t.cmp_spec(&(*box_node).key) == Less)
+                    && (forall|t: T| (#[trigger] (*box_node).right@.contains(t@)) ==> t.cmp_spec(&(*box_node).key) == Greater)
                 }
             }
         }
@@ -137,7 +137,7 @@ pub mod BSTParaStEph {
 
     /// View-consistent ordering: elements with the same view compare Equal.
     pub open spec fn view_ord_consistent<T: StT + Ord>() -> bool {
-        forall|a: T, b: T| #![auto] a@ == b@ <==> a.cmp_spec(&b) == Equal
+        forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == Equal
     }
 
     // 7. proof fns
@@ -249,8 +249,8 @@ pub mod BSTParaStEph {
                     && !l@.contains(k@)
                     && !r@.contains(k@)
                     && l@.len() + r@.len() < usize::MAX as nat
-                    && (forall|t: T| #![auto] l@.contains(t@) ==> t.cmp_spec(&k) == Less)
-                    && (forall|t: T| #![auto] r@.contains(t@) ==> t.cmp_spec(&k) == Greater)
+                    && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
+                    && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
                 };
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
@@ -262,8 +262,8 @@ pub mod BSTParaStEph {
                     && !l@.contains(k@)
                     && !r@.contains(k@)
                     && l@.len() + r@.len() < usize::MAX as nat
-                    && (forall|t: T| #![auto] l@.contains(t@) ==> t.cmp_spec(&k) == Less)
-                    && (forall|t: T| #![auto] r@.contains(t@) ==> t.cmp_spec(&k) == Greater)
+                    && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
+                    && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
                 },
             ensures
                 exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty(),
@@ -277,8 +277,8 @@ pub mod BSTParaStEph {
                 !left@.contains(key@),
                 !right@.contains(key@),
                 left@.len() + right@.len() < usize::MAX as nat,
-                forall|t: T| #![auto] left@.contains(t@) ==> t.cmp_spec(&key) == Less,
-                forall|t: T| #![auto] right@.contains(t@) ==> t.cmp_spec(&key) == Greater,
+                forall|t: T| (#[trigger] left@.contains(t@)) ==> t.cmp_spec(&key) == Less,
+                forall|t: T| (#[trigger] right@.contains(t@)) ==> t.cmp_spec(&key) == Greater,
             ensures tree@ =~= left@.union(right@).insert(key@);
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
@@ -329,8 +329,8 @@ pub mod BSTParaStEph {
                 parts.0@.disjoint(parts.2@),
                 !parts.0@.contains(key@),
                 !parts.2@.contains(key@),
-                forall|t: T| #![auto] parts.0@.contains(t@) ==> t.cmp_spec(&key) == Less,
-                forall|t: T| #![auto] parts.2@.contains(t@) ==> t.cmp_spec(&key) == Greater;
+                forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(&key) == Less,
+                forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(&key) == Greater;
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
         fn min_key(&self) -> (minimum: Option<T>)
@@ -340,7 +340,7 @@ pub mod BSTParaStEph {
             ensures
                 self@.len() == 0 <==> minimum.is_none(),
                 minimum.is_some() ==> self@.contains(minimum.unwrap()@),
-                minimum.is_some() ==> forall|t: T| #![auto] self@.contains(t@) ==>
+                minimum.is_some() ==> forall|t: T| (#[trigger] self@.contains(t@)) ==>
                     minimum.unwrap().cmp_spec(&t) == Less || minimum.unwrap()@ == t@;
         /// - APAS: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|))
         /// - Claude-Opus-4.6: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|)) -- agrees with APAS.
@@ -351,7 +351,7 @@ pub mod BSTParaStEph {
                 self@.disjoint(other@),
                 self@.finite(), other@.finite(),
                 self@.len() + other@.len() < usize::MAX as nat,
-                forall|s: T, o: T| #![auto] self@.contains(s@) && other@.contains(o@) ==> s.cmp_spec(&o) == Less,
+                forall|s: T, o: T| #![trigger self@.contains(s@), other@.contains(o@)] self@.contains(s@) && other@.contains(o@) ==> s.cmp_spec(&o) == Less,
             ensures joined@.finite(), joined@ =~= self@.union(other@);
         /// - APAS: Work O(m · lg(n/m)), Span O(m · lg(n/m)) — sequential
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(m · lg(n/m)) -- agrees with APAS; sequential, not parallel.
@@ -448,8 +448,8 @@ pub mod BSTParaStEph {
                     && !l@.contains(k@)
                     && !r@.contains(k@)
                     && l@.len() + r@.len() < usize::MAX as nat
-                    && (forall|t: T| #![auto] l@.contains(t@) ==> t.cmp_spec(&k) == Less)
-                    && (forall|t: T| #![auto] r@.contains(t@) ==> t.cmp_spec(&k) == Greater)
+                    && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
+                    && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
                 },
         {
             proof { use_type_invariant(self); }
@@ -465,8 +465,8 @@ pub mod BSTParaStEph {
                     // T::clone has no verified ensures; cmp_spec(k) vs cmp_spec(node.key) unresolvable.
                     proof { assume(
                         k@ == node.key@
-                        && (forall|t: T| #![auto] l@.contains(t@) ==> t.cmp_spec(&k) == Less)
-                        && (forall|t: T| #![auto] r@.contains(t@) ==> t.cmp_spec(&k) == Greater)
+                        && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
+                        && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
                     ); }
                     Exposed::Node(l, k, r)
                 }
@@ -559,7 +559,7 @@ pub mod BSTParaStEph {
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
                 assume(left@.len() + right@.len() < usize::MAX as nat);
-                assert forall|s: T, o: T| #![auto]
+                assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
                     left@.contains(s@) && right@.contains(o@) implies
                     s.cmp_spec(&o) == Less by {
                     lemma_cmp_antisymmetry(o, kref);
@@ -601,8 +601,8 @@ pub mod BSTParaStEph {
                 parts.0@.disjoint(parts.2@),
                 !parts.0@.contains(key@),
                 !parts.2@.contains(key@),
-                forall|t: T| #![auto] parts.0@.contains(t@) ==> t.cmp_spec(&key) == Less,
-                forall|t: T| #![auto] parts.2@.contains(t@) ==> t.cmp_spec(&key) == Greater,
+                forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(&key) == Less,
+                forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(&key) == Greater,
             decreases self@.len(),
         {
             match self.expose() {
@@ -651,7 +651,7 @@ pub mod BSTParaStEph {
                                 };
                                 assert(llv.union(rebuilt@) =~= self@.remove(key@));
                                 // Ordering: rebuilt elements > key.
-                                assert forall|t: T| #![auto] rebuilt@.contains(t@) implies
+                                assert forall|t: T| (#[trigger] rebuilt@.contains(t@)) implies
                                     t.cmp_spec(&key) == Greater by {
                                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                                     reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
@@ -705,7 +705,7 @@ pub mod BSTParaStEph {
                                 };
                                 assert(rebuilt@.union(rrv) =~= self@.remove(key@));
                                 // Ordering: rebuilt elements < key.
-                                assert forall|t: T| #![auto] rebuilt@.contains(t@) implies
+                                assert forall|t: T| (#[trigger] rebuilt@.contains(t@)) implies
                                     t.cmp_spec(&key) == Less by {
                                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                                     reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
@@ -731,11 +731,11 @@ pub mod BSTParaStEph {
                             proof {
                                 // left < root_key == key, right > root_key == key.
                                 // Right congruence: Equal(kval, rk) → t cmp kval == t cmp rk.
-                                assert forall|t: T| #![auto] left@.contains(t@) implies
+                                assert forall|t: T| (#[trigger] left@.contains(t@)) implies
                                     t.cmp_spec(&key) == Less by {
                                     lemma_cmp_equal_congruent_right(t, kval, rk);
                                 };
-                                assert forall|t: T| #![auto] right@.contains(t@) implies
+                                assert forall|t: T| (#[trigger] right@.contains(t@)) implies
                                     t.cmp_spec(&key) == Greater by {
                                     lemma_cmp_equal_congruent_right(t, kval, rk);
                                 };
@@ -751,7 +751,7 @@ pub mod BSTParaStEph {
             ensures
                 self@.len() == 0 <==> minimum.is_none(),
                 minimum.is_some() ==> self@.contains(minimum.unwrap()@),
-                minimum.is_some() ==> forall|t: T| #![auto] self@.contains(t@) ==>
+                minimum.is_some() ==> forall|t: T| (#[trigger] self@.contains(t@)) ==>
                     minimum.unwrap().cmp_spec(&t) == Less || minimum.unwrap()@ == t@,
             decreases self@.len(),
         {
@@ -881,11 +881,11 @@ pub mod BSTParaStEph {
                     let ghost ruv = right_union@;
                     proof {
                         // Ordering: luv = alv ∪ blv (all < ak), ruv = arv ∪ brv (all > ak).
-                        assert forall|t: T| #![auto] luv.contains(t@)
+                        assert forall|t: T| (#[trigger] luv.contains(t@))
                             implies t.cmp_spec(&ak) == Less by {
                             if alv.contains(t@) {} else { assert(blv.contains(t@)); }
                         };
-                        assert forall|t: T| #![auto] ruv.contains(t@)
+                        assert forall|t: T| (#[trigger] ruv.contains(t@))
                             implies t.cmp_spec(&ak) == Greater by {
                             if arv.contains(t@) {} else { assert(brv.contains(t@)); }
                         };
@@ -981,10 +981,10 @@ pub mod BSTParaStEph {
                             vstd::set_lib::lemma_len_subset(lrv, alv);
                             vstd::set_lib::lemma_len_subset(rrv, arv);
                             // Ordering: lrv ⊂ al@ (< ak), rrv ⊂ ar@ (> ak).
-                            assert forall|t: T| #![auto] lrv.contains(t@) implies t.cmp_spec(&ak) == Less by {
+                            assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&ak) == Less by {
                                 assert(alv.contains(t@));
                             };
-                            assert forall|t: T| #![auto] rrv.contains(t@) implies t.cmp_spec(&ak) == Greater by {
+                            assert forall|t: T| (#[trigger] rrv.contains(t@)) implies t.cmp_spec(&ak) == Greater by {
                                 assert(arv.contains(t@));
                             };
                         }
@@ -1049,7 +1049,7 @@ pub mod BSTParaStEph {
                             vstd::set_lib::lemma_len_subset(lrv, alv);
                             vstd::set_lib::lemma_len_subset(rrv, arv);
                             // Ordering: lrv ⊂ al@ (< ak), rrv ⊂ ar@ (> ak). s < ak < o ⟹ s < o.
-                            assert forall|s: T, o: T| #![auto] lrv.contains(s@) && rrv.contains(o@)
+                            assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)] lrv.contains(s@) && rrv.contains(o@)
                                 implies s.cmp_spec(&o) == Less by {
                                 assert(alv.contains(s@));
                                 assert(arv.contains(o@));
@@ -1150,7 +1150,7 @@ pub mod BSTParaStEph {
                             vstd::set_lib::lemma_len_subset(lrv, alv);
                             vstd::set_lib::lemma_len_subset(rrv, arv);
                             // Ordering: elements of lrv ⊂ al@ are < ak, elements of rrv ⊂ ar@ are > ak.
-                            assert forall|s: T, o: T| #![auto] lrv.contains(s@) && rrv.contains(o@)
+                            assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)] lrv.contains(s@) && rrv.contains(o@)
                                 implies s.cmp_spec(&o) == Less by {
                                 assert(alv.contains(s@));
                                 assert(arv.contains(o@));
@@ -1226,10 +1226,10 @@ pub mod BSTParaStEph {
                             vstd::set_lib::lemma_len_subset(lrv, alv);
                             vstd::set_lib::lemma_len_subset(rrv, arv);
                             // Ordering: lrv ⊂ al@ (< ak), rrv ⊂ ar@ (> ak).
-                            assert forall|t: T| #![auto] lrv.contains(t@) implies t.cmp_spec(&ak) == Less by {
+                            assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&ak) == Less by {
                                 assert(alv.contains(t@));
                             };
-                            assert forall|t: T| #![auto] rrv.contains(t@) implies t.cmp_spec(&ak) == Greater by {
+                            assert forall|t: T| (#[trigger] rrv.contains(t@)) implies t.cmp_spec(&ak) == Greater by {
                                 assert(arv.contains(t@));
                             };
                         }
@@ -1446,10 +1446,10 @@ pub mod BSTParaStEph {
                             }
                         };
                         // Ordering: left_filtered ⊆ left (< key), right_filtered ⊆ right (> key).
-                        assert forall|t: T| #![auto] left_filtered@.contains(t@) implies t.cmp_spec(&key) == Less by {
+                        assert forall|t: T| (#[trigger] left_filtered@.contains(t@)) implies t.cmp_spec(&key) == Less by {
                             assert(left@.contains(t@));
                         };
-                        assert forall|t: T| #![auto] right_filtered@.contains(t@) implies t.cmp_spec(&key) == Greater by {
+                        assert forall|t: T| (#[trigger] right_filtered@.contains(t@)) implies t.cmp_spec(&key) == Greater by {
                             assert(right@.contains(t@));
                         };
                     }
@@ -1462,7 +1462,7 @@ pub mod BSTParaStEph {
                         vstd::set_lib::lemma_len_subset(left_filtered@, left@);
                         vstd::set_lib::lemma_len_subset(right_filtered@, right@);
                         // Ordering: left_filtered ⊆ left < key < right ⊇ right_filtered.
-                        assert forall|s: T, o: T| #![auto]
+                        assert forall|s: T, o: T| #![trigger left_filtered@.contains(s@), right_filtered@.contains(o@)]
                             left_filtered@.contains(s@) && right_filtered@.contains(o@) implies
                             s.cmp_spec(&o) == Less by {
                             assert(left@.contains(s@));
