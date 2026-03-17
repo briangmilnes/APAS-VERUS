@@ -108,7 +108,7 @@ broadcast use {
             ensures
                 self@.contains_key(k@),
                 self@.dom() =~= old(self)@.dom().insert(k@),
-                forall|key: K::V| #![auto] key != k@ && old(self)@.contains_key(key) ==> self@[key] == old(self)@[key],
+                forall|key: K::V| key != k@ && #[trigger] old(self)@.contains_key(key) ==> self@[key] == old(self)@[key],
                 !old(self)@.contains_key(k@) ==> self@[k@] == v@,
                 old(self)@.contains_key(k@) ==> (exists|old_v: V, r: V|
                     old_v@ == old(self)@[k@] && combine.ensures((&old_v, &v), r) && self@[k@] == r@),
@@ -134,7 +134,7 @@ broadcast use {
             ensures
                 tabulated@.dom() =~= keys@,
                 tabulated.spec_orderedtablesteph_wf(),
-                forall|k: K::V| #![auto] tabulated@.contains_key(k) ==>
+                forall|k: K::V| #[trigger] tabulated@.contains_key(k) ==>
                     (exists|key_arg: K, result: V|
                         key_arg@ == k && f.ensures((&key_arg,), result)
                         && tabulated@[k] == result@),
@@ -157,7 +157,7 @@ broadcast use {
                     f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
             ensures
                 filtered@.dom().subset_of(self@.dom()),
-                forall|k: K::V| #![auto] filtered@.contains_key(k) ==> filtered@[k] == self@[k],
+                forall|k: K::V| #[trigger] filtered@.contains_key(k) ==> filtered@[k] == self@[k],
                 forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
                     ==> #[trigger] filtered@.dom().contains(k),
                 filtered@.dom().finite();
@@ -177,7 +177,7 @@ broadcast use {
                 obeys_view_eq::<K>(),
             ensures
                 self@.dom() =~= old(self)@.dom().intersect(other@.dom()),
-                forall|k: K::V| #![auto] self@.contains_key(k) ==>
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==>
                     (exists|v1: V, v2: V, r: V|
                         v1@ == old(self)@[k] && v2@ == other@[k]
                         && f.ensures((&v1, &v2), r)
@@ -195,11 +195,11 @@ broadcast use {
                 obeys_view_eq::<K>(),
             ensures
                 self@.dom() =~= old(self)@.dom().union(other@.dom()),
-                forall|k: K::V| #![auto] old(self)@.contains_key(k) && !other@.contains_key(k)
+                forall|k: K::V| #[trigger] old(self)@.contains_key(k) && !other@.contains_key(k)
                     ==> self@[k] == old(self)@[k],
-                forall|k: K::V| #![auto] other@.contains_key(k) && !old(self)@.contains_key(k)
+                forall|k: K::V| #[trigger] other@.contains_key(k) && !old(self)@.contains_key(k)
                     ==> self@[k] == other@[k],
-                forall|k: K::V| #![auto] old(self)@.contains_key(k) && other@.contains_key(k) ==>
+                forall|k: K::V| #[trigger] old(self)@.contains_key(k) && other@.contains_key(k) ==>
                     (exists|v1: V, v2: V, r: V|
                         v1@ == old(self)@[k] && v2@ == other@[k]
                         && f.ensures((&v1, &v2), r)
@@ -211,7 +211,7 @@ broadcast use {
             requires old(self).spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
             ensures
                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
-                forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k],
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
                 self@.dom().finite();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- delegates to TableStEph.restrict which is linear scan per key
@@ -219,7 +219,7 @@ broadcast use {
             requires old(self).spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>()
             ensures
                 self@.dom() =~= old(self)@.dom().intersect(keys@),
-                forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k],
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
                 self@.dom().finite();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- delegates to TableStEph.subtract which is linear scan per key
@@ -227,7 +227,7 @@ broadcast use {
             requires old(self).spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>()
             ensures
                 self@.dom() =~= old(self)@.dom().difference(keys@),
-                forall|k: K::V| #![auto] self@.contains_key(k) ==> self@[k] == old(self)@[k],
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
                 self@.dom().finite();
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- agrees with APAS; copies entries then sorts
@@ -241,7 +241,7 @@ broadcast use {
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
                 first matches Some(k) ==> self@.dom().contains(k@),
-                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(v, t);
+                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns last element
         fn last_key(&self) -> (last: Option<K>)
@@ -250,7 +250,7 @@ broadcast use {
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
-                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, v);
+                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans backward
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
@@ -259,7 +259,7 @@ broadcast use {
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
-                predecessor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+                predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans forward
         fn next_key(&self, k: &K) -> (successor: Option<K>)
@@ -268,7 +268,7 @@ broadcast use {
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
-                successor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+                successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects, partitions, rebuilds two tables
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
@@ -285,7 +285,7 @@ broadcast use {
                 split.0@.dom().subset_of(old(self)@.dom()),
                 split.2@.dom().subset_of(old(self)@.dom()),
                 split.0@.dom().disjoint(split.2@.dom()),
-                forall|key| old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.2@.dom().contains(key) || key == k@;
+                forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.2@.dom().contains(key) || key == k@;
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to union which is linear scan
         fn join_key(&mut self, other: Self)
@@ -304,7 +304,7 @@ broadcast use {
             ensures
                 range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
-                forall|key| range@.dom().contains(key) ==> range@[key] == self@[key];
+                forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key];
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then counts
         fn rank_key(&self, k: &K) -> (rank: usize)
@@ -312,7 +312,7 @@ broadcast use {
             ensures
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
-                rank as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+                rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then indexes
         fn select_key(&self, i: usize) -> (selected: Option<K>)
@@ -321,7 +321,7 @@ broadcast use {
                 self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,
                 selected matches Some(k) ==> self@.dom().contains(k@),
-                selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
+                selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects, partitions, rebuilds
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
@@ -334,7 +334,7 @@ broadcast use {
                 split.0@.dom().subset_of(old(self)@.dom()),
                 split.1@.dom().subset_of(old(self)@.dom()),
                 split.0@.dom().disjoint(split.1@.dom()),
-                forall|key| old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key);
+                forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key);
     }
 
     // 9. impls
@@ -548,7 +548,7 @@ broadcast use {
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
                 first matches Some(k) ==> self@.dom().contains(k@),
-                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(v, t),
+                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -562,7 +562,7 @@ broadcast use {
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
-                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, v),
+                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -576,7 +576,7 @@ broadcast use {
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
-                predecessor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
+                predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -594,7 +594,7 @@ broadcast use {
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
-                successor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
+                successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -619,7 +619,7 @@ broadcast use {
                 split.0@.dom().subset_of(old(self)@.dom()),
                 split.2@.dom().subset_of(old(self)@.dom()),
                 split.0@.dom().disjoint(split.2@.dom()),
-                forall|key| old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.2@.dom().contains(key) || key == k@,
+                forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.2@.dom().contains(key) || key == k@,
         {
             let entries = self.collect();
             let size = entries.length();
@@ -660,7 +660,7 @@ broadcast use {
             ensures
                 range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
-                forall|key| range@.dom().contains(key) ==> range@[key] == self@[key],
+                forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
         {
             let entries = self.collect();
             let size = entries.length();
@@ -683,7 +683,7 @@ broadcast use {
             ensures
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
-                rank as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
+                rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -702,7 +702,7 @@ broadcast use {
                 self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,
                 selected matches Some(k) ==> self@.dom().contains(k@),
-                selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int,
+                selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int,
         {
             let entries = self.collect();
             let size = entries.length();
@@ -719,7 +719,7 @@ broadcast use {
                 split.0@.dom().subset_of(old(self)@.dom()),
                 split.1@.dom().subset_of(old(self)@.dom()),
                 split.0@.dom().disjoint(split.1@.dom()),
-                forall|key| old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
+                forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
         {
             let entries = self.collect();
             let size = entries.length();
