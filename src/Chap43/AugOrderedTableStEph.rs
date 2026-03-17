@@ -204,7 +204,7 @@ broadcast use {
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to OrderedTableStEph.map (collect + rebuild)
         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (mapped: Self)
-            requires self.spec_augorderedtablesteph_wf(), forall|k: &K, v: &V| f.requires((k, v))
+            requires self.spec_augorderedtablesteph_wf(), forall|k: &K, v: &V| f.requires((k, v)), obeys_feq_clone::<Pair<K, V>>()
             ensures mapped@.dom() =~= self@.dom(), mapped@.dom().finite();
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to OrderedTableStEph.filter (collect + filter + rebuild)
