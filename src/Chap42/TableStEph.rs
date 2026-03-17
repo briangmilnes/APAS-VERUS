@@ -120,7 +120,7 @@ broadcast use {
     // 7. proof fns
 
     // If a key is in spec_entries_to_map, it appears in the seq.
-    proof fn lemma_entries_to_map_key_in_seq<KV, VV>(entries: Seq<(KV, VV)>, k: KV)
+    pub proof fn lemma_entries_to_map_key_in_seq<KV, VV>(entries: Seq<(KV, VV)>, k: KV)
         requires spec_entries_to_map(entries).contains_key(k)
         ensures exists|i: int| 0 <= i < entries.len() && (#[trigger] entries[i]).0 == k
         decreases entries.len()
@@ -139,7 +139,7 @@ broadcast use {
     }
 
     // If entries[idx] has key k, the map contains k.
-    proof fn lemma_entries_to_map_contains_key<KV, VV>(entries: Seq<(KV, VV)>, idx: int)
+    pub proof fn lemma_entries_to_map_contains_key<KV, VV>(entries: Seq<(KV, VV)>, idx: int)
         requires 0 <= idx < entries.len()
         ensures spec_entries_to_map(entries).contains_key(entries[idx].0)
         decreases entries.len()
@@ -153,7 +153,7 @@ broadcast use {
     }
 
     // When keys are unique, spec_entries_to_map length equals seq length.
-    proof fn lemma_entries_to_map_len<KV, VV>(entries: Seq<(KV, VV)>)
+    pub proof fn lemma_entries_to_map_len<KV, VV>(entries: Seq<(KV, VV)>)
         requires spec_keys_no_dups(entries)
         ensures spec_entries_to_map(entries).len() == entries.len()
         decreases entries.len()
@@ -192,7 +192,7 @@ broadcast use {
     }
 
     // If no entry has key k, spec_entries_to_map does not contain k.
-    proof fn lemma_entries_to_map_no_key<KV, VV>(entries: Seq<(KV, VV)>, k: KV)
+    pub proof fn lemma_entries_to_map_no_key<KV, VV>(entries: Seq<(KV, VV)>, k: KV)
         requires forall|i: int| 0 <= i < entries.len() ==> (#[trigger] entries[i]).0 != k
         ensures !spec_entries_to_map(entries).contains_key(k)
     {
@@ -202,7 +202,7 @@ broadcast use {
     }
 
     // If entries[idx] = (k, v) and keys are unique, map contains k with value v.
-    proof fn lemma_entries_to_map_get<KV, VV>(entries: Seq<(KV, VV)>, idx: int)
+    pub proof fn lemma_entries_to_map_get<KV, VV>(entries: Seq<(KV, VV)>, idx: int)
         requires
             0 <= idx < entries.len(),
             spec_keys_no_dups(entries),
@@ -240,7 +240,7 @@ broadcast use {
     }
 
     // If every key in sub appears in sup, sub map domain ⊆ sup map domain.
-    proof fn lemma_entries_to_map_dom_subset<KV, VV>(
+    pub proof fn lemma_entries_to_map_dom_subset<KV, VV>(
         sub: Seq<(KV, VV)>,
         sup: Seq<(KV, VV)>,
     )
@@ -259,7 +259,7 @@ broadcast use {
     }
 
     // If two sequences have the same keys at each position, their maps have the same domain.
-    proof fn lemma_entries_to_map_dom_same_keys<KV, VV1, VV2>(
+    pub proof fn lemma_entries_to_map_dom_same_keys<KV, VV1, VV2>(
         s1: Seq<(KV, VV1)>,
         s2: Seq<(KV, VV2)>,
     )

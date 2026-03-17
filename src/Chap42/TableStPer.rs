@@ -160,7 +160,7 @@ pub mod TableStPer {
 
     // When keys are unique, spec_entries_to_map length equals seq length.
     // If entries[idx] = (k, v) and keys are unique, map contains k with value v.
-    proof fn lemma_entries_to_map_get<KV, VV>(entries: Seq<(KV, VV)>, idx: int)
+    pub proof fn lemma_entries_to_map_get<KV, VV>(entries: Seq<(KV, VV)>, idx: int)
         requires
             0 <= idx < entries.len(),
             spec_keys_no_dups(entries),
@@ -201,7 +201,7 @@ pub mod TableStPer {
     }
 
     // If every key in sub appears in sup, sub map domain ⊆ sup map domain.
-    proof fn lemma_entries_to_map_dom_subset<KV, VV>(
+    pub proof fn lemma_entries_to_map_dom_subset<KV, VV>(
         sub: Seq<(KV, VV)>,
         sup: Seq<(KV, VV)>,
     )
@@ -220,7 +220,7 @@ pub mod TableStPer {
     }
 
     // If entries[idx] has key k, the map contains k.
-    proof fn lemma_entries_to_map_contains_key<KV, VV>(entries: Seq<(KV, VV)>, idx: int)
+    pub proof fn lemma_entries_to_map_contains_key<KV, VV>(entries: Seq<(KV, VV)>, idx: int)
         requires 0 <= idx < entries.len(),
         ensures spec_entries_to_map(entries).contains_key(entries[idx].0),
         decreases entries.len(),
@@ -246,7 +246,7 @@ pub mod TableStPer {
     }
 
     // If a key is in spec_entries_to_map, it appears in the seq.
-    proof fn lemma_entries_to_map_key_in_seq<KV, VV>(entries: Seq<(KV, VV)>, k: KV)
+    pub proof fn lemma_entries_to_map_key_in_seq<KV, VV>(entries: Seq<(KV, VV)>, k: KV)
         requires spec_entries_to_map(entries).contains_key(k),
         ensures exists|i: int| 0 <= i < entries.len() && (#[trigger] entries[i]).0 == k,
         decreases entries.len(),

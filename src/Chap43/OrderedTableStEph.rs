@@ -142,7 +142,10 @@ broadcast use {
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects, iterates O(n), rebuilds via from_sorted_entries
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
-            requires forall|k: &K, v: &V| f.requires((k, v))
+            requires
+                self.spec_orderedtablesteph_wf(),
+                forall|k: &K, v: &V| f.requires((k, v)),
+                obeys_feq_clone::<Pair<K, V>>(),
             ensures mapped@.dom() =~= self@.dom(), mapped@.dom().finite();
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects, filters, rebuilds
@@ -301,6 +304,8 @@ broadcast use {
         /// - APAS: Work Θ(log n + m) where m = output size, Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects, filters, rebuilds
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+            requires
+                self.spec_orderedtablesteph_wf(),
             ensures
                 range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
@@ -326,6 +331,8 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects, partitions, rebuilds
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
+            requires
+                old(self).spec_orderedtablesteph_wf(),
             ensures
                 self@.dom().finite(),
                 old(self)@.dom().finite(),
@@ -418,7 +425,6 @@ broadcast use {
             OrderedTableStEph { base_table: base }
         }
 
-        #[verifier::external_body]
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
         {
             let entries = self.collect();
@@ -428,17 +434,41 @@ broadcast use {
             while i < size
                 invariant
                     i <= size,
-                    size as nat == entries.spec_seq().len(),
+                    size as nat == entries@.len(),
                     entries.spec_avltreeseqstper_wf(),
                     forall|k: &K, v: &V| f.requires((k, v)),
+                    result_entries@.len() == i as nat,
+                    forall|j: int| 0 <= j < i as int ==>
+                        (#[trigger] result_entries@[j])@.0 == entries@[j].0,
+                    spec_keys_no_dups(entries@),
                 decreases size - i,
             {
                 let pair = entries.nth(i);
                 let new_value = f(&pair.0, &pair.1);
-                result_entries.push(Pair(pair.0.clone(), new_value));
+                let cloned_key = pair.0.clone_plus();
+                proof {
+                    assert(obeys_feq_full_trigger::<K>());
+                }
+                result_entries.push(Pair(cloned_key, new_value));
                 i += 1;
             }
             let result_seq = AVLTreeSeqStPerS::from_vec(result_entries);
+            proof {
+                assert(result_seq@.len() == entries@.len());
+                assert forall|j: int| 0 <= j < result_seq@.len()
+                    implies (#[trigger] result_seq@[j]).0 == (#[trigger] entries@[j]).0
+                by {};
+                lemma_entries_to_map_dom_same_keys::<K::V, V::V, V::V>(
+                    result_seq@, entries@);
+                assert forall|i_: int, j_: int|
+                    0 <= i_ < j_ < result_seq@.len()
+                    implies (#[trigger] result_seq@[i_]).0
+                        != (#[trigger] result_seq@[j_]).0
+                by {
+                    assert(result_seq@[i_].0 == entries@[i_].0);
+                    assert(result_seq@[j_].0 == entries@[j_].0);
+                };
+            }
             from_sorted_entries(result_seq)
         }
 
@@ -530,6 +560,8 @@ broadcast use {
                 collected.spec_avltreeseqstper_wf(),
                 collected@.len() == self@.dom().len(),
                 forall|i: int| 0 <= i < collected@.len() ==> self@.dom().contains((#[trigger] collected@[i]).0),
+                self.spec_orderedtablesteph_wf() ==> spec_entries_to_map(collected@) =~= self@,
+                self.spec_orderedtablesteph_wf() ==> spec_keys_no_dups(collected@),
         {
             let array_seq = self.base_table.entries();
             let len = array_seq.length();
@@ -709,43 +741,159 @@ broadcast use {
             if i >= size { None } else { Some(entries.nth(i).0.clone()) }
         }
 
-        #[verifier::external_body]
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
-            ensures
-                self@.dom().finite(),
-                old(self)@.dom().finite(),
-                split.0@.dom().finite(),
-                split.1@.dom().finite(),
-                split.0@.dom().subset_of(old(self)@.dom()),
-                split.1@.dom().subset_of(old(self)@.dom()),
-                split.0@.dom().disjoint(split.1@.dom()),
-                forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
         {
             let entries = self.collect();
             let size = entries.length();
+            let split_at: usize = if i >= size { size } else { i };
+            proof { assert(obeys_feq_full_trigger::<Pair<K, V>>()); }
 
-            if i >= size {
-                let current = self.clone();
-                *self = Self::empty();
-                return (current, Self::empty());
+            // Build left entries [0..split_at)
+            let mut left_entries: Vec<Pair<K, V>> = Vec::new();
+            let mut j: usize = 0;
+            while j < split_at
+                invariant
+                    j <= split_at,
+                    split_at <= size,
+                    size as nat == entries@.len(),
+                    entries.spec_avltreeseqstper_wf(),
+                    left_entries@.len() == j as nat,
+                    forall|k: int| 0 <= k < j as int ==>
+                        (#[trigger] left_entries@[k])@ == entries@[k],
+                    spec_keys_no_dups(entries@),
+                    obeys_feq_clone::<Pair<K, V>>(),
+                decreases split_at - j,
+            {
+                let elem = entries.nth(j);
+                let cloned = elem.clone_plus();
+                proof { assert(obeys_feq_full_trigger::<Pair<K, V>>()); }
+                left_entries.push(cloned);
+                j += 1;
             }
 
-            let mut left_entries = Vec::new();
-            let mut right_entries = Vec::new();
-
-            for j in 0..i {
-                left_entries.push(entries.nth(j).clone());
-            }
-            for j in i..size {
-                right_entries.push(entries.nth(j).clone());
+            // Build right entries [split_at..size)
+            let mut right_entries: Vec<Pair<K, V>> = Vec::new();
+            while j < size
+                invariant
+                    split_at <= j <= size,
+                    size as nat == entries@.len(),
+                    entries.spec_avltreeseqstper_wf(),
+                    right_entries@.len() == (j - split_at) as nat,
+                    forall|k: int| 0 <= k < (j - split_at) as int ==>
+                        (#[trigger] right_entries@[k])@ == entries@[split_at as int + k],
+                    spec_keys_no_dups(entries@),
+                    obeys_feq_clone::<Pair<K, V>>(),
+                decreases size - j,
+            {
+                let elem = entries.nth(j);
+                let cloned = elem.clone_plus();
+                proof { assert(obeys_feq_full_trigger::<Pair<K, V>>()); }
+                right_entries.push(cloned);
+                j += 1;
             }
 
             let left_seq = AVLTreeSeqStPerS::from_vec(left_entries);
             let right_seq = AVLTreeSeqStPerS::from_vec(right_entries);
 
+            proof {
+                // spec_keys_no_dups for left
+                assert(spec_keys_no_dups(left_seq@)) by {
+                    assert forall|i_: int, j_: int|
+                        0 <= i_ < j_ < left_seq@.len()
+                        implies (#[trigger] left_seq@[i_]).0 != (#[trigger] left_seq@[j_]).0
+                    by {
+                        assert(left_seq@[i_] == left_entries@[i_]@);
+                        assert(left_seq@[j_] == left_entries@[j_]@);
+                        assert(left_entries@[i_]@ == entries@[i_]);
+                        assert(left_entries@[j_]@ == entries@[j_]);
+                    };
+                };
+
+                // spec_keys_no_dups for right
+                assert(spec_keys_no_dups(right_seq@)) by {
+                    assert forall|i_: int, j_: int|
+                        0 <= i_ < j_ < right_seq@.len()
+                        implies (#[trigger] right_seq@[i_]).0 != (#[trigger] right_seq@[j_]).0
+                    by {
+                        assert(right_seq@[i_] == right_entries@[i_]@);
+                        assert(right_seq@[j_] == right_entries@[j_]@);
+                        assert(right_entries@[i_]@ == entries@[split_at as int + i_]);
+                        assert(right_entries@[j_]@ == entries@[split_at as int + j_]);
+                    };
+                };
+            }
+
+            let left_table = from_sorted_entries(left_seq);
+            let right_table = from_sorted_entries(right_seq);
+
+            proof {
+                // Subset: left
+                assert forall|idx: int| 0 <= idx < left_seq@.len()
+                    implies exists|jdx: int| 0 <= jdx < entries@.len()
+                        && (#[trigger] entries@[jdx]).0 == (#[trigger] left_seq@[idx]).0
+                by {
+                    assert(left_seq@[idx] == left_entries@[idx]@);
+                    assert(left_entries@[idx]@ == entries@[idx]);
+                };
+                lemma_entries_to_map_dom_subset::<K::V, V::V>(left_seq@, entries@);
+
+                // Subset: right
+                assert forall|idx: int| 0 <= idx < right_seq@.len()
+                    implies exists|jdx: int| 0 <= jdx < entries@.len()
+                        && (#[trigger] entries@[jdx]).0 == (#[trigger] right_seq@[idx]).0
+                by {
+                    let jdx = split_at as int + idx;
+                    assert(right_seq@[idx] == right_entries@[idx]@);
+                    assert(right_entries@[idx]@ == entries@[jdx]);
+                };
+                lemma_entries_to_map_dom_subset::<K::V, V::V>(right_seq@, entries@);
+
+                // Disjoint
+                assert(left_table@.dom().disjoint(right_table@.dom())) by {
+                    assert forall|key: K::V|
+                        !(left_table@.dom().contains(key) && right_table@.dom().contains(key))
+                    by {
+                        if left_table@.dom().contains(key) && right_table@.dom().contains(key) {
+                            lemma_entries_to_map_key_in_seq(left_seq@, key);
+                            lemma_entries_to_map_key_in_seq(right_seq@, key);
+                            let li = choose|li: int|
+                                0 <= li < left_seq@.len() && (#[trigger] left_seq@[li]).0 == key;
+                            let ri = choose|ri: int|
+                                0 <= ri < right_seq@.len() && (#[trigger] right_seq@[ri]).0 == key;
+                            assert(left_seq@[li] == entries@[li]);
+                            assert(right_seq@[ri] == entries@[split_at as int + ri]);
+                            assert(entries@[li].0 == key);
+                            assert(entries@[split_at as int + ri].0 == key);
+                        }
+                    };
+                };
+
+                // Coverage
+                assert forall|key: K::V|
+                    #[trigger] old(self)@.dom().contains(key)
+                    implies left_table@.dom().contains(key) || right_table@.dom().contains(key)
+                by {
+                    lemma_entries_to_map_key_in_seq(entries@, key);
+                    let idx = choose|idx: int|
+                        0 <= idx < entries@.len() && (#[trigger] entries@[idx]).0 == key;
+                    if idx < split_at as int {
+                        assert(left_seq@[idx] == left_entries@[idx]@);
+                        assert(left_entries@[idx]@ == entries@[idx]);
+                        lemma_entries_to_map_contains_key(left_seq@, idx);
+                    } else {
+                        let ridx = idx - split_at as int;
+                        assert(right_seq@[ridx] == right_entries@[ridx]@);
+                        assert(right_entries@[ridx]@ == entries@[split_at as int + ridx]);
+                        lemma_entries_to_map_contains_key(right_seq@, ridx);
+                    }
+                };
+
+                lemma_entries_to_map_finite::<K::V, V::V>(entries@);
+            }
+
             *self = Self::empty();
 
-            (from_sorted_entries(left_seq), from_sorted_entries(right_seq))
+            (left_table, right_table)
         }
     }
 
@@ -887,8 +1035,14 @@ broadcast use {
     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
     ) -> (cloned: OrderedTableStEph<K, V>)
-        requires entries.spec_avltreeseqstper_wf(),
-        ensures cloned@.dom().finite(),
+        requires
+            entries.spec_avltreeseqstper_wf(),
+            spec_keys_no_dups(entries@),
+            obeys_feq_clone::<Pair<K, V>>(),
+        ensures
+            cloned@.dom().finite(),
+            cloned@ =~= spec_entries_to_map(entries@),
+            cloned.spec_orderedtablesteph_wf(),
     {
         let len = entries.length();
         let mut elements: Vec<Pair<K, V>> = Vec::new();
@@ -898,13 +1052,30 @@ broadcast use {
                 entries.spec_avltreeseqstper_wf(),
                 len as nat == entries@.len(),
                 i <= len,
+                elements@.len() == i as nat,
+                forall|j: int| 0 <= j < i as int ==>
+                    (#[trigger] elements@[j])@ == entries@[j],
             decreases len - i,
         {
-            elements.push(entries.nth(i).clone_plus());
+            let elem = entries.nth(i);
+            let cloned = elem.clone_plus();
+            proof { assert(obeys_feq_full_trigger::<Pair<K, V>>()); }
+            elements.push(cloned);
             i = i + 1;
         }
+        let seq = ArraySeqStEphS::from_vec(elements);
+        proof {
+            assert forall|j: int| 0 <= j < entries@.len()
+                implies #[trigger] seq@[j] == entries@[j]
+            by {
+                assert(seq.spec_index(j) == elements@[j]);
+                assert(elements@[j]@ == entries@[j]);
+            };
+            assert(seq@ =~= entries@);
+            lemma_entries_to_map_finite::<K::V, V::V>(entries@);
+        }
         OrderedTableStEph {
-            base_table: crate::Chap42::TableStEph::TableStEph::from_sorted_entries(elements),
+            base_table: TableStEph { entries: seq },
         }
     }
 
