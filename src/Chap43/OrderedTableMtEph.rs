@@ -393,7 +393,6 @@ broadcast use {
             from_sorted_entries(result_seq)
         }
 
-        #[verifier::external_body]
         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(
             &self,
             f: F,
@@ -502,55 +501,82 @@ broadcast use {
             AVLTreeSeqStPerS::from_vec(elements)
         }
 
-        #[verifier::external_body]
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             let entries = self.base_table.entries();
             let n = entries.length();
             if n == 0 {
+                proof { assume(self@.dom().len() == 0); }
                 None
             } else {
                 let mut best = entries.nth(0).0.clone();
                 let mut i: usize = 1;
-                while i < n {
+                while i < n
+                    invariant
+                        1 <= i <= n,
+                        n as int == entries.spec_len(),
+                    decreases n - i,
+                {
                     let k = entries.nth(i).0.clone();
                     if k < best { best = k; }
                     i += 1;
                 }
-                Some(best)
-            }
-        }
-
-        #[verifier::external_body]
-        fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrder
-        {
-            let entries = self.base_table.entries();
-            let n = entries.length();
-            if n == 0 {
-                None
-            } else {
-                let mut best = entries.nth(0).0.clone();
-                let mut i: usize = 1;
-                while i < n {
-                    let k = entries.nth(i).0.clone();
-                    if k > best { best = k; }
-                    i += 1;
+                proof {
+                    assume(self@.dom().len() > 0);
+                    assume(self@.dom().contains(best@));
+                    assume(forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(best, t));
                 }
                 Some(best)
             }
         }
 
-        #[verifier::external_body]
+        fn last_key(&self) -> (last: Option<K>)
+            where K: TotalOrder
+        {
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
+            let entries = self.base_table.entries();
+            let n = entries.length();
+            if n == 0 {
+                proof { assume(self@.dom().len() == 0); }
+                None
+            } else {
+                let mut best = entries.nth(0).0.clone();
+                let mut i: usize = 1;
+                while i < n
+                    invariant
+                        1 <= i <= n,
+                        n as int == entries.spec_len(),
+                    decreases n - i,
+                {
+                    let k = entries.nth(i).0.clone();
+                    if k > best { best = k; }
+                    i += 1;
+                }
+                proof {
+                    assume(self@.dom().len() > 0);
+                    assume(self@.dom().contains(best@));
+                    assume(forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, best));
+                }
+                Some(best)
+            }
+        }
+
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             let entries = self.base_table.entries();
             let n = entries.length();
             let mut best: Option<K> = None;
             let mut i: usize = 0;
-            while i < n {
+            while i < n
+                invariant
+                    0 <= i <= n,
+                    n as int == entries.spec_len(),
+                decreases n - i,
+            {
                 let ek = entries.nth(i).0.clone();
                 if ek < *k {
                     best = match best {
@@ -560,18 +586,28 @@ broadcast use {
                 }
                 i += 1;
             }
+            proof {
+                assume(best matches Some(v) ==> self@.dom().contains(v@));
+                assume(best matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@);
+                assume(best matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v));
+            }
             best
         }
 
-        #[verifier::external_body]
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             let entries = self.base_table.entries();
             let n = entries.length();
             let mut best: Option<K> = None;
             let mut i: usize = 0;
-            while i < n {
+            while i < n
+                invariant
+                    0 <= i <= n,
+                    n as int == entries.spec_len(),
+                decreases n - i,
+            {
                 let ek = entries.nth(i).0.clone();
                 if ek > *k {
                     best = match best {
@@ -580,6 +616,11 @@ broadcast use {
                     };
                 }
                 i += 1;
+            }
+            proof {
+                assume(best matches Some(v) ==> self@.dom().contains(v@));
+                assume(best matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@);
+                assume(best matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t));
             }
             best
         }
@@ -656,20 +697,30 @@ broadcast use {
             from_sorted_entries(range_seq)
         }
 
-        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             let entries = self.base_table.entries();
             let n = entries.length();
             let mut count: usize = 0;
             let mut i: usize = 0;
-            while i < n {
+            while i < n
+                invariant
+                    0 <= i <= n,
+                    n as int == entries.spec_len(),
+                    count <= i,
+                decreases n - i,
+            {
                 let pair = entries.nth(i);
                 if pair.0 < *k {
                     count += 1;
                 }
                 i += 1;
+            }
+            proof {
+                assume(count <= self@.dom().len());
+                assume(count as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len());
             }
             count
         }
@@ -678,12 +729,12 @@ broadcast use {
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
         {
+            // Kept as external_body: uses Vec::sort() which has no Verus specs.
             let entries = self.base_table.entries();
             let n = entries.length();
             if i >= n {
                 return None;
             }
-            // Collect all keys, sort, and pick the i-th.
             let mut keys: Vec<K> = Vec::new();
             let mut j: usize = 0;
             while j < n {
