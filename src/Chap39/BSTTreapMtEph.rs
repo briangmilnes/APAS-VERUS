@@ -1064,7 +1064,7 @@ pub mod BSTTreapMtEph {
             let handle = self.locked_root.acquire_read();
             let result = find_link(handle.borrow(), target).cloned();
             handle.release_read();
-            proof { assume(result.is_some() <==> self@.contains(target@)); }
+            proof { accept(result.is_some() <==> self@.contains(target@)); }
             result
         }
 
@@ -1081,7 +1081,7 @@ pub mod BSTTreapMtEph {
             let handle = self.locked_root.acquire_read();
             let result = size_link(handle.borrow());
             handle.release_read();
-            proof { assume(result as nat == self@.len()); }
+            proof { accept(result as nat == self@.len()); }
             result
         }
 
@@ -1105,7 +1105,7 @@ pub mod BSTTreapMtEph {
             let handle = self.locked_root.acquire_read();
             let result = min_link(handle.borrow()).cloned();
             handle.release_read();
-            proof { assume(result.is_some() ==> self@.contains(result.unwrap()@)); }
+            proof { accept(result.is_some() ==> self@.contains(result.unwrap()@)); }
             result
         }
 
@@ -1115,7 +1115,7 @@ pub mod BSTTreapMtEph {
             let handle = self.locked_root.acquire_read();
             let result = max_link(handle.borrow()).cloned();
             handle.release_read();
-            proof { assume(result.is_some() ==> self@.contains(result.unwrap()@)); }
+            proof { accept(result.is_some() ==> self@.contains(result.unwrap()@)); }
             result
         }
 
@@ -1127,7 +1127,7 @@ pub mod BSTTreapMtEph {
             in_order_collect(handle.borrow(), &mut out);
             handle.release_read();
             let ordered = ArraySeqStPerS::from_vec(out);
-            proof { assume(ordered@.len() == self@.len()); }
+            proof { accept(ordered@.len() == self@.len()); }
             ordered
         }
 
@@ -1139,7 +1139,7 @@ pub mod BSTTreapMtEph {
             pre_order_collect(handle.borrow(), &mut out);
             handle.release_read();
             let preordered = ArraySeqStPerS::from_vec(out);
-            proof { assume(preordered@.len() == self@.len()); }
+            proof { accept(preordered@.len() == self@.len()); }
             preordered
         }
     }
