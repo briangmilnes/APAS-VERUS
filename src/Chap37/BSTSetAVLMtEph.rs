@@ -146,6 +146,7 @@ pub mod BSTSetAVLMtEph {
         tree.in_order().iter().cloned().collect()
     }
 
+    // veracity: no_requires
     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
         ensures true,
     {
@@ -156,6 +157,7 @@ pub mod BSTSetAVLMtEph {
         tree
     }
 
+    // veracity: no_requires
     fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetAVLMtEph<T>)
     where
         I: IntoIterator<Item = T>,

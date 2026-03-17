@@ -35,8 +35,8 @@ pub open spec fn is_sorted<T: TotalOrder>(v: &[T]) -> bool {
 /// - APAS: Work Θ(n²), Span Θ(n²) — sequential insertion sort.
 /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS. Iterative in-place variant, same cost as the recursive prose version.
 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+// veracity: no_requires
 pub fn insertion_sort<T: TotalOrder + Copy>(a: &mut [T]) -> (sorted: &[T])
-        requires true,
         ensures
           sorted.len() == old(a).len(),
           sorted@.to_multiset() == old(a)@.to_multiset(),

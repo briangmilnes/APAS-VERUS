@@ -44,8 +44,8 @@ pub mod Exercise21_7 {
     /// Check if a number is even.
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    // veracity: no_requires
     pub fn is_even(x: &N) -> (r: B)
-        requires true,
         ensures r == spec_is_even(*x as int)
     { *x % 2 == 0 }
 
@@ -58,8 +58,8 @@ pub mod Exercise21_7 {
     /// Check if a character is a vowel (case-insensitive).
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    // veracity: no_requires
     pub fn is_vowel(c: &char) -> (r: B)
-        requires true,
         ensures r == spec_is_vowel(*c)
     {
         match *c {

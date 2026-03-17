@@ -97,8 +97,8 @@ pub mod BoruvkaStEph {
     //		7. proof fns/broadcast groups
 
     /// Deterministic coin flip from seed and vertex iteration index.
+    // veracity: no_requires
     fn coin_flip(seed: u64, index: usize) -> (flip: bool)
-        requires true,
         ensures flip == (((seed ^ (index as u64)) & 1u64) == 1u64)
     {
         ((seed ^ (index as u64)) & 1) == 1

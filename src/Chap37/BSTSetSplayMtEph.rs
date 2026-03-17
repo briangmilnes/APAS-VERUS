@@ -147,6 +147,7 @@ pub mod BSTSetSplayMtEph {
         tree.in_order().iter().cloned().collect()
     }
 
+    // veracity: no_requires
     fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
         ensures true,
     {
@@ -157,6 +158,7 @@ pub mod BSTSetSplayMtEph {
         tree
     }
 
+    // veracity: no_requires
     fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder, I>(values: I) -> (set: BSTSetSplayMtEph<T>)
     where
         I: IntoIterator<Item = T>,

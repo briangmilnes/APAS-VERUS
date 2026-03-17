@@ -101,6 +101,7 @@ pub mod StructChainedHashTable {
 
         /// Inserts key-value into chain, updating if key exists, appending if not.
         /// Returns (new_chain, existed) where existed is true if key was already present.
+        // veracity: no_requires
         fn chain_insert<Key: PartialEq, Value>(
             chain: Option<Box<Node<Key, Value>>>,
             key: Key,
@@ -141,6 +142,7 @@ pub mod StructChainedHashTable {
         }
 
         /// Looks up key in chain, returning value if found.
+        // veracity: no_requires
         fn chain_lookup<Key: PartialEq, Value: Clone>(
             chain: &Option<Box<Node<Key, Value>>>,
             key: &Key,
@@ -181,6 +183,7 @@ pub mod StructChainedHashTable {
         }
 
         /// Removes all nodes matching key, returns updated chain and whether any found.
+        // veracity: no_requires
         fn chain_delete<Key: PartialEq, Value>(
             chain: Option<Box<Node<Key, Value>>>,
             key: &Key,

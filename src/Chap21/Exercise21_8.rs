@@ -173,8 +173,8 @@ pub mod Exercise21_8 {
     /// - Uses tabulate + filter per the textbook.
     /// - APAS: Work Θ(√n), Span Θ(lg n)
     /// - Claude-Opus-4.6: Work Θ(√n), Span Θ(√n) — sequential StEph tabulate + filter.
+    // veracity: no_requires
     pub fn is_prime(n: N) -> (prime: B)
-        requires true,
         ensures prime == spec_is_prime(n as int)
     {
         if n < 2 {

@@ -672,6 +672,7 @@ pub mod AVLTreeSeqStEph {
         true
     }
 
+    // veracity: no_requires
     fn clone_link<T: StT>(link: &Link<T>) -> (copy: Link<T>)
         ensures
             spec_inorder(copy) =~= spec_inorder(*link),
@@ -1037,6 +1038,7 @@ pub mod AVLTreeSeqStEph {
 
     // 10. iterators
 
+    // veracity: no_requires
     fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqIterStEph<'a, T>, link: &'a Link<T>)
         ensures true,
         decreases *link,

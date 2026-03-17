@@ -309,6 +309,7 @@ broadcast use {
                 vals
             };
 
+            // veracity: no_requires
             fn parallel_filter<T: StTInMtT + Ord + 'static, F: Pred<T> + Clone>(vals: Vec<T>, f: F) -> Vec<T> {
                 let n = vals.len();
                 if n == 0 {
@@ -368,6 +369,7 @@ broadcast use {
                 (sv, ov)
             };
 
+            // veracity: no_requires
             fn parallel_intersect<T: StTInMtT + Ord + 'static>(self_vals: Vec<T>, other_vals: Vec<T>) -> Vec<T> {
                 let n = self_vals.len();
                 if n == 0 {

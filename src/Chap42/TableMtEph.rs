@@ -2171,8 +2171,8 @@ broadcast use {
         }
     }
 
+    // veracity: no_requires
     pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (constructed: TableMtEph<K, V>)
-        requires true,
         ensures constructed@.dom().finite()
     {
         let seq = ArraySeqMtEphS::from_vec(entries);

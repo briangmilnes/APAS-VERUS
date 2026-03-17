@@ -228,6 +228,7 @@ broadcast use {
         {
             let mut vals = seq.values_in_order();
 
+            // veracity: no_requires
             fn parallel_sort<T: StTInMtT + Ord + 'static>(mut vals: Vec<T>) -> Vec<T> {
                 let n = vals.len();
                 if n <= 1 {

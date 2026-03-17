@@ -728,6 +728,7 @@ pub mod AVLTreeSeqStPer {
 
     // 10. iterators
 
+    // veracity: no_requires
     fn push_left_iter_stper<'a, T: StT>(it: &mut AVLTreeSeqStPerIter<'a, T>, cur: Option<&'a Node<T>>)
         ensures true,
         decreases cur,

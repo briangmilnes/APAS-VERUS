@@ -722,6 +722,7 @@ pub mod BSTRBMtEph {
         }
     }
 
+    // veracity: no_requires
     fn build_balanced<T: StTInMtT + Ord + TotalOrder>(values: &[T]) -> (link: Link<T>)
         ensures link_spec_size(link) <= values@.len(),
         decreases values.len(),

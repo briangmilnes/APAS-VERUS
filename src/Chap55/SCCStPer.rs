@@ -243,8 +243,8 @@ pub mod SCCStPer {
     }
 
     /// Runtime check that all neighbor indices are valid vertex indices.
+    // veracity: no_requires
     fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (valid: bool)
-        requires true,
         ensures valid ==> spec_toposortstper_wf(graph),
     {
         let n = graph.length();

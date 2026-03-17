@@ -816,8 +816,8 @@ pub mod BalBinTreeStEph {
 
     /// - APAS: N/A — derive scaffolding.
     /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — recursive deep clone.
+    // veracity: no_requires
     fn clone_tree<T: Clone>(t: &BalBinTree<T>) -> (c: BalBinTree<T>)
-        requires true,
         ensures c == *t
         decreases t,
     {

@@ -66,8 +66,8 @@ pub mod MaxContigSubSumBruteStEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    // veracity: no_requires
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
-        requires true,
         ensures
             max == spec_max_opt_i32(a, b),
     {

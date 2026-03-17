@@ -137,6 +137,7 @@ pub mod BSTSetRBMtEph {
         from_sorted_iter(values)
     }
 
+    // veracity: no_requires
     fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder, I: IntoIterator<Item = T>>(values: I) -> (set: BSTSetRBMtEph<T>)
         ensures true,
     {

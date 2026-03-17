@@ -2015,10 +2015,10 @@ pub mod TableStPer {
         }
     }
 
+    // veracity: no_requires
     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
         entries: Vec<Pair<K, V>>,
     ) -> (cloned: TableStPer<K, V>)
-        requires true,
         ensures cloned@.dom().finite()
     {
         let seq = ArraySeqStPerS::from_vec(entries);
