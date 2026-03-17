@@ -112,28 +112,28 @@ broadcast use {
             index < 64,
         ensures
             get_bit64!(bv_new, index) == bit,
-            forall|loc2: u64| #![auto] (loc2 < 64 && loc2 != index) ==>
+            forall|loc2: u64| #![trigger (0x1u64 & (bv_new >> loc2))] (loc2 < 64 && loc2 != index) ==>
                 (get_bit64!(bv_new, loc2) == get_bit64!(bv_old, loc2)),
     {}
 
     #[verifier::bit_vector]
     proof fn bit_or_64_proof(bv1: u64, bv2: u64, bv_new: u64)
         requires bv_new == bv1 | bv2,
-        ensures forall|i: u64| #![auto] (i < 64) ==>
+        ensures forall|i: u64| #![trigger (0x1u64 & (bv_new >> i))] (i < 64) ==>
             get_bit64!(bv_new, i) == (get_bit64!(bv1, i) || get_bit64!(bv2, i)),
     {}
 
     #[verifier::bit_vector]
     proof fn bit_and_64_proof(bv1: u64, bv2: u64, bv_new: u64)
         requires bv_new == bv1 & bv2,
-        ensures forall|i: u64| #![auto] (i < 64) ==>
+        ensures forall|i: u64| #![trigger (0x1u64 & (bv_new >> i))] (i < 64) ==>
             get_bit64!(bv_new, i) == (get_bit64!(bv1, i) && get_bit64!(bv2, i)),
     {}
 
     #[verifier::bit_vector]
     proof fn bit_andnot_64_proof(bv1: u64, bv2: u64, bv_new: u64)
         requires bv_new == bv1 & !bv2,
-        ensures forall|i: u64| #![auto] (i < 64) ==>
+        ensures forall|i: u64| #![trigger (0x1u64 & (bv_new >> i))] (i < 64) ==>
             get_bit64!(bv_new, i) == (get_bit64!(bv1, i) && !get_bit64!(bv2, i)),
     {}
 
@@ -601,7 +601,7 @@ broadcast use {
             }
             // Establish: all bits in new_bits are zero (subset invariant holds vacuously).
             proof {
-                assert forall|k: int, b: int| #![auto]
+                assert forall|k: int, b: int| #![trigger u64_view(new_bits@[k])[b]]
                     0 <= k < word_count as int && 0 <= b < 64 && u64_view(new_bits@[k])[b]
                     implies u64_view(self.bits@[k])[b] by
                 {
@@ -617,7 +617,7 @@ broadcast use {
                     word_count == self.bits@.len(),
                     word_count as int == num_words(self.universe_size as int),
                     self.spec_arraysetenummteph_wf(),
-                    forall|k: int, b: int| #![auto]
+                    forall|k: int, b: int| #![trigger u64_view(new_bits@[k])[b]]
                         (0 <= k < word_count as int && 0 <= b < 64 && u64_view(new_bits@[k])[b])
                         ==> u64_view(self.bits@[k])[b],
                     forall|ii: usize| ii < self.spec_universe_size()
@@ -635,7 +635,7 @@ broadcast use {
                     }
                     new_bits.set(word_idx, new_word);
                     proof {
-                        assert forall|k: int, b: int| #![auto]
+                        assert forall|k: int, b: int| #![trigger u64_view(new_bits@[k])[b]]
                             0 <= k < word_count as int && 0 <= b < 64
                                 && u64_view(new_bits@[k])[b]
                             implies u64_view(self.bits@[k])[b] by
@@ -692,7 +692,7 @@ broadcast use {
                     n == self.bits@.len(),
                     n == other.bits@.len(),
                     result_bits@.len() == i as int,
-                    forall|k: int, j: int| #![auto]
+                    forall|k: int, j: int| #![trigger u64_view(result_bits@[k])[j]]
                         0 <= k < i && 0 <= j < 64 ==>
                             u64_view(result_bits@[k])[j] ==
                                 (u64_view(self.bits@[k])[j] && u64_view(other.bits@[k])[j]),
@@ -743,7 +743,7 @@ broadcast use {
                     n == self.bits@.len(),
                     n == other.bits@.len(),
                     result_bits@.len() == i as int,
-                    forall|k: int, j: int| #![auto]
+                    forall|k: int, j: int| #![trigger u64_view(result_bits@[k])[j]]
                         0 <= k < i && 0 <= j < 64 ==>
                             u64_view(result_bits@[k])[j] ==
                                 (u64_view(self.bits@[k])[j] && !u64_view(other.bits@[k])[j]),
@@ -794,7 +794,7 @@ broadcast use {
                     n == self.bits@.len(),
                     n == other.bits@.len(),
                     result_bits@.len() == i as int,
-                    forall|k: int, j: int| #![auto]
+                    forall|k: int, j: int| #![trigger u64_view(result_bits@[k])[j]]
                         0 <= k < i && 0 <= j < 64 ==>
                             u64_view(result_bits@[k])[j] ==
                                 (u64_view(self.bits@[k])[j] || u64_view(other.bits@[k])[j]),

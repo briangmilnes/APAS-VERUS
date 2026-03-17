@@ -102,9 +102,9 @@ pub mod BSTKeyValueStEph {
             Some(node) => {
                 spec_ordered_link(&node.left)
                 && spec_ordered_link(&node.right)
-                && (forall |k: K| #![auto] spec_content_link(&node.left).contains_key(k)
+                && (forall |k: K| #[trigger] spec_content_link(&node.left).contains_key(k)
                     ==> (TotalOrder::le(k, node.key) && k != node.key))
-                && (forall |k: K| #![auto] spec_content_link(&node.right).contains_key(k)
+                && (forall |k: K| #[trigger] spec_content_link(&node.right).contains_key(k)
                     ==> (TotalOrder::le(node.key, k) && k != node.key))
             }
         }
@@ -315,9 +315,9 @@ pub mod BSTKeyValueStEph {
                 Some(node) => {
                     spec_ordered_link(&node.left)
                     && spec_ordered_link(&node.right)
-                    && (forall |k: K| #![auto] spec_content_link(&node.left).contains_key(k)
+                    && (forall |k: K| #[trigger] spec_content_link(&node.left).contains_key(k)
                         ==> (TotalOrder::le(k, node.key) && k != node.key))
-                    && (forall |k: K| #![auto] spec_content_link(&node.right).contains_key(k)
+                    && (forall |k: K| #[trigger] spec_content_link(&node.right).contains_key(k)
                         ==> (TotalOrder::le(node.key, k) && k != node.key))
                 }
             }
@@ -799,13 +799,13 @@ pub mod BSTKeyValueStEph {
                         assert(TotalOrder::le(xk, yk));
                         assert(xk != yk);
                         // Capture all ordering facts before mutations.
-                        assert(forall |k: K| #![auto] a_content.contains_key(k)
+                        assert(forall |k: K| #[trigger] a_content.contains_key(k)
                             ==> (TotalOrder::le(k, xk) && k != xk));
-                        assert(forall |k: K| #![auto] x_right_content.contains_key(k)
+                        assert(forall |k: K| #[trigger] x_right_content.contains_key(k)
                             ==> (TotalOrder::le(xk, k) && k != xk));
-                        assert(forall |k: K| #![auto] b_content.contains_key(k)
+                        assert(forall |k: K| #[trigger] b_content.contains_key(k)
                             ==> (TotalOrder::le(k, yk) && k != yk));
-                        assert(forall |k: K| #![auto] c_content.contains_key(k)
+                        assert(forall |k: K| #[trigger] c_content.contains_key(k)
                             ==> (TotalOrder::le(yk, k) && k != yk));
                         assert(spec_ordered_link(&x.left));
                         assert(spec_ordered_link(&y.left));
@@ -817,9 +817,9 @@ pub mod BSTKeyValueStEph {
                     // Prove new x (left=A, right=B, key=xk) is ordered.
                     proof {
                         // B was in x.right content, so B > xk.
-                        assert(forall |k: K| #![auto] b_content.contains_key(k)
+                        assert(forall |k: K| #[trigger] b_content.contains_key(k)
                             ==> x_right_content.contains_key(k));
-                        assert(forall |k: K| #![auto] spec_content_link(&x.right).contains_key(k)
+                        assert(forall |k: K| #[trigger] spec_content_link(&x.right).contains_key(k)
                             ==> (TotalOrder::le(xk, k) && k != xk));
                     }
 
@@ -837,7 +837,7 @@ pub mod BSTKeyValueStEph {
                         assert(new_x_content =~=
                             a_content.union_prefer_right(b_content).insert(xk, xv));
                         // A keys < yk by transitivity: A < xk < yk.
-                        assert forall |k: K| #![auto] a_content.contains_key(k)
+                        assert forall |k: K| #[trigger] a_content.contains_key(k)
                             implies (TotalOrder::le(k, yk) && k != yk) by {
                             if a_content.contains_key(k) {
                                 // Inline transitivity: le(k,xk) && le(xk,yk) => le(k,yk).
@@ -852,10 +852,10 @@ pub mod BSTKeyValueStEph {
                         // B keys < yk (from original y ordering, captured above).
                         // xk < yk (established above).
                         // Combine: all new_x_content keys < yk.
-                        assert(forall |k: K| #![auto] new_x_content.contains_key(k)
+                        assert(forall |k: K| #[trigger] new_x_content.contains_key(k)
                             ==> (TotalOrder::le(k, yk) && k != yk));
                         // C keys > yk (from original y ordering, captured above).
-                        assert(forall |k: K| #![auto] c_content.contains_key(k)
+                        assert(forall |k: K| #[trigger] c_content.contains_key(k)
                             ==> (TotalOrder::le(yk, k) && k != yk));
                     }
 
@@ -863,9 +863,9 @@ pub mod BSTKeyValueStEph {
                     proof {
                         assert(spec_ordered_link(&y.left));
                         assert(spec_ordered_link(&y.right));
-                        assert(forall |k: K| #![auto] spec_content_link(&y.left).contains_key(k)
+                        assert(forall |k: K| #[trigger] spec_content_link(&y.left).contains_key(k)
                             ==> (TotalOrder::le(k, yk) && k != yk));
-                        assert(forall |k: K| #![auto] spec_content_link(&y.right).contains_key(k)
+                        assert(forall |k: K| #[trigger] spec_content_link(&y.right).contains_key(k)
                             ==> (TotalOrder::le(yk, k) && k != yk));
                     }
 
@@ -911,13 +911,13 @@ pub mod BSTKeyValueStEph {
                         assert(TotalOrder::le(yk, xk));
                         assert(yk != xk);
                         // Capture all ordering facts before mutations.
-                        assert(forall |k: K| #![auto] a_content.contains_key(k)
+                        assert(forall |k: K| #[trigger] a_content.contains_key(k)
                             ==> (TotalOrder::le(k, yk) && k != yk));
-                        assert(forall |k: K| #![auto] x_left_content.contains_key(k)
+                        assert(forall |k: K| #[trigger] x_left_content.contains_key(k)
                             ==> (TotalOrder::le(k, xk) && k != xk));
-                        assert(forall |k: K| #![auto] b_content.contains_key(k)
+                        assert(forall |k: K| #[trigger] b_content.contains_key(k)
                             ==> (TotalOrder::le(yk, k) && k != yk));
-                        assert(forall |k: K| #![auto] c_content.contains_key(k)
+                        assert(forall |k: K| #[trigger] c_content.contains_key(k)
                             ==> (TotalOrder::le(xk, k) && k != xk));
                         assert(spec_ordered_link(&x.right));
                         assert(spec_ordered_link(&y.left));
@@ -929,9 +929,9 @@ pub mod BSTKeyValueStEph {
                     // Prove new x (left=B, right=C, key=xk) is ordered.
                     proof {
                         // B was in x.left content, so B < xk.
-                        assert(forall |k: K| #![auto] b_content.contains_key(k)
+                        assert(forall |k: K| #[trigger] b_content.contains_key(k)
                             ==> x_left_content.contains_key(k));
-                        assert(forall |k: K| #![auto] spec_content_link(&x.left).contains_key(k)
+                        assert(forall |k: K| #[trigger] spec_content_link(&x.left).contains_key(k)
                             ==> (TotalOrder::le(k, xk) && k != xk));
                     }
 
@@ -949,7 +949,7 @@ pub mod BSTKeyValueStEph {
                         assert(new_x_content =~=
                             b_content.union_prefer_right(c_content).insert(xk, xv));
                         // C keys > yk by transitivity: C > xk > yk.
-                        assert forall |k: K| #![auto] c_content.contains_key(k)
+                        assert forall |k: K| #[trigger] c_content.contains_key(k)
                             implies (TotalOrder::le(yk, k) && k != yk) by {
                             if c_content.contains_key(k) {
                                 lemma_strict_gt_transitive(k, xk, yk);
@@ -958,10 +958,10 @@ pub mod BSTKeyValueStEph {
                         // B keys > yk (from original y ordering, captured above).
                         // xk > yk (established above).
                         // Combine: all new_x_content keys > yk.
-                        assert(forall |k: K| #![auto] new_x_content.contains_key(k)
+                        assert(forall |k: K| #[trigger] new_x_content.contains_key(k)
                             ==> (TotalOrder::le(yk, k) && k != yk));
                         // A keys < yk (from original y ordering, captured above).
-                        assert(forall |k: K| #![auto] spec_content_link(&y.left).contains_key(k)
+                        assert(forall |k: K| #[trigger] spec_content_link(&y.left).contains_key(k)
                             ==> (TotalOrder::le(k, yk) && k != yk));
                     }
 
@@ -1006,9 +1006,9 @@ pub mod BSTKeyValueStEph {
                     // Capture all ordering facts before mutations.
                     assert(spec_ordered_link(&node.left));
                     assert(spec_ordered_link(&node.right));
-                    assert(forall |k: K| #![auto] old_left_content.contains_key(k)
+                    assert(forall |k: K| #[trigger] old_left_content.contains_key(k)
                         ==> (TotalOrder::le(k, node_key) && k != node_key));
-                    assert(forall |k: K| #![auto] old_right_content.contains_key(k)
+                    assert(forall |k: K| #[trigger] old_right_content.contains_key(k)
                         ==> (TotalOrder::le(node_key, k) && k != node_key));
                 }
 
@@ -1028,11 +1028,11 @@ pub mod BSTKeyValueStEph {
                         let inserted = Self::insert_link(&mut node.left, key, value, priority);
                         // Ordering: new left = old_left.insert(key,value). All < node_key.
                         proof {
-                            assert(forall |k: K| #![auto]
+                            assert(forall |k: K| #[trigger]
                                 spec_content_link(&node.left).contains_key(k)
                                 ==> (TotalOrder::le(k, node_key) && k != node_key));
                             // Right subtree unchanged — reassert ordering.
-                            assert(forall |k: K| #![auto]
+                            assert(forall |k: K| #[trigger]
                                 spec_content_link(&node.right).contains_key(k)
                                 ==> (TotalOrder::le(node_key, k) && k != node_key));
                         }
@@ -1061,11 +1061,11 @@ pub mod BSTKeyValueStEph {
                         }
                         let inserted = Self::insert_link(&mut node.right, key, value, priority);
                         proof {
-                            assert(forall |k: K| #![auto]
+                            assert(forall |k: K| #[trigger]
                                 spec_content_link(&node.right).contains_key(k)
                                 ==> (TotalOrder::le(node_key, k) && k != node_key));
                             // Left subtree unchanged — reassert ordering.
-                            assert(forall |k: K| #![auto]
+                            assert(forall |k: K| #[trigger]
                                 spec_content_link(&node.left).contains_key(k)
                                 ==> (TotalOrder::le(k, node_key) && k != node_key));
                         }
@@ -1092,10 +1092,10 @@ pub mod BSTKeyValueStEph {
                         node.value = value;
                         // Both children unchanged — reassert ordering.
                         proof {
-                            assert(forall |k: K| #![auto]
+                            assert(forall |k: K| #[trigger]
                                 spec_content_link(&node.left).contains_key(k)
                                 ==> (TotalOrder::le(k, node_key) && k != node_key));
-                            assert(forall |k: K| #![auto]
+                            assert(forall |k: K| #[trigger]
                                 spec_content_link(&node.right).contains_key(k)
                                 ==> (TotalOrder::le(node_key, k) && k != node_key));
                         }
@@ -1143,9 +1143,9 @@ pub mod BSTKeyValueStEph {
                     assert(old_count == 1 + old_left_count + old_right_count);
                     assert(spec_ordered_link(&node.left));
                     assert(spec_ordered_link(&node.right));
-                    assert(forall |k: K| #![auto] spec_content_link(&node.left).contains_key(k)
+                    assert(forall |k: K| #[trigger] spec_content_link(&node.left).contains_key(k)
                         ==> (TotalOrder::le(k, node.key) && k != node.key));
-                    assert(forall |k: K| #![auto] spec_content_link(&node.right).contains_key(k)
+                    assert(forall |k: K| #[trigger] spec_content_link(&node.right).contains_key(k)
                         ==> (TotalOrder::le(node.key, k) && k != node.key));
                 }
 
@@ -1165,7 +1165,7 @@ pub mod BSTKeyValueStEph {
                             reveal_with_fuel(spec_content_link, 2);
                             reveal_with_fuel(spec_node_count_link, 2);
                             assert(spec_content_link(link) =~= old_content.remove(*key));
-                            assert forall |k: K| #![auto] spec_content_link(&node.left).contains_key(k)
+                            assert forall |k: K| #[trigger] spec_content_link(&node.left).contains_key(k)
                                 implies (TotalOrder::le(k, node.key) && k != node.key) by {
                                 assert(old_left_content.contains_key(k));
                             };
@@ -1187,7 +1187,7 @@ pub mod BSTKeyValueStEph {
                             reveal_with_fuel(spec_content_link, 2);
                             reveal_with_fuel(spec_node_count_link, 2);
                             assert(spec_content_link(link) =~= old_content.remove(*key));
-                            assert forall |k: K| #![auto] spec_content_link(&node.right).contains_key(k)
+                            assert forall |k: K| #[trigger] spec_content_link(&node.right).contains_key(k)
                                 implies (TotalOrder::le(node.key, k) && k != node.key) by {
                                 assert(old_right_content.contains_key(k));
                             };
@@ -1237,7 +1237,7 @@ pub mod BSTKeyValueStEph {
                                         K::antisymmetric(*key, rot.key);
                                     }
                                     assert(spec_content_link(link) =~= old_content.remove(*key));
-                                    assert forall |k: K| #![auto] spec_content_link(&rot.right).contains_key(k)
+                                    assert forall |k: K| #[trigger] spec_content_link(&rot.right).contains_key(k)
                                         implies (TotalOrder::le(rot.key, k) && k != rot.key) by {
                                         assert(rot_right_content.contains_key(k));
                                     };
@@ -1273,7 +1273,7 @@ pub mod BSTKeyValueStEph {
                                 }
                                 // Left subtree ordering after deletion.
                                 proof {
-                                    assert forall |k: K| #![auto] spec_content_link(&rot.left).contains_key(k)
+                                    assert forall |k: K| #[trigger] spec_content_link(&rot.left).contains_key(k)
                                         implies (TotalOrder::le(k, rot.key) && k != rot.key) by {
                                         assert(rot_left_content.contains_key(k));
                                     };
@@ -1291,11 +1291,11 @@ pub mod BSTKeyValueStEph {
                                     assert(c1);
                                     assert(c2);
                                     assert(c1 && c2);
-                                    let ghost c3 = forall |k: K| #![auto] spec_content_link(&node.left).contains_key(k)
+                                    let ghost c3 = forall |k: K| #[trigger] spec_content_link(&node.left).contains_key(k)
                                         ==> (TotalOrder::le(k, node.key) && k != node.key);
                                     assert(c3);
                                     assert(c1 && c2 && c3);
-                                    let ghost c4 = forall |k: K| #![auto] spec_content_link(&node.right).contains_key(k)
+                                    let ghost c4 = forall |k: K| #[trigger] spec_content_link(&node.right).contains_key(k)
                                         ==> (TotalOrder::le(node.key, k) && k != node.key);
                                     assert(c4);
                                     assert(c1 && c2 && c3 && c4);

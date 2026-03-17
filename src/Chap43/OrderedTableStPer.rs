@@ -115,7 +115,7 @@ pub mod OrderedTableStPer {
             ensures
                 table@.dom() =~= keys@,
                 table.spec_orderedtablestper_wf(),
-                forall|k: K::V| #![auto] table@.contains_key(k) ==>
+                forall|k: K::V| #[trigger] table@.contains_key(k) ==>
                     (exists|key_arg: K, result: V|
                         key_arg@ == k && f.ensures((&key_arg,), result)
                         && table@[k] == result@),
@@ -126,7 +126,7 @@ pub mod OrderedTableStPer {
             requires self.spec_orderedtablestper_wf(), forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
             ensures
                 table@.dom() == self@.dom(),
-                forall|k: K::V| #![auto] table@.contains_key(k) ==>
+                forall|k: K::V| #[trigger] table@.contains_key(k) ==>
                     (exists|old_val: V, result: V|
                         old_val@ == self@[k]
                         && f.ensures((&old_val,), result)
@@ -143,7 +143,7 @@ pub mod OrderedTableStPer {
                 forall|k: K, v: V, keep: bool| f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
             ensures
                 table@.dom().subset_of(self@.dom()),
-                forall|k: K::V| #![auto] table@.contains_key(k) ==> table@[k] == self@[k],
+                forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
                 forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
                     ==> #[trigger] table@.dom().contains(k),
                 table@.dom().finite(),
@@ -159,7 +159,7 @@ pub mod OrderedTableStPer {
                 obeys_feq_full::<K>(),
             ensures
                 table@.dom() =~= self@.dom().intersect(other@.dom()),
-                forall|k: K::V| #![auto] table@.contains_key(k) ==>
+                forall|k: K::V| #[trigger] table@.contains_key(k) ==>
                     (exists|v1: V, v2: V, r: V|
                         v1@ == self@[k] && v2@ == other@[k]
                         && f.ensures((&v1, &v2), r)
@@ -177,11 +177,11 @@ pub mod OrderedTableStPer {
                 obeys_feq_full::<Pair<K, V>>(),
             ensures
                 table@.dom() =~= self@.dom().union(other@.dom()),
-                forall|k: K::V| #![auto] self@.contains_key(k) && !other@.contains_key(k)
+                forall|k: K::V| #[trigger] self@.contains_key(k) && !other@.contains_key(k)
                     ==> table@[k] == self@[k],
-                forall|k: K::V| #![auto] other@.contains_key(k) && !self@.contains_key(k)
+                forall|k: K::V| #[trigger] other@.contains_key(k) && !self@.contains_key(k)
                     ==> table@[k] == other@[k],
-                forall|k: K::V| #![auto] self@.contains_key(k) && other@.contains_key(k) ==>
+                forall|k: K::V| #[trigger] self@.contains_key(k) && other@.contains_key(k) ==>
                     (exists|v1: V, v2: V, r: V|
                         v1@ == self@[k] && v2@ == other@[k]
                         && f.ensures((&v1, &v2), r)
@@ -194,7 +194,7 @@ pub mod OrderedTableStPer {
             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
             ensures
                 table@.dom() =~= self@.dom().difference(other@.dom()),
-                forall|k: K::V| #![auto] table@.contains_key(k) ==> table@[k] == self@[k],
+                forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
                 table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
@@ -203,7 +203,7 @@ pub mod OrderedTableStPer {
             requires self.spec_orderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
             ensures
                 table@.dom() =~= self@.dom().intersect(keys@),
-                forall|k: K::V| #![auto] table@.contains_key(k) ==> table@[k] == self@[k],
+                forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
                 table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
@@ -212,7 +212,7 @@ pub mod OrderedTableStPer {
             requires self.spec_orderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
             ensures
                 table@.dom() =~= self@.dom().difference(keys@),
-                forall|k: K::V| #![auto] table@.contains_key(k) ==> table@[k] == self@[k],
+                forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
                 table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
@@ -227,7 +227,7 @@ pub mod OrderedTableStPer {
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
-                key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(v, t);
+                key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns last element
         fn last_key(&self) -> (key: Option<K>)
@@ -236,7 +236,7 @@ pub mod OrderedTableStPer {
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
-                key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, v);
+                key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans for predecessor
         fn previous_key(&self, k: &K) -> (key: Option<K>)
@@ -245,7 +245,7 @@ pub mod OrderedTableStPer {
                 self@.dom().finite(),
                 key matches Some(pk) ==> self@.dom().contains(pk@),
                 key matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
-                key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+                key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans for successor
         fn next_key(&self, k: &K) -> (key: Option<K>)
@@ -254,7 +254,7 @@ pub mod OrderedTableStPer {
                 self@.dom().finite(),
                 key matches Some(nk) ==> self@.dom().contains(nk@),
                 key matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
-                key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+                key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then partitions by key
         fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))
@@ -270,7 +270,7 @@ pub mod OrderedTableStPer {
                 parts.0@.dom().subset_of(self@.dom()),
                 parts.2@.dom().subset_of(self@.dom()),
                 parts.0@.dom().disjoint(parts.2@.dom()),
-                forall|key| self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@;
+                forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@;
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to union (linear merge)
         fn join_key(left: &Self, right: &Self) -> (table: Self)
@@ -289,7 +289,7 @@ pub mod OrderedTableStPer {
             ensures
                 table@.dom().finite(),
                 table@.dom().subset_of(self@.dom()),
-                forall|key| table@.dom().contains(key) ==> table@[key] == self@[key];
+                forall|key| #[trigger] table@.dom().contains(key) ==> table@[key] == self@[key];
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then counts elements < k
         fn rank_key(&self, k: &K) -> (rank: usize)
@@ -297,7 +297,7 @@ pub mod OrderedTableStPer {
             ensures
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
-                rank as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+                rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then indexes
         fn select_key(&self, i: usize) -> (key: Option<K>)
@@ -306,7 +306,7 @@ pub mod OrderedTableStPer {
                 self@.dom().finite(),
                 i >= self@.dom().len() ==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
-                key matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
+                key matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then partitions by rank
         fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
@@ -318,7 +318,7 @@ pub mod OrderedTableStPer {
                 parts.0@.dom().subset_of(self@.dom()),
                 parts.1@.dom().subset_of(self@.dom()),
                 parts.0@.dom().disjoint(parts.1@.dom()),
-                forall|key| self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.1@.dom().contains(key);
+                forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.1@.dom().contains(key);
     }
 
     // 9. impls
@@ -462,7 +462,7 @@ pub mod OrderedTableStPer {
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
-                key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(v, t),
+                key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -476,7 +476,7 @@ pub mod OrderedTableStPer {
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
-                key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, v),
+                key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -490,7 +490,7 @@ pub mod OrderedTableStPer {
                 self@.dom().finite(),
                 key matches Some(pk) ==> self@.dom().contains(pk@),
                 key matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
-                key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
+                key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -508,7 +508,7 @@ pub mod OrderedTableStPer {
                 self@.dom().finite(),
                 key matches Some(nk) ==> self@.dom().contains(nk@),
                 key matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
-                key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
+                key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -533,7 +533,7 @@ pub mod OrderedTableStPer {
                 parts.0@.dom().subset_of(self@.dom()),
                 parts.2@.dom().subset_of(self@.dom()),
                 parts.0@.dom().disjoint(parts.2@.dom()),
-                forall|key| self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@,
+                forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@,
         {
             let entries = self.collect();
             let size = entries.length();
@@ -572,7 +572,7 @@ pub mod OrderedTableStPer {
             ensures
                 table@.dom().finite(),
                 table@.dom().subset_of(self@.dom()),
-                forall|key| table@.dom().contains(key) ==> table@[key] == self@[key],
+                forall|key| #[trigger] table@.dom().contains(key) ==> table@[key] == self@[key],
         {
             let entries = self.collect();
             let size = entries.length();
@@ -603,7 +603,7 @@ pub mod OrderedTableStPer {
             ensures
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
-                rank as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
+                rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
         {
             let entries = self.collect();
             let size = entries.length();
@@ -622,7 +622,7 @@ pub mod OrderedTableStPer {
                 self@.dom().finite(),
                 i >= self@.dom().len() ==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
-                key matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int,
+                key matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int,
         {
             let entries = self.collect();
             let size = entries.length();
@@ -639,7 +639,7 @@ pub mod OrderedTableStPer {
                 parts.0@.dom().subset_of(self@.dom()),
                 parts.1@.dom().subset_of(self@.dom()),
                 parts.0@.dom().disjoint(parts.1@.dom()),
-                forall|key| self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.1@.dom().contains(key),
+                forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.1@.dom().contains(key),
         {
             let entries = self.collect();
             let size = entries.length();

@@ -410,7 +410,7 @@ pub mod TableStPer {
             ensures
                 tabulated@.dom() =~= keys@,
                 tabulated.spec_tablestper_wf(),
-                forall|k: K::V| #![auto] tabulated@.contains_key(k) ==>
+                forall|k: K::V| #[trigger] tabulated@.contains_key(k) ==>
                     (exists|key_arg: K, result: V|
                         key_arg@ == k && f.ensures((&key_arg,), result)
                         && tabulated@[k] == result@);
@@ -425,7 +425,7 @@ pub mod TableStPer {
             ensures
                 mapped@.dom() == self@.dom(),
                 mapped.spec_tablestper_wf(),
-                forall|k: K::V| #![auto] mapped@.contains_key(k) ==>
+                forall|k: K::V| #[trigger] mapped@.contains_key(k) ==>
                     (exists|old_val: V, result: V|
                         old_val@ == self@[k]
                         && f.ensures((&old_val,), result)
@@ -447,7 +447,7 @@ pub mod TableStPer {
             ensures
                 filtered@.dom().subset_of(self@.dom()),
                 filtered.spec_tablestper_wf(),
-                forall|k: K::V| #![auto] filtered@.contains_key(k) ==> filtered@[k] == self@[k],
+                forall|k: K::V| #[trigger] filtered@.contains_key(k) ==> filtered@[k] == self@[k],
                 forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
                     ==> #[trigger] filtered@.dom().contains(k);
 
@@ -463,7 +463,7 @@ pub mod TableStPer {
             ensures
                 common@.dom() =~= self@.dom().intersect(other@.dom()),
                 common.spec_tablestper_wf(),
-                forall|k: K::V| #![auto] common@.contains_key(k) ==>
+                forall|k: K::V| #[trigger] common@.contains_key(k) ==>
                     (exists|v1: V, v2: V, r: V|
                         v1@ == self@[k] && v2@ == other@[k]
                         && combine.ensures((&v1, &v2), r)
@@ -481,11 +481,11 @@ pub mod TableStPer {
             ensures
                 combined@.dom() =~= self@.dom().union(other@.dom()),
                 combined.spec_tablestper_wf(),
-                forall|k: K::V| #![auto] self@.contains_key(k) && !other@.contains_key(k)
+                forall|k: K::V| #[trigger] self@.contains_key(k) && !other@.contains_key(k)
                     ==> combined@[k] == self@[k],
-                forall|k: K::V| #![auto] other@.contains_key(k) && !self@.contains_key(k)
+                forall|k: K::V| #[trigger] other@.contains_key(k) && !self@.contains_key(k)
                     ==> combined@[k] == other@[k],
-                forall|k: K::V| #![auto] self@.contains_key(k) && other@.contains_key(k) ==>
+                forall|k: K::V| #[trigger] self@.contains_key(k) && other@.contains_key(k) ==>
                     (exists|v1: V, v2: V, r: V|
                         v1@ == self@[k] && v2@ == other@[k]
                         && combine.ensures((&v1, &v2), r)
@@ -498,7 +498,7 @@ pub mod TableStPer {
             ensures
                 remaining@.dom() =~= self@.dom().difference(other@.dom()),
                 remaining.spec_tablestper_wf(),
-                forall|k: K::V| #![auto] remaining@.contains_key(k) ==> remaining@[k] == self@[k];
+                forall|k: K::V| #[trigger] remaining@.contains_key(k) ==> remaining@[k] == self@[k];
 
         /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan; disagrees with APAS (not tree-based).
@@ -532,7 +532,7 @@ pub mod TableStPer {
                 updated@.contains_key(key@),
                 updated.spec_tablestper_wf(),
                 updated@.dom() =~= self@.dom().insert(key@),
-                forall|k: K::V| #![auto] k != key@ && self@.contains_key(k) ==> updated@[k] == self@[k],
+                forall|k: K::V| k != key@ && #[trigger] self@.contains_key(k) ==> updated@[k] == self@[k],
                 !self@.contains_key(key@) ==> updated@[key@] == value@,
                 self@.contains_key(key@) ==> (exists|old_v: V, r: V|
                     old_v@ == self@[key@] && combine.ensures((&old_v, &value), r)
@@ -545,7 +545,7 @@ pub mod TableStPer {
             ensures
                 restricted@.dom() =~= self@.dom().intersect(keys@),
                 restricted.spec_tablestper_wf(),
-                forall|k: K::V| #![auto] restricted@.contains_key(k) ==> restricted@[k] == self@[k];
+                forall|k: K::V| #[trigger] restricted@.contains_key(k) ==> restricted@[k] == self@[k];
 
         /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
         /// - Claude-Opus-4.6: Work Θ(|self| * |keys|), Span same -- linear scan; disagrees with APAS.
@@ -554,7 +554,7 @@ pub mod TableStPer {
             ensures
                 subtracted@.dom() =~= self@.dom().difference(keys@),
                 subtracted.spec_tablestper_wf(),
-                forall|k: K::V| #![auto] subtracted@.contains_key(k) ==> subtracted@[k] == self@[k];
+                forall|k: K::V| #[trigger] subtracted@.contains_key(k) ==> subtracted@[k] == self@[k];
 
         /// - APAS: Work Θ(|a|), Span Θ(lg |a|) -- from Algorithm 42.3
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- returns backing entries directly.
@@ -616,8 +616,8 @@ pub mod TableStPer {
                     i <= self.entries.spec_len(),
                     keys.spec_arraysetsteph_wf(),
                     keys@.finite(),
-                    forall|j: int| #![auto] 0 <= j < i as int
-                        ==> keys@.contains(self.entries@[j].0),
+                    forall|j: int| 0 <= j < i as int
+                        ==> keys@.contains((#[trigger] self.entries@[j]).0),
                     forall|k: K::V| keys@.contains(k)
                         ==> exists|j: int| 0 <= j < i as int
                             && (#[trigger] self.entries@[j]).0 == k,
@@ -630,8 +630,8 @@ pub mod TableStPer {
                 keys.insert(key_clone);
                 proof {
                     // Forward: new key is in the set, old keys remain.
-                    assert forall|j: int| #![auto] 0 <= j < i as int + 1
-                        implies keys@.contains(self.entries@[j].0)
+                    assert forall|j: int| 0 <= j < i as int + 1
+                        implies keys@.contains((#[trigger] self.entries@[j]).0)
                     by {
                         if j < i as int {
                             assert(old_keys.contains(self.entries@[j].0));
@@ -654,7 +654,7 @@ pub mod TableStPer {
                 i += 1;
             }
             proof {
-                assert forall|k: K::V| #![auto] keys@.contains(k) == self@.dom().contains(k)
+                assert forall|k: K::V| #[trigger] keys@.contains(k) == self@.dom().contains(k)
                 by {
                     if keys@.contains(k) {
                         let j = choose|j: int| 0 <= j < self.entries@.len()
@@ -680,9 +680,9 @@ pub mod TableStPer {
                 invariant
                     i <= key_seq.spec_len(),
                     entry_vec@.len() == i as int,
-                    forall|j: int| #![auto] 0 <= j < i as int ==>
-                        entry_vec@[j].0@ == key_seq@[j],
                     forall|j: int| 0 <= j < i as int ==>
+                        (#[trigger] entry_vec@[j]).0@ == key_seq@[j],
+                    forall|j: int| #![trigger key_seq.seq@[j]] 0 <= j < i as int ==>
                         f.ensures((&key_seq.seq@[j],), entry_vec@[j].1),
                     forall|k: &K| f.requires((k,)),
                     obeys_feq_full::<K>(),
@@ -713,7 +713,7 @@ pub mod TableStPer {
                         assert(entries@[j].0 == key_seq@[j]);
                     };
                 };
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     spec_entries_to_map(entries@).dom().contains(k) == keys@.contains(k)
                 by {
                     if spec_entries_to_map(entries@).dom().contains(k) {
@@ -730,7 +730,7 @@ pub mod TableStPer {
                     }
                 };
                 // Closure ensures postcondition.
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     spec_entries_to_map(entries@).contains_key(k)
                     implies exists|key_arg: K, result: V|
                         key_arg@ == k && f.ensures((&key_arg,), result)
@@ -759,9 +759,9 @@ pub mod TableStPer {
                     i <= self.entries.spec_len(),
                     new_entries@.len() == i as int,
                     self.entries@ == old_view,
-                    forall|j: int| #![auto] 0 <= j < i as int ==>
-                        new_entries@[j].0@ == old_view[j].0,
                     forall|j: int| 0 <= j < i as int ==>
+                        (#[trigger] new_entries@[j]).0@ == old_view[j].0,
+                    forall|j: int| #![trigger new_entries@[j]] 0 <= j < i as int ==>
                         f.ensures((&self.entries.spec_index(j).1,), new_entries@[j].1),
                     forall|v: &V| f.requires((v,)),
                     obeys_feq_full::<K>(),
@@ -795,7 +795,7 @@ pub mod TableStPer {
                     };
                 };
                 // Closure ensures postcondition.
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     spec_entries_to_map(entries@).contains_key(k)
                     implies exists|old_val: V, result: V|
                         old_val@ == self@[k] && f.ensures((&old_val,), result)
@@ -832,12 +832,12 @@ pub mod TableStPer {
                     forall|k: K, v: V, keep: bool|
                         f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
                     sources.len() == kept@.len(),
-                    forall|j: int| #![auto] 0 <= j < sources.len() ==>
-                        0 <= sources[j] < self_view.len()
+                    forall|j: int| 0 <= j < sources.len() ==>
+                        0 <= #[trigger] sources[j] < self_view.len()
                         && self_view[sources[j]].0 == kept@[j].0@
                         && self_view[sources[j]].1 == kept@[j].1@,
-                    forall|j: int| #![auto] 0 <= j < sources.len() ==> sources[j] < i as int,
-                    forall|j1: int, j2: int| #![auto]
+                    forall|j: int| 0 <= j < sources.len() ==> #[trigger] sources[j] < i as int,
+                    forall|j1: int, j2: int| #![trigger sources[j1], sources[j2]]
                         0 <= j1 < j2 < sources.len() ==> sources[j1] < sources[j2],
                     forall|si: int| 0 <= si < i as int
                         && spec_pred((#[trigger] self_view[si]).0, self_view[si].1)
@@ -876,7 +876,7 @@ pub mod TableStPer {
             let entries = ArraySeqStPerS::from_vec(kept);
             proof {
                 // Prove subset directly: any key in filtered map is also in self map.
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     spec_entries_to_map(entries@).dom().contains(k)
                     implies spec_entries_to_map(self_view).dom().contains(k)
                 by {
@@ -902,7 +902,7 @@ pub mod TableStPer {
                     };
                 };
                 // Value preservation.
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     spec_entries_to_map(entries@).contains_key(k)
                     implies spec_entries_to_map(entries@)[k]
                         == spec_entries_to_map(self_view)[k]
@@ -953,24 +953,24 @@ pub mod TableStPer {
                     forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                     self_srcs.len() == kept@.len(),
                     other_srcs.len() == kept@.len(),
-                    forall|j: int| #![auto] 0 <= j < self_srcs.len() ==>
-                        0 <= self_srcs[j] < self_view.len()
+                    forall|j: int| 0 <= j < self_srcs.len() ==>
+                        0 <= #[trigger] self_srcs[j] < self_view.len()
                         && self_view[self_srcs[j]].0 == kept@[j].0@,
-                    forall|j: int| #![auto] 0 <= j < other_srcs.len() ==>
-                        0 <= other_srcs[j] < other_view.len()
+                    forall|j: int| 0 <= j < other_srcs.len() ==>
+                        0 <= #[trigger] other_srcs[j] < other_view.len()
                         && other_view[other_srcs[j]].0 == kept@[j].0@,
                     forall|si: int| #![trigger self_view[si]] 0 <= si < i as int
-                        && (exists|oj: int| #![auto] 0 <= oj < other_view.len()
-                            && other_view[oj].0 == self_view[si].0)
+                        && (exists|oj: int| 0 <= oj < other_view.len()
+                            && (#[trigger] other_view[oj]).0 == self_view[si].0)
                         ==> exists|j: int| 0 <= j < self_srcs.len() && self_srcs[j] == si,
                     forall|si: int| #![trigger self_view[si]] 0 <= si < i as int
-                        && !(exists|oj: int| #![auto] 0 <= oj < other_view.len()
-                            && other_view[oj].0 == self_view[si].0)
+                        && !(exists|oj: int| 0 <= oj < other_view.len()
+                            && (#[trigger] other_view[oj]).0 == self_view[si].0)
                         ==> !spec_entries_to_map(other_view).contains_key(self_view[si].0),
-                    forall|j: int| #![auto] 0 <= j < self_srcs.len() ==> self_srcs[j] < i as int,
-                    forall|j1: int, j2: int| #![auto]
+                    forall|j: int| 0 <= j < self_srcs.len() ==> #[trigger] self_srcs[j] < i as int,
+                    forall|j1: int, j2: int| #![trigger self_srcs[j1], self_srcs[j2]]
                         0 <= j1 < j2 < self_srcs.len() ==> self_srcs[j1] < self_srcs[j2],
-                    forall|k: int| 0 <= k < kept@.len() ==>
+                    forall|k: int| #![trigger kept@[k]] 0 <= k < kept@.len() ==>
                         combine.ensures(
                             (&self.entries.spec_index(self_srcs[k]).1,
                              &other.entries.spec_index(other_srcs[k]).1),
@@ -991,8 +991,8 @@ pub mod TableStPer {
                         other.entries@ == other_view,
                         found ==> found_idx < other.entries.spec_len()
                             && other_view[found_idx as int].0 == pair.0@,
-                        !found ==> forall|jj: int| #![auto] 0 <= jj < j as int ==>
-                            other_view[jj].0 != pair.0@,
+                        !found ==> forall|jj: int| 0 <= jj < j as int ==>
+                            (#[trigger] other_view[jj]).0 != pair.0@,
                         obeys_view_eq::<K>(),
                     decreases other.entries.spec_len() - j,
                 {
@@ -1015,8 +1015,8 @@ pub mod TableStPer {
                         other_srcs = other_srcs.push(found_idx as int);
                         // Re-establish coverage for si in 0..i+1.
                         assert forall|si: int| #![trigger self_view[si]] 0 <= si < i as int + 1
-                            && (exists|oj: int| #![auto] 0 <= oj < other_view.len()
-                                && other_view[oj].0 == self_view[si].0)
+                            && (exists|oj: int| 0 <= oj < other_view.len()
+                                && (#[trigger] other_view[oj]).0 == self_view[si].0)
                             implies exists|j: int| 0 <= j < self_srcs.len() && self_srcs[j] == si
                         by {
                             if si < i as int {
@@ -1038,7 +1038,7 @@ pub mod TableStPer {
             let entries = ArraySeqStPerS::from_vec(kept);
             proof {
                 // Forward: result keys are in self ∩ other.
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     spec_entries_to_map(entries@).dom().contains(k)
                     implies self@.dom().contains(k)
                         && other@.dom().contains(k)
@@ -1055,7 +1055,7 @@ pub mod TableStPer {
                     lemma_entries_to_map_contains_key::<K::V, V::V>(other_view, os);
                 };
                 // Backward: keys in self ∩ other are in result.
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     self@.dom().contains(k) && other@.dom().contains(k)
                     implies spec_entries_to_map(entries@).dom().contains(k)
                 by {
@@ -1083,7 +1083,7 @@ pub mod TableStPer {
                     };
                 };
                 // Value: combine.ensures postcondition.
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     spec_entries_to_map(entries@).contains_key(k)
                     implies exists|v1: V, v2: V, r: V|
                         v1@ == self@[k] && v2@ == other@[k]
@@ -1136,23 +1136,23 @@ pub mod TableStPer {
                     obeys_feq_full::<Pair<K, V>>(),
                     spec_keys_no_dups(other_view),
                     // Self-only values preserved.
-                    forall|k: K::V| #![auto]
+                    forall|k: K::V| #[trigger]
                         spec_entries_to_map(self_view).contains_key(k)
                         && !spec_entries_to_map(other_view).contains_key(k)
                         ==> combined@[k] == spec_entries_to_map(self_view)[k],
                     // Other-only values preserved (processed entries).
-                    forall|oj: int| #![auto] 0 <= oj < j as int
-                        && !spec_entries_to_map(self_view).contains_key(other_view[oj].0)
+                    forall|oj: int| 0 <= oj < j as int
+                        && !spec_entries_to_map(self_view).contains_key((#[trigger] other_view[oj]).0)
                         ==> combined@[other_view[oj].0] == other_view[oj].1,
                     // Self values preserved for both-keys not yet processed from other.
-                    forall|k: K::V| #![auto]
+                    forall|k: K::V| #[trigger]
                         spec_entries_to_map(self_view).contains_key(k)
                         && spec_entries_to_map(other_view).contains_key(k)
-                        && (forall|oj: int| 0 <= oj < j as int ==> other_view[oj].0 != k)
+                        && (forall|oj: int| 0 <= oj < j as int ==> (#[trigger] other_view[oj]).0 != k)
                         ==> combined@[k] == spec_entries_to_map(self_view)[k],
                     // Combine.ensures for both-keys already processed from other.
                     forall|oj: int| 0 <= oj < j as int
-                        && spec_entries_to_map(self_view).contains_key(other_view[oj].0)
+                        && spec_entries_to_map(self_view).contains_key((#[trigger] other_view[oj]).0)
                         ==> (exists|v1: V, v2: V, r: V|
                             v1@ == spec_entries_to_map(self_view)[other_view[oj].0]
                             && v2@ == other_view[oj].1
@@ -1183,7 +1183,7 @@ pub mod TableStPer {
                         }
                     };
                     // Self-only values: insert preserves since key is from other.
-                    assert forall|k: K::V| #![auto]
+                    assert forall|k: K::V| #[trigger]
                         spec_entries_to_map(self_view).contains_key(k)
                         && !spec_entries_to_map(other_view).contains_key(k)
                         implies combined@[k] == spec_entries_to_map(self_view)[k]
@@ -1194,8 +1194,8 @@ pub mod TableStPer {
                         assert(old_combined.contains_key(k));
                     };
                     // Other-only values: previous entries preserved, new entry added.
-                    assert forall|oj: int| #![auto] 0 <= oj < j as int + 1
-                        && !spec_entries_to_map(self_view).contains_key(other_view[oj].0)
+                    assert forall|oj: int| 0 <= oj < j as int + 1
+                        && !spec_entries_to_map(self_view).contains_key((#[trigger] other_view[oj]).0)
                         implies combined@[other_view[oj].0] == other_view[oj].1
                     by {
                         let ok = other_view[oj].0;
@@ -1219,10 +1219,10 @@ pub mod TableStPer {
                         }
                     };
                     // Unprocessed both-keys: self values preserved.
-                    assert forall|k: K::V| #![auto]
+                    assert forall|k: K::V| #[trigger]
                         spec_entries_to_map(self_view).contains_key(k)
                         && spec_entries_to_map(other_view).contains_key(k)
-                        && (forall|oj: int| 0 <= oj < j as int + 1 ==> other_view[oj].0 != k)
+                        && (forall|oj: int| 0 <= oj < j as int + 1 ==> (#[trigger] other_view[oj]).0 != k)
                         implies combined@[k] == spec_entries_to_map(self_view)[k]
                     by {
                         // Instantiate forall at oj = j: other_view[j].0 != k.
@@ -1233,7 +1233,7 @@ pub mod TableStPer {
                     };
                     // Combine.ensures for processed both-keys.
                     assert forall|oj: int| 0 <= oj < j as int + 1
-                        && spec_entries_to_map(self_view).contains_key(other_view[oj].0)
+                        && spec_entries_to_map(self_view).contains_key((#[trigger] other_view[oj]).0)
                         implies exists|v1: V, v2: V, r: V|
                             v1@ == spec_entries_to_map(self_view)[other_view[oj].0]
                             && v2@ == other_view[oj].1
@@ -1283,7 +1283,7 @@ pub mod TableStPer {
                 };
                 // Self-only value preservation (from loop invariant).
                 // Other-only value preservation: connect per-entry to per-key.
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     other@.contains_key(k) && !self@.contains_key(k)
                     implies combined@[k] == other@[k]
                 by {
@@ -1293,7 +1293,7 @@ pub mod TableStPer {
                     lemma_entries_to_map_get::<K::V, V::V>(other_view, oj);
                 };
                 // Combine value: both self and other contain k.
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     self@.contains_key(k) && other@.contains_key(k)
                     implies exists|v1: V, v2: V, r: V|
                         v1@ == self@[k] && v2@ == other@[k]
@@ -1322,19 +1322,19 @@ pub mod TableStPer {
                     self.entries@ == self_view,
                     other.entries@ == other_view,
                     sources.len() == kept@.len(),
-                    forall|j: int| #![auto] 0 <= j < sources.len() ==>
-                        0 <= sources[j] < self_view.len()
+                    forall|j: int| 0 <= j < sources.len() ==>
+                        0 <= #[trigger] sources[j] < self_view.len()
                         && self_view[sources[j]].0 == kept@[j].0@
                         && self_view[sources[j]].1 == kept@[j].1@,
-                    forall|j: int| #![auto] 0 <= j < kept@.len() ==>
-                        !spec_entries_to_map(other_view).contains_key(kept@[j].0@),
+                    forall|j: int| 0 <= j < kept@.len() ==>
+                        !spec_entries_to_map(other_view).contains_key((#[trigger] kept@[j]).0@),
                     // Coverage: every self entry not in other has been added.
                     forall|si: int| 0 <= si < i as int
                         && !spec_entries_to_map(other_view).contains_key(
                             (#[trigger] self_view[si]).0)
                         ==> exists|j: int| 0 <= j < sources.len() && sources[j] == si,
-                    forall|j: int| #![auto] 0 <= j < sources.len() ==> sources[j] < i as int,
-                    forall|j1: int, j2: int| #![auto]
+                    forall|j: int| 0 <= j < sources.len() ==> #[trigger] sources[j] < i as int,
+                    forall|j1: int, j2: int| #![trigger sources[j1], sources[j2]]
                         0 <= j1 < j2 < sources.len() ==> sources[j1] < sources[j2],
                     spec_keys_no_dups(self_view),
                     obeys_view_eq::<K>(),
@@ -1350,8 +1350,8 @@ pub mod TableStPer {
                     invariant
                         j <= other.entries.spec_len(),
                         other.entries@ == other_view,
-                        !found ==> forall|jj: int| #![auto] 0 <= jj < j as int ==>
-                            other_view[jj].0 != pair.0@,
+                        !found ==> forall|jj: int| 0 <= jj < j as int ==>
+                            (#[trigger] other_view[jj]).0 != pair.0@,
                         found ==> 0 <= found_pos < other_view.len()
                             && other_view[found_pos].0 == pair.0@,
                         obeys_view_eq::<K>(),
@@ -1399,7 +1399,7 @@ pub mod TableStPer {
             let entries = ArraySeqStPerS::from_vec(kept);
             proof {
                 // Forward: result keys are in self \ other.
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     spec_entries_to_map(entries@).dom().contains(k)
                     implies self@.dom().contains(k)
                         && !other@.dom().contains(k)
@@ -1413,7 +1413,7 @@ pub mod TableStPer {
                     lemma_entries_to_map_contains_key::<K::V, V::V>(self_view, s);
                 };
                 // Backward: keys in self \ other are in result.
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     self@.dom().contains(k) && !other@.dom().contains(k)
                     implies spec_entries_to_map(entries@).dom().contains(k)
                 by {
@@ -1437,7 +1437,7 @@ pub mod TableStPer {
                     };
                 };
                 // Value preservation.
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     spec_entries_to_map(entries@).contains_key(k)
                     implies spec_entries_to_map(entries@)[k]
                         == spec_entries_to_map(self_view)[k]
@@ -1462,8 +1462,8 @@ pub mod TableStPer {
                 invariant
                     i <= self.entries.spec_len(),
                     self.spec_tablestper_wf(),
-                    forall|j: int| #![auto] 0 <= j < i as int ==>
-                        self.entries@[j].0 != key@,
+                    forall|j: int| 0 <= j < i as int ==>
+                        (#[trigger] self.entries@[j]).0 != key@,
                     obeys_view_eq::<K>(),
                     obeys_feq_full::<V>(),
                 decreases self.entries.spec_len() - i,
@@ -1496,8 +1496,8 @@ pub mod TableStPer {
                     i <= self.entries.spec_len(),
                     self.entries@ == self_view,
                     self.spec_tablestper_wf(),
-                    forall|j: int| #![auto] 0 <= j < updated@.len() ==>
-                        updated@[j].0@ != key@,
+                    forall|j: int| 0 <= j < updated@.len() ==>
+                        (#[trigger] updated@[j]).0@ != key@,
                     src.len() == updated@.len(),
                     forall|j: int| 0 <= j < src.len() ==> (
                         0 <= #[trigger] src[j] < i
@@ -1590,7 +1590,7 @@ pub mod TableStPer {
                     lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, j);
                 };
                 // Values.
-                assert forall|k: K::V| #![auto] result_map.dom().contains(k) && target_map.dom().contains(k)
+                assert forall|k: K::V| #[trigger] result_map.dom().contains(k) && target_map.dom().contains(k)
                     implies result_map[k] == target_map[k]
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(entries@, k);
@@ -1628,7 +1628,7 @@ pub mod TableStPer {
                         && all@[j].1@ == self_view[src[j]].1
                     ),
                     forall|a: int, b: int| 0 <= a < b < src.len() ==> src[a] < src[b],
-                    forall|j: int| #![auto] 0 <= j < all@.len() ==> all@[j].0@ != key_view,
+                    forall|j: int| 0 <= j < all@.len() ==> (#[trigger] all@[j]).0@ != key_view,
                     forall|si: int| 0 <= si < i as int && (#[trigger] self_view[si]).0 != key_view ==>
                         exists|j: int| 0 <= j < src.len() && src[j] == si,
                     obeys_view_eq::<K>(),
@@ -1708,7 +1708,7 @@ pub mod TableStPer {
                         }
                     };
                 };
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     spec_entries_to_map(self_view).contains_key(k)
                     implies spec_entries_to_map(entries@).contains_key(k)
                 by {
@@ -1724,7 +1724,7 @@ pub mod TableStPer {
                         lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, j);
                     }
                 };
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     spec_entries_to_map(entries@).contains_key(k)
                     implies self@.dom().contains(k) || k == key_view
                 by {
@@ -1737,8 +1737,8 @@ pub mod TableStPer {
                         lemma_entries_to_map_contains_key::<K::V, V::V>(self_view, s);
                     }
                 };
-                assert forall|k: K::V| #![auto]
-                    k != key_view && self@.contains_key(k)
+                assert forall|k: K::V|
+                    k != key_view && #[trigger] self@.contains_key(k)
                     implies spec_entries_to_map(entries@)[k] == self@[k]
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self_view, k);
@@ -1794,8 +1794,8 @@ pub mod TableStPer {
                     i <= self.entries.spec_len(),
                     self.entries@ == self_view,
                     sources.len() == kept@.len(),
-                    forall|j: int| #![auto] 0 <= j < sources.len() ==>
-                        0 <= sources[j] < self_view.len()
+                    forall|j: int| 0 <= j < sources.len() ==>
+                        0 <= #[trigger] sources[j] < self_view.len()
                         && self_view[sources[j]].0 == kept@[j].0@
                         && self_view[sources[j]].1 == kept@[j].1@,
                     // Coverage: every self entry in keys has been kept.
@@ -1803,10 +1803,10 @@ pub mod TableStPer {
                         && keys@.contains((#[trigger] self_view[si]).0)
                         ==> exists|j: int| 0 <= j < sources.len() && sources[j] == si,
                     // Kept entries are in keys.
-                    forall|j: int| #![auto] 0 <= j < kept@.len() ==>
-                        keys@.contains(kept@[j].0@),
-                    forall|j: int| #![auto] 0 <= j < sources.len() ==> sources[j] < i as int,
-                    forall|j1: int, j2: int| #![auto]
+                    forall|j: int| 0 <= j < kept@.len() ==>
+                        keys@.contains((#[trigger] kept@[j]).0@),
+                    forall|j: int| 0 <= j < sources.len() ==> #[trigger] sources[j] < i as int,
+                    forall|j1: int, j2: int| #![trigger sources[j1], sources[j2]]
                         0 <= j1 < j2 < sources.len() ==> sources[j1] < sources[j2],
                     spec_keys_no_dups(self_view),
                     obeys_feq_full::<Pair<K, V>>(),
@@ -1874,7 +1874,7 @@ pub mod TableStPer {
                     };
                 };
                 // Value preservation.
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     spec_entries_to_map(entries@).contains_key(k)
                     implies spec_entries_to_map(entries@)[k]
                         == spec_entries_to_map(self_view)[k]
@@ -1903,19 +1903,19 @@ pub mod TableStPer {
                     i <= self.entries.spec_len(),
                     self.entries@ == self_view,
                     sources.len() == kept@.len(),
-                    forall|j: int| #![auto] 0 <= j < sources.len() ==>
-                        0 <= sources[j] < self_view.len()
+                    forall|j: int| 0 <= j < sources.len() ==>
+                        0 <= #[trigger] sources[j] < self_view.len()
                         && self_view[sources[j]].0 == kept@[j].0@
                         && self_view[sources[j]].1 == kept@[j].1@,
                     // Kept entries are not in keys.
-                    forall|j: int| #![auto] 0 <= j < kept@.len() ==>
-                        !keys@.contains(kept@[j].0@),
+                    forall|j: int| 0 <= j < kept@.len() ==>
+                        !keys@.contains((#[trigger] kept@[j]).0@),
                     // Coverage: every self entry not in keys has been kept.
                     forall|si: int| 0 <= si < i as int
                         && !keys@.contains((#[trigger] self_view[si]).0)
                         ==> exists|j: int| 0 <= j < sources.len() && sources[j] == si,
-                    forall|j: int| #![auto] 0 <= j < sources.len() ==> sources[j] < i as int,
-                    forall|j1: int, j2: int| #![auto]
+                    forall|j: int| 0 <= j < sources.len() ==> #[trigger] sources[j] < i as int,
+                    forall|j1: int, j2: int| #![trigger sources[j1], sources[j2]]
                         0 <= j1 < j2 < sources.len() ==> sources[j1] < sources[j2],
                     spec_keys_no_dups(self_view),
                     obeys_feq_full::<Pair<K, V>>(),
@@ -1983,7 +1983,7 @@ pub mod TableStPer {
                     };
                 };
                 // Value preservation.
-                assert forall|k: K::V| #![auto]
+                assert forall|k: K::V| #[trigger]
                     spec_entries_to_map(entries@).contains_key(k)
                     implies spec_entries_to_map(entries@)[k]
                         == spec_entries_to_map(self_view)[k]
@@ -2045,7 +2045,7 @@ pub mod TableStPer {
         ensures
             forall|k: K::V| grouped@.contains_key(k)
                 <==> spec_collect_domain::<K::V, V::V>(pairs@).contains(k),
-            forall|k: K::V| #![auto] grouped@.contains_key(k)
+            forall|k: K::V| #[trigger] grouped@.contains_key(k)
                 ==> grouped@[k] == spec_collect_key::<K::V, V::V>(pairs@, k),
             grouped@.dom().finite(),
     {
@@ -2058,10 +2058,10 @@ pub mod TableStPer {
                 pairs@ == pairs_view,
                 result.spec_tablestper_wf(),
                 result@.dom().finite(),
-                forall|k: K::V| #![auto] result@.contains_key(k)
+                forall|k: K::V| #[trigger] result@.contains_key(k)
                     <==> spec_collect_domain::<K::V, V::V>(
                         pairs_view.subrange(0, i as int)).contains(k),
-                forall|k: K::V| #![auto] result@.contains_key(k)
+                forall|k: K::V| #[trigger] result@.contains_key(k)
                     ==> result@[k] == spec_collect_key::<K::V, V::V>(
                         pairs_view.subrange(0, i as int), k),
                 obeys_view_eq::<K>(),
@@ -2103,8 +2103,8 @@ pub mod TableStPer {
                         // Trigger second append ensures via val_seq.seq@ term.
                         assert(val_seq.seq@[0int] == val_clone);
                         assert(val_clone@ == pair_val_view);
-                        assert forall|j: int| #![auto] 0 <= j < appended@.len()
-                            implies appended@[j]
+                        assert forall|j: int| 0 <= j < appended@.len()
+                            implies #[trigger] appended@[j]
                                 == seq@.push(pair_val_view)[j]
                         by {
                             // Fire append ensures trigger via spec_index call.
@@ -2153,7 +2153,7 @@ pub mod TableStPer {
                 lemma_spec_collect_domain_step::<K::V, V::V>(pairs_view, i as int);
                 assert(result@[key_view] == new_seq_view);
 
-                assert forall|k: K::V| #![auto] result@.contains_key(k)
+                assert forall|k: K::V| #[trigger] result@.contains_key(k)
                     implies result@[k]
                         == spec_collect_key::<K::V, V::V>(sub_i1, k)
                 by {
