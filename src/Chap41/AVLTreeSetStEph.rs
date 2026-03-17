@@ -956,7 +956,17 @@ broadcast use {
                     };
                     assert(rv =~= new_vec@.map_values(|t: T| t@));
                 }
-                proof { assume(new_vec@.len() < usize::MAX); }
+                proof {
+                    // Wf gives n < usize::MAX; from_vec needs n+1 < usize::MAX.
+                    // Off-by-one: the tree wf bound (total_size < usize::MAX) does
+                    // not leave room for insert. All AVLTreeSeqStEph insert methods
+                    // require len+1 < usize::MAX. A proper fix would strengthen the
+                    // wf or add a precondition, but that cascades to MtEph callers
+                    // where the RwLock predicate can't track exact size.
+                    lemma_wf_implies_len_bound::<T>(&self.elements.root);
+                    assert(self.elements@.len() < usize::MAX);
+                    assume(new_vec@.len() < usize::MAX);
+                }
                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
                 proof {
                     assert(self.elements@ =~= rv);

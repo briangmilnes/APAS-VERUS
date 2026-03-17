@@ -228,7 +228,9 @@ broadcast use {
         {
             let mut vals = seq.values_in_order();
 
-            fn parallel_sort<T: StTInMtT + Ord + 'static>(mut vals: Vec<T>) -> Vec<T> {
+            fn parallel_sort<T: StTInMtT + Ord + 'static>(mut vals: Vec<T>) -> (sorted: Vec<T>)
+                ensures sorted@.len() == vals@.len()
+            {
                 let n = vals.len();
                 if n <= 1 {
                     return vals;
@@ -463,30 +465,34 @@ broadcast use {
                 assert(obeys_feq_full_trigger::<T>());
             }
             let n = self.elements.length();
-            let mut lo: usize = 0;
-            let mut hi: usize = n;
-            while lo < hi
+            let mut i: usize = 0;
+            while i < n
                 invariant
                     self.elements.spec_avltreeseqmtper_wf(),
                     obeys_feq_full::<T>(),
                     n as int == self.elements.spec_seq().len(),
-                    lo <= hi, hi <= n,
-                decreases hi - lo,
+                    i <= n,
+                    forall|k: int| #![trigger self.elements@[k]]
+                        0 <= k < i ==> self.elements@[k] != x@,
+                decreases n - i,
             {
-                let mid = lo + (hi - lo) / 2;
-                let elem = self.elements.nth(mid);
+                let elem = self.elements.nth(i);
                 if feq(elem, x) {
-                    assert(self.elements@[mid as int] == x@);
+                    assert(self.elements@[i as int] == x@);
                     assert(self.elements@.contains(x@));
                     return true;
                 }
-                if *elem < *x {
-                    lo = mid + 1;
-                } else {
-                    hi = mid;
+                i += 1;
+            }
+            proof {
+                if self@.contains(x@) {
+                    assert(self.elements@.to_set().contains(x@));
+                    assert(self.elements@.contains(x@));
+                    let k = choose|k: int| 0 <= k < self.elements@.len()
+                        && self.elements@[k] == x@;
+                    assert(false);
                 }
             }
-            proof { assume(!self@.contains(x@)); }
             false
         }
 
