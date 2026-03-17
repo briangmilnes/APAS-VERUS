@@ -36,7 +36,7 @@ pub mod KruskalStEph {
 
         /// Kruskal's MST algorithm.
         /// APAS: Work O(m log m), Span O(m log m) where m = |E|
-        fn kruskal_mst<V: StT + Hash + Ord>(
+        fn kruskal_mst<V: HashOrd>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
         ) -> SetStEph<LabEdge<V, WrappedF64>>
             requires Self::spec_kruskalsteph_wf(graph);
@@ -47,7 +47,7 @@ pub mod KruskalStEph {
 
         /// Verify MST has correct size.
         /// APAS: Work O(1), Span O(1)
-        fn verify_mst_size<V: StT + Hash + Ord>(
+        fn verify_mst_size<V: HashOrd>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             mst: &SetStEph<LabEdge<V, WrappedF64>>,
         ) -> B
@@ -70,7 +70,7 @@ pub mod KruskalStEph {
     /// - APAS: Work O(m lg n), Span O(m lg n)
     /// - Claude-Opus-4.6: Work O(m lg m), Span O(m lg m) — sorting dominates; sequential
     #[cfg(not(verus_keep_ghost))]
-    pub fn kruskal_mst<V: StT + Hash + Ord>(
+    pub fn kruskal_mst<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
     ) -> SetStEph<LabEdge<V, WrappedF64>> {
         let mut mst_edges = SetLit![];
@@ -124,7 +124,7 @@ pub mod KruskalStEph {
     /// - APAS: (no cost stated) — validation utility
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     #[cfg(not(verus_keep_ghost))]
-    pub fn verify_mst_size<V: StT + Hash + Ord>(
+    pub fn verify_mst_size<V: HashOrd>(
         n_vertices: N,
         mst_edges: &SetStEph<LabEdge<V, WrappedF64>>,
     ) -> B {

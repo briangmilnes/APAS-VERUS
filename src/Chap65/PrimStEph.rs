@@ -60,7 +60,7 @@ pub mod PrimStEph {
 
         /// Prim's MST algorithm.
         /// APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
-        fn prim_mst<V: StT + Hash + Ord>(
+        fn prim_mst<V: HashOrd>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             start: V,
         ) -> SetStEph<LabEdge<V, WrappedF64>>
@@ -77,7 +77,7 @@ pub mod PrimStEph {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     #[cfg(not(verus_keep_ghost))]
-    fn pq_entry_new<V: StT + Hash + Ord>(priority: WrappedF64, vertex: V, parent: Option<V>) -> PQEntry<V> {
+    fn pq_entry_new<V: HashOrd>(priority: WrappedF64, vertex: V, parent: Option<V>) -> PQEntry<V> {
         PQEntry {
             priority,
             vertex,
@@ -86,26 +86,26 @@ pub mod PrimStEph {
     }
 
     #[cfg(not(verus_keep_ghost))]
-    impl<V: StT + Hash + Ord> Ord for PQEntry<V> {
+    impl<V: HashOrd> Ord for PQEntry<V> {
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn cmp(&self, other: &Self) -> Ordering { self.priority.cmp(&other.priority) }
     }
 
     #[cfg(not(verus_keep_ghost))]
-    impl<V: StT + Hash + Ord> PartialOrd for PQEntry<V> {
+    impl<V: HashOrd> PartialOrd for PQEntry<V> {
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
     }
 
     #[cfg(not(verus_keep_ghost))]
-    impl<V: StT + Hash + Ord + Display> Display for PQEntry<V> {
+    impl<V: HashOrd + Display> Display for PQEntry<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "({}, {})", self.priority, self.vertex) }
     }
 
     #[cfg(not(verus_keep_ghost))]
-    impl<V: StT + Hash + Ord + std::fmt::Debug> std::fmt::Debug for PQEntry<V> {
+    impl<V: HashOrd + std::fmt::Debug> std::fmt::Debug for PQEntry<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("PQEntry")
                 .field("priority", &self.priority.val)
@@ -129,7 +129,7 @@ pub mod PrimStEph {
     ///   work across all vertices is O(nm) = O(m²) in a dense graph. With an adjacency-list
     ///   graph representation this would be O(m lg n) as textbook states.
     #[cfg(not(verus_keep_ghost))]
-    pub fn prim_mst<V: StT + Hash + Ord + Display>(
+    pub fn prim_mst<V: HashOrd + Display>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         start: &V,
     ) -> SetStEph<LabEdge<V, WrappedF64>> {

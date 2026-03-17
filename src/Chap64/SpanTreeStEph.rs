@@ -37,12 +37,12 @@ pub mod SpanTreeStEph {
 
         /// Sequential spanning tree via star contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn spanning_tree_star_contraction<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>
+        fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>
             requires Self::spec_spantreesteph_wf(graph);
 
         /// Verify spanning tree properties.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn verify_spanning_tree<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>, tree: &SetStEph<Edge<V>>) -> B
+        fn verify_spanning_tree<V: HashOrd>(graph: &UnDirGraphStEph<V>, tree: &SetStEph<Edge<V>>) -> B
             requires Self::spec_spantreesteph_wf(graph);
     }
 
@@ -72,7 +72,7 @@ pub mod SpanTreeStEph {
     /// Returns:
     /// - Set of edges forming a spanning tree
     #[cfg(not(verus_keep_ghost))]
-    pub fn spanning_tree_star_contraction<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>> {
+    pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>> {
         // Base: no edges means no spanning tree edges (isolated vertices)
         let base = |_vertices: &SetStEph<V>| SetLit![];
 
@@ -135,7 +135,7 @@ pub mod SpanTreeStEph {
     ///
     /// Returns true if valid spanning tree
     #[cfg(not(verus_keep_ghost))]
-    pub fn verify_spanning_tree<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>, tree_edges: &SetStEph<Edge<V>>) -> B {
+    pub fn verify_spanning_tree<V: HashOrd>(graph: &UnDirGraphStEph<V>, tree_edges: &SetStEph<Edge<V>>) -> B {
         let n = graph.sizeV();
         let expected_edges = if n > 0 { n - 1 } else { 0 };
 

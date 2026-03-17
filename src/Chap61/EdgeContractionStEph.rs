@@ -40,7 +40,7 @@ pub mod EdgeContractionStEph {
 
         /// Sequential edge contraction algorithm.
         /// APAS: Work O(|E|), Span O(|E|)
-        fn edge_contract<V: StT + Hash + Ord>(
+        fn edge_contract<V: HashOrd>(
             graph: &UnDirGraphStEph<V>,
             matching: &SetStEph<Edge<V>>,
         ) -> UnDirGraphStEph<V>
@@ -48,7 +48,7 @@ pub mod EdgeContractionStEph {
 
         /// Single round of sequential edge contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn contract_round<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V>
+        fn contract_round<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V>
             requires Self::spec_edgecontractionsteph_wf(graph);
     }
 
@@ -73,7 +73,7 @@ pub mod EdgeContractionStEph {
     /// Returns:
     /// - Contracted graph where matched edges are merged into single vertices
     #[cfg(not(verus_keep_ghost))]
-    pub fn edge_contract<V: StT + Hash + Ord>(
+    pub fn edge_contract<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         matching: &SetStEph<Edge<V>>,
     ) -> UnDirGraphStEph<V> {
@@ -129,7 +129,7 @@ pub mod EdgeContractionStEph {
     /// Returns:
     /// - Contracted graph
     #[cfg(not(verus_keep_ghost))]
-    pub fn contract_round<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V> {
+    pub fn contract_round<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V> {
         let matching = greedy_matching(graph);
         edge_contract(graph, &matching)
     }

@@ -38,14 +38,14 @@ pub mod StarContractionStEph {
         /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
         fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R
         where
-            V: StT + Hash + Ord,
+            V: HashOrd,
             F: Fn(&SetStEph<V>) -> R,
             G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R
         requires Self::spec_starcontractionsteph_wf(graph);
 
         /// Contract graph to just vertices (no edges).
         /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
-        fn contract_to_vertices<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>
+        fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>
             requires Self::spec_starcontractionsteph_wf(graph);
     }
 
@@ -73,7 +73,7 @@ pub mod StarContractionStEph {
     #[cfg(not(verus_keep_ghost))]
     pub fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R
     where
-        V: StT + Hash + Ord,
+        V: HashOrd,
         F: Fn(&SetStEph<V>) -> R,
         G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R,
     {
@@ -97,7 +97,7 @@ pub mod StarContractionStEph {
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential loop over all edges.
     #[cfg(not(verus_keep_ghost))]
-    fn build_quotient_graph<V: StT + Hash + Ord>(
+    fn build_quotient_graph<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         centers: &SetStEph<V>,
         partition_map: &HashMap<V, V>,
@@ -130,7 +130,7 @@ pub mod StarContractionStEph {
     /// - APAS: Work O((n + m) lg n), Span O((n + m) lg n)
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — agrees with APAS.
     #[cfg(not(verus_keep_ghost))]
-    pub fn contract_to_vertices<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<V> {
+    pub fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V> {
         star_contract(
             graph,
             &|vertices| vertices.clone(),

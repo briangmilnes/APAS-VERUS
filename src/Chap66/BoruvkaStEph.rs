@@ -116,7 +116,7 @@ pub mod BoruvkaStEph {
 
         /// Find vertex bridges for Borůvka's algorithm.
         /// APAS: Work O(|E|), Span O(|E|)
-        fn vertex_bridges<V: StT + Hash + Ord>(
+        fn vertex_bridges<V: HashOrd>(
             edges: &SetStEph<LabeledEdge<V>>,
         ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
             requires
@@ -131,7 +131,7 @@ pub mod BoruvkaStEph {
 
         /// Bridge-based star partition.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn bridge_star_partition<V: StT + Hash + Ord>(
+        fn bridge_star_partition<V: HashOrd>(
             vertices: &SetStEph<V>,
             bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
             seed: u64,
@@ -143,7 +143,7 @@ pub mod BoruvkaStEph {
 
         /// Borůvka's MST algorithm.
         /// APAS: Work O(m log n), Span O(m log n)
-        fn boruvka_mst<V: StT + Hash + Ord>(
+        fn boruvka_mst<V: HashOrd>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: SetStEph<usize>,
@@ -159,7 +159,7 @@ pub mod BoruvkaStEph {
 
         /// Borůvka's MST with random seed.
         /// APAS: Work O(m log n), Span O(m log n)
-        fn boruvka_mst_with_seed<V: StT + Hash + Ord>(
+        fn boruvka_mst_with_seed<V: HashOrd>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
             seed: u64,
@@ -190,7 +190,7 @@ pub mod BoruvkaStEph {
         ///
         /// - APAS: Work O(m), Span O(log m)
         /// - Sequential: Work O(m), Span O(m) — sequential iteration over edges.
-        fn vertex_bridges<V: StT + Hash + Ord>(
+        fn vertex_bridges<V: HashOrd>(
             edges: &SetStEph<LabeledEdge<V>>,
         ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>) {
             let mut bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)> =
@@ -256,7 +256,7 @@ pub mod BoruvkaStEph {
         ///
         /// - APAS: Work O(n), Span O(log n)
         /// - Sequential: Work O(n), Span O(n) — sequential iteration over vertices.
-        fn bridge_star_partition<V: StT + Hash + Ord>(
+        fn bridge_star_partition<V: HashOrd>(
             vertices: &SetStEph<V>,
             bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
             seed: u64,
@@ -358,7 +358,7 @@ pub mod BoruvkaStEph {
         /// - APAS: Work O(m log n), Span O(log^2 n)
         /// - Sequential: Work O(m log n), Span O(m log n) — sequential; O(log n) rounds each O(m).
         #[verifier::exec_allows_no_decreases_clause]
-        fn boruvka_mst<V: StT + Hash + Ord>(
+        fn boruvka_mst<V: HashOrd>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: SetStEph<usize>,
@@ -455,7 +455,7 @@ pub mod BoruvkaStEph {
         ///
         /// - APAS: Work O(m log n), Span O(log^2 n)
         /// - Sequential: Work O(m log n), Span O(m log n) — delegates to sequential boruvka_mst.
-        fn boruvka_mst_with_seed<V: StT + Hash + Ord>(
+        fn boruvka_mst_with_seed<V: HashOrd>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
             seed: u64,

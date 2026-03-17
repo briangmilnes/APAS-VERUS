@@ -41,22 +41,22 @@ pub mod ConnectivityStEph {
 
         /// Count connected components using star contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn count_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N
+        fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N
             requires Self::spec_connectivitysteph_wf(graph);
 
         /// Find connected components using star contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn connected_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
+        fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
             requires Self::spec_connectivitysteph_wf(graph);
 
         /// Count components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn count_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N
+        fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N
             requires Self::spec_connectivitysteph_wf(graph);
 
         /// Find components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn connected_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
+        fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
             requires Self::spec_connectivitysteph_wf(graph);
     }
 
@@ -80,7 +80,7 @@ pub mod ConnectivityStEph {
     /// Returns:
     /// - The number of connected components
     #[cfg(not(verus_keep_ghost))]
-    pub fn count_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N {
+    pub fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
         if graph.sizeE() == 0 {
             return graph.sizeV();
         }
@@ -108,7 +108,7 @@ pub mod ConnectivityStEph {
     /// - (representatives, component_map): Set of component representatives and
     ///   mapping from each vertex to its component representative
     #[cfg(not(verus_keep_ghost))]
-    pub fn connected_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
+    pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
         if graph.sizeE() == 0 {
             let mut component_map = HashMap::new();
             for vertex in graph.vertices().iter() {
@@ -139,7 +139,7 @@ pub mod ConnectivityStEph {
     /// - APAS: N/A — helper function implicit in Algorithm 63.2/63.3 Line 7.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — single pass over edges
     #[cfg(not(verus_keep_ghost))]
-    fn build_quotient_edges<V: StT + Hash + Ord>(
+    fn build_quotient_edges<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         partition_map: &HashMap<V, V>,
     ) -> SetStEph<Edge<V>> {
@@ -170,7 +170,7 @@ pub mod ConnectivityStEph {
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.2
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
     #[cfg(not(verus_keep_ghost))]
-    pub fn count_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N {
+    pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
         let base = |vertices: &SetStEph<V>| vertices.size();
 
         let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMap<V, V>, r: N| r;
@@ -185,7 +185,7 @@ pub mod ConnectivityStEph {
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.3
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
     #[cfg(not(verus_keep_ghost))]
-    pub fn connected_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
+    pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
         let base = |vertices: &SetStEph<V>| {
             let mut map = HashMap::new();
             for v in vertices.iter() {

@@ -46,7 +46,7 @@ pub mod TSPApproxStEph {
 
         /// Compute Euler tour of a tree.
         /// APAS: Work O(|V|), Span O(|V|)
-        fn euler_tour<V: StT + Hash + Ord>(
+        fn euler_tour<V: HashOrd>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             start: &V,
             tree_edges: &SetStEph<LabEdge<V, WrappedF64>>,
@@ -55,11 +55,11 @@ pub mod TSPApproxStEph {
 
         /// Shortcut Euler tour to avoid revisiting vertices.
         /// APAS: Work O(|V|), Span O(|V|)
-        fn shortcut_tour<V: StT + Hash + Ord>(euler_tour: &[V]) -> Vec<V>;
+        fn shortcut_tour<V: HashOrd>(euler_tour: &[V]) -> Vec<V>;
 
         /// Compute total weight of a tour.
         /// APAS: Work O(|V|), Span O(|V|)
-        fn tour_weight<V: StT + Hash + Ord>(
+        fn tour_weight<V: HashOrd>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             tour: &[V],
         ) -> WrappedF64
@@ -67,7 +67,7 @@ pub mod TSPApproxStEph {
 
         /// 2-approximation algorithm for metric TSP.
         /// APAS: Work O(|V|² log |V|), Span O(|V|² log |V|)
-        fn approx_metric_tsp<V: StT + Hash + Ord>(
+        fn approx_metric_tsp<V: HashOrd>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             spanning_tree: &SetStEph<LabEdge<V, WrappedF64>>,
             start: &V,
@@ -93,7 +93,7 @@ pub mod TSPApproxStEph {
     /// Returns:
     /// - Vector of vertices in Euler tour order
     #[cfg(not(verus_keep_ghost))]
-    pub fn euler_tour<V: StT + Hash + Ord>(
+    pub fn euler_tour<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         start: &V,
         tree_edges: &SetStEph<LabEdge<V, WrappedF64>>,
@@ -110,7 +110,7 @@ pub mod TSPApproxStEph {
     /// - Claude-Opus-4.6: Work O(n * m_tree), Span O(n * m_tree) — for each vertex,
     ///   scans neighbors (O(m)) and tree_edges (O(m_tree)) to find matching edges.
     #[cfg(not(verus_keep_ghost))]
-    fn euler_tour_dfs<V: StT + Hash + Ord>(
+    fn euler_tour_dfs<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         current: &V,
         parent: Option<&V>,
@@ -173,7 +173,7 @@ pub mod TSPApproxStEph {
     /// Returns:
     /// - Vector of vertices with each vertex appearing exactly once (except start/end)
     #[cfg(not(verus_keep_ghost))]
-    pub fn shortcut_tour<V: StT + Hash + Ord>(euler_tour: &[V]) -> Vec<V> {
+    pub fn shortcut_tour<V: HashOrd>(euler_tour: &[V]) -> Vec<V> {
         if euler_tour.is_empty() {
             return Vec::new();
         }
@@ -203,7 +203,7 @@ pub mod TSPApproxStEph {
     /// - APAS: Work O(n), Span O(n)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) — agrees with APAS.
     #[cfg(not(verus_keep_ghost))]
-    pub fn tour_weight<V: StT + Hash + Ord>(
+    pub fn tour_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         tour: &[V],
     ) -> WrappedF64 {
@@ -225,7 +225,7 @@ pub mod TSPApproxStEph {
     /// - APAS: N/A — internal helper, no prose counterpart.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges.
     #[cfg(not(verus_keep_ghost))]
-    fn get_neighbors<V: StT + Hash + Ord>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> SetStEph<V> {
+    fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> SetStEph<V> {
         let mut neighbors = SetLit![];
         for edge in graph.labeled_edges().iter() {
             let LabEdge(a, b, _) = edge;
@@ -241,7 +241,7 @@ pub mod TSPApproxStEph {
     /// - APAS: N/A — internal helper, no prose counterpart.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges.
     #[cfg(not(verus_keep_ghost))]
-    fn get_edge_weight<V: StT + Hash + Ord>(
+    fn get_edge_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         u: &V,
         v: &V,
@@ -274,7 +274,7 @@ pub mod TSPApproxStEph {
     /// Returns:
     /// - (tour, weight): Hamiltonian cycle and its total weight
     #[cfg(not(verus_keep_ghost))]
-    pub fn approx_metric_tsp<V: StT + Hash + Ord>(
+    pub fn approx_metric_tsp<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         spanning_tree: &SetStEph<LabEdge<V, WrappedF64>>,
         start: &V,
