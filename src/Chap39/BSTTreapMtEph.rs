@@ -800,7 +800,7 @@ pub mod BSTTreapMtEph {
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
     fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
-        requires true,
+        requires Lnk::spec_bst_link(link),
         ensures found.is_some() ==> spec_contains_link(link, *found.unwrap()),
         decreases *link,
     {
@@ -830,7 +830,7 @@ pub mod BSTTreapMtEph {
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
     fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> (min_val: Option<&T>)
-        requires true,
+        requires Lnk::spec_bst_link(link),
         ensures min_val.is_some() ==> spec_contains_link(link, *min_val.unwrap()),
         decreases *link,
     {
@@ -855,7 +855,7 @@ pub mod BSTTreapMtEph {
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
     fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> (max_val: Option<&T>)
-        requires true,
+        requires Lnk::spec_bst_link(link),
         ensures max_val.is_some() ==> spec_contains_link(link, *max_val.unwrap()),
         decreases *link,
     {
@@ -992,10 +992,11 @@ pub mod BSTTreapMtEph {
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         {
+            proof { use_type_invariant(&*self); }
             let handle = self.locked_root.acquire_read();
             let result = size_link(handle.borrow());
             handle.release_read();
-            proof { assume(result as nat == self@.len() && self@.finite()); }
+            proof { assume(result as nat == self@.len()); }
             result
         }
 
