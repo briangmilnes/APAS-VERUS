@@ -1,65 +1,34 @@
 Verus Style Review
 ==================
 
-Path: src/Chap47/
-Codebase: src/Chap47/
+Path: ./src/Chap47/LinkedListChainedHashTableStEph.rs
+Codebase: .
 Mode: basic
-Logging to: src/Chap47/analyses/veracity-review-verus-style.log
+Logging to: ./src/Chap47/analyses/veracity-review-verus-style.log
 
-Checking 9 files...
+Checking 1 files...
 
-src/Chap47/ChainedHashTable.rs:
-src/Chap47/ChainedHashTable.rs:1: info: [1] has mod declarations
-src/Chap47/ChainedHashTable.rs:1: info: [2] vstd::prelude::* before verus!
-src/Chap47/ChainedHashTable.rs:1: info: [3] has verus! macro
-src/Chap47/ChainedHashTable.rs:1: info: [4] std imports grouped with trailing blank
-src/Chap47/ChainedHashTable.rs:1: info: [5] vstd imports grouped with trailing blank
-src/Chap47/ChainedHashTable.rs:1: info: [11] no Set/Seq usage (ok)
-src/Chap47/ChainedHashTable.rs:1: info: [12] all trait fns have specs
-src/Chap47/ChainedHashTable.rs:1: info: [13] trait impls inside verus!
-src/Chap47/ChainedHashTable.rs:1: info: [14] Debug, Display outside verus!
-src/Chap47/ChainedHashTable.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-src/Chap47/ChainedHashTable.rs:1: info: [16] no Lit macro definitions (ok)
-src/Chap47/ChainedHashTable.rs:1: info: [17] no collection structs (ok)
-src/Chap47/ChainedHashTable.rs:1: info: [18] definition order correct
-src/Chap47/ChainedHashTable.rs:1: info: [19] no generic return names
-src/Chap47/ChainedHashTable.rs:1: info: [21] no broadcast use entries
-src/Chap47/ChainedHashTable.rs:1: info: [22] spec fns: all in traits as abstract signatures
-src/Chap47/ChainedHashTable.rs:1: info: [23] free fn type bounds: N/A
-src/Chap47/ChainedHashTable.rs:1: info: [24] copyright line present
-src/Chap47/ChainedHashTable.rs:49: warning: [20] trait ChainedHashTable is defined but has no impl
+./src/Chap47/LinkedListChainedHashTableStEph.rs:
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [1] has mod declarations
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [3] has verus! macro
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [4] std imports grouped with trailing blank
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [5] no vstd imports (ok)
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [12] no traits (ok)
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [13] trait impls inside verus!
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [14] Debug, Display outside verus!
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [17] no collection structs (ok)
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [18] definition order correct
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [19] no generic return names
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [20] no traits defined
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [21] no broadcast use entries
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [23] free fn type bounds match trait
+./src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: [24] copyright line present
 
-src/Chap47/DoubleHashFlatHashTableStEph.rs:
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [1] has mod declarations
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [3] has verus! macro
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [4] std imports grouped with trailing blank
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [5] no vstd imports (ok)
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [12] no traits (ok)
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [13] trait impls inside verus!
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [14] Debug, Display outside verus!
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [17] no collection structs (ok)
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [18] definition order correct
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [19] no generic return names
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [20] no traits defined
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [21] no broadcast use entries
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [23] free fn type bounds match trait
-src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [24] copyright line present
-src/Chap47/DoubleHashFlatHashTableStEph.rs:39: warning: [22] free spec fn spec_doublehashflathashsteph_wf should be an abstract signature in a trait with body in the impl
-
-src/Chap47/FlatHashTable.rs:
-src/Chap47/FlatHashTable.rs:1: info: [1] has mod declarations
-src/Chap47/FlatHashTable.rs:1: info: [2] vstd::prelude::* before verus!
-src/Chap47/FlatHashTable.rs:1: info: [3] has verus! macro
-src/Chap47/FlatHashTable.rs:1: info: [4] no std imports (ok)
-src/Chap47/FlatHashTable.rs:1: info: [5] no vstd imports (ok)
-src/Chap47/FlatHashTable.rs:1: info: [11] no Set/Seq usage (ok)
-src/Chap47/FlatHashTable.rs:1: info: [12] all trait fns have specs
-src/Chap47/FlatHashTable.rs:1: info: [13] trait impls inside verus!
-src/Chap47/FlatHashTable.rs:1: info: [14] Debug, Display outside verus!
-src/Chap47/FlatHashTable.rs:1: info: [15] Clone inside verus!
-src/Chap47/FlatHashTable.rs:1: info: [16] no Lit macro definitions (ok)
-src/Chap47/FlatHashTable.rs:1: info: [17] no collection structs (ok)
+════════════════════════════════════════════════════════════════
+Summary: 19 passed, 0 warnings in 0 files (checked 1 files)
+════════════════════════════════════════════════════════════════

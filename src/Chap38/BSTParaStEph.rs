@@ -293,6 +293,7 @@ pub mod BSTParaStEph {
         fn insert(&mut self, key: T)
             requires
                 old(self).spec_bstparasteph_wf(),
+                old(self)@.len() < usize::MAX as nat,
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures
@@ -303,6 +304,7 @@ pub mod BSTParaStEph {
         fn delete(&mut self, key: &T)
             requires
                 old(self).spec_bstparasteph_wf(),
+                old(self)@.len() < usize::MAX as nat,
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures
@@ -359,6 +361,7 @@ pub mod BSTParaStEph {
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
+                self@.len() + other@.len() <= usize::MAX as nat,
             ensures combined@ == self@.union(other@), combined@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(m · lg(n/m)) — sequential
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(m · lg(n/m)) -- agrees with APAS; sequential, not parallel.
@@ -547,7 +550,13 @@ pub mod BSTParaStEph {
             let ghost kv = key@;
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                assume(left@.len() + right@.len() < usize::MAX as nat);
+                // left@ ∪ right@ =~= old_view.remove(kv), disjoint.
+                // disjoint_lens: left@.len() + right@.len() == old_view.remove(kv).len().
+                // old_view.remove(kv).len() ≤ old_view.len() < usize::MAX (from requires).
+                assert(left@.union(right@) =~= old_view.remove(kv));
+                assert(old_view.remove(kv).subset_of(old_view));
+                vstd::set_lib::lemma_len_subset(old_view.remove(kv), old_view);
+                assert(left@.len() + right@.len() < usize::MAX as nat);
             }
             *self = Self::join_m(left, key, right);
         }
@@ -558,7 +567,10 @@ pub mod BSTParaStEph {
             let (left, _, right) = self.split(key);
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                assume(left@.len() + right@.len() < usize::MAX as nat);
+                assert(left@.union(right@) =~= old_view.remove(kref@));
+                assert(old_view.remove(kref@).subset_of(old_view));
+                vstd::set_lib::lemma_len_subset(old_view.remove(kref@), old_view);
+                assert(left@.len() + right@.len() < usize::MAX as nat);
                 assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
                     left@.contains(s@) && right@.contains(o@) implies
                     s.cmp_spec(&o) == Less by {
@@ -875,6 +887,17 @@ pub mod BSTParaStEph {
                     let (bl, _, br) = other.split(&ak);
                     let ghost blv = bl@;
                     let ghost brv = br@;
+                    proof {
+                        // Recursive call bounds: al@.len() + bl@.len() <= usize::MAX.
+                        // bl ⊂ other (from split), so bl.len() ≤ other.len().
+                        assert(blv.subset_of(other@.remove(akv)));
+                        assert(other@.remove(akv).subset_of(other@));
+                        vstd::set_lib::lemma_len_subset(blv, other@);
+                        vstd::set_lib::lemma_len_subset(brv, other@);
+                        // al.len() = sv.len() - ar.len() - 1, so al.len() + bl.len() < sv.len() + other.len().
+                        assert(alv.len() + blv.len() <= sv.len() - 1 + other@.len());
+                        assert(arv.len() + brv.len() <= sv.len() - 1 + other@.len());
+                    }
                     let left_union = al.union(&bl);
                     let right_union = ar.union(&br);
                     let ghost luv = left_union@;
@@ -908,8 +931,27 @@ pub mod BSTParaStEph {
                                 assert(t.cmp_spec(&ak) == Greater);
                             }
                         };
-                        // Size: not provable without input bounds.
-                        assume(luv.len() + ruv.len() < usize::MAX as nat);
+                        // Size: luv ∪ ruv ∪ {akv} ⊆ self@ ∪ other@, with akv ∉ luv ∪ ruv.
+                        // So luv.len() + ruv.len() + 1 ≤ (self@ ∪ other@).len() ≤ usize::MAX.
+                        vstd::set_lib::lemma_set_disjoint_lens(luv, ruv);
+                        let ghost luv_ruv = luv.union(ruv);
+                        assert(!luv_ruv.contains(akv));
+                        assert forall|x| #[trigger] luv_ruv.insert(akv).contains(x)
+                            implies sv.union(other@).contains(x) by {
+                            if x == akv { assert(sv.contains(akv)); }
+                            else if luv.contains(x) {
+                                if alv.contains(x) { assert(sv.contains(x)); }
+                                else { assert(blv.contains(x)); assert(other@.contains(x)); }
+                            } else {
+                                assert(ruv.contains(x));
+                                if arv.contains(x) { assert(sv.contains(x)); }
+                                else { assert(brv.contains(x)); assert(other@.contains(x)); }
+                            }
+                        };
+                        assert(luv_ruv.insert(akv).subset_of(sv.union(other@)));
+                        vstd::set_lib::lemma_len_union(sv, other@);
+                        vstd::set_lib::lemma_len_subset(luv_ruv.insert(akv), sv.union(other@));
+                        assert(luv.len() + ruv.len() < usize::MAX as nat);
                     }
                     let result = Self::join_m(left_union, ak, right_union);
                     proof {
