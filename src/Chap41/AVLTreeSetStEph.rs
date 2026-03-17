@@ -105,7 +105,7 @@ broadcast use {
 
 
     /// The values sequence maps to the views sequence element-by-element.
-    proof fn lemma_inorder_values_maps_to_views<T: StT>(link: Link<T>)
+    pub proof fn lemma_inorder_values_maps_to_views<T: StT>(link: Link<T>)
         ensures spec_inorder_values(link).map_values(|t: T| t@) =~= spec_inorder(link),
         decreases link,
     {
