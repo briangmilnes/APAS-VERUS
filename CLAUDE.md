@@ -682,6 +682,12 @@ impl<T: Bounds> RwLockPredicate<LockedType<T>> for FooMtEphInv {
 **Outside verus!**: Debug, Display, `macro_rules!`, unsafe marker traits, `&mut`-returning
 methods, `#[cfg(...)]` stubs (sections 12-13).
 
+**DO NOT MOVE DEFINITIONS OUT OF `verus!` THAT ARE ALREADY IN THERE.** If a function,
+type, trait, or impl is inside `verus!`, it stays inside `verus!`. Moving code outside
+`verus!` to dodge verification warnings (fn_missing_requires, fn_missing_requires_ensures,
+etc.) is never acceptable — it removes the code from Verus's verification scope entirely,
+which is the opposite of proving it. If you cannot fix the warning, leave it in place.
+
 ### Implementation Standalone Rules
 
 - **Chapter standalone**: StEph, StPer, MtEph files of the same algorithm must NOT import

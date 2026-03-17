@@ -309,7 +309,34 @@ broadcast use {
                 vals
             };
 
-            let filtered = parallel_filter_set(vals, f);
+            fn parallel_filter<T: StTInMtT + Ord + 'static, F: PredMt<T> + Clone>(vals: Vec<T>, f: F) -> Vec<T> {
+                let n = vals.len();
+                if n == 0 {
+                    return Vec::new();
+                }
+                if n == 1 {
+                    return if f(&vals[0]) { vals } else { Vec::new() };
+                }
+
+                let mid = n / 2;
+                let mut right_vals = vals;
+                let left_vals = right_vals.split_off(mid);
+                let right_vals_final = right_vals;
+
+                let f_left = f.clone();
+                let f_right = f;
+
+                let Pair(left_filtered, right_filtered) = ParaPair!(
+                    move || parallel_filter(left_vals, f_left),
+                    move || parallel_filter(right_vals_final, f_right)
+                );
+
+                let mut filtered = left_filtered;
+                filtered.extend(right_filtered);
+                filtered
+            }
+
+            let filtered = parallel_filter(vals, f);
             Self::from_seq(AVLTreeSeqStEphS::from_vec(filtered))
         }
 
@@ -341,7 +368,39 @@ broadcast use {
                 (sv, ov)
             };
 
-            let intersect = parallel_intersect_set(self_vals, other_vals);
+            fn parallel_intersect<T: StTInMtT + Ord + 'static>(self_vals: Vec<T>, other_vals: Vec<T>) -> Vec<T> {
+                let n = self_vals.len();
+                if n == 0 {
+                    return Vec::new();
+                }
+                if n == 1 {
+                    let other_set = AVLTreeSetMtEph::from_seq(AVLTreeSeqStEphS::from_vec(other_vals));
+                    return if other_set.find(&self_vals[0]) {
+                        self_vals
+                    } else {
+                        Vec::new()
+                    };
+                }
+
+                let mid = n / 2;
+                let mut right_self = self_vals;
+                let left_self = right_self.split_off(mid);
+                let right_self_final = right_self;
+
+                let other_left = other_vals.clone();
+                let other_right = other_vals;
+
+                let Pair(left_intersect, right_intersect) =
+                    ParaPair!(move || parallel_intersect(left_self, other_left), move || {
+                        parallel_intersect(right_self_final, other_right)
+                    });
+
+                let mut common = left_intersect;
+                common.extend(right_intersect);
+                common
+            }
+
+            let intersect = parallel_intersect(self_vals, other_vals);
             Self::from_seq(AVLTreeSeqStEphS::from_vec(intersect))
         }
 
@@ -558,76 +617,6 @@ broadcast use {
     // Ghost<Set<V>> field is zero-sized; AVLTreeSetMtEph is Send/Sync via Arc<RwLock>.
     unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
-
-    // 14. parallel helpers outside verus!
-
-    /// Recursive parallel filter via divide-and-conquer with ParaPair.
-    fn parallel_filter_set<T: StTInMtT + Ord + 'static, F: PredMt<T> + Clone>(
-        vals: Vec<T>,
-        f: F,
-    ) -> Vec<T> {
-        let n = vals.len();
-        if n == 0 {
-            return Vec::new();
-        }
-        if n == 1 {
-            return if f(&vals[0]) { vals } else { Vec::new() };
-        }
-
-        let mid = n / 2;
-        let mut right_vals = vals;
-        let left_vals = right_vals.split_off(mid);
-        let right_vals_final = right_vals;
-
-        let f_left = f.clone();
-        let f_right = f;
-
-        let Pair(left_filtered, right_filtered) = ParaPair!(
-            move || parallel_filter_set(left_vals, f_left),
-            move || parallel_filter_set(right_vals_final, f_right)
-        );
-
-        let mut filtered = left_filtered;
-        filtered.extend(right_filtered);
-        filtered
-    }
-
-    /// Recursive parallel intersection via divide-and-conquer with ParaPair.
-    fn parallel_intersect_set<T: StTInMtT + Ord + 'static>(
-        self_vals: Vec<T>,
-        other_vals: Vec<T>,
-    ) -> Vec<T> {
-        let n = self_vals.len();
-        if n == 0 {
-            return Vec::new();
-        }
-        if n == 1 {
-            let other_set =
-                AVLTreeSetMtEph::from_seq(AVLTreeSeqStEphS::from_vec(other_vals));
-            return if other_set.find(&self_vals[0]) {
-                self_vals
-            } else {
-                Vec::new()
-            };
-        }
-
-        let mid = n / 2;
-        let mut right_self = self_vals;
-        let left_self = right_self.split_off(mid);
-        let right_self_final = right_self;
-
-        let other_left = other_vals.clone();
-        let other_right = other_vals;
-
-        let Pair(left_intersect, right_intersect) = ParaPair!(
-            move || parallel_intersect_set(left_self, other_left),
-            move || parallel_intersect_set(right_self_final, other_right)
-        );
-
-        let mut common = left_intersect;
-        common.extend(right_intersect);
-        common
-    }
 
     // 12. macros
 

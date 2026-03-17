@@ -282,10 +282,9 @@ pub mod BinaryHeapPQ {
         }
 
         fn parent(i: usize) -> (parent_idx: usize)
-            requires i > 0,
-            ensures parent_idx as int == (i as int - 1) / 2,
+            ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),
         {
-            (i - 1) / 2
+            if i == 0 { 0 } else { (i - 1) / 2 }
         }
 
         proof fn lemma_swap_preserves_multiset<A>(s: Seq<A>, i: int, j: int)
