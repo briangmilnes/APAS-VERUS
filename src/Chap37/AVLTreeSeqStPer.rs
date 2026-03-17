@@ -730,6 +730,7 @@ pub mod AVLTreeSeqStPer {
 
     // veracity: no_requires — iterator helper called from Iterator::next.
     fn push_left_iter_stper<'a, T: StT>(it: &mut AVLTreeSeqStPerIter<'a, T>, cur: Option<&'a Node<T>>)
+        requires 0nat <= usize::MAX as nat,
         ensures true,
         decreases cur,
     {

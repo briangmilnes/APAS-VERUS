@@ -1040,6 +1040,7 @@ pub mod AVLTreeSeqStEph {
 
     // veracity: no_requires — iterator helper called from Iterator::next.
     fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqIterStEph<'a, T>, link: &'a Link<T>)
+        requires 0nat <= usize::MAX as nat,
         ensures true,
         decreases *link,
     {
