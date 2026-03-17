@@ -718,39 +718,36 @@ Table of Contents:
       8 × external_body
    Info: 9 total
 ❌ src/Chap38/BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:466: error: assume() - proof { assume(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:472: error: assume() - proof { assume(
        439 |         fn expose(&self) -> (exposed: Exposed<T>)
             ...
-       464 |                     let r = node.right.clone();
-       465 |                     // T::clone has no verified ensures; cmp_spec(k) vs cmp_spec(node.key) unresolvable.
-       467 |                         k@ == node.key@
-       468 |                         && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:550: error: assume() - assume(left@.len() + right@.len() < usize::MAX as nat);
-       544 |         fn insert(&mut self, key: T) {
+       470 |                     let r = node.right.clone();
+       471 |                     // T::clone has no verified ensures; cmp_spec(k) vs cmp_spec(node.key) unresolvable.
+       473 |                         k@ == node.key@
+       474 |                         && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:556: error: assume() - assume(left@.len() + right@.len() < usize::MAX as nat);
+       550 |         fn insert(&mut self, key: T) {
             ...
-       548 |             proof {
-       549 |                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-       551 |             }
-       552 |             *self = Self::join_m(left, key, right);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:561: error: assume() - assume(left@.len() + right@.len() < usize::MAX as nat);
-       555 |         fn delete(&mut self, key: &T) {
+       554 |             proof {
+       555 |                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+       557 |             }
+       558 |             *self = Self::join_m(left, key, right);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:567: error: assume() - assume(left@.len() + right@.len() < usize::MAX as nat);
+       561 |         fn delete(&mut self, key: &T) {
             ...
-       559 |             proof {
-       560 |                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-       562 |                 assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
-       563 |                     left@.contains(s@) && right@.contains(o@) implies
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:912: error: assume() - assume(luv.len() + ruv.len() < usize::MAX as nat);
-       852 |         fn union(&self, other: &Self) -> (combined: Self)
+       565 |             proof {
+       566 |                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+       568 |                 assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
+       569 |                     left@.contains(s@) && right@.contains(o@) implies
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:918: error: assume() - assume(luv.len() + ruv.len() < usize::MAX as nat);
+       858 |         fn union(&self, other: &Self) -> (combined: Self)
             ...
-       910 |                         };
-       911 |                         // Size: not provable without input bounds.
-       913 |                     }
-       914 |                     let result = Self::join_m(left_union, ak, right_union);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:1535: error: external_body - #[verifier::external_body]
-      1536 |         fn clone(&self) -> (cloned: Self)
-   Holes: 5 total
+       916 |                         };
+       917 |                         // Size: not provable without input bounds.
+       919 |                     }
+       920 |                     let result = Self::join_m(left_union, ak, right_union);
+   Holes: 4 total
       4 × assume()
-      1 × external_body
    Proof functions: 5 total (5 clean, 0 holed)
 ❌ src/Chap39/BSTParaTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:68: error: external_body - #[verifier::external_body]
@@ -2577,11 +2574,11 @@ Function Specs:
    7231 total fns
 
 
-Holes Found: 189 total
+Holes Found: 188 total
    31 × assume() (16%)
    1 × assume_specification (0%)
    2 × unsafe impl (1%)
-   153 × external_body (80%)
+   152 × external_body (80%)
    2 × external (1%)
 
 =================================================================
@@ -2599,47 +2596,47 @@ Holes Found: 189 total
    3  Chap47  (22 holes, 9 files)
    4  Chap37  (20 holes, 19 files)
    5  Chap39  (18 holes, 4 files)
-   6  Chap38  (14 holes, 2 files)
+   6  Chap38  (13 holes, 2 files)
    7  Chap45  (6 holes, 7 files)
    8  Chap52  (5 holes, 14 files)
    9  Chap57  (4 holes, 3 files)
    10  Chap58  (2 holes, 2 files)
    11  Chap59  (1 holes, 4 files)
-   12  Chap17  (0 holes, 1 files)
-   13  Chap50  (0 holes, 8 files)
-   14  Chap53  (0 holes, 5 files)
-   15  Chap40  (0 holes, 3 files)
-   16  Chap27  (0 holes, 4 files)
-   17  Chap02  (0 holes, 2 files)
-   18  Concurrency  (0 holes, 1 files)
-   19  Chap62  (0 holes, 4 files)
-   20  Chap28  (0 holes, 11 files)
-   21  Chap35  (0 holes, 4 files)
-   22  Chap65  (0 holes, 3 files)
-   23  Chap12  (0 holes, 3 files)
-   24  ParaPairs  (0 holes, 1 files)
-   25  Chap42  (0 holes, 4 files)
-   26  Chap36  (0 holes, 3 files)
-   27  Chap06  (0 holes, 20 files)
-   28  Chap18  (0 holes, 7 files)
-   29  Chap54  (0 holes, 4 files)
-   30  Chap64  (0 holes, 3 files)
-   31  Chap03  (0 holes, 1 files)
-   32  Chap05  (0 holes, 5 files)
-   33  Chap30  (0 holes, 1 files)
-   34  Chap19  (0 holes, 4 files)
-   35  Chap11  (0 holes, 5 files)
-   36  Chap44  (0 holes, 2 files)
-   37  Chap51  (0 holes, 8 files)
-   38  Chap63  (0 holes, 2 files)
-   39  Chap56  (0 holes, 12 files)
-   40  Chap49  (0 holes, 8 files)
-   41  Chap55  (0 holes, 8 files)
-   42  Chap26  (0 holes, 8 files)
-   43  Chap21  (0 holes, 12 files)
-   44  Chap66  (0 holes, 2 files)
-   45  Chap61  (0 holes, 4 files)
-   46  Chap23  (0 holes, 2 files)
+   12  Chap18  (0 holes, 7 files)
+   13  Chap12  (0 holes, 3 files)
+   14  Chap61  (0 holes, 4 files)
+   15  Chap23  (0 holes, 2 files)
+   16  Chap66  (0 holes, 2 files)
+   17  Chap35  (0 holes, 4 files)
+   18  Chap56  (0 holes, 12 files)
+   19  Chap21  (0 holes, 12 files)
+   20  Chap19  (0 holes, 4 files)
+   21  Chap17  (0 holes, 1 files)
+   22  Concurrency  (0 holes, 1 files)
+   23  Chap64  (0 holes, 3 files)
+   24  Chap02  (0 holes, 2 files)
+   25  Chap03  (0 holes, 1 files)
+   26  Chap30  (0 holes, 1 files)
+   27  Chap50  (0 holes, 8 files)
+   28  Chap55  (0 holes, 8 files)
+   29  Chap11  (0 holes, 5 files)
+   30  Chap06  (0 holes, 20 files)
+   31  Chap62  (0 holes, 4 files)
+   32  Chap51  (0 holes, 8 files)
+   33  Chap27  (0 holes, 4 files)
+   34  Chap44  (0 holes, 2 files)
+   35  Chap65  (0 holes, 3 files)
+   36  Chap49  (0 holes, 8 files)
+   37  Chap63  (0 holes, 2 files)
+   38  Chap28  (0 holes, 11 files)
+   39  Chap36  (0 holes, 3 files)
+   40  Chap54  (0 holes, 4 files)
+   41  Chap53  (0 holes, 5 files)
+   42  ParaPairs  (0 holes, 1 files)
+   43  Chap42  (0 holes, 4 files)
+   44  Chap26  (0 holes, 8 files)
+   45  Chap05  (0 holes, 5 files)
+   46  Chap40  (0 holes, 3 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -2648,29 +2645,29 @@ Holes Found: 189 total
    1  src/Chap39/BSTParaTreapMtEph.rs  (10 holes)
    2  src/Chap38/BSTParaMtEph.rs  (9 holes)
    3  src/Chap39/BSTTreapMtEph.rs  (6 holes)
-   4  src/Chap38/BSTParaStEph.rs  (5 holes)
+   4  src/Chap38/BSTParaStEph.rs  (4 holes)
    5  src/Chap37/BSTSplayStEph.rs  (3 holes)
-   6  src/Chap37/BSTSetAVLMtEph.rs  (2 holes)
-   7  src/Chap37/AVLTreeSeqStEph.rs  (2 holes)
-   8  src/Chap47/ParaHashTableStEph.rs  (2 holes)
-   9  src/Chap37/AVLTreeSeqMtPer.rs  (2 holes)
-   10  src/Chap39/BSTTreapStEph.rs  (2 holes)
-   11  src/Chap52/EdgeSetGraphStPer.rs  (2 holes)
-   12  src/Chap45/BinaryHeapPQ.rs  (2 holes)
-   13  src/Chap37/BSTSetPlainMtEph.rs  (2 holes)
-   14  src/Chap37/BSTSetBBAlphaMtEph.rs  (2 holes)
-   15  src/Chap37/BSTSplayMtEph.rs  (1 holes)
-   16  src/Chap45/Example45_2.rs  (1 holes)
+   6  src/Chap39/BSTTreapStEph.rs  (2 holes)
+   7  src/Chap47/ParaHashTableStEph.rs  (2 holes)
+   8  src/Chap37/AVLTreeSeqStEph.rs  (2 holes)
+   9  src/Chap52/EdgeSetGraphStPer.rs  (2 holes)
+   10  src/Chap37/AVLTreeSeqMtPer.rs  (2 holes)
+   11  src/Chap45/BinaryHeapPQ.rs  (2 holes)
+   12  src/Chap37/BSTSetPlainMtEph.rs  (2 holes)
+   13  src/Chap37/BSTSetBBAlphaMtEph.rs  (2 holes)
+   14  src/Chap37/BSTSetAVLMtEph.rs  (2 holes)
+   15  src/Chap45/Example45_2.rs  (1 holes)
+   16  src/Chap45/LeftistHeapPQ.rs  (1 holes)
    17  src/Chap37/BSTRBMtEph.rs  (1 holes)
-   18  src/Chap37/AVLTreeSeqStPer.rs  (1 holes)
-   19  src/Chap45/LeftistHeapPQ.rs  (1 holes)
+   18  src/Chap37/BSTSplayMtEph.rs  (1 holes)
+   19  src/Chap37/AVLTreeSeqStPer.rs  (1 holes)
    20  src/Chap37/AVLTreeSeq.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
-   1  src/Chap38  (14 holes, 2 files)
+   1  src/Chap38  (13 holes, 2 files)
 
 =================================================================
 4.4. Not Verusified
@@ -2688,7 +2685,7 @@ Holes Found: 189 total
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 35 clean, 11 holed, 189 holes (global), 257 modules
+Chapter Status — 46 chapters, 35 clean, 11 holed, 188 holes (global), 257 modules
 
 CLEAN CHAPTERS (35)
   Chapter        Files
@@ -2729,17 +2726,17 @@ CLEAN CHAPTERS (35)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (11) — 219 holes
+HOLED CHAPTERS (11) — 218 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap37            20    19  internal  Chap37::BSTSplayMtEph, Chap37::BSTRBMtEph
-  Chap38            14     2  YES       
+  Chap37            20    19  internal  Chap37::BSTRBMtEph, Chap37::BSTSplayMtEph
+  Chap38            13     2  YES       
   Chap39            18     4  internal  Chap39::BSTParaTreapMtEph
-  Chap41            29     7  NO        Chap37::AVLTreeSeqStPer, Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqMtPer
-  Chap43            98    11  NO        Chap37::AVLTreeSeqStPer, Chap42::TableStPer, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph, Chap42::TableStEph, Chap42::TableMtEph
+  Chap41            29     7  NO        Chap37::AVLTreeSeqMtPer, Chap37::AVLTreeSeqStEph, Chap37::AVLTreeSeqStPer
+  Chap43            98    11  NO        Chap37::AVLTreeSeqStPer, Chap42::TableMtEph, Chap42::TableStPer, Chap42::TableStEph, Chap37::AVLTreeSeqStEph, Chap41::AVLTreeSetStEph
   Chap45             6     7  NO        Chap37::AVLTreeSeqStPer
   Chap47            22     9  internal  Chap47::ParaHashTableStEph
-  Chap52             5    14  NO        Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph, Chap43::OrderedTableStPer, Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer
+  Chap52             5    14  NO        Chap43::OrderedTableStPer, Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph, Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer
   Chap57             4     3  NO        Chap05::SetStEph, Chap45::BinaryHeapPQ
   Chap58             2     2  NO        Chap05::SetStEph
   Chap59             1     4  NO        Chap05::SetStEph
@@ -2769,8 +2766,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-16 21:38:32 -07:00
-Ended:     2026-03-16 21:38:34 -07:00
-Duration:  2446ms
+Started:   2026-03-16 23:27:15 -07:00
+Ended:     2026-03-16 23:27:16 -07:00
+Duration:  1188ms
 
 Full output: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-review-verus-proof-holes.log
