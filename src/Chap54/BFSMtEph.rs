@@ -37,21 +37,21 @@ pub mod BFSMtEph {
 
     /// All neighbor indices in the adjacency list are valid vertex indices.
     pub open spec fn spec_bfsmteph_wf(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>) -> bool {
-        forall|u: int, i: int| #![auto]
+        forall|u: int, i: int|
             0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len()
-            ==> graph.spec_index(u).spec_index(i) < graph.spec_len()
+            ==> #[trigger] graph.spec_index(u).spec_index(i) < graph.spec_len()
     }
 
     /// Every distance entry is either UNREACHABLE or bounded by n.
     pub open spec fn spec_distances_bounded(distances: &ArraySeqMtEphS<N>, n: int) -> bool {
-        forall|j: int| #![auto] 0 <= j < distances.spec_len() ==>
-            distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
+        forall|j: int| 0 <= j < distances.spec_len() ==>
+            #[trigger] distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
     }
 
     /// Every parent entry is either NO_PARENT or a valid vertex index.
     pub open spec fn spec_parents_bounded(parents: &ArraySeqMtEphS<N>, n: int) -> bool {
-        forall|j: int| #![auto] 0 <= j < parents.spec_len() ==>
-            parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
+        forall|j: int| 0 <= j < parents.spec_len() ==>
+            #[trigger] parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
     }
 
     // 7. proof fns
@@ -59,7 +59,7 @@ pub mod BFSMtEph {
     proof fn lemma_tabulate_all_no_parent(parents: &ArraySeqMtEphS<N>, n: int)
         requires
             parents.spec_len() == n,
-            forall|i: int| #![auto] 0 <= i < n ==> parents.spec_index(i) == NO_PARENT,
+            forall|i: int| 0 <= i < n ==> #[trigger] parents.spec_index(i) == NO_PARENT,
         ensures
             spec_parents_bounded(parents, n),
     {}
@@ -77,8 +77,8 @@ pub mod BFSMtEph {
             0 <= v < n,
             new_val < n,
             parents.spec_index(v) == new_val,
-            forall|j: int| #![auto] 0 <= j < n && j != v ==>
-                parents.spec_index(j) == old_parents.spec_index(j),
+            forall|j: int| 0 <= j < n && j != v ==>
+                #[trigger] parents.spec_index(j) == old_parents.spec_index(j),
             spec_parents_bounded(old_parents, n),
         ensures
             spec_parents_bounded(parents, n),
@@ -103,8 +103,8 @@ pub mod BFSMtEph {
         requires
             spec_parents_bounded(original, n),
             copy.spec_len() == original.spec_len(),
-            forall|i: int| #![auto] 0 <= i < original.spec_len() ==>
-                copy.spec_index(i) == original.spec_index(i),
+            forall|i: int| 0 <= i < original.spec_len() ==>
+                #[trigger] copy.spec_index(i) == original.spec_index(i),
         ensures
             spec_parents_bounded(copy, n),
     {
@@ -119,8 +119,8 @@ pub mod BFSMtEph {
     proof fn lemma_tabulate_all_unreachable(distances: &ArraySeqMtEphS<N>, n: int)
         requires
             distances.spec_len() == n,
-            forall|i: int| #![auto] 0 <= i < n ==>
-                distances.spec_index(i) == UNREACHABLE,
+            forall|i: int| 0 <= i < n ==>
+                #[trigger] distances.spec_index(i) == UNREACHABLE,
         ensures
             spec_distances_bounded(distances, n),
     {
@@ -139,8 +139,8 @@ pub mod BFSMtEph {
             0 <= v < n,
             new_val < n,
             distances.spec_index(v) == new_val,
-            forall|j: int| #![auto] 0 <= j < n && j != v ==>
-                distances.spec_index(j) == old_distances.spec_index(j),
+            forall|j: int| 0 <= j < n && j != v ==>
+                #[trigger] distances.spec_index(j) == old_distances.spec_index(j),
             spec_distances_bounded(old_distances, n),
         ensures
             spec_distances_bounded(distances, n),
@@ -162,8 +162,8 @@ pub mod BFSMtEph {
         requires distances.spec_len() <= usize::MAX,
         ensures
             copied.spec_len() == distances.spec_len(),
-            forall|i: int| #![auto] 0 <= i < distances.spec_len() ==>
-                copied.spec_index(i) == distances.spec_index(i),
+            forall|i: int| 0 <= i < distances.spec_len() ==>
+                #[trigger] copied.spec_index(i) == distances.spec_index(i),
     {
         let n = distances.length();
         ArraySeqMtEphS::tabulate(
@@ -180,11 +180,11 @@ pub mod BFSMtEph {
         requires graph.spec_len() <= usize::MAX,
         ensures
             copied.spec_len() == graph.spec_len(),
-            forall|u: int| #![auto] 0 <= u < graph.spec_len() ==>
-                copied.spec_index(u).spec_len() == graph.spec_index(u).spec_len(),
-            forall|u: int, i: int| #![auto]
+            forall|u: int| 0 <= u < graph.spec_len() ==>
+                #[trigger] copied.spec_index(u).spec_len() == graph.spec_index(u).spec_len(),
+            forall|u: int, i: int|
                 0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len() ==>
-                copied.spec_index(u).spec_index(i) == graph.spec_index(u).spec_index(i),
+                #[trigger] copied.spec_index(u).spec_index(i) == graph.spec_index(u).spec_index(i),
     {
         let n = graph.length();
         ArraySeqMtEphS::tabulate(
@@ -192,8 +192,8 @@ pub mod BFSMtEph {
                 requires u_idx < n, n == graph.spec_len()
                 ensures
                     r.spec_len() == graph.spec_index(u_idx as int).spec_len(),
-                    forall|k: int| #![auto] 0 <= k < r.spec_len() ==>
-                        r.spec_index(k) == graph.spec_index(u_idx as int).spec_index(k),
+                    forall|k: int| 0 <= k < r.spec_len() ==>
+                        #[trigger] r.spec_index(k) == graph.spec_index(u_idx as int).spec_index(k),
             {
                 let adj = graph.nth(u_idx);
                 let adj_len = adj.length();
@@ -216,11 +216,11 @@ pub mod BFSMtEph {
         requires
             spec_bfsmteph_wf(original),
             copy.spec_len() == original.spec_len(),
-            forall|u: int| #![auto] 0 <= u < original.spec_len() ==>
-                copy.spec_index(u).spec_len() == original.spec_index(u).spec_len(),
-            forall|u: int, i: int| #![auto]
+            forall|u: int| 0 <= u < original.spec_len() ==>
+                #[trigger] copy.spec_index(u).spec_len() == original.spec_index(u).spec_len(),
+            forall|u: int, i: int|
                 0 <= u < original.spec_len() && 0 <= i < original.spec_index(u).spec_len() ==>
-                copy.spec_index(u).spec_index(i) == original.spec_index(u).spec_index(i),
+                #[trigger] copy.spec_index(u).spec_index(i) == original.spec_index(u).spec_index(i),
         ensures
             spec_bfsmteph_wf(copy),
     {
@@ -242,8 +242,8 @@ pub mod BFSMtEph {
         requires
             spec_distances_bounded(original, n),
             copy.spec_len() == original.spec_len(),
-            forall|i: int| #![auto] 0 <= i < original.spec_len() ==>
-                copy.spec_index(i) == original.spec_index(i),
+            forall|i: int| 0 <= i < original.spec_len() ==>
+                #[trigger] copy.spec_index(i) == original.spec_index(i),
         ensures
             spec_distances_bounded(copy, n),
     {
@@ -263,8 +263,8 @@ pub mod BFSMtEph {
         fn top_down_order(&self) -> (order: &ArraySeqMtEphS<N>)
             ensures
                 order.spec_len() == self.spec_order().spec_len(),
-                forall|i: int| #![auto] 0 <= i < order.spec_len() ==>
-                    order.spec_index(i) == self.spec_order().spec_index(i),
+                forall|i: int| 0 <= i < order.spec_len() ==>
+                    #[trigger] order.spec_index(i) == self.spec_order().spec_index(i),
         ;
 
         /// Vertices in reverse BFS order (furthest from root first).
@@ -272,8 +272,8 @@ pub mod BFSMtEph {
             requires self.spec_order().spec_len() <= usize::MAX,
             ensures
                 order.spec_len() == self.spec_order().spec_len(),
-                forall|i: int| #![auto] 0 <= i < order.spec_len() ==>
-                    order.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i),
+                forall|i: int| 0 <= i < order.spec_len() ==>
+                    #[trigger] order.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i),
         ;
     }
 
@@ -290,7 +290,7 @@ pub mod BFSMtEph {
                 traversal.spec_len() == graph.spec_len(),
                 traversal.spec_index(source as int) == 0usize,
                 spec_distances_bounded(&traversal, graph.spec_len() as int),
-                forall|v: int| #![auto] 0 <= v < traversal.spec_len()
+                forall|v: int| #![trigger traversal.spec_index(v)] 0 <= v < traversal.spec_len()
                     && traversal.spec_index(v) != UNREACHABLE && v != source as int
                     ==> traversal.spec_index(v) > 0usize,
         ;
@@ -309,10 +309,10 @@ pub mod BFSMtEph {
                 traversal.order.spec_len() > 0,
                 traversal.order.spec_len() <= graph.spec_len(),
                 traversal.order.spec_index(0) == source,
-                forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
-                    ==> traversal.order.spec_index(i) < graph.spec_len(),
+                forall|i: int| 0 <= i < traversal.order.spec_len()
+                    ==> #[trigger] traversal.order.spec_index(i) < graph.spec_len(),
                 spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
-                forall|i: int| #![auto] 0 <= i < traversal.order.spec_len()
+                forall|i: int| #![trigger traversal.order.spec_index(i)] 0 <= i < traversal.order.spec_len()
                     ==> traversal.parents.spec_index(
                         traversal.order.spec_index(i) as int) != NO_PARENT,
         ;
@@ -334,15 +334,15 @@ pub mod BFSMtEph {
             distances.spec_len() == graph.spec_len(),
             spec_distances_bounded(&distances, graph.spec_len() as int),
             next_dist < graph.spec_len(),
-            forall|j: int| #![auto] 0 <= j < frontier@.len() ==>
+            forall|j: int| #![trigger frontier@[j]] 0 <= j < frontier@.len() ==>
                 frontier@[j] < graph.spec_len(),
         ensures
-            forall|j: int| #![auto] 0 <= j < traversal.0@.len() ==>
+            forall|j: int| #![trigger traversal.0@[j]] 0 <= j < traversal.0@.len() ==>
                 traversal.0@[j] < graph.spec_len(),
-            forall|j: int| #![auto] 0 <= j < traversal.1@.len() ==>
-                traversal.1@[j].0 < graph.spec_len()
-                && traversal.1@[j].1 == next_dist
-                && distances.spec_index(traversal.1@[j].0 as int) == UNREACHABLE,
+            forall|j: int| #![trigger traversal.1@[j]] 0 <= j < traversal.1@.len() ==>
+                (traversal.1@[j]).0 < graph.spec_len()
+                && (traversal.1@[j]).1 == next_dist
+                && distances.spec_index((traversal.1@[j]).0 as int) == UNREACHABLE,
         decreases frontier@.len()
     {
         let n = graph.length();
@@ -370,12 +370,12 @@ pub mod BFSMtEph {
                     next_dist < n,
                     distances.spec_len() == n,
                     spec_distances_bounded(&distances, n as int),
-                    forall|j: int| #![auto] 0 <= j < next_verts@.len() ==>
+                    forall|j: int| #![trigger next_verts@[j]] 0 <= j < next_verts@.len() ==>
                         next_verts@[j] < n,
-                    forall|j: int| #![auto] 0 <= j < updates@.len() ==>
-                        updates@[j].0 < n
-                        && updates@[j].1 == next_dist
-                        && distances.spec_index(updates@[j].0 as int) == UNREACHABLE,
+                    forall|j: int| #![trigger updates@[j]] 0 <= j < updates@.len() ==>
+                        (updates@[j]).0 < n
+                        && (updates@[j]).1 == next_dist
+                        && distances.spec_index((updates@[j]).0 as int) == UNREACHABLE,
                 decreases num_neighbors - i
             {
                 let v = *neighbors.nth(i);
@@ -407,16 +407,16 @@ pub mod BFSMtEph {
 
         let f1 = move || -> (r: (Vec<N>, Vec<Pair<N, N>>))
             ensures
-                forall|j: int| #![auto] 0 <= j < r.0@.len() ==> (r.0@[j] as int) < n_spec,
-                forall|j: int| #![auto] 0 <= j < r.1@.len() ==>
-                    (r.1@[j].0 as int) < n_spec
-                    && r.1@[j].1 == next_dist
-                    && dist_fn(r.1@[j].0 as int) == UNREACHABLE,
+                forall|j: int| #![trigger r.0@[j]] 0 <= j < r.0@.len() ==> (r.0@[j] as int) < n_spec,
+                forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len() ==>
+                    ((r.1@[j]).0 as int) < n_spec
+                    && (r.1@[j]).1 == next_dist
+                    && dist_fn((r.1@[j]).0 as int) == UNREACHABLE,
         {
             let r = process_frontier_parallel(graph_copy, distances_copy, left_frontier, next_dist);
             proof {
-                assert forall|j: int| #![auto] 0 <= j < r.1@.len()
-                implies dist_fn(r.1@[j].0 as int) == UNREACHABLE
+                assert forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len()
+                implies dist_fn((r.1@[j]).0 as int) == UNREACHABLE
                 by {}
             }
             r
@@ -424,16 +424,16 @@ pub mod BFSMtEph {
 
         let f2 = move || -> (r: (Vec<N>, Vec<Pair<N, N>>))
             ensures
-                forall|j: int| #![auto] 0 <= j < r.0@.len() ==> (r.0@[j] as int) < n_spec,
-                forall|j: int| #![auto] 0 <= j < r.1@.len() ==>
-                    (r.1@[j].0 as int) < n_spec
-                    && r.1@[j].1 == next_dist
-                    && dist_fn(r.1@[j].0 as int) == UNREACHABLE,
+                forall|j: int| #![trigger r.0@[j]] 0 <= j < r.0@.len() ==> (r.0@[j] as int) < n_spec,
+                forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len() ==>
+                    ((r.1@[j]).0 as int) < n_spec
+                    && (r.1@[j]).1 == next_dist
+                    && dist_fn((r.1@[j]).0 as int) == UNREACHABLE,
         {
             let r = process_frontier_parallel(graph, distances, right_frontier, next_dist);
             proof {
-                assert forall|j: int| #![auto] 0 <= j < r.1@.len()
-                implies dist_fn(r.1@[j].0 as int) == UNREACHABLE
+                assert forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len()
+                implies dist_fn((r.1@[j]).0 as int) == UNREACHABLE
                 by {}
             }
             r
@@ -446,9 +446,9 @@ pub mod BFSMtEph {
         while k < right_verts.len()
             invariant
                 0 <= k <= right_verts@.len(),
-                forall|j: int| #![auto] 0 <= j < all_verts@.len() ==>
+                forall|j: int| #![trigger all_verts@[j]] 0 <= j < all_verts@.len() ==>
                     (all_verts@[j] as int) < n_spec,
-                forall|j: int| #![auto] 0 <= j < right_verts@.len() ==>
+                forall|j: int| #![trigger right_verts@[j]] 0 <= j < right_verts@.len() ==>
                     (right_verts@[j] as int) < n_spec,
             decreases right_verts@.len() - k
         {
@@ -461,14 +461,14 @@ pub mod BFSMtEph {
         while k2 < right_updates.len()
             invariant
                 0 <= k2 <= right_updates@.len(),
-                forall|j: int| #![auto] 0 <= j < all_updates@.len() ==>
-                    (all_updates@[j].0 as int) < n_spec
-                    && all_updates@[j].1 == next_dist
-                    && dist_fn(all_updates@[j].0 as int) == UNREACHABLE,
-                forall|j: int| #![auto] 0 <= j < right_updates@.len() ==>
-                    (right_updates@[j].0 as int) < n_spec
-                    && right_updates@[j].1 == next_dist
-                    && dist_fn(right_updates@[j].0 as int) == UNREACHABLE,
+                forall|j: int| #![trigger all_updates@[j]] 0 <= j < all_updates@.len() ==>
+                    ((all_updates@[j]).0 as int) < n_spec
+                    && (all_updates@[j]).1 == next_dist
+                    && dist_fn((all_updates@[j]).0 as int) == UNREACHABLE,
+                forall|j: int| #![trigger right_updates@[j]] 0 <= j < right_updates@.len() ==>
+                    ((right_updates@[j]).0 as int) < n_spec
+                    && (right_updates@[j]).1 == next_dist
+                    && dist_fn((right_updates@[j]).0 as int) == UNREACHABLE,
             decreases right_updates@.len() - k2
         {
             all_updates.push(right_updates[k2]);
@@ -490,13 +490,13 @@ pub mod BFSMtEph {
             spec_bfsmteph_wf(&graph),
             parents.spec_len() == graph.spec_len(),
             spec_parents_bounded(&parents, graph.spec_len() as int),
-            forall|j: int| #![auto] 0 <= j < frontier@.len() ==>
+            forall|j: int| #![trigger frontier@[j]] 0 <= j < frontier@.len() ==>
                 frontier@[j] < graph.spec_len(),
         ensures
-            forall|j: int| #![auto] 0 <= j < traversal@.len() ==>
-                traversal@[j].0 < graph.spec_len()
-                && traversal@[j].1 < graph.spec_len()
-                && parents.spec_index(traversal@[j].0 as int) == NO_PARENT,
+            forall|j: int| #![trigger traversal@[j]] 0 <= j < traversal@.len() ==>
+                (traversal@[j]).0 < graph.spec_len()
+                && (traversal@[j]).1 < graph.spec_len()
+                && parents.spec_index((traversal@[j]).0 as int) == NO_PARENT,
         decreases frontier@.len()
     {
         let n = graph.length();
@@ -522,10 +522,10 @@ pub mod BFSMtEph {
                     *neighbors == graph.spec_index(u as int),
                     parents.spec_len() == n,
                     spec_parents_bounded(&parents, n as int),
-                    forall|j: int| #![auto] 0 <= j < updates@.len() ==>
-                        updates@[j].0 < n
-                        && updates@[j].1 < n
-                        && parents.spec_index(updates@[j].0 as int) == NO_PARENT,
+                    forall|j: int| #![trigger updates@[j]] 0 <= j < updates@.len() ==>
+                        (updates@[j]).0 < n
+                        && (updates@[j]).1 < n
+                        && parents.spec_index((updates@[j]).0 as int) == NO_PARENT,
                 decreases num_neighbors - i
             {
                 let v = *neighbors.nth(i);
@@ -555,15 +555,15 @@ pub mod BFSMtEph {
 
         let f1 = move || -> (r: Vec<Pair<N, N>>)
             ensures
-                forall|j: int| #![auto] 0 <= j < r@.len() ==>
-                    (r@[j].0 as int) < n_spec
-                    && (r@[j].1 as int) < n_spec
-                    && parents_fn(r@[j].0 as int) == NO_PARENT,
+                forall|j: int| #![trigger r@[j]] 0 <= j < r@.len() ==>
+                    ((r@[j]).0 as int) < n_spec
+                    && ((r@[j]).1 as int) < n_spec
+                    && parents_fn((r@[j]).0 as int) == NO_PARENT,
         {
             let r = process_frontier_tree_parallel(graph_copy, parents_copy, left_frontier);
             proof {
-                assert forall|j: int| #![auto] 0 <= j < r@.len()
-                implies parents_fn(r@[j].0 as int) == NO_PARENT
+                assert forall|j: int| #![trigger r@[j]] 0 <= j < r@.len()
+                implies parents_fn((r@[j]).0 as int) == NO_PARENT
                 by {}
             }
             r
@@ -571,15 +571,15 @@ pub mod BFSMtEph {
 
         let f2 = move || -> (r: Vec<Pair<N, N>>)
             ensures
-                forall|j: int| #![auto] 0 <= j < r@.len() ==>
-                    (r@[j].0 as int) < n_spec
-                    && (r@[j].1 as int) < n_spec
-                    && parents_fn(r@[j].0 as int) == NO_PARENT,
+                forall|j: int| #![trigger r@[j]] 0 <= j < r@.len() ==>
+                    ((r@[j]).0 as int) < n_spec
+                    && ((r@[j]).1 as int) < n_spec
+                    && parents_fn((r@[j]).0 as int) == NO_PARENT,
         {
             let r = process_frontier_tree_parallel(graph, parents, right_frontier);
             proof {
-                assert forall|j: int| #![auto] 0 <= j < r@.len()
-                implies parents_fn(r@[j].0 as int) == NO_PARENT
+                assert forall|j: int| #![trigger r@[j]] 0 <= j < r@.len()
+                implies parents_fn((r@[j]).0 as int) == NO_PARENT
                 by {}
             }
             r
@@ -592,14 +592,14 @@ pub mod BFSMtEph {
         while k < right_updates.len()
             invariant
                 0 <= k <= right_updates@.len(),
-                forall|j: int| #![auto] 0 <= j < all_updates@.len() ==>
-                    (all_updates@[j].0 as int) < n_spec
-                    && (all_updates@[j].1 as int) < n_spec
-                    && parents_fn(all_updates@[j].0 as int) == NO_PARENT,
-                forall|j: int| #![auto] 0 <= j < right_updates@.len() ==>
-                    (right_updates@[j].0 as int) < n_spec
-                    && (right_updates@[j].1 as int) < n_spec
-                    && parents_fn(right_updates@[j].0 as int) == NO_PARENT,
+                forall|j: int| #![trigger all_updates@[j]] 0 <= j < all_updates@.len() ==>
+                    ((all_updates@[j]).0 as int) < n_spec
+                    && ((all_updates@[j]).1 as int) < n_spec
+                    && parents_fn((all_updates@[j]).0 as int) == NO_PARENT,
+                forall|j: int| #![trigger right_updates@[j]] 0 <= j < right_updates@.len() ==>
+                    ((right_updates@[j]).0 as int) < n_spec
+                    && ((right_updates@[j]).1 as int) < n_spec
+                    && parents_fn((right_updates@[j]).0 as int) == NO_PARENT,
             decreases right_updates@.len() - k
         {
             all_updates.push(right_updates[k]);
@@ -652,10 +652,10 @@ pub mod BFSMtEph {
                 spec_bfsmteph_wf(graph),
                 distances.spec_index(source as int) == 0usize,
                 spec_distances_bounded(&distances, n as int),
-                forall|v: int| #![auto] 0 <= v < distances.spec_len()
+                forall|v: int| #![trigger distances.spec_index(v)] 0 <= v < distances.spec_len()
                     && distances.spec_index(v) != UNREACHABLE && v != source as int
                     ==> distances.spec_index(v) > 0usize,
-                forall|j: int| #![auto] 0 <= j < current_layer@.len() ==>
+                forall|j: int| #![trigger current_layer@[j]] 0 <= j < current_layer@.len() ==>
                     current_layer@[j] < n,
                 current_dist < n,
         {
@@ -674,19 +674,19 @@ pub mod BFSMtEph {
                     );
 
                 proof {
-                    assert forall|j: int| #![auto] 0 <= j < distance_updates@.len()
+                    assert forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len()
                     implies
-                        distances.spec_index(distance_updates@[j].0 as int) == UNREACHABLE
-                        && distance_updates@[j].0 < n
-                        && distance_updates@[j].1 == current_dist + 1
+                        distances.spec_index((distance_updates@[j]).0 as int) == UNREACHABLE
+                        && (distance_updates@[j]).0 < n
+                        && (distance_updates@[j]).1 == current_dist + 1
                     by {}
                 }
 
                 proof {
-                    assert forall|j: int| #![auto] 0 <= j < distance_updates@.len()
-                    implies distance_updates@[j].0 != source
+                    assert forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len()
+                    implies (distance_updates@[j]).0 != source
                     by {
-                        assert(distances.spec_index(distance_updates@[j].0 as int) == UNREACHABLE);
+                        assert(distances.spec_index((distance_updates@[j]).0 as int) == UNREACHABLE);
                         assert(distances.spec_index(source as int) == 0usize);
                     }
                 }
@@ -704,14 +704,14 @@ pub mod BFSMtEph {
                         spec_bfsmteph_wf(graph),
                         distances.spec_index(source as int) == 0usize,
                         spec_distances_bounded(&distances, n as int),
-                        forall|v: int| #![auto] 0 <= v < distances.spec_len()
+                        forall|v: int| #![trigger distances.spec_index(v)] 0 <= v < distances.spec_len()
                             && distances.spec_index(v) != UNREACHABLE && v != source as int
                             ==> distances.spec_index(v) > 0usize,
                         current_dist + 1 < n,
-                        forall|j: int| #![auto] 0 <= j < distance_updates@.len() ==>
-                            distance_updates@[j].0 < graph.spec_len()
-                            && distance_updates@[j].1 == current_dist + 1
-                            && distance_updates@[j].0 != source,
+                        forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len() ==>
+                            (distance_updates@[j]).0 < graph.spec_len()
+                            && (distance_updates@[j]).1 == current_dist + 1
+                            && (distance_updates@[j]).0 != source,
                     decreases distance_updates@.len() - k
                 {
                     let pair = &distance_updates[k];
@@ -788,13 +788,13 @@ pub mod BFSMtEph {
                 spec_bfsmteph_wf(graph),
                 parents.spec_index(source as int) == source,
                 spec_parents_bounded(&parents, n as int),
-                forall|j: int| #![auto] 0 <= j < current_layer@.len() ==>
+                forall|j: int| #![trigger current_layer@[j]] 0 <= j < current_layer@.len() ==>
                     current_layer@[j] < n,
                 order@.len() > 0,
                 order@.len() <= n as int,
                 order@[0] == source,
-                forall|j: int| #![auto] 0 <= j < order@.len() ==> order@[j] < n,
-                forall|j: int| #![auto] 0 <= j < order@.len() ==>
+                forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==> order@[j] < n,
+                forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==>
                     parents.spec_index(order@[j] as int) != NO_PARENT,
         {
             let graph_owned = copy_graph(graph);
@@ -811,11 +811,11 @@ pub mod BFSMtEph {
                 );
 
             proof {
-                assert forall|j: int| #![auto] 0 <= j < tree_updates@.len()
+                assert forall|j: int| #![trigger tree_updates@[j]] 0 <= j < tree_updates@.len()
                 implies
-                    parents.spec_index(tree_updates@[j].0 as int) == NO_PARENT
-                    && tree_updates@[j].0 < n
-                    && tree_updates@[j].1 < n
+                    parents.spec_index((tree_updates@[j]).0 as int) == NO_PARENT
+                    && (tree_updates@[j]).0 < n
+                    && (tree_updates@[j]).1 < n
                 by {}
             }
 
@@ -833,15 +833,15 @@ pub mod BFSMtEph {
                     spec_bfsmteph_wf(graph),
                     parents.spec_index(source as int) == source,
                     spec_parents_bounded(&parents, n as int),
-                    forall|j: int| #![auto] 0 <= j < tree_updates@.len() ==>
-                        tree_updates@[j].0 < n && tree_updates@[j].1 < n,
-                    forall|j: int| #![auto] 0 <= j < next_layer@.len() ==>
+                    forall|j: int| #![trigger tree_updates@[j]] 0 <= j < tree_updates@.len() ==>
+                        (tree_updates@[j]).0 < n && (tree_updates@[j]).1 < n,
+                    forall|j: int| #![trigger next_layer@[j]] 0 <= j < next_layer@.len() ==>
                         next_layer@[j] < n,
                     order@.len() > 0,
                     order@.len() <= n as int,
                     order@[0] == source,
-                    forall|j: int| #![auto] 0 <= j < order@.len() ==> order@[j] < n,
-                    forall|j: int| #![auto] 0 <= j < order@.len() ==>
+                    forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==> order@[j] < n,
+                    forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==>
                         parents.spec_index(order@[j] as int) != NO_PARENT,
                 decreases tree_updates@.len() - k
             {

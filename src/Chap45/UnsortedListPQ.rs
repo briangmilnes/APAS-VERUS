@@ -268,8 +268,8 @@ broadcast use {
                     let sv = Seq::<T::V>::empty().push(element@);
                     assert(pq@ =~= self@ + sv) by {
                         assert(pq@.len() == self@.len() + sv.len());
-                        assert forall|i: int| #![auto] 0 <= i < pq@.len()
-                        implies pq@[i] == (self@ + sv)[i] by {
+                        assert forall|i: int| 0 <= i < pq@.len()
+                        implies #[trigger] pq@[i] == (self@ + sv)[i] by {
                             if i < self@.len() {
                                 assert(pq.elements.spec_index(i)
                                     == self.elements.seq@[i]);
@@ -345,9 +345,9 @@ broadcast use {
                         new_elements@.len() ==
                             i as int - if (min_index as int) < (i as int)
                                 { 1int } else { 0int },
-                        forall|j: int| #![auto] 0 <= j < new_elements.seq@.len()
+                        forall|j: int| 0 <= j < new_elements.seq@.len()
                             ==> TotalOrder::le(
-                                *min_element, new_elements.seq@[j]),
+                                *min_element, #[trigger] new_elements.seq@[j]),
                         new_elements@ =~= self@.remove(
                             min_index as int).take(
                                 new_elements@.len() as int),
@@ -374,10 +374,10 @@ broadcast use {
                                     == single_seq.seq@[0]);
                             };
                             // Prove le invariant for all new_elements.
-                            assert forall|j: int| #![auto]
+                            assert forall|j: int|
                                 0 <= j < new_elements.seq@.len() implies
                                 TotalOrder::le(
-                                    *min_element, new_elements.seq@[j])
+                                    *min_element, #[trigger] new_elements.seq@[j])
                             by {
                                 if j < old_len as int {
                                     assert(new_elements.spec_index(j)
@@ -385,9 +385,9 @@ broadcast use {
                                 }
                             };
                             // Prove view invariant: new_elements@ extends.
-                            assert forall|j: int| #![auto]
+                            assert forall|j: int|
                                 0 <= j < new_elements@.len() implies
-                                new_elements@[j] == self@.remove(
+                                #[trigger] new_elements@[j] == self@.remove(
                                     min_index as int).take(
                                         new_elements@.len() as int)[j]
                             by {
@@ -432,8 +432,8 @@ broadcast use {
                 };
                 proof {
                     assert(pq@ =~= self@ + other@) by {
-                        assert forall|i: int| #![auto] 0 <= i < pq@.len()
-                        implies pq@[i] == (self@ + other@)[i] by {
+                        assert forall|i: int| 0 <= i < pq@.len()
+                        implies #[trigger] pq@[i] == (self@ + other@)[i] by {
                             if i < self@.len() {
                                 assert(pq.elements.spec_index(i)
                                     == self.elements.seq@[i]);
@@ -567,15 +567,15 @@ broadcast use {
                 proof {
                     // from_vec gives seq.seq@ =~= vec@ (element-wise + length).
                     assert(seq.seq@ =~= vec_view) by {
-                        assert forall|i: int| #![auto] 0 <= i < seq.seq@.len()
-                        implies seq.seq@[i] == vec_view[i] by {
+                        assert forall|i: int| 0 <= i < seq.seq@.len()
+                        implies #[trigger] seq.seq@[i] == vec_view[i] by {
                             assert(seq.spec_index(i) == vec_view[i]);
                         };
                     };
                     // seq@ = seq.seq@.map(view) =~= vec@.map(view), and pq@ =~= seq@.
                     assert(seq@ =~= vec_view.map(|_i: int, t: T| t@)) by {
-                        assert forall|i: int| #![auto] 0 <= i < seq@.len()
-                        implies seq@[i] == vec_view.map(|_i: int, t: T| t@)[i] by {
+                        assert forall|i: int| 0 <= i < seq@.len()
+                        implies #[trigger] seq@[i] == vec_view.map(|_i: int, t: T| t@)[i] by {
                             assert(seq.seq@[i] == vec_view[i]);
                         };
                     };
@@ -608,8 +608,8 @@ broadcast use {
                         n == sorted_seq@.len(),
                         result@.len() == i as int,
                         Self::spec_sorted(sorted_seq.seq@),
-                        forall|k: int| #![auto] 0 <= k < i as int ==>
-                            result@[k] == sorted_seq.seq@[k],
+                        forall|k: int| 0 <= k < i as int ==>
+                            #[trigger] result@[k] == sorted_seq.seq@[k],
                 {
                     let elem = sorted_seq.nth(i).clone();
                     proof {

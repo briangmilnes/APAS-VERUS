@@ -169,8 +169,7 @@ pub mod TopDownDPStPer {
         }
 
         open spec fn spec_memo_correct(&self, memo: Map<(usize, usize), usize>) -> bool {
-            forall|a: usize, b: usize| #![auto]
-                memo.contains_key((a, b)) ==>
+            forall|a: usize, b: usize| #[trigger] memo.contains_key((a, b)) ==>
                 memo[(a, b)] as nat == self.spec_med(a as nat, b as nat)
         }
 
@@ -276,8 +275,7 @@ pub mod TopDownDPStPer {
             let ghost pre_memo = memo@;
             memo.insert(Pair(i, j), result);
             proof {
-                assert forall|a: usize, b: usize| #![auto]
-                    memo@.contains_key((a, b))
+                assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
                 implies
                     memo@[(a, b)] as nat == self.spec_med(a as nat, b as nat)
                 by {
