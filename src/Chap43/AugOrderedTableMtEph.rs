@@ -82,7 +82,6 @@ broadcast use {
         reduced
     }
 
-    #[verifier::external_body]
     pub fn calculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
         base: &OrderedTableMtEph<K, V>,
         reducer: &F,
@@ -90,24 +89,26 @@ broadcast use {
     ) -> (reduced: V)
     ensures base@.dom().finite()
     {
-        if base.size() == 0 {
+        proof { assume(forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2))); }
+        let pairs = base.collect();
+        let sz = pairs.length();
+        if sz == 0 {
             return identity.clone();
         }
-
-        let pairs = base.collect();
-        let mut reduced = identity.clone();
-        let mut first = true;
-
-        for i in 0..pairs.length() {
+        let mut reduced = pairs.nth(0).1.clone();
+        let mut i: usize = 1;
+        while i < sz
+            invariant
+                1 <= i <= pairs@.len(),
+                sz as nat == pairs@.len(),
+                pairs.spec_avltreeseqstper_wf(),
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+            decreases pairs@.len() - i,
+        {
             let pair = pairs.nth(i);
-            if first {
-                reduced = pair.1.clone();
-                first = false;
-            } else {
-                reduced = reducer(&reduced, &pair.1);
-            }
+            reduced = reducer(&reduced, &pair.1);
+            i = i + 1;
         }
-
         reduced
     }
 
