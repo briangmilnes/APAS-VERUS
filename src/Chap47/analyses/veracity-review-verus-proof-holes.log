@@ -28,7 +28,7 @@ Table of Contents:
 ❌ DoubleHashFlatHashTableStEph.rs
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:91: error: external_body - #[verifier::external_body]
         92 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:129: error: assume() - assume(forall |j: int| 0 <= j < m as int
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap47/DoubleHashFlatHashTableStEph.rs:129: error: assume() [algorithmic] - assume(forall |j: int| 0 <= j < m as int
        122 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             ...
        127 |             // uses our runtime step. The wf existential witness s == step.
@@ -255,15 +255,12 @@ Real Actionable Holes: 9 (10 total - 1 structural FPs in count)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 12:29:05 -07:00
-Ended:     2026-03-17 12:29:05 -07:00
-Duration:  47ms
+Started:   2026-03-17 19:40:38 -07:00
+Ended:     2026-03-17 19:40:38 -07:00
+Duration:  51ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
-=================================
-
-Started:   2026-03-17 12:29:05 -07:00
-Ended:     2026-03-17 12:29:05 -07:00
-Duration:  47ms
+ed:     2026-03-17 19:40:38 -07:00
+Duration:  51ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log

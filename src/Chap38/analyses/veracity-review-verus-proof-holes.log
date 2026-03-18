@@ -58,7 +58,7 @@ Table of Contents:
       8 × external_body
    Info: 9 total
 ❌ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaStEph.rs:475: error: assume() - proof { assume(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaStEph.rs:475: error: assume() [algorithmic] - proof { assume(
        442 |         fn expose(&self) -> (exposed: Exposed<T>)
             ...
        473 |                     let r = node.right.clone();
@@ -121,9 +121,12 @@ Accepted (reviewed): 9 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 12:29:05 -07:00
-Ended:     2026-03-17 12:29:05 -07:00
-Duration:  26ms
+Started:   2026-03-17 19:40:38 -07:00
+Ended:     2026-03-17 19:40:38 -07:00
+Duration:  29ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
+d:     2026-03-17 19:40:38 -07:00
+Duration:  29ms
+
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log

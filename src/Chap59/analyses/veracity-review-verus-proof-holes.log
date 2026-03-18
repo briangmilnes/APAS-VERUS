@@ -24,7 +24,7 @@ Table of Contents:
 ✓ JohnsonMtEphI64.rs
 ✓ JohnsonStEphF64.rs
 ❌ JohnsonStEphI64.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap59/JohnsonStEphI64.rs:437: error: assume() - proof { assume(reweighted@.A.len() * 2 + 2 <= usize::MAX as 
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap59/JohnsonStEphI64.rs:437: error: assume() [algorithmic] - proof { assume(reweighted@.A.len() * 2 + 2 <= usize::MAX as 
        366 |     pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>)
             ...
        435 |             // Dijkstra requires source < graph.vertices().size().
@@ -109,12 +109,12 @@ Warnings: 3 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 12:29:05 -07:00
-Ended:     2026-03-17 12:29:05 -07:00
-Duration:  8ms
+Started:   2026-03-17 19:40:38 -07:00
+Ended:     2026-03-17 19:40:38 -07:00
+Duration:  5ms
 
 Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
-
-Duration:  8ms
+38 -07:00
+Duration:  5ms
 
 Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log

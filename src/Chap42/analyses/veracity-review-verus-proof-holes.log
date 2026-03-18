@@ -31,7 +31,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap42/TableStEph.rs:2119: info: accept()
    Info: 1 total
    8 clean proof functions
-❌ TableStPer.rs
+⚠ TableStPer.rs
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap42/TableStPer.rs:2036: error: fn_missing_wf_ensures - fn collect_by_key — ensures should include grouped.spec_tablestper_wf() for return type TableStPer
       2019 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
             ...
@@ -42,7 +42,6 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap42/TableStPer.rs:2194: info: accept()
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap42/TableStPer.rs:2205: info: accept()
    Info: 2 total
-   Proof functions: 12 total (12 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -102,9 +101,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 12:29:05 -07:00
-Ended:     2026-03-17 12:29:05 -07:00
-Duration:  92ms
+Started:   2026-03-17 19:40:38 -07:00
+Ended:     2026-03-17 19:40:38 -07:00
+Duration:  102ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap42/analyses/veracity-review-verus-proof-holes.log

@@ -200,8 +200,8 @@ Accepted (reviewed): 46 total
    46 × accept()
 
 Structural False Positives: 2 detected (language limitations, not missing proof)
-   1 × STD_TRAIT_IMPL
    1 × OPAQUE_EXTERNAL
+   1 × STD_TRAIT_IMPL
 
 Real Actionable Holes: 0 (2 total - 2 structural FPs in count)
 
@@ -209,11 +209,11 @@ Real Actionable Holes: 0 (2 total - 2 structural FPs in count)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 12:29:05 -07:00
-Ended:     2026-03-17 12:29:05 -07:00
-Duration:  165ms
+Started:   2026-03-17 19:40:37 -07:00
+Ended:     2026-03-17 19:40:38 -07:00
+Duration:  167ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
-uration:  165ms
+Duration:  167ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log

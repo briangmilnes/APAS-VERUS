@@ -83,9 +83,9 @@ Holes Found: 0 total
 
 Accepted (reviewed): 10 total
    6 × external_body_accept_hole
+   1 × external_type_specification_accept_hole
    1 × accept()
    1 × enum_outside_verus_accept_hole
-   1 × external_type_specification_accept_hole
    1 × struct_outside_verus_accept_hole
 
 Structural False Positives: 4 detected (language limitations, not missing proof)
@@ -99,12 +99,12 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 12:29:04 -07:00
-Ended:     2026-03-17 12:29:04 -07:00
+Started:   2026-03-17 19:40:37 -07:00
+Ended:     2026-03-17 19:40:37 -07:00
 Duration:  4ms
 
 Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
-26-03-17 12:29:04 -07:00
+26-03-17 19:40:37 -07:00
 Duration:  4ms
 
 Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log

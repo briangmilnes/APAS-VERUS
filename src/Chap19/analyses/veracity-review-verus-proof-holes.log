@@ -84,8 +84,8 @@ Function Specs:
 Holes Found: 0 total
 
 Accepted (reviewed): 6 total
-   3 × trivial_spec_wf
    3 × accept()
+   3 × trivial_spec_wf
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -93,9 +93,11 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 12:29:04 -07:00
-Ended:     2026-03-17 12:29:04 -07:00
-Duration:  52ms
+Started:   2026-03-17 19:40:37 -07:00
+Ended:     2026-03-17 19:40:37 -07:00
+Duration:  49ms
 
 Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
+Duration:  49ms
+
 Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log

@@ -60,7 +60,7 @@ Table of Contents:
       10 × external_body
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ AugOrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableStPer.rs:102: error: assume() - proof { assume(reducer.requires((&reduced, &pair.1))); }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableStPer.rs:102: error: assume() [closure] - proof { assume(reducer.requires((&reduced, &pair.1))); }
         75 |     pub fn calculate_reduction<K: StT + Ord, V: StT, F>(
             ...
        100 |         {
@@ -75,7 +75,7 @@ Table of Contents:
        633 |         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableStPer.rs:644: error: external_body - #[verifier::external_body]
        645 |         fn next_key(&self, k: &K) -> (successor: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableStPer.rs:705: error: assume() - proof { assume(left.reducer.requires(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableStPer.rs:705: error: assume() [closure] - proof { assume(left.reducer.requires(
        697 |         fn join_key(left: &Self, right: &Self) -> (joined: Self)
             ...
        703 |                 left.cached_reduction.clone()
@@ -100,14 +100,14 @@ Table of Contents:
 ✓ Example43_1.rs
    1 clean proof function
 ❌ OrderedSetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:241: error: assume() - proof { assume(count == self@.len()); }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:241: error: assume() [rwlock:reader] - proof { assume(count == self@.len()); }
        236 |         fn size(&self) -> (count: usize) {
             ...
        239 |             let inner = read_handle.borrow();
        240 |             let count = inner.size();
        242 |             read_handle.release_read();
        243 |             count
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:269: error: assume() - proof { assume(found == self@.contains(x@)); }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:269: error: assume() [rwlock:reader] - proof { assume(found == self@.contains(x@)); }
        264 |         fn find(&self, x: &T) -> (found: B) {
             ...
        267 |             let inner = read_handle.borrow();
@@ -116,87 +116,96 @@ Table of Contents:
        271 |             found
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:345: error: external_body - #[verifier::external_body]
        346 |         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>) {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:385: error: assume() - proof { assume(inner@ =~= self@); }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:385: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
        378 |         fn first(&self) -> (first: Option<T>)
             ...
        383 |             let inner = read_handle.borrow();
        384 |             let first = inner.first();
        386 |             read_handle.release_read();
        387 |             first
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:397: error: assume() - proof { assume(inner@ =~= self@); }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:397: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
        390 |         fn last(&self) -> (last: Option<T>)
             ...
        395 |             let inner = read_handle.borrow();
        396 |             let last = inner.last();
        398 |             read_handle.release_read();
        399 |             last
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:409: error: assume() - proof { assume(inner@ =~= self@); }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:409: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
        402 |         fn previous(&self, k: &T) -> (predecessor: Option<T>)
             ...
        407 |             let inner = read_handle.borrow();
        408 |             let predecessor = inner.previous(k);
        410 |             read_handle.release_read();
        411 |             predecessor
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:421: error: assume() - proof { assume(inner@ =~= self@); }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:421: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
        414 |         fn next(&self, k: &T) -> (successor: Option<T>)
             ...
        419 |             let inner = read_handle.borrow();
        420 |             let successor = inner.next(k);
        422 |             read_handle.release_read();
        423 |             successor
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:434: error: assume() - assume(left.spec_orderedsetsteph_wf());
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:434: error: assume() [rwlock:predicate] - assume(left.spec_orderedsetsteph_wf());
        426 |         fn split(&mut self, k: &T) -> (split: (Self, B, Self)) {
             ...
        432 |             write_handle.release_write(empty_val);
        433 |             proof {
        435 |                 assume(right.spec_orderedsetsteph_wf());
        436 |             }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:435: error: assume() - assume(right.spec_orderedsetsteph_wf());
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:435: error: assume() [rwlock:predicate] - assume(right.spec_orderedsetsteph_wf());
        426 |         fn split(&mut self, k: &T) -> (split: (Self, B, Self)) {
             ...
        433 |             proof {
        434 |                 assume(left.spec_orderedsetsteph_wf());
        436 |             }
        437 |             (from_st(left), found, from_st(right))
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:459: error: assume() - proof { assume(range.spec_orderedsetsteph_wf()); }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:459: error: assume() [rwlock:predicate] - proof { assume(range.spec_orderedsetsteph_wf()); }
        453 |         fn get_range(&self, k1: &T, k2: &T) -> (range: Self) {
             ...
        457 |             let range = inner.get_range(k1, k2);
        458 |             read_handle.release_read();
        460 |             from_st(range)
        461 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:470: error: assume() - proof { assume(inner@ =~= self@); }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:470: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
        463 |         fn rank(&self, k: &T) -> (rank: usize)
             ...
        468 |             let inner = read_handle.borrow();
        469 |             let rank = inner.rank(k);
        471 |             read_handle.release_read();
        472 |             rank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:482: error: assume() - proof { assume(inner@ =~= self@); }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:482: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
        475 |         fn select(&self, i: usize) -> (selected: Option<T>)
             ...
        480 |             let inner = read_handle.borrow();
        481 |             let selected = inner.select(i);
        483 |             read_handle.release_read();
        484 |             selected
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:495: error: assume() - assume(left.spec_orderedsetsteph_wf());
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:495: error: assume() [rwlock:predicate] - assume(left.spec_orderedsetsteph_wf());
        487 |         fn split_rank(&mut self, i: usize) -> (split: (Self, Self)) {
             ...
        493 |             write_handle.release_write(empty_val);
        494 |             proof {
        496 |                 assume(right.spec_orderedsetsteph_wf());
        497 |             }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:496: error: assume() - assume(right.spec_orderedsetsteph_wf());
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:496: error: assume() [rwlock:predicate] - assume(right.spec_orderedsetsteph_wf());
        487 |         fn split_rank(&mut self, i: usize) -> (split: (Self, Self)) {
             ...
        494 |             proof {
        495 |                 assume(left.spec_orderedsetsteph_wf());
        497 |             }
        498 |             (from_st(left), from_st(right))
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:434: info: structural_false_positive RWLOCK_GHOST split [low]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:435: info: structural_false_positive RWLOCK_GHOST split [low]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:495: info: structural_false_positive RWLOCK_GHOST split_rank [low]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:496: info: structural_false_positive RWLOCK_GHOST split_rank [low]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:241: info: structural_false_positive RWLOCK_GHOST size [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:269: info: structural_false_positive RWLOCK_GHOST find [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:385: info: structural_false_positive RWLOCK_GHOST first [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:397: info: structural_false_positive RWLOCK_GHOST last [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:409: info: structural_false_positive RWLOCK_GHOST previous [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:421: info: structural_false_positive RWLOCK_GHOST next [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:434: info: structural_false_positive RWLOCK_GHOST split [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:435: info: structural_false_positive RWLOCK_GHOST split [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:459: info: structural_false_positive RWLOCK_GHOST get_range [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:470: info: structural_false_positive RWLOCK_GHOST rank [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:482: info: structural_false_positive RWLOCK_GHOST select [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:495: info: structural_false_positive RWLOCK_GHOST split_rank [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:496: info: structural_false_positive RWLOCK_GHOST split_rank [medium]
    Holes: 14 total
       13 × assume()
       1 × external_body
@@ -265,139 +274,36 @@ Table of Contents:
    Holes: 9 total
       9 × external_body
 ❌ OrderedTableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:511: error: assume() - proof { assume(self@.dom().len() == 0); }
-       504 |         fn first_key(&self) -> (first: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:504: error: external_body - #[verifier::external_body]
+       505 |         fn first_key(&self) -> (first: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:522: error: external_body - #[verifier::external_body]
+       523 |         fn last_key(&self) -> (last: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:540: error: external_body - #[verifier::external_body]
+       541 |         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:559: error: external_body - #[verifier::external_body]
+       560 |         fn next_key(&self, k: &K) -> (successor: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:650: error: external_body - #[verifier::external_body]
+       651 |         fn rank_key(&self, k: &K) -> (rank: usize)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:666: error: external_body - #[verifier::external_body]
+       667 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:876: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include constructed.spec_orderedtablemteph_wf() for return type OrderedTableMtEph
+       865 |         fn clone(&self) -> (cloned: Self)
             ...
-       509 |             let n = entries.length();
-       510 |             if n == 0 {
-       512 |                 None
-       513 |             } else {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:527: error: assume() - assume(self@.dom().len() > 0);
-       504 |         fn first_key(&self) -> (first: Option<K>)
-            ...
-       525 |                 }
-       526 |                 proof {
-       528 |                     assume(self@.dom().contains(best@));
-       529 |                     assume(forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(best, t));
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:528: error: assume() - assume(self@.dom().contains(best@));
-       504 |         fn first_key(&self) -> (first: Option<K>)
-            ...
-       526 |                 proof {
-       527 |                     assume(self@.dom().len() > 0);
-       529 |                     assume(forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(best, t));
-       530 |                 }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:529: error: assume() - assume(forall|t: K| self@.dom().contains(t@) ==> TotalOrder:
-       504 |         fn first_key(&self) -> (first: Option<K>)
-            ...
-       527 |                     assume(self@.dom().len() > 0);
-       528 |                     assume(self@.dom().contains(best@));
-       530 |                 }
-       531 |                 Some(best)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:542: error: assume() - proof { assume(self@.dom().len() == 0); }
-       535 |         fn last_key(&self) -> (last: Option<K>)
-            ...
-       540 |             let n = entries.length();
-       541 |             if n == 0 {
-       543 |                 None
-       544 |             } else {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:558: error: assume() - assume(self@.dom().len() > 0);
-       535 |         fn last_key(&self) -> (last: Option<K>)
-            ...
-       556 |                 }
-       557 |                 proof {
-       559 |                     assume(self@.dom().contains(best@));
-       560 |                     assume(forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, best));
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:559: error: assume() - assume(self@.dom().contains(best@));
-       535 |         fn last_key(&self) -> (last: Option<K>)
-            ...
-       557 |                 proof {
-       558 |                     assume(self@.dom().len() > 0);
-       560 |                     assume(forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, best));
-       561 |                 }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:560: error: assume() - assume(forall|t: K| self@.dom().contains(t@) ==> TotalOrder:
-       535 |         fn last_key(&self) -> (last: Option<K>)
-            ...
-       558 |                     assume(self@.dom().len() > 0);
-       559 |                     assume(self@.dom().contains(best@));
-       561 |                 }
-       562 |                 Some(best)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:590: error: assume() - assume(best matches Some(v) ==> self@.dom().contains(v@));
-       566 |         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ...
-       588 |             }
-       589 |             proof {
-       591 |                 assume(best matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@);
-       592 |                 assume(best matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v));
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:591: error: assume() - assume(best matches Some(v) ==> TotalOrder::le(v, *k) && v@ 
-       566 |         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ...
-       589 |             proof {
-       590 |                 assume(best matches Some(v) ==> self@.dom().contains(v@));
-       592 |                 assume(best matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v));
-       593 |             }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:592: error: assume() - assume(best matches Some(v) ==> forall|t: K| self@.dom().con
-       566 |         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ...
-       590 |                 assume(best matches Some(v) ==> self@.dom().contains(v@));
-       591 |                 assume(best matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@);
-       593 |             }
-       594 |             best
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:621: error: assume() - assume(best matches Some(v) ==> self@.dom().contains(v@));
-       597 |         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ...
-       619 |             }
-       620 |             proof {
-       622 |                 assume(best matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@);
-       623 |                 assume(best matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t));
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:622: error: assume() - assume(best matches Some(v) ==> TotalOrder::le(*k, v) && v@ 
-       597 |         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ...
-       620 |             proof {
-       621 |                 assume(best matches Some(v) ==> self@.dom().contains(v@));
-       623 |                 assume(best matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t));
-       624 |             }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:623: error: assume() - assume(best matches Some(v) ==> forall|t: K| self@.dom().con
-       597 |         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ...
-       621 |                 assume(best matches Some(v) ==> self@.dom().contains(v@));
-       622 |                 assume(best matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@);
-       624 |             }
-       625 |             best
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:722: error: assume() - assume(count <= self@.dom().len());
-       700 |         fn rank_key(&self, k: &K) -> (rank: usize)
-            ...
-       720 |             }
-       721 |             proof {
-       723 |                 assume(count as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len());
-       724 |             }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:723: error: assume() - assume(count as int == self@.dom().filter(|x: K::V| exists|t
-       700 |         fn rank_key(&self, k: &K) -> (rank: usize)
-            ...
-       721 |             proof {
-       722 |                 assume(count <= self@.dom().len());
-       724 |             }
-       725 |             count
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:728: error: external_body - #[verifier::external_body]
-       729 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:938: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include constructed.spec_orderedtablemteph_wf() for return type OrderedTableMtEph
-       927 |         fn clone(&self) -> (cloned: Self)
-            ...
-       936 |     }
-       937 | 
-       939 |         requires entries.spec_avltreeseqstper_wf()
-       940 |         ensures constructed@.dom().finite()
-   Holes: 17 total
-      16 × assume()
-      1 × external_body
+       874 |     }
+       875 | 
+       877 |         requires entries.spec_avltreeseqstper_wf()
+       878 |         ensures constructed@.dom().finite()
+   Holes: 6 total
+      6 × external_body
 ❌ OrderedTableMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:81: error: assume() - assume(inner.spec_orderedtablestper_wf());
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:81: error: assume() [rwlock:predicate] - assume(inner.spec_orderedtablestper_wf());
         73 |     fn from_st_table<K: MtKey + 'static, V: StTInMtT + Ord + 'static>(
             ...
         79 |         let ghost view = inner@;
         80 |         proof {
         82 |         }
         83 |         OrderedTableMtPer {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:242: error: assume() - proof { assume(count == self@.dom().len()); }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:242: error: assume() [rwlock:reader] - proof { assume(count == self@.dom().len()); }
        238 |         fn size(&self) -> (count: usize) {
             ...
        240 |             let inner = read_handle.borrow();
@@ -419,7 +325,8 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:522: info: accept()
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:526: info: accept()
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:527: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:81: info: structural_false_positive RWLOCK_GHOST from_st_table [low]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:81: info: structural_false_positive RWLOCK_GHOST from_st_table [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:242: info: structural_false_positive RWLOCK_GHOST size [medium]
    Holes: 8 total
       2 × assume()
       6 × external_body
@@ -550,9 +457,12 @@ Function Specs:
    660 total fns
 
 
-Holes Found: 101 total
-   33 × assume() (32%)
-   68 × external_body (67%)
+Holes Found: 90 total
+   17 × assume() (18%)
+      9 × rwlock:reader
+      6 × rwlock:predicate
+      2 × closure
+   73 × external_body (81%)
 
 Warnings: 7 total
    4 × fn_missing_requires
@@ -561,26 +471,19 @@ Warnings: 7 total
 Accepted (reviewed): 5 total
    5 × accept()
 
-Structural False Positives: 8 detected (language limitations, not missing proof)
-   5 × RWLOCK_GHOST
+Structural False Positives: 18 detected (language limitations, not missing proof)
+   15 × RWLOCK_GHOST
    2 × STD_TRAIT_IMPL
    1 × OPAQUE_EXTERNAL
 
-Real Actionable Holes: 93 (101 total - 8 structural FPs in count)
+Real Actionable Holes: 72 (90 total - 18 structural FPs in count)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 12:29:05 -07:00
-Ended:     2026-03-17 12:29:05 -07:00
-Duration:  105ms
-
-Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
-===========================================================
-
-Started:   2026-03-17 12:29:05 -07:00
-Ended:     2026-03-17 12:29:05 -07:00
-Duration:  105ms
+Started:   2026-03-17 19:43:27 -07:00
+Ended:     2026-03-17 19:43:27 -07:00
+Duration:  89ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
