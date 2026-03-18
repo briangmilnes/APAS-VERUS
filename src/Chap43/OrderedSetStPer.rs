@@ -25,7 +25,7 @@ pub mod OrderedSetStPer {
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
+    use crate::vstdplus::feq::feq::{feq, obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
@@ -706,43 +706,164 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn split(&self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
-            ensures
-                self@.finite(),
-                split.1 == self@.contains(k@),
-                split.0@.finite(),
-                split.2@.finite(),
-                split.0@.subset_of(self@),
-                split.2@.subset_of(self@),
-                split.0@.disjoint(split.2@),
-                !split.0@.contains(k@),
-                !split.2@.contains(k@),
-                forall|x| self@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@,
         {
-            let seq = self.to_seq();
-
-            let array_seq = ArraySeqStPerS::tabulate(&|i| seq.nth(i).clone(), seq.length());
-
-            let mut left_vec = Vec::new();
-            let mut right_vec = Vec::new();
+            assert(obeys_feq_full_trigger::<T>());
+            let elements = &self.base_set.elements;
+            let size = elements.length();
+            proof { elements@.unique_seq_to_set(); }
+            let mut left = Self::empty();
+            let mut right = Self::empty();
             let mut found = false;
-            for i in 0..array_seq.length() {
-                let elem = array_seq.nth(i).clone();
-                if elem < *k {
-                    left_vec.push(elem);
-                } else if elem > *k {
-                    right_vec.push(elem);
-                } else {
+            let mut j: usize = 0;
+            while j < size
+                invariant
+                    j <= size,
+                    elements.spec_avltreeseqstper_wf(),
+                    elements@.no_duplicates(),
+                    size as nat == elements@.len(),
+                    obeys_feq_full::<T>(),
+                    self@.finite(),
+                    self@ =~= elements@.to_set(),
+                    left@.finite(),
+                    right@.finite(),
+                    left@.subset_of(self@),
+                    right@.subset_of(self@),
+                    left.spec_orderedsetstper_wf(),
+                    right.spec_orderedsetstper_wf(),
+                    left@.disjoint(right@),
+                    !left@.contains(k@),
+                    !right@.contains(k@),
+                    found ==> self@.contains(k@),
+                    !found ==> forall|idx: int| #![trigger elements@[idx]]
+                        0 <= idx < j ==> elements@[idx] != k@,
+                    // Provenance: left/right elements come from visited indices.
+                    forall|x| left@.contains(x) ==>
+                        exists|idx: int| 0 <= idx < j && #[trigger] elements@[idx] == x,
+                    forall|x| right@.contains(x) ==>
+                        exists|idx: int| 0 <= idx < j && #[trigger] elements@[idx] == x,
+                    // Coverage: every visited element is accounted for.
+                    forall|idx: int| #![trigger elements@[idx]]
+                        0 <= idx < j ==> left@.contains(elements@[idx]) || right@.contains(elements@[idx]) || elements@[idx] == k@,
+                decreases size - j,
+            {
+                let elem = elements.nth(j);
+                if feq(elem, k) {
                     found = true;
+                    proof {
+                        assert(elem@ == elements@[j as int]);
+                        assert(elements@[j as int] == k@);
+                        assert(self@.contains(k@));
+                    }
+                } else {
+                    let v = elem.clone();
+                    proof {
+                        lemma_cloned_view_eq(*elem, v);
+                        assert(v@ == elements@[j as int]);
+                        assert(elements@.to_set().contains(v@));
+                        assert(v@ != k@);
+                    }
+                    if v < *k {
+                        let ghost old_left_view = left@;
+                        left = left.insert(v);
+                        proof {
+                            assert(left@.subset_of(self@)) by {
+                                assert forall|x| #[trigger] left@.contains(x) implies self@.contains(x) by {
+                                    if !old_left_view.contains(x) {
+                                        assert(x == elem@);
+                                    }
+                                };
+                            };
+                            assert(!left@.contains(k@)) by {
+                                assert forall|x| #[trigger] left@.contains(x) implies x != k@ by {
+                                    if !old_left_view.contains(x) {
+                                        assert(x == elem@);
+                                    }
+                                };
+                            };
+                            assert(left@.disjoint(right@)) by {
+                                assert forall|x| !(#[trigger] left@.contains(x) && right@.contains(x)) by {
+                                    if left@.contains(x) && right@.contains(x) {
+                                        if !old_left_view.contains(x) {
+                                            assert(x == elem@);
+                                            assert(x == elements@[j as int]);
+                                            let idx = choose|idx: int| 0 <= idx < j && elements@[idx] == x;
+                                            assert(elements@[idx] == elements@[j as int]);
+                                        }
+                                    }
+                                };
+                            };
+                            assert forall|x| left@.contains(x) implies
+                                exists|idx: int| 0 <= idx < j + 1 && #[trigger] elements@[idx] == x by {
+                                if old_left_view.contains(x) {
+                                } else {
+                                    assert(x == elem@);
+                                    assert(elements@[j as int] == x);
+                                }
+                            };
+                        }
+                    } else {
+                        let ghost old_right_view = right@;
+                        right = right.insert(v);
+                        proof {
+                            assert(right@.subset_of(self@)) by {
+                                assert forall|x| #[trigger] right@.contains(x) implies self@.contains(x) by {
+                                    if !old_right_view.contains(x) {
+                                        assert(x == elem@);
+                                    }
+                                };
+                            };
+                            assert(!right@.contains(k@)) by {
+                                assert forall|x| #[trigger] right@.contains(x) implies x != k@ by {
+                                    if !old_right_view.contains(x) {
+                                        assert(x == elem@);
+                                    }
+                                };
+                            };
+                            assert(left@.disjoint(right@)) by {
+                                assert forall|x| !(#[trigger] left@.contains(x) && right@.contains(x)) by {
+                                    if left@.contains(x) && right@.contains(x) {
+                                        if !old_right_view.contains(x) {
+                                            assert(x == elem@);
+                                            assert(x == elements@[j as int]);
+                                            let idx = choose|idx: int| 0 <= idx < j && elements@[idx] == x;
+                                            assert(elements@[idx] == elements@[j as int]);
+                                        }
+                                    }
+                                };
+                            };
+                            assert forall|x| right@.contains(x) implies
+                                exists|idx: int| 0 <= idx < j + 1 && #[trigger] elements@[idx] == x by {
+                                if old_right_view.contains(x) {
+                                } else {
+                                    assert(x == elem@);
+                                    assert(elements@[j as int] == x);
+                                }
+                            };
+                        }
+                    }
                 }
+                j = j + 1;
             }
-
-            let left_seq = AVLTreeSeqStPerS::from_vec(left_vec);
-            let right_seq = AVLTreeSeqStPerS::from_vec(right_vec);
-
-            (Self::from_seq(left_seq), found, Self::from_seq(right_seq))
+            proof {
+                if !found {
+                    if self@.contains(k@) {
+                        assert(elements@.to_set().contains(k@));
+                        assert(elements@.contains(k@));
+                        let idx = choose|idx: int| 0 <= idx < elements@.len() && elements@[idx] == k@;
+                        assert(elements@[idx] != k@);
+                    }
+                }
+                assert forall|x| self@.contains(x)
+                    implies left@.contains(x) || right@.contains(x) || x == k@ by {
+                    assert(elements@.to_set().contains(x));
+                    assert(elements@.contains(x));
+                    let idx = choose|idx: int| 0 <= idx < elements@.len() && elements@[idx] == x;
+                    assert(left@.contains(elements@[idx]) || right@.contains(elements@[idx]) || elements@[idx] == k@);
+                };
+            }
+            (left, found, right)
         }
 
         fn join(left: &Self, right: &Self) -> (joined: Self)

@@ -21,10 +21,10 @@ Table of Contents:
 =================================================================
 
 ℹ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:52: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:52: info: accept()
    Info: 1 total
 ℹ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:67: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:67: info: accept()
    Info: 1 total
 
 =================================================================
@@ -78,9 +78,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 08:33:10 -07:00
-Ended:     2026-03-18 08:33:10 -07:00
+Started:   2026-03-18 09:31:52 -07:00
+Ended:     2026-03-18 09:31:52 -07:00
 Duration:  7ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
+alyses/veracity-review-verus-proof-holes.log
