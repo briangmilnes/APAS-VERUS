@@ -161,7 +161,7 @@ pub mod OrderedSetMtEph {
                 self@.finite(),
                 self@.len() == 0 <==> first matches None,
                 first matches Some(v) ==> self@.contains(v@),
-                first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(v, t);
+                first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> #[trigger] TotalOrder::le(v, t);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + last)
         fn last(&self) -> (last: Option<T>)
@@ -170,7 +170,7 @@ pub mod OrderedSetMtEph {
                 self@.finite(),
                 self@.len() == 0 <==> last matches None,
                 last matches Some(v) ==> self@.contains(v@),
-                last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(t, v);
+                last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> #[trigger] TotalOrder::le(t, v);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + scan)
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
@@ -179,7 +179,7 @@ pub mod OrderedSetMtEph {
                 self@.finite(),
                 predecessor matches Some(v) ==> self@.contains(v@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
-                predecessor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+                predecessor matches Some(v) ==> forall|t: T| #![trigger t@] self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + scan)
         fn next(&self, k: &T) -> (successor: Option<T>)
@@ -188,7 +188,7 @@ pub mod OrderedSetMtEph {
                 self@.finite(),
                 successor matches Some(v) ==> self@.contains(v@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
-                successor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+                successor matches Some(v) ==> forall|t: T| #![trigger t@] self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + partition)
         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
@@ -209,7 +209,7 @@ pub mod OrderedSetMtEph {
             ensures
                 self@.finite(),
                 rank <= self@.len(),
-                rank as int == self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+                rank as int == self@.filter(|x: T::V| exists|t: T| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + index)
         fn select(&self, i: usize) -> (selected: Option<T>)
@@ -218,7 +218,7 @@ pub mod OrderedSetMtEph {
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
                 selected matches Some(v) ==> self@.contains(v@),
-                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
+                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + partition)
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
