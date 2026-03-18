@@ -26,18 +26,15 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:83: info: external_type_specification_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:84: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:95: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:105: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:132: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:151: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:163: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:185: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:19: info: struct_outside_verus_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:25: info: enum_outside_verus_accept_hole
-   Info: 10 total
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:105: info: structural_false_positive THREAD_SPAWN join [high]
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:132: info: structural_false_positive THREAD_SPAWN spawn_join [high]
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:163: info: structural_false_positive THREAD_SPAWN spawn [high]
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:185: info: structural_false_positive THREAD_SPAWN wait [medium]
+   Info: 6 total
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:105: info: structural_false_positive THREAD_SPAWN join — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:132: info: structural_false_positive THREAD_SPAWN spawn_join — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:163: info: structural_false_positive THREAD_SPAWN spawn — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:185: info: structural_false_positive THREAD_SPAWN wait — #[verifier::external_body] // accept hole [medium]
+   Info: 4 × structural_false_positive
 ✓ src/Chap03/InsertionSortStEph.rs
 ✓ src/Chap05/KleeneStPer.rs
    9 clean proof functions
@@ -375,21 +372,18 @@ Table of Contents:
 ✓ src/Chap28/MaxContigSubSumReducedStEph.rs
 ℹ src/Chap30/Probability.rs
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:51: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:67: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:78: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:86: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:109: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:116: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:123: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:132: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:141: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:150: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:159: info: external_body_accept_hole
-   Info: 11 total
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:67: info: structural_false_positive STD_TRAIT_IMPL eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:78: info: structural_false_positive STD_TRAIT_IMPL partial_cmp [high]
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:86: info: structural_false_positive STD_TRAIT_IMPL cmp [high]
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:109: info: structural_false_positive STD_TRAIT_IMPL hash [high]
+   Info: 7 total
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:67: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:78: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:86: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:109: info: structural_false_positive STD_TRAIT_IMPL hash — #[verifier::external_body]  // accept hole [high]
+   Info: 4 × structural_false_positive
 ✓ src/Chap35/OrderStatSelectMtEph.rs
    2 clean proof functions
 ✓ src/Chap35/OrderStatSelectMtPer.rs
@@ -404,30 +398,24 @@ Table of Contents:
    3 clean proof functions
 ✓ src/Chap36/QuickSortStEph.rs
    2 clean proof functions
-❌ src/Chap37/AVLTreeSeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1117: error: external_body - #[verifier::external_body]
-      1118 |         fn next(&mut self) -> (next: Option<&'a T>)
+ℹ src/Chap37/AVLTreeSeq.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1226: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1227: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1228: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1251: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1117: info: structural_false_positive STD_TRAIT_IMPL next [high]
-   Holes: 1 total
-      1 × external_body
    Info: 4 total
-   Proof functions: 3 total (3 clean, 0 holed)
-❌ src/Chap37/AVLTreeSeqMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:642: error: external_body - #[verifier::external_body]
-       643 |         fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1117: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+   Info: 1 × structural_false_positive
+   3 clean proof functions
+ℹ src/Chap37/AVLTreeSeqMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:734: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:735: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:736: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:749: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:642: info: structural_false_positive OPAQUE_EXTERNAL subseq_copy [medium]
-   Holes: 1 total
-      1 × external_body
    Info: 4 total
-   Proof functions: 2 total (2 clean, 0 holed)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:642: info: structural_false_positive OPAQUE_EXTERNAL subseq_copy — #[verifier::external_body] [medium]
+   Info: 1 × structural_false_positive
+   2 clean proof functions
 ℹ src/Chap37/AVLTreeSeqStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:690: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1108: info: accept()
@@ -638,13 +626,6 @@ Table of Contents:
    Info: 7 total
    8 clean proof functions
 ❌ src/Chap41/AVLTreeSetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:245: error: assume() [rwlock:reader] - proof { assume(count == self@.len()); }
-       241 |         fn size(&self) -> (count: usize)
-            ...
-       243 |             let handle = self.inner.acquire_read();
-       244 |             let count = handle.borrow().size();
-       246 |             handle.release_read();
-       247 |             count
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:250: error: external_body - #[verifier::external_body]
        251 |         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:294: error: external_body - #[verifier::external_body]
@@ -655,11 +636,6 @@ Table of Contents:
        413 |         fn difference(&self, other: &Self) -> (remaining: Self)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:423: error: external_body - #[verifier::external_body]
        424 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:622: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
-       623 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:623: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
-       624 | 
-       625 |     // 12. macros
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:312: error: fn_missing_requires - fn parallel_filter — exec fn should have requires
        295 |         fn filter<F: Pred<T> + Clone>(
             ...
@@ -676,13 +652,14 @@ Table of Contents:
        375 |             {
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:461: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:546: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:245: info: structural_false_positive RWLOCK_GHOST size [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:622: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph [high]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:623: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph [high]
-   Holes: 8 total
-      1 × assume()
-      2 × unsafe impl
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:245: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:622: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph — unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:623: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph — unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {} [high]
+   Holes: 5 total
       5 × external_body
+   Info: 3 × structural_false_positive
+      2 × UNSAFE_SEND_SYNC
+      1 × RWLOCK_GHOST
    Info: 2 total
 ❌ src/Chap41/AVLTreeSetMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:225: error: external_body - #[verifier::external_body]
@@ -699,8 +676,6 @@ Table of Contents:
        500 |         fn delete(&self, x: &T) -> (updated: Self)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:509: error: external_body - #[verifier::external_body]
        510 |         fn insert(&self, x: T) -> (updated: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:580: error: external_body - #[verifier::external_body]
-       581 |         fn cmp(&self, other: &Self) -> (ord: Ordering)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:231: error: fn_missing_requires - fn parallel_sort — exec fn should have requires
        226 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
             ...
@@ -712,9 +687,11 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:545: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:567: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:606: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:580: info: structural_false_positive STD_TRAIT_IMPL cmp [high]
-   Holes: 8 total
-      8 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:580: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+   Holes: 7 total
+      7 × external_body
+   Info: 1 × structural_false_positive
+      1 × STD_TRAIT_IMPL
    Info: 4 total
 ❌ src/Chap41/AVLTreeSetStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1059: error: assume() [algorithmic] - assume(new_vec@.len() < usize::MAX);
@@ -835,115 +812,25 @@ Table of Contents:
 ✓ src/Chap43/Example43_1.rs
    1 clean proof function
 ❌ src/Chap43/OrderedSetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:241: error: assume() [rwlock:reader] - proof { assume(count == self@.len()); }
-       236 |         fn size(&self) -> (count: usize) {
-            ...
-       239 |             let inner = read_handle.borrow();
-       240 |             let count = inner.size();
-       242 |             read_handle.release_read();
-       243 |             count
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:269: error: assume() [rwlock:reader] - proof { assume(found == self@.contains(x@)); }
-       264 |         fn find(&self, x: &T) -> (found: B) {
-            ...
-       267 |             let inner = read_handle.borrow();
-       268 |             let found = inner.find(x);
-       270 |             read_handle.release_read();
-       271 |             found
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:345: error: external_body - #[verifier::external_body]
        346 |         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:385: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
-       378 |         fn first(&self) -> (first: Option<T>)
-            ...
-       383 |             let inner = read_handle.borrow();
-       384 |             let first = inner.first();
-       386 |             read_handle.release_read();
-       387 |             first
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:397: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
-       390 |         fn last(&self) -> (last: Option<T>)
-            ...
-       395 |             let inner = read_handle.borrow();
-       396 |             let last = inner.last();
-       398 |             read_handle.release_read();
-       399 |             last
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:409: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
-       402 |         fn previous(&self, k: &T) -> (predecessor: Option<T>)
-            ...
-       407 |             let inner = read_handle.borrow();
-       408 |             let predecessor = inner.previous(k);
-       410 |             read_handle.release_read();
-       411 |             predecessor
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:421: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
-       414 |         fn next(&self, k: &T) -> (successor: Option<T>)
-            ...
-       419 |             let inner = read_handle.borrow();
-       420 |             let successor = inner.next(k);
-       422 |             read_handle.release_read();
-       423 |             successor
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:434: error: assume() [rwlock:predicate] - assume(left.spec_orderedsetsteph_wf());
-       426 |         fn split(&mut self, k: &T) -> (split: (Self, B, Self)) {
-            ...
-       432 |             write_handle.release_write(empty_val);
-       433 |             proof {
-       435 |                 assume(right.spec_orderedsetsteph_wf());
-       436 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:435: error: assume() [rwlock:predicate] - assume(right.spec_orderedsetsteph_wf());
-       426 |         fn split(&mut self, k: &T) -> (split: (Self, B, Self)) {
-            ...
-       433 |             proof {
-       434 |                 assume(left.spec_orderedsetsteph_wf());
-       436 |             }
-       437 |             (from_st(left), found, from_st(right))
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:459: error: assume() [rwlock:predicate] - proof { assume(range.spec_orderedsetsteph_wf()); }
-       453 |         fn get_range(&self, k1: &T, k2: &T) -> (range: Self) {
-            ...
-       457 |             let range = inner.get_range(k1, k2);
-       458 |             read_handle.release_read();
-       460 |             from_st(range)
-       461 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:470: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
-       463 |         fn rank(&self, k: &T) -> (rank: usize)
-            ...
-       468 |             let inner = read_handle.borrow();
-       469 |             let rank = inner.rank(k);
-       471 |             read_handle.release_read();
-       472 |             rank
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:482: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
-       475 |         fn select(&self, i: usize) -> (selected: Option<T>)
-            ...
-       480 |             let inner = read_handle.borrow();
-       481 |             let selected = inner.select(i);
-       483 |             read_handle.release_read();
-       484 |             selected
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:495: error: assume() [rwlock:predicate] - assume(left.spec_orderedsetsteph_wf());
-       487 |         fn split_rank(&mut self, i: usize) -> (split: (Self, Self)) {
-            ...
-       493 |             write_handle.release_write(empty_val);
-       494 |             proof {
-       496 |                 assume(right.spec_orderedsetsteph_wf());
-       497 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:496: error: assume() [rwlock:predicate] - assume(right.spec_orderedsetsteph_wf());
-       487 |         fn split_rank(&mut self, i: usize) -> (split: (Self, Self)) {
-            ...
-       494 |             proof {
-       495 |                 assume(left.spec_orderedsetsteph_wf());
-       497 |             }
-       498 |             (from_st(left), from_st(right))
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:241: info: structural_false_positive RWLOCK_GHOST size [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:269: info: structural_false_positive RWLOCK_GHOST find [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:385: info: structural_false_positive RWLOCK_GHOST first [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:397: info: structural_false_positive RWLOCK_GHOST last [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:409: info: structural_false_positive RWLOCK_GHOST previous [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:421: info: structural_false_positive RWLOCK_GHOST next [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:434: info: structural_false_positive RWLOCK_GHOST split [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:435: info: structural_false_positive RWLOCK_GHOST split [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:459: info: structural_false_positive RWLOCK_GHOST get_range [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:470: info: structural_false_positive RWLOCK_GHOST rank [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:482: info: structural_false_positive RWLOCK_GHOST select [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:495: info: structural_false_positive RWLOCK_GHOST split_rank [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:496: info: structural_false_positive RWLOCK_GHOST split_rank [medium]
-   Holes: 14 total
-      13 × assume()
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:241: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:269: info: structural_false_positive RWLOCK_GHOST find — proof { assume(found == self@.contains(x@)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:385: info: structural_false_positive RWLOCK_GHOST first — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:397: info: structural_false_positive RWLOCK_GHOST last — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:409: info: structural_false_positive RWLOCK_GHOST previous — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:421: info: structural_false_positive RWLOCK_GHOST next — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:434: info: structural_false_positive RWLOCK_GHOST split — assume(left.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:435: info: structural_false_positive RWLOCK_GHOST split — assume(right.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:459: info: structural_false_positive RWLOCK_GHOST get_range — proof { assume(range.spec_orderedsetsteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:470: info: structural_false_positive RWLOCK_GHOST rank — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:482: info: structural_false_positive RWLOCK_GHOST select — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:495: info: structural_false_positive RWLOCK_GHOST split_rank — assume(left.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:496: info: structural_false_positive RWLOCK_GHOST split_rank — assume(right.spec_orderedsetsteph_wf()); [medium]
+   Holes: 1 total
       1 × external_body
+   Info: 13 × structural_false_positive
+      13 × RWLOCK_GHOST
 ❌ src/Chap43/OrderedSetStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:796: error: external_body - #[verifier::external_body]
        797 |         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
@@ -951,8 +838,6 @@ Table of Contents:
        886 |         fn rank(&self, k: &T) -> (rank: usize)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:908: error: external_body - #[verifier::external_body]
        909 |         fn select(&self, i: usize) -> (selected: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1075: error: external_body - #[verifier::external_body]
-      1076 |         fn next(&mut self) -> (next: Option<&'a T>)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1188: error: fn_missing_requires - fn from_sorted_elements — exec fn should have requires
       1179 |         fn clone(&self) -> (cloned: Self)
             ...
@@ -961,9 +846,11 @@ Table of Contents:
       1189 |         ensures constructed@.finite(), constructed.spec_orderedsetsteph_wf()
       1190 |     {
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:343: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1075: info: structural_false_positive STD_TRAIT_IMPL next [high]
-   Holes: 4 total
-      4 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1075: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+   Holes: 3 total
+      3 × external_body
+   Info: 1 × structural_false_positive
+      1 × STD_TRAIT_IMPL
    Info: 1 total
 ❌ src/Chap43/OrderedSetStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:709: error: external_body - #[verifier::external_body]
@@ -972,8 +859,6 @@ Table of Contents:
        807 |         fn rank(&self, k: &T) -> (rank: usize)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:824: error: external_body - #[verifier::external_body]
        825 |         fn select(&self, i: usize) -> (selected: Option<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1000: error: external_body - #[verifier::external_body]
-      1001 |         fn next(&mut self) -> (next: Option<&'a T>)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:957: error: fn_missing_requires - fn from_sorted_elements — exec fn should have requires
        837 |         fn split_rank(&self, i: usize) -> (split: (Self, Self))
             ...
@@ -981,9 +866,11 @@ Table of Contents:
        956 | 
        958 |         ensures constructed@.finite(), constructed.spec_orderedsetstper_wf()
        959 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1000: info: structural_false_positive STD_TRAIT_IMPL next [high]
-   Holes: 4 total
-      4 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1000: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+   Holes: 3 total
+      3 × external_body
+   Info: 1 × structural_false_positive
+      1 × STD_TRAIT_IMPL
 ❌ src/Chap43/OrderedTableMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:504: error: external_body - #[verifier::external_body]
        505 |         fn first_key(&self) -> (first: Option<K>)
@@ -1006,91 +893,34 @@ Table of Contents:
        878 |         ensures constructed@.dom().finite()
    Holes: 6 total
       6 × external_body
-❌ src/Chap43/OrderedTableMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:81: error: assume() [rwlock:predicate] - assume(inner.spec_orderedtablestper_wf());
-        73 |     fn from_st_table<K: MtKey + 'static, V: StTInMtT + Ord + 'static>(
-            ...
-        79 |         let ghost view = inner@;
-        80 |         proof {
-        82 |         }
-        83 |         OrderedTableMtPer {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:242: error: assume() [rwlock:reader] - proof { assume(count == self@.dom().len()); }
-       238 |         fn size(&self) -> (count: usize) {
-            ...
-       240 |             let inner = read_handle.borrow();
-       241 |             let count = inner.size();
-       243 |             proof { use_type_invariant(self); }
-       244 |             read_handle.release_read();
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:408: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
-       402 |         fn first_key(&self) -> (first: Option<K>)
-            ...
-       406 |             let inner = read_handle.borrow();
-       407 |             let first = inner.first_key();
-       409 |             read_handle.release_read();
-       410 |             first
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:419: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
-       413 |         fn last_key(&self) -> (last: Option<K>)
-            ...
-       417 |             let inner = read_handle.borrow();
-       418 |             let last = inner.last_key();
-       420 |             read_handle.release_read();
-       421 |             last
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:430: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
-       424 |         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            ...
-       428 |             let inner = read_handle.borrow();
-       429 |             let predecessor = inner.previous_key(k);
-       431 |             read_handle.release_read();
-       432 |             predecessor
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:441: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
-       435 |         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            ...
-       439 |             let inner = read_handle.borrow();
-       440 |             let successor = inner.next_key(k);
-       442 |             read_handle.release_read();
-       443 |             successor
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:488: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
-       482 |         fn rank_key(&self, k: &K) -> (rank: usize)
-            ...
-       486 |             let inner = read_handle.borrow();
-       487 |             let rank = inner.rank_key(k);
-       489 |             read_handle.release_read();
-       490 |             rank
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:499: error: assume() [rwlock:reader] - proof { assume(inner@ =~= self@); }
-       493 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ...
-       497 |             let inner = read_handle.borrow();
-       498 |             let selected = inner.select_key(i);
-       500 |             read_handle.release_read();
-       501 |             selected
+ℹ src/Chap43/OrderedTableMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:522: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:526: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:527: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:81: info: structural_false_positive RWLOCK_GHOST from_st_table [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:242: info: structural_false_positive RWLOCK_GHOST size [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:408: info: structural_false_positive RWLOCK_GHOST first_key [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:419: info: structural_false_positive RWLOCK_GHOST last_key [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:430: info: structural_false_positive RWLOCK_GHOST previous_key [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:441: info: structural_false_positive RWLOCK_GHOST next_key [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:488: info: structural_false_positive RWLOCK_GHOST rank_key [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:499: info: structural_false_positive RWLOCK_GHOST select_key [medium]
-   Holes: 8 total
-      8 × assume()
    Info: 3 total
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:81: info: structural_false_positive RWLOCK_GHOST from_st_table — assume(inner.spec_orderedtablestper_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:242: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:408: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:419: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:430: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:441: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:488: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:499: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
+   Info: 8 × structural_false_positive
 ❌ src/Chap43/OrderedTableStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:475: error: external_body - #[verifier::external_body]
        476 |         fn filter<F: Fn(&K, &V) -> B>(
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:556: error: external_body - #[verifier::external_body]
        557 |         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:943: error: external_body - #[verifier::external_body]
-       944 |         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1094: error: external_body - #[verifier::external_body]
       1095 |         fn rank_key(&self, k: &K) -> (rank: usize)
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1112: error: external_body - #[verifier::external_body]
       1113 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:943: info: structural_false_positive OPAQUE_EXTERNAL split_key [medium]
-   Holes: 5 total
-      5 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:943: info: structural_false_positive OPAQUE_EXTERNAL split_key — #[verifier::external_body] [medium]
+   Holes: 4 total
+      4 × external_body
+   Info: 1 × structural_false_positive
+      1 × OPAQUE_EXTERNAL
 ❌ src/Chap43/OrderedTableStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:444: error: external_body - #[verifier::external_body]
        445 |         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
@@ -1201,8 +1031,6 @@ Table of Contents:
 ❌ src/Chap47/ParaHashTableStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:463: error: external_body - #[verifier::external_body]
        464 |     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (index: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:493: error: external_body - #[verifier::external_body]
-       494 |     pub fn compute_second_hash<Key: std::hash::Hash>(key: &Key, table_size: usize) -> (step: usize)
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:572: error: fn_missing_wf_ensures - fn createTable — ensures should include table.spec_hashtable_wf() for return type HashTable
        564 |         open spec fn spec_impl_wf(table: &HashTable<Key, Value, Entry, Metrics, H>) -> bool {
             ...
@@ -1259,9 +1087,11 @@ Table of Contents:
        685 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
        687 |             requires
        688 |                 new_size > 0,
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:493: info: structural_false_positive OPAQUE_EXTERNAL compute_second_hash [medium]
-   Holes: 2 total
-      2 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:493: info: structural_false_positive OPAQUE_EXTERNAL compute_second_hash — #[verifier::external_body] [medium]
+   Holes: 1 total
+      1 × external_body
+   Info: 1 × structural_false_positive
+      1 × OPAQUE_EXTERNAL
    Proof functions: 12 total (12 clean, 0 holed)
 ❌ src/Chap47/QuadProbFlatHashTableStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:76: error: external_body - #[verifier::external_body]
@@ -1445,10 +1275,6 @@ Table of Contents:
 ✓ src/Chap56/SSSPResultStPerI64.rs
 ✓ src/Chap57/DijkstraStEphF64.rs
 ❌ src/Chap57/DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:101: error: external_body - #[verifier::external_body]
-       102 |         fn cmp(&self, other: &Self) -> Ordering {
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:118: error: external_body - #[verifier::external_body]
-       119 |         fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:202: error: assume() [algorithmic] - assume(BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_se
        155 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
             ...
@@ -1471,11 +1297,12 @@ Table of Contents:
         95 |         ensures r.dist == dist, r.vertex == vertex,
         96 |     {
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:167: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:101: info: structural_false_positive STD_TRAIT_IMPL cmp [high]
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:118: info: structural_false_positive STD_TRAIT_IMPL partial_cmp [high]
-   Holes: 4 total
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:101: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:118: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+   Holes: 2 total
       2 × assume()
-      2 × external_body
+   Info: 2 × structural_false_positive
+      2 × STD_TRAIT_IMPL
    Info: 1 total
    Proof functions: 4 total (4 clean, 0 holed)
 ✓ src/Chap57/StackStEph.rs
@@ -1672,7 +1499,7 @@ Chap40::BSTKeyValueStEph  depends upon only clean modules
 Chap40::BSTReducedStEph  depends upon only clean modules
 Chap40::BSTSizeStEph  depends upon only clean modules
 Chap41::AVLTreeSetMtEph  depends upon holed modules: Chap41::AVLTreeSetStEph
-Chap41::AVLTreeSetMtPer  depends upon holed modules: Chap37::AVLTreeSeqMtPer
+Chap41::AVLTreeSetMtPer  depends upon only clean modules
 Chap41::AVLTreeSetStEph  depends upon only clean modules
 Chap41::AVLTreeSetStPer  depends upon only clean modules
 Chap41::ArraySetEnumMtEph  depends upon only clean modules
@@ -1743,7 +1570,7 @@ Chap52::AdjSeqGraphMtEph  depends upon only clean modules
 Chap52::AdjSeqGraphMtPer  depends upon only clean modules
 Chap52::AdjSeqGraphStEph  depends upon only clean modules
 Chap52::AdjSeqGraphStPer  depends upon only clean modules
-Chap52::AdjTableGraphMtPer  depends upon holed modules: Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer
+Chap52::AdjTableGraphMtPer  depends upon holed modules: Chap41::AVLTreeSetMtPer
 Chap52::AdjTableGraphStEph  depends upon holed modules: Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph
 Chap52::AdjTableGraphStPer  depends upon holed modules: Chap43::OrderedTableStPer
 Chap52::EdgeSetGraphMtPer  depends upon holed modules: Chap41::AVLTreeSetMtPer
@@ -1934,7 +1761,7 @@ src/Chap40/BSTKeyValueStEph.rs  depends upon only clean modules
 src/Chap40/BSTReducedStEph.rs  depends upon only clean modules
 src/Chap40/BSTSizeStEph.rs  depends upon only clean modules
 src/Chap41/AVLTreeSetMtEph.rs  depends upon holed modules: Chap41::AVLTreeSetStEph
-src/Chap41/AVLTreeSetMtPer.rs  depends upon holed modules: Chap37::AVLTreeSeqMtPer
+src/Chap41/AVLTreeSetMtPer.rs  depends upon only clean modules
 src/Chap41/AVLTreeSetStEph.rs  depends upon only clean modules
 src/Chap41/AVLTreeSetStPer.rs  depends upon only clean modules
 src/Chap41/ArraySetEnumMtEph.rs  depends upon only clean modules
@@ -2005,7 +1832,7 @@ src/Chap52/AdjSeqGraphMtEph.rs  depends upon only clean modules
 src/Chap52/AdjSeqGraphMtPer.rs  depends upon only clean modules
 src/Chap52/AdjSeqGraphStEph.rs  depends upon only clean modules
 src/Chap52/AdjSeqGraphStPer.rs  depends upon only clean modules
-src/Chap52/AdjTableGraphMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer, Chap43::OrderedTableMtPer
+src/Chap52/AdjTableGraphMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer
 src/Chap52/AdjTableGraphStEph.rs  depends upon holed modules: Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph
 src/Chap52/AdjTableGraphStPer.rs  depends upon holed modules: Chap43::OrderedTableStPer
 src/Chap52/EdgeSetGraphMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer
@@ -2075,8 +1902,8 @@ src/ParaPairs.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   228 clean (no holes, no errors; 88%)
-   29 holed (holes or errors, 11%)
+   231 clean (no holes, no errors; 89%)
+   26 holed (holes or errors, 10%)
    257 total
 
 Proof Functions:
@@ -2092,21 +1919,18 @@ Function Specs:
    7247 total fns
 
 
-Holes Found: 108 total
-   30 × assume() (27%)
-      16 × rwlock:reader
+Holes Found: 75 (actionable)
+   8 × assume() (10%)
       7 × algorithmic
-      6 × rwlock:predicate
       1 × closure
-   1 × assume_specification (0%)
-   2 × unsafe impl (1%)
-   74 × external_body (68%)
-   1 × external (0%)
+   1 × assume_specification (1%)
+   65 × external_body (86%)
+   1 × external (1%)
 
 Per-Chapter Holes:
-  Chap37:  2  Chap38: 10  Chap39: 10
-  Chap41: 22  Chap43: 48  Chap45:  1
-  Chap47: 10  Chap57:  4  Chap59:  1
+  Chap38: 10  Chap39: 10  Chap41: 18
+  Chap43: 24  Chap45:  1  Chap47:  9
+  Chap57:  2  Chap59:  1
 
 Warnings: 37 total
    10 × fn_missing_requires
@@ -2115,35 +1939,33 @@ Warnings: 37 total
    2 × requires_true
    1 × assume_eq_clone_workaround
 
-Accepted (reviewed): 328 total
+Accepted (reviewed): 320 total
    272 × accept()
-   34 × external_body_accept_hole
+   26 × external_body_accept_hole
    10 × trivial_spec_wf
    5 × external_accept_hole
    4 × unsafe_block_accept_hole
    1 × struct_outside_verus_accept_hole
-   1 × external_type_specification_accept_hole
    1 × enum_outside_verus_accept_hole
+   1 × external_type_specification_accept_hole
 
 Accepted by Chapter:
-  Chap02: 10  Chap05:  7  Chap06: 29
+  Chap02:  6  Chap05:  7  Chap06: 29
   Chap11:  6  Chap12: 19  Chap17:  2
   Chap18: 17  Chap19:  6  Chap23:  9
-  Chap30: 11  Chap37: 46  Chap38:  9
+  Chap30:  7  Chap37: 46  Chap38:  9
   Chap39: 16  Chap40: 23  Chap41: 18
   Chap42:  5  Chap43:  5  Chap45: 12
   Chap47: 44  Chap50: 18  Chap51:  8
   Chap52:  2  Chap56:  2  Chap57:  1
   Chap66:  2
 
-Structural False Positives: 41 detected (language limitations, not missing proof)
+Structural (info only): 41
    22 × RWLOCK_GHOST
    10 × STD_TRAIT_IMPL
    4 × THREAD_SPAWN
    3 × OPAQUE_EXTERNAL
    2 × UNSAFE_SEND_SYNC
-
-Real Actionable Holes: 67 (108 total - 41 structural FPs in count)
 
 =================================================================
 4. Proof Targets
@@ -2155,52 +1977,52 @@ Real Actionable Holes: 67 (108 total - 41 structural FPs in count)
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap43  (48 holes, 11 files)
-   2  Chap41  (22 holes, 7 files)
+   1  Chap43  (24 holes, 11 files)
+   2  Chap41  (18 holes, 7 files)
    3  Chap38  (10 holes, 2 files)
-   4  Chap47  (10 holes, 9 files)
-   5  Chap39  (10 holes, 4 files)
-   6  Chap57  (4 holes, 3 files)
-   7  Chap37  (2 holes, 19 files)
-   8  Chap59  (1 holes, 4 files)
-   9  Chap45  (1 holes, 7 files)
-   10  Chap53  (0 holes, 5 files)
-   11  Chap21  (0 holes, 12 files)
-   12  Chap17  (0 holes, 1 files)
-   13  Chap44  (0 holes, 2 files)
-   14  Chap63  (0 holes, 2 files)
-   15  ParaPairs  (0 holes, 1 files)
-   16  Chap55  (0 holes, 8 files)
-   17  Chap18  (0 holes, 7 files)
-   18  Chap56  (0 holes, 12 files)
-   19  Chap12  (0 holes, 3 files)
-   20  Chap35  (0 holes, 4 files)
-   21  Chap58  (0 holes, 2 files)
-   22  Chap50  (0 holes, 8 files)
-   23  Chap52  (0 holes, 14 files)
-   24  Chap28  (0 holes, 11 files)
-   25  Chap05  (0 holes, 5 files)
-   26  Chap40  (0 holes, 3 files)
-   27  Chap54  (0 holes, 4 files)
-   28  Chap62  (0 holes, 4 files)
-   29  Chap11  (0 holes, 5 files)
-   30  Chap27  (0 holes, 4 files)
-   31  Chap42  (0 holes, 4 files)
-   32  Chap19  (0 holes, 4 files)
-   33  Chap65  (0 holes, 3 files)
-   34  Concurrency  (0 holes, 1 files)
-   35  Chap30  (0 holes, 1 files)
-   36  Chap06  (0 holes, 20 files)
-   37  Chap36  (0 holes, 3 files)
-   38  Chap51  (0 holes, 8 files)
-   39  Chap03  (0 holes, 1 files)
-   40  Chap23  (0 holes, 2 files)
-   41  Chap02  (0 holes, 2 files)
-   42  Chap61  (0 holes, 4 files)
-   43  Chap26  (0 holes, 8 files)
-   44  Chap66  (0 holes, 2 files)
-   45  Chap64  (0 holes, 3 files)
-   46  Chap49  (0 holes, 8 files)
+   4  Chap39  (10 holes, 4 files)
+   5  Chap47  (9 holes, 9 files)
+   6  Chap57  (2 holes, 3 files)
+   7  Chap59  (1 holes, 4 files)
+   8  Chap45  (1 holes, 7 files)
+   9  Chap66  (0 holes, 2 files)
+   10  Chap44  (0 holes, 2 files)
+   11  Chap37  (0 holes, 19 files)
+   12  Chap63  (0 holes, 2 files)
+   13  Chap06  (0 holes, 20 files)
+   14  Chap28  (0 holes, 11 files)
+   15  Chap65  (0 holes, 3 files)
+   16  Chap27  (0 holes, 4 files)
+   17  ParaPairs  (0 holes, 1 files)
+   18  Chap62  (0 holes, 4 files)
+   19  Chap64  (0 holes, 3 files)
+   20  Chap11  (0 holes, 5 files)
+   21  Chap40  (0 holes, 3 files)
+   22  Chap55  (0 holes, 8 files)
+   23  Chap03  (0 holes, 1 files)
+   24  Chap54  (0 holes, 4 files)
+   25  Chap12  (0 holes, 3 files)
+   26  Chap18  (0 holes, 7 files)
+   27  Chap42  (0 holes, 4 files)
+   28  Chap53  (0 holes, 5 files)
+   29  Chap19  (0 holes, 4 files)
+   30  Concurrency  (0 holes, 1 files)
+   31  Chap35  (0 holes, 4 files)
+   32  Chap05  (0 holes, 5 files)
+   33  Chap17  (0 holes, 1 files)
+   34  Chap56  (0 holes, 12 files)
+   35  Chap50  (0 holes, 8 files)
+   36  Chap36  (0 holes, 3 files)
+   37  Chap51  (0 holes, 8 files)
+   38  Chap30  (0 holes, 1 files)
+   39  Chap21  (0 holes, 12 files)
+   40  Chap02  (0 holes, 2 files)
+   41  Chap61  (0 holes, 4 files)
+   42  Chap49  (0 holes, 8 files)
+   43  Chap58  (0 holes, 2 files)
+   44  Chap52  (0 holes, 14 files)
+   45  Chap26  (0 holes, 8 files)
+   46  Chap23  (0 holes, 2 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -2208,23 +2030,21 @@ Real Actionable Holes: 67 (108 total - 41 structural FPs in count)
 
    1  src/Chap39/BSTParaTreapMtEph.rs  (10 holes)
    2  src/Chap38/BSTParaMtEph.rs  (9 holes)
-   3  src/Chap43/OrderedTableMtEph.rs  (6 holes)
-   4  src/Chap43/OrderedTableStEph.rs  (5 holes)
-   5  src/Chap43/OrderedSetStPer.rs  (4 holes)
-   6  src/Chap41/AVLTreeSetStEph.rs  (2 holes)
-   7  src/Chap47/ParaHashTableStEph.rs  (2 holes)
-   8  src/Chap37/AVLTreeSeqMtPer.rs  (1 holes)
-   9  src/Chap37/AVLTreeSeq.rs  (1 holes)
-   10  src/Chap45/Example45_2.rs  (1 holes)
-   11  src/Chap38/BSTParaStEph.rs  (1 holes)
+   3  src/Chap41/AVLTreeSetMtPer.rs  (7 holes)
+   4  src/Chap43/OrderedTableMtEph.rs  (6 holes)
+   5  src/Chap43/OrderedTableStEph.rs  (4 holes)
+   6  src/Chap43/OrderedSetStPer.rs  (3 holes)
+   7  src/Chap41/AVLTreeSetStEph.rs  (2 holes)
+   8  src/Chap45/Example45_2.rs  (1 holes)
+   9  src/Chap38/BSTParaStEph.rs  (1 holes)
+   10  src/Chap47/ParaHashTableStEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
    1  src/Chap38  (10 holes, 2 files)
-   2  src/Chap37  (2 holes, 19 files)
-   3  src/Chap45  (1 holes, 7 files)
+   2  src/Chap45  (1 holes, 7 files)
 
 =================================================================
 4.4. Not Verusified
@@ -2242,9 +2062,9 @@ Real Actionable Holes: 67 (108 total - 41 structural FPs in count)
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 37 clean, 9 holed, 108 holes (global), 257 modules
+Chapter Status — 46 chapters, 38 clean, 8 holed, 75 holes (global), 257 modules
 
-CLEAN CHAPTERS (37)
+CLEAN CHAPTERS (38)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -2264,6 +2084,7 @@ CLEAN CHAPTERS (37)
   Chap30             1
   Chap35             4
   Chap36             3
+  Chap37            19
   Chap40             3
   Chap42             4
   Chap44             2
@@ -2285,24 +2106,22 @@ CLEAN CHAPTERS (37)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (9) — 108 holes
+HOLED CHAPTERS (8) — 75 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap37             2    19  YES       
   Chap38            10     2  YES       
   Chap39            10     4  internal  Chap39::BSTParaTreapMtEph
-  Chap41            22     7  NO        Chap37::AVLTreeSeqMtPer
-  Chap43            48    11  NO        Chap42::TableStPer, Chap41::AVLTreeSetStEph
+  Chap41            18     7  internal  Chap41::AVLTreeSetStEph
+  Chap43            24    11  NO        Chap42::TableStPer, Chap41::AVLTreeSetStEph
   Chap45             1     7  YES       
-  Chap47            10     9  internal  Chap47::ParaHashTableStEph
-  Chap57             4     3  NO        Chap05::SetStEph
+  Chap47             9     9  internal  Chap47::ParaHashTableStEph
+  Chap57             2     3  NO        Chap05::SetStEph
   Chap59             1     4  NO        Chap05::SetStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
   --------------  -------------------
   Chap06          Chap05
-  Chap41          Chap37
   Chap43          Chap41, Chap42
   Chap44          Chap42
   Chap52          Chap41, Chap43
@@ -2322,8 +2141,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 08:05:50 -07:00
-Ended:     2026-03-18 08:05:51 -07:00
-Duration:  1310ms
+Started:   2026-03-18 08:33:10 -07:00
+Ended:     2026-03-18 08:33:11 -07:00
+Duration:  1313ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

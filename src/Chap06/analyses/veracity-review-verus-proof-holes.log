@@ -150,7 +150,7 @@ Function Specs:
    621 total fns
 
 
-Holes Found: 0 total
+Holes Found: 0 (actionable)
 
 Accepted (reviewed): 29 total
    29 × accept()
@@ -161,11 +161,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 08:05:48 -07:00
-Ended:     2026-03-18 08:05:48 -07:00
-Duration:  93ms
+Started:   2026-03-18 08:33:09 -07:00
+Ended:     2026-03-18 08:33:09 -07:00
+Duration:  102ms
 
 Full output: src/Chap06/analyses/veracity-review-verus-proof-holes.log
-ration:  93ms
-
-Full output: src/Chap06/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap06/analyses/veracity-review-verus-proof-holes.log

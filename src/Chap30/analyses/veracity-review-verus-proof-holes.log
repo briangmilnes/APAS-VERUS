@@ -22,21 +22,18 @@ Table of Contents:
 
 ℹ Probability.rs
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:51: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:67: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:78: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:86: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:109: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:116: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:123: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:132: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:141: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:150: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:159: info: external_body_accept_hole
-   Info: 11 total
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:67: info: structural_false_positive STD_TRAIT_IMPL eq [high]
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:78: info: structural_false_positive STD_TRAIT_IMPL partial_cmp [high]
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:86: info: structural_false_positive STD_TRAIT_IMPL cmp [high]
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:109: info: structural_false_positive STD_TRAIT_IMPL hash [high]
+   Info: 7 total
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:67: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:78: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:86: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:109: info: structural_false_positive STD_TRAIT_IMPL hash — #[verifier::external_body]  // accept hole [high]
+   Info: 4 × structural_false_positive
 
 =================================================================
 2. Depends Upon
@@ -76,15 +73,13 @@ Function Specs:
    22 total fns
 
 
-Holes Found: 0 total
+Holes Found: 0 (actionable)
 
-Accepted (reviewed): 11 total
-   11 × external_body_accept_hole
+Accepted (reviewed): 7 total
+   7 × external_body_accept_hole
 
-Structural False Positives: 4 detected (language limitations, not missing proof)
+Structural (info only): 4
    4 × STD_TRAIT_IMPL
-
-Real Actionable Holes: 0 (0 total - 4 structural FPs in count)
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -92,12 +87,12 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 08:05:49 -07:00
-Ended:     2026-03-18 08:05:49 -07:00
+Started:   2026-03-18 08:33:09 -07:00
+Ended:     2026-03-18 08:33:09 -07:00
 Duration:  2ms
 
 Full output: src/Chap30/analyses/veracity-review-verus-proof-holes.log
-ded:     2026-03-18 08:05:49 -07:00
+
 Duration:  2ms
 
 Full output: src/Chap30/analyses/veracity-review-verus-proof-holes.log

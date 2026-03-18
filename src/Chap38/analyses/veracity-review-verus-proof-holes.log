@@ -109,7 +109,7 @@ Function Specs:
    104 total fns
 
 
-Holes Found: 10 total
+Holes Found: 10 (actionable)
    1 × assume() (10%)
    1 × assume_specification (10%)
    8 × external_body (80%)
@@ -121,8 +121,12 @@ Accepted (reviewed): 9 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 08:06:44 -07:00
-Ended:     2026-03-18 08:06:44 -07:00
+Started:   2026-03-18 08:33:09 -07:00
+Ended:     2026-03-18 08:33:09 -07:00
+Duration:  25ms
+
+Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
+2026-03-18 08:33:09 -07:00
 Duration:  25ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log

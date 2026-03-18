@@ -120,7 +120,7 @@ Function Specs:
    260 total fns
 
 
-Holes Found: 10 total
+Holes Found: 10 (actionable)
    10 × external_body (100%)
 
 Warnings: 2 total
@@ -133,8 +133,12 @@ Accepted (reviewed): 16 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 08:06:45 -07:00
-Ended:     2026-03-18 08:06:45 -07:00
-Duration:  33ms
+Started:   2026-03-18 08:33:09 -07:00
+Ended:     2026-03-18 08:33:09 -07:00
+Duration:  40ms
+
+Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
+     2026-03-18 08:33:09 -07:00
+Duration:  40ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log

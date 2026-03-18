@@ -22,10 +22,6 @@ Table of Contents:
 
 ✓ DijkstraStEphF64.rs
 ❌ DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:101: error: external_body - #[verifier::external_body]
-       102 |         fn cmp(&self, other: &Self) -> Ordering {
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:118: error: external_body - #[verifier::external_body]
-       119 |         fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:202: error: assume() [algorithmic] - assume(BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_se
        155 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
             ...
@@ -48,11 +44,12 @@ Table of Contents:
         95 |         ensures r.dist == dist, r.vertex == vertex,
         96 |     {
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:167: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:101: info: structural_false_positive STD_TRAIT_IMPL cmp [high]
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:118: info: structural_false_positive STD_TRAIT_IMPL partial_cmp [high]
-   Holes: 4 total
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:101: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:118: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+   Holes: 2 total
       2 × assume()
-      2 × external_body
+   Info: 2 × structural_false_positive
+      2 × STD_TRAIT_IMPL
    Info: 1 total
    Proof functions: 4 total (4 clean, 0 holed)
 ✓ StackStEph.rs
@@ -99,9 +96,8 @@ Function Specs:
    31 total fns
 
 
-Holes Found: 4 total
-   2 × assume() (50%)
-   2 × external_body (50%)
+Holes Found: 2 (actionable)
+   2 × assume() (100%)
 
 Warnings: 1 total
    1 × fn_missing_requires
@@ -109,17 +105,18 @@ Warnings: 1 total
 Accepted (reviewed): 1 total
    1 × accept()
 
-Structural False Positives: 2 detected (language limitations, not missing proof)
+Structural (info only): 2
    2 × STD_TRAIT_IMPL
-
-Real Actionable Holes: 2 (4 total - 2 structural FPs in count)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 08:06:52 -07:00
-Ended:     2026-03-18 08:06:52 -07:00
-Duration:  11ms
+Started:   2026-03-18 08:33:10 -07:00
+Ended:     2026-03-18 08:33:10 -07:00
+Duration:  5ms
+
+Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
+ation:  5ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log

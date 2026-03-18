@@ -3,7 +3,7 @@
 ## State After R36
 
 - 4282 verified, 0 errors
-- 108 total holes, 41 SFPs, **67 real actionable**
+- **75 actionable holes** (41 SFPs now info-only, not counted)
 - 37 clean chapters, 9 holed
 - Chap37 and Chap45 are effectively clean (0 real actionable; SFPs/Example only)
 
@@ -27,7 +27,7 @@
 | 3 | 3 | Chap43 OrderedSet St + AugOrderedTableMtEph | StEph.rs, StPer.rs, AugMtEph.rs | 10 | -4 to -8 |
 | 4 | 4 | Chap47 hash tables + Chap57 Dijkstra | 5 Chap47 files, Dijkstra | 11 | -5 to -9 |
 
-**Expected total: -18 to -32 holes (67 → 35-49 remaining)**
+**Expected total: -18 to -32 holes (75 → 43-57 remaining)**
 
 ## File Assignments (no overlap)
 

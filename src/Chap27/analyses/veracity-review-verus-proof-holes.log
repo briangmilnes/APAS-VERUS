@@ -73,7 +73,7 @@ Function Specs:
    37 total fns
 
 
-Holes Found: 0 total
+Holes Found: 0 (actionable)
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -81,9 +81,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 08:05:49 -07:00
-Ended:     2026-03-18 08:05:49 -07:00
-Duration:  17ms
+Started:   2026-03-18 08:33:09 -07:00
+Ended:     2026-03-18 08:33:09 -07:00
+Duration:  16ms
 
 Full output: src/Chap27/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap27/analyses/veracity-review-verus-proof-holes.log
+ src/Chap27/analyses/veracity-review-verus-proof-holes.log

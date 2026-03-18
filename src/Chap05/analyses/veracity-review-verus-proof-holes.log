@@ -181,7 +181,7 @@ Function Specs:
    254 total fns
 
 
-Holes Found: 0 total
+Holes Found: 0 (actionable)
 
 Warnings: 14 total
    10 × fn_missing_wf_requires
@@ -196,12 +196,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 08:05:48 -07:00
-Ended:     2026-03-18 08:05:48 -07:00
-Duration:  31ms
+Started:   2026-03-18 08:33:09 -07:00
+Ended:     2026-03-18 08:33:09 -07:00
+Duration:  33ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
-:     2026-03-18 08:05:48 -07:00
-Duration:  31ms
+====================
+
+Started:   2026-03-18 08:33:09 -07:00
+Ended:     2026-03-18 08:33:09 -07:00
+Duration:  33ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log

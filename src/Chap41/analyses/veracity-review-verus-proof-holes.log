@@ -21,13 +21,6 @@ Table of Contents:
 =================================================================
 
 ❌ AVLTreeSetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:245: error: assume() [rwlock:reader] - proof { assume(count == self@.len()); }
-       241 |         fn size(&self) -> (count: usize)
-            ...
-       243 |             let handle = self.inner.acquire_read();
-       244 |             let count = handle.borrow().size();
-       246 |             handle.release_read();
-       247 |             count
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:250: error: external_body - #[verifier::external_body]
        251 |         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:294: error: external_body - #[verifier::external_body]
@@ -38,11 +31,6 @@ Table of Contents:
        413 |         fn difference(&self, other: &Self) -> (remaining: Self)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:423: error: external_body - #[verifier::external_body]
        424 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:622: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
-       623 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:623: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
-       624 | 
-       625 |     // 12. macros
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:312: error: fn_missing_requires - fn parallel_filter — exec fn should have requires
        295 |         fn filter<F: Pred<T> + Clone>(
             ...
@@ -59,13 +47,14 @@ Table of Contents:
        375 |             {
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:461: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:546: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:245: info: structural_false_positive RWLOCK_GHOST size [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:622: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph [high]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:623: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph [high]
-   Holes: 8 total
-      1 × assume()
-      2 × unsafe impl
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:245: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:622: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph — unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:623: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph — unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {} [high]
+   Holes: 5 total
       5 × external_body
+   Info: 3 × structural_false_positive
+      2 × UNSAFE_SEND_SYNC
+      1 × RWLOCK_GHOST
    Info: 2 total
 ❌ AVLTreeSetMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:225: error: external_body - #[verifier::external_body]
@@ -82,8 +71,6 @@ Table of Contents:
        500 |         fn delete(&self, x: &T) -> (updated: Self)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:509: error: external_body - #[verifier::external_body]
        510 |         fn insert(&self, x: T) -> (updated: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:580: error: external_body - #[verifier::external_body]
-       581 |         fn cmp(&self, other: &Self) -> (ord: Ordering)
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:231: error: fn_missing_requires - fn parallel_sort — exec fn should have requires
        226 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
             ...
@@ -95,9 +82,11 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:545: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:567: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:606: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:580: info: structural_false_positive STD_TRAIT_IMPL cmp [high]
-   Holes: 8 total
-      8 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:580: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+   Holes: 7 total
+      7 × external_body
+   Info: 1 × structural_false_positive
+      1 × STD_TRAIT_IMPL
    Info: 4 total
 ❌ AVLTreeSetStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1059: error: assume() [algorithmic] - assume(new_vec@.len() < usize::MAX);
@@ -203,12 +192,9 @@ Function Specs:
    256 total fns
 
 
-Holes Found: 22 total
-   3 × assume() (13%)
-      2 × algorithmic
-      1 × rwlock:reader
-   2 × unsafe impl (9%)
-   17 × external_body (77%)
+Holes Found: 18 (actionable)
+   2 × assume() (11%)
+   16 × external_body (88%)
 
 Warnings: 3 total
    3 × fn_missing_requires
@@ -216,19 +202,21 @@ Warnings: 3 total
 Accepted (reviewed): 18 total
    18 × accept()
 
-Structural False Positives: 4 detected (language limitations, not missing proof)
+Structural (info only): 4
    2 × UNSAFE_SEND_SYNC
    1 × RWLOCK_GHOST
    1 × STD_TRAIT_IMPL
-
-Real Actionable Holes: 18 (22 total - 4 structural FPs in count)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 08:06:43 -07:00
-Ended:     2026-03-18 08:06:43 -07:00
-Duration:  62ms
+Started:   2026-03-18 08:33:10 -07:00
+Ended:     2026-03-18 08:33:10 -07:00
+Duration:  59ms
+
+Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
+   2026-03-18 08:33:10 -07:00
+Duration:  59ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log

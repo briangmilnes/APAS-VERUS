@@ -77,8 +77,6 @@ Table of Contents:
 ❌ ParaHashTableStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:463: error: external_body - #[verifier::external_body]
        464 |     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (index: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:493: error: external_body - #[verifier::external_body]
-       494 |     pub fn compute_second_hash<Key: std::hash::Hash>(key: &Key, table_size: usize) -> (step: usize)
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:572: error: fn_missing_wf_ensures - fn createTable — ensures should include table.spec_hashtable_wf() for return type HashTable
        564 |         open spec fn spec_impl_wf(table: &HashTable<Key, Value, Entry, Metrics, H>) -> bool {
             ...
@@ -135,9 +133,11 @@ Table of Contents:
        685 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
        687 |             requires
        688 |                 new_size > 0,
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:493: info: structural_false_positive OPAQUE_EXTERNAL compute_second_hash [medium]
-   Holes: 2 total
-      2 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:493: info: structural_false_positive OPAQUE_EXTERNAL compute_second_hash — #[verifier::external_body] [medium]
+   Holes: 1 total
+      1 × external_body
+   Info: 1 × structural_false_positive
+      1 × OPAQUE_EXTERNAL
    Proof functions: 12 total (12 clean, 0 holed)
 ❌ QuadProbFlatHashTableStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:76: error: external_body - #[verifier::external_body]
@@ -235,9 +235,9 @@ Function Specs:
    135 total fns
 
 
-Holes Found: 10 total
-   1 × assume() (10%)
-   9 × external_body (90%)
+Holes Found: 9 (actionable)
+   1 × assume() (11%)
+   8 × external_body (88%)
 
 Warnings: 8 total
    6 × fn_missing_wf_requires
@@ -246,17 +246,19 @@ Warnings: 8 total
 Accepted (reviewed): 44 total
    44 × accept()
 
-Structural False Positives: 1 detected (language limitations, not missing proof)
+Structural (info only): 1
    1 × OPAQUE_EXTERNAL
-
-Real Actionable Holes: 9 (10 total - 1 structural FPs in count)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 08:06:46 -07:00
-Ended:     2026-03-18 08:06:46 -07:00
-Duration:  43ms
+Started:   2026-03-18 08:33:10 -07:00
+Ended:     2026-03-18 08:33:10 -07:00
+Duration:  41ms
+
+Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
+:10 -07:00
+Duration:  41ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
