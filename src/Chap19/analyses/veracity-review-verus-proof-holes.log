@@ -21,21 +21,21 @@ Table of Contents:
 =================================================================
 
 ℹ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqMtEph.rs:478: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqMtEph.rs:1481: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:478: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1481: info: accept()
    Info: 2 total
    6 clean proof functions
 ✓ ArraySeqMtEphSlice.rs
 ℹ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqStEph.rs:452: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqStEph.rs:1201: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:452: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1201: info: accept()
    Info: 2 total
    4 clean proof functions
 ℹ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqStPer.rs:438: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap19/ArraySeqStPer.rs:1201: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:438: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1209: info: accept()
    Info: 2 total
-   3 clean proof functions
+   4 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -69,16 +69,16 @@ Modules:
    4 total
 
 Proof Functions:
-   13 clean (100%)
+   14 clean (100%)
    0 holed (0%)
-   13 total
+   14 total
 
 Function Specs:
    183 exec fns with complete spec (requires+ensures) (68%)
    0 exec fns missing spec (0%)
-   85 proof/spec fns clean (31%)
+   86 proof/spec fns clean (31%)
    0 proof/spec fns with holes (0%)
-   268 total fns
+   269 total fns
 
 
 Holes Found: 0 total
@@ -93,11 +93,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 19:40:37 -07:00
-Ended:     2026-03-17 19:40:37 -07:00
-Duration:  49ms
+Started:   2026-03-18 08:05:49 -07:00
+Ended:     2026-03-18 08:05:49 -07:00
+Duration:  41ms
 
 Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
-Duration:  49ms
-
-Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
