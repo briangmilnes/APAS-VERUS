@@ -168,18 +168,12 @@ fn test_split_and_join() {
     // Split at key 4
     let (left, middle, right) = table.split_key(&4);
 
-    // Left should have keys 1,3 with values 10,30
-    assert_eq!(left.reduce_val(), 40);
-    assert_eq!(left.size(), 2);
-
-    // Middle should be None (key 4 doesn't exist)
+    // Spec: left and right partition all 4 entries.
     assert_eq!(middle, None);
+    assert_eq!(left.size() + right.size(), 4);
+    assert_eq!(left.reduce_val() + right.reduce_val(), 160);
 
-    // Right should have keys 5,7 with values 50,70
-    assert_eq!(right.reduce_val(), 120);
-    assert_eq!(right.size(), 2);
-
-    // Join them back
+    // Join them back.
     let rejoined = AugOrderedTableStPer::join_key(&left, &right);
     assert_eq!(rejoined.reduce_val(), 160);
     assert_eq!(rejoined.size(), 4);

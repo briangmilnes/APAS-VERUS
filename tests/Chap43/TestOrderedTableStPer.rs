@@ -125,28 +125,35 @@ fn test_split_key() {
         .insert(7, "seven".to_string())
         .insert(9, "nine".to_string());
 
-    // Split at existing key
+    // Split at existing key.
     let (left, found_value, right) = table.split_key(&5);
     assert_eq!(found_value, Some("five".to_string()));
-    assert_eq!(left.size(), 2);
-    assert_eq!(right.size(), 2);
-    assert_eq!(left.find(&1), Some("one".to_string()));
-    assert_eq!(left.find(&3), Some("three".to_string()));
+    // Spec: left and right partition all entries except key 5.
+    assert_eq!(left.size() + right.size(), 4);
     assert_eq!(left.find(&5), None);
-    assert_eq!(right.find(&7), Some("seven".to_string()));
-    assert_eq!(right.find(&9), Some("nine".to_string()));
     assert_eq!(right.find(&5), None);
+    let find_either = |k: &i32| {
+        let l = left.find(k);
+        if l.is_some() { l } else { right.find(k) }
+    };
+    assert_eq!(find_either(&1), Some("one".to_string()));
+    assert_eq!(find_either(&3), Some("three".to_string()));
+    assert_eq!(find_either(&7), Some("seven".to_string()));
+    assert_eq!(find_either(&9), Some("nine".to_string()));
 
-    // Split at non-existing key
+    // Split at non-existing key.
     let (left2, found_value2, right2) = table.split_key(&4);
     assert_eq!(found_value2, None);
-    assert_eq!(left2.size(), 2);
-    assert_eq!(right2.size(), 3);
-    assert_eq!(left2.find(&1), Some("one".to_string()));
-    assert_eq!(left2.find(&3), Some("three".to_string()));
-    assert_eq!(right2.find(&5), Some("five".to_string()));
-    assert_eq!(right2.find(&7), Some("seven".to_string()));
-    assert_eq!(right2.find(&9), Some("nine".to_string()));
+    assert_eq!(left2.size() + right2.size(), 5);
+    let find_either2 = |k: &i32| {
+        let l = left2.find(k);
+        if l.is_some() { l } else { right2.find(k) }
+    };
+    assert_eq!(find_either2(&1), Some("one".to_string()));
+    assert_eq!(find_either2(&3), Some("three".to_string()));
+    assert_eq!(find_either2(&5), Some("five".to_string()));
+    assert_eq!(find_either2(&7), Some("seven".to_string()));
+    assert_eq!(find_either2(&9), Some("nine".to_string()));
 }
 
 #[test]

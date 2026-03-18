@@ -236,7 +236,7 @@ pub mod TableStPer {
     }
 
     // If no entry has key k, spec_entries_to_map does not contain k.
-    proof fn lemma_entries_to_map_no_key<KV, VV>(entries: Seq<(KV, VV)>, k: KV)
+    pub proof fn lemma_entries_to_map_no_key<KV, VV>(entries: Seq<(KV, VV)>, k: KV)
         requires forall|i: int| 0 <= i < entries.len() ==> (#[trigger] entries[i]).0 != k,
         ensures !spec_entries_to_map(entries).contains_key(k),
     {
@@ -265,7 +265,7 @@ pub mod TableStPer {
     }
 
     // When keys are unique, spec_entries_to_map length equals seq length.
-    proof fn lemma_entries_to_map_len<KV, VV>(entries: Seq<(KV, VV)>)
+    pub proof fn lemma_entries_to_map_len<KV, VV>(entries: Seq<(KV, VV)>)
         requires spec_keys_no_dups(entries),
         ensures spec_entries_to_map(entries).len() == entries.len(),
         decreases entries.len(),

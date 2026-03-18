@@ -444,6 +444,7 @@ pub mod OrderedTableMtPer {
         }
 
         fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self)) {
+            proof { assert(obeys_view_eq_trigger::<K>()); }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let (left, val, right) = inner.split_key(k);
@@ -482,6 +483,7 @@ pub mod OrderedTableMtPer {
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
+            proof { assert(obeys_view_eq_trigger::<K>()); }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let rank = inner.rank_key(k);
@@ -493,6 +495,7 @@ pub mod OrderedTableMtPer {
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
         {
+            proof { assert(obeys_view_eq_trigger::<K>()); }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let selected = inner.select_key(i);

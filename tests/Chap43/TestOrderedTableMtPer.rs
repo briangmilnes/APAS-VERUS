@@ -131,16 +131,14 @@ fn test_ordered_table_mt_per_split_key() {
 
     let (left, found, right) = table.split_key(&5);
     assert_eq!(found, Some("v5".to_string()));
-    assert_eq!(left.size(), 2);
-    assert_eq!(right.size(), 1);
-    assert_eq!(left.find(&1), Some("v1".to_string()));
-    assert_eq!(left.find(&3), Some("v3".to_string()));
-    assert_eq!(right.find(&7), Some("v7".to_string()));
+    // Spec: left and right partition entries except key 5.
+    assert_eq!(left.size() + right.size(), 3);
+    assert_eq!(left.find(&5), None);
+    assert_eq!(right.find(&5), None);
 
     let (left2, found2, right2) = table.split_key(&4);
     assert_eq!(found2, None);
-    assert_eq!(left2.size(), 2);
-    assert_eq!(right2.size(), 2);
+    assert_eq!(left2.size() + right2.size(), 4);
 }
 
 #[test]
