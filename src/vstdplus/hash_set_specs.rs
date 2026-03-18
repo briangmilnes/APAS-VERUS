@@ -9,10 +9,11 @@ use core::hash::Hash;
 
 verus! {
 
-pub assume_specification<T, S> [<std::collections::HashSet<T, S> as std::clone::Clone>::clone] (_0: &std::collections::HashSet<T, S>) -> std::collections::HashSet<T, S>
+pub assume_specification<T, S, A> [<std::collections::HashSet<T, S, A> as std::clone::Clone>::clone] (_0: &std::collections::HashSet<T, S, A>) -> std::collections::HashSet<T, S, A>
 where
     S: std::clone::Clone,
     T: std::clone::Clone,
+    A: std::clone::Clone + std::alloc::Allocator,
 ;
 
 } // verus!
