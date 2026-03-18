@@ -4,7 +4,8 @@
 
 Proved 4 ordering operations in OrderedTableMtEph.rs by porting the TotalOrder
 bridging proofs from OrderedTableStEph.rs. Made 2 TableMtEph lemmas public to
-support the proofs.
+support the proofs. Investigated 4 additional targets from R37 Update — all
+blocked by structural issues or cascade scope.
 
 ## Verification
 
@@ -45,17 +46,48 @@ quantifiers over TotalOrder, which requires linking a concrete loop count to
 abstract set filter cardinality. This is a hard proof obligation shared across
 StEph and MtEph.
 
-### Tier 2: AVLTreeSetStEph Assumes (not attempted)
+## R37 Update Targets — Investigation Results
 
-Two assumes at lines 1059, 1334:
-```rust
-assume(new_vec@.len() < usize::MAX);
-```
-Root cause: wf bounds tree size to `< usize::MAX`, but insert adds one element
-needing `+ 1 < usize::MAX`. Fix requires adding
-`requires old(self)@.len() + 1 < usize::MAX as nat` to the trait's `insert`
-method, which cascades to 17 files across Chap41–55. Not attempted due to
-cascade scope.
+### Target 1: BSTParaStEph.rs assume (Chap38, line 475) — STRUCTURAL
+
+The assume bridges `k = node.key.clone()` to `k@ == node.key@` and
+`t.cmp_spec(&k) == t.cmp_spec(&node.key)` inside `expose()`. The function has
+no `requires` — `obeys_cmp_spec::<T>()` and `view_ord_consistent::<T>()` are
+unavailable. These are needed by all the file's helper lemmas
+(`lemma_cmp_antisymmetry`, `lemma_cmp_transitivity`, etc.). Adding requires to
+`expose()` would cascade to `Clone::clone` (which can't have requires in Rust).
+**Cannot fix without redesigning the expose/clone interface.**
+
+### Target 2: JohnsonStEphI64.rs assume (Chap59, line 437) — CASCADE
+
+The assume is `reweighted@.A.len() * 2 + 2 <= usize::MAX as int`, needed for
+Dijkstra's edge-count bound. Fixing requires:
+1. `from_weighed_edges` (Chap06) must ensure `g@.A.len()` relationship.
+2. `reweight_graph` must ensure `result@.A.len()` preservation.
+3. `johnson_apsp` requires must include edge-count bound.
+Each change cascades through WeightedDirGraph specs and all callers.
+**Too complex for a single-target fix.**
+
+### Target 3: AVLTreeSetStEph.rs assumes (Chap41, lines 1059/1334) — CASCADE
+
+Two `assume(new_vec@.len() < usize::MAX)` in insert/insert_sorted. Root cause:
+wf bounds `< usize::MAX`, insert adds one element needing `+ 1 < usize::MAX`.
+Fix requires `requires old(self)@.len() + 1 < usize::MAX as nat` on the trait's
+`insert` method, cascading to 17 files across Chap41–55.
+**Not attempted due to cascade scope.**
+
+### Target 4: OrderedSetMtEph.rs to_seq (Chap43, line 345) — BLOCKED
+
+The external_body wraps: acquire_read → inner.to_seq() → release_read → copy
+elements → ArraySeqStPerS::from_vec. Removing external_body requires:
+1. `assume(inner@ =~= self@)` — RWLOCK_GHOST bridge (standard).
+2. `assume(st_seq.spec_avltreeseqstper_wf())` — OrderedSetStEph::to_seq trait
+   ensures omit wf on the returned sequence (impl ensures it via from_vec, but
+   trait contract doesn't propagate). Needed for nth/length calls.
+3. clone_plus loop with element-wise view invariant for clone/view bridging.
+The StEph version already uses `accept()` for the same clone/view gap.
+**Fixable with 2 assumes + loop proof, but wf trait gap needs to be addressed
+in OrderedSetStEph.rs (agent3 territory).**
 
 ## Files Modified
 
@@ -64,9 +96,14 @@ cascade scope.
 | 1 | 42 | TableMtEph.rs | Made 2 lemmas pub |
 | 2 | 43 | OrderedTableMtEph.rs | Proved 4 ordering ops, added imports |
 
-## Remaining Holes in OrderedTableMtEph.rs
+## Remaining Holes in Assigned Files
 
 | # | Chap | File | Function | Type | Blocker |
 |---|------|------|----------|------|---------|
-| 1 | 43 | OrderedTableMtEph.rs | rank_key | external_body | Set::filter cardinality proof (also blocked in StEph) |
-| 2 | 43 | OrderedTableMtEph.rs | select_key | external_body | Set::filter cardinality proof (also blocked in StEph) |
+| 1 | 43 | OrderedTableMtEph.rs | rank_key | external_body | Set::filter cardinality (blocked in StEph) |
+| 2 | 43 | OrderedTableMtEph.rs | select_key | external_body | Set::filter cardinality (blocked in StEph) |
+| 3 | 43 | OrderedSetMtEph.rs | to_seq | external_body | Trait wf gap + clone bridging |
+| 4 | 38 | BSTParaStEph.rs | expose | assume | No requires on expose/Clone |
+| 5 | 59 | JohnsonStEphI64.rs | johnson_apsp | assume | Edge-count spec cascade |
+| 6 | 41 | AVLTreeSetStEph.rs | insert | assume | usize::MAX cascade to 17 files |
+| 7 | 41 | AVLTreeSetStEph.rs | insert_sorted | assume | usize::MAX cascade to 17 files |
