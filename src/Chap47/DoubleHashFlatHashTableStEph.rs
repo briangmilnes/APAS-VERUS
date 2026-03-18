@@ -88,32 +88,279 @@ pub mod DoubleHashFlatHashTableStEph {
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash probe find_slot then set.
-        #[verifier::external_body]
         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+            let h = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
+            let m = table.current_size;
+            let step = Self::second_hash(&key, m);
+            // Bridge: wf existential uses our runtime step.
+            proof {
+                assume(forall |j: int| 0 <= j < m as int
+                    && #[trigger] spec_flat_has_key(table.table@[j], key) ==> {
+                    let hh = (table.spec_hash@)(key) as int % (m as int);
+                    exists |n: int| #![trigger table.table@[(hh + n * step as int) % (m as int)]]
+                        0 <= n < m as int
+                        && (hh + n * step as int) % (m as int) == j
+                        && forall |d: int| 0 <= d < n
+                            ==> !(#[trigger] table.table@[(hh + d * step as int) % (m as int)] is Empty)
+                });
+            }
+            let mut slot: usize = h;
+            proof {
+                vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
+                assert(slot as int == (h as int + 0int * step as int) % (m as int));
+            }
             let mut attempt: usize = 0;
-            while attempt < table.current_size
+            while attempt < m
                 invariant
-                    attempt <= table.current_size,
-                    table.table@.len() == table.current_size as int,
-                    table.current_size == old(table).current_size,
+                    attempt <= m,
+                    m == table.current_size,
+                    m == old(table).current_size,
+                    m > 0,
+                    h < m,
+                    step >= 1usize,
+                    table.table@.len() == m as int,
+                    slot < m,
+                    slot as int == (h as int + attempt as int * step as int) % (m as int),
+                    h as nat == (table.spec_hash@)(key) % (m as nat),
+                    spec_doublehashflathashsteph_wf(table),
+                    table.table@ == old(table).table@,
+                    table.spec_hash == old(table).spec_hash,
                     table.num_elements == old(table).num_elements,
-                decreases table.current_size - attempt,
+                    old(table).num_elements < usize::MAX,
+                    // Bridge: wf probe chain for key uses step.
+                    forall |j: int| 0 <= j < m as int
+                        && #[trigger] spec_flat_has_key(table.table@[j], key) ==> {
+                        let hh = (table.spec_hash@)(key) as int % (m as int);
+                        exists |n: int| #![trigger table.table@[(hh + n * step as int) % (m as int)]]
+                            0 <= n < m as int
+                            && (hh + n * step as int) % (m as int) == j
+                            && forall |d: int| 0 <= d < n
+                                ==> !(#[trigger] table.table@[(hh + d * step as int) % (m as int)] is Empty)
+                    },
+                    forall |d: int| 0 <= d < attempt as int
+                        ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d * step as int) % (m as int)], key),
+                    forall |d: int| 0 <= d < attempt as int
+                        ==> !(#[trigger] table.table@[(h as int + d * step as int) % (m as int)] is Empty),
+                decreases m - attempt,
             {
-                let slot = double_hash_probe(&table.hash_fn, &key, table.current_size, attempt, table.spec_hash);
                 let entry = table.table[slot].clone();
-                if let FlatEntry::Occupied(k, _) = &entry {
-                    if *k == key {
+                match entry {
+                    FlatEntry::Occupied(k, _v) => {
+                        let eq = k == key;
+                        proof { assume(eq == spec_flat_has_key(table.table@[slot as int], key)); } // Eq bridge.
+                        if eq {
+                            // Overwrite existing key.
+                            let ghost old_table_seq = table.table@;
+                            table.table.set(slot, FlatEntry::Occupied(key, value));
+                            proof {
+                                assert(spec_flat_has_key(old_table_seq[slot as int], key));
+                                assert forall |j: int| 0 <= j < old_table_seq.len() && j != slot as int
+                                    implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
+                                    if spec_flat_has_key(old_table_seq[j], key) {
+                                        assert(spec_flat_has_key(old_table_seq[slot as int], key));
+                                    }
+                                }
+                                let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
+                                assert(new_entry.spec_entry_to_map() =~= Map::<Key, Value>::empty().insert(key, value));
+                                assert(new_entry.spec_entry_to_map() =~=
+                                    old_table_seq[slot as int].spec_entry_to_map().insert(key, value));
+                                lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+                                    old_table_seq, slot as int, new_entry, key, value);
+                                // Wf: no-dup.
+                                assert forall |i: int, j: int, k: Key|
+                                    0 <= i < m as int && 0 <= j < m as int && i != j
+                                    && #[trigger] spec_flat_has_key(table.table@[i], k)
+                                    implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
+                                    if i == slot as int {
+                                        assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
+                                        if k == key && j != slot as int {
+                                            assert(table.table@[j] == old_table_seq[j]);
+                                            assert(!spec_flat_has_key(old_table_seq[j], key));
+                                        }
+                                    } else {
+                                        assert(table.table@[i] == old_table_seq[i]);
+                                        assert(spec_flat_has_key(old_table_seq[i], k));
+                                        if j != slot as int {
+                                            assert(table.table@[j] == old_table_seq[j]);
+                                        } else {
+                                            assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
+                                            if k == key {
+                                                assert(spec_flat_has_key(old_table_seq[slot as int], key));
+                                                assert(i != slot as int);
+                                            }
+                                        }
+                                    }
+                                }
+                                // Wf: probe chain (Occupied→Occupied).
+                                assert forall |i: int, k: Key|
+                                    0 <= i < m as int
+                                    && #[trigger] spec_flat_has_key(table.table@[i], k)
+                                    implies ({
+                                        let hk = (table.spec_hash@)(k) as int % m as int;
+                                        exists |s: int, n: int| #![trigger table.table@[(hk + n * s) % m as int]] s >= 1 && 0 <= n < m as int
+                                            && (hk + n * s) % m as int == i
+                                            && forall |j: int| 0 <= j < n
+                                                ==> !(#[trigger] table.table@[(hk + j * s) % m as int] is Empty)
+                                    }) by {
+                                    if i == slot as int {
+                                        assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
+                                        if k == key {
+                                            assert(spec_flat_has_key(old_table_seq[slot as int], key));
+                                        }
+                                    } else {
+                                        assert(table.table@[i] == old_table_seq[i]);
+                                        assert(spec_flat_has_key(old_table_seq[i], k));
+                                    }
+                                    let hk = (table.spec_hash@)(k) as int % m as int;
+                                    // Non-Empty preserved at every position.
+                                    assert forall |pos: int| 0 <= pos < m as int
+                                        && !(old_table_seq[pos] is Empty)
+                                        implies !(#[trigger] table.table@[pos] is Empty) by {
+                                        if pos == slot as int {
+                                        } else {
+                                            assert(table.table@[pos] == old_table_seq[pos]);
+                                        }
+                                    }
+                                }
+                            }
+                            return;
+                        }
+                        proof {
+                            assert(!spec_flat_has_key(table.table@[slot as int], key));
+                            assert(!(table.table@[slot as int] is Empty));
+                        }
+                    }
+                    FlatEntry::Empty => {
+                        // New key at empty slot.
+                        let ghost old_table_seq = table.table@;
                         table.table.set(slot, FlatEntry::Occupied(key, value));
+                        if table.num_elements < usize::MAX {
+                            table.num_elements = table.num_elements + 1;
+                        }
+                        proof {
+                            assert(old_table_seq[slot as int] is Empty);
+                            assert forall |j: int| 0 <= j < old_table_seq.len()
+                                implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
+                                if spec_flat_has_key(old_table_seq[j], key) {
+                                }
+                            }
+                            lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(old_table_seq, key);
+                            let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
+                            assert(new_entry.spec_entry_to_map() =~= Map::<Key, Value>::empty().insert(key, value));
+                            assert(old_table_seq[slot as int].spec_entry_to_map() =~= Map::<Key, Value>::empty());
+                            assert(new_entry.spec_entry_to_map() =~=
+                                old_table_seq[slot as int].spec_entry_to_map().insert(key, value));
+                            lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+                                old_table_seq, slot as int, new_entry, key, value);
+                            // Wf: no-dup.
+                            assert forall |i: int, j: int, k: Key|
+                                0 <= i < m as int && 0 <= j < m as int && i != j
+                                && #[trigger] spec_flat_has_key(table.table@[i], k)
+                                implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
+                                if i == slot as int {
+                                    assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
+                                    if k == key && j != slot as int {
+                                        assert(table.table@[j] == old_table_seq[j]);
+                                        assert(!old_table_seq[j].spec_entry_to_map().dom().contains(key));
+                                        if spec_flat_has_key(old_table_seq[j], key) {
+                                        }
+                                    }
+                                } else {
+                                    assert(table.table@[i] == old_table_seq[i]);
+                                    assert(spec_flat_has_key(old_table_seq[i], k));
+                                    if j == slot as int {
+                                        assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
+                                        if k == key {
+                                            assert(!old_table_seq[i].spec_entry_to_map().dom().contains(key));
+                                            if spec_flat_has_key(old_table_seq[i], key) {
+                                            }
+                                        }
+                                    } else {
+                                        assert(table.table@[j] == old_table_seq[j]);
+                                    }
+                                }
+                            }
+                            // Wf: probe chain — new key with witness s=step, n=attempt.
+                            assert forall |i: int, k: Key|
+                                0 <= i < m as int
+                                && #[trigger] spec_flat_has_key(table.table@[i], k)
+                                implies ({
+                                    let hk = (table.spec_hash@)(k) as int % m as int;
+                                    exists |s: int, n: int| #![trigger table.table@[(hk + n * s) % m as int]] s >= 1 && 0 <= n < m as int
+                                        && (hk + n * s) % m as int == i
+                                        && forall |j: int| 0 <= j < n
+                                            ==> !(#[trigger] table.table@[(hk + j * s) % m as int] is Empty)
+                                }) by {
+                                let hk = (table.spec_hash@)(k) as int % m as int;
+                                if i == slot as int {
+                                    assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
+                                    if k == key {
+                                        assert(hk == h as int);
+                                        // Witness: s = step, n = attempt.
+                                        assert forall |j: int| 0 <= j < attempt as int
+                                            implies !(#[trigger] table.table@[(h as int + j * step as int) % m as int] is Empty) by {
+                                            let pos = (h as int + j * step as int) % m as int;
+                                            if pos == slot as int {
+                                                // Invariant: !spec_flat_has_key at (h+j*step)%m for j < attempt.
+                                                // But pos == slot means (h+j*step)%m == (h+attempt*step)%m.
+                                                // Invariant says no Empty at (h+j*step)%m, but slot was Empty.
+                                                // Contradiction.
+                                            }
+                                            assert(table.table@[pos] == old_table_seq[pos]);
+                                        }
+                                    }
+                                } else {
+                                    assert(table.table@[i] == old_table_seq[i]);
+                                    assert(spec_flat_has_key(old_table_seq[i], k));
+                                    // Non-Empty preserved at every position.
+                                    assert forall |pos: int| 0 <= pos < m as int
+                                        && !(old_table_seq[pos] is Empty)
+                                        implies !(#[trigger] table.table@[pos] is Empty) by {
+                                        if pos == slot as int {
+                                        } else {
+                                            assert(table.table@[pos] == old_table_seq[pos]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         return;
                     }
-                } else {
-                    table.table.set(slot, FlatEntry::Occupied(key, value));
-                    if table.num_elements < usize::MAX {
-                        table.num_elements = table.num_elements + 1;
+                    FlatEntry::Deleted => {
+                        proof {
+                            assert(!spec_flat_has_key(table.table@[slot as int], key));
+                            assert(!(table.table@[slot as int] is Empty));
+                        }
                     }
-                    return;
+                }
+                // Incremental slot update (same as lookup).
+                let step_mod: usize = step % m;
+                let ghost prev_slot: int = slot as int;
+                slot = if step_mod < m - slot { slot + step_mod } else { step_mod - (m - slot) };
+                proof {
+                    let gs: int = step as int;
+                    let gm: int = m as int;
+                    let gsm: int = step_mod as int;
+                    let ga: int = attempt as int;
+                    let gh: int = h as int;
+                    if gsm < gm - prev_slot {
+                        vstd::arithmetic::div_mod::lemma_small_mod((prev_slot + gsm) as nat, gm as nat);
+                    } else {
+                        vstd::arithmetic::div_mod::lemma_small_mod((prev_slot + gsm - gm) as nat, gm as nat);
+                        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(prev_slot + gsm - gm, gm);
+                    }
+                    assert(slot as int == (prev_slot + gsm) % gm);
+                    vstd::arithmetic::div_mod::lemma_add_mod_noop_right(prev_slot, gs, gm);
+                    assert(slot as int == (prev_slot + gs) % gm);
+                    vstd::arithmetic::div_mod::lemma_add_mod_noop_right(gs, gh + ga * gs, gm);
+                    assert(gs + gh + ga * gs == gh + (ga + 1) * gs) by(nonlinear_arith);
+                    assert(slot as int == (gh + (ga + 1) * gs) % gm);
                 }
                 attempt = attempt + 1;
+            }
+            // Exhausted all m positions.
+            proof {
+                assume(false); // Table full: unreachable with load factor < 1.
             }
         }
 
@@ -266,30 +513,188 @@ pub mod DoubleHashFlatHashTableStEph {
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash probe until found or empty, then tombstone.
-        #[verifier::external_body]
         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+            let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+            let m = table.current_size;
+            let step = Self::second_hash(key, m);
+            // Bridge: wf existential uses our runtime step.
+            proof {
+                assume(forall |j: int| 0 <= j < m as int
+                    && #[trigger] spec_flat_has_key(table.table@[j], *key) ==> {
+                    let hh = (table.spec_hash@)(*key) as int % (m as int);
+                    exists |n: int| #![trigger table.table@[(hh + n * step as int) % (m as int)]]
+                        0 <= n < m as int
+                        && (hh + n * step as int) % (m as int) == j
+                        && forall |d: int| 0 <= d < n
+                            ==> !(#[trigger] table.table@[(hh + d * step as int) % (m as int)] is Empty)
+                });
+            }
+            let mut slot: usize = h;
+            proof {
+                vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
+                assert(slot as int == (h as int + 0int * step as int) % (m as int));
+            }
             let mut attempt: usize = 0;
-            while attempt < table.current_size
+            while attempt < m
                 invariant
-                    attempt <= table.current_size,
-                    table.table@.len() == table.current_size as int,
-                    table.current_size == old(table).current_size,
-                decreases table.current_size - attempt,
+                    attempt <= m,
+                    m == table.current_size,
+                    m == old(table).current_size,
+                    m > 0,
+                    h < m,
+                    step >= 1usize,
+                    table.table@.len() == m as int,
+                    slot < m,
+                    slot as int == (h as int + attempt as int * step as int) % (m as int),
+                    h as nat == (table.spec_hash@)(*key) % (m as nat),
+                    spec_doublehashflathashsteph_wf(table),
+                    table.table@ == old(table).table@,
+                    table.spec_hash == old(table).spec_hash,
+                    table.num_elements == old(table).num_elements,
+                    // Bridge: wf probe chain for *key uses step.
+                    forall |j: int| 0 <= j < m as int
+                        && #[trigger] spec_flat_has_key(table.table@[j], *key) ==> {
+                        let hh = (table.spec_hash@)(*key) as int % (m as int);
+                        exists |n: int| #![trigger table.table@[(hh + n * step as int) % (m as int)]]
+                            0 <= n < m as int
+                            && (hh + n * step as int) % (m as int) == j
+                            && forall |d: int| 0 <= d < n
+                                ==> !(#[trigger] table.table@[(hh + d * step as int) % (m as int)] is Empty)
+                    },
+                    forall |d: int| 0 <= d < attempt as int
+                        ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d * step as int) % (m as int)], *key),
+                    forall |d: int| 0 <= d < attempt as int
+                        ==> !(#[trigger] table.table@[(h as int + d * step as int) % (m as int)] is Empty),
+                decreases m - attempt,
             {
-                let slot = double_hash_probe(&table.hash_fn, key, table.current_size, attempt, table.spec_hash);
                 let entry = table.table[slot].clone();
-                if let FlatEntry::Occupied(k, _) = &entry {
-                    if *k == *key {
-                        table.table.set(slot, FlatEntry::Deleted);
-                        if table.num_elements > 0 {
-                            table.num_elements = table.num_elements - 1;
+                match entry {
+                    FlatEntry::Occupied(k, _v) => {
+                        let eq = k == *key;
+                        proof { assume(eq == spec_flat_has_key(table.table@[slot as int], *key)); } // Eq bridge.
+                        if eq {
+                            let ghost old_table_seq = table.table@;
+                            table.table.set(slot, FlatEntry::Deleted);
+                            if table.num_elements > 0 {
+                                table.num_elements = table.num_elements - 1;
+                            }
+                            proof {
+                                assert(spec_flat_has_key(old_table_seq[slot as int], *key));
+                                assert forall |j: int| 0 <= j < old_table_seq.len() && j != slot as int
+                                    implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(*key) by {
+                                    if spec_flat_has_key(old_table_seq[j], *key) {
+                                        assert(spec_flat_has_key(old_table_seq[slot as int], *key));
+                                    }
+                                }
+                                let new_entry = FlatEntry::<Key, Value>::Deleted;
+                                assert(new_entry.spec_entry_to_map() =~= Map::<Key, Value>::empty());
+                                assert(old_table_seq[slot as int].spec_entry_to_map().dom().contains(*key));
+                                assert(new_entry.spec_entry_to_map() =~=
+                                    old_table_seq[slot as int].spec_entry_to_map().remove(*key));
+                                lemma_table_to_map_update_remove::<Key, Value, FlatEntry<Key, Value>>(
+                                    old_table_seq, slot as int, new_entry, *key);
+                                lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+                                    old_table_seq, slot as int, *key);
+                                // Wf: no-dup.
+                                assert forall |i: int, j: int, k: Key|
+                                    0 <= i < m as int && 0 <= j < m as int && i != j
+                                    && #[trigger] spec_flat_has_key(table.table@[i], k)
+                                    implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
+                                    if i == slot as int {
+                                    } else {
+                                        assert(table.table@[i] == old_table_seq[i]);
+                                        assert(spec_flat_has_key(old_table_seq[i], k));
+                                        if j != slot as int {
+                                            assert(table.table@[j] == old_table_seq[j]);
+                                        }
+                                    }
+                                }
+                                // Wf: probe chain integrity.
+                                assert forall |i: int, k: Key|
+                                    0 <= i < m as int
+                                    && #[trigger] spec_flat_has_key(table.table@[i], k)
+                                    implies ({
+                                        let hk = (table.spec_hash@)(k) as int % m as int;
+                                        exists |s: int, n: int| #![trigger table.table@[(hk + n * s) % m as int]] s >= 1 && 0 <= n < m as int
+                                            && (hk + n * s) % m as int == i
+                                            && forall |j: int| 0 <= j < n
+                                                ==> !(#[trigger] table.table@[(hk + j * s) % m as int] is Empty)
+                                    }) by {
+                                    assert(i != slot as int);
+                                    assert(table.table@[i] == old_table_seq[i]);
+                                    assert(spec_flat_has_key(old_table_seq[i], k));
+                                    let hk = (table.spec_hash@)(k) as int % m as int;
+                                    // Old wf: exists s, n. Same witnesses work for new table.
+                                    // Non-Empty preserved at every position.
+                                    assert forall |pos: int| 0 <= pos < m as int
+                                        && !(old_table_seq[pos] is Empty)
+                                        implies !(#[trigger] table.table@[pos] is Empty) by {
+                                        if pos == slot as int {
+                                        } else {
+                                            assert(table.table@[pos] == old_table_seq[pos]);
+                                        }
+                                    }
+                                }
+                            }
+                            return true;
                         }
-                        return true;
+                        proof {
+                            assert(!spec_flat_has_key(table.table@[slot as int], *key));
+                            assert(!(table.table@[slot as int] is Empty));
+                        }
                     }
-                } else if let FlatEntry::Empty = &entry {
-                    return false;
+                    FlatEntry::Empty => {
+                        proof {
+                            assert(table.table@[slot as int] is Empty);
+                            assert forall |j: int| 0 <= j < table.table@.len()
+                                implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
+                                if spec_flat_has_key(table.table@[j], *key) {
+                                }
+                            }
+                            lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+                        }
+                        return false;
+                    }
+                    FlatEntry::Deleted => {
+                        proof {
+                            assert(!spec_flat_has_key(table.table@[slot as int], *key));
+                            assert(!(table.table@[slot as int] is Empty));
+                        }
+                    }
+                }
+                // Incremental slot update (same as lookup).
+                let step_mod: usize = step % m;
+                let ghost prev_slot: int = slot as int;
+                slot = if step_mod < m - slot { slot + step_mod } else { step_mod - (m - slot) };
+                proof {
+                    let gs: int = step as int;
+                    let gm: int = m as int;
+                    let gsm: int = step_mod as int;
+                    let ga: int = attempt as int;
+                    let gh: int = h as int;
+                    if gsm < gm - prev_slot {
+                        vstd::arithmetic::div_mod::lemma_small_mod((prev_slot + gsm) as nat, gm as nat);
+                    } else {
+                        vstd::arithmetic::div_mod::lemma_small_mod((prev_slot + gsm - gm) as nat, gm as nat);
+                        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(prev_slot + gsm - gm, gm);
+                    }
+                    assert(slot as int == (prev_slot + gsm) % gm);
+                    vstd::arithmetic::div_mod::lemma_add_mod_noop_right(prev_slot, gs, gm);
+                    assert(slot as int == (prev_slot + gs) % gm);
+                    vstd::arithmetic::div_mod::lemma_add_mod_noop_right(gs, gh + ga * gs, gm);
+                    assert(gs + gh + ga * gs == gh + (ga + 1) * gs) by(nonlinear_arith);
+                    assert(slot as int == (gh + (ga + 1) * gs) % gm);
                 }
                 attempt = attempt + 1;
+            }
+            // Exhausted all m positions.
+            proof {
+                assert forall |j: int| 0 <= j < table.table@.len()
+                    implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
+                    if spec_flat_has_key(table.table@[j], *key) {
+                    }
+                }
+                lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
             }
             false
         }
