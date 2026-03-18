@@ -23,6 +23,10 @@ pub mod DijkstraStEphU64 {
     use crate::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
     use crate::Types::Types::*;
     use crate::vstdplus::feq::feq::obeys_feq_clone;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
 
@@ -41,6 +45,7 @@ pub mod DijkstraStEphU64 {
     broadcast use {
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
         crate::Types::Types::group_Pair_axioms,
+        crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
     // 4. type definitions
@@ -66,6 +71,12 @@ pub mod DijkstraStEphU64 {
         {
             PQEntry { dist: self.dist, vertex: self.vertex }
         }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl PartialEqSpecImpl for PQEntry {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
     // 8. traits
@@ -163,7 +174,7 @@ pub mod DijkstraStEphU64 {
     {
         let n = graph.vertices().size();
         assert(n == graph@.V.len());
-        proof { assume(obeys_feq_clone::<PQEntry>()); }
+        proof { assert(obeys_feq_full_trigger::<PQEntry>()); }
 
         // Edge count for PQ size bound: total PQ inserts <= |E|.
         let arcs_ref = graph.labeled_arcs();
