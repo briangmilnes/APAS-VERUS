@@ -3,7 +3,6 @@
 pub mod total_order {
     use core::cmp::Ordering;
     use vstd::prelude::*;
-    use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialOrdIs;
 
@@ -522,15 +521,15 @@ impl IsLtTransitive for isize {
 // accept hole
 impl IsLtTransitive for String {
     proof fn is_lt_transitive(a: Self, b: Self, c: Self) {
-        accept(a.is_lt(&c));
+        assume(a.is_lt(&c));
     }
     // accept hole
     proof fn is_lt_irreflexive(a: Self) {
-        accept(!a.is_lt(&a));
+        assume(!a.is_lt(&a));
     }
     // accept hole
     proof fn is_lt_antisymmetric(a: Self, b: Self) {
-        accept(a == b);
+        assume(a == b);
     }
 }
 
@@ -544,30 +543,30 @@ impl TotalOrder for String {
     }
 
     proof fn reflexive(x: Self) {
-        accept(TotalOrder::le(x, x));
+        assume(TotalOrder::le(x, x));
     }
 
     proof fn transitive(x: Self, y: Self, z: Self) {
-        accept(TotalOrder::le(x, z));
+        assume(TotalOrder::le(x, z));
     }
 
     proof fn antisymmetric(x: Self, y: Self) {
-        accept(x == y);
+        assume(x == y);
     }
 
     proof fn total(x: Self, y: Self) {
-        accept(TotalOrder::le(x, y) || TotalOrder::le(y, x));
+        assume(TotalOrder::le(x, y) || TotalOrder::le(y, x));
     }
 
     fn cmp(&self, other: &Self) -> (c: Ordering) {
         if *self < *other {
-            proof { accept(TotalOrder::le(*self, *other) && self != other); }
+            proof { assume(TotalOrder::le(*self, *other) && self != other); }
             Ordering::Less
         } else if *self == *other {
-            proof { accept(*self == *other); }
+            proof { assume(*self == *other); }
             Ordering::Equal
         } else {
-            proof { accept(TotalOrder::le(*other, *self) && self != other); }
+            proof { assume(TotalOrder::le(*other, *self) && self != other); }
             Ordering::Greater
         }
     }

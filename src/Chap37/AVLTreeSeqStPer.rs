@@ -25,7 +25,6 @@ pub mod AVLTreeSeqStPer {
     use vstd::slice::slice_subrange;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
@@ -782,9 +781,9 @@ pub mod AVLTreeSeqStPer {
             ensures equal == (self@ == other@)
         {
             proof {
-                accept(spec_avltreeseqstper_wf(self.root));
-                accept(spec_avltreeseqstper_wf(other.root));
-                accept(obeys_feq_full::<T>());
+                assume(spec_avltreeseqstper_wf(self.root));
+                assume(spec_avltreeseqstper_wf(other.root));
+                assume(obeys_feq_full::<T>());
             }
             compare_trees(&self.root, &other.root)
         }
@@ -799,7 +798,7 @@ pub mod AVLTreeSeqStPer {
             let copy = AVLTreeSeqStPerS {
                 root: self.root.clone(),
             };
-            proof { accept(copy@ == self@ && (self.spec_avltreeseqstper_wf() ==> copy.spec_avltreeseqstper_wf())); }  // accept hole: Arc::clone external_body
+            proof { assume(copy@ == self@ && (self.spec_avltreeseqstper_wf() ==> copy.spec_avltreeseqstper_wf())); }  // accept hole: Arc::clone external_body
             copy
         }
     }

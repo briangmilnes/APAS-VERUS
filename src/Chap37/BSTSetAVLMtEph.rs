@@ -25,7 +25,6 @@ pub mod BSTSetAVLMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::BSTAVLMtEph::BSTAVLMtEph::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -404,7 +403,7 @@ pub mod BSTSetAVLMtEph {
             } else {
                 let item = self.snapshot[self.pos].clone();
                 self.pos += 1;
-                proof { accept(item == old(self)@.1[old(self)@.0]); }  // accept hole: Clone preserves value
+                proof { assume(item == old(self)@.1[old(self)@.0]); }  // accept hole: Clone preserves value
                 Some(item)
             }
         }

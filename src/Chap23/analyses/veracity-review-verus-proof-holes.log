@@ -20,20 +20,71 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-ℹ BalBinTreeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/BalBinTreeStEph.rs:794: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/BalBinTreeStEph.rs:811: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/BalBinTreeStEph.rs:832: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/BalBinTreeStEph.rs:857: info: accept()
-   Info: 4 total
-   2 clean proof functions
-ℹ PrimTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/PrimTreeSeqStPer.rs:887: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/PrimTreeSeqStPer.rs:899: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/PrimTreeSeqStPer.rs:917: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/PrimTreeSeqStPer.rs:935: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap23/PrimTreeSeqStPer.rs:940: info: accept()
-   Info: 5 total
+⚠ BalBinTreeStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:793: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       785 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       791 |                 (BalBinTree::Node(a), BalBinTree::Node(b)) => {
+       792 |                     let equal = a.left == b.left && a.value == b.value && a.right == b.right;
+       794 |                     equal
+       795 |                 },
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:810: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       806 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       808 |         {
+       809 |             let equal = self.left == other.left && self.value == other.value && self.right == other.right;
+       811 |             equal
+       812 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:831: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       819 |     fn clone_tree<T: Clone>(t: &BalBinTree<T>) -> (c: BalBinTree<T>)
+            ...
+       829 |             })),
+       830 |         };
+       832 |         c
+       833 |     }
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:856: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       848 |         fn clone(&self) -> (cloned: Self)
+            ...
+       854 |                 right: clone_tree(&self.right),
+       855 |             };
+       857 |             cloned
+       858 |         }
+⚠ PrimTreeSeqStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:886: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       882 |         fn clone(&self) -> (cloned: Self)
+            ...
+       884 |         {
+       885 |             let cloned = PrimTreeSeqStS { seq: self.seq.clone() };
+       887 |             cloned
+       888 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:898: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       894 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       896 |         {
+       897 |             let equal = self.seq == other.seq;
+       899 |             equal
+       900 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:916: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       908 |         fn clone(&self) -> (cloned: Self)
+            ...
+       914 |                 PrimTreeSeqStTree::Two(l, r) => PrimTreeSeqStTree::Two(l.clone(), r.clone()),
+       915 |             };
+       917 |             cloned
+       918 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:934: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       924 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       932 |                 (PrimTreeSeqStTree::One(a), PrimTreeSeqStTree::One(b)) => {
+       933 |                     let equal = *a == *b;
+       935 |                     equal
+       936 |                 },
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:939: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       924 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       937 |                 (PrimTreeSeqStTree::Two(l1, r1), PrimTreeSeqStTree::Two(l2, r2)) => {
+       938 |                     let equal = *l1 == *l2 && *r1 == *r2;
+       940 |                     equal
+       941 |                 },
 
 =================================================================
 2. Depends Upon
@@ -77,21 +128,18 @@ Function Specs:
 
 Holes Found: 0 (actionable)
 
-Accepted (reviewed): 9 total
-   9 × accept()
+Warnings: 9 total
+   9 × assume_eq_clone_workaround
 
-No proof holes or warnings found! All proofs are complete.
+No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 09:40:52 -07:00
-Ended:     2026-03-18 09:40:52 -07:00
-Duration:  17ms
+Started:   2026-03-18 11:13:52 -07:00
+Ended:     2026-03-18 11:13:52 -07:00
+Duration:  18ms
 
 Full output: src/Chap23/analyses/veracity-review-verus-proof-holes.log
-00
-Duration:  17ms
-
-Full output: src/Chap23/analyses/veracity-review-verus-proof-holes.log
+ty-review-verus-proof-holes.log

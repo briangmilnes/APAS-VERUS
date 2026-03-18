@@ -71,8 +71,6 @@ pub mod ConnectivityMtEph {
             requires Self::spec_connectivitymteph_wf(graph);
     }
 
-    } // verus!
-
     #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphMtEph<V>;
 
@@ -89,6 +87,7 @@ pub mod ConnectivityMtEph {
     ///
     /// Returns:
     /// - The number of connected components
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
         if graph.sizeE() == 0 {
@@ -117,6 +116,7 @@ pub mod ConnectivityMtEph {
     /// Returns:
     /// - (representatives, component_map): Set of component representatives and
     ///   mapping from each vertex to its component representative
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
@@ -146,6 +146,7 @@ pub mod ConnectivityMtEph {
     ///
     /// - APAS: N/A — helper function implicit in Algorithm 63.2/63.3 Line 7.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to route_edges_parallel whose merge is sequential
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     fn build_quotient_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
@@ -164,6 +165,7 @@ pub mod ConnectivityMtEph {
     ///
     /// - APAS: N/A — helper function, not in prose.
     /// - Claude-Opus-4.6: Work O(k), Span O(k) — sequential set union after ParaPair! makes span O(k) not O(lg k)
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
@@ -212,10 +214,11 @@ pub mod ConnectivityMtEph {
         result
     }
 
-    /// Compose maps (P ∘ C): for each (u → v) in P, output (u → C[v]).
+    /// Compose maps (P . C): for each (u -> v) in P, output (u -> C[v]).
     ///
     /// - APAS: N/A — helper function, Line 10 of Algorithm 63.3.
     /// - Claude-Opus-4.6: Work O(|P|), Span O(|P|) — currently sequential despite "parallel" name
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     fn compose_maps_parallel<V: StT + MtT + Hash + Ord + 'static>(
         partition_map: &HashMap<V, V>,
@@ -231,8 +234,9 @@ pub mod ConnectivityMtEph {
 
     /// Exercise 63.1: Count Components using star_contract_mt higher-order function
     ///
-    /// - APAS: Work O((n+m) lg n), Span O(lg² n) — same as Algorithm 63.2 (parallel)
+    /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.2 (parallel)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt (inherits merge bottleneck)
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
         let base = |vertices: &SetStEph<V>| vertices.size();
@@ -244,8 +248,9 @@ pub mod ConnectivityMtEph {
 
     /// Exercise 63.2: Connected Components using star_contract_mt higher-order function
     ///
-    /// - APAS: Work O((n+m) lg n), Span O(lg² n) — same as Algorithm 63.3 (parallel)
+    /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.3 (parallel)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(n lg n) — delegates to star_contract_mt (inherits compose bottleneck)
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
@@ -274,4 +279,6 @@ pub mod ConnectivityMtEph {
 
         star_contract_mt(graph, seed, &base, &expand)
     }
+
+    } // verus!
 }

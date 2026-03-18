@@ -31,7 +31,6 @@ pub mod BSTReducedStEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -609,7 +608,7 @@ pub mod BSTReducedStEph {
             Some(node) => {
                 let k = node.key.clone();
                 let v = node.value.clone();
-                proof { accept(k == node.key && v == node.value); } // accept hole: Clone bridge
+                proof { assume(k == node.key && v == node.value); } // accept hole: Clone bridge
                 Some(Box::new(Node {
                     key: k,
                     value: v,
@@ -1605,7 +1604,7 @@ pub mod BSTReducedStEph {
 
     impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
         fn clone(&self) -> Self {
-            proof { accept(Lnk::spec_ordered_link(&self.left)); accept(Lnk::spec_ordered_link(&self.right)); } // Clone body: ordering bridge
+            proof { assume(Lnk::spec_ordered_link(&self.left)); assume(Lnk::spec_ordered_link(&self.right)); } // Clone body: ordering bridge
             Node {
                 key: self.key.clone(),
                 value: self.value.clone(),
@@ -1647,9 +1646,9 @@ pub mod BSTReducedStEph {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
-            proof { accept(Lnk::spec_ordered_link(&self.root)); accept(Lnk::spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
+            proof { assume(Lnk::spec_ordered_link(&self.root)); assume(Lnk::spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
             let equal = compare_reduced_links(&self.root, &other.root);
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }

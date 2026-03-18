@@ -33,7 +33,6 @@ pub mod AVLTreeSetMtEph {
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::ParaPair;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     // NOTE: This type does NOT implement Ord (unlike AVLTreeSetMtPer) because no caller requires it.
@@ -543,7 +542,7 @@ broadcast use {
             } else {
                 let item = self.snapshot[self.pos].clone();
                 self.pos = self.pos + 1;
-                proof { accept(item == old(self)@.1[old(self)@.0]); }  // accept hole: Clone preserves value
+                proof { assume(item == old(self)@.1[old(self)@.0]); }  // accept hole: Clone preserves value
                 Some(item)
             }
         }

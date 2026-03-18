@@ -57,8 +57,6 @@ pub mod EdgeContractionMtEph {
             requires Self::spec_edgecontractionmteph_wf(graph);
     }
 
-    } // verus!
-
     /// Algorithm 61.6: Parallel Edge Contraction
     ///
     /// Contracts edges in a matching by merging their endpoints in parallel.
@@ -79,6 +77,7 @@ pub mod EdgeContractionMtEph {
     ///
     /// Returns:
     /// - Contracted graph where matched edges are merged into single vertices
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn edge_contract_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
@@ -126,6 +125,7 @@ pub mod EdgeContractionMtEph {
     ///
     /// - APAS: N/A — Verus-specific scaffolding (parallel edge routing helper)
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(lg |E|) — genuine divide-and-conquer parallelism
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
@@ -182,7 +182,7 @@ pub mod EdgeContractionMtEph {
     /// Computes a parallel matching and contracts it.
     ///
     /// - APAS: Work O(|V| + |E|), Span O(lg |V|)
-    /// - Claude-Opus-4.6: Work Θ(|E|²), Span Θ(|E|) — dominated by parallel_matching_mt's
+    /// - Claude-Opus-4.6: Work Θ(|E|^2), Span Θ(|E|) — dominated by parallel_matching_mt's
     ///   should_select_edge scanning all edges
     ///
     /// Arguments:
@@ -191,6 +191,7 @@ pub mod EdgeContractionMtEph {
     ///
     /// Returns:
     /// - Contracted graph
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
@@ -199,4 +200,6 @@ pub mod EdgeContractionMtEph {
         let matching = parallel_matching_mt(graph, seed);
         edge_contract_mt(graph, &matching)
     }
+
+    } // verus!
 }

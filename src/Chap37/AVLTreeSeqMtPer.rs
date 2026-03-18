@@ -44,7 +44,6 @@ pub mod AVLTreeSeqMtPer {
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::{spawn, wait};
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
@@ -731,9 +730,9 @@ pub mod AVLTreeSeqMtPer {
             ensures equal == (self@ == other@)
         {
             proof {
-                accept(spec_avltreeseqmtper_wf(self.root));
-                accept(spec_avltreeseqmtper_wf(other.root));
-                accept(obeys_feq_full::<T>());
+                assume(spec_avltreeseqmtper_wf(self.root));
+                assume(spec_avltreeseqmtper_wf(other.root));
+                assume(obeys_feq_full::<T>());
             }
             compare_trees(&self.root, &other.root)
         }
@@ -746,7 +745,7 @@ pub mod AVLTreeSeqMtPer {
             let copy = AVLTreeSeqMtPerS {
                 root: self.root.clone(),
             };
-            proof { accept(copy@ == self@); }  // accept hole: Arc::clone external_body
+            proof { assume(copy@ == self@); }  // accept hole: Arc::clone external_body
             copy
         }
     }

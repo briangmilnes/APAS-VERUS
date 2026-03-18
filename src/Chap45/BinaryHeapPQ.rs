@@ -38,7 +38,6 @@ pub mod BinaryHeapPQ {
 
         use crate::Types::Types::*;
         use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
-        use crate::vstdplus::accept::accept;
         use crate::vstdplus::total_order::total_order::TotalOrder;
         use crate::vstdplus::pervasives_plus::pervasives_plus::vec_swap;
         use core::cmp::Ordering;
@@ -1555,7 +1554,7 @@ pub mod BinaryHeapPQ {
             {
                 let cloned = BinaryHeapPQ { elements: self.elements.clone() };
                 proof {
-                    accept(obeys_feq_clone::<T>());
+                    assume(obeys_feq_clone::<T>());
                     lemma_seq_map_cloned_view_eq(
                         self.elements.seq@,
                         cloned.elements.seq@,
@@ -1576,7 +1575,7 @@ pub mod BinaryHeapPQ {
                 ensures equal == (self@ == other@)
             {
                 let equal = self.elements == other.elements;
-                proof { accept(equal == (self@ == other@)); }
+                proof { assume(equal == (self@ == other@)); }
                 equal
             }
         }

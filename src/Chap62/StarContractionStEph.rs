@@ -49,8 +49,6 @@ pub mod StarContractionStEph {
             requires Self::spec_starcontractionsteph_wf(graph);
     }
 
-    } // verus!
-
     #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphStEph<V>;
 
@@ -70,6 +68,7 @@ pub mod StarContractionStEph {
     ///
     /// Returns:
     /// - Result of type R as computed by base and expand functions
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R
     where
@@ -96,6 +95,7 @@ pub mod StarContractionStEph {
     ///
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential loop over all edges.
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     fn build_quotient_graph<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
@@ -129,6 +129,7 @@ pub mod StarContractionStEph {
     ///
     /// - APAS: Work O((n + m) lg n), Span O((n + m) lg n)
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — agrees with APAS.
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V> {
         star_contract(
@@ -137,4 +138,6 @@ pub mod StarContractionStEph {
             &|_v, _e, _centers, _part, result| result,
         )
     }
+
+    } // verus!
 }

@@ -42,7 +42,6 @@ pub mod AVLTreeSeqStEph {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{lemma_cloned_view_eq, obeys_feq_full};
@@ -687,7 +686,7 @@ pub mod AVLTreeSeqStEph {
                 let left = clone_link(&node.left);
                 let right = clone_link(&node.right);
                 let new_value = node.value.clone_plus();
-                proof { accept(new_value@ == node.value@); }
+                proof { assume(new_value@ == node.value@); }
                 Some(Box::new(AVLTreeNode {
                     value: new_value,
                     height: node.height,
@@ -1105,9 +1104,9 @@ pub mod AVLTreeSeqStEph {
             ensures equal == (self@ == other@)
         {
             proof {
-                accept(spec_avltreeseqsteph_wf(self.root));
-                accept(spec_avltreeseqsteph_wf(other.root));
-                accept(obeys_feq_full::<T>());
+                assume(spec_avltreeseqsteph_wf(self.root));
+                assume(spec_avltreeseqsteph_wf(other.root));
+                assume(obeys_feq_full::<T>());
             }
             compare_trees(&self.root, &other.root)
         }

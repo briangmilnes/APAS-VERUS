@@ -54,8 +54,6 @@ pub mod StarContractionMtEph {
             requires Self::spec_starcontractionmteph_wf(graph);
     }
 
-    } // verus!
-
     #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphMtEph<V>;
 
@@ -65,7 +63,7 @@ pub mod StarContractionMtEph {
     /// - Base case: No edges, call base function on vertices
     /// - Recursive case: Parallel partition, parallel quotient construction, recur, then expand
     ///
-    /// - APAS: Work O((n + m) lg n), Span O(lg² n)
+    /// - APAS: Work O((n + m) lg n), Span O(lg^2 n)
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — star_partition is sequential (all loops); quotient build uses ParaPair but partition dominates span.
     ///
     /// Arguments:
@@ -76,6 +74,7 @@ pub mod StarContractionMtEph {
     ///
     /// Returns:
     /// - Result of type R as computed by base and expand functions
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R
     where
@@ -102,6 +101,7 @@ pub mod StarContractionMtEph {
     ///
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(lg m) — delegates to route_edges_parallel which uses ParaPair fork-join.
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
@@ -123,6 +123,7 @@ pub mod StarContractionMtEph {
     ///
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
@@ -175,8 +176,9 @@ pub mod StarContractionMtEph {
     ///
     /// Convenience wrapper that performs contraction with identity base/expand.
     ///
-    /// - APAS: Work O((n + m) lg n), Span O(lg² n)
+    /// - APAS: Work O((n + m) lg n), Span O(lg^2 n)
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — delegates to star_contract_mt which has sequential partition.
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
@@ -189,4 +191,6 @@ pub mod StarContractionMtEph {
             &|_v, _e, _centers, _part, result| result,
         )
     }
+
+    } // verus!
 }

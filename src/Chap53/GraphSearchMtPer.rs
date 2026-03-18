@@ -12,7 +12,6 @@ pub mod GraphSearchMtPer {
     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerTrait;
     use crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 

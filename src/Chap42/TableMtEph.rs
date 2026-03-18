@@ -33,7 +33,6 @@ pub mod TableMtEph {
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{lemma_seq_map_cloned_view_eq, obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger, obeys_view_eq_trigger};
@@ -2200,7 +2199,7 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             let equal = self.entries == other.entries;
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }
@@ -2212,7 +2211,7 @@ broadcast use {
             let cloned = TableMtEph {
                 entries: self.entries.clone(),
             };
-            proof { accept(cloned@ == self@); }  // accept hole: Vec::clone external_body
+            proof { assume(cloned@ == self@); }  // accept hole: Vec::clone external_body
             cloned
         }
     }

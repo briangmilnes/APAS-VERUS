@@ -23,7 +23,6 @@ pub mod OrderedTableMtPer {
     use crate::Chap43::OrderedSetMtEph::OrderedSetMtEph::*;
     use crate::Chap43::OrderedTableStPer::OrderedTableStPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_view_eq_trigger};
@@ -519,12 +518,12 @@ pub mod OrderedTableMtPer {
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow().clone();
-            proof { accept(inner@ == self@); }
+            proof { assume(inner@ == self@); }
             read_handle.release_read();
             let ghost view = inner@;
             proof {
-                accept(view.dom().finite());
-                accept(inner.spec_orderedtablestper_wf());
+                assume(view.dom().finite());
+                assume(inner.spec_orderedtablestper_wf());
             }
             OrderedTableMtPer {
                 locked_table: RwLock::new(inner, Ghost(OrderedTableMtPerInv)),

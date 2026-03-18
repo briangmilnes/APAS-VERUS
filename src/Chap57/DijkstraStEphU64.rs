@@ -22,7 +22,6 @@ pub mod DijkstraStEphU64 {
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     verus! {
@@ -164,7 +163,7 @@ pub mod DijkstraStEphU64 {
     {
         let n = graph.vertices().size();
         assert(n == graph@.V.len());
-        proof { accept(obeys_feq_clone::<PQEntry>()); }
+        proof { assume(obeys_feq_clone::<PQEntry>()); }
 
         // Edge count for PQ size bound: total PQ inserts <= |E|.
         let arcs_ref = graph.labeled_arcs();

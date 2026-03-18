@@ -33,7 +33,6 @@ pub mod AVLTreeSetStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
@@ -1682,8 +1681,8 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             proof {
-                accept(self.spec_avltreesetsteph_wf());
-                accept(other.spec_avltreesetsteph_wf());
+                assume(self.spec_avltreesetsteph_wf());
+                assume(other.spec_avltreesetsteph_wf());
             }
             let equal = self.size() == other.size() && {
                 let n = self.elements.length();
@@ -1705,7 +1704,7 @@ broadcast use {
                 }
                 all_found
             };
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }

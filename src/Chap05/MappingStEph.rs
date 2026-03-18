@@ -34,7 +34,6 @@ verus! {
         vstd::std_specs::hash::obeys_key_model,
         vstd::std_specs::clone::*,
     };
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::seq_set::*;
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
@@ -619,7 +618,7 @@ verus! {
                 }
             }
             // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
-            proof { accept(r == (self@ == other@)); }
+            proof { assume(r == (self@ == other@)); }
             r
         }
     }

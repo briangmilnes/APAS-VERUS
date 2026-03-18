@@ -27,7 +27,6 @@ pub mod TableStPer {
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -2191,7 +2190,7 @@ pub mod TableStPer {
             ensures equal == (self@ == other@)
         {
             let equal = self.entries == other.entries;
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }
@@ -2202,7 +2201,7 @@ pub mod TableStPer {
         {
             let cloned = TableStPer { entries: self.entries.clone() };
             proof {
-                accept(obeys_feq_clone::<Pair<K, V>>());
+                assume(obeys_feq_clone::<Pair<K, V>>());
                 lemma_seq_map_cloned_view_eq(
                     self.entries.seq@,
                     cloned.entries.seq@,

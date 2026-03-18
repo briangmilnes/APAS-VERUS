@@ -7,7 +7,6 @@
 pub mod BoruvkaMtEph {
 
     use vstd::prelude::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::float::float::{WrappedF64, zero_dist};
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
@@ -49,7 +48,7 @@ pub mod BoruvkaMtEph {
             ensures r == (self@ == other@)
         {
             let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
-            proof { accept(r == (self@ == other@)); }
+            proof { assume(r == (self@ == other@)); }
             r
         }
     }
@@ -124,48 +123,11 @@ pub mod BoruvkaMtEph {
         ) -> WrappedF64;
     }
 
-    } // verus!
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> PartialOrd for LabeledEdge<V> {
-        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-            Some(self.cmp(other))
-        }
-    }
-    #[cfg(not(verus_keep_ghost))]
-    impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> Ord for LabeledEdge<V> {
-        fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-            self.0.cmp(&other.0)
-                .then_with(|| self.1.cmp(&other.1))
-                .then_with(|| self.2.val.partial_cmp(&other.2.val).unwrap_or(std::cmp::Ordering::Equal))
-                .then_with(|| self.3.cmp(&other.3))
-        }
-    }
-    #[cfg(not(verus_keep_ghost))]
-    impl<V: std::hash::Hash> std::hash::Hash for LabeledEdge<V> {
-        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-            self.0.hash(state);
-            self.1.hash(state);
-            self.2.val.to_bits().hash(state);
-            self.3.hash(state);
-        }
-    }
-    #[cfg(not(verus_keep_ghost))]
-    impl<V: std::fmt::Debug> std::fmt::Debug for LabeledEdge<V> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            f.debug_tuple("LabeledEdge").field(&self.0).field(&self.1).field(&self.2.val).field(&self.3).finish()
-        }
-    }
-    #[cfg(not(verus_keep_ghost))]
-    impl<V: std::fmt::Display> std::fmt::Display for LabeledEdge<V> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "({}, {}, {}, {})", self.0, self.1, self.2, self.3)
-        }
-    }
+    // 9. impls
 
     // Hash-based coin flip: deterministic from (seed, round, vertex index).
     // Replaces sequential StdRng coin flips with a parallelizable hash function.
-    #[cfg(not(verus_keep_ghost))]
+    #[verifier::external_body]
     fn hash_coin(seed: u64, round: usize, index: usize) -> bool {
         use std::hash::{Hash, Hasher};
         use std::collections::hash_map::DefaultHasher;
@@ -179,7 +141,7 @@ pub mod BoruvkaMtEph {
     /// Parallel coin flip generation using divide-and-conquer.
     ///
     /// - Work O(n), Span O(log n) — parallel hash-based coin generation via ParaPair!.
-    #[cfg(not(verus_keep_ghost))]
+    #[verifier::external_body]
     fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices: Arc<Vec<V>>,
         seed: u64,
@@ -214,7 +176,7 @@ pub mod BoruvkaMtEph {
     /// Parallel remaining-vertex filter using divide-and-conquer.
     ///
     /// - Work O(n), Span O(log n) — parallel filter via ParaPair!.
-    #[cfg(not(verus_keep_ghost))]
+    #[verifier::external_body]
     fn compute_remaining_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices: Arc<Vec<V>>,
         partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,
@@ -252,7 +214,7 @@ pub mod BoruvkaMtEph {
     /// Parallel MST label collection using divide-and-conquer.
     ///
     /// - Work O(n), Span O(log n) — parallel label extraction via ParaPair!.
-    #[cfg(not(verus_keep_ghost))]
+    #[verifier::external_body]
     fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + 'static>(
         keys: Arc<Vec<V>>,
         partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,
@@ -290,7 +252,7 @@ pub mod BoruvkaMtEph {
     /// Maps tails→heads from partition, remaining→identity.
     ///
     /// - Work O(n), Span O(log n) — parallel map building via ParaPair!.
-    #[cfg(not(verus_keep_ghost))]
+    #[verifier::external_body]
     fn build_partition_map_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices: Arc<Vec<V>>,
         partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,
@@ -335,7 +297,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: Work O(m), Span O(log m)
     /// - Claude-Opus-4.6: Work O(m), Span O(log m) — agrees with APAS; parallel divide-and-conquer via ParaPair!.
-    #[cfg(not(verus_keep_ghost))]
+    #[verifier::external_body]
     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
         start: usize,
@@ -391,7 +353,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: Work O(n), Span O(log n)
     /// - Claude-Opus-4.6: Work O(n), Span O(log n) — coin flips, filter, and remaining all O(log n) via ParaPair!.
-    #[cfg(not(verus_keep_ghost))]
+    #[verifier::external_body]
     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices_vec: Vec<V>,
         bridges: HashMap<V, (V, WrappedF64, usize)>,
@@ -430,7 +392,7 @@ pub mod BoruvkaMtEph {
     /// Parallel filter: find edges from Tail→Head.
     ///
     /// - Claude-Opus-4.6: Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.
-    #[cfg(not(verus_keep_ghost))]
+    #[verifier::external_body]
     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices: Arc<Vec<V>>,
         bridges: Arc<HashMap<V, (V, WrappedF64, usize)>>,
@@ -486,7 +448,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: Work O(m log n), Span O(log² n)
     /// - Claude-Opus-4.6: Work O(m log n), Span O(log² n) — each round is O(log n) span (bridges O(log m), partition O(log n), reroute O(log m)); O(log n) rounds total.
-    #[cfg(not(verus_keep_ghost))]
+    #[verifier::external_body]
     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices_vec: Vec<V>,
         edges_vec: Vec<LabeledEdge<V>>,
@@ -545,7 +507,7 @@ pub mod BoruvkaMtEph {
     /// Parallel edge re-routing: map edges to new endpoints and remove self-edges.
     ///
     /// - Claude-Opus-4.6: Work O(m), Span O(log m) — parallel divide-and-conquer via ParaPair!.
-    #[cfg(not(verus_keep_ghost))]
+    #[verifier::external_body]
     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
         partition: Arc<HashMap<V, V>>,
@@ -591,7 +553,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: Work O(m log n), Span O(log² n)
     /// - Claude-Opus-4.6: Work O(m log n), Span O(log² n) — delegates to boruvka_mst_mt which achieves O(log n) span per round.
-    #[cfg(not(verus_keep_ghost))]
+    #[verifier::external_body]
     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
         vertices: &SetStEph<V>,
         edges: &SetStEph<LabeledEdge<V>>,
@@ -606,7 +568,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: N/A — utility function, not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential scan of edges.
-    #[cfg(not(verus_keep_ghost))]
+    #[verifier::external_body]
     pub fn mst_weight<V: StT + Hash>(
         edges: &SetStEph<LabeledEdge<V>>,
         mst_labels: &SetStEph<usize>,
@@ -618,5 +580,46 @@ pub mod BoruvkaMtEph {
             }
         }
         total
+    }
+
+    } // verus!
+
+    // 14. derive impls outside verus!
+
+    #[cfg(not(verus_keep_ghost))]
+    impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> PartialOrd for LabeledEdge<V> {
+        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+            Some(self.cmp(other))
+        }
+    }
+    #[cfg(not(verus_keep_ghost))]
+    impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> Ord for LabeledEdge<V> {
+        fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+            self.0.cmp(&other.0)
+                .then_with(|| self.1.cmp(&other.1))
+                .then_with(|| self.2.val.partial_cmp(&other.2.val).unwrap_or(std::cmp::Ordering::Equal))
+                .then_with(|| self.3.cmp(&other.3))
+        }
+    }
+    #[cfg(not(verus_keep_ghost))]
+    impl<V: std::hash::Hash> std::hash::Hash for LabeledEdge<V> {
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+            self.0.hash(state);
+            self.1.hash(state);
+            self.2.val.to_bits().hash(state);
+            self.3.hash(state);
+        }
+    }
+    #[cfg(not(verus_keep_ghost))]
+    impl<V: std::fmt::Debug> std::fmt::Debug for LabeledEdge<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_tuple("LabeledEdge").field(&self.0).field(&self.1).field(&self.2.val).field(&self.3).finish()
+        }
+    }
+    #[cfg(not(verus_keep_ghost))]
+    impl<V: std::fmt::Display> std::fmt::Display for LabeledEdge<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "({}, {}, {}, {})", self.0, self.1, self.2, self.3)
+        }
     }
 }

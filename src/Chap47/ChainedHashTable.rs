@@ -20,7 +20,6 @@ pub mod ChainedHashTable {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
-    use crate::vstdplus::accept::accept;
     use crate::Types::Types::*;
 
     verus! {
@@ -142,7 +141,7 @@ pub mod ChainedHashTable {
                 ensures cloned == *self
             {
                 let cloned = ChainEntry { chain: self.chain.clone(), _phantom: PhantomData };
-                proof { accept(cloned == *self); }
+                proof { assume(cloned == *self); }
                 cloned
             }
         }
@@ -152,7 +151,7 @@ pub mod ChainedHashTable {
                 ensures equal == (self.chain == other.chain)
             {
                 let equal = self.chain == other.chain;
-                proof { accept(equal == (self.chain == other.chain)); }
+                proof { assume(equal == (self.chain == other.chain)); }
                 equal
             }
         }

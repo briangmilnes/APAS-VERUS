@@ -598,23 +598,28 @@ pub mod ETSPMtEph {
         { *self }
     }
 
-    } // verus!
-
     use std::sync::Arc;
 
     pub trait ETSPPointTrait {
         fn distance(&self, other: &Point) -> f64;
     }
 
+    #[verifier::external_body]
+    fn point_distance(a: &Point, b: &Point) -> f64 {
+        let dx = a.x - b.x;
+        let dy = a.y - b.y;
+        (dx * dx + dy * dy).sqrt()
+    }
+
     impl ETSPPointTrait for Point {
+        #[verifier::external_body]
         fn distance(&self, other: &Point) -> f64 {
-            let dx = self.x - other.x;
-            let dy = self.y - other.y;
-            (dx * dx + dy * dy).sqrt()
+            point_distance(self, other)
         }
     }
 
     /// Sort points by longest-spread dimension and split at median. (f64 arithmetic.)
+    #[verifier::external_body]
     pub fn sort_and_split_impl(points: &Vec<Point>) -> (Vec<Point>, Vec<Point>) {
         let n = points.len();
         let (mut min_x, mut max_x, mut min_y, mut max_y) =
@@ -641,6 +646,7 @@ pub mod ETSPMtEph {
     /// Parallel find-best-swap: recursively splits the outer loop over left_tour
     /// and runs both halves in parallel via HFScheduler join().
     /// Work Θ(n·m), Span Θ(m·lg n) where n = left_tour.len(), m = right_tour.len().
+    #[verifier::external_body]
     pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (usize, usize) {
         let lt = Arc::new(left_tour.clone());
         let rt = Arc::new(right_tour.clone());
@@ -648,6 +654,7 @@ pub mod ETSPMtEph {
         (li, ri)
     }
 
+    #[verifier::external_body]
     fn find_best_swap_par(
         left_tour: Arc<Vec<Edge>>, right_tour: Arc<Vec<Edge>>, lo: usize, hi: usize,
     ) -> (usize, usize, f64) {
@@ -683,5 +690,7 @@ pub mod ETSPMtEph {
             if left_res.2 <= right_res.2 { left_res } else { right_res }
         }
     }
+
+    } // verus!
 
 } // mod

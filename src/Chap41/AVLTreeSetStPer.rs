@@ -28,7 +28,6 @@ pub mod AVLTreeSetStPer {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -988,8 +987,8 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             proof {
-                accept(self.spec_avltreesetstper_wf());
-                accept(other.spec_avltreesetstper_wf());
+                assume(self.spec_avltreesetstper_wf());
+                assume(other.spec_avltreesetstper_wf());
             }
             let equal = self.size() == other.size() && {
                 let n = self.elements.length();
@@ -1011,7 +1010,7 @@ broadcast use {
                 }
                 all_found
             };
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }

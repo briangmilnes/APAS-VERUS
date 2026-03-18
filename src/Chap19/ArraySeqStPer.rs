@@ -1206,7 +1206,7 @@ pub mod ArraySeqStPer {
             ensures equal == (self@ == other@)
         {
             let equal = self.seq == other.seq;
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }

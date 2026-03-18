@@ -37,7 +37,6 @@ pub mod BalBinTreeStEph {
         vstd::std_specs::vec::*,
         vstd::std_specs::cmp::PartialEqSpecImpl,
     };
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -791,7 +790,7 @@ pub mod BalBinTreeStEph {
                 (BalBinTree::Leaf, BalBinTree::Leaf) => true,
                 (BalBinTree::Node(a), BalBinTree::Node(b)) => {
                     let equal = a.left == b.left && a.value == b.value && a.right == b.right;
-                    proof { accept(equal == (*self == *other)); }
+                    proof { assume(equal == (*self == *other)); }
                     equal
                 },
                 _ => false,
@@ -808,7 +807,7 @@ pub mod BalBinTreeStEph {
             ensures equal == (*self == *other)
         {
             let equal = self.left == other.left && self.value == other.value && self.right == other.right;
-            proof { accept(equal == (*self == *other)); }
+            proof { assume(equal == (*self == *other)); }
             equal
         }
     }
@@ -829,7 +828,7 @@ pub mod BalBinTreeStEph {
                 right: clone_tree(&node.right),
             })),
         };
-        proof { accept(c == *t); }
+        proof { assume(c == *t); }
         c
     }
 
@@ -854,7 +853,7 @@ pub mod BalBinTreeStEph {
                 value: self.value.clone(),
                 right: clone_tree(&self.right),
             };
-            proof { accept(cloned == *self); }
+            proof { assume(cloned == *self); }
             cloned
         }
     }

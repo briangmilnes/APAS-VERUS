@@ -39,7 +39,6 @@ pub mod PrimTreeSeqStPer {
         vstd::std_specs::vec::*,
         vstd::std_specs::cmp::PartialEqSpecImpl,
     };
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     #[cfg(verus_keep_ghost)]
     use vstd::multiset::Multiset;
@@ -884,7 +883,7 @@ pub mod PrimTreeSeqStPer {
             ensures cloned@ == self@
         {
             let cloned = PrimTreeSeqStS { seq: self.seq.clone() };
-            proof { accept(cloned@ == self@); }
+            proof { assume(cloned@ == self@); }
             cloned
         }
     }
@@ -896,7 +895,7 @@ pub mod PrimTreeSeqStPer {
             ensures equal == (self@ == other@)
         {
             let equal = self.seq == other.seq;
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }
@@ -914,7 +913,7 @@ pub mod PrimTreeSeqStPer {
                 PrimTreeSeqStTree::One(v) => PrimTreeSeqStTree::One(v.clone()),
                 PrimTreeSeqStTree::Two(l, r) => PrimTreeSeqStTree::Two(l.clone(), r.clone()),
             };
-            proof { accept(cloned@ == self@); }
+            proof { assume(cloned@ == self@); }
             cloned
         }
     }
@@ -932,12 +931,12 @@ pub mod PrimTreeSeqStPer {
                 },
                 (PrimTreeSeqStTree::One(a), PrimTreeSeqStTree::One(b)) => {
                     let equal = *a == *b;
-                    proof { accept(equal == (self@ == other@)); }
+                    proof { assume(equal == (self@ == other@)); }
                     equal
                 },
                 (PrimTreeSeqStTree::Two(l1, r1), PrimTreeSeqStTree::Two(l2, r2)) => {
                     let equal = *l1 == *l2 && *r1 == *r2;
-                    proof { accept(equal == (self@ == other@)); }
+                    proof { assume(equal == (self@ == other@)); }
                     equal
                 },
                 _ => {

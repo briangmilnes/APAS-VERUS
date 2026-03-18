@@ -45,7 +45,6 @@ verus! {
         vstd::laws_eq::*,
     };
     use vstd::rwlock::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -1042,7 +1041,7 @@ verus! {
         fn size(&self) -> (size: N) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            proof { accept(inner@ == self@); }
+            proof { assume(inner@ == self@); }
             let size = inner.size();
             read_handle.release_read();
             size
@@ -1051,7 +1050,7 @@ verus! {
         fn mem(&self, x: T) -> (contains: B) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            proof { accept(inner@ == self@); }
+            proof { assume(inner@ == self@); }
             let contains = inner.mem(&x);
             read_handle.release_read();
             contains
@@ -1059,7 +1058,7 @@ verus! {
 
         fn insert(&mut self, x: T) -> (r: std::result::Result<bool, ()>) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
-            proof { accept(self.ghost_locked_set@ == locked_val@); }
+            proof { assume(self.ghost_locked_set@ == locked_val@); }
             let inserted = locked_val.insert(x);
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);
@@ -1070,7 +1069,7 @@ verus! {
         fn choose(&self) -> (element: T) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            proof { accept(inner@ == self@); }
+            proof { assume(inner@ == self@); }
             let element = inner.choose();
             read_handle.release_read();
             element
@@ -1096,7 +1095,7 @@ verus! {
             ensures equal == (self@ == other@)
         {
             let equal = self.elements == other.elements;
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }

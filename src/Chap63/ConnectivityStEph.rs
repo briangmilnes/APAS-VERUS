@@ -60,8 +60,6 @@ pub mod ConnectivityStEph {
             requires Self::spec_connectivitysteph_wf(graph);
     }
 
-    } // verus!
-
     #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphStEph<V>;
 
@@ -79,6 +77,7 @@ pub mod ConnectivityStEph {
     ///
     /// Returns:
     /// - The number of connected components
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
         if graph.sizeE() == 0 {
@@ -107,6 +106,7 @@ pub mod ConnectivityStEph {
     /// Returns:
     /// - (representatives, component_map): Set of component representatives and
     ///   mapping from each vertex to its component representative
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
         if graph.sizeE() == 0 {
@@ -138,6 +138,7 @@ pub mod ConnectivityStEph {
     ///
     /// - APAS: N/A — helper function implicit in Algorithm 63.2/63.3 Line 7.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — single pass over edges
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     fn build_quotient_edges<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
@@ -169,6 +170,7 @@ pub mod ConnectivityStEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.2
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
         let base = |vertices: &SetStEph<V>| vertices.size();
@@ -184,6 +186,7 @@ pub mod ConnectivityStEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.3
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
         let base = |vertices: &SetStEph<V>| {
@@ -209,4 +212,6 @@ pub mod ConnectivityStEph {
 
         star_contract(graph, &base, &expand)
     }
+
+    } // verus!
 }

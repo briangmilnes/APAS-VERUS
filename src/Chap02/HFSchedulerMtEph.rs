@@ -9,7 +9,6 @@
 
 pub mod HFSchedulerMtEph {
     use vstd::prelude::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::threads_plus::threads_plus::*;
     use crate::Concurrency::*;
     use std::sync::{Mutex, Condvar, LazyLock, RwLock};
@@ -148,7 +147,7 @@ pub mod HFSchedulerMtEph {
         let b = match handle.join() {
             Ok(val) => val,
             Err(_) => {
-                proof { accept(false); }
+                proof { assume(false); }
                 diverge()
             }
         };

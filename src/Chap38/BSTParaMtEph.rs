@@ -24,7 +24,6 @@ pub mod BSTParaMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
 
     verus! {
@@ -94,13 +93,7 @@ pub mod BSTParaMtEph {
 
     // 7. proof fns/broadcast groups
 
-    pub assume_specification<T: MtKey + 'static>[ split_inner ](tree: &ParamBST<T>, key: &T)
-        -> (parts: (ParamBST<T>, B, ParamBST<T>))
-        ensures
-            parts.1 == tree@.contains(key@),
-            parts.0@.finite(),
-            parts.2@.finite()
-    ;
+    // assume_specification for split_inner removed — specs now on the function itself.
 
     // 8. traits
 
@@ -207,7 +200,7 @@ pub mod BSTParaMtEph {
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparamteph_wf()
         {
             let empty = ParamBST { root: new_param_bst_arc(None) };
-            proof { accept(empty@ == Set::<<T as View>::V>::empty() && empty.spec_bstparamteph_wf()); }
+            proof { assume(empty@ == Set::<<T as View>::V>::empty() && empty.spec_bstparamteph_wf()); }
             empty
         }
 
@@ -221,7 +214,7 @@ pub mod BSTParaMtEph {
             let tree = ParamBST {
                 root: new_param_bst_arc(Some(Box::new(NodeInner { key, size: 1, left, right }))),
             };
-            proof { accept(tree@ == Set::<<T as View>::V>::empty().insert(key@) && tree@.finite()); }
+            proof { assume(tree@ == Set::<<T as View>::V>::empty().insert(key@) && tree@.finite()); }
             tree
         }
 
@@ -237,7 +230,7 @@ pub mod BSTParaMtEph {
                 },
             };
             handle.release_read();
-            proof { accept(self@.len() == 0 ==> exposed is Leaf); }
+            proof { assume(self@.len() == 0 ==> exposed is Leaf); }
             exposed
         }
 
@@ -260,7 +253,7 @@ pub mod BSTParaMtEph {
                     let joined = ParamBST {
                         root: new_param_bst_arc(Some(Box::new(NodeInner { key, size: sz, left, right }))),
                     };
-                    proof { accept(exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty()); }
+                    proof { assume(exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty()); }
                     joined
                 },
             }
@@ -276,7 +269,7 @@ pub mod BSTParaMtEph {
                 Some(node) => node.size,
             };
             handle.release_read();
-            proof { accept(count == self@.len() && self@.finite()); }
+            proof { assume(count == self@.len() && self@.finite()); }
             count
         }
 
@@ -348,7 +341,7 @@ pub mod BSTParaMtEph {
                 }
                 remaining = remaining - 1;
             }
-            proof { accept(result.is_some() <==> self@.contains(key@)); }
+            proof { assume(result.is_some() <==> self@.contains(key@)); }
             result
         }
 
@@ -414,7 +407,7 @@ pub mod BSTParaMtEph {
                 Exposed::Leaf => Exposed::Leaf,
                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
             };
-            proof { accept(cloned@ == self@); }
+            proof { assume(cloned@ == self@); }
             cloned
         }
     }
@@ -429,7 +422,7 @@ pub mod BSTParaMtEph {
                 left: self.left.clone(),
                 right: self.right.clone(),
             };
-            proof { accept(cloned@ == self@); }
+            proof { assume(cloned@ == self@); }
             cloned
         }
     }
@@ -439,17 +432,19 @@ pub mod BSTParaMtEph {
             ensures cloned@ == self@
         {
             let cloned = ParamBST { root: clone_arc_rwlock(&self.root) };
-            proof { accept(cloned@ == self@); }
+            proof { assume(cloned@ == self@); }
             cloned
         }
     }
 
-    } // verus!
+    // 12. outside-verus algorithmic helpers (external_body, pending full proofs)
 
+    #[verifier::external_body]
     fn new_leaf<T: MtKey>() -> ParamBST<T> {
         ParamBST { root: new_param_bst_arc(None) }
     }
 
+    #[verifier::external_body]
     fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> Exposed<T> {
         let handle = tree.root.acquire_read();
         let exposed = match handle.borrow() {
@@ -460,6 +455,7 @@ pub mod BSTParaMtEph {
         exposed
     }
 
+    #[verifier::external_body]
     fn join_mid<T: MtKey + 'static>(exposed: Exposed<T>) -> ParamBST<T> {
         match exposed {
             | Exposed::Leaf => new_leaf(),
@@ -472,7 +468,13 @@ pub mod BSTParaMtEph {
         }
     }
 
-    fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (ParamBST<T>, B, ParamBST<T>) {
+    #[verifier::external_body]
+    fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))
+        ensures
+            parts.1 == tree@.contains(key@),
+            parts.0@.finite(),
+            parts.2@.finite()
+    {
         match expose_internal(tree) {
             | Exposed::Leaf => (new_leaf(), false, new_leaf()),
             | Exposed::Node(left, root_key, right) => match key.cmp(&root_key) {
@@ -491,10 +493,12 @@ pub mod BSTParaMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn join_m<T: MtKey + 'static>(left: ParamBST<T>, key: T, right: ParamBST<T>) -> ParamBST<T> {
         join_mid(Exposed::Node(left, key, right))
     }
 
+    #[verifier::external_body]
     fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> Option<T> {
         match expose_internal(tree) {
             | Exposed::Leaf => None,
@@ -505,6 +509,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn join_pair_inner<T: MtKey + 'static>(left: ParamBST<T>, right: ParamBST<T>) -> ParamBST<T> {
         match expose_internal(&right) {
             | Exposed::Leaf => left,
@@ -516,6 +521,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn union_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
         match (expose_internal(a), expose_internal(b)) {
             | (Exposed::Leaf, _) => b.clone(),
@@ -529,6 +535,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn intersect_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
         match (expose_internal(a), expose_internal(b)) {
             | (Exposed::Leaf, _) | (_, Exposed::Leaf) => new_leaf(),
@@ -545,6 +552,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn difference_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
         match (expose_internal(a), expose_internal(b)) {
             | (Exposed::Leaf, _) => new_leaf(),
@@ -563,6 +571,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn filter_inner<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         predicate: &Arc<F>,
@@ -585,6 +594,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn filter_parallel<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         predicate: F,
@@ -593,6 +603,7 @@ pub mod BSTParaMtEph {
         filter_inner(tree, &predicate)
     }
 
+    #[verifier::external_body]
     fn reduce_inner<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         op: &Arc<F>,
@@ -616,6 +627,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn reduce_parallel<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         op: F,
@@ -625,6 +637,7 @@ pub mod BSTParaMtEph {
         reduce_inner(tree, &op, base)
     }
 
+    #[verifier::external_body]
     fn collect_in_order<T: MtKey + 'static>(tree: &ParamBST<T>, out: &mut Vec<T>) {
         match expose_internal(tree) {
             | Exposed::Leaf => {}
@@ -635,6 +648,8 @@ pub mod BSTParaMtEph {
             }
         }
     }
+
+    } // verus!
 
     // 13. derive impls outside verus!
 

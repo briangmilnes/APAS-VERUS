@@ -21,45 +21,45 @@ Table of Contents:
 =================================================================
 
 ℹ DirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:833: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:842: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:851: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:860: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:869: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:878: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:887: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:896: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:905: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:914: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/DirGraphMtEph.rs:923: info: accept()
-   Info: 11 total
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:832: info: structural_false_positive RWLOCK_GHOST vertices — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:841: info: structural_false_positive RWLOCK_GHOST arcs — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:850: info: structural_false_positive RWLOCK_GHOST sizeV — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:859: info: structural_false_positive RWLOCK_GHOST sizeA — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:868: info: structural_false_positive RWLOCK_GHOST neighbor — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:877: info: structural_false_positive RWLOCK_GHOST n_plus — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:886: info: structural_false_positive RWLOCK_GHOST n_minus — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:895: info: structural_false_positive RWLOCK_GHOST ng — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:904: info: structural_false_positive RWLOCK_GHOST n_plus_of_vertices — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:913: info: structural_false_positive RWLOCK_GHOST n_minus_of_vertices — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:922: info: structural_false_positive RWLOCK_GHOST ng_of_vertices — proof { assume(inner@ == self@); } [medium]
+   Info: 11 × structural_false_positive
 ✓ DirGraphStEph.rs
 ℹ LabDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:710: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:720: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:731: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabDirGraphMtEph.rs:740: info: accept()
-   Info: 4 total
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:709: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:719: info: structural_false_positive RWLOCK_GHOST add_labeled_arc — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:730: info: structural_false_positive RWLOCK_GHOST n_plus — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:739: info: structural_false_positive RWLOCK_GHOST n_minus — proof { assume(inner@ == self@); } [medium]
+   Info: 4 × structural_false_positive
 ✓ LabDirGraphStEph.rs
 ℹ LabUnDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:658: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:667: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:676: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:685: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:694: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:702: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/LabUnDirGraphMtEph.rs:712: info: accept()
-   Info: 7 total
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:657: info: structural_false_positive RWLOCK_GHOST vertices — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:666: info: structural_false_positive RWLOCK_GHOST labeled_edges — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:675: info: structural_false_positive RWLOCK_GHOST edges — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:684: info: structural_false_positive RWLOCK_GHOST has_edge — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:693: info: structural_false_positive RWLOCK_GHOST ng — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:701: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:711: info: structural_false_positive RWLOCK_GHOST add_labeled_edge — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+   Info: 7 × structural_false_positive
 ✓ LabUnDirGraphStEph.rs
 ℹ UnDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:556: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:565: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:574: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:583: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:592: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:601: info: accept()
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap06/UnDirGraphMtEph.rs:610: info: accept()
-   Info: 7 total
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:555: info: structural_false_positive RWLOCK_GHOST vertices — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:564: info: structural_false_positive RWLOCK_GHOST edges — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:573: info: structural_false_positive RWLOCK_GHOST sizeV — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:582: info: structural_false_positive RWLOCK_GHOST sizeE — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:591: info: structural_false_positive RWLOCK_GHOST neighbor — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:600: info: structural_false_positive RWLOCK_GHOST ng — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:609: info: structural_false_positive RWLOCK_GHOST ng_of_vertices — proof { assume(inner@ == self@); } [medium]
+   Info: 7 × structural_false_positive
 ✓ UnDirGraphStEph.rs
 ✓ WeightedDirGraphStEphI128.rs
 ✓ WeightedDirGraphStEphI16.rs
@@ -152,8 +152,8 @@ Function Specs:
 
 Holes Found: 0 (actionable)
 
-Accepted (reviewed): 29 total
-   29 × accept()
+Structural (info only): 29
+   29 × RWLOCK_GHOST
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -161,12 +161,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 09:40:52 -07:00
-Ended:     2026-03-18 09:40:52 -07:00
-Duration:  120ms
+Started:   2026-03-18 11:13:52 -07:00
+Ended:     2026-03-18 11:13:52 -07:00
+Duration:  104ms
 
 Full output: src/Chap06/analyses/veracity-review-verus-proof-holes.log
-
-Duration:  120ms
-
-Full output: src/Chap06/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap06/analyses/veracity-review-verus-proof-holes.log

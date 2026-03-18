@@ -71,11 +71,10 @@ pub mod PrimStEph {
         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64;
     }
 
-    } // verus!
-
     /// Module-level function to create a new PQEntry.
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     fn pq_entry_new<V: HashOrd>(priority: WrappedF64, vertex: V, parent: Option<V>) -> PQEntry<V> {
         PQEntry {
@@ -85,49 +84,20 @@ pub mod PrimStEph {
         }
     }
 
-    #[cfg(not(verus_keep_ghost))]
-    impl<V: HashOrd> Ord for PQEntry<V> {
-        /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn cmp(&self, other: &Self) -> Ordering { self.priority.cmp(&other.priority) }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<V: HashOrd> PartialOrd for PQEntry<V> {
-        /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<V: HashOrd + Display> Display for PQEntry<V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "({}, {})", self.priority, self.vertex) }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<V: HashOrd + std::fmt::Debug> std::fmt::Debug for PQEntry<V> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            f.debug_struct("PQEntry")
-                .field("priority", &self.priority.val)
-                .field("vertex", &self.vertex)
-                .field("parent", &self.parent)
-                .finish()
-        }
-    }
-
     /// Algorithm 65.1: Prim's MST Algorithm
     ///
     /// Computes the Minimum Spanning Tree using priority-first search.
     /// Similar to Dijkstra's, but priority is minimum edge weight to visited set X.
     ///
-    /// Priority: p(v) = min_{x∈X} w(x,v)
+    /// Priority: p(v) = min_{x in X} w(x,v)
     ///
     /// - APAS: Work O(m lg n), Span O(m lg n)
-    /// - Claude-Opus-4.6: Work O(m² lg n), Span O(m² lg n) — the APAS bound assumes
+    /// - Claude-Opus-4.6: Work O(m^2 lg n), Span O(m^2 lg n) — the APAS bound assumes
     ///   O(degree) adjacency-list lookups, but LabUnDirGraphStEph stores edges in a flat
     ///   set, so ng() and get_edge_label() each cost O(m) per call. Total neighbor/weight
-    ///   work across all vertices is O(nm) = O(m²) in a dense graph. With an adjacency-list
+    ///   work across all vertices is O(nm) = O(m^2) in a dense graph. With an adjacency-list
     ///   graph representation this would be O(m lg n) as textbook states.
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn prim_mst<V: HashOrd + Display>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
@@ -183,6 +153,7 @@ pub mod PrimStEph {
     /// Compute total MST weight.
     /// - APAS: (no cost stated) — utility function
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64 {
         let mut total = zero_dist();
@@ -191,5 +162,37 @@ pub mod PrimStEph {
             total += *w;
         }
         total
+    }
+
+    } // verus!
+
+    #[cfg(not(verus_keep_ghost))]
+    impl<V: HashOrd> Ord for PQEntry<V> {
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        fn cmp(&self, other: &Self) -> Ordering { self.priority.cmp(&other.priority) }
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    impl<V: HashOrd> PartialOrd for PQEntry<V> {
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    impl<V: HashOrd + Display> Display for PQEntry<V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "({}, {})", self.priority, self.vertex) }
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    impl<V: HashOrd + std::fmt::Debug> std::fmt::Debug for PQEntry<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("PQEntry")
+                .field("priority", &self.priority.val)
+                .field("vertex", &self.vertex)
+                .field("parent", &self.parent)
+                .finish()
+        }
     }
 }

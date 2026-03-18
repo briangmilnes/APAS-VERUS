@@ -32,7 +32,6 @@ pub mod HeapsortExample {
     use crate::Chap45::SortedListPQ::SortedListPQ::*;
     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ;
     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
@@ -95,7 +94,7 @@ broadcast use {
                     binary_heap_result: self.binary_heap_result.clone(),
                     leftist_heap_result: self.leftist_heap_result.clone(),
                 };
-                proof { accept(cloned@ == self@); }
+                proof { assume(cloned@ == self@); }
                 cloned
             }
         }
@@ -110,7 +109,7 @@ broadcast use {
                     && self.balanced_tree_result == other.balanced_tree_result
                     && self.binary_heap_result == other.binary_heap_result
                     && self.leftist_heap_result == other.leftist_heap_result;
-                proof { accept(equal == (self@ == other@)); }
+                proof { assume(equal == (self@ == other@)); }
                 equal
             }
         }

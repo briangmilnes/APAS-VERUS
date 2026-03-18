@@ -23,7 +23,6 @@ pub mod BalancedTreePQ {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Types::Types::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
@@ -668,7 +667,7 @@ broadcast use {
                 ensures equal == (self@ == other@)
             {
                 let equal = self.elements == other.elements;
-                proof { accept(equal == (self@ == other@)); }
+                proof { assume(equal == (self@ == other@)); }
                 equal
             }
         }

@@ -75,8 +75,6 @@ pub mod TSPApproxStEph {
             requires Self::spec_tspapproxsteph_wf(graph);
     }
 
-    } // verus!
-
     /// Euler Tour of a Tree
     ///
     /// Performs DFS traversal that visits each edge twice (once in each direction).
@@ -92,6 +90,7 @@ pub mod TSPApproxStEph {
     ///
     /// Returns:
     /// - Vector of vertices in Euler tour order
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn euler_tour<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
@@ -109,6 +108,7 @@ pub mod TSPApproxStEph {
     /// - APAS: N/A — internal helper for euler_tour.
     /// - Claude-Opus-4.6: Work O(n * m_tree), Span O(n * m_tree) — for each vertex,
     ///   scans neighbors (O(m)) and tree_edges (O(m_tree)) to find matching edges.
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     fn euler_tour_dfs<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
@@ -172,6 +172,7 @@ pub mod TSPApproxStEph {
     ///
     /// Returns:
     /// - Vector of vertices with each vertex appearing exactly once (except start/end)
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn shortcut_tour<V: HashOrd>(euler_tour: &[V]) -> Vec<V> {
         if euler_tour.is_empty() {
@@ -202,6 +203,7 @@ pub mod TSPApproxStEph {
     ///
     /// - APAS: Work O(n), Span O(n)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) — agrees with APAS.
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn tour_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
@@ -224,6 +226,7 @@ pub mod TSPApproxStEph {
 
     /// - APAS: N/A — internal helper, no prose counterpart.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges.
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> SetStEph<V> {
         let mut neighbors = SetLit![];
@@ -240,6 +243,7 @@ pub mod TSPApproxStEph {
 
     /// - APAS: N/A — internal helper, no prose counterpart.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges.
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     fn get_edge_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
@@ -261,7 +265,7 @@ pub mod TSPApproxStEph {
     /// 1. Given spanning tree T (should be MST for best results)
     /// 2. Compute Euler tour (visits each edge twice)
     /// 3. Apply shortcuts using triangle inequality
-    /// 4. Result has weight ≤ 2 × w(T)
+    /// 4. Result has weight <= 2 * w(T)
     ///
     /// - APAS: Work O(n+m), Span O(n+m)
     /// - Claude-Opus-4.6: Work O(n+m), Span O(n+m) — agrees with APAS.
@@ -273,6 +277,7 @@ pub mod TSPApproxStEph {
     ///
     /// Returns:
     /// - (tour, weight): Hamiltonian cycle and its total weight
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn approx_metric_tsp<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
@@ -290,4 +295,6 @@ pub mod TSPApproxStEph {
 
         (tour, weight)
     }
+
+    } // verus!
 }

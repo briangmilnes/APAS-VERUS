@@ -27,7 +27,6 @@ pub mod LeftistHeapPQ {
     use crate::Types::Types::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Concurrency::diverge;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -1130,7 +1129,7 @@ broadcast use {
                             right: Box::new((**right).clone()),
                             rank: *rank,
                         };
-                        proof { accept(cloned == *self); }
+                        proof { assume(cloned == *self); }
                         cloned
                     }
                 }
@@ -1150,7 +1149,7 @@ broadcast use {
                     }
                     _ => false,
                 };
-                proof { accept(equal == (*self == *other)); }
+                proof { assume(equal == (*self == *other)); }
                 equal
             }
         }
@@ -1162,7 +1161,7 @@ broadcast use {
                 ensures cloned.root == self.root
             {
                 let cloned = LeftistHeapPQ { root: self.root.clone() };
-                proof { accept(cloned.root == self.root); }
+                proof { assume(cloned.root == self.root); }
                 cloned
             }
         }
@@ -1172,7 +1171,7 @@ broadcast use {
                 ensures equal == (self.root == other.root)
             {
                 let equal = self.root == other.root;
-                proof { accept(equal == (self.root == other.root)); }
+                proof { assume(equal == (self.root == other.root)); }
                 equal
             }
         }

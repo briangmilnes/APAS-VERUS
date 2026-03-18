@@ -24,7 +24,6 @@ pub mod SortedListPQ {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Types::Types::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -1043,7 +1042,7 @@ broadcast use {
             {
                 let cloned = SortedListPQ { elements: self.elements.clone() };
                 proof {
-                    accept(obeys_feq_clone::<T>());
+                    assume(obeys_feq_clone::<T>());
                     lemma_seq_map_cloned_view_eq(
                         self.elements.seq@,
                         cloned.elements.seq@,

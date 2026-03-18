@@ -38,7 +38,6 @@ pub mod ArraySeqStEph {
         vstd::std_specs::clone::*,
     };
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::monoid::monoid::*;
     use crate::vstdplus::multiset::multiset::*;
@@ -1052,7 +1051,7 @@ pub mod ArraySeqStEph {
             ensures equal == (self@ == other@)
         {
             let equal = self.seq == other.seq;
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }

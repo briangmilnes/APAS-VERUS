@@ -28,7 +28,6 @@ pub mod ArraySetEnumMtEph {
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Concurrency::Concurrency::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
 
     // Bit manipulation macros (must precede verus! for use in spec fns).
 
@@ -948,7 +947,7 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             let equal = self.universe_size == other.universe_size && self.bits == other.bits;
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }
@@ -961,7 +960,7 @@ broadcast use {
                 bits: self.bits.clone(),
                 universe_size: self.universe_size,
             };
-            proof { accept(cloned@ == self@); }
+            proof { assume(cloned@ == self@); }
             cloned
         }
     }

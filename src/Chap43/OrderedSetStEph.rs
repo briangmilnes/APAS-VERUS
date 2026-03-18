@@ -23,11 +23,12 @@ pub mod OrderedSetStEph {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{feq, obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
+    #[cfg(not(verus_keep_ghost))]
+    use crate::vstdplus::feq::feq::feq;
 
     verus! {
 
@@ -340,7 +341,7 @@ broadcast use {
             let result = AVLTreeSeqStPerS::from_vec(elements);
             proof {
                 // T::clone preserves View (StT bound); from_vec maps values through View.
-                accept(result@ =~= eph_seq@);  // Clone/view bridging.
+                assume(result@ =~= eph_seq@);  // Clone/view bridging.
             }
             result
         }

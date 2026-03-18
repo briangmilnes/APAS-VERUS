@@ -22,7 +22,6 @@ pub mod OrderedSetMtEph {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap43::OrderedSetStEph::OrderedSetStEph::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {

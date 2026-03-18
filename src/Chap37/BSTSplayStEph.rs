@@ -25,7 +25,6 @@ pub mod BSTSplayStEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
 
     verus! {
 

@@ -28,7 +28,6 @@ pub mod BSTParaTreapMtEph {
     use vstd::rwlock::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
 
@@ -127,12 +126,9 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    } // verus!
-
-    //		9. impls
-
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    #[verifier::external_body]
     fn priority_for<T: MtKey>(key: &T) -> i64 {
         let mut hasher = std::collections::hash_map::DefaultHasher::new();
         let mut buf = String::new();
@@ -143,6 +139,7 @@ pub mod BSTParaTreapMtEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    #[verifier::external_body]
     fn tree_priority<T: MtKey>(tree: &ParamTreap<T>) -> i64 {
         let handle = tree.root.acquire_read();
         let result = handle.borrow().as_ref().map_or(i64::MIN, |node| node.priority);
@@ -152,6 +149,7 @@ pub mod BSTParaTreapMtEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    #[verifier::external_body]
     fn tree_size<T: MtKey>(tree: &ParamTreap<T>) -> usize {
         let handle = tree.root.acquire_read();
         let result = handle.borrow().as_ref().map_or(0, |node| node.size);
@@ -161,6 +159,7 @@ pub mod BSTParaTreapMtEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    #[verifier::external_body]
     fn make_node<T: MtKey>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> ParamTreap<T> {
         let size = 1 + tree_size(&left) + tree_size(&right);
         ParamTreap {
@@ -170,6 +169,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn join_with_priority<T: MtKey + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> ParamTreap<T>
     where
         ParamTreap<T>: ParamTreapTrait<T>,
@@ -194,6 +194,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn split_inner<T: MtKey + 'static>(tree: &ParamTreap<T>, key: &T) -> (ParamTreap<T>, bool, ParamTreap<T>)
     where
         ParamTreap<T>: ParamTreapTrait<T>,
@@ -216,6 +217,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn join_pair_inner<T: MtKey + 'static>(left: ParamTreap<T>, right: ParamTreap<T>) -> ParamTreap<T>
     where
         ParamTreap<T>: ParamTreapTrait<T>,
@@ -231,6 +233,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn union_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>
     where
         ParamTreap<T>: ParamTreapTrait<T>,
@@ -246,6 +249,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn intersect_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>
     where
         ParamTreap<T>: ParamTreapTrait<T>,
@@ -265,6 +269,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn difference_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>
     where
         ParamTreap<T>: ParamTreapTrait<T>,
@@ -284,6 +289,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn filter_inner<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: &Arc<F>) -> ParamTreap<T>
     where
         ParamTreap<T>: ParamTreapTrait<T>,
@@ -304,6 +310,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn filter_parallel<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: F) -> ParamTreap<T>
     where
         ParamTreap<T>: ParamTreapTrait<T>,
@@ -312,6 +319,7 @@ pub mod BSTParaTreapMtEph {
         filter_inner(tree, &predicate)
     }
 
+    #[verifier::external_body]
     fn reduce_inner<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> T
     where
         ParamTreap<T>: ParamTreapTrait<T>,
@@ -335,6 +343,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn reduce_parallel<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> T
     where
         ParamTreap<T>: ParamTreapTrait<T>,
@@ -344,6 +353,7 @@ pub mod BSTParaTreapMtEph {
         reduce_inner(tree, &op, base)
     }
 
+    #[verifier::external_body]
     fn collect_in_order<T: MtKey + 'static>(tree: &ParamTreap<T>, out: &mut Vec<T>)
     where
         ParamTreap<T>: ParamTreapTrait<T>,
@@ -357,8 +367,6 @@ pub mod BSTParaTreapMtEph {
             }
         }
     }
-
-    verus! {
 
     //		8. traits
 
@@ -496,7 +504,7 @@ pub mod BSTParaTreapMtEph {
             let tree = ParamTreap {
                 root: new_param_treap_arc(None),
             };
-            proof { accept(tree@.finite() && tree@.len() == 0); }
+            proof { assume(tree@.finite() && tree@.len() == 0); }
             tree
         }
 
@@ -526,7 +534,7 @@ pub mod BSTParaTreapMtEph {
             };
             handle.release_read();
             proof {
-                accept(
+                assume(
                     self@.finite()
                     && (result is None ==> self@.len() == 0)
                     && (result matches Some((left, key, _, right)) ==> (
@@ -565,7 +573,7 @@ pub mod BSTParaTreapMtEph {
                 Some(node) => node.size,
             };
             handle.release_read();
-            proof { accept(self@.finite() && count == self@.len()); }
+            proof { assume(self@.finite() && count == self@.len()); }
             count
         }
 
@@ -652,7 +660,7 @@ pub mod BSTParaTreapMtEph {
                 remaining = remaining - 1;
             }
             proof {
-                accept(
+                assume(
                     (result matches Some(v) ==> v@ == key@ && self@.contains(v@))
                     && (result is None ==> !self@.contains(key@))
                 );

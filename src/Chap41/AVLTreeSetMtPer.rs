@@ -29,7 +29,6 @@ pub mod AVLTreeSetMtPer {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger};
@@ -541,8 +540,8 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             proof {
-                accept(self.spec_avltreesetmtper_wf());
-                accept(other.spec_avltreesetmtper_wf());
+                assume(self.spec_avltreesetmtper_wf());
+                assume(other.spec_avltreesetmtper_wf());
             }
             let equal = self.size() == other.size() && {
                 let n = self.size();
@@ -564,7 +563,7 @@ broadcast use {
                 }
                 all_found
             };
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }
@@ -603,7 +602,7 @@ broadcast use {
             ensures cloned@ == self@, cloned.spec_avltreesetmtper_wf() == self.spec_avltreesetmtper_wf(),
         {
             let cloned = AVLTreeSetMtPer { elements: self.elements.clone() };
-            proof { accept(cloned@ == self@ && cloned.spec_avltreesetmtper_wf() == self.spec_avltreesetmtper_wf()); }
+            proof { assume(cloned@ == self@ && cloned.spec_avltreesetmtper_wf() == self.spec_avltreesetmtper_wf()); }
             cloned
         }
     }

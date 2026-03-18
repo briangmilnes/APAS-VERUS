@@ -8,7 +8,6 @@ pub mod OrderedTableStPer {
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Chap42::TableStPer::TableStPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use vstd::prelude::*;
@@ -1334,7 +1333,7 @@ pub mod OrderedTableStPer {
             ensures equal == (self@ == other@)
         {
             let equal = self.base_table.entries == other.base_table.entries;
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }

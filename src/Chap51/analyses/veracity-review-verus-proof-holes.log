@@ -20,38 +20,70 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-ℹ BottomUpDPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:329: info: accept()
-   Info: 1 total
-   2 clean proof functions
-ℹ BottomUpDPMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:296: info: accept()
-   Info: 1 total
-   2 clean proof functions
-ℹ BottomUpDPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:481: info: accept()
-   Info: 1 total
-   2 clean proof functions
-ℹ BottomUpDPStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:438: info: accept()
-   Info: 1 total
-   2 clean proof functions
-ℹ TopDownDPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:485: info: accept()
-   Info: 1 total
-   3 clean proof functions
-ℹ TopDownDPMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:440: info: accept()
-   Info: 1 total
-   3 clean proof functions
-ℹ TopDownDPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:383: info: accept()
-   Info: 1 total
-   3 clean proof functions
-ℹ TopDownDPStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:332: info: accept()
-   Info: 1 total
-   3 clean proof functions
+⚠ BottomUpDPMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:328: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       324 |         fn eq(&self, other: &Self) -> (eq: bool)
+            ...
+       326 |         {
+       327 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       329 |             r
+       330 |         }
+⚠ BottomUpDPMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:295: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       291 |         fn eq(&self, other: &Self) -> (eq: bool)
+            ...
+       293 |         {
+       294 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       296 |             r
+       297 |         }
+⚠ BottomUpDPStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:480: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       476 |         fn eq(&self, other: &Self) -> (eq: bool)
+            ...
+       478 |         {
+       479 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       481 |             r
+       482 |         }
+⚠ BottomUpDPStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:437: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       433 |         fn eq(&self, other: &Self) -> (eq: bool)
+            ...
+       435 |         {
+       436 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       438 |             r
+       439 |         }
+⚠ TopDownDPMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:484: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       480 |         fn eq(&self, other: &Self) -> (eq: bool)
+            ...
+       482 |         {
+       483 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       485 |             r
+       486 |         }
+⚠ TopDownDPMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:439: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       435 |         fn eq(&self, other: &Self) -> (eq: bool)
+            ...
+       437 |         {
+       438 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       440 |             r
+       441 |         }
+⚠ TopDownDPStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:382: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       378 |         fn eq(&self, other: &Self) -> (eq: bool)
+            ...
+       380 |         {
+       381 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       383 |             r
+       384 |         }
+⚠ TopDownDPStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:331: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       327 |         fn eq(&self, other: &Self) -> (eq: bool)
+            ...
+       329 |         {
+       330 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       332 |             r
+       333 |         }
 
 =================================================================
 2. Depends Upon
@@ -107,18 +139,18 @@ Function Specs:
 
 Holes Found: 0 (actionable)
 
-Accepted (reviewed): 8 total
-   8 × accept()
+Warnings: 8 total
+   8 × assume_eq_clone_workaround
 
-No proof holes or warnings found! All proofs are complete.
+No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 09:40:53 -07:00
-Ended:     2026-03-18 09:40:53 -07:00
-Duration:  39ms
+Started:   2026-03-18 11:13:53 -07:00
+Ended:     2026-03-18 11:13:53 -07:00
+Duration:  30ms
 
 Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap51/analyses/veracity-review-verus-proof-holes.log

@@ -28,7 +28,6 @@ pub mod ArraySeqMtPer {
 
     use vstd::prelude::*;
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
@@ -1188,7 +1187,7 @@ pub mod ArraySeqMtPer {
             ensures equal == (self@ == other@)
         {
             let equal = self.seq == other.seq;
-            proof { accept(equal == (self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }

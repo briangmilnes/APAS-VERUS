@@ -26,6 +26,8 @@ pub mod OrderedSetStPer {
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{feq, obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
+    #[cfg(not(verus_keep_ghost))]
+    use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 

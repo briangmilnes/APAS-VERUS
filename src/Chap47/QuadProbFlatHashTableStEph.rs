@@ -19,7 +19,6 @@ pub mod QuadProbFlatHashTableStEph {
     use crate::Chap47::FlatHashTable::FlatHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -402,7 +401,7 @@ pub mod QuadProbFlatHashTableStEph {
                 match entry {
                     FlatEntry::Occupied(k, v) => {
                         let eq = k == *key;
-                        proof { accept(eq == spec_flat_has_key(table.table@[slot as int], *key)); } // Eq bridge.
+                        proof { assume(eq == spec_flat_has_key(table.table@[slot as int], *key)); } // Eq bridge.
                         if eq {
                             proof {
                                 assert(spec_flat_has_key(table.table@[slot as int], *key));
@@ -833,8 +832,8 @@ pub mod QuadProbFlatHashTableStEph {
                 let key = pairs[j].0.clone();
                 let value = pairs[j].1.clone();
                 proof {
-                    accept(key == pairs@[j as int].0);
-                    accept(value == pairs@[j as int].1);
+                    assume(key == pairs@[j as int].0);
+                    assume(value == pairs@[j as int].1);
                 }
                 Self::insert(&mut new_table, key, value);
                 proof {

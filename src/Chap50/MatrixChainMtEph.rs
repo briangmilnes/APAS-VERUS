@@ -15,7 +15,6 @@ pub mod MatrixChainMtEph {
 
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
@@ -493,7 +492,7 @@ broadcast use {
                 memo: self.memo.clone(),
                 ghost_dimensions: Ghost(self.ghost_dimensions@),
             };
-            proof { accept(mc@ == self@); }
+            proof { assume(mc@ == self@); }
             mc
         }
     }
@@ -515,7 +514,7 @@ broadcast use {
             let r = *self_handle.borrow() == *other_handle.borrow();
             other_handle.release_read();
             self_handle.release_read();
-            proof { accept(r == (self@ == other@)); }
+            proof { assume(r == (self@ == other@)); }
             r
         }
     }

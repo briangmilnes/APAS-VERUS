@@ -17,7 +17,6 @@ pub mod MatrixChainMtPer {
 
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Types::Types::*;
-    use crate::vstdplus::accept::accept;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
@@ -405,7 +404,7 @@ broadcast use {
                 dimensions: self.dimensions.clone(),
                 memo: self.memo.clone(),
             };
-            proof { accept(mc@ == self@); }
+            proof { assume(mc@ == self@); }
             mc
         }
     }
@@ -423,7 +422,7 @@ broadcast use {
             let self_dims = arc_deref(&self.dimensions);
             let other_dims = arc_deref(&other.dimensions);
             let r = *self_dims == *other_dims;
-            proof { accept(r == (self@ == other@)); }
+            proof { assume(r == (self@ == other@)); }
             r
         }
     }
