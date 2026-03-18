@@ -121,12 +121,12 @@ Accepted (reviewed): 9 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 09:31:51 -07:00
-Ended:     2026-03-18 09:31:51 -07:00
-Duration:  28ms
+Started:   2026-03-18 10:21:21 -07:00
+Ended:     2026-03-18 10:21:21 -07:00
+Duration:  25ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
-   2026-03-18 09:31:51 -07:00
-Duration:  28ms
+d:     2026-03-18 10:21:21 -07:00
+Duration:  25ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log

@@ -845,39 +845,45 @@ Table of Contents:
    Info: 13 × structural_false_positive
       13 × RWLOCK_GHOST
 ❌ src/Chap43/OrderedSetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1007: error: external_body - #[verifier::external_body]
-      1008 |         fn rank(&self, k: &T) -> (rank: usize)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1030: error: external_body - #[verifier::external_body]
-      1031 |         fn select(&self, i: usize) -> (selected: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1310: error: fn_missing_requires - fn from_sorted_elements — exec fn should have requires
-      1301 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1110: error: assume() [algorithmic] - assume(self@.filter(|x: T::V| exists|t: T| t@ == x && TotalO
+      1094 |         fn select(&self, i: usize) -> (selected: Option<T>)
             ...
-      1308 |     }
-      1309 | 
-      1311 |         ensures constructed@.finite(), constructed.spec_orderedsetsteph_wf()
-      1312 |     {
+      1108 |                     // Filter cardinality requires sortedness of the backing sequence,
+      1109 |                     // which is true for AVL trees but not captured in the wf spec.
+      1111 |                 }
+      1112 |                 Some(result)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1378: error: fn_missing_requires - fn from_sorted_elements — exec fn should have requires
+      1369 |         fn clone(&self) -> (cloned: Self)
+            ...
+      1376 |     }
+      1377 | 
+      1379 |         ensures constructed@.finite(), constructed.spec_orderedsetsteph_wf()
+      1380 |     {
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:343: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1197: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-   Holes: 2 total
-      2 × external_body
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1265: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+   Holes: 1 total
+      1 × assume()
    Info: 1 × structural_false_positive
       1 × STD_TRAIT_IMPL
    Info: 1 total
 ❌ src/Chap43/OrderedSetStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:927: error: external_body - #[verifier::external_body]
-       928 |         fn rank(&self, k: &T) -> (rank: usize)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:945: error: external_body - #[verifier::external_body]
-       946 |         fn select(&self, i: usize) -> (selected: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1078: error: fn_missing_requires - fn from_sorted_elements — exec fn should have requires
-       958 |         fn split_rank(&self, i: usize) -> (split: (Self, Self))
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1029: error: assume() [algorithmic] - assume(self@.filter(|x: T::V| exists|t: T| t@ == x && TotalO
+      1013 |         fn select(&self, i: usize) -> (selected: Option<T>)
             ...
-      1076 |     }
-      1077 | 
-      1079 |         ensures constructed@.finite(), constructed.spec_orderedsetstper_wf()
-      1080 |     {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1121: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-   Holes: 2 total
-      2 × external_body
+      1027 |                     // Filter cardinality requires sortedness of the backing sequence,
+      1028 |                     // which is true for AVL trees but not captured in the wf spec.
+      1030 |                 }
+      1031 |                 Some(result)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1155: error: fn_missing_requires - fn from_sorted_elements — exec fn should have requires
+      1035 |         fn split_rank(&self, i: usize) -> (split: (Self, Self))
+            ...
+      1153 |     }
+      1154 | 
+      1156 |         ensures constructed@.finite(), constructed.spec_orderedsetstper_wf()
+      1157 |     {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1198: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+   Holes: 1 total
+      1 × assume()
    Info: 1 × structural_false_positive
       1 × STD_TRAIT_IMPL
 ❌ src/Chap43/OrderedTableMtEph.rs
@@ -1928,17 +1934,17 @@ Function Specs:
    7247 total fns
 
 
-Holes Found: 73 (actionable)
-   9 × assume() (12%)
-      8 × algorithmic
+Holes Found: 71 (actionable)
+   11 × assume() (15%)
+      10 × algorithmic
       1 × closure
    1 × assume_specification (1%)
-   62 × external_body (84%)
+   58 × external_body (81%)
    1 × external (1%)
 
 Per-Chapter Holes:
   Chap38: 10  Chap39: 10  Chap41: 18
-  Chap43: 22  Chap45:  1  Chap47:  9
+  Chap43: 20  Chap45:  1  Chap47:  9
   Chap57:  2  Chap59:  1
 
 Warnings: 38 total
@@ -1954,9 +1960,9 @@ Accepted (reviewed): 320 total
    10 × trivial_spec_wf
    5 × external_accept_hole
    4 × unsafe_block_accept_hole
-   1 × external_type_specification_accept_hole
-   1 × enum_outside_verus_accept_hole
    1 × struct_outside_verus_accept_hole
+   1 × enum_outside_verus_accept_hole
+   1 × external_type_specification_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap05:  7  Chap06: 29
@@ -1986,52 +1992,52 @@ Structural (info only): 41
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap43  (22 holes, 11 files)
+   1  Chap43  (20 holes, 11 files)
    2  Chap41  (18 holes, 7 files)
    3  Chap38  (10 holes, 2 files)
    4  Chap39  (10 holes, 4 files)
    5  Chap47  (9 holes, 9 files)
    6  Chap57  (2 holes, 3 files)
-   7  Chap59  (1 holes, 4 files)
-   8  Chap45  (1 holes, 7 files)
+   7  Chap45  (1 holes, 7 files)
+   8  Chap59  (1 holes, 4 files)
    9  Chap18  (0 holes, 7 files)
-   10  Chap42  (0 holes, 4 files)
-   11  Chap06  (0 holes, 20 files)
-   12  Chap26  (0 holes, 8 files)
-   13  Chap53  (0 holes, 5 files)
-   14  Chap56  (0 holes, 12 files)
-   15  Chap44  (0 holes, 2 files)
-   16  Chap61  (0 holes, 4 files)
-   17  Chap63  (0 holes, 2 files)
-   18  Chap21  (0 holes, 12 files)
-   19  Chap11  (0 holes, 5 files)
-   20  Chap12  (0 holes, 3 files)
-   21  ParaPairs  (0 holes, 1 files)
-   22  Chap17  (0 holes, 1 files)
-   23  Chap05  (0 holes, 5 files)
-   24  Chap66  (0 holes, 2 files)
-   25  Chap03  (0 holes, 1 files)
-   26  Chap64  (0 holes, 3 files)
-   27  Concurrency  (0 holes, 1 files)
-   28  Chap65  (0 holes, 3 files)
-   29  Chap49  (0 holes, 8 files)
-   30  Chap51  (0 holes, 8 files)
-   31  Chap23  (0 holes, 2 files)
-   32  Chap50  (0 holes, 8 files)
-   33  Chap30  (0 holes, 1 files)
-   34  Chap52  (0 holes, 14 files)
-   35  Chap62  (0 holes, 4 files)
-   36  Chap02  (0 holes, 2 files)
-   37  Chap40  (0 holes, 3 files)
-   38  Chap27  (0 holes, 4 files)
-   39  Chap58  (0 holes, 2 files)
-   40  Chap19  (0 holes, 4 files)
-   41  Chap28  (0 holes, 11 files)
-   42  Chap37  (0 holes, 19 files)
-   43  Chap55  (0 holes, 8 files)
-   44  Chap36  (0 holes, 3 files)
-   45  Chap54  (0 holes, 4 files)
-   46  Chap35  (0 holes, 4 files)
+   10  Chap50  (0 holes, 8 files)
+   11  Chap30  (0 holes, 1 files)
+   12  Chap44  (0 holes, 2 files)
+   13  Chap03  (0 holes, 1 files)
+   14  Chap35  (0 holes, 4 files)
+   15  Chap12  (0 holes, 3 files)
+   16  Chap27  (0 holes, 4 files)
+   17  Concurrency  (0 holes, 1 files)
+   18  Chap63  (0 holes, 2 files)
+   19  Chap21  (0 holes, 12 files)
+   20  Chap40  (0 holes, 3 files)
+   21  Chap55  (0 holes, 8 files)
+   22  Chap53  (0 holes, 5 files)
+   23  Chap66  (0 holes, 2 files)
+   24  Chap52  (0 holes, 14 files)
+   25  Chap02  (0 holes, 2 files)
+   26  Chap23  (0 holes, 2 files)
+   27  Chap56  (0 holes, 12 files)
+   28  Chap64  (0 holes, 3 files)
+   29  Chap05  (0 holes, 5 files)
+   30  Chap62  (0 holes, 4 files)
+   31  Chap17  (0 holes, 1 files)
+   32  Chap54  (0 holes, 4 files)
+   33  Chap26  (0 holes, 8 files)
+   34  Chap65  (0 holes, 3 files)
+   35  Chap37  (0 holes, 19 files)
+   36  Chap06  (0 holes, 20 files)
+   37  Chap19  (0 holes, 4 files)
+   38  Chap51  (0 holes, 8 files)
+   39  Chap36  (0 holes, 3 files)
+   40  ParaPairs  (0 holes, 1 files)
+   41  Chap11  (0 holes, 5 files)
+   42  Chap28  (0 holes, 11 files)
+   43  Chap58  (0 holes, 2 files)
+   44  Chap49  (0 holes, 8 files)
+   45  Chap42  (0 holes, 4 files)
+   46  Chap61  (0 holes, 4 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -2043,10 +2049,10 @@ Structural (info only): 41
    4  src/Chap43/OrderedTableMtEph.rs  (6 holes)
    5  src/Chap43/OrderedTableStEph.rs  (4 holes)
    6  src/Chap41/AVLTreeSetStEph.rs  (2 holes)
-   7  src/Chap43/OrderedSetStPer.rs  (2 holes)
-   8  src/Chap47/ParaHashTableStEph.rs  (1 holes)
-   9  src/Chap38/BSTParaStEph.rs  (1 holes)
-   10  src/Chap45/Example45_2.rs  (1 holes)
+   7  src/Chap43/OrderedSetStPer.rs  (1 holes)
+   8  src/Chap38/BSTParaStEph.rs  (1 holes)
+   9  src/Chap45/Example45_2.rs  (1 holes)
+   10  src/Chap47/ParaHashTableStEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -2071,7 +2077,7 @@ Structural (info only): 41
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 38 clean, 8 holed, 73 holes (global), 257 modules
+Chapter Status — 46 chapters, 38 clean, 8 holed, 71 holes (global), 257 modules
 
 CLEAN CHAPTERS (38)
   Chapter        Files
@@ -2115,13 +2121,13 @@ CLEAN CHAPTERS (38)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (8) — 73 holes
+HOLED CHAPTERS (8) — 71 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap38            10     2  YES       
   Chap39            10     4  internal  Chap39::BSTParaTreapMtEph
   Chap41            18     7  internal  Chap41::AVLTreeSetStEph
-  Chap43            22    11  NO        Chap41::AVLTreeSetStEph, Chap42::TableStPer
+  Chap43            20    11  NO        Chap42::TableStPer, Chap41::AVLTreeSetStEph
   Chap45             1     7  YES       
   Chap47             9     9  internal  Chap47::ParaHashTableStEph
   Chap57             2     3  NO        Chap05::SetStEph
@@ -2150,8 +2156,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 09:31:52 -07:00
-Ended:     2026-03-18 09:31:53 -07:00
-Duration:  1427ms
+Started:   2026-03-18 10:21:22 -07:00
+Ended:     2026-03-18 10:21:23 -07:00
+Duration:  1520ms
 
 Full output: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-review-verus-proof-holes.log

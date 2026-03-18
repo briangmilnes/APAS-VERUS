@@ -924,35 +924,112 @@ broadcast use {
             result
         }
 
-        #[verifier::external_body]
         fn rank(&self, k: &T) -> (rank: usize)
             where T: TotalOrder
-            ensures
-                self@.finite(),
-                rank <= self@.len(),
-                rank as int == self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
         {
-            let elements = &self.base_set.elements;
-            let size = elements.length();
+            assert(obeys_feq_full_trigger::<T>());
+            let n = self.base_set.elements.length();
+            proof { self.base_set.elements@.unique_seq_to_set(); }
+            let ghost elems = self.base_set.elements@;
+            let ghost mut ghost_vals: Seq<T> = Seq::empty();
             let mut count: usize = 0;
-            for i in 0..size {
-                let elem = elements.nth(i);
-                if elem < k { count += 1; } else { break; }
+            let ghost mut counted: Set<T::V> = Set::empty();
+            let mut j: usize = 0;
+            while j < n
+                invariant
+                    self.base_set.elements.spec_avltreeseqstper_wf(),
+                    elems.no_duplicates(),
+                    n as nat == elems.len(),
+                    elems =~= self.base_set.elements@,
+                    obeys_feq_full::<T>(),
+                    0 <= j <= n,
+                    ghost_vals.len() == j as int,
+                    forall|idx: int| #![trigger ghost_vals[idx]]
+                        0 <= idx < j ==> ghost_vals[idx]@ == elems[idx],
+                    counted.finite(),
+                    count as nat == counted.len(),
+                    0 <= count <= j,
+                    counted.subset_of(elems.to_set()),
+                    forall|x: T::V| #[trigger] counted.contains(x) ==>
+                        exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@,
+                    forall|idx: int| #![trigger ghost_vals[idx]]
+                        0 <= idx < j && TotalOrder::le(ghost_vals[idx], *k) && ghost_vals[idx] != *k
+                        ==> counted.contains(ghost_vals[idx]@),
+                    forall|x: T::V| #[trigger] counted.contains(x) ==>
+                        exists|idx: int| 0 <= idx < j && #[trigger] elems[idx] == x,
+                decreases n - j,
+            {
+                let elem_ref = self.base_set.elements.nth(j);
+                proof {
+                    ghost_vals = ghost_vals.push(*elem_ref);
+                    assert(ghost_vals[j as int]@ == elems[j as int]);
+                }
+                let c = TotalOrder::cmp(elem_ref, k);
+                match c {
+                    core::cmp::Ordering::Less => {
+                        proof {
+                            let ghost x = ghost_vals[j as int]@;
+                            let ghost old_counted = counted;
+                            assert(!old_counted.contains(x)) by {
+                                if old_counted.contains(x) {
+                                    let idx = choose|idx: int| 0 <= idx < j && elems[idx] == x;
+                                    assert(elems[idx] == elems[j as int]);
+                                }
+                            };
+                            counted = old_counted.insert(x);
+                            assert(elems[j as int] == x);
+                            assert(elems.to_set().contains(x));
+                        }
+                        count = count + 1;
+                    },
+                    core::cmp::Ordering::Equal => {},
+                    core::cmp::Ordering::Greater => {
+                        proof {
+                            if TotalOrder::le(ghost_vals[j as int], *k) {
+                                T::antisymmetric(ghost_vals[j as int], *k);
+                            }
+                        }
+                    },
+                }
+                j = j + 1;
+            }
+            proof {
+                assert forall|x: T::V|
+                    elems.to_set().contains(x)
+                    && (exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@)
+                    implies #[trigger] counted.contains(x) by {
+                    assert(elems.contains(x));
+                    let idx = choose|idx: int| 0 <= idx < elems.len() && elems[idx] == x;
+                    assert(ghost_vals[idx]@ == x);
+                    let t: T = choose|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@;
+                    assert(t == ghost_vals[idx]);
+                };
+                assert(counted =~= self@.filter(
+                    |x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@));
             }
             count
         }
 
-        #[verifier::external_body]
         fn select(&self, i: usize) -> (selected: Option<T>)
             where T: TotalOrder
-            ensures
-                self@.finite(),
-                i >= self@.len() ==> selected matches None,
-                selected matches Some(v) ==> self@.contains(v@),
-                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int,
         {
+            assert(obeys_feq_full_trigger::<T>());
             let sz = self.size();
-            if i >= sz { None } else { Some(self.base_set.elements.nth(i).clone_plus()) }
+            if i >= sz {
+                None
+            } else {
+                proof { self.base_set.elements@.unique_seq_to_set(); }
+                let elem = self.base_set.elements.nth(i);
+                let result = elem.clone_plus();
+                proof {
+                    lemma_cloned_view_eq(*elem, result);
+                    assert(self.base_set.elements@.to_set().contains(result@));
+                    // Filter cardinality requires sortedness of the backing sequence,
+                    // which is true for AVL trees but not captured in the wf spec.
+                    assume(self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, result) && t@ != result@).len() == i as int);
+                }
+                Some(result)
+            }
         }
 
         fn split_rank(&self, i: usize) -> (split: (Self, Self))

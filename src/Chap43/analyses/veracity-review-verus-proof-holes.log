@@ -97,39 +97,45 @@ Table of Contents:
    Info: 13 × structural_false_positive
       13 × RWLOCK_GHOST
 ❌ OrderedSetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1007: error: external_body - #[verifier::external_body]
-      1008 |         fn rank(&self, k: &T) -> (rank: usize)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1030: error: external_body - #[verifier::external_body]
-      1031 |         fn select(&self, i: usize) -> (selected: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1310: error: fn_missing_requires - fn from_sorted_elements — exec fn should have requires
-      1301 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1110: error: assume() [algorithmic] - assume(self@.filter(|x: T::V| exists|t: T| t@ == x && TotalO
+      1094 |         fn select(&self, i: usize) -> (selected: Option<T>)
             ...
-      1308 |     }
-      1309 | 
-      1311 |         ensures constructed@.finite(), constructed.spec_orderedsetsteph_wf()
-      1312 |     {
+      1108 |                     // Filter cardinality requires sortedness of the backing sequence,
+      1109 |                     // which is true for AVL trees but not captured in the wf spec.
+      1111 |                 }
+      1112 |                 Some(result)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1378: error: fn_missing_requires - fn from_sorted_elements — exec fn should have requires
+      1369 |         fn clone(&self) -> (cloned: Self)
+            ...
+      1376 |     }
+      1377 | 
+      1379 |         ensures constructed@.finite(), constructed.spec_orderedsetsteph_wf()
+      1380 |     {
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:343: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1197: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-   Holes: 2 total
-      2 × external_body
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1265: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+   Holes: 1 total
+      1 × assume()
    Info: 1 × structural_false_positive
       1 × STD_TRAIT_IMPL
    Info: 1 total
 ❌ OrderedSetStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:927: error: external_body - #[verifier::external_body]
-       928 |         fn rank(&self, k: &T) -> (rank: usize)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:945: error: external_body - #[verifier::external_body]
-       946 |         fn select(&self, i: usize) -> (selected: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1078: error: fn_missing_requires - fn from_sorted_elements — exec fn should have requires
-       958 |         fn split_rank(&self, i: usize) -> (split: (Self, Self))
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1029: error: assume() [algorithmic] - assume(self@.filter(|x: T::V| exists|t: T| t@ == x && TotalO
+      1013 |         fn select(&self, i: usize) -> (selected: Option<T>)
             ...
-      1076 |     }
-      1077 | 
-      1079 |         ensures constructed@.finite(), constructed.spec_orderedsetstper_wf()
-      1080 |     {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1121: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-   Holes: 2 total
-      2 × external_body
+      1027 |                     // Filter cardinality requires sortedness of the backing sequence,
+      1028 |                     // which is true for AVL trees but not captured in the wf spec.
+      1030 |                 }
+      1031 |                 Some(result)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1155: error: fn_missing_requires - fn from_sorted_elements — exec fn should have requires
+      1035 |         fn split_rank(&self, i: usize) -> (split: (Self, Self))
+            ...
+      1153 |     }
+      1154 | 
+      1156 |         ensures constructed@.finite(), constructed.spec_orderedsetstper_wf()
+      1157 |     {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1198: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+   Holes: 1 total
+      1 × assume()
    Info: 1 × structural_false_positive
       1 × STD_TRAIT_IMPL
 ❌ OrderedTableMtEph.rs
@@ -254,11 +260,11 @@ Function Specs:
    661 total fns
 
 
-Holes Found: 22 (actionable)
-   2 × assume() (9%)
+Holes Found: 20 (actionable)
+   4 × assume() (20%)
+      3 × algorithmic
       1 × closure
-      1 × algorithmic
-   20 × external_body (90%)
+   16 × external_body (80%)
 
 Warnings: 6 total
    4 × fn_missing_requires
@@ -277,15 +283,8 @@ Structural (info only): 24
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 09:31:51 -07:00
-Ended:     2026-03-18 09:31:51 -07:00
-Duration:  125ms
-
-Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
-==============
-
-Started:   2026-03-18 09:31:51 -07:00
-Ended:     2026-03-18 09:31:51 -07:00
-Duration:  125ms
+Started:   2026-03-18 10:21:31 -07:00
+Ended:     2026-03-18 10:21:31 -07:00
+Duration:  117ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log

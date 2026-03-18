@@ -2,25 +2,27 @@
 
 ## Summary
 
-Proved `split` in OrderedSetStEph.rs and OrderedSetStPer.rs, and `calculate_reduction`
-in AugOrderedTableMtEph.rs. Net result: **-2 actionable holes** (75 → 73).
+Proved `split` and `rank` in OrderedSetStEph.rs and OrderedSetStPer.rs, `calculate_reduction`
+in AugOrderedTableMtEph.rs, and partially proved `select` in both OrderedSet files.
+Net result: **-4 actionable holes** (75 → 71).
 
-Verification: 4288 verified, 0 errors.
+Verification: 4294 verified, 0 errors.
 
 ## Holes Before/After
 
 | # | Chap | File | Before | After | Delta |
 |---|------|------|--------|-------|-------|
-| 1 | 43 | OrderedSetStEph.rs | 3 | 2 | -1 |
-| 2 | 43 | OrderedSetStPer.rs | 3 | 2 | -1 |
+| 1 | 43 | OrderedSetStEph.rs | 3 | 1 | -2 |
+| 2 | 43 | OrderedSetStPer.rs | 3 | 1 | -2 |
 | 3 | 43 | AugOrderedTableMtEph.rs | 2 | 2 | 0 |
 
-**OrderedSetStEph/StPer**: Each had 3 external_body (split, rank, select). Split proved
-(-1 each). Rank/select remain external_body.
+**OrderedSetStEph/StPer**: Each had 3 external_body (split, rank, select).
+- split: fully proved (-1 each)
+- rank: fully proved via ghost counted set + Set::filter extensional equality (-1 each)
+- select: external_body removed, 3 of 4 ensures proved, assume for filter cardinality (0 net)
 
-**AugOrderedTableMtEph**: calculate_reduction external_body removed, but replaced with
-assume for closure totality (`forall|v1, v2| reducer.requires((v1, v2))`). Net 0 for this
-file since veracity counts the assume.
+**AugOrderedTableMtEph**: calculate_reduction external_body removed, replaced with assume
+for closure totality. Net 0.
 
 ## Techniques
 
@@ -30,37 +32,68 @@ Adapted the proven `split_rank` loop pattern with 3-way partitioning (left/right
 
 - Loop over `base_set.elements` using index `j`, calling `nth(j)` for element access.
 - Used `feq(elem_ref, k)` from `vstdplus/feq.rs` to bridge exec `==` to spec view equality.
-- Disjointness proved via provenance-by-index + no_duplicates: if `x` is in both left and
-  right, two distinct indices map to the same value, contradicting no_duplicates.
+- Disjointness proved via provenance-by-index + no_duplicates.
 - Coverage proved by showing every visited index is accounted for (left, right, or == k@).
-- `found == old_view.contains(k@)` proved by contradiction: if !found but k@ in view,
-  then k@ in elements sequence, so some visited index has k@, but all were shown != k@.
+
+### rank (both StEph and StPer) — FULL PROOF, NO ASSUMES
+
+The ensures spec uses `self@.filter(|x| exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len()`.
+This requires bridging from a loop count over concrete elements to a Set::filter cardinality
+on view-level values with an existential quantifier. The proof uses a ghost counted set:
+
+1. **Ghost infrastructure**: `spec_inorder_values` (StEph) or `ghost_vals: Seq<T>` built
+   incrementally (StPer) provides exec-level T values corresponding to each sequence index.
+   `lemma_inorder_values_maps_to_views` (StEph) or push-per-iteration (StPer) establishes
+   `vals[j]@ == elems[j]`.
+
+2. **Loop with TotalOrder::cmp**: Uses `TotalOrder::cmp(elem_ref, k)` instead of `<` for
+   precise ordering information:
+   - Less: `TotalOrder::le(vals[j], *k) && vals[j] != *k` — insert into counted set.
+   - Equal: `vals[j] == *k` — filter predicate fails (t@ == k@).
+   - Greater: `!TotalOrder::le(vals[j], *k)` (by antisymmetry) — filter predicate fails.
+
+3. **Ghost counted set invariants**:
+   - `counted.finite()`, `count == counted.len()`, `counted.subset_of(self@)`
+   - All counted elements satisfy the filter predicate (with vals[idx] as witness)
+   - All visited elements < k are in counted (forward completeness)
+   - All counted elements have provenance (an index < j with matching view)
+
+4. **Uniqueness of insertions**: `!counted.contains(x)` proved via provenance + no_duplicates:
+   if x were already counted, two distinct indices would have the same view, contradicting
+   `elems.no_duplicates()`.
+
+5. **Post-loop extensional equality**: For any x in `self@.filter(pred)`:
+   - x is in `elems.to_set()`, so some index has `elems[idx] == x`
+   - The existential witness t satisfies `t@ == x`, so `t == vals[idx]` by feq injectivity
+   - Therefore `TotalOrder::le(vals[idx], *k) && vals[idx] != *k`, so idx was counted
+   - `counted =~= self@.filter(pred)`, giving `count == filter.len()` ✓
+
+### select (both StEph and StPer)
+
+Removed external_body. Proved `self@.finite()`, `i >= len ==> None`, and
+`self@.contains(v@)` (via `unique_seq_to_set` + `to_set().contains(elem@)`).
+The filter cardinality clause requires sortedness of the backing AVL sequence,
+which is true but not captured in `spec_orderedset*_wf`. Used targeted assume.
 
 ### calculate_reduction (AugOrderedTableMtEph)
 
-Mirrored the StEph pattern: `assume(forall|v1, v2| reducer.requires((v1, v2)))` for
-closure totality (unavoidable without cascading requires through 12+ callers). Used
-`collect()` to get pairs, then while loop reducing from index 1.
+Assume for closure totality, while loop body verified.
 
 ### Iterator::next (attempted, reverted)
 
-Removed external_body, added `assume(iter_invariant(self))` in body. Verified successfully.
-However, veracity classifies external_body on `std::iter::Iterator::next` as a structural
-false positive (STD_TRAIT_IMPL), so it was never counted as a hole. The assume IS counted.
-Net effect would have been +2 holes, so changes were reverted.
+Veracity classifies external_body on `std::iter::Iterator::next` as STD_TRAIT_IMPL
+(not counted). Adding assume would increase hole count. Reverted.
 
 ## Remaining Holes in Agent 3 Files
 
 | # | Chap | File | Hole | What Blocks It |
 |---|------|------|------|----------------|
-| 1 | 43 | OrderedSetStEph.rs | rank external_body | Set::filter + existential quantifiers |
-| 2 | 43 | OrderedSetStEph.rs | select external_body | Same as rank |
-| 3 | 43 | OrderedSetStPer.rs | rank external_body | Same as rank |
-| 4 | 43 | OrderedSetStPer.rs | select external_body | Same as rank |
-| 5 | 43 | AugOrderedTableMtEph.rs | assume (closure totality) | Closure requires cascade |
-| 6 | 43 | AugOrderedTableMtEph.rs | reduce_range_parallel ext_body | ParaPair! fork-join |
+| 1 | 43 | OrderedSetStEph.rs | select assume (filter cardinality) | Sortedness not in wf spec |
+| 2 | 43 | OrderedSetStPer.rs | select assume (filter cardinality) | Sortedness not in wf spec |
+| 3 | 43 | AugOrderedTableMtEph.rs | assume (closure totality) | Closure requires cascade |
+| 4 | 43 | AugOrderedTableMtEph.rs | reduce_range_parallel ext_body | ParaPair! fork-join |
 
-**rank/select** require connecting sorted-sequence indexing to set-filter cardinality through
-TotalOrder + spec_inorder_values. The spec uses `Set::filter` with existential quantifiers
-(`exists|i| 0 <= i < rank && sorted[i] == x`), making the proof extremely difficult.
-Estimated 2-4 hours each. Deferred to future round.
+**select assumes** could be eliminated by adding `spec_elements_sorted()` to
+`spec_orderedset*_wf()` and proving it through insert/delete. The predicate exists
+in AVLTreeSetStEph (`spec_seq_sorted(spec_inorder_values(root))`) but is not part
+of wf. This is a Chap41 prerequisite.
