@@ -21,39 +21,39 @@ Table of Contents:
 =================================================================
 
 ℹ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:671: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BalancedTreePQ.rs:671: info: accept()
    Info: 1 total
    1 clean proof function
 ℹ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:1558: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:1579: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:1558: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/BinaryHeapPQ.rs:1579: info: accept()
    Info: 2 total
    5 clean proof functions
 ❌ Example45_2.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/Example45_2.rs:43: error: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/Example45_2.rs:43: error: external - #[verifier::external]
         44 |         impl Example45_2Trait for Example45_2 {
    Holes: 1 total
       1 × external
    Proof functions: 1 total (1 clean, 0 holed)
 ℹ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/HeapsortExample.rs:98: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/HeapsortExample.rs:113: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/HeapsortExample.rs:98: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/HeapsortExample.rs:113: info: accept()
    Info: 2 total
    1 clean proof function
 ℹ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1133: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1153: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1165: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:1175: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1133: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1153: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1165: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/LeftistHeapPQ.rs:1175: info: accept()
    Info: 4 total
    4 clean proof functions
 ℹ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/SortedListPQ.rs:1046: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/SortedListPQ.rs:1046: info: accept()
    Info: 1 total
    3 clean proof functions
 ℹ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/UnsortedListPQ.rs:652: info: accept()
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/UnsortedListPQ.rs:667: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/UnsortedListPQ.rs:652: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap45/UnsortedListPQ.rs:667: info: accept()
    Info: 2 total
    1 clean proof function
 
@@ -117,9 +117,9 @@ Accepted (reviewed): 12 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 19:54:33 -07:00
-Ended:     2026-03-17 19:54:33 -07:00
-Duration:  54ms
+Started:   2026-03-17 19:40:38 -07:00
+Ended:     2026-03-17 19:40:38 -07:00
+Duration:  68ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
