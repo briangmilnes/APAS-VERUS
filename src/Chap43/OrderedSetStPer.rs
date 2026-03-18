@@ -142,7 +142,7 @@ broadcast use {
                 self@.finite(),
                 self@.len() == 0 <==> first matches None,
                 first matches Some(v) ==> self@.contains(v@),
-                first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(v, t);
+                first matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==> TotalOrder::le(v, t);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then returns last element
         fn last(&self) -> (last: Option<T>)
@@ -152,7 +152,7 @@ broadcast use {
                 self@.finite(),
                 self@.len() == 0 <==> last matches None,
                 last matches Some(v) ==> self@.contains(v@),
-                last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(t, v);
+                last matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==> TotalOrder::le(t, v);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then scans for predecessor
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
@@ -162,7 +162,7 @@ broadcast use {
                 self@.finite(),
                 predecessor matches Some(v) ==> self@.contains(v@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
-                predecessor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+                predecessor matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then scans for successor
         fn next(&self, k: &T) -> (successor: Option<T>)
@@ -172,7 +172,7 @@ broadcast use {
                 self@.finite(),
                 successor matches Some(v) ==> self@.contains(v@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
-                successor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+                successor matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then partitions into two sets
         fn split(&self, k: &T) -> (split: (Self, B, Self))
@@ -188,7 +188,7 @@ broadcast use {
                 split.0@.disjoint(split.2@),
                 !split.0@.contains(k@),
                 !split.2@.contains(k@),
-                forall|x| self@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
+                forall|x| #[trigger] self@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- delegates to union (sequential)
         fn join(left: &Self, right: &Self) -> (joined: Self)
@@ -210,7 +210,7 @@ broadcast use {
             ensures
                 self@.finite(),
                 rank <= self@.len(),
-                rank as int == self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+                rank as int == self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@).len();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then indexes
         fn select(&self, i: usize) -> (selected: Option<T>)
@@ -220,7 +220,7 @@ broadcast use {
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
                 selected matches Some(v) ==> self@.contains(v@),
-                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
+                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, v) && t@ == x && t@ != v@).len() == i as int;
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then partitions by rank (verified with loop invariant)
         fn split_rank(&self, i: usize) -> (split: (Self, Self))
@@ -233,7 +233,7 @@ broadcast use {
                 split.0@.subset_of(self@),
                 split.1@.subset_of(self@),
                 split.0@.disjoint(split.1@),
-                forall|x| self@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x);
+                forall|x| #[trigger] self@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x);
     }
 
     // 9. impls
@@ -400,7 +400,7 @@ broadcast use {
                     i = i + 1;
                 }
                 proof {
-                    assert forall|t: T| self@.contains(t@)
+                    assert forall|t: T| #[trigger] self@.contains(t@)
                         implies TotalOrder::le(min_val, t) by {
                         assert(self.base_set.elements@.to_set().contains(t@));
                         assert(self.base_set.elements@.contains(t@));
@@ -478,7 +478,7 @@ broadcast use {
                     i = i + 1;
                 }
                 proof {
-                    assert forall|t: T| self@.contains(t@)
+                    assert forall|t: T| #[trigger] self@.contains(t@)
                         implies TotalOrder::le(t, max_val) by {
                         assert(self.base_set.elements@.to_set().contains(t@));
                         assert(self.base_set.elements@.contains(t@));
@@ -586,7 +586,7 @@ broadcast use {
                     lemma_cloned_view_eq(*result_ref, result);
                     assert(result@ == ghost_vals[best_idx]@);
                     assert(result == ghost_vals[best_idx]);
-                    assert forall|t: T| self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@
+                    assert forall|t: T| #[trigger] self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@
                         implies TotalOrder::le(t, result) by {
                         assert(self.base_set.elements@.to_set().contains(t@));
                         assert(self.base_set.elements@.contains(t@));
@@ -694,7 +694,7 @@ broadcast use {
                     lemma_cloned_view_eq(*result_ref, result);
                     assert(result@ == ghost_vals[best_idx]@);
                     assert(result == ghost_vals[best_idx]);
-                    assert forall|t: T| self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@
+                    assert forall|t: T| #[trigger] self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@
                         implies TotalOrder::le(result, t) by {
                         assert(self.base_set.elements@.to_set().contains(t@));
                         assert(self.base_set.elements@.contains(t@));
@@ -953,7 +953,7 @@ broadcast use {
                     0 <= count <= j,
                     counted.subset_of(elems.to_set()),
                     forall|x: T::V| #[trigger] counted.contains(x) ==>
-                        exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@,
+                        exists|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@,
                     forall|idx: int| #![trigger ghost_vals[idx]]
                         0 <= idx < j && TotalOrder::le(ghost_vals[idx], *k) && ghost_vals[idx] != *k
                         ==> counted.contains(ghost_vals[idx]@),
@@ -998,16 +998,16 @@ broadcast use {
             proof {
                 assert forall|x: T::V|
                     elems.to_set().contains(x)
-                    && (exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@)
+                    && (exists|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@)
                     implies #[trigger] counted.contains(x) by {
                     assert(elems.contains(x));
                     let idx = choose|idx: int| 0 <= idx < elems.len() && elems[idx] == x;
                     assert(ghost_vals[idx]@ == x);
-                    let t: T = choose|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@;
+                    let t: T = choose|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@;
                     assert(t == ghost_vals[idx]);
                 };
                 assert(counted =~= self@.filter(
-                    |x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@));
+                    |x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@));
             }
             count
         }
@@ -1028,7 +1028,7 @@ broadcast use {
                     assert(self.base_set.elements@.to_set().contains(result@));
                     // Filter cardinality requires sortedness of the backing sequence,
                     // which is true for AVL trees but not captured in the wf spec.
-                    assume(self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, result) && t@ != result@).len() == i as int);
+                    assume(self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, result) && t@ == x && t@ != result@).len() == i as int);
                 }
                 Some(result)
             }

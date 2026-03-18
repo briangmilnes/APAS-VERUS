@@ -234,8 +234,8 @@ broadcast use {
                     constructed@.finite(),
                     constructed.spec_avltreesetstper_wf(),
                     obeys_feq_full::<T>(),
-                    forall|j: int| 0 <= j < i ==> constructed@.contains(seq@[j]),
-                    forall|v: <T as View>::V| constructed@.contains(v) ==>
+                    forall|j: int| 0 <= j < i ==> #[trigger] constructed@.contains(seq@[j]),
+                    forall|v: <T as View>::V| #[trigger] constructed@.contains(v) ==>
                         (exists|j: int| 0 <= j < i && seq@[j] == v),
                 decreases n - i,
             {
@@ -248,13 +248,13 @@ broadcast use {
                 constructed = constructed.insert(elem);
                 proof {
                     assert forall|j: int| 0 <= j < i + 1
-                        implies constructed@.contains(seq@[j]) by {
+                        implies #[trigger] constructed@.contains(seq@[j]) by {
                         if j < i as int {
                             assert(old_view.contains(seq@[j]));
                         }
                     };
                     assert forall|v: <T as View>::V|
-                        constructed@.contains(v) implies
+                        #[trigger] constructed@.contains(v) implies
                         (exists|j: int| 0 <= j < i + 1 && seq@[j] == v) by {
                         if !old_view.contains(v) {
                             assert(v == seq@[i as int]);
@@ -268,7 +268,7 @@ broadcast use {
             }
             proof {
                 assert forall|v: <T as View>::V|
-                    constructed@.contains(v) == seq@.to_set().contains(v) by {
+                    #[trigger] constructed@.contains(v) == seq@.to_set().contains(v) by {
                     if constructed@.contains(v) {
                         let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == v;
                         assert(seq@.contains(v));

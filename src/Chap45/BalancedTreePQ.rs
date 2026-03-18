@@ -263,7 +263,7 @@ broadcast use {
                     self@.insert_ensures(pos as int, element@);
                     let view_fn = |t: T| t@;
                     assert forall|k: int| 0 <= k < vals@.map_values(view_fn).len()
-                        implies vals@.map_values(view_fn)[k]
+                        implies #[trigger] vals@.map_values(view_fn)[k]
                             == self@.insert(pos as int, element@)[k] by {
                         if k < pos as int {
                             assert(vals@[k] == old_vals[k]);

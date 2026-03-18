@@ -387,7 +387,7 @@ pub mod BSTSplayStEph {
                             reveal_with_fuel(spec_contains_link, 4);
                             assert(left.key == left_key);
                             // BST ordering: elements in left.right (= Some(root)) > left.key.
-                            assert forall|x: T| spec_contains_link(&left.right, x) implies
+                            assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
                                 (T::le(left_key, x) && x != left_key)
                             by {
                                 reveal_with_fuel(spec_contains_link, 3);
@@ -472,7 +472,7 @@ pub mod BSTSplayStEph {
                                 // ll_key ∈ splay result ∈ orig_left_left, so < left_key.
                                 assert(spec_contains_link(&orig_left_left, ll_key));
                                 // BST: ll.right elements > ll_key.
-                                assert forall|x: T| spec_contains_link(&ll.right, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&ll.right, x) implies
                                     (T::le(ll_key, x) && x != ll_key)
                                 by {
                                     reveal_with_fuel(spec_contains_link, 4);
@@ -494,13 +494,13 @@ pub mod BSTSplayStEph {
                                     }
                                 };
                                 // BST: left.left (= ll_right) elements < left_key.
-                                assert forall|x: T| spec_contains_link(&left.left, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&left.left, x) implies
                                     (T::le(x, left_key) && x != left_key)
                                 by {
                                     assert(spec_contains_link(&orig_left_left, x));
                                 };
                                 // BST: left.right elements > left_key.
-                                assert forall|x: T| spec_contains_link(&left.right, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
                                     (T::le(left_key, x) && x != left_key)
                                 by {
                                     reveal_with_fuel(spec_contains_link, 3);
@@ -567,7 +567,7 @@ pub mod BSTSplayStEph {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(spec_contains_link, 4);
                                 assert(left.key == left_key);
-                                assert forall|x: T| spec_contains_link(&left.right, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
                                     (T::le(left_key, x) && x != left_key)
                                 by {
                                     reveal_with_fuel(spec_contains_link, 3);
@@ -654,7 +654,7 @@ pub mod BSTSplayStEph {
                                 reveal_with_fuel(spec_contains_link, 5);
                                 assert(lr.key == lr_key);
                                 // BST: lr.left (= Some(left)) elements < lr_key.
-                                assert forall|x: T| spec_contains_link(&lr.left, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&lr.left, x) implies
                                     (T::le(x, lr_key) && x != lr_key)
                                 by {
                                     reveal_with_fuel(spec_contains_link, 3);
@@ -667,7 +667,7 @@ pub mod BSTSplayStEph {
                                     }
                                 };
                                 // BST: lr.right (= Some(root)) elements > lr_key.
-                                assert forall|x: T| spec_contains_link(&lr.right, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&lr.right, x) implies
                                     (T::le(lr_key, x) && x != lr_key)
                                 by {
                                     reveal_with_fuel(spec_contains_link, 3);
@@ -681,13 +681,13 @@ pub mod BSTSplayStEph {
                                     }
                                 };
                                 // BST: left.right (= lr_left) elements > left_key.
-                                assert forall|x: T| spec_contains_link(&left.right, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
                                     (T::le(left_key, x) && x != left_key)
                                 by {
                                     assert(spec_contains_link(&orig_left_right, x));
                                 };
                                 // BST: root.left (= lr_right) elements < root_key.
-                                assert forall|x: T| spec_contains_link(&root.left, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&root.left, x) implies
                                     (T::le(x, root_key) && x != root_key)
                                 by {
                                     assert(spec_contains_link(&orig_left_right, x));
@@ -766,7 +766,7 @@ pub mod BSTSplayStEph {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(spec_contains_link, 4);
                                 assert(left.key == left_key);
-                                assert forall|x: T| spec_contains_link(&left.right, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
                                     (T::le(left_key, x) && x != left_key)
                                 by {
                                     reveal_with_fuel(spec_contains_link, 3);
@@ -864,7 +864,7 @@ pub mod BSTSplayStEph {
                             reveal_with_fuel(spec_contains_link, 4);
                             assert(right.key == right_key);
                             // BST ordering: elements in right.left (= Some(root)) < right.key.
-                            assert forall|x: T| spec_contains_link(&right.left, x) implies
+                            assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
                                 (T::le(x, right_key) && x != right_key)
                             by {
                                 reveal_with_fuel(spec_contains_link, 3);
@@ -951,7 +951,7 @@ pub mod BSTSplayStEph {
                                 // rr_key ∈ splay result ∈ orig_right_right, so > right_key.
                                 assert(spec_contains_link(&orig_right_right, rr_key));
                                 // BST: rr.left (= Some(right)) elements < rr_key.
-                                assert forall|x: T| spec_contains_link(&rr.left, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&rr.left, x) implies
                                     (T::le(x, rr_key) && x != rr_key)
                                 by {
                                     reveal_with_fuel(spec_contains_link, 4);
@@ -973,13 +973,13 @@ pub mod BSTSplayStEph {
                                     }
                                 };
                                 // BST: right.right (= rr_left) elements > right_key.
-                                assert forall|x: T| spec_contains_link(&right.right, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&right.right, x) implies
                                     (T::le(right_key, x) && x != right_key)
                                 by {
                                     assert(spec_contains_link(&orig_right_right, x));
                                 };
                                 // BST: right.left elements < right_key.
-                                assert forall|x: T| spec_contains_link(&right.left, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
                                     (T::le(x, right_key) && x != right_key)
                                 by {
                                     reveal_with_fuel(spec_contains_link, 3);
@@ -1057,7 +1057,7 @@ pub mod BSTSplayStEph {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(spec_contains_link, 4);
                                 assert(right.key == right_key);
-                                assert forall|x: T| spec_contains_link(&right.left, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
                                     (T::le(x, right_key) && x != right_key)
                                 by {
                                     reveal_with_fuel(spec_contains_link, 3);
@@ -1144,7 +1144,7 @@ pub mod BSTSplayStEph {
                                 reveal_with_fuel(spec_contains_link, 5);
                                 assert(rl.key == rl_key);
                                 // BST: rl.right (= Some(right)) elements > rl_key.
-                                assert forall|x: T| spec_contains_link(&rl.right, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&rl.right, x) implies
                                     (T::le(rl_key, x) && x != rl_key)
                                 by {
                                     reveal_with_fuel(spec_contains_link, 3);
@@ -1157,7 +1157,7 @@ pub mod BSTSplayStEph {
                                     }
                                 };
                                 // BST: rl.left (= Some(root)) elements < rl_key.
-                                assert forall|x: T| spec_contains_link(&rl.left, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&rl.left, x) implies
                                     (T::le(x, rl_key) && x != rl_key)
                                 by {
                                     reveal_with_fuel(spec_contains_link, 3);
@@ -1171,13 +1171,13 @@ pub mod BSTSplayStEph {
                                     }
                                 };
                                 // BST: right.left (= rl_right) elements < right_key.
-                                assert forall|x: T| spec_contains_link(&right.left, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
                                     (T::le(x, right_key) && x != right_key)
                                 by {
                                     assert(spec_contains_link(&orig_right_left, x));
                                 };
                                 // BST: root.right (= rl_left) elements > root_key.
-                                assert forall|x: T| spec_contains_link(&root.right, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&root.right, x) implies
                                     (T::le(root_key, x) && x != root_key)
                                 by {
                                     assert(spec_contains_link(&orig_right_left, x));
@@ -1245,7 +1245,7 @@ pub mod BSTSplayStEph {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(spec_contains_link, 4);
                                 assert(right.key == right_key);
-                                assert forall|x: T| spec_contains_link(&right.left, x) implies
+                                assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
                                     (T::le(x, right_key) && x != right_key)
                                 by {
                                     reveal_with_fuel(spec_contains_link, 3);
@@ -1503,7 +1503,7 @@ pub mod BSTSplayStEph {
         ensures
             link.is_some() ==> min.is_some(),
             min.is_some() ==> spec_contains_link(link, *min.unwrap()),
-            min.is_some() ==> forall|x: T| spec_contains_link(link, x) ==> T::le(*min.unwrap(), x),
+            min.is_some() ==> forall|x: T| #[trigger] spec_contains_link(link, x) ==> T::le(*min.unwrap(), x),
         decreases *link,
     {
         match link {
@@ -1511,7 +1511,7 @@ pub mod BSTSplayStEph {
             | Some(node) => match node.left {
                 | None => {
                     proof {
-                        assert forall|x: T| spec_contains_link(link, x) implies T::le(node.key, x) by {
+                        assert forall|x: T| #[trigger] spec_contains_link(link, x) implies T::le(node.key, x) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(spec_contains_link, 2);
                             if x == node.key {
@@ -1529,7 +1529,7 @@ pub mod BSTSplayStEph {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(spec_contains_link, 2);
                         assert(spec_contains_link(&node.left, *min.unwrap()));
-                        assert forall|x: T| spec_contains_link(link, x) implies T::le(*min.unwrap(), x) by {
+                        assert forall|x: T| #[trigger] spec_contains_link(link, x) implies T::le(*min.unwrap(), x) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(spec_contains_link, 2);
                             if spec_contains_link(&node.left, x) {
@@ -1555,7 +1555,7 @@ pub mod BSTSplayStEph {
         ensures
             link.is_some() ==> max.is_some(),
             max.is_some() ==> spec_contains_link(link, *max.unwrap()),
-            max.is_some() ==> forall|x: T| spec_contains_link(link, x) ==> T::le(x, *max.unwrap()),
+            max.is_some() ==> forall|x: T| #[trigger] spec_contains_link(link, x) ==> T::le(x, *max.unwrap()),
         decreases *link,
     {
         match link {
@@ -1563,7 +1563,7 @@ pub mod BSTSplayStEph {
             | Some(node) => match node.right {
                 | None => {
                     proof {
-                        assert forall|x: T| spec_contains_link(link, x) implies T::le(x, node.key) by {
+                        assert forall|x: T| #[trigger] spec_contains_link(link, x) implies T::le(x, node.key) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(spec_contains_link, 2);
                             if x == node.key {
@@ -1581,7 +1581,7 @@ pub mod BSTSplayStEph {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(spec_contains_link, 2);
                         assert(spec_contains_link(&node.right, *max.unwrap()));
-                        assert forall|x: T| spec_contains_link(link, x) implies T::le(x, *max.unwrap()) by {
+                        assert forall|x: T| #[trigger] spec_contains_link(link, x) implies T::le(x, *max.unwrap()) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(spec_contains_link, 2);
                             if spec_contains_link(&node.right, x) {

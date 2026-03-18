@@ -208,7 +208,7 @@ pub mod OrderedSetMtEph {
             ensures
                 self@.finite(),
                 rank <= self@.len(),
-                rank as int == self@.filter(|x: T::V| exists|t: T| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+                rank as int == self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@).len();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + index)
         fn select(&self, i: usize) -> (selected: Option<T>)
@@ -217,7 +217,7 @@ pub mod OrderedSetMtEph {
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
                 selected matches Some(v) ==> self@.contains(v@),
-                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
+                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, v) && t@ == x && t@ != v@).len() == i as int;
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + partition)
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))

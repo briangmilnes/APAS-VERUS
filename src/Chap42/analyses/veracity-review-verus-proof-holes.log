@@ -22,26 +22,51 @@ Table of Contents:
 
 ✓ Example42_1.rs
    1 clean proof function
-ℹ TableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:2203: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:2215: info: accept()
-   Info: 2 total
-   11 clean proof functions
-ℹ TableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:2119: info: accept()
-   Info: 1 total
-   8 clean proof functions
-⚠ TableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:2036: error: fn_missing_wf_ensures - fn collect_by_key — ensures should include grouped.spec_tablestper_wf() for return type TableStPer
-      2019 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
+⚠ TableMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2202: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2198 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      2034 |     /// APAS Algorithm 42.3: collect groups a sequence of (key, value) pairs into a table
-      2035 |     /// mapping each key to the subsequence of values for that key, preserving order.
-      2037 |         pairs: &ArraySeqStPerS<Pair<K, V>>,
-      2038 |     ) -> (grouped: TableStPer<K, ArraySeqStPerS<V>>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:2194: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:2205: info: accept()
-   Info: 2 total
+      2200 |         {
+      2201 |             let equal = self.entries == other.entries;
+      2203 |             equal
+      2204 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2214: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2208 |         fn clone(&self) -> (cloned: Self)
+            ...
+      2212 |                 entries: self.entries.clone(),
+      2213 |             };
+      2215 |             cloned
+      2216 |         }
+⚠ TableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2118: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2114 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      2116 |         {
+      2117 |             let equal = self.entries == other.entries;
+      2119 |             equal
+      2120 |         }
+⚠ TableStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2035: error: fn_missing_wf_ensures - fn collect_by_key — ensures should include grouped.spec_tablestper_wf() for return type TableStPer
+      2018 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
+            ...
+      2033 |     /// APAS Algorithm 42.3: collect groups a sequence of (key, value) pairs into a table
+      2034 |     /// mapping each key to the subsequence of values for that key, preserving order.
+      2036 |         pairs: &ArraySeqStPerS<Pair<K, V>>,
+      2037 |     ) -> (grouped: TableStPer<K, ArraySeqStPerS<V>>)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2193: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2189 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      2191 |         {
+      2192 |             let equal = self.entries == other.entries;
+      2194 |             equal
+      2195 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2204: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2199 |         fn clone(&self) -> (cloned: Self)
+            ...
+      2202 |             let cloned = TableStPer { entries: self.entries.clone() };
+      2203 |             proof {
+      2205 |                 lemma_seq_map_cloned_view_eq(
+      2206 |                     self.entries.seq@,
 
 =================================================================
 2. Depends Upon
@@ -89,11 +114,9 @@ Function Specs:
 
 Holes Found: 0 (actionable)
 
-Warnings: 1 total
+Warnings: 6 total
    1 × fn_missing_wf_ensures
-
-Accepted (reviewed): 5 total
-   5 × accept()
+   5 × assume_eq_clone_workaround
 
 No proof holes found! All proofs are complete.
 
@@ -101,11 +124,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 11:10:37 -07:00
-Ended:     2026-03-18 11:10:37 -07:00
-Duration:  97ms
+Started:   2026-03-18 11:46:47 -07:00
+Ended:     2026-03-18 11:46:47 -07:00
+Duration:  79ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
-Duration:  97ms
-
-Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
+/analyses/veracity-review-verus-proof-holes.log

@@ -533,7 +533,7 @@ pub mod OrderedTableStPer {
                 proof {
                     lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_table.entries@, min_idx);
                     assert(self@.dom().contains(min_key@));
-                    assert forall|t: K| self@.dom().contains(t@)
+                    assert forall|t: K| #[trigger] self@.dom().contains(t@)
                         implies TotalOrder::le(min_key, t) by {
                         lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.base_table.entries@, t@);
                         let j = choose|j: int| 0 <= j < self.base_table.entries@.len()
@@ -612,7 +612,7 @@ pub mod OrderedTableStPer {
                 proof {
                     lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_table.entries@, max_idx);
                     assert(self@.dom().contains(max_key@));
-                    assert forall|t: K| self@.dom().contains(t@)
+                    assert forall|t: K| #[trigger] self@.dom().contains(t@)
                         implies TotalOrder::le(t, max_key) by {
                         lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.base_table.entries@, t@);
                         let j = choose|j: int| 0 <= j < self.base_table.entries@.len()
@@ -783,8 +783,8 @@ pub mod OrderedTableStPer {
                                         let old_best = best_idx;
                                         best_idx = i as int;
                                         assert forall|j: int| 0 <= j < i + 1
-                                            && TotalOrder::le(*k, self.base_table.entries.spec_index(j).0) && self.base_table.entries.spec_index(j).0@ != k@
-                                            implies TotalOrder::le(#[trigger] self.base_table.entries.spec_index(best_idx).0, self.base_table.entries.spec_index(j).0) by {
+                                            && TotalOrder::le(*k, (#[trigger] self.base_table.entries.spec_index(j)).0) && self.base_table.entries.spec_index(j).0@ != k@
+                                            implies TotalOrder::le(self.base_table.entries.spec_index(best_idx).0, self.base_table.entries.spec_index(j).0) by {
                                             if j == i as int {
                                                 K::reflexive(self.base_table.entries.spec_index(i as int).0);
                                             } else {
@@ -1167,7 +1167,7 @@ pub mod OrderedTableStPer {
                 let less_keys: Set<K::V> = Set::new(|kv: K::V|
                     exists|j: int| #[trigger] less_idx.contains(j) && self.base_table.entries@[j].0 == kv);
                 assert(less_keys =~= self@.dom().filter(pred)) by {
-                    assert forall|kv: K::V| less_keys.contains(kv)
+                    assert forall|kv: K::V| #[trigger] less_keys.contains(kv)
                         implies self@.dom().filter(pred).contains(kv) by {
                         let j = choose|j: int| less_idx.contains(j) && (#[trigger] self.base_table.entries@[j]).0 == kv;
                         assert(0 <= j < len);
@@ -1178,7 +1178,7 @@ pub mod OrderedTableStPer {
                         assert(TotalOrder::le(t, *k) && t != *k);
                         assert(t@ != k@);
                     };
-                    assert forall|kv: K::V| self@.dom().filter(pred).contains(kv)
+                    assert forall|kv: K::V| #[trigger] self@.dom().filter(pred).contains(kv)
                         implies less_keys.contains(kv) by {
                         assert(self@.dom().contains(kv) && pred(kv));
                         lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.base_table.entries@, kv);

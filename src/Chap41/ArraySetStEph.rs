@@ -515,8 +515,8 @@ pub mod ArraySetStEph {
                     constructed@.finite(),
                     constructed.spec_arraysetsteph_wf(),
                     i <= seq.spec_len(),
-                    forall|j: int| 0 <= j < i ==> constructed@.contains(seq@[j]),
-                    forall|v: <T as View>::V| constructed@.contains(v) ==>
+                    forall|j: int| 0 <= j < i ==> #[trigger] constructed@.contains(seq@[j]),
+                    forall|v: <T as View>::V| #[trigger] constructed@.contains(v) ==>
                         (exists|j: int| 0 <= j < i && seq@[j] == v),
                 decreases seq.spec_len() - i,
             {
@@ -529,13 +529,13 @@ pub mod ArraySetStEph {
                 constructed.insert(elem);
                 proof {
                     assert forall|j: int| 0 <= j < i + 1
-                        implies constructed@.contains(seq@[j]) by {
+                        implies #[trigger] constructed@.contains(seq@[j]) by {
                         if j < i as int {
                             assert(old_view.contains(seq@[j]));
                         }
                     };
                     assert forall|v: <T as View>::V|
-                        constructed@.contains(v) implies
+                        #[trigger] constructed@.contains(v) implies
                         (exists|j: int| 0 <= j < i + 1 && seq@[j] == v) by {
                         if !old_view.contains(v) {
                             assert(v == seq@[i as int]);
@@ -549,7 +549,7 @@ pub mod ArraySetStEph {
             }
             proof {
                 assert forall|v: <T as View>::V|
-                    constructed@.contains(v) == seq@.to_set().contains(v) by {
+                    #[trigger] constructed@.contains(v) == seq@.to_set().contains(v) by {
                     if constructed@.contains(v) {
                         let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == v;
                         assert(seq@.contains(v));

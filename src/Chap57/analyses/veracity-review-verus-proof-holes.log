@@ -22,35 +22,40 @@ Table of Contents:
 
 ✓ DijkstraStEphF64.rs
 ❌ DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphU64.rs:202: error: assume() [algorithmic] - assume(BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_se
-       155 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:166: error: assume() [algorithmic] - proof { assume(obeys_feq_clone::<PQEntry>()); }
+       154 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
             ...
-       200 |             assert(pq@.len() * 2 <= usize::MAX as int);
-       201 |             proof {
-       203 |             }
-       204 |             let (new_pq, min_elem) = pq.delete_min();
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphU64.rs:243: error: assume() [algorithmic] - proof { assume(remaining_budget > 0); }
-       155 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
+       164 |         let n = graph.vertices().size();
+       165 |         assert(n == graph@.V.len());
+       167 | 
+       168 |         // Edge count for PQ size bound: total PQ inserts <= |E|.
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:201: error: assume() [algorithmic] - assume(BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_se
+       154 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
             ...
-       241 |                                         assert(pq@.len() + 1 <= usize::MAX as int);
-       242 |                                         // Budget: total Dijkstra PQ inserts <= |E|.
-       244 |                                         pq = pq.insert(pq_entry_new(new_dist, *u));
-       245 |                                         proof { remaining_budget = remaining_budget - 1; }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphU64.rs:94: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
-        78 |         fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
+       199 |             assert(pq@.len() * 2 <= usize::MAX as int);
+       200 |             proof {
+       202 |             }
+       203 |             let (new_pq, min_elem) = pq.delete_min();
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:242: error: assume() [algorithmic] - proof { assume(remaining_budget > 0); }
+       154 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
             ...
-        92 |     /// - APAS: N/A — Verus-specific scaffolding.
-        93 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
-        95 |         ensures r.dist == dist, r.vertex == vertex,
-        96 |     {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphU64.rs:167: info: accept()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphU64.rs:101: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphU64.rs:118: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
-   Holes: 2 total
-      2 × assume()
+       240 |                                         assert(pq@.len() + 1 <= usize::MAX as int);
+       241 |                                         // Budget: total Dijkstra PQ inserts <= |E|.
+       243 |                                         pq = pq.insert(pq_entry_new(new_dist, *u));
+       244 |                                         proof { remaining_budget = remaining_budget - 1; }
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:93: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
+        77 |         fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
+            ...
+        91 |     /// - APAS: N/A — Verus-specific scaffolding.
+        92 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
+        94 |         ensures r.dist == dist, r.vertex == vertex,
+        95 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:100: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:117: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+   Holes: 3 total
+      3 × assume()
    Info: 2 × structural_false_positive
       2 × STD_TRAIT_IMPL
-   Info: 1 total
    Proof functions: 4 total (4 clean, 0 holed)
 ✓ StackStEph.rs
 
@@ -96,14 +101,11 @@ Function Specs:
    31 total fns
 
 
-Holes Found: 2 (actionable)
-   2 × assume() (100%)
+Holes Found: 3 (actionable)
+   3 × assume() (100%)
 
 Warnings: 1 total
    1 × fn_missing_requires
-
-Accepted (reviewed): 1 total
-   1 × accept()
 
 Structural (info only): 2
    2 × STD_TRAIT_IMPL
@@ -112,12 +114,9 @@ Structural (info only): 2
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 11:10:37 -07:00
-Ended:     2026-03-18 11:10:37 -07:00
-Duration:  4ms
+Started:   2026-03-18 11:46:47 -07:00
+Ended:     2026-03-18 11:46:47 -07:00
+Duration:  6ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
-:00
-Duration:  4ms
-
-Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap57/analyses/veracity-review-verus-proof-holes.log

@@ -20,12 +20,49 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-ℹ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:52: info: accept()
-   Info: 1 total
-ℹ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:67: info: accept()
-   Info: 1 total
+❌ BoruvkaMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:144: error: external_body - #[verifier::external_body]
+       145 |     fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:179: error: external_body - #[verifier::external_body]
+       180 |     fn compute_remaining_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:217: error: external_body - #[verifier::external_body]
+       218 |     fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:255: error: external_body - #[verifier::external_body]
+       256 |     fn build_partition_map_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:300: error: external_body - #[verifier::external_body]
+       301 |     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:356: error: external_body - #[verifier::external_body]
+       357 |     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:395: error: external_body - #[verifier::external_body]
+       396 |     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:451: error: external_body - #[verifier::external_body]
+       452 |     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:510: error: external_body - #[verifier::external_body]
+       511 |     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:556: error: external_body - #[verifier::external_body]
+       557 |     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:571: error: external_body - #[verifier::external_body]
+       572 |     pub fn mst_weight<V: StT + Hash>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:51: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        47 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        49 |         {
+        50 |             let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
+        52 |             r
+        53 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:130: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+   Holes: 11 total
+      11 × external_body
+   Info: 1 × structural_false_positive
+      1 × OPAQUE_EXTERNAL
+⚠ BoruvkaStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:66: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        62 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        64 |         {
+        65 |             let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
+        67 |             r
+        68 |         }
 
 =================================================================
 2. Depends Upon
@@ -50,8 +87,8 @@ BoruvkaStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   1 clean (no holes, no errors; 50%)
+   1 holed (holes or errors, 50%)
    2 total
 
 Proof Functions:
@@ -60,27 +97,31 @@ Proof Functions:
    0 total
 
 Function Specs:
-   19 exec fns with complete spec (requires+ensures) (70%)
-   1 exec fns missing spec (3%)
-   7 proof/spec fns clean (25%)
+   31 exec fns with complete spec (requires+ensures) (79%)
+   1 exec fns missing spec (2%)
+   7 proof/spec fns clean (17%)
    0 proof/spec fns with holes (0%)
-   27 total fns
+   39 total fns
 
 
-Holes Found: 0 (actionable)
+Holes Found: 11 (actionable)
+   11 × external_body (100%)
 
-Accepted (reviewed): 2 total
-   2 × accept()
+Warnings: 2 total
+   2 × assume_eq_clone_workaround
 
-No proof holes or warnings found! All proofs are complete.
+Structural (info only): 1
+   1 × OPAQUE_EXTERNAL
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 11:10:37 -07:00
-Ended:     2026-03-18 11:10:37 -07:00
-Duration:  9ms
+Started:   2026-03-18 11:46:47 -07:00
+Ended:     2026-03-18 11:46:47 -07:00
+Duration:  15ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
+Duration:  15ms
+
+Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
